@@ -1,0 +1,723 @@
+{
+ "book_id": "091ae3a3e6609106",
+ "source_status": "COMPLETE",
+ "source_note": "Frank H. Knight, Risk, Uncertainty and Profit, first published 1921. Local file: Google Books scan PDF, image-only with no text layer, 397 pages by pdfinfo, 11,053,996 bytes, at library/books-must-have/Knight-1921-RiskUncertaintyAndProfit.pdf. Full sha256 over (str(size) + file bytes): 091ae3a3e660910622f053f5ca674921cf991ced94be2d76e1b1bac2c6fd2033; book_id is the first 16 hex characters of that digest. The library extracted text file for this book holds front matter only (3,404 characters) because the scan has no text layer, so quotations were verified against the fleet GPU-OCR full text of the identical PDF (830,694 characters), stored at extraction-mandate-2026-11-10/recovery/gpu-ocr/text/Knight-1921-RiskUncertaintyAndProfit.txt, a byte-identical copy of which also sits in the research library. Every quotation is a contiguous substring of that text after whitespace, ligature, and dash normalization, taken from inside a single printed page, with OCR-damaged passages avoided by passage choice. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "law_of_choice",
+   "name": "Law of Choice: confronted alternatives are combined in proportions that equalize the utility of the correlated amounts at the margin",
+   "verbatim_quote": "When confronted with alternative, quantitatively variable lines of action or experience, we tend to combine them in such proportions that the physically correlated amounts or degrees of each are of equal utility to the person choosing.",
+   "page": "Chapter III (printed pp. 64-65); GPU-OCR text line 883",
+   "latex": "",
+   "assumptions": [
+    "Alternative lines of action are quantitatively variable and can be combined in adjustable proportions.",
+    "The chooser can compare the utility of correlated amounts across alternatives."
+   ],
+   "breakdown_regime": "Fails when alternatives are indivisible, not quantitatively variable, or when the wants governing the choice shift during the choosing itself.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The reasoning engine allocates weight across competing signals until the marginal value of the next unit of evidence is equal across channels, the same equilibration rule Knight states for conduct among alternatives.",
+    "source_operator": "law_of_choice",
+    "telemetry": "Per-signal marginal contribution logs from the reasoning layer, recorded as weights are adjusted."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "specific_productivity_imputation",
+   "name": "Under static equilibrium the value of each productive service equals the value of its specific contribution to the total product",
+   "verbatim_quote": "the value of each service is equal to the value of its contribution to the total product, and the contributions of physically similar agencies are of equal value throughout the system.",
+   "page": "Chapter IV; GPU-OCR text line 1543",
+   "latex": "",
+   "assumptions": [
+    "Perfect competition with physically defined, interchangeable agencies of each type.",
+    "Static conditions, so contributions can be experimentally determined."
+   ],
+   "breakdown_regime": "Imputation fails inside small groups of unique, mutually dependent agents, where competition cannot price individual contributions and a joint product resists division (Knight's own Chapter VI caveat).",
+   "domain": "distribution theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine attributes outcome value to individual signals by their marginal contribution with the signal removed, not by narrative credit assigned after the fact.",
+    "source_operator": "specific_productivity_imputation",
+    "telemetry": "Ablation runs over historical prediction records, one signal removed at a time."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "known_risk_converts_to_certainty",
+   "name": "A known risk spread over a considerable number of cases becomes effective certainty, because prediction error approaches zero as cases increase",
+   "verbatim_quote": "a single situation involving a known risk may be regarded as \"uncertain,\" this uncertainty is easily converted into effective certainty; for in a considerable number of such cases the results become predictable in accordance with the laws of chance, and the error in such prediction approaches zero as the number of cases is increased.",
+   "page": "Chapter II; GPU-OCR text line 713",
+   "latex": "",
+   "assumptions": [
+    "The risk in each case is known, so outcomes follow the laws of chance.",
+    "Cases are numerous enough, and independent enough, for errors to cancel."
+   ],
+   "breakdown_regime": "Fails for a single case, and degrades when cases are correlated so that errors reinforce instead of canceling.",
+   "domain": "probability and grouping",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pooling repeated forecasts of the same situation type converts their scatter into a stable, measurable error estimate that the engine can carry as a known quantity.",
+    "source_operator": "known_risk_converts_to_certainty",
+    "telemetry": "Grouped forecast error distributions by situation type, with case counts."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "no_reward_for_measurable_risk",
+   "name": "If risk were only a known chance, there could be no reward for risk-taking, because the burden can be shed for a small fixed insurance cost",
+   "verbatim_quote": "If risk were exclusively of the nature of a known chance or mathematical probability, there could be no reward of risk-taking",
+   "page": "Chapters I-II; GPU-OCR text line 711",
+   "latex": "",
+   "assumptions": [
+    "The actuarial chance is ascertainable a priori or from statistics of past experience.",
+    "An insurance organization exists through which the burden can be transferred."
+   ],
+   "breakdown_regime": "Where classification is imperfect, a margin of true uncertainty survives inside the supposedly measurable risk, and only that margin can carry a return.",
+   "domain": "probability and grouping",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any engine uncertainty that can be measured from logged history must be booked as a cost of the prediction, never presented as an unexplained edge.",
+    "source_operator": "no_reward_for_measurable_risk",
+    "telemetry": "Calibration tables and historical frequency counts for every measured error source."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "measurable_risk_is_not_uncertainty",
+   "name": "A measurable uncertainty, risk proper, is so far different from an unmeasurable one that it is not in effect an uncertainty at all",
+   "verbatim_quote": "a measurable uncertainty, or \"risk\" proper, as we shall use the term, is so far different from an unmeasurable one that it is not in effect an uncertainty at all.",
+   "page": "Chapter I; GPU-OCR text line 315",
+   "latex": "",
+   "assumptions": [
+    "Measurement means a valid quantitative probability for the case or class exists.",
+    "The terms risk and uncertainty are specialized to keep the two categories apart."
+   ],
+   "breakdown_regime": "Borderline cases with partial measurement blur the line in practice, though Knight holds the distinction absolute in principle.",
+   "domain": "epistemology of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine knowledge store holds two different object types, a measured distribution and an unmeasured judgment, and the type tag travels with the object so one can never masquerade as the other.",
+    "source_operator": "measurable_risk_is_not_uncertainty",
+    "telemetry": "Schema type tags on knowledge records, with counts by type."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "remainderless_distribution_condition",
+   "name": "The necessary and sufficient condition for remainderless distribution, beyond perfect competition, is that change be anticipatable over the calculation horizon",
+   "verbatim_quote": "In every case the necessary and sufficient condition of a perfect, remainderless distribution of the product of industry among the agencies causally concerned in creating it, in addition to perfect competition itself, is that the change can be anticipated over the period of time to which producers' calculations relate.",
+   "page": "Chapter V, printed p. 172",
+   "latex": "",
+   "assumptions": [
+    "Perfect competition itself is present.",
+    "The law of the change is known, so its course can be predicted as far ahead as calculations require."
+   ],
+   "breakdown_regime": "Any change whose law is unknown breaks the condition, and the unanticipated part appears as a residual gain or loss.",
+   "domain": "competition theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Law-like, scheduled variation in the engine's world is not uncertainty and must be discounted in advance; only the unanticipated residue is allowed to register as signal.",
+    "source_operator": "remainderless_distribution_condition",
+    "telemetry": "Calendar and schedule features with known periodic structure, marked as pre-discounted."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "combination_incentive_undermines_competition",
+   "name": "Under perfect competition, agents gain by combining and bargaining as a unit, so the incentive runs toward monopoly without limit",
+   "verbatim_quote": "Therefore, under perfect competition, they will combine and bargain as a unit; and the same incentive will urge them to keep on combining until a monopoly results.",
+   "page": "Chapter VI, printed p. 192",
+   "latex": "",
+   "assumptions": [
+    "Combined units can prevent substitution of outside marginal units for their own members.",
+    "Organization and communication costs are negligible, as perfect competition assumes."
+   ],
+   "breakdown_regime": "In real life friction, organization costs, and the human limit on wielding industrial power arrest the process before the theoretical end.",
+   "domain": "competition theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Correlated signals act inside the engine like a combined bargaining block: priced one at a time they take more total weight than their joint contribution warrants, so the reasoning layer must price correlated groups as units.",
+    "source_operator": "combination_incentive_undermines_competition",
+    "telemetry": "Signal correlation matrices and grouped ablation results."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "imperfect_knowledge_not_change",
+   "name": "It is imperfect knowledge of the future, a consequence of change, not change as such, that gives rise to profit and loss",
+   "verbatim_quote": "it is our imperfect knowledge of the future, a consequence of change, not change as such, which is crucial for the understanding of our problem.",
+   "page": "Chapter VII, printed p. 198",
+   "latex": "",
+   "assumptions": [
+    "Entrepreneurs contract for productive services in advance at fixed rates, on the basis of anticipations.",
+    "Change that follows invariable, universally known laws can be foreseen indefinitely far ahead."
+   ],
+   "breakdown_regime": "Misapplied when used to blame the amount of change in the world rather than the divergence between anticipation and outcome.",
+   "domain": "theory of profit",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine postmortems score the gap between the recorded anticipation and the realized outcome, since that divergence, not the volatility of the environment, is what produces loss.",
+    "source_operator": "imperfect_knowledge_not_change",
+    "telemetry": "Pre-event expectation records paired with realized outcomes for every evaluated case."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "inference_by_analogy",
+   "name": "All reasoning rests on the principle of analogy: the future is judged from the past by assuming associations that have held will hold",
+   "verbatim_quote": "all reasoning rests on the principle of analogy. We know the absent from the present, the future from the now, by assuming that connections or associations among phenomena which have been valid will be so; we judge the future by the past.",
+   "page": "Chapter VII, printed p. 204",
+   "latex": "",
+   "assumptions": [
+    "The world consists of things with fairly constant modes of behavior under the same circumstances.",
+    "Classes are real: similarity in observed respects supports inference to unobserved respects."
+   ],
+   "breakdown_regime": "Where real change alters the association between properties, analogy misleads, and the failure is visible only after the fact.",
+   "domain": "epistemology of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine inference is an analogy from stored cases, so the engine records which past cases each judgment leans on, making the analogy itself auditable.",
+    "source_operator": "inference_by_analogy",
+    "telemetry": "Case retrieval logs attached to each judgment, listing the precedent cases used."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "a_priori_probability",
+   "name": "A priori probability: absolutely homogeneous classification of instances identical except for really indeterminate factors, on the logical plane of mathematics",
+   "verbatim_quote": "A priori probability. Absolutely homogeneous classification of instances completely identical except for really indeterminate factors.",
+   "page": "Chapter VII, printed pp. 224-225",
+   "latex": "",
+   "assumptions": [
+    "Elementary alternatives are equally probable by construction, so chances are computable by permutations and combinations.",
+    "Classification is perfectly homogeneous; only indeterminate factors differ between instances."
+   ],
+   "breakdown_regime": "Almost never available outside games of chance; real classifications leak determinate differences between supposedly identical instances.",
+   "domain": "epistemology of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Only engine components with genuinely symmetric outcome structure may carry computed probabilities; every other component must be labeled statistical or estimate.",
+    "source_operator": "a_priori_probability",
+    "telemetry": "Component registry recording the probability basis claimed by each component."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "statistical_probability",
+   "name": "Statistical probability: empirical evaluation of the frequency of association between predicates, not analyzable into equally probable alternatives",
+   "verbatim_quote": "Statistical probability. Empirical evaluation of the frequency of association between predicates, not analyzable into varying combinations of equally probable alternatives.",
+   "page": "Chapter VII, printed p. 225",
+   "latex": "",
+   "assumptions": [
+    "Proportions found in the past will hold in the future, itself resting on an a priori judgment of indeterminateness.",
+    "The empirical classification of instances is reasonably homogeneous."
+   ],
+   "breakdown_regime": "Non-homogeneous groups corrupt the frequency, and structural change in the underlying process voids it without announcing itself.",
+   "domain": "epistemology of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine base rates are statistical probabilities and must carry their grouping definition, sample window, and case count wherever they are used downstream.",
+    "source_operator": "statistical_probability",
+    "telemetry": "Frequency tables with class definitions, windows, and counts stored beside each rate."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "estimates_unique_instances",
+   "name": "Estimates: the business instance is so entirely unique that no tabulation of like cases can ground any real probability for it",
+   "verbatim_quote": "The essential and outstanding fact is that the \"instance\" in question is so entirely unique that there are no others or not a sufficient number to make it possible to tabulate enough like it to form a basis for any inference of value about any real probability in the case we are interested in.",
+   "page": "Chapter VII, printed p. 226",
+   "latex": "",
+   "assumptions": [
+    "The situation is unique in the respects that determine its outcome.",
+    "No sufficient number of like instances exists or can be assembled."
+   ],
+   "breakdown_regime": "The boundary with statistical probability is one of degree; loose classification can always manufacture classes, and lazy classification can manufacture false uniqueness.",
+   "domain": "epistemology of probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine faces a situation with no adequate reference class, the output is typed as an estimate, and confidence is carried as a separate quantity from the estimate itself.",
+    "source_operator": "estimates_unique_instances",
+    "telemetry": "Reference class size attached to every output; zero or small class size flags estimate status."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "estimate_of_estimate",
+   "name": "The decision maker not only forms the best estimate he can of the outcome, but also estimates the probability that his estimate is correct",
+   "verbatim_quote": "The business man himself not merely forms the best estimate he can of the outcome of his actions, but he is likely also to estimate the probability that his estimate is correct.",
+   "page": "Chapter VII, printed p. 226",
+   "latex": "",
+   "assumptions": [
+    "Judgment can be turned on itself; the value of an estimate is itself estimable.",
+    "Action depends on felt confidence as much as on the favorableness of the estimate."
+   ],
+   "breakdown_regime": "The regress of estimates of estimates has no firm floor; Knight treats the two-level form as the practical stopping point.",
+   "domain": "epistemology of probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine separates every forecast into a value and a second order confidence in that value, and downstream logic consumes both quantities, never the value alone.",
+    "source_operator": "estimate_of_estimate",
+    "telemetry": "Paired estimate and confidence fields in prediction records, plus confidence calibration history."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "judgment_capacity_is_the_paid_endowment",
+   "name": "Capacity for forming correct judgments in a field is the principal fact that makes a man serviceable in business, the endowment for which wages are paid",
+   "verbatim_quote": "this capacity for forming correct judgments (in a more or less extended or restricted field) is the principal fact which makes a man serviceable in business; it is the characteristic human activity, the most important endowment for which wages are received.",
+   "page": "Chapter VII, printed p. 229",
+   "latex": "",
+   "assumptions": [
+    "Judgment capacity is somewhat stable for a person within a field, and others can estimate it.",
+    "Assigning men to positions and fixing their pay depends on such estimates being more right than wrong."
+   ],
+   "breakdown_regime": "Capacity is field specific and does not transfer; estimates of another's capacity are themselves estimates and share their fallibility.",
+   "domain": "theory of judgment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine tracks the judgment record of each signal source and submodel per domain, and weights them by demonstrated judgment in that domain rather than by design intent.",
+    "source_operator": "judgment_capacity_is_the_paid_endowment",
+    "telemetry": "Per-source, per-domain hit and error records maintained over time."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "risk_uncertainty_practical_difference",
+   "name": "Risk: the distribution of outcomes in a group of instances is known; uncertainty: it is not known, because the situation is in a high degree unique",
+   "verbatim_quote": "The practical difference between the two categories, risk and uncertainty, is that in the former the distribution of the outcome in a group of instances is known (either through calculation a priori or from statistics of past experience), while in the case of uncertainty this is not true",
+   "page": "Chapter VIII, printed p. 233",
+   "latex": "",
+   "assumptions": [
+    "For risk, the distribution is known a priori or from statistics of past experience.",
+    "For uncertainty, forming a group of instances is impossible because of the uniqueness of the situation."
+   ],
+   "breakdown_regime": "Mixed situations combine both categories in one decision; Knight's remedy is to decompose the measurable part from the judgmental residue.",
+   "domain": "epistemology of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the type split for the whole engine: distributional knowledge on one side, singular judgment on the other, with different combination and display rules for each side.",
+    "source_operator": "risk_uncertainty_practical_difference",
+    "telemetry": "Knowledge store type tags and record counts by type."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "estimate_thrown_into_probability_form",
+   "name": "The individual throws his estimate of the value of an opinion into the probability form of a successes in b trials",
+   "verbatim_quote": "throws his estimate of the value of an opinion into the probability form of \"a successes in b trials\" (a/b being a proper fraction)",
+   "page": "Chapter VIII, printed p. 234",
+   "latex": "\\frac{a}{b}",
+   "assumptions": [
+    "The subjective ratio is treated in conduct as if it were an objective probability.",
+    "The imagined trials are a presentational device, not an actual sample."
+   ],
+   "breakdown_regime": "The imagined a and b have no sampling basis, so the precision of the ratio is illusory even though the feeling it expresses is real.",
+   "domain": "epistemology of probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine must expose confidence for a judgment, it states the equivalent successes over trials, forcing the imagined sample size into the open where it can be challenged.",
+    "source_operator": "estimate_thrown_into_probability_form",
+    "telemetry": "Effective sample size equivalents stored alongside every judgment confidence value."
+   },
+   "symbol_and_unit_ledger": {
+    "a": "successes in the imagined series of trials (count, dimensionless)",
+    "b": "trials in the imagined series (count, dimensionless)"
+   }
+  },
+  {
+   "primitive_id": "effective_uncertainty_is_felt_confidence",
+   "name": "The amount of uncertainty effective in a conduct situation is the degree of subjective confidence felt, not the true value of the judgment",
+   "verbatim_quote": "The amount of uncertainty effective in a conduct situation is the degree of subjective confidence felt in the contemplated act as a correct adaptation to the future",
+   "page": "Chapter VIII, printed p. 242",
+   "latex": "",
+   "assumptions": [
+    "Conduct is controlled by the actor's own opinion of his judgment and powers.",
+    "Confidence felt is in large measure independent of the true value of the judgment."
+   ],
+   "breakdown_regime": "For system design the objective value matters even though behavior follows the felt one; confusing the two corrupts both records.",
+   "domain": "theory of judgment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine logs both the confidence a decision carries and the measured reliability of its source, and flags decisions where the gap between felt and measured is wide.",
+    "source_operator": "effective_uncertainty_is_felt_confidence",
+    "telemetry": "Confidence versus realized accuracy divergence reports per source."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "insurance_converts_contingency_to_fixed_charge",
+   "name": "Insurance converts a larger contingent loss into a smaller fixed charge, on the basis of measured probability from fairly accurate grouping into classes",
+   "verbatim_quote": "The application of the insurance principle, converting a larger contingent loss into a smaller fixed charge, depends upon the measurement of probability on the basis of a fairly accurate grouping into classes.",
+   "page": "Chapter VIII, printed p. 246",
+   "latex": "",
+   "assumptions": [
+    "Classes of cases are homogeneous enough for real probability to be measured.",
+    "Premiums can be set so each insured bears roughly his fair share of the pooled losses."
+   ],
+   "breakdown_regime": "Moral hazard and practical limits leave part of the loss uninsured, and non-independent losses (a fire spreading) resist the conversion.",
+   "domain": "insurance and grouping",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Recurring, classifiable error sources in the engine are converted into fixed adjustments, known biases subtracted in advance, instead of being carried as open uncertainty on every case.",
+    "source_operator": "insurance_converts_contingency_to_fixed_charge",
+    "telemetry": "Bias tables by error class, with the fixed charge equivalent of each."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "uninsurable_judgment_risk",
+   "name": "The typical uninsurable business risk is the exercise of judgment in making decisions, unclassifiable and blocked by moral hazard from outside consolidation",
+   "verbatim_quote": "the typical uninsurable (because unmeasurable and this because unclassifiable) business risk relates to the exercise of judgment in the making of decisions by the business man",
+   "page": "Chapter VIII, printed p. 251",
+   "latex": "",
+   "assumptions": [
+    "The decisive factors lie inside the person making the decisions and resist objective description and external control.",
+    "Estimates become groupable only after the fact, and a man's active life is too short to found prediction on the grouping."
+   ],
+   "breakdown_regime": "Inside a single organization with unified interest, partial consolidation of judgment risk becomes possible where an outside insurer cannot achieve it.",
+   "domain": "insurance and grouping",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine cannot outsource its central judgment risk; the accuracy of the deciding layer itself is the residual exposure and must be measured directly and continuously.",
+    "source_operator": "uninsurable_judgment_risk",
+    "telemetry": "Decision layer outcome audits with error attribution by cause."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "scale_incentive_from_grouping",
+   "name": "Reducing uncertainty by transforming it into measurable risk through grouping is a strong incentive to extend the scale of operations",
+   "verbatim_quote": "The possibility of thus reducing uncertainty by transforming it into a measurable risk through grouping constitutes a strong incentive to extend the scale of operations of a business establishment.",
+   "page": "Chapter VIII, printed p. 252",
+   "latex": "",
+   "assumptions": [
+    "A single decision maker can extend his exercise of judgment over more decisions by borrowing capital or otherwise widening scope.",
+    "Bad guesses are offset by good ones as the number of decisions grows."
+   ],
+   "breakdown_regime": "The quality of estimates is not independent of their number and the mass of data involved, so beyond a span the grouping gain is eaten by declining judgment quality.",
+   "domain": "insurance and grouping",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine gains reliability by widening the pool of comparable judgments, but only while per-judgment quality is monitored for dilution as volume grows.",
+    "source_operator": "scale_incentive_from_grouping",
+    "telemetry": "Pooled error rates as a function of volume, with per-unit quality drift measures."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "specialist_substitutes_judgment",
+   "name": "Transferring uncertainty to a specialist substitutes his judgment for the transferor's, so the individual risk itself falls beyond the gain from grouping",
+   "verbatim_quote": "In so far as his knowledge and judgment are better, which they almost certainly will be from the mere fact that he is a specialist, the individual risk is less likely to become a loss, in addition to the gain from grouping.",
+   "page": "Chapter VIII, printed pp. 258-259",
+   "latex": "",
+   "assumptions": [
+    "The specialist's knowledge and judgment are in fact better, from the mere fact of specialization.",
+    "The transfer genuinely replaces the judgment exercised, rather than merely re-labeling it."
+   ],
+   "breakdown_regime": "If the specialist's judgment is not better, only the grouping gain remains; and the inseparability of uncertainty from management means the transfer changes the decision itself.",
+   "domain": "specialization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Routing a class of decisions to the submodel specialized for it is a judgment substitution, and the engine verifies that the specialist actually outperforms the generalist it replaces.",
+    "source_operator": "specialist_substitutes_judgment",
+    "telemetry": "Head to head accuracy records of specialist versus generalist per decision class."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "deciding_displaces_doing",
+   "name": "With uncertainty present, deciding what to do and how to do it becomes the primary function of life; execution becomes secondary",
+   "verbatim_quote": "With uncertainty present, doing things, the actual execution of activity, becomes in a real sense a secondary part of life; the primary problem or function is deciding what to do and how to do it.",
+   "page": "Chapter IX, printed p. 268",
+   "latex": "",
+   "assumptions": [
+    "Uncertainty is present and material, so activity must be directed by opinion rather than knowledge.",
+    "The internal organization of productive groups is free to rearrange around the deciding function."
+   ],
+   "breakdown_regime": "In routine, settled domains the balance reverses: execution dominates and decision shrinks back to a minor function.",
+   "domain": "enterprise organization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine architecture follows the same law: the reasoning and decision layer is the product, while data gathering and execution are subordinate routine in its service.",
+    "source_operator": "deciding_displaces_doing",
+    "telemetry": "Share of failures and of improvement effort attributable to the decision layer versus the execution layer."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "essence_of_enterprise",
+   "name": "The essence of enterprise is the specialization of responsible direction of economic life; responsibility and control are inseparable",
+   "verbatim_quote": "The essence of enterprise is the specialization of the function of responsible direction of economic life, the neglected feature of which is the inseparability of these two elements, responsibility and control.",
+   "page": "Chapter IX, printed p. 271",
+   "latex": "",
+   "assumptions": [
+    "Direction of others' work is given only to one who assumes responsibility for the results.",
+    "Any effective exercise of judgment in a free society is coupled with a corresponding degree of uncertainty-bearing."
+   ],
+   "breakdown_regime": "Apparent separations, such as the hired manager, dissolve on inspection: responsibility lands on whoever selected the decider.",
+   "domain": "enterprise organization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In the engine, whichever component effectively selects or overrides a decision owns its outcome in the audit trail; control without recorded responsibility is a design defect.",
+    "source_operator": "essence_of_enterprise",
+    "telemetry": "Decision ownership fields and override chains in the audit log."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "two_kinds_of_income",
+   "name": "The produce of society divides into two kinds of income only: contractual income, fixed in advance, and residual income or profit",
+   "verbatim_quote": "The produce of society is similarly divided into two kinds of income, and two only, contractual income, which is essentially rent, as economic theory has described incomes, and residual income or profit.",
+   "page": "Chapter IX, printed p. 271",
+   "latex": "",
+   "assumptions": [
+    "Enterprise organization: productive services are furnished for a guaranteed remuneration.",
+    "The differentiation is causal; real incomes are always mixtures of the two kinds."
+   ],
+   "breakdown_regime": "The mixture in any real income cannot be separated exactly, because with uncertainty present the proportions are not observable even in principle.",
+   "domain": "enterprise organization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine evaluation separates what was locked in by construction, known costs and measured risks, from the residual that judgment added or destroyed over a period.",
+    "source_operator": "two_kinds_of_income",
+    "telemetry": "Variance decomposition of outcomes into contracted and residual parts."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "fourfold_specialization",
+   "name": "Uncertainty exerts a fourfold tendency to select men and specialize functions: by kind of knowledge, degree of foresight, managerial control, and venturesomeness",
+   "verbatim_quote": "Uncertainty thus exerts a fourfold tendency to select men and specialize functions: (1) an adaptation of men to occupations on the basis of kind of knowledge and judgment",
+   "page": "Chapter IX, printed p. 270",
+   "latex": "",
+   "assumptions": [
+    "Men differ independently in knowledge type, foresight, ruling capacity, and confidence joined with disposition to venture.",
+    "One who guarantees another's result must be given power to direct his work, and the guarantee is demanded in return."
+   ],
+   "breakdown_regime": "The tendencies interact, and the system works only because judgment of one's own and others' judgment is in the large more right than wrong.",
+   "domain": "enterprise organization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine staffs its own functions the same way, matching sources to roles by knowledge type and demonstrated foresight, and granting override power only together with outcome responsibility.",
+    "source_operator": "fourfold_specialization",
+    "telemetry": "Role assignment records scored against later outcomes."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "profit_is_the_residual_difference",
+   "name": "Profit is the difference between the competitively guaranteed prices of the productive services employed and the amount finally realized from the product",
+   "verbatim_quote": "This profit is simply the difference between the market price of the productive agencies he employs, the amount which the competition of other entrepreneurs forces him to guarantee to them as a condition of securing their services, and the amount which he finally realizes from the disposition of the product which under his direction they turn out.",
+   "page": "Chapter IX, printed p. 277",
+   "latex": "",
+   "assumptions": [
+    "Competition among entrepreneurs fixes in advance what must be guaranteed to secure the services.",
+    "The entrepreneur continues to receive ordinary wages and rent for his own routine services and property, separately from the differential element."
+   ],
+   "breakdown_regime": "The residual mixes an element of calculation with an element of luck, and the two cannot be separated from the realized figure alone.",
+   "domain": "theory of profit",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine skill is measured only as a residual after every pre-committed, competitively priced input has been charged; anything left uncharged inflates apparent skill.",
+    "source_operator": "profit_is_the_residual_difference",
+    "telemetry": "Full input cost accounting attached to each evaluated outcome."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "one_trial_establishes_only_presumption",
+   "name": "The results of one trial or a small number of trials establish at most a presumption that ability has or has not been shown",
+   "verbatim_quote": "The results of one trial or of a small number of trials can at most establish a certain presumption in favor of the view that ability has or has not been shown.",
+   "page": "Chapter IX, printed p. 281",
+   "latex": "",
+   "assumptions": [
+    "Even the best judgment carries an inevitable margin of error, so success and failure both occur at every ability level.",
+    "A dependable estimate of ability requires a considerable number of trials."
+   ],
+   "breakdown_regime": "In near-deterministic tasks a single trial can be informative; Knight's claim governs judgment exercised under genuine uncertainty, where instances are also never closely alike.",
+   "domain": "theory of judgment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine never promotes or demotes a signal on a single outcome; status changes require a trial count sufficient to separate ability from accident.",
+    "source_operator": "one_trial_establishes_only_presumption",
+    "telemetry": "Trial counts gating every status change, with presumption strength scores."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "class_confidence_sets_profit",
+   "name": "Profit depends mainly on the rashness or timidity of entrepreneurs as a class in bidding up the prices of productive services, not on scarcity of mere ability",
+   "verbatim_quote": "The abundance or scarcity of mere ability to manage business successfully exerts relatively little influence on profit; the main thing is the rashness or timidity of entrepreneurs (actual and potential) as a class in bidding up the prices of productive services.",
+   "page": "Chapter IX, printed p. 283",
+   "latex": "",
+   "assumptions": [
+    "Entrepreneur income is residual, so it is set by the demand for other services, which is a matter of the class's self-confidence.",
+    "Entrepreneurs as a class can sustain a net loss, made up from their earnings in other capacities."
+   ],
+   "breakdown_regime": "Where ability is of such quality that it escapes diminishing returns and its possessors know their powers, competition among even a few raises contractual returns and compresses the residual.",
+   "domain": "theory of profit",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Aggregate engine results depend on the confidence level at which inputs were committed across the whole portfolio, so confidence policy is a system level control rather than a per-case afterthought.",
+    "source_operator": "class_confidence_sets_profit",
+    "telemetry": "Aggregate commitment levels versus realized values across periods."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "true_profit_needs_absolute_uncertainty",
+   "name": "True profit depends on absolute uncertainty in estimating the value of judgment, or on the absence of organization combining enough instances to secure certainty by consolidation",
+   "verbatim_quote": "The presence of true profit, therefore, depends on an absolute uncertainty in the estimation of the value of judgment, or on the absence of the requisite organization for combining a sufficient number of instances to secure certainty through consolidation.",
+   "page": "Chapter IX, printed p. 285",
+   "latex": "",
+   "assumptions": [
+    "A man may know the amount of uncertainty in trusting his own judgment, which at sufficient scale removes effective uncertainty.",
+    "Knowledge that other bidders know their own powers can substitute for direct knowledge of their powers."
+   ],
+   "breakdown_regime": "Bargaining under such knowledge takes on the character of a poker game, and residuals can persist through bluffing even where knowledge is wide.",
+   "domain": "theory of profit",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An unexplained residual in the engine is diagnostic: it marks either an unmeasured judgment layer or a missing consolidation of repeated cases, and the two causes call for different repairs.",
+    "source_operator": "true_profit_needs_absolute_uncertainty",
+    "telemetry": "Residual audits classified by suspected cause, unmeasured judgment versus missing consolidation."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "control_is_judgment_of_men",
+   "name": "Control consists mainly of selecting someone else to do the controlling; business judgment is chiefly judgment of men",
+   "verbatim_quote": "What we call \"control\" consists mainly of selecting some one else to do the \"controlling.\" Business judgment is chiefly judgment of men.",
+   "page": "Chapter X, printed p. 291",
+   "latex": "",
+   "assumptions": [
+    "In organized activity, knowledge of things is held indirectly, through knowledge of the men who know them.",
+    "Ends are fixed outside the productive organization; all internal decisions concern means, differing only in generality."
+   ],
+   "breakdown_regime": "In small or fully routine operations, direct knowledge of things can dominate again, and control is not chiefly selection of men.",
+   "domain": "enterprise organization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's highest leverage decisions are selections among signal sources and submodels; evaluation of sources is therefore the controlling layer of the whole system.",
+    "source_operator": "control_is_judgment_of_men",
+    "telemetry": "Source selection decisions with downstream outcome attribution."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "known_judgment_becomes_wage",
+   "name": "As fast as income can be known in advance to flow from superior judgment, it is imputed to its possessor and becomes a wage of management, no longer profit",
+   "verbatim_quote": "As far and as fast as any portion of income can be known in advance to be connected with the exercise of superior judgment, it will be imputed to the person possessing the unusual powers, and will become a wage (of management), no longer a profit.",
+   "page": "Chapter X, printed p. 309",
+   "latex": "",
+   "assumptions": [
+    "Competitive imputation assigns to every agency all the product value that can be associated with it.",
+    "Management, properly understood, is routine work once the capacity behind it is evaluated."
+   ],
+   "breakdown_regime": "Imputation lags under fluctuating conditions, so in the short run known and unknown elements remain mixed in every actual income.",
+   "domain": "theory of profit",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Once a signal's contribution is measured and stable, the engine books it as a known input with a fixed weight; only the unmeasured remainder counts as open judgment.",
+    "source_operator": "known_judgment_becomes_wage",
+    "telemetry": "Promotion log moving signals from judgment status to fixed weight status, with measurement history."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "profit_from_absolute_unpredictability",
+   "name": "Profit arises from the inherent, absolute unpredictability of things, only so far as even a probability calculation about the results is impossible and meaningless",
+   "verbatim_quote": "Profit arises out of the inherent, absolute unpredictability of things, out of the sheer brute fact that the results of human activity cannot be anticipated and then only in so far as even a probability calculation in regard to them is impossible and meaningless.",
+   "page": "Chapter X, printed p. 311",
+   "latex": "",
+   "assumptions": [
+    "The uncertainty results from an exercise of ultimate responsibility, which cannot be insured, capitalized, or salaried.",
+    "An insurer whose business is reduced to a science takes no risk, because grouping obliterates the individual case."
+   ],
+   "breakdown_regime": "The claim defines pure profit only; every real income also contains imputed elements, and Knight insists the two never appear unmixed.",
+   "domain": "theory of profit",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats its truly unprobabilizable residue as a named category with its own handling, instead of forcing a spurious number onto it.",
+    "source_operator": "profit_from_absolute_unpredictability",
+    "telemetry": "Count and share of outputs carrying unprobabilizable status, reviewed per period."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "judgment_of_judgment_vs_luck",
+   "name": "Profit in a particular case rests on judgment of judgment, and in an individual case there is no way of telling good judgment from good luck",
+   "verbatim_quote": "But it is judgment of judgment, especially one's own judgment, and in an individual case there is no way of telling good judgment from good luck, and a succession of cases sufficient to evaluate the judgment or determine its probable value transforms the profit into a wage.",
+   "page": "Chapter X, printed p. 311",
+   "latex": "",
+   "assumptions": [
+    "A succession of cases sufficient to evaluate the judgment converts the return into an imputable wage.",
+    "The fundamental operation of organized activity is forming an approximate evaluation of the judgment and capacity of the man."
+   ],
+   "breakdown_regime": "Knight offers no escape from the limit; it is the epistemic core of the book and the permanent condition of evaluating any judge.",
+   "domain": "theory of judgment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Evaluation inside the engine is second order by construction, judging judging, so its sample requirements and humility rules are stricter than those for first order forecasts.",
+    "source_operator": "judgment_of_judgment_vs_luck",
+    "telemetry": "Evaluation sample sizes and confidence intervals attached to evaluator verdicts."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "fluctuation_in_progress",
+   "name": "Fluctuation, not progressive change, is the true cause of uncertainty; change that follows a known law gives rise to none",
+   "verbatim_quote": "It is fluctuation after all which is the true cause of the uncertainty, fluctuation in progress.",
+   "page": "Chapter XI, printed p. 315",
+   "latex": "",
+   "assumptions": [
+    "A merely progressive change, uniform or following any known mathematical function of time, can be foreknown as accurately as no change.",
+    "Whether a change counts as fluctuation or progress depends on its period relative to the length of human life and to consolidation horizons."
+   ],
+   "breakdown_regime": "Separating trend from fluctuation in real time is itself an estimate and can be wrong, so the decomposition inherits the uncertainty it tries to remove.",
+   "domain": "progress and uncertainty",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine decomposes every changing input into a law-like trend, discounted in advance, and a fluctuation residue, which is the only part allowed to move confidence.",
+    "source_operator": "fluctuation_in_progress",
+    "telemetry": "Trend versus residue decomposition records for each input series."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "overconfidence_betting_on_oneself",
+   "name": "Men have an irrationally high confidence in their own good fortune, doubly true when their personal prowess is in the reckoning and they are betting on themselves",
+   "verbatim_quote": "most men have an irrationally high confidence in their own good fortune, and that this is doubly true when their personal prowess comes into the reckoning, when they are betting on themselves.",
+   "page": "Chapter XII, printed p. 365",
+   "latex": "",
+   "assumptions": [
+    "The psychology generalizes from lotteries and gambling to business venturers, a self-selected class of the confident and optimistic.",
+    "Competitive bidding adds auction pressure to outbid rivals, and tenacity keeps the committed bidding long after entry."
+   ],
+   "breakdown_regime": "Knight presents this as the probable explanation of an aggregate entrepreneurial loss, argued on a priori grounds; he finds the statistics suggestive but inconclusive.",
+   "domain": "behavioral",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Self-evaluation inside the engine is presumed inflated; internal confidence scores require an external check against recorded outcomes before they are allowed to move any weight.",
+    "source_operator": "overconfidence_betting_on_oneself",
+    "telemetry": "Self-assessed versus measured accuracy gaps per component, tracked over time."
+   },
+   "symbol_and_unit_ledger": {}
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "091ae3a3e6609106-t1",
+   "think": "Knight's book is built as a controlled experiment in theory. He first constructs a perfectly competitive economy under perfect knowledge and shows that in that world distribution is remainderless: every productive service is paid exactly its specific contribution, cost equals value everywhere, and no residual income exists. He then relaxes one assumption at a time. Change by itself, even large progressive change, does not disturb the result, provided the law of the change is known, because competition discounts foreseen change in advance. What breaks the machine is imperfect knowledge of the future. The whole argument therefore turns on a taxonomy of not-knowing, and the taxonomy is the book's real machinery. Probability comes in three types. A priori probability rests on perfectly homogeneous instances differing only in really indeterminate factors, and it carries the certainty of mathematics. Statistical probability rests on empirical classification, on frequencies of association between predicates, and it works because grouping many cases lets errors cancel. Estimates, the third type, rest on no valid classification at all: the business situation is unique, and the decision maker forms an estimate and then, in a second exercise of judgment, estimates the value of his own estimate. This third type is what Knight renames uncertainty, reserving risk for the measurable types. The distinction is not a verbal nicety. A measurable uncertainty can be consolidated: grouped, insured, converted into a fixed cost, and thereby eliminated as a source of residual gain or loss. That is why there can be no reward for bearing measurable risk; anyone can shed it for the administrative cost of insurance. True uncertainty cannot be shed, because its decisive factors sit inside the judging person, undescribable and uncontrollable from outside, so no insurer can classify the instances. What cannot be shed must be borne, and organizing that bearing is what enterprise is. The entrepreneur is the man who guarantees contractual incomes to the owners of productive services, fixed in advance by competitive bidding on anticipations, and keeps the residual. His income is therefore not imputed like wages or rent; it is what is left, and it mixes superior judgment with luck in proportions that no single outcome can reveal. Knight follows the function upward through organized business and finds that control itself dissolves into judgment of men: every manager's real work is selecting the next decider down, and responsibility, traced honestly, lands on whoever made the selection. Ability that becomes known is competed into wages of management, so pure profit survives only where the value of judgment itself remains unmeasured, which is the normal case, because a succession of trials long enough to evaluate judgment usually exceeds the life of the ventures and of the judge. The methods chapter reads like a design catalogue for any system that must act under uncertainty. Consolidation reduces uncertainty by grouping, inside insurance, inside the firm through scale, and inside the corporation through divisible and transferable shares that also diffuse losses. Specialization moves uncertainty to those best fitted to bear it, and Knight is careful to note that a specialist does more than pool: he substitutes better judgment, so the risk itself shrinks, which never happens with a fire or a death. Control of the future and increased power of prediction are the remaining methods, and both are simply the general program of rational conduct, while the choice of less uncertain lines of activity closes the list. Progress adds a second act. Capitalization lets anticipated future income be cashed at once, which magnifies both the incentive to venture and the damage from insider manipulation, and fluctuation, rather than steady progress, is identified as the true source of disturbance, since a change that follows a known law, however large, produces no uncertainty at all. The closing chapters turn the theory on its owners. If entrepreneurs as a class systematically overestimate their prospects, because men overvalue their own luck and doubly overvalue their own prowess, then aggregate pure profit is negative and the class pays for the privilege of bearing uncertainty out of its other earnings. Knight finds the statistics inconclusive but the psychology persuasive. Either way the diagnostic stands: the sign of the residual is an empirical property of the confidence level at which a whole class commits its resources, not a reward mechanically attached to risk. For an engine that must govern itself, that is the deepest lesson in the book, because it converts confidence from a feeling into a policy variable with measurable consequences. The book's limits are plain. It offers no estimating procedure, no way to compute the value of a judgment except by waiting for trials that rarely accumulate, and its psychology is asserted from observation rather than measured. Its categories blur at the edges, as Knight repeatedly concedes. But the blur is honest: he maps exactly where measurement stops, and a system that knows where its measurements stop is strictly stronger than one that assigns numbers everywhere. For a reasoning engine this book supplies the missing type system. It says that a forecast is not one thing but three, that confidence is a separate judgment with its own error, that pooling is the only legitimate way scatter becomes knowledge, that evaluated skill stops being an open question and becomes a fixed input, and that the residual after every measurable thing has been charged is the only honest measure of judgment. It also supplies the failure modes: overconfidence when a system bets on itself, the temptation to price unique situations with class frequencies, and the illusion that a probability computed for a group describes a single case. An engine that internalizes Knight will label every output by its epistemic type, will carry estimate and confidence as separate fields, will refuse to call measured risk an edge, and will audit its own deciding layer as the one uninsurable risk it permanently carries.",
+   "retrocausal_genealogy": "The argument descends from the classical theory of distribution and its failure to explain the entrepreneur's income. Knight takes the static theory of Clark, in which profit appears only through friction during dynamic change, and shows the explanation mistakes change for ignorance: foreseen change yields no profit, so the dynamic theory collapses into a theory of uncertainty. From the German literature, Mangoldt above all, and from the Austrian tradition, he takes the entrepreneur as a distinct functionary and the problem of risks that cannot be shifted by insurance. From Hawley he takes the risk theory of profit, accepting its direction and correcting its kind, since only unmeasurable risk can pay. The probability chapters draw on the logical tradition of Venn and on the theory of classification and homogeneous grouping, the insurance analysis on Willett, and the treatment of management on Marshall's trained instinct and quasi-rent. Knight's synthesis, judgment of judgment as the ultimate scarce capacity, anticipates later work on entrepreneurship, on the firm as an uncertainty bearing device, and on the economics of information, and the book remains the source from which the modern vocabulary of risk versus uncertainty descends.",
+   "theory_of_mind": "Knight's model of the reader is a theorist trained to trust the competitive model and tempted to treat its assumptions as descriptions of the world. He therefore writes as a logician of conduct: first he makes the reader build the perfect machine and watch it distribute everything without remainder, so that the residual, when it appears, is felt as an anomaly demanding exactly one missing ingredient. He assumes the reader believes knowledge is either present or absent, and his central pedagogical act is to replace that binary with degrees and kinds of knowing, each kind carrying different organizational consequences. He also models business men not as calculators but as opinion holders whose confidence, self-estimate, and appetite for venturing are themselves causal variables in the outcome. His rhetoric is concessive and self-limiting: he repeatedly marks where classification blurs, where statistics run out, and where his own conclusions are opinion rather than demonstration. The reader he wants is one who will distrust any theory, including his own, that assigns a precise number where only an estimate exists.",
+   "cross_layer_veto": "Knight's framework vetoes several moves that other layers of a reasoning system are tempted to make. It vetoes pricing a unique situation from a class frequency while calling the result a probability: that output is an estimate and must be labeled and handled as one. It vetoes counting measurable risk as a source of edge, since anything measurable can be shed at administrative cost and therefore carries no residual. It vetoes promoting a signal, a model, or a person on the strength of one success, because a single trial cannot separate judgment from luck. It vetoes separating control from responsibility in the audit trail: whoever selected the decider owns the outcome. And it vetoes self-graded confidence, because the documented direction of self-estimate is inflation, above all when the judge is judging his own prowess. Any layer that proposes these moves is overruled by the Knight layer, which does not itself generate forecasts; it governs what kind of thing every forecast is allowed to claim to be."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for any agent that must act before it can know. Sort every unknown by whether its distribution over repeated cases is knowable; shed or pool everything in that class and book it as a cost; reserve the name of real decision for the residue that is unique, undescribable from outside, and inseparable from the judge. Then organize around the residue: give control only together with responsibility, evaluate judges by long successions of outcomes rather than single results, expect self-estimates to run high, and treat confidence itself as a policy choice whose aggregate consequences can be measured after the fact.",
+ "gsi_mapping": "The Institute takes from Knight its research discipline for judgment itself. The three probability types become a classification standard for every claim the Institute studies or teaches: computed, statistical, or estimate, with the evidence basis stated in each case. The judgment of judgment problem defines a research program on evaluating evaluators, including the trial counts required before ability may be inferred and the conversion of proven ability into fixed, teachable inputs. The overconfidence findings ground instruction on self-assessment and calibration. The consolidation analysis grounds the study of how organizations, from firms to research groups, pool singular exposures into manageable ones. Knight supplies the Institute its core vocabulary and its standard of honesty about what cannot be measured.",
+ "gse_mapping": "The engine takes Knight as its epistemic governor. Every output is typed as a computed probability, a statistical frequency with its reference class and window attached, or an estimate carrying a separate confidence field, and the type governs how the output may be combined, displayed, and acted on. Measurable error sources are converted into fixed charges against a prediction rather than carried as open uncertainty. Signals earn fixed weights only after a succession of outcomes sufficient to separate judgment from luck, and until then they remain open judgments with their trial counts exposed. Aggregate confidence is set as a system level policy and its realized sign is audited, following Knight's finding that a whole class of venturers can lose in aggregate by overestimating itself."
+}

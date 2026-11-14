@@ -1,0 +1,718 @@
+{
+ "book_id": "b8f0fbb70d3e9a88",
+ "source_status": "COMPLETE",
+ "source_note": "Francis X. Diebold (University of Pennsylvania), Forecasting in Economics, Business, Finance and Beyond, short title Forecasting; Edition 2024, version dated Thursday 22 August 2024; copyright 2013-2024 by the author, distributed under CC BY-NC-ND 4.0. The author describes the work as preliminary, incomplete, and evolving, and gives the citation form: Diebold, F.X. (2024), Forecasting, Department of Economics, University of Pennsylvania. The local file is the author distributed PDF (619 pages) held in the 2026-11-12 full library, books-d-models bucket. Full sha256 (gatekeeper scan digest over str(size) plus full PDF bytes): b8f0fbb70d3e9a880f8a31245089ad316ae3e8663a0289d762b35dbcdc257f05; size 13,660,650 bytes; book_id is the first 16 hex characters of that digest. Text quality: clean born digital extraction, 843,457 characters across 17,440 lines (about 118,693 words); prose is fully legible, while some mathematical displays are glyph fragmented in extraction, so verbatim quotes were chosen from clean prose passages inside single pages. No catalog correction needed; the file name's short title matches the author's own citation form. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "pages_total": 619,
+ "pages_read": 619,
+ "primitives": [
+  {
+   "primitive_id": "forecast_object_taxonomy",
+   "name": "Forecasts target one of three objects: an event outcome, an event timing, or a time series",
+   "verbatim_quote": "Event outcome forecasts are relevant to situations in which an event is certain to take place at a given time but the outcome is uncertain.",
+   "page": "Ch. 1, Introduction (printed p. 7); text line ~1285",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The quantity of interest can be classified before any model is chosen",
+    "The forecaster can state the object and the horizon in advance"
+   ],
+   "breakdown_regime": "The taxonomy blurs when the object is a functional of a whole path, such as a maximum over a window, which needs the full path distribution rather than any single category.",
+   "domain": "forecasting foundations"
+  },
+  {
+   "primitive_id": "information_set_conditioning",
+   "name": "Every forecast is conditional on an information set Omega_T, which may be univariate or multivariate and may include judgment",
+   "verbatim_quote": "Any forecast we produce is conditional upon the information used to produce it, whether explicitly or implicitly.",
+   "page": "Ch. 2, sec. 2.1.2 (printed p. 10); text line ~1327",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The information set is fixed and statable at the forecast origin",
+    "Conditioning uses information actually available at time T, not later revised values"
+   ],
+   "breakdown_regime": "Real time data revision and late arriving information violate the fixed information set, and judgmental inputs enter Omega_T informally, so they cannot be audited the same way as data inputs.",
+   "domain": "forecasting foundations"
+  },
+  {
+   "primitive_id": "all_models_false",
+   "name": "All models are false as literal descriptions, so models are judged by forecast performance, and it takes a model to beat a model",
+   "verbatim_quote": "One must never, ever, be so foolish as to be lulled into believing that one's model coincides with the true DGP.",
+   "page": "Ch. 2, sec. 2.7 (printed p. 32); text line ~1221",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Usefulness for prediction is the criterion, not literal truth of the specification",
+    "A rival model exists or can be built to challenge the incumbent"
+   ],
+   "breakdown_regime": "Taken too far it licenses sloppy specification; the book pairs the admission with diagnostics and evaluation discipline rather than treating falsity as an excuse.",
+   "domain": "forecasting philosophy"
+  },
+  {
+   "primitive_id": "forecast_statement_types",
+   "name": "A forecast statement is a point, an interval, or a full predictive density, in increasing order of information content",
+   "verbatim_quote": "More precisely, we must decide if the forecast will be (1) a point forecast, (2) an interval forecast, or (3) a density forecast.",
+   "page": "Ch. 2, sec. 2.2.3 (printed p. 17); text line ~1508",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The consumer of the forecast can use the richer statement forms",
+    "Interval and density statements require a distributional model beyond the point forecast"
+   ],
+   "breakdown_regime": "Density statements inherit every distributional assumption behind them; a wrong density can be worse than an honest point forecast with a wide interval.",
+   "domain": "forecasting foundations"
+  },
+  {
+   "primitive_id": "loss_function_framework",
+   "name": "Forecast quality is measured by a loss function L(e) of the forecast error e = y minus the forecast; quadratic and absolute loss are the leading cases",
+   "verbatim_quote": "The corresponding forecast error, e, is the difference between the realization and the previously-made forecast,",
+   "page": "Ch. 2, sec. 2.4.1 (printed p. 21); text line ~1653",
+   "latex": "e = y - \\hat{y}, \\qquad L(e) = e^2 \\ \\text{(quadratic)}, \\qquad L(e) = |e| \\ \\text{(absolute)}",
+   "symbol_and_unit_ledger": {
+    "e": "forecast error, units of the target variable y",
+    "y": "realized outcome, units of the target",
+    "\\hat{y}": "point forecast, same units as y",
+    "L(e)": "loss; units of y squared under quadratic loss, units of y under absolute loss"
+   },
+   "assumptions": [
+    "Loss depends on the realization only through the error e",
+    "The decision maker's loss is known or can be elicited before forecasting"
+   ],
+   "breakdown_regime": "Real loss is often state dependent or asymmetric in ways a single L(e) misses; the book treats state dependent loss as an extension, not the default.",
+   "domain": "forecast evaluation"
+  },
+  {
+   "primitive_id": "optimal_forecast_functionals",
+   "name": "The optimal point forecast is the functional of the predictive distribution matched to the loss: conditional mean under quadratic loss, conditional median under absolute loss, conditional quantile with level b/(a+b) under linlin loss, conditional mode under direction of change loss",
+   "verbatim_quote": "Under quadratic loss, the optimal forecast is the conditional mean.",
+   "page": "Ch. 2, sec. 2.4.2 (printed p. 27); text line ~1734",
+   "latex": "d = \\frac{b}{a+b}",
+   "symbol_and_unit_ledger": {
+    "d": "optimal quantile level under linlin loss, dimensionless, in (0, 1)",
+    "a, b": "linlin loss slope parameters for the two error signs, loss units per unit of error"
+   },
+   "assumptions": [
+    "The predictive distribution is the forecaster's true conditional distribution",
+    "Loss is exactly quadratic, absolute, or linlin as specified"
+   ],
+   "breakdown_regime": "Under asymmetric loss the optimal forecast is deliberately biased relative to the conditional mean, so unbiasedness tests reject optimal forecasts; publishing the mean under non quadratic loss is suboptimal by construction.",
+   "domain": "forecast evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine must attach a loss to every decision surface before choosing what number to publish: a central projection for squared error decisions, a median for absolute error decisions, and a quantile for threshold decisions. Publishing one functional for all uses is a category error this primitive forbids.",
+    "source_operator": "optimal_forecast_functionals",
+    "telemetry": "the declared loss and decision type attached to each published projection, plus realized errors scored under that same loss"
+   }
+  },
+  {
+   "primitive_id": "unobserved_components_decomposition",
+   "name": "A series is decomposed into trend, seasonal, cycle, and irregular components, additive in levels or in logs",
+   "verbatim_quote": "In many forecasting situations, however, more than one component is needed to capture the dynamics in a series to be forecast – frequently they're all needed.",
+   "page": "Ch. 2, sec. 2.8 (printed p. 35); text line ~9805",
+   "latex": "y_t = T_t + S_t + C_t + \\varepsilon_t",
+   "symbol_and_unit_ledger": {
+    "y_t": "observed series at time t, units of the series",
+    "T_t": "trend component, same units",
+    "S_t": "seasonal component, same units",
+    "C_t": "cyclical component, same units",
+    "\\varepsilon_t": "irregular component, same units"
+   },
+   "assumptions": [
+    "Components add, with multiplicative forms made additive by logging",
+    "Each component can be modeled with its own machinery"
+   ],
+   "breakdown_regime": "The components are unobserved and not uniquely identified without restrictions; different decompositions of the same series can imply different forecasts.",
+   "domain": "time series decomposition"
+  },
+  {
+   "primitive_id": "linear_projection_conditional_mean",
+   "name": "OLS estimates the linear projection P(y_t|x_t) = x_t' beta with beta_hat = (X'X)^{-1} X'y; the projection equals the conditional mean when the conditional expectation is linear, as under joint normality, and under the full ideal conditions OLS is minimum variance unbiased and normally distributed",
+   "verbatim_quote": "Hence to forecast yt for any given value of xt , we can use the fitted line to find the value of yt that corresponds to the given value of xt .",
+   "page": "Ch. 3, sec. 3.4.1 (printed p. 88); text line ~2675",
+   "latex": "P(y_t|x_t) = x_t'\\beta, \\qquad \\hat{\\beta} = (X'X)^{-1}X'y, \\qquad E(y_t|x_t) = \\mu_y + \\Sigma_{yx}\\Sigma_{xx}^{-1}(x_t - \\mu_x)",
+   "symbol_and_unit_ledger": {
+    "x_t": "K-vector of regressors at t, mixed units",
+    "\\beta": "K-vector of projection coefficients, units of y per unit of each regressor",
+    "X": "T by K regressor matrix",
+    "\\Sigma_{yx}, \\Sigma_{xx}": "covariance blocks of the joint distribution of (y, x)",
+    "\\mu_y, \\mu_x": "unconditional means of y and x"
+   },
+   "assumptions": [
+    "For the projection interpretation: finite second moments and a nonsingular X'X",
+    "For the conditional mean interpretation: a linear conditional expectation, for example under joint normality",
+    "For the finite sample FIC results: spherical normal disturbances, exogenous regressors, correct specification"
+   ],
+   "breakdown_regime": "If the conditional expectation is nonlinear, OLS recovers only the best linear approximation to it; under failures of the full ideal conditions the finite sample distribution results fail even though the projection interpretation survives.",
+   "domain": "predictive regression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every matchup evaluation in the engine is a projection problem: a feature vector describing the situation, and an outcome to be predicted. The fitted projection is the disciplined baseline expectation, situational reasoning enters as measured deviations from it, and the projection equals the true conditional expectation only when the relationship is actually linear in the features used, which is a testable claim rather than an assumption.",
+    "source_operator": "linear_projection_conditional_mean",
+    "telemetry": "feature vectors and outcomes at game and play level, with the fitted projection stored beside each realized outcome"
+   }
+  },
+  {
+   "primitive_id": "aic_sic_criteria",
+   "name": "Information criteria AIC and SIC trade fit against parameter count and act as inflated in sample MSE estimates of out of sample MSE",
+   "verbatim_quote": "The AIC penalizes degrees of freedom more heavily than s2 , but it too remains inconsistent; even as the sample size gets large, the AIC selects models that are too large (“overparameterized”). The SIC, which penalizes degrees of freedom most heavily, is consistent.",
+   "page": "Ch. 3, sec. 3.3.6 (printed p. 81); text line ~13358",
+   "latex": "AIC = -2\\ln L + 2K, \\qquad SIC = -2\\ln L + K \\ln T",
+   "symbol_and_unit_ledger": {
+    "L": "maximized likelihood, dimensionless",
+    "K": "number of estimated parameters, count",
+    "T": "sample size, count"
+   },
+   "assumptions": [
+    "Models are compared on the same data and the same likelihood basis",
+    "The penalty is an adequate stand in for out of sample optimism"
+   ],
+   "breakdown_regime": "AIC is inconsistent and overfits in large samples while SIC is consistent but can underfit in finite samples; the book's selection chapter separates consistency from asymptotic efficiency explicitly.",
+   "domain": "model selection"
+  },
+  {
+   "primitive_id": "simulation_density_bootstrap",
+   "name": "Feasible density forecasts by simulation: draw disturbances from a fitted parametric density or by bootstrapping residuals with probability 1/N each, add the conditional mean, and read intervals off the sorted draws",
+   "verbatim_quote": "Now assume that we know nothing about distribution D, except that it has mean 0.",
+   "page": "Ch. 4, sec. 4.1.5 (printed p. 99); text line ~3085",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Residuals approximate the disturbance distribution well",
+    "The conditional mean function is correctly specified and held fixed across draws"
+   ],
+   "breakdown_regime": "The basic algorithm ignores parameter estimation uncertainty and so understates interval width; the residual bootstrap inherits any residual dependence or heteroskedasticity the model failed to capture.",
+   "domain": "density forecasting"
+  },
+  {
+   "primitive_id": "parameter_estimation_uncertainty",
+   "name": "Parameter estimation uncertainty is added to density forecasts by drawing coefficients from N(beta_hat, sigma_hat^2 (X'X)^{-1}); its contribution to forecast MSE vanishes unusually quickly as the sample grows",
+   "verbatim_quote": "Parameter estimation uncertainty is often ignored, as its contribution to overall forecast MSE can be shown to vanish unusually quickly as sample size grows",
+   "page": "Ch. 4, sec. 4.1.6 (printed p. 102); text line ~3122",
+   "latex": "\\tilde{\\beta} \\sim N(\\hat{\\beta}, \\hat{\\sigma}^2 (X'X)^{-1})",
+   "symbol_and_unit_ledger": {
+    "\\tilde{\\beta}": "simulated coefficient draw, units of beta",
+    "\\hat{\\beta}": "OLS coefficient estimate",
+    "\\hat{\\sigma}^2": "estimated disturbance variance, units of y squared",
+    "(X'X)^{-1}": "inverse cross product matrix of the regressors"
+   },
+   "assumptions": [
+    "Asymptotic normality of the estimator is an adequate approximation",
+    "Disturbance uncertainty and parameter uncertainty are simulated independently"
+   ],
+   "breakdown_regime": "In small samples or near unit root dynamics the normal approximation to the estimator's distribution is poor and the quick vanishing result does not hold.",
+   "domain": "density forecasting"
+  },
+  {
+   "primitive_id": "frv_problem",
+   "name": "The FRV problem: an h-step time series forecast needs future regressor values x_{T+h} that are unknown at the forecast origin; the escapes are scenarios, lagged regressors, and deterministic regressors",
+   "verbatim_quote": "We call this the “forecasting-the-right-hand-side-variables (FRV) problem.” It is a problem, but it's not nearly as damaging as you might fear.",
+   "page": "Ch. 5, sec. 5.1 (printed p. 112); text line ~3990",
+   "latex": "E(y_{T+h} | x_{T+h}) = x_{T+h}'\\beta",
+   "symbol_and_unit_ledger": {
+    "x_{T+h}": "regressor vector at the future target date, unknown at time T",
+    "y_{T+h}": "target variable at horizon h",
+    "\\beta": "regression coefficients"
+   },
+   "assumptions": [
+    "The regression is the forecasting model, with parameters treated as known for the purpose of stating the problem",
+    "Future regressors are not deterministic functions of time"
+   ],
+   "breakdown_regime": "Scenario forecasts answer a different, conditional question; pretending assumed regressor paths are known facts understates forecast uncertainty.",
+   "domain": "forecasting practice"
+  },
+  {
+   "primitive_id": "deterministic_trend_models",
+   "name": "Deterministic trends (linear, quadratic, exponential) are forecast by extrapolating the fitted time function, with future noise projected to zero",
+   "verbatim_quote": "If trend is characterized by constant growth at rate β1 , then we can write",
+   "page": "Ch. 5, sec. 5.2.1 (printed p. 114); text line ~4100",
+   "latex": "T_t = \\beta_0 + \\beta_1 \\, TIME_t, \\qquad T_t = \\beta_0 e^{\\beta_1 TIME_t}",
+   "symbol_and_unit_ledger": {
+    "T_t": "trend at time t, units of y",
+    "TIME_t": "time index, periods",
+    "\\beta_0": "intercept, units of y",
+    "\\beta_1": "slope per period in the linear form (units of y per period); growth rate per period in the exponential form"
+   },
+   "assumptions": [
+    "The trend is a deterministic function of time alone",
+    "The trend form does not change over the forecast horizon"
+   ],
+   "breakdown_regime": "Deterministic trends are brittle under structural change and are easily confused with stochastic trends; the distinction is consequential and this edition flags it while deferring stochastic trend treatment.",
+   "domain": "trend modeling"
+  },
+  {
+   "primitive_id": "seasonal_dummy_model",
+   "name": "Deterministic seasonality is modeled with a full set of seasonal dummies whose coefficients are the seasonal factors; a full dummy set requires dropping the separate intercept",
+   "verbatim_quote": "Those different intercepts, the γi 's, are called the seasonal factors; they summarize the seasonal pattern over the year.",
+   "page": "Ch. 5, sec. 5.3 (printed p. 118); text line ~4504",
+   "latex": "S_t = \\sum_{i=1}^{s} \\gamma_i D_{it}",
+   "symbol_and_unit_ledger": {
+    "S_t": "seasonal component at t, units of y",
+    "\\gamma_i": "seasonal factor for season i, units of y",
+    "D_{it}": "dummy, 1 if t falls in season i and 0 otherwise, dimensionless",
+    "s": "number of seasons per year, count"
+   },
+   "assumptions": [
+    "The seasonal pattern is fixed over time",
+    "Seasonality is deterministic rather than stochastic"
+   ],
+   "breakdown_regime": "Evolving seasonal patterns and calendar effects such as moving holidays and trading day variation break the fixed factor assumption.",
+   "domain": "seasonal modeling"
+  },
+  {
+   "primitive_id": "covariance_stationarity",
+   "name": "Covariance stationarity: constant mean, finite variance, and autocovariance depending only on the lag; the autocorrelation rho(tau) = gamma(tau)/gamma(0) summarizes the second order dynamics",
+   "verbatim_quote": "At a minimum we'd like a series' mean and its covariance structure (that is, the covariances between current and past values) to be stable over time, in which case we say that the series is covariance stationary.",
+   "page": "Ch. 6, sec. 6.1 (printed p. 132)",
+   "latex": "\\gamma(\\tau) = E[(y_t - \\mu)(y_{t-\\tau} - \\mu)], \\qquad \\rho(\\tau) = \\frac{\\gamma(\\tau)}{\\gamma(0)}",
+   "symbol_and_unit_ledger": {
+    "\\gamma(\\tau)": "autocovariance at lag tau, units of y squared",
+    "\\rho(\\tau)": "autocorrelation at lag tau, dimensionless, in [-1, 1]",
+    "\\mu": "constant mean, units of y"
+   },
+   "assumptions": [
+    "First two moments exist and are time invariant",
+    "Trend and seasonal components are stripped before cycle modeling"
+   ],
+   "breakdown_regime": "Structural breaks and stochastic trends violate time invariance; sample autocorrelations of nonstationary series are uninformative about cycle dynamics.",
+   "domain": "time series theory"
+  },
+  {
+   "primitive_id": "white_noise_process",
+   "name": "White noise is the unforecastable benchmark: mean zero, constant variance, zero autocorrelation at all nonzero lags; modeling aims to reduce one step errors to white noise, tested with Box-Pierce and Ljung-Box portmanteau statistics",
+   "verbatim_quote": "Such a process, with zero mean, constant variance, and no serial correlation, is called zero-mean white noise, or simply white noise.",
+   "page": "Ch. 6, sec. 6.2.2 (printed p. 139); text line ~5037",
+   "latex": "y_t \\sim WN(0, \\sigma^2), \\qquad Q_{LB} = T(T+2) \\sum_{\\tau=1}^{m} \\frac{\\hat{\\rho}^2(\\tau)}{T - \\tau}",
+   "symbol_and_unit_ledger": {
+    "\\sigma^2": "constant variance, units of y squared",
+    "Q_{LB}": "Ljung-Box statistic, dimensionless, chi squared reference distribution",
+    "\\hat{\\rho}(\\tau)": "sample autocorrelation at lag tau, dimensionless",
+    "T": "sample size, count",
+    "m": "number of lags tested, count"
+   },
+   "assumptions": [
+    "Under the null of white noise, sample autocorrelations are approximately N(0, 1/T)",
+    "Zero autocorrelation is the operative notion of unforecastability in the linear framework"
+   ],
+   "breakdown_regime": "A series can be white noise in levels while dependent in squares (ARCH), so passing a portmanteau test does not prove independence.",
+   "domain": "time series theory"
+  },
+  {
+   "primitive_id": "ar1_yule_walker",
+   "name": "AR(1): y_t = phi y_{t-1} + epsilon_t is stationary iff |phi| < 1, with Yule-Walker recursion gamma(tau) = phi gamma(tau-1), ACF rho(tau) = phi^tau, variance sigma^2/(1-phi^2), and a PACF that cuts off after lag 1",
+   "verbatim_quote": "This is called the Yule-Walker equation. It is a recursive equation; that is, given γ(τ ), for any τ , the Yule-Walker equation immediately tells us how to get γ(τ + 1).",
+   "page": "Ch. 6, sec. 6.4 (printed p. 147); text line ~5740",
+   "latex": "y_t = \\phi y_{t-1} + \\varepsilon_t, \\qquad \\gamma(\\tau) = \\phi \\gamma(\\tau - 1), \\qquad \\rho(\\tau) = \\phi^\\tau, \\qquad Var(y_t) = \\frac{\\sigma^2}{1 - \\phi^2}",
+   "symbol_and_unit_ledger": {
+    "\\phi": "autoregressive coefficient, dimensionless; stationarity requires |phi| < 1",
+    "\\varepsilon_t": "white noise innovation, units of y",
+    "\\sigma^2": "innovation variance, units of y squared"
+   },
+   "assumptions": [
+    "Innovations are white noise",
+    "Stationary initialization, so initial conditions are forgotten"
+   ],
+   "breakdown_regime": "At |phi| = 1 the variance is infinite and the stationary theory collapses (unit root); near unit roots, stationary approximations mislead at long horizons.",
+   "domain": "autoregressive models"
+  },
+  {
+   "primitive_id": "arp_process",
+   "name": "AR(p): Phi(L) y_t = epsilon_t; stationarity requires the roots of Phi(z) = 0 to lie outside the unit circle, the PACF cuts off after lag p, and complex roots generate damped oscillations",
+   "verbatim_quote": "An AR(p) process is covariance stationary if and only if all roots of the autoregressive lag operator polynomial Φ(L) are outside the unit circle.",
+   "page": "Ch. 6, sec. 6.5 (printed p. 151); text line ~5838",
+   "latex": "\\Phi(L) y_t = \\varepsilon_t, \\qquad \\Phi(L) = 1 - \\phi_1 L - \\phi_2 L^2 - \\cdots - \\phi_p L^p",
+   "symbol_and_unit_ledger": {
+    "L": "lag operator, L y_t = y_{t-1}, dimensionless",
+    "\\phi_i": "autoregressive coefficients, dimensionless",
+    "p": "autoregressive order, count"
+   },
+   "assumptions": [
+    "Innovations are white noise",
+    "The lag polynomial is time invariant"
+   ],
+   "breakdown_regime": "Order selection is fragile; overfit autoregressions forecast worse than parsimonious ones, and the root condition is a population statement that estimated roots can violate in samples.",
+   "domain": "autoregressive models"
+  },
+  {
+   "primitive_id": "wolds_chain_rule",
+   "name": "Wold's chain rule: multi step forecasts are built recursively by iterating the one step model forward and treating forecasts as data; for AR(1) the h-step forecast is phi^h y_T and the error variance grows toward the unconditional variance",
+   "verbatim_quote": "Continuing in this way, we can recursively build up forecasts for any and all future periods. Hence the name “chain rule of forecasting.”",
+   "page": "Ch. 6, sec. 6.7.3 (printed p. 155); text line ~6043",
+   "latex": "y_{T+h,T} = \\phi^h y_T, \\qquad \\sigma_h^2 = \\sigma^2 \\sum_{i=0}^{h-1} \\phi^{2i}",
+   "symbol_and_unit_ledger": {
+    "y_{T+h,T}": "h step ahead forecast made at T, units of y",
+    "\\sigma_h^2": "h step forecast error variance, units of y squared",
+    "h": "forecast horizon, periods"
+   },
+   "assumptions": [
+    "The one step model is correctly specified",
+    "Future innovations are projected to their conditional mean of zero"
+   ],
+   "breakdown_regime": "Plug in recursion compounds specification error with horizon; direct multi step estimation is the rival approach when the one step model is suspect.",
+   "domain": "multi step forecasting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Longer range projections are generated by chaining the one step reasoning forward and feeding each projection back as the state for the next step, exactly as the chain rule feeds forecasts in as data. The price of the chain is explicit: uncertainty grows with each link toward the unconditional spread, so confidence decays with horizon by construction, not by mood.",
+    "source_operator": "wolds_chain_rule",
+    "telemetry": "the sequence of intermediate projections and the per horizon error variances realized in past chains"
+   }
+  },
+  {
+   "primitive_id": "wold_representation",
+   "name": "Wold representation theorem: every zero mean covariance stationary process is an infinite moving average of white noise innovations, y_t = sum b_i epsilon_{t-i} with b_0 = 1 and sum b_i^2 finite, and the innovations are the one step forecast errors",
+   "verbatim_quote": "In short, the correct “model” for any covariance stationary series is some infinite distributed lag of white noise, called the Wold representation.",
+   "page": "Ch. 7, sec. 7.1 (printed p. 163); text line ~6530",
+   "latex": "y_t = B(L) \\varepsilon_t = \\sum_{i=0}^{\\infty} b_i \\varepsilon_{t-i}, \\qquad b_0 = 1, \\quad \\sum_{i=0}^{\\infty} b_i^2 < \\infty",
+   "symbol_and_unit_ledger": {
+    "b_i": "moving average weights, dimensionless, with b_0 normalized to 1",
+    "\\varepsilon_t": "innovation, the one step ahead forecast error, units of y",
+    "B(L)": "infinite lag polynomial"
+   },
+   "assumptions": [
+    "Covariance stationarity and zero mean, with deterministic components removed",
+    "The process is purely nondeterministic, with no perfectly predictable component"
+   ],
+   "breakdown_regime": "The representation is an existence result with infinitely many parameters; it cannot be estimated directly and must be approximated, and it holds conditional variance constant, the gap ARCH fills.",
+   "domain": "time series theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any stationary performance series the engine tracks can be written as a weighted sum of its own past surprises, with weights that say how long a shock echoes. The innovation, the part of today that the engine failed to foresee, is the primitive object: modeling means explaining the level, and learning means studying the innovations that remain.",
+    "source_operator": "wold_representation",
+    "telemetry": "game by game and play by play series with their one step ahead forecast errors, the empirical innovations"
+   }
+  },
+  {
+   "primitive_id": "arma_rational_approximation",
+   "name": "ARMA(p,q): Phi(L) y_t = Theta(L) epsilon_t is a parsimonious rational approximation to the infinite Wold lag polynomial; stationarity and invertibility are root conditions, and neither the ACF nor the PACF cuts off",
+   "verbatim_quote": "ARMA models approximate the Wold representation by a ratio of two finite-order lag-operator polynomials, neither of which is degenerate.",
+   "page": "Ch. 7, sec. 7.2 (printed p. 172); text line ~7452",
+   "latex": "\\Phi(L) y_t = \\Theta(L) \\varepsilon_t",
+   "symbol_and_unit_ledger": {
+    "\\Phi(L)": "autoregressive lag polynomial of order p",
+    "\\Theta(L)": "moving average lag polynomial of order q",
+    "\\varepsilon_t": "white noise innovation, units of y"
+   },
+   "assumptions": [
+    "Phi and Theta share no common roots, so no parameters are redundant",
+    "Stationarity: roots of Phi(z) = 0 outside the unit circle; invertibility: roots of Theta(z) = 0 outside the unit circle"
+   ],
+   "breakdown_regime": "Near common roots make parameters weakly identified; ARMA approximates linear dynamics only and says nothing about conditional variance.",
+   "domain": "ARMA models"
+  },
+  {
+   "primitive_id": "multistep_forecast_errors",
+   "name": "For a general linear process the h-step forecast error is an MA(h-1) in the innovations with variance sigma^2 sum_{i=0}^{h-1} b_i^2, and optimal forecast errors cannot be predicted from the time T information set",
+   "verbatim_quote": "It follows that the h-step ahead forecast error is serially correlated; it follows an M A(h − 1) process,",
+   "page": "Ch. 7, sec. 7.3 (printed p. 175); text line ~7672",
+   "latex": "\\sigma_h^2 = \\sigma^2 \\sum_{i=0}^{h-1} b_i^2",
+   "symbol_and_unit_ledger": {
+    "\\sigma_h^2": "h step forecast error variance, units of y squared",
+    "b_i": "Wold moving average weights, dimensionless",
+    "\\sigma^2": "innovation variance, units of y squared"
+   },
+   "assumptions": [
+    "The Wold representation and its weights are known",
+    "Forecasts are conditional means, optimal under quadratic loss"
+   ],
+   "breakdown_regime": "Estimated weights add parameter uncertainty the formula omits; beyond the order of a finite MA process the series is unforecastable and the forecast collapses to the unconditional mean.",
+   "domain": "multi step forecasting"
+  },
+  {
+   "primitive_id": "arch_process",
+   "name": "ARCH(p): conditional variance sigma_t^2 = omega + sum gamma_i epsilon_{t-i}^2 with gamma_i >= 0 and sum gamma_i < 1 generates volatility clustering, and the unconditional variance is omega/(1 - sum gamma_i)",
+   "verbatim_quote": "The ARCH process approximates volatility dynamics in an autoregressive fashion; hence the name autoregressive conditional heteroskedasticity.",
+   "page": "Ch. 8, sec. 8.1.1 (printed p. 184); text line ~8848",
+   "latex": "\\varepsilon_t | \\Omega_{t-1} \\sim N(0, \\sigma_t^2), \\qquad \\sigma_t^2 = \\omega + \\sum_{i=1}^{p} \\gamma_i \\varepsilon_{t-i}^2, \\qquad \\bar{\\sigma}^2 = \\frac{\\omega}{1 - \\sum_i \\gamma_i}",
+   "symbol_and_unit_ledger": {
+    "\\sigma_t^2": "conditional variance at t, units of y squared",
+    "\\omega": "variance intercept, positive, units of y squared",
+    "\\gamma_i": "ARCH weights on past squared innovations, dimensionless and nonnegative",
+    "\\varepsilon_{t-i}^2": "squared past innovations, units of y squared"
+   },
+   "assumptions": [
+    "Conditional normality of standardized innovations in the basic form",
+    "Nonnegativity and sum constraints for a positive process with finite unconditional variance"
+   ],
+   "breakdown_regime": "Plain ARCH needs many lags to capture persistent volatility, which is the gap GARCH closes; Gaussian ARCH understates tail risk relative to fat tailed conditional densities.",
+   "domain": "volatility modeling"
+  },
+  {
+   "primitive_id": "garch_process",
+   "name": "GARCH(p,q): sigma_t^2 = omega + alpha(L) epsilon^2 + beta(L) sigma^2 is to ARCH as ARMA is to AR, a restricted infinite ARCH whose multi step variance forecasts mean revert to omega/(1 - alpha(1) - beta(1)) at rate alpha(1) + beta(1)",
+   "verbatim_quote": "GARCH is to ARCH (for conditional variance dynamics) as ARMA is to AR (for conditional mean dynamics).",
+   "page": "Ch. 8, sec. 8.1.2 (printed p. 188); text line ~8875",
+   "latex": "\\sigma_t^2 = \\omega + \\sum_{i=1}^{q} \\alpha_i \\varepsilon_{t-i}^2 + \\sum_{j=1}^{p} \\beta_j \\sigma_{t-j}^2",
+   "symbol_and_unit_ledger": {
+    "\\alpha_i": "weights on past squared innovations, dimensionless and nonnegative",
+    "\\beta_j": "weights on past conditional variances, dimensionless and nonnegative",
+    "\\omega": "variance intercept, positive, units of y squared",
+    "alpha(1) + beta(1)": "variance persistence, dimensionless; below 1 required for a finite unconditional variance"
+   },
+   "assumptions": [
+    "Coefficient nonnegativity and persistence below one",
+    "Squared innovations are a noisy but unbiased signal of variance, since epsilon_t^2 itself has an ARMA representation"
+   ],
+   "breakdown_regime": "Symmetric GARCH misses leverage and sign effects, which TGARCH and EGARCH address; persistence near one makes variance forecasts revert so slowly that unconditional statements mislead.",
+   "domain": "volatility modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Uncertainty is a state variable with its own dynamics, not a fixed band. The engine carries a conditional variance for each projection stream, updated by realized squared surprises with GARCH weights, so intervals widen after volatile stretches and narrow after calm ones, and multi period uncertainty mean reverts instead of exploding or freezing.",
+    "source_operator": "garch_process",
+    "telemetry": "the archive of realized projection errors by stream, squared and fed through the recursion each period"
+   }
+  },
+  {
+   "primitive_id": "assembled_components_model",
+   "name": "The assembled regression model combines a deterministic trend and seasonal dummies with autoregressive disturbances (or lagged dependent variables); forecasts add the known deterministic parts to the chained forecast of the disturbance",
+   "verbatim_quote": "The only twist concerns the cyclical behavior that may be lurking in the disturbance term, future values of which don't necessarily project to zero, because the disturbance is no longer necessarily white noise.",
+   "page": "Ch. 9, sec. 9.1 (printed p. 206); text line ~9869",
+   "latex": "y_t = T_t(\\theta) + \\sum_i \\gamma_i D_{it} + \\varepsilon_t, \\qquad \\Phi(L) \\varepsilon_t = v_t \\sim WN(0, \\sigma^2)",
+   "symbol_and_unit_ledger": {
+    "T_t(\\theta)": "deterministic trend function with parameter vector theta, units of y",
+    "D_{it}": "seasonal dummies, dimensionless",
+    "\\varepsilon_t": "autoregressive disturbance, units of y",
+    "v_t": "white noise innovation of the disturbance process, units of y"
+   },
+   "assumptions": [
+    "Deterministic components are known functions of time at the forecast date",
+    "The disturbance dynamics are captured by the fitted autoregression"
+   ],
+   "breakdown_regime": "Misspecifying which components are present, or treating a stochastic trend as deterministic, corrupts every part of the assembled forecast at once.",
+   "domain": "model assembly"
+  },
+  {
+   "primitive_id": "unforecastability_principle",
+   "name": "The unforecastability principle and the properties of optimal forecasts: errors must be unforecastable from the forecast's own information set, one step errors are white noise, h-step errors are at most MA(h-1), and error variances grow with horizon toward the unconditional variance",
+   "verbatim_quote": "The key property of optimal forecast errors, from which all others follow, (including those cataloged below), is that they should be unforecastable on the basis of information available at the time the forecast was made.",
+   "page": "Ch. 10, sec. 10.1.1 (printed p. 223); text line ~10235",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Optimality is relative to the stated loss and the stated information set",
+    "The evaluation sample is generated by the same process as the forecast sample"
+   ],
+   "breakdown_regime": "The properties are necessary, not sufficient: unforecastable errors do not prove the information was used well, only that the checks applied found no leftover pattern.",
+   "domain": "forecast evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's standing self veto. Any detectable pattern left in the engine's own forecast errors, correlation with information available at forecast time or serial correlation beyond the horizon allowance, is proof of unused signal and blocks promotion of the model that produced it until the leftover is explained or absorbed.",
+    "source_operator": "unforecastability_principle",
+    "telemetry": "the full archive of engine forecasts paired with realizations and the information timestamps attached to each forecast"
+   }
+  },
+  {
+   "primitive_id": "mincer_zarnowitz",
+   "name": "Mincer-Zarnowitz regression: regress the realization on an intercept and the forecast, y_{t+h} = beta_0 + beta_1 y_{t+h,t} + u_t; forecast optimality requires (beta_0, beta_1) = (0, 1)",
+   "verbatim_quote": "We can regress the error on an intercept and the forecast and test (0, 0), or we can regress the realization on an intercept and the forecast and test (0, 1).",
+   "page": "Ch. 10, sec. 10.1.5 (printed p. 228); text line ~10355",
+   "latex": "y_{t+h} = \\beta_0 + \\beta_1 y_{t+h,t} + u_t, \\qquad H_0: (\\beta_0, \\beta_1) = (0, 1)",
+   "symbol_and_unit_ledger": {
+    "y_{t+h,t}": "forecast of y_{t+h} made at t, units of y",
+    "\\beta_0": "intercept, units of y; a nonzero value means bias",
+    "\\beta_1": "slope; below one means forecasts are too volatile, above one too timid",
+    "u_t": "regression disturbance, units of y"
+   },
+   "assumptions": [
+    "The joint test is run under the loss for which optimality is claimed, quadratic in the basic form",
+    "Standard errors account for the serial correlation of overlapping multi step errors"
+   ],
+   "breakdown_regime": "Under asymmetric loss an optimal forecast fails the (0, 1) test by design; rejection diagnoses inefficiency relative to the information used, not necessarily a bad forecast.",
+   "domain": "forecast evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every published projection stream gets a standing Mincer-Zarnowitz audit: realizations regressed on projections, intercept and slope tested against (0, 1). A stream that fails is recalibrated or demoted by rule, and the coefficients themselves say how: the intercept is the bias correction and the slope is the volatility correction.",
+    "source_operator": "mincer_zarnowitz",
+    "telemetry": "paired projections and realizations per stream, rolling over evaluation windows"
+   }
+  },
+  {
+   "primitive_id": "mse_bias_variance",
+   "name": "MSE decomposes as error variance plus squared mean error, MSE = sigma_e^2 + mu_e^2, separating a forecast's bias from its dispersion",
+   "verbatim_quote": "MSE can be decomposed into bias and variance components, reflecting the tradeoff between bias and variance forecast accuracy under quadratic loss.",
+   "page": "Ch. 10, sec. 10.2.1 (printed p. 230); text line ~10452",
+   "latex": "MSE = \\sigma_e^2 + \\mu_e^2",
+   "symbol_and_unit_ledger": {
+    "MSE": "mean squared forecast error, units of y squared",
+    "\\sigma_e^2": "variance of the forecast errors, units of y squared",
+    "\\mu_e": "mean forecast error (bias), units of y"
+   },
+   "assumptions": [
+    "Errors are measured against realizations on a common sample",
+    "Quadratic loss is the accuracy criterion"
+   ],
+   "breakdown_regime": "MSE rankings need not agree with rankings under absolute or asymmetric loss; the decomposition is exact for sample moments but cannot say whether an observed bias was optimal under the true loss.",
+   "domain": "forecast evaluation"
+  },
+  {
+   "primitive_id": "diebold_mariano",
+   "name": "Diebold-Mariano test: compare two forecasts through their loss differential d_{12,t} = L(e_{1t}) - L(e_{2t}); with the differential covariance stationary, DM = d_bar / sigma_hat(d_bar) is asymptotically standard normal using HAC standard errors",
+   "verbatim_quote": "The Diebold-Mariano test answers that question, allowing one to assess the significance of apparent predictive superiority.",
+   "page": "Ch. 10, sec. 10.2.3 (printed p. 240); text line ~10776",
+   "latex": "d_{12,t} = L(e_{1t}) - L(e_{2t}), \\qquad DM_{12} = \\frac{\\bar{d}_{12}}{\\hat{\\sigma}(\\bar{d}_{12})} \\sim N(0, 1)",
+   "symbol_and_unit_ledger": {
+    "d_{12,t}": "loss differential at t, loss units",
+    "\\bar{d}_{12}": "mean loss differential over the evaluation sample, loss units",
+    "\\hat{\\sigma}(\\bar{d}_{12})": "HAC standard error of the mean differential, loss units"
+   },
+   "assumptions": [
+    "The loss differential is covariance stationary (Assumption DM)",
+    "The two forecasts are compared on identical targets, horizons, and samples"
+   ],
+   "breakdown_regime": "Nested model comparisons break the standard asymptotics, small samples distort size, and the test compares expected loss only, not conditional performance, which the Giacomini-White extension covers.",
+   "domain": "forecast evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Model against model and model against benchmark are settled by loss differentials with serial correlation robust errors, never by headline win rates or raw average margins. A challenger earns promotion only when its mean loss differential is negative and statistically distinguishable from zero on identical targets and horizons.",
+    "source_operator": "diebold_mariano",
+    "telemetry": "paired per event loss series for every competing model and benchmark, with horizons and timestamps aligned"
+   }
+  },
+  {
+   "primitive_id": "christoffersen_coverage",
+   "name": "Interval calibration in the Christoffersen framework: a correctly conditionally calibrated (1 - alpha) interval has a hit sequence I_t that is iid Bernoulli(1 - alpha), testable for both coverage level and independence",
+   "verbatim_quote": "Note well the two-part characterization. The hit series must have the correct mean, (1−α), which corresponds to correct unconditional calibration.",
+   "page": "Ch. 11, sec. 11.1.2 (printed p. 256); text line ~11243",
+   "latex": "I_t = \\mathbf{1}\\{y_t \\in [\\ell_t, u_t]\\}, \\qquad I_t \\sim iid\\ Bernoulli(1 - \\alpha)",
+   "symbol_and_unit_ledger": {
+    "I_t": "hit indicator, 1 if the realization falls inside the interval, dimensionless",
+    "\\alpha": "nominal miss probability, dimensionless",
+    "[\\ell_t, u_t]": "forecast interval endpoints, units of y"
+   },
+   "assumptions": [
+    "The interval is a genuine conditional (1 - alpha) statement each period",
+    "Hits are scored against realizations without revision"
+   ],
+   "breakdown_regime": "Correct unconditional coverage can hide clustering of misses; the independence half of the test is what catches intervals that fail exactly when conditions change.",
+   "domain": "interval evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any interval the engine publishes is audited as a hit sequence, not by its width or its intentions: the realized hit rate must match the nominal level and the hits must arrive independently. Consecutive misses are treated as a calibration failure signal in their own right, the same structure as the source test.",
+    "source_operator": "christoffersen_coverage",
+    "telemetry": "issued intervals with timestamps and their realized hit indicators, per stream"
+   }
+  },
+  {
+   "primitive_id": "pit_density_evaluation",
+   "name": "Probability integral transform: z_t = P_t(y_t); if the issued density equals the true density the PIT values are iid uniform on (0, 1), diagnosed with histograms and correlograms and reused as a recalibration device",
+   "verbatim_quote": "Note, in particular, that if pt (yt ) = ft (yt ) , then qt (zt ) is simply the U (0, 1) density.",
+   "page": "Ch. 11, sec. 11.2.1 (printed p. 261); text line ~11323",
+   "latex": "z_t = P_t(y_t) = \\int_{-\\infty}^{y_t} p_t(u)\\, du, \\qquad z_t \\sim iid\\ U(0, 1) \\ \\text{when } p_t = f_t",
+   "symbol_and_unit_ledger": {
+    "z_t": "probability integral transform of the realization, dimensionless, in (0, 1)",
+    "P_t": "issued predictive cumulative distribution function",
+    "p_t": "issued predictive density",
+    "f_t": "true conditional density"
+   },
+   "assumptions": [
+    "The predictive distribution is continuous, so the transform is exact",
+    "Multi step PIT values are split into horizon specific sub series, each iid under correctness"
+   ],
+   "breakdown_regime": "Uniformity is necessary, not sufficient, for a good density; discrete outcomes need a randomized PIT, and recalibration maps estimated on short samples can overfit the evaluation window.",
+   "domain": "density evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Density outputs pass a PIT gate before promotion: transform every realization through the density that was issued for it, and the resulting values must look uniform and independent. The same machinery recalibrates: the empirical PIT distribution becomes the correction map applied to the next density, so calibration is a maintained process rather than a one time check.",
+    "source_operator": "pit_density_evaluation",
+    "telemetry": "issued predictive densities archived per event with their realizations, sufficient to recompute every PIT value"
+   }
+  },
+  {
+   "primitive_id": "forecast_encompassing",
+   "name": "Forecast encompassing: in the combination regression y_{t+h} = beta_a y^a + beta_b y^b + error, (beta_a, beta_b) = (1, 0) means forecast a encompasses forecast b; combination is a pragmatic short run substitute for pooling the underlying information sets",
+   "verbatim_quote": "If one forecast incorporates all the relevant information, nothing can be gained by combining forecasts.",
+   "page": "Ch. 12, sec. 12.1 (printed p. 277); text line ~11636",
+   "latex": "y_{t+h} = \\beta_a y^a_{t+h,t} + \\beta_b y^b_{t+h,t} + \\varepsilon_t, \\qquad (\\beta_a, \\beta_b) = (1, 0)",
+   "symbol_and_unit_ledger": {
+    "y^a_{t+h,t}, y^b_{t+h,t}": "the two rival forecasts of the same target, units of y",
+    "\\beta_a, \\beta_b": "encompassing regression weights, dimensionless"
+   },
+   "assumptions": [
+    "Both forecasts target the same variable and the same horizon",
+    "The regression is estimated on a genuine out of sample forecast record"
+   ],
+   "breakdown_regime": "Encompassing is sample dependent; a forecast encompassed in one regime can carry unique information in another, which motivates time varying combination.",
+   "domain": "forecast combination"
+  },
+  {
+   "primitive_id": "bates_granger_weights",
+   "name": "Bates-Granger combination weights minimize the combined error variance subject to weights summing to one, lambda* = (sigma_b^2 - sigma_ab)/(sigma_a^2 + sigma_b^2 - 2 sigma_ab), in general lambda* = (iota' Sigma^{-1} iota)^{-1} Sigma^{-1} iota, and the population combined variance is no larger than the best component's",
+   "verbatim_quote": "In general, the forecast with the smaller error variance receives the higher weight, with the precise size of the weight depending on the disparity between variances.",
+   "page": "Ch. 12, sec. 12.2 (printed p. 280); text line ~11733",
+   "latex": "\\lambda^* = \\frac{\\sigma_b^2 - \\sigma_{ab}}{\\sigma_a^2 + \\sigma_b^2 - 2\\sigma_{ab}}, \\qquad \\boldsymbol{\\lambda}^* = (\\iota' \\Sigma^{-1} \\iota)^{-1} \\Sigma^{-1} \\iota",
+   "symbol_and_unit_ledger": {
+    "\\lambda^*": "optimal weight on the first forecast, dimensionless",
+    "\\sigma_a^2, \\sigma_b^2": "component forecast error variances, units of y squared",
+    "\\sigma_{ab}": "component forecast error covariance, units of y squared",
+    "\\Sigma": "forecast error covariance matrix",
+    "\\iota": "vector of ones, dimensionless"
+   },
+   "assumptions": [
+    "Component forecasts are unbiased, or bias corrected through a combination regression intercept",
+    "The error covariance matrix is known or well estimated"
+   ],
+   "breakdown_regime": "Estimated weights carry sampling variance that can erase the population gain, the equal weights puzzle: equal weights are slightly biased but have no estimation variance, so the book recommends shrinking combining weights toward equality.",
+   "domain": "forecast combination",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Ensembles in the engine are weighted from the measured error covariance of their members, not from reputation or recency, and the weights are shrunk toward the simple average by an amount that reflects how noisy the covariance estimate is. Diversification value is computed, not asserted: a member earns weight only by lowering the combined error variance.",
+    "source_operator": "bates_granger_weights",
+    "telemetry": "the joint error history of all ensemble members on common targets, from which Sigma is estimated each cycle"
+   }
+  },
+  {
+   "primitive_id": "penalized_ridge_lasso",
+   "name": "Penalized estimation: beta_hat_PEN = argmin [SSR + lambda sum |beta_i|^q]; q = 2 is ridge with beta_hat_ridge = (X'X + lambda I)^{-1} X'y, q = 1 is the lasso, which shrinks and selects, and q toward 0 approaches subset selection",
+   "verbatim_quote": "Concave penalty functions non-differentiable at the origin produce selection. Smooth convex penalties produce shrinkage.",
+   "page": "Ch. 15, sec. 15.2 (printed p. 326); text line ~13530",
+   "latex": "\\hat{\\beta}^{PEN} = \\arg\\min_{\\beta} \\left[ SSR + \\lambda \\sum_i |\\beta_i|^q \\right], \\qquad \\hat{\\beta}^{ridge} = (X'X + \\lambda I)^{-1} X'y",
+   "symbol_and_unit_ledger": {
+    "SSR": "sum of squared residuals, units of y squared",
+    "\\lambda": "penalty strength, tuning parameter",
+    "q": "penalty exponent: 2 for ridge, 1 for lasso, toward 0 for subset selection",
+    "I": "identity matrix"
+   },
+   "assumptions": [
+    "Predictors are scaled so the penalty treats coefficients comparably",
+    "The penalty level is chosen by an out of sample criterion such as cross validation"
+   ],
+   "breakdown_regime": "Lasso selection is unstable under strong collinearity, with correlated predictors picked almost arbitrarily; elastic net and adaptive lasso are the book's remedies, and post selection inference is not automatic.",
+   "domain": "regularization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The candidate signal library is far larger than any sample can support, so admission runs through penalization: lasso style sparsity decides which signals enter at all, ridge style shrinkage keeps the weights of correlated admitted signals stable, and principal component distillation compresses redundant families. The penalty level is set by out of sample validation, never by in sample fit.",
+    "source_operator": "penalized_ridge_lasso",
+    "telemetry": "the full candidate feature matrix with outcome labels and the validation folds used to set lambda"
+   }
+  },
+  {
+   "primitive_id": "var_cholesky_irf",
+   "name": "VAR impulse responses: a VAR(p) has a moving average form y_t = sum Phi^i epsilon_{t-i}; orthogonalized responses use epsilon_t = P v_t with P the Cholesky factor of the error covariance, so the causal ordering matters, and responses are read off {P, Phi P, Phi^2 P, ...}",
+   "verbatim_quote": "This is crucial, because it lets us perform the experiment of interest – shocking one variable in isolation of the others, which we can do if the innovations are uncorrelated but can't do if they're correlated, as in the original unnormalized representation.",
+   "page": "Ch. 16, sec. 16.3.2 (printed p. 354); text line ~14209",
+   "latex": "y_t = \\sum_{i=0}^{\\infty} \\Phi^i \\varepsilon_{t-i}, \\qquad \\varepsilon_t = P v_t, \\qquad P P' = \\Sigma",
+   "symbol_and_unit_ledger": {
+    "\\Phi": "VAR coefficient matrix in companion (matrix power) form",
+    "P": "lower triangular Cholesky factor of the error covariance matrix Sigma",
+    "v_t": "orthogonalized structural shocks, unit variance",
+    "\\varepsilon_t": "reduced form innovations"
+   },
+   "assumptions": [
+    "The VAR is covariance stationary, so the moving average form converges",
+    "The Cholesky ordering encodes the assumed contemporaneous causal structure"
+   ],
+   "breakdown_regime": "Different orderings give different impulse responses from the same data; reduced form responses without an identification story are descriptions rather than causal effects, and Granger causality inside the system is predictive content, not structural causation.",
+   "domain": "multivariate time series"
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "b8f0fbb70d3e9a88-t1",
+   "think": "This book is a complete operating system for prediction under uncertainty, built for economics, business, and finance but written at a level of generality that makes its machinery portable. Its architecture is a pipeline. First it fixes the object: a forecast is always of something specific, an event outcome, an event timing, or a time series, and it is always conditional on an information set that the forecaster must be able to state. Then it fixes the statement form: point, interval, or density, in increasing order of information and of modeling commitment. Then it fixes the criterion: a loss function over forecast errors, from which the optimal forecast falls out as a functional of the predictive distribution. Only after those three decisions does the book build models, and the models are assembled from components, trend, seasonality, cycle, and noise, each with its own machinery. Finally it closes the loop with evaluation, combination, selection, and multivariate extension. The order matters. Most failed forecasting practice fails at the first three steps, not at estimation: the object is vague, the statement form is richer than the model can support, or the number published is the conditional mean while the decision actually carries asymmetric loss, in which case the optimal forecast is a quantile and deliberate bias is correct. The regression core is stated with unusual honesty. Ordinary least squares is presented three ways at once: as the estimator that is minimum variance unbiased and normal under the full ideal conditions, as the estimator of a linear projection that survives when those conditions fail, and, through the equivalence of projection and conditional expectation under linear conditional means, as the conditional mean itself in the Gaussian case. That triple framing tells the user exactly what is lost at each level of assumption failure, which is the difference between a tool and a superstition. The same honesty runs through the treatment of uncertainty. Density forecasts are built by simulation, disturbances are drawn, and then a second, separate layer of parameter estimation uncertainty is added by drawing coefficients from their asymptotic distribution, with the notable result that this second layer's contribution to forecast error variance dies out faster than the usual parametric intuition suggests. The book also names the forecasting the right hand side variables problem without flinching: a conditional model cannot forecast until someone supplies the future values of its own inputs, and the honest escapes are scenarios, lag structures that move the needed inputs into the observed past, or deterministic regressors. The time series core is the classical inheritance rebuilt from Wold's theorem. Any covariance stationary series is an infinite moving average of its own one step forecast errors, so the innovation is the atomic unit of the whole theory. ARMA models are rational approximations to that infinite object, chosen for parsimony. Multi step forecasts are produced by the chain rule, feeding forecasts back as data, and the error accounting is exact: the h step error is a moving average of order h minus one in the innovations, its variance accumulates the squared Wold weights, and it converges to the unconditional variance as the horizon grows, which is the formal content of the claim that long horizon forecasts revert to the mean. The conditional variance is then given its own dynamics through ARCH and GARCH, completing the second moment story: the level follows Wold, the variance follows a recursion on past squared innovations, and squared innovations themselves are treated as noisy measurements of the latent variance, an idea with obvious reach beyond this book. The evaluation chapters are the part a reasoning engine should read as law. Optimal forecasts have testable properties: errors unforecastable from the information set, one step errors white, multi step errors no more than MA(h minus 1), Mincer-Zarnowitz coefficients of zero and one. Accuracy is decomposed, not just measured: mean squared error is error variance plus squared bias, so a model can be diagnosed rather than merely ranked. Competing forecasts are compared with the Diebold-Mariano test on loss differentials, intervals are audited through hit sequences that must be iid Bernoulli at the nominal rate, and densities are audited through probability integral transforms that must be iid uniform, with the transform doubling as a recalibration device. Combination is treated as information economics: encompassing asks whether one forecast already contains another's information, Bates-Granger weights fall out of the error covariance matrix, and the equal weights puzzle, that estimated optimal weights often lose to a simple average, is faced directly and answered with shrinkage toward equality. Selection and shrinkage close the single model story: information criteria are separated into consistent and efficient families, and penalized estimation unifies subset selection, ridge, and the lasso in one objective. What this changes for a reasoning engine is the standard of proof at every stage. A projection is a claim about a conditional expectation and inherits the projection caveat. A published interval is a claim about a hit process and can be audited as one. A density is a claim that survives or fails a uniformity test. An ensemble is a claim about an error covariance matrix. Where the book breaks is equally instructive: it is a linear, Gaussian centered edifice. Structural change is acknowledged as a universal consideration, but the machinery mostly assumes stable parameters. The full ideal conditions are a benchmark, not a description. Density evaluation assumes continuity. The multivariate chapter stops at reduced form VARs with Cholesky identification whose ordering sensitivity is stated but not solved. A reasoning engine that adopts this book should adopt its evaluation discipline wholesale and its model forms as defaults to be beaten, which is, in the book's own phrase, exactly the status it claims for every model.",
+   "retrocausal_genealogy": "The lineage runs from Wold's 1938 decomposition theorem and the Yule-Walker equations of the 1920s, through Box and Jenkins, who turned the Wold representation into the ARIMA modeling cycle in 1970, and Bates and Granger, who showed in 1969 that combining forecasts beats choosing among them. Mincer and Zarnowitz supplied the optimality regression in 1969. Engle's ARCH in 1982 and Bollerslev's GARCH in 1986 gave the conditional variance its own time series model. Diebold and Mariano's 1995 test made forecast comparison a formal hypothesis test, Christoffersen's 1998 work did the same for interval calibration, and the 1998 density evaluation work of Diebold, Gunther, and Tay completed the set with the probability integral transform. Ridge and lasso shrinkage arrived from the statistics of the 1970s and 1990s. The book is the integration point of that century of work, written by one of its contributors.",
+   "theory_of_mind": "Diebold writes for a reader he models as a smart practitioner who will actually be scored. His theory of the domain is that forecasting failure is usually a failure of setup rather than of cleverness: the wrong object, an unstated information set, a loss function nobody chose, a model judged by truth instead of by purpose. He believes the reader over trusts point forecasts, so he keeps rebuilding the same ideas at three levels of statement, point, interval, and density, until the richer forms feel native. He also believes the reader fears admitting that all models are false, so he pairs that admission with its constructive twin, it takes a model to beat a model, making criticism an engineering activity. His pedagogy is cumulative and slightly austere: every chapter's machinery is load bearing for the evaluation chapters at the end, because in his model of the world a forecast that cannot be audited should not be issued.",
+   "cross_layer_veto": "Several results in this book act as vetoes on any layered prediction system built on top of it. The unforecastability principle vetoes promotion: structure left in a model's own errors is proof of unused information, whatever the model's headline score. The loss functional results veto format decisions made downstream: if the loss attached to a decision is asymmetric, a layer that publishes the conditional mean is wrong by construction, and no upstream accuracy can repair it. The FRV problem vetoes any conditional projection whose future inputs are silently assumed rather than scenario priced. The equal weights puzzle vetoes confident ensemble weighting built on short error histories. And the coverage and PIT results veto the release of intervals and densities that have not passed their audits, regardless of how good the point forecasts underneath them look."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for any discipline that must act on predictions. State the object before modeling it. State what you knew and when. Choose the form of the claim, a point, a range, or a distribution, and do not claim more than the model supports. Attach the loss before optimizing, because the loss decides which summary of the future is the right one. Build from components. Audit the errors, not the intentions. Combine rival views by their measured error structure, shrink confident weights toward humble ones, and treat every model as false but improvable. The domain is incidental; the discipline is the content.",
+ "gsi_mapping": "For the Galaxy Sports Institute this book is curriculum and method at once. It defines the research standard for any predictive claim the institute studies: a stated information set, a stated loss, an evaluation design with optimality regressions, loss differential tests, and calibration audits, and a combination protocol that shrinks toward equal weights when error histories are short. Its component decomposition, Wold representation, and conditional variance machinery give the institute a shared technical language for time series work across sports and beyond, and its provenance practice, tracing each test to its originators, models the citation standard the institute expects in its own publications and teaching.",
+ "gse_mapping": "For the Galaxy Sports Edge engine this book supplies the evaluation constitution. Projections are issued as functionals matched to declared losses, intervals and densities are released only after hit sequence and PIT audits pass, rival models are promoted or demoted by Diebold-Mariano comparisons on identical targets, ensembles are weighted from measured error covariances with shrinkage toward the simple average, and any structure left in the engine's own forecast errors vetoes the producing model. The chain rule sets how multi period projections are built and how their uncertainty must grow, and the FRV problem marks every place a projection quietly depends on future inputs that must be scenario handled instead."
+}
