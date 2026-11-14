@@ -45,7 +45,7 @@ Execute the connected pipeline via `python scripts/ops/gse_connected_game_workfl
 
 ### Stage 0 — Roster, Transaction & Contamination Gate (`stage0_receipt_sha256`)
 - Runs `scripts/ops/enforce_stage0_roster_and_board_allowlist.py` (`build_stage0_gate_receipt` + `assert_zero_roster_contamination`).
-- Builds the 32-team dynamic active allowlist strictly from `data/nflverse/rosters_2026.csv`, `data/nflverse/injuries_2026.csv`, `data/nflverse/play_by_play_2026.parquet`, `data/engine/week9_live_roster_transactions_and_starters_2026.json`, and the live DraftKings board.
+- Builds the 32-team dynamic active allowlist strictly from `data/nflverse/rosters_2026.csv`, `data/nflverse/injuries_2026.csv`, `data/nflverse/play_by_play_2026.parquet`, `data/nflverse/week9_live_roster_transactions_and_starters_2026.json`, and the live DraftKings board.
 - Hard-blocks traded, IR, retired, or off-roster hallucinations (e.g., `Tank Bigsby`, `Isaiah Likely`, `Tyler Huntley`, `Lamar Jackson` when `Out`) by raising `Stage0RosterContaminationError` (`RuntimeError`).
 - Verifies true per-player 2026 `player_gp` (never dividing injured/returning players by team GP).
 
@@ -60,8 +60,8 @@ Execute the connected pipeline via `python scripts/ops/gse_connected_game_workfl
   - `packages/mcp-equations-server/src/mcp-cognitive-router.ts`: Evaluates all `1,666` executable equation modules (`buildContextMask` 288-bit mask $\to$ `stageC` Spectral Cluster Orthogonalization $\to$ `stageD` Cross-Equation Jacobian Coupling & Positive-Part James-Stein Shrinkage with $|\Delta\text{log-odds}| \le 0.35$).
   - `packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts`: Executes `22/22` situational streams (`0` skipped) and `77` zero-orphan situational modules (`51` catalog signals).
   - `packages/prediction-engine/src/nfl/x-situational-80-rules.ts`: Evaluates all `80/80` anti-misleading-stats situational rules.
-  - `packages/prediction-engine/src/equations/index.ts`: Runs the `213` Equation Engine across all active athletes.
-  - `packages/prediction-engine/src/models/wireable-dispatch.ts`: Audits `173` wireable modules and `196` registered models.
+  - `packages/mcp-equations-server/src/thousand-equation-registry.ts`: Runs the executable equation registry across all active athletes.
+  - `packages/prediction-engine/src/wireable-dispatch.ts`: Audits `173` wireable modules and `196` registered models.
 
 ### Stage 2 — Full-Game Snap-by-Snap JEV + 10,000-World Sinkhorn Coach-Mind PBP Simulation (`stage2_receipt_sha256`)
 - Chains `parent_stage1b_receipt_sha256`.

@@ -71,14 +71,21 @@ const NON_DESCRIPTIVE_DOC_PREFIXES: ReadonlyArray<readonly [string, string]> = [
   ["docs/ops/CLAUDE_DECISIONS_20260902.md", "dated decision log; quotes the schedule as it was on 2026-09-02"],
   ["docs/ops/cost-github-hf.md", "dated 2026-09-29 cost measurement; quotes schedules as they were then"],
   ["docs/data-sources/research/", "dated research-inbox artifacts (per docs/INDEX.md every entry lives under a dated directory); the scripts they name are records of their date, not present-tense repo scripts"],
+  ["data/corpus/", "ingested third-party artifacts (scraped IG reports, inbox drops). They are captured evidence, not repo documentation; rewriting them would falsify the record"],
+  [".agents/skills/", "generated mirror of .claude/skills; same never-modify rationale as the entry above — it is refreshed from the canonical skill pack, not hand-edited"],
   ["docs/ops/ACTIONS-MINUTES-RECOVERY.md", "dated 2026-08-26 incident record; it quotes the schedule as measured then and retimes proposed then, neither of which is the live set"],
-  [".claude/skills/model-promotion-gate/SKILL.md", "law 2 places .claude/** on the never-modify list, so an agent cannot repair its stale calibration command line; excluded until the owner updates the skill"],
 ];
 
 const DATED_DOC_RE = /[_-](20\d\d)[-_]?(\d\d)[-_]?(\d\d)\.md$/;
+/** A directory segment like `2026-10-21` — the same record rule, one level up. */
+const DATED_DIR_RE = /(^|\/)(20\d\d-\d\d-\d\d)(\/|$)/;
 
 function isDescriptiveDoc(file: string): boolean {
   if (DATED_DOC_RE.test(file)) return false; // date-stamped docs are historical records
+  // Dated directories are records too. docs/engine/research/2026-10-21/** holds
+  // mirrored workspace snapshots whose npm scripts are that day's, not today's —
+  // the same rationale already applied to docs/data-sources/research/.
+  if (DATED_DIR_RE.test(file)) return false;
   return !NON_DESCRIPTIVE_DOC_PREFIXES.some(([prefix]) => file.startsWith(prefix));
 }
 
