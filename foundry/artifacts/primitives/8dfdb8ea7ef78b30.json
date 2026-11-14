@@ -1,0 +1,892 @@
+{
+ "book_id": "8dfdb8ea7ef78b30",
+ "source_status": "COMPLETE",
+ "source_note": "Tor Lattimore and Csaba Szepesvari, 'Bandit Algorithms', Cambridge University Press, 2020. Local file: the free online edition PDF (title page states the content is the same as the print edition except minor typos corrected; page numbers differ from print), 5,400,750 bytes, sha256 in gatekeeper scan form sha256(str(size) + file bytes) = 8dfdb8ea7ef78b30ec5bf03a7c8c34f7c58e147510cb9ef48b7b7f63a5e5dfcc. Text layer extracted to a 1,729,365-byte .txt (31,385 lines), clean born-digital text; display mathematics is partly garbled in the text layer (radicals, sums and subscripts displaced), so equations were transcribed from the printed displays and cross-checked against the surrounding prose and theorem statements. Printed page anchors cited are the online edition's own page numbers as they appear in the text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "bandit_protocol_explore_exploit",
+   "name": "Bandit protocol: sequential learner-environment game whose core tension is exploration versus exploitation",
+   "verbatim_quote": "Should one explore an option that looks inferior or exploit by going with the option that looks best currently? Finding the right balance between exploration and exploitation is at the heart of all bandit problems.",
+   "page": "Ch 1, Fig 1.2 discussion, printed p. 9 (txt lines 712-720)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Actions are chosen sequentially using only the observed history; the learner cannot peek into the future.",
+    "The environment is unknown but lies in a known environment class E."
+   ],
+   "breakdown_regime": "With no price on exploration the problem collapses to pure exploration (Ch 33); with full information it collapses to online learning. The dilemma only exists under partial feedback.",
+   "domain": "sequential-decision",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE reasoning engine faces the same protocol shape every cycle: a finite set of candidate signals, models and data sources, partial feedback after each use, and a standing choice between exploiting the currently best supported signal and spending scarce evaluation budget on an under-sampled one. The protocol makes the history the only legal input to the next decision, which is exactly the discipline a pregame reasoning trace must obey.",
+    "source_operator": "bandit_protocol_explore_exploit",
+    "telemetry": "per-signal historical performance logs, sample counts per signal, timestamps of last evaluation"
+   }
+  },
+  {
+   "primitive_id": "regret_definition",
+   "name": "Regret: expected reward deficit against the best policy in a competitor class (Def 1.1, Eq 4.1)",
+   "verbatim_quote": "The regret of the learner relative to a policy π (not necessarily that followed by the learner) is the difference between the total expected reward using policy π for n rounds and the total expected reward collected by the learner over n rounds.",
+   "page": "Ch 1 Sec 1.1, printed p. 10 (txt lines 760-763); formal form Ch 4 Sec 4.4 Eq (4.1), printed p. 60",
+   "latex": "R_n(\\pi, \\nu) = n\\mu^* - \\mathbb{E}\\left[\\sum_{t=1}^{n} X_t\\right]",
+   "symbol_and_unit_ledger": {
+    "n": "horizon, number of rounds [rounds]",
+    "\\mu^*": "mean of the optimal arm [reward units]",
+    "X_t": "reward observed in round t [reward units]",
+    "\\pi": "learner policy",
+    "\\nu": "bandit environment instance"
+   },
+   "assumptions": [
+    "Regret is measured in expectation over environment and policy randomness.",
+    "The competitor class is large enough to contain the optimal policy for every environment in the class.",
+    "A good learner has sublinear regret: R_n = o(n)."
+   ],
+   "breakdown_regime": "Regret in expectation hides tail risk; the book flags that risk-sensitive users need the random regret or pseudo-regret instead (Ch 4 notes). Regret is also only as meaningful as the competitor class chosen.",
+   "domain": "sequential-decision",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Regret is the engine's native scoreboard: every deployed reasoning policy can be scored after the fact as the gap between what it collected and what the best fixed alternative in a declared competitor class would have collected. Declaring the competitor class in advance is what keeps the score honest, because a regret number without a named baseline is unfalsifiable.",
+    "source_operator": "regret_definition",
+    "telemetry": "settled outcome logs per decision, the declared competitor set, per-round chosen action records"
+   }
+  },
+  {
+   "primitive_id": "pseudo_regret",
+   "name": "Pseudo-regret: regret with reward noise filtered out, the cleaner measure of policy skill",
+   "verbatim_quote": "While R̂n is influenced by the noise Xt − µAt in the rewards, the pseudo-regret filters this out, which arguably makes it a better basis for measuring the ‘skill’ of a bandit policy.",
+   "page": "Ch 4 Sec 4.9 note 4, printed p. 68 (txt lines 3651-3662)",
+   "latex": "\\bar{R}_n = n\\mu^* - \\sum_{t=1}^{n} \\mu_{A_t}",
+   "symbol_and_unit_ledger": {
+    "\\mu_{A_t}": "true mean of the arm actually chosen in round t [reward units]",
+    "\\mu^*": "mean of the optimal arm [reward units]",
+    "n": "horizon [rounds]"
+   },
+   "assumptions": [
+    "Arm means exist and are finite.",
+    "Used when the goal is to grade the policy rather than the realised noisy outcomes."
+   ],
+   "breakdown_regime": "Pseudo-regret requires knowing the true means, so it is an analysis and backtesting quantity, not something observable live. The random regret measures tend to be highly skewed, so variance-based risk summaries of them mislead.",
+   "domain": "sequential-decision",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "In backtests the engine should grade a reasoning policy by pseudo-regret against settled true outcome rates rather than by the noisy realised scoreline of individual events: the noise term belongs to the world, not to the policy. This separates a policy that reasoned well and got unlucky from one that reasoned badly and got lucky, which is the distinction a calibration ledger exists to draw.",
+    "source_operator": "pseudo_regret",
+    "telemetry": "per-decision chosen option, settled empirical rates per option, full decision history for replay"
+   }
+  },
+  {
+   "primitive_id": "regret_decomposition_lemma",
+   "name": "Regret decomposition (Lemma 4.5): total regret is the gap-weighted sum of expected pulls of each suboptimal arm",
+   "verbatim_quote": "Lemma 4.5 tells us that a learner should aim to use an arm with a larger suboptimality gap proportionally fewer times.",
+   "page": "Ch 4 Sec 4.5, printed p. 62 (txt lines 3375-3389)",
+   "latex": "R_n = \\sum_{a \\in A} \\Delta_a \\, \\mathbb{E}[T_a(n)]",
+   "symbol_and_unit_ledger": {
+    "\\Delta_a": "suboptimality gap of arm a, mu* minus mu_a [reward units]",
+    "T_a(n)": "number of times arm a was played in n rounds [count]",
+    "A": "finite or countable action set"
+   },
+   "assumptions": [
+    "Finite or countable action set; the uncountable case needs the integral form of Lemma 4.6.",
+    "Stationary stochastic bandit: each arm has a fixed reward distribution."
+   ],
+   "breakdown_regime": "Fails for adversarial or non-stationary rewards, where gaps change over time; the adversarial analysis replaces it with estimator-based decompositions (Ch 11). It is the basis of almost every stochastic bandit proof in the book.",
+   "domain": "sequential-decision",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The decomposition is an accounting identity the engine can run on itself: total loss splits into a per-signal ledger where each signal contributes its quality gap times how often the engine actually used it. That turns post-hoc review from a single blame number into an allocation audit, showing whether loss came from trusting a weak signal too often or from a strong signal being priced as weak.",
+    "source_operator": "regret_decomposition_lemma",
+    "telemetry": "usage counts per signal, settled quality gap per signal, decision logs"
+   }
+  },
+  {
+   "primitive_id": "structured_bandits_information_sharing",
+   "name": "Structured bandits: when the environment class is not a product set, playing one action yields information about actions never played",
+   "verbatim_quote": "An important feature of structured bandits is that the learner can often obtain information about some actions while never playing them.",
+   "page": "Ch 4 Sec 4.3, printed p. 60 (txt lines 3245-3247)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The environment class couples arms through shared parameters or known functional relations.",
+    "Contrasts with unstructured bandits, where the class is a product of per-arm distribution sets and no cross-arm learning is possible."
+   ],
+   "breakdown_regime": "Lower bounds for structured classes are delicate and handled case by case (Ch 16 notes); assuming product structure when real coupling exists wastes information, and assuming coupling that does not exist fabricates it.",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Most real prediction problems are structured in exactly this sense: options share latent factors, so evidence about one matchup, player or signal updates beliefs about related ones that were never directly tested. An engine that treats every option as an independent arm throws away the coupling; an engine that models the shared parameters learns at the rate of the parameter dimension, not the number of options.",
+    "source_operator": "structured_bandits_information_sharing",
+    "telemetry": "cross-option outcome correlations, shared latent factor estimates, factor loading structure"
+   }
+  },
+  {
+   "primitive_id": "subgaussian_concentration",
+   "name": "Subgaussianity and finite-time concentration: exponential tail bounds and confidence widths that shrink like sqrt(log(1/delta)/n) (Def 5.2, Thm 5.3, Eq 5.6)",
+   "verbatim_quote": "For the sake of moving rapidly towards bandits, we start with a straightforward and relatively fundamental assumption on the distribution of X, known as the subgaussian assumption.",
+   "page": "Ch 5 Sec 5.3, printed pp. 77-78 (txt lines 4090-4245)",
+   "latex": "\\mathbb{E}[e^{\\lambda X}] \\le e^{\\lambda^2 \\sigma^2 / 2}, \\qquad \\mathbb{P}(X \\ge \\varepsilon) \\le \\exp\\!\\left(-\\frac{\\varepsilon^2}{2\\sigma^2}\\right), \\qquad \\mu \\le \\hat{\\mu} + \\sqrt{\\frac{2\\sigma^2 \\log(1/\\delta)}{n}}",
+   "symbol_and_unit_ledger": {
+    "\\sigma": "subgaussian parameter, tail scale [reward units]",
+    "\\lambda": "Chernoff tilting parameter [1/reward units]",
+    "\\varepsilon": "deviation size [reward units]",
+    "\\hat{\\mu}": "empirical mean of n samples [reward units]",
+    "\\delta": "failure probability [dimensionless]",
+    "n": "sample count [count]"
+   },
+   "assumptions": [
+    "Centred random variables; for uncentred X the condition applies to X minus its mean.",
+    "Bounded and Gaussian variables are subgaussian; exponential variables are not subgaussian for any sigma.",
+    "The asymptotic CLT is explicitly rejected as a design tool; only finite-time bounds are used."
+   ],
+   "breakdown_regime": "Heavy-tailed noise breaks the bound entirely: the moment-generating function is infinite and no exponential concentration holds. Near the boundary the bound is loose for very small deviations, where Chebyshev can be stronger.",
+   "domain": "probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's uncertainty arithmetic. Any empirical rate the engine quotes should carry a finite-time width computed from an explicit tail assumption and sample count, never an asymptotic standard error. The width formula also prices information: it says exactly how many more observations are needed to halve the uncertainty on a signal, which is what an exploration budget should be spent against.",
+    "source_operator": "subgaussian_concentration",
+    "telemetry": "sample counts per estimate, empirical means, declared tail parameter per data source, target confidence levels"
+   }
+  },
+  {
+   "primitive_id": "explore_then_commit",
+   "name": "Explore-then-commit (ETC): explore each arm m times, then commit; regret bound exposes the exploration-length trade-off (Thm 6.1)",
+   "verbatim_quote": "The bound in Theorem 6.1 illustrates the trade-off between exploration and exploitation. If m is large, then the policy explores for too long, and the first term will be large.",
+   "page": "Ch 6 Sec 6.1, printed pp. 92-93 (txt lines 4876-4931)",
+   "latex": "R_n \\le \\sum_{i=1}^{k} m\\Delta_i + (n - mk) \\sum_{i=1}^{k} \\Delta_i \\exp\\!\\left(-\\frac{m\\Delta_i^2}{4}\\right)",
+   "symbol_and_unit_ledger": {
+    "m": "exploration pulls per arm [count]",
+    "k": "number of arms [count]",
+    "\\Delta_i": "suboptimality gap of arm i [reward units]",
+    "n": "horizon [rounds]"
+   },
+   "assumptions": [
+    "1-subgaussian rewards; 1 <= m <= n/k.",
+    "The tuning of m in Eq (6.5) requires advance knowledge of the gap Delta, which is normally unknown."
+   ],
+   "breakdown_regime": "ETC cannot adapt: it explores at the same rate whether the evidence is already decisive or still ambiguous, and a wrong commit is never revisited. Its worst-case rate is only O(n^(2/3))-style unless m is tuned with knowledge of the gaps; adaptive rules (UCB, Thompson) strictly improve on it.",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "ETC is the template of every fixed evaluation window: test each candidate signal for a fixed number of cases, then promote the winner. The bound names the two failure costs precisely, wasted budget from over-testing and the probability-weighted cost of promoting the wrong signal, and it shows the window length must scale with the inverse square of the difference one hopes to detect. Differences smaller than the window can resolve will be decided by luck.",
+    "source_operator": "explore_then_commit",
+    "telemetry": "evaluation window lengths, per-candidate outcome counts, promotion decisions and their later settled quality"
+   }
+  },
+  {
+   "primitive_id": "optimism_principle",
+   "name": "Optimism in the face of uncertainty: act as if the environment is as nice as plausibly possible",
+   "verbatim_quote": "The UCB algorithm is based on the principle of optimism in the face of uncertainty, which states that one should act as if the environment is as nice as plausibly possible.",
+   "page": "Ch 7 Sec 7.1, printed p. 102 (txt lines 5395-5398)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Plausibility is defined by a confidence set that contains the truth with high probability.",
+    "Applies beyond finite-armed bandits: linear bandits, MDPs (UCRL2), and Bayesian settings all use forms of it."
+   ],
+   "breakdown_regime": "Optimism is not universally optimal: in stochastic linear bandits it provably cannot achieve the asymptotic lower bound constant (Ch 25), because it under-plays informative arms that look suboptimal. If the confidence set excludes the truth, optimism chases a fiction.",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Optimism is a decision rule for acting under unresolved uncertainty: score each candidate by its plausible best case rather than its point estimate, so that under-tested options are tried precisely because their upside is unrefuted. For the reasoning engine this governs which under-evidenced signals get live trials instead of being permanently shadowed by incumbents with more data but lower ceilings.",
+    "source_operator": "optimism_principle",
+    "telemetry": "confidence sets per candidate, plausible-best scores, trial allocation logs"
+   }
+  },
+  {
+   "primitive_id": "ucb_index_theorem",
+   "name": "UCB index policy and regret bounds: empirical mean plus confidence bonus; gap-dependent logarithmic regret with the optimal constant 2/Delta (Thm 7.1, Thm 8.1)",
+   "verbatim_quote": "The value inside the argmax is called the index of arm i. Generally speaking, an index algorithm chooses the arm in each round that maximises some value (the index), which usually only depends on the current time step and the samples from that arm.",
+   "page": "Ch 7 Sec 7.1, printed pp. 103-105 (txt lines 5430-5549); Ch 8 Sec 8.1, printed pp. 117-118",
+   "latex": "\\mathrm{UCB}_i(t-1, \\delta) = \\hat{\\mu}_i(t-1) + \\sqrt{\\frac{2 \\log(1/\\delta)}{T_i(t-1)}}, \\qquad R_n \\le 3\\sum_{i=1}^{k} \\Delta_i + \\sum_{i:\\Delta_i > 0} \\frac{16 \\log n}{\\Delta_i}, \\qquad \\limsup_{n\\to\\infty} \\frac{R_n}{\\log n} \\le \\sum_{i:\\Delta_i>0} \\frac{2}{\\Delta_i}",
+   "symbol_and_unit_ledger": {
+    "\\hat{\\mu}_i(t-1)": "empirical mean of arm i before round t [reward units]",
+    "T_i(t-1)": "pulls of arm i before round t [count]",
+    "\\delta": "confidence level; Thm 7.1 uses delta = 1/n^2 [dimensionless]",
+    "\\Delta_i": "suboptimality gap of arm i [reward units]"
+   },
+   "assumptions": [
+    "1-subgaussian bandit; each arm played once before indices apply.",
+    "Theorem 8.1 uses the time-varying schedule f(t) = 1 + t log^2(t) in place of a fixed delta, which removes the need to know the horizon and yields the optimal leading constant."
+   ],
+   "breakdown_regime": "The basic UCB bound is not minimax optimal (an extra log factor versus MOSS) and the fixed-delta version needs the horizon in advance. Choosing delta too large risks linear regret when the optimal arm's index dips below its mean.",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The index is a complete ranking rule the engine can adopt for candidate signals: point estimate plus an exploration bonus that decays with evidence. It allocates attention automatically, heavily sampled candidates must win on merit while lightly sampled ones get the benefit of the doubt, and the theorem quantifies the total cost of that fairness as logarithmic in time and inverse in the quality gaps.",
+    "source_operator": "ucb_index_theorem",
+    "telemetry": "per-candidate empirical quality, evaluation counts, index values at each selection"
+   }
+  },
+  {
+   "primitive_id": "moss_minimax_optimality",
+   "name": "MOSS: UCB with per-arm confidence levels depending on n and k removes the log factor and is minimax optimal (Thm 9.1)",
+   "verbatim_quote": "Building on UCB, the directly named ‘minimax optimal strategy in the stochastic case’ (MOSS) algorithm was the first to make this modification and is presented below.",
+   "page": "Ch 9 Sec 9.1, printed pp. 123-124 (txt lines 6560-6572)",
+   "latex": "R_n \\le 39\\sqrt{kn} + \\sum_{i=1}^{k} \\Delta_i",
+   "symbol_and_unit_ledger": {
+    "k": "number of arms [count]",
+    "n": "horizon [rounds]",
+    "\\Delta_i": "suboptimality gap of arm i [reward units]"
+   },
+   "assumptions": [
+    "1-subgaussian bandit; index bonus uses log+(n/(k T_i)) so the confidence level adapts to each arm's own sample count.",
+    "Horizon n is an input; the notes explain how to relax this."
+   ],
+   "breakdown_regime": "Minimax optimality is a worst-case statement: on easy instances MOSS still pays the worst-case rate in its confidence schedule, and it does not achieve the instance-dependent asymptotic constant of KL-UCB on Bernoulli problems.",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "MOSS shows the engine how to set confidence levels when the number of competing candidates and the total decision budget are both known: the bonus should shrink with the candidate's own evidence count relative to the whole slate, not with wall-clock time. That is the right shape for slate-level allocation problems where a fixed pool of options competes for a fixed number of trials.",
+    "source_operator": "moss_minimax_optimality",
+    "telemetry": "slate size, total trial budget, per-candidate pull counts"
+   }
+  },
+  {
+   "primitive_id": "kl_ucb_chernoff",
+   "name": "KL-UCB: confidence bounds from the Bernoulli Chernoff bound in KL divergence, giving the asymptotically optimal constant Delta/d(mu, mu*) (Lemma 10.3, Thm 10.6)",
+   "verbatim_quote": "The difference between KL-UCB and UCB is that Chernoff’s bound is used to define the upper confidence bound instead of Lemma 5.5.",
+   "page": "Ch 10 Sec 10.1-10.2, printed pp. 134-137 (txt lines 7179-7320)",
+   "latex": "d(p, q) = p \\log \\frac{p}{q} + (1-p) \\log \\frac{1-p}{1-q}, \\qquad \\mathbb{P}(\\hat{\\mu} \\ge \\mu + \\varepsilon) \\le e^{-n d(\\mu+\\varepsilon, \\mu)}, \\qquad \\limsup_{n\\to\\infty} \\frac{R_n}{\\log n} \\le \\sum_{i:\\Delta_i>0} \\frac{\\Delta_i}{d(\\mu_i, \\mu^*)}",
+   "symbol_and_unit_ledger": {
+    "d(p, q)": "relative entropy between Bernoulli(p) and Bernoulli(q) [nats]",
+    "\\hat{\\mu}": "sample mean of n Bernoulli rewards [probability]",
+    "\\mu_i, \\mu^*": "means of arm i and the optimal arm [probability]",
+    "\\Delta_i": "gap mu* minus mu_i [probability]"
+   },
+   "assumptions": [
+    "Bernoulli rewards; the index is the largest mean whose KL divergence from the empirical mean stays within log f(t)/T_i(t).",
+    "By Pinsker's inequality d(mu_i, mu*) >= 2 Delta_i^2, so KL-UCB is never asymptotically worse than subgaussian UCB, and it is much better when means are near 0 or 1 because the Bernoulli variance mu(1-mu) enters."
+   ],
+   "breakdown_regime": "The KL index has no closed form and must be computed numerically (Newton's method). The analysis here is Bernoulli-specific; general distributions need the empirical KL or other divergence constructions.",
+   "domain": "bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Most engine outcomes are binary or near-binary (a projection is right or wrong, a signal fires or not), and for such data the Gaussian-style width is the wrong geometry: uncertainty near the extremes is far smaller than at one half. KL confidence sets encode that asymmetry, so the engine can certify a very strong or very weak signal on far fewer observations than a symmetric interval would allow.",
+    "source_operator": "kl_ucb_chernoff",
+    "telemetry": "binary outcome rates per signal, sample counts, KL index values"
+   }
+  },
+  {
+   "primitive_id": "importance_weighted_estimator",
+   "name": "Importance-weighted estimator: an unbiased estimate of an unplayed arm's reward from bandit feedback, with variance exploding as the play probability shrinks (Eq 11.3, 11.5)",
+   "verbatim_quote": "A key ingredient of all adversarial bandit algorithms is a mechanism for estimating the reward of unplayed arms.",
+   "page": "Ch 11 Sec 11.2, printed pp. 150-151 (txt lines 7936-7990)",
+   "latex": "\\hat{X}_{ti} = \\frac{\\mathbb{1}\\{A_t = i\\} X_t}{P_{ti}}, \\qquad \\mathbb{E}_{t-1}[\\hat{X}_{ti}] = x_{ti}, \\qquad V_{t-1}[\\hat{X}_{ti}] = \\frac{x_{ti}^2 (1 - P_{ti})}{P_{ti}}",
+   "symbol_and_unit_ledger": {
+    "P_{ti}": "conditional probability the policy plays arm i in round t [probability]",
+    "X_t": "observed reward [reward units]",
+    "x_{ti}": "true reward of arm i in round t [reward units]",
+    "V_{t-1}": "conditional variance given the history [reward units squared]"
+   },
+   "assumptions": [
+    "Requires P_ti > 0 almost surely for every arm: every arm must retain some chance of being played.",
+    "The loss-based variant (Eq 11.6) has the same structure with losses in place of rewards and a different variance profile."
+   ],
+   "breakdown_regime": "Variance is unbounded as P_ti approaches 0, which is the central instability of adversarial bandit methods; the book notes all unbiased estimators in this setting are importance-weighted, so the variance problem cannot be dodged, only managed (Exp3-IX bias, clipping).",
+   "domain": "adversarial-bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's counterfactual accounting tool: from decisions actually taken and their logged selection probabilities, it reconstructs unbiased estimates of what every untaken option would have returned. That makes honest off-policy evaluation possible, grading policies that were never deployed, provided the selection probabilities were logged and never allowed to hit zero.",
+    "source_operator": "importance_weighted_estimator",
+    "telemetry": "logged action propensities per decision, realised outcomes, candidate action sets per decision"
+   }
+  },
+  {
+   "primitive_id": "exp3_adversarial_bandit",
+   "name": "Exp3: exponential weights over importance-weighted loss estimates achieve O(sqrt(nk log k)) regret against an adversarial environment (Thm 11.1, 11.2)",
+   "verbatim_quote": "The simplest algorithm for adversarial bandits is called Exp3, which stands for ‘exponential-weight algorithm for exploration and exploitation’.",
+   "page": "Ch 11 Sec 11.3-11.4, printed pp. 152-156 (txt lines 8020-8290)",
+   "latex": "P_{ti} = \\frac{\\exp(\\eta \\hat{S}_{t-1,i})}{\\sum_{j=1}^{k} \\exp(\\eta \\hat{S}_{t-1,j})}, \\qquad R_n(\\pi, x) \\le 2\\sqrt{nk \\log k}",
+   "symbol_and_unit_ledger": {
+    "\\eta": "learning rate; Thm 11.1 uses eta = sqrt(log k / (nk)), Thm 11.2 sharpens the constant with eta = sqrt(2 log k / (nk)) [dimensionless]",
+    "\\hat{S}_{t-1,i}": "cumulative importance-weighted estimated reward of arm i [reward units]",
+    "x": "adversarial reward matrix in [0,1]^(n x k)",
+    "k": "number of arms [count]"
+   },
+   "assumptions": [
+    "Rewards bounded in [0, 1]; the adversary is oblivious (the reward matrix is fixed without knowledge of the learner's random draws).",
+    "Competes against the best single fixed arm in hindsight, not the best action sequence."
+   ],
+   "breakdown_regime": "Against a non-oblivious adversary or when the right benchmark is a switching sequence, the fixed-arm guarantee is the wrong target (Ch 31 rebuilds the objective). The bound is an expectation bound; high-probability control needs Exp3-IX.",
+   "domain": "adversarial-bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exp3 is the engine's insurance policy for hostile or drifting environments: when the stationarity assumption behind UCB-style reasoning is not trusted, exponential weighting over unbiased counterfactual estimates still guarantees performance close to the best single option in hindsight. The softmax form also gives a principled way to keep every candidate alive with probability proportional to its track record.",
+    "source_operator": "exp3_adversarial_bandit",
+    "telemetry": "per-round estimated losses for all candidates, selection probability vectors, realised outcomes"
+   }
+  },
+  {
+   "primitive_id": "exp3_ix_implicit_exploration",
+   "name": "Exp3-IX: a deliberately biased importance-weighted estimator (divide by P + gamma) trades a little bias for much less variance and yields high-probability regret bounds (Eq 12.4, Thm 12.1)",
+   "verbatim_quote": "As γ increases, the predictable variance decreases, but the bias increases. The optimal choice of γ depends on finding the sweet spot, which we will do once the dust has settled in the analysis.",
+   "page": "Ch 12 Sec 12.1-12.2, printed pp. 166-167 (txt lines 8830-8910)",
+   "latex": "\\hat{Y}_{ti} = \\frac{\\mathbb{1}\\{A_t = i\\} Y_t}{P_{ti} + \\gamma}",
+   "symbol_and_unit_ledger": {
+    "\\gamma": "implicit exploration parameter, set to eta/2 in Thm 12.1 [dimensionless]",
+    "Y_t": "observed loss, 1 minus reward [loss units]",
+    "P_{ti}": "probability of playing arm i in round t [probability]"
+   },
+   "assumptions": [
+    "The bias is optimistic for losses: the estimator underestimates losses, more so for rarely played arms, which itself induces exploration (implicit exploration).",
+    "Theorem 12.1 gives bounds that hold with probability at least 1 minus delta, in two tunings (delta-free eta_1 and delta-dependent eta_2)."
+   ],
+   "breakdown_regime": "The bias means estimates no longer centre on the truth, so IX estimates must not be fed into machinery that assumes unbiasedness. The delta-dependent tuning buys a better constant only for the pre-chosen confidence level.",
+   "domain": "adversarial-bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exp3-IX teaches a general estimation lesson the engine should reuse: when an unbiased estimator's variance is the binding constraint, a small, signed, well-understood bias can be worth more than unbiasedness. Deliberately shrinking estimates for rarely sampled options toward optimism both stabilises the estimate and subsidises further sampling of exactly the options whose estimates are least reliable.",
+    "source_operator": "exp3_ix_implicit_exploration",
+    "telemetry": "estimator bias settings, per-option sampling probabilities, high-probability performance certificates"
+   }
+  },
+  {
+   "primitive_id": "kl_divergence_relative_entropy",
+   "name": "Relative entropy (KL divergence): the information distance between distributions that prices statistical distinguishability (Thm 14.1)",
+   "verbatim_quote": "Relative entropy is a kind of ‘distance’ measure between distributions P and Q. In particular, D(P, Q) = 0 whenever P = Q, and otherwise D(P, Q) > 0.",
+   "page": "Ch 14 Sec 14.2, printed pp. 189-190 (txt lines 9990-10045)",
+   "latex": "D(P, Q) = \\int p \\log \\frac{p}{q} \\, d\\lambda, \\qquad D(\\mathcal{N}(\\mu_1, \\sigma^2), \\mathcal{N}(\\mu_2, \\sigma^2)) = \\frac{(\\mu_1 - \\mu_2)^2}{2\\sigma^2}",
+   "symbol_and_unit_ledger": {
+    "p, q": "densities of P and Q with respect to a common dominating measure lambda [density]",
+    "D(P, Q)": "relative entropy of P with respect to Q [nats]",
+    "\\mu_1, \\mu_2": "Gaussian means [reward units]",
+    "\\sigma^2": "common variance [reward units squared]"
+   },
+   "assumptions": [
+    "D(P, Q) is finite only if P is absolutely continuous with respect to Q; otherwise it is infinite.",
+    "Not symmetric and not a metric, despite serving the same purpose."
+   ],
+   "breakdown_regime": "Infinite divergence (support mismatch) makes KL-based bounds vacuous. KL is also an expectation under P, so it is dominated by regions P visits often and can understate differences in the tails.",
+   "domain": "information-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "KL divergence is the exchange rate between evidence and belief change throughout the engine: it says how many observations are needed before two competing explanations of the same signal become reliably distinguishable. Any claim that the engine can tell two hypotheses apart should be checkable against the KL between them times the sample count actually collected.",
+    "source_operator": "kl_divergence_relative_entropy",
+    "telemetry": "candidate hypothesis distributions per signal, observation counts, fitted distribution parameters"
+   }
+  },
+  {
+   "primitive_id": "bretagnolle_huber_inequality",
+   "name": "Bretagnolle-Huber inequality: no test can distinguish two hypotheses better than their relative entropy allows (Thm 14.2)",
+   "verbatim_quote": "We are nearing the end of our whirlwind tour of relative entropy. It remains to state the key lemma that connects the relative entropy to the hardness of hypothesis testing.",
+   "page": "Ch 14 Sec 14.2, printed p. 190 (txt lines 10040-10052)",
+   "latex": "\\mathbb{P}(A) + \\mathbb{Q}(A^c) \\ge \\frac{1}{2} \\exp(-D(\\mathbb{P}, \\mathbb{Q}))",
+   "symbol_and_unit_ledger": {
+    "A": "arbitrary measurable event, the decision region of a test",
+    "D(P, Q)": "relative entropy between the two hypotheses [nats]",
+    "P(A) + Q(A^c)": "sum of the two error probabilities of any test [probability]"
+   },
+   "assumptions": [
+    "P and Q are probability measures on a common measurable space.",
+    "The result is symmetric: D(Q, P) may be substituted when it gives the stronger bound."
+   ],
+   "breakdown_regime": "When D(P, Q) = 0 the bound only certifies an error sum of at least 1/2, and when the divergence is infinite the bound is vacuous; it is a floor on error, never a guarantee that a good test exists.",
+   "domain": "information-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is a veto primitive. Before the engine spends compute trying to separate two explanations of a pattern, Bretagnolle-Huber prices the attempt: if the accumulated divergence between the hypotheses is small, every possible test errs with constant probability and the honest output is 'not yet distinguishable', together with the sample size at which it would become distinguishable.",
+    "source_operator": "bretagnolle_huber_inequality",
+    "telemetry": "hypothesis pairs under consideration, divergence estimates, accumulated sample counts"
+   }
+  },
+  {
+   "primitive_id": "divergence_decomposition_lemma",
+   "name": "Divergence decomposition (Lemma 15.1): the KL between two bandit interaction laws is the pull-count-weighted sum of per-arm divergences",
+   "verbatim_quote": "We note in passing that the divergence decomposition holds regardless of whether the action set is discrete or not.",
+   "page": "Ch 15 Sec 15.1, printed p. 198 (txt lines 10495-10505)",
+   "latex": "D(\\mathbb{P}_{\\nu}, \\mathbb{P}_{\\nu'}) = \\sum_{i=1}^{k} \\mathbb{E}_{\\nu}[T_i(n)] \\, D(P_i, P_i')",
+   "symbol_and_unit_ledger": {
+    "\\mathbb{P}_{\\nu}, \\mathbb{P}_{\\nu'}": "laws of the full interaction history under bandits nu and nu' [probability measures]",
+    "T_i(n)": "pulls of arm i [count]",
+    "D(P_i, P_i')": "per-arm reward divergence [nats]"
+   },
+   "assumptions": [
+    "Both bandits are interacted with by the same fixed policy; the policy terms cancel in the density ratio.",
+    "A stopping-time version holds as well and is what powers the best-arm identification lower bound."
+   ],
+   "breakdown_regime": "Requires the per-arm divergences to be finite for the clean form; with uncountable action sets the sum becomes an integral against the expected occupation measure.",
+   "domain": "information-theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The decomposition turns distinguishability into a budget line: total evidence separating two world-models equals, arm by arm, samples collected times per-sample divergence. For the engine this means an experiment plan can be costed before it runs, by choosing where to sample so that the weighted divergence against the most dangerous alternative hypothesis grows fastest per unit of budget.",
+    "source_operator": "divergence_decomposition_lemma",
+    "telemetry": "per-option sample allocation, per-option divergence to alternative hypotheses, experiment plans"
+   }
+  },
+  {
+   "primitive_id": "minimax_lower_bound",
+   "name": "Minimax lower bound: no policy beats c sqrt(kn) worst-case regret on Gaussian bandits, certifying MOSS as minimax optimal (Thm 13.1, Thm 15.2)",
+   "verbatim_quote": "One of the main results of this part is a proof of the following theorem, which together with Theorem 9.1 shows that Algorithm 7 from Chapter 9 is minimax optimal up to constant factors for 1-subgaussian bandits with suboptimality gaps in [0, 1].",
+   "page": "Ch 13, printed p. 180 (txt lines 9580-9595); Ch 15 Sec 15.2, printed p. 199",
+   "latex": "R_n^*(\\mathcal{E}^k) \\ge \\frac{1}{27}\\sqrt{(k-1)n}",
+   "symbol_and_unit_ledger": {
+    "R_n^*(E^k)": "minimax regret over the class of k-armed unit-variance Gaussian bandits with means in [0,1] [reward units]",
+    "k": "number of arms [count]",
+    "n": "horizon [rounds]"
+   },
+   "assumptions": [
+    "Proof strategy: pick the least-explored suboptimal arm, perturb it to optimality, and apply Bretagnolle-Huber with the divergence decomposition.",
+    "Minimax optimality is a property of a policy together with an environment class and a horizon, not of a policy alone."
+   ],
+   "breakdown_regime": "Worst-case bounds are silent about easy instances: a minimax-optimal method can still be far from the instance-dependent optimum on a specific problem, which is what Part IV's second half and the KL-UCB analysis address.",
+   "domain": "lower-bounds",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A minimax floor is the engine's defence against overpromising: for a slate of k candidate approaches over n decisions, there is a quantified amount of loss no reasoning policy can avoid in the worst case. Roadmaps and performance claims should be stated as distance above this floor, because claiming below-floor performance is a proof of an error somewhere in the evaluation.",
+    "source_operator": "minimax_lower_bound",
+    "telemetry": "slate sizes, decision counts, worst-case benchmark computations per problem class"
+   }
+  },
+  {
+   "primitive_id": "lai_robbins_asymptotic_lower_bound",
+   "name": "Instance-dependent asymptotic lower bound (Thm 16.2, Burnetas-Katehakis form): any consistent policy pays at least sum Delta_i / d_inf(P_i, mu*) per log n",
+   "verbatim_quote": "Consistency is an asymptotic notion. A policy could be consistent and yet play At = 1 for all t ≤ 10100 . For this reason, an assumption of consistency is insufficient to derive non-asymptotic lower bounds.",
+   "page": "Ch 16 Sec 16.1, printed pp. 207-208 (txt lines 11013-11025)",
+   "latex": "\\liminf_{n \\to \\infty} \\frac{R_n}{\\log n} \\ge \\sum_{i:\\Delta_i > 0} \\frac{\\Delta_i}{d_{\\inf}(P_i, \\mu^*, \\mathcal{M}_i)}, \\qquad d_{\\inf}(P, \\mu^*, \\mathcal{M}) = \\inf\\{D(P, P') : P' \\in \\mathcal{M}, \\mu(P') > \\mu^*\\}",
+   "symbol_and_unit_ledger": {
+    "d_inf": "smallest divergence from arm i's distribution to any distribution in its class with mean above the optimum [nats]",
+    "\\Delta_i": "suboptimality gap [reward units]",
+    "consistent policy": "regret o(n^p) for every p > 0 on every instance in the class"
+   },
+   "assumptions": [
+    "Unstructured environment class (product of per-arm families); structured classes need separate treatment.",
+    "For Gaussians d_inf = Delta^2/(2 sigma^2), recovering the 2 sigma^2/Delta rate; for Bernoulli d_inf = d(mu_i, mu*), matching KL-UCB exactly."
+   ],
+   "breakdown_regime": "Purely asymptotic: it constrains no finite horizon, and consistency is a weak requirement that even a policy idle for the first 10^100 rounds satisfies. Finite-time instance-dependent versions (Thm 16.4) lose roughly a factor of two in the leading term.",
+   "domain": "lower-bounds",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This bound is the engine's per-instance price list for certainty: to certify that a candidate is worse than the incumbent, it must be sampled roughly log(n)/d_inf times, where d_inf measures how easily that candidate could masquerade as the best. Candidates that are hard to distinguish from the best are exactly the ones that must be sampled most, which inverts the naive instinct to spend the budget on the obviously bad ones.",
+    "source_operator": "lai_robbins_asymptotic_lower_bound",
+    "telemetry": "per-candidate divergence to better-than-incumbent alternatives, target confidence, accumulated log-budget"
+   }
+  },
+  {
+   "primitive_id": "exp4_expert_advice",
+   "name": "Exp4: compete with the best expert in hindsight by exponential weighting over experts, at regret O(sqrt(nk log M)) (Thm 18.1)",
+   "verbatim_quote": "The number 4 in Exp4 is not just an increased version number, but indicates the four e’s in the long name of the algorithm, which is exponential weighting for exploration and exploitation with experts.",
+   "page": "Ch 18 Sec 18.2-18.4, printed pp. 228-230 (txt lines 12060-12105)",
+   "latex": "R_n \\le 2\\sqrt{nk \\log M}",
+   "symbol_and_unit_ledger": {
+    "M": "number of experts [count]",
+    "k": "number of actions [count]",
+    "n": "horizon [rounds]",
+    "experts": "each round every expert reports a distribution over actions; experts are oblivious to the learner's actions"
+   },
+   "assumptions": [
+    "Regret is measured against the best single expert in hindsight, using the experts' reported distributions.",
+    "Memory O(M) and per-round computation O(M + k): practical only for moderate M and k."
+   ],
+   "breakdown_regime": "Competing with the best expert is weaker than competing with the best action sequence; if all experts are bad, matching the best of them is cold comfort. The expert set can also be gamed by near-duplicate experts splitting weight.",
+   "domain": "contextual-bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exp4 is the formal version of the engine's ensemble layer: multiple reasoning modules, models or human-style heuristics each propose a distribution over conclusions, and the engine weights them by exponential scoring on counterfactual estimates. The theorem prices the ensemble: following the weighted mixture costs only about sqrt(log M) over following the single best module, so adding a genuinely different module is cheap insurance.",
+    "source_operator": "exp4_expert_advice",
+    "telemetry": "per-module recommendation distributions, module track records, mixture weights over time"
+   }
+  },
+  {
+   "primitive_id": "linucb_oful_confidence_ellipsoid",
+   "name": "Stochastic linear bandits: ridge regression estimate plus a Mahalanobis confidence ellipsoid gives OFUL/LinUCB with regret O(d sqrt(n) log(nL)) (Sec 19.2-19.3, Thm 19.2, Cor 19.3)",
+   "verbatim_quote": "In the case of linear bandits, the idea remains the same, but the form of the confidence bound is more complicated because rewards received yield information about more than just the arm played.",
+   "page": "Ch 19 Sec 19.2-19.3, printed pp. 241-243 (txt lines 12690-12815)",
+   "latex": "\\hat{\\theta}_t = V_t^{-1} \\sum_{s=1}^{t} A_s X_s, \\qquad V_t = \\lambda I + \\sum_{s=1}^{t} A_s A_s^{\\top}, \\qquad \\mathcal{C}_t \\subseteq \\{\\theta : \\|\\theta - \\hat{\\theta}_{t-1}\\|_{V_{t-1}}^2 \\le \\beta_t\\}, \\qquad R_n \\le C d \\sqrt{n} \\log(nL)",
+   "symbol_and_unit_ledger": {
+    "\\theta^*": "unknown parameter vector in R^d [reward per unit feature]",
+    "\\hat{\\theta}_t": "regularised least squares estimate",
+    "V_t": "design matrix, accumulates outer products of played actions [feature^2]",
+    "\\lambda": "ridge penalty factor [feature^2]",
+    "\\beta_t": "confidence radius schedule [dimensionless]",
+    "L": "bound on action norms, ||a||_2 <= L [feature units]",
+    "d": "parameter dimension [count]"
+   },
+   "assumptions": [
+    "Mean reward is linear: E[X_t] = <theta*, A_t>; noise conditionally 1-subgaussian in Ch 22's variant, Gaussian intuition in Ch 19.",
+    "Action chosen optimistically: A_t = argmax over a of max over theta in C_t of <theta, a>.",
+    "The proof runs through the elliptical potential lemma (Lemma 19.4): the sum of 1 and ||a_t||^2_{V_{t-1}^{-1}} over rounds is at most 2 log(det V_n / det V_0), which is what converts per-round widths into the d sqrt(n) rate."
+   ],
+   "breakdown_regime": "When action sets are finite and fixed, phased elimination with G-optimal design (Ch 22, Thm 22.1) improves the rate to O(sqrt(nd log(nk))), a factor of about sqrt(d) better. The ellipsoid is also conservative in directions the design has not excited, and misspecification of the linear model is not covered by the bound (Ch 24 studies misspecified lower bounds).",
+   "domain": "linear-bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's machinery for any prediction problem where an outcome is a linear score of features: maintain the ridge estimate, carry the design matrix as the memory of what has been probed, and score candidates by the optimistic end of the ellipsoid. The width in a direction is large exactly where few probing actions have pointed, so the algorithm automatically spends trials learning the feature directions it is most ignorant about.",
+    "source_operator": "linucb_oful_confidence_ellipsoid",
+    "telemetry": "feature vectors per candidate, design matrix updates, per-direction confidence widths"
+   }
+  },
+  {
+   "primitive_id": "method_of_mixtures_confidence",
+   "name": "Method of mixtures: a self-normalised concentration bound for least squares that holds uniformly over all times (Thm 20.4, Thm 20.5)",
+   "verbatim_quote": "The take-home message is that if we integrate the exponential of a function that has a pronounced maximum, then we can expect that the integral will be close to the exponential function of the maximum.",
+   "page": "Ch 20 Sec 20.1, printed pp. 258-260 (txt lines 13750-13795)",
+   "latex": "\\|\\hat{\\theta}_t - \\theta^*\\|_{V_t(\\lambda)} < \\sqrt{\\lambda m_2^2 + 2 \\log \\frac{1}{\\delta} + \\log \\frac{\\det V_t(\\lambda)}{\\lambda^d}}",
+   "symbol_and_unit_ledger": {
+    "V_t(\\lambda)": "regularised design matrix lambda I plus sum of action outer products [feature^2]",
+    "m_2": "upper bound on ||theta*||_2 [reward per unit feature]",
+    "\\delta": "failure probability, and the bound holds simultaneously for all t [dimensionless]",
+    "S_t": "score vector, sum of A_s X_s [feature x reward]"
+   },
+   "assumptions": [
+    "Built by mixing a family of exponential supermartingales over a Gaussian prior (Laplace's method), then applying the maximal inequality for supermartingales.",
+    "Supplies the beta_t schedule that makes the OFUL confidence ellipsoid of Ch 19 valid at all times simultaneously, not just at a fixed t."
+   ],
+   "breakdown_regime": "Uniform-over-time validity costs extra log-det terms versus a fixed-time bound. The radius also grows if the parameter norm bound m_2 is loose, so a badly overestimated prior scale inflates exploration.",
+   "domain": "linear-bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine monitors signals continuously and peeks at results constantly, which invalidates fixed-horizon confidence statements. A mixture bound is the correct licence for that behaviour: one probability budget buys a guarantee that holds at every look, forever. Any live dashboard number the engine acts on should trace to a time-uniform bound of this family rather than a pointwise interval that silently expires on the second look.",
+    "source_operator": "method_of_mixtures_confidence",
+    "telemetry": "continuously updated estimates, look schedules, global failure probability budgets"
+   }
+  },
+  {
+   "primitive_id": "kiefer_wolfowitz_optimal_design",
+   "name": "Kiefer-Wolfowitz theorem: G-optimal and D-optimal experimental designs coincide, the minimal worst-case prediction width is d, and a core set of at most d(d+1)/2 actions suffices (Thm 21.1)",
+   "verbatim_quote": "A design that maximises f is known as a D-optimal design, and thus the theorem establishes the equivalence of G-optimal and D-optimal designs.",
+   "page": "Ch 21 Sec 21.1, printed p. 268 (txt lines 14260-14278)",
+   "latex": "g(\\pi) = \\max_{a \\in A} \\|a\\|_{V(\\pi)^{-1}}^2, \\qquad V(\\pi) = \\sum_a \\pi(a) a a^{\\top}, \\qquad g(\\pi^*) = d",
+   "symbol_and_unit_ledger": {
+    "\\pi": "design: a probability distribution over the action set A",
+    "V(\\pi)": "information matrix of the design [feature^2]",
+    "g(\\pi)": "worst-case squared prediction width over A [reward^2 per unit]",
+    "d": "dimension; also the optimal value of g [count]",
+    "core set": "support of an optimal design, at most d(d+1)/2 actions [count]"
+   },
+   "assumptions": [
+    "A is compact and spans R^d.",
+    "A design maximising log det V(pi) (D-optimal) is the same as one minimising g(pi) (G-optimal)."
+   ],
+   "breakdown_regime": "Optimal design minimises worst-case variance for estimating the whole parameter, which is the wrong objective when only the identity of the best action matters; best-arm identification designs (Ch 33) target a different functional. Computation of the design can itself be expensive for huge action sets.",
+   "domain": "experimental-design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine gets to choose what to measure, this theorem is the allocation rule: spread probes so that the worst-measured direction is as well measured as possible, and know that a small core set of probe types, at most d(d+1)/2 of them, carries all the information. It converts experiment planning from intuition into an optimisation with a known optimum value, d, against which any proposed measurement plan can be scored.",
+    "source_operator": "kiefer_wolfowitz_optimal_design",
+    "telemetry": "candidate probe sets, information matrices per plan, worst-case width per plan"
+   }
+  },
+  {
+   "primitive_id": "online_to_confidence_set_conversion",
+   "name": "Online-to-confidence-set conversion: any online linear predictor with a cumulative squared-loss regret bound induces a valid confidence set, and optimism on it gives OLR-UCB (Thm 23.4, Thm 23.5)",
+   "verbatim_quote": "At last we have established all the conditions required for Theorem 19.2, which implies the following theorem bounding the regret of Algorithm 14:",
+   "page": "Ch 23 Sec 23.3, printed pp. 284-285 (txt lines 15100-15185)",
+   "latex": "\\mathcal{C}_{t+1} = \\left\\{\\theta \\in \\mathbb{R}^d : \\|\\theta\\|_2^2 + \\sum_{s=1}^{t} (\\hat{X}_s - \\langle \\theta, A_s \\rangle)^2 \\le m_2^2 + \\beta_t(\\delta)\\right\\}",
+   "symbol_and_unit_ledger": {
+    "\\hat{X}_s": "the online predictor's prediction in round s [reward units]",
+    "B_t": "the predictor's cumulative regret bound against any fixed theta [reward^2]",
+    "\\beta_t(\\delta)": "radius built from B_t by Eq (23.10) [reward^2]",
+    "m_2": "bound on ||theta*||_2",
+    "\\mathcal{C}_{t+1}": "confidence set containing theta* for all t with probability at least 1 minus delta"
+   },
+   "assumptions": [
+    "Needs a black-box online predictor for squared loss with a known regret bound B_t valid against every comparator theta in the class.",
+    "The set is rewritten as an ellipsoid via Eq (23.11), after which the standard LinUCB analysis (Thm 19.2) applies."
+   ],
+   "breakdown_regime": "The conversion is only as good as the predictor's bound: for sparse parameters, plugging in the sparse online predictor of Thm 23.6 (regret scaling with ||theta||_0 log n rather than d) is what yields sparsity-adaptive bandit regret; a dense predictor wastes the structure. The radius beta_t can also be loose, since it is derived by solving a worst-case inequality.",
+   "domain": "linear-bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is a compiler the engine can reuse everywhere: any component that predicts well online, in the squared-loss regret sense, can be mechanically converted into calibrated uncertainty sets, and those sets plug straight into optimistic decision rules. It means prediction quality and decision quality are not separate projects; improving any online predictor in the stack automatically improves the decisions built on its confidence sets.",
+    "source_operator": "online_to_confidence_set_conversion",
+    "telemetry": "online predictor regret certificates, squared-loss histories, induced confidence radii"
+   }
+  },
+  {
+   "primitive_id": "linear_asymptotic_lower_bound_optimism_limit",
+   "name": "Asymptotic lower bound for linear bandits is an allocation optimisation (Cor 25.2), and optimism provably cannot attain it (Sec 25.2)",
+   "verbatim_quote": "The theorem and its corollary have disturbing implications for policies based on the principle of optimism in the face of uncertainty, which is that they can never be asymptotically optimal.",
+   "page": "Ch 25 Sec 25.1-25.2, printed pp. 296-301 (txt lines 15845-16080)",
+   "latex": "c(A, \\theta) = \\inf_{\\alpha \\in [0,\\infty)^A} \\sum_{a \\in A} \\alpha(a) \\Delta_a \\quad \\text{subject to} \\quad \\|a\\|_{H_\\alpha^{-1}}^2 \\le \\frac{\\Delta_a^2}{2} \\ \\forall a: \\Delta_a > 0, \\qquad H_\\alpha = \\sum_a \\alpha(a) a a^{\\top}",
+   "symbol_and_unit_ledger": {
+    "\\alpha(a)": "asymptotic sampling rate of action a, pulls per unit log n [count]",
+    "c(A, \\theta)": "the optimal asymptotic regret constant: liminf R_n / log n >= c(A, theta) for any consistent policy [reward units]",
+    "\\Delta_a": "gap of action a [reward units]",
+    "H_\\alpha": "limiting normalised design matrix [feature^2]"
+   },
+   "assumptions": [
+    "Finite action set spanning R^d; unique optimal action; consistent policies only.",
+    "Thm 25.3 shows the bound is attainable by a policy that tracks the optimal allocation; the constraint says every suboptimal arm must be certified suboptimal, meaning its confidence width must fall below its gap."
+   ],
+   "breakdown_regime": "The failure of optimism is structural: an optimistic rule stops playing an arm once it looks beaten, but in the linear setting a beaten arm can be the most informative probe for distinguishing two other arms (the d = 2, k = 3 example of Sec 25.2), so the optimal allocation deliberately plays arms it believes are suboptimal.",
+   "domain": "linear-bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This pair of results rewires how the engine should value a probe: the worth of testing an option is not its own upside but the information it carries about the options actually in contention. A candidate signal that looks weak can still be the cheapest way to separate two leading hypotheses, and an allocation that only ever tests leaders will stall at a worse constant than the allocation the optimisation prescribes.",
+    "source_operator": "linear_asymptotic_lower_bound_optimism_limit",
+    "telemetry": "contention sets of near-tied hypotheses, per-probe information about rival pairs, allocation rates"
+   }
+  },
+  {
+   "primitive_id": "ftrl_mirror_descent_bregman",
+   "name": "Follow-the-regularised-leader and mirror descent: one regret decomposition, diameter over eta plus stability, governs online linear optimisation and adversarial linear bandits (Thm 28.4, Thm 28.10)",
+   "verbatim_quote": "Although mirror descent and follow-the-regularised-leader are not the same, the bounds presented here are identical.",
+   "page": "Ch 26 Sec 26.3; Ch 28 Sec 28.2-28.3, printed pp. 331-336 (txt lines 17555-17855)",
+   "latex": "D_F(x, y) = F(x) - F(y) - \\langle x - y, \\nabla F(y) \\rangle, \\qquad R_n(a) \\le \\frac{F(a) - F(a_1)}{\\eta} + \\frac{1}{\\eta} \\sum_{t=1}^{n} D_F(a_t, \\tilde{a}_{t+1})",
+   "symbol_and_unit_ledger": {
+    "F": "Legendre regulariser, e.g. negative entropy or squared norm [dimensionless]",
+    "D_F": "Bregman divergence induced by F",
+    "\\eta": "learning rate trading diameter against stability",
+    "\\tilde{a}_{t+1}": "the unprojected mirror update",
+    "diam_F(A)": "range of F over the action set, e.g. log k for entropy on the simplex"
+   },
+   "assumptions": [
+    "Losses are linear (or linearised); with bandit feedback the loss vector is replaced by an unbiased estimator such as the importance-weighted one.",
+    "The regulariser must be strongly convex in the geometry dual to the loss norm for the stability term to be small."
+   ],
+   "breakdown_regime": "The two algorithms differ once projections bite (Fig 28.2), and a mismatched geometry, for example Euclidean regularisation on a simplex problem, costs polynomial factors. Everything rests on the loss estimator: biased or heavy-tailed estimates break the telescoping argument.",
+   "domain": "online-learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "FTRL is the engine's generic weight-update kernel: keep cumulative evidence in a dual space, map back through a geometry chosen for the problem, and let one learning rate mediate between how far the incumbent can be displaced (diameter) and how much each new observation can move the decision (stability). Exp3, Exp4 and the linear bandit methods are all special cases, so tuning intuition transfers across the whole stack instead of being relearned per algorithm.",
+    "source_operator": "ftrl_mirror_descent_bregman",
+    "telemetry": "cumulative loss estimates, regulariser choice per problem, learning rate schedules, iterate displacement logs"
+   }
+  },
+  {
+   "primitive_id": "combinatorial_semibandit_feedback",
+   "name": "Combinatorial bandits: actions are subsets or paths; semi-bandit feedback (observing every chosen coordinate) makes coordinate-wise estimation and mirror descent efficient (Sec 30.1, 30.4, Thm 30.1)",
+   "verbatim_quote": "In the bandit setting, they observe total travel time (21 hours), while in the semi-bandit they observe the length of each flight on the route they took (1 hour, 12 hours, 8 hours).",
+   "page": "Ch 30 Sec 30.1-30.4, printed pp. 362-365; quote from Fig 30.1 caption, printed p. 364 (txt lines 19263-19270)",
+   "latex": "\\hat{Y}_{ti} = \\frac{A_{ti} y_{ti}}{\\bar{A}_{ti}}, \\qquad R_n \\le 2m \\sqrt{3 d n \\log |A|}",
+   "symbol_and_unit_ledger": {
+    "m": "number of coordinates in a chosen action (super-arm size) [count]",
+    "d": "total number of base coordinates [count]",
+    "\\bar{A}_{ti}": "expected value of coordinate i under the learner's distribution [probability]",
+    "|A|": "number of feasible super-arms, typically exponential in d [count]",
+    "y_{ti}": "loss of coordinate i in round t [loss units]"
+   },
+   "assumptions": [
+    "Reward or loss of a super-arm is the sum of its coordinates' values.",
+    "Bandit feedback (only the total is observed) forces Exp3-style methods whose regret grows with m; semi-bandit feedback removes most of that cost."
+   ],
+   "breakdown_regime": "Even with regret guarantees, computation can be hopeless: the action set can encode travelling-salesman-hard problems, and the book is explicit that no efficient sublinear-regret algorithm exists in full generality. The bounds also degrade when the super-arm size m is large.",
+   "domain": "combinatorial-bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine decisions are rarely single choices: a slate, a card of signals, a package of projections is one composite action whose components each generate their own feedback. The semi-bandit lesson is to log and learn at the coordinate level whenever the components are separately observable, because component feedback converts an exponentially large slate problem back into a manageable per-component estimation problem.",
+    "source_operator": "combinatorial_semibandit_feedback",
+    "telemetry": "slate composition logs, per-component outcomes, component selection frequencies"
+   }
+  },
+  {
+   "primitive_id": "nonstationary_tracking_regret",
+   "name": "Non-stationary bandits: enlarge the competitor class to action sequences with m segments (tracking regret); clipped mirror descent attains O(sqrt(nmk log)) and no policy does better up to logs (Sec 31.1, Thm 31.1)",
+   "verbatim_quote": "The non-stationary regret is sometimes called the tracking regret because a learner that makes it small must ‘track’ the best arm as it changes.",
+   "page": "Ch 31 Sec 31.1, printed pp. 379-380 (txt lines 20050-20150)",
+   "latex": "R_n^m = \\mathbb{E}\\left[\\sum_{t=1}^n y_{t A_t}\\right] - \\min_{a \\in \\Gamma_n^m} \\mathbb{E}\\left[\\sum_{t=1}^n y_{t a_t}\\right], \\qquad R_n^m = O\\left(\\sqrt{nmk \\log \\frac{kn}{m}}\\right)",
+   "symbol_and_unit_ledger": {
+    "\\Gamma_n^m": "set of action sequences of length n with at most m-1 changes [sequences]",
+    "m": "number of segments in the comparator [count]",
+    "y_t": "adversarial loss vector in round t [loss units]",
+    "clipping level alpha": "lower bound imposed on every action probability so no arm is ever fully abandoned"
+   },
+   "assumptions": [
+    "The Exp4-over-sequences upper bound is matched by a lower bound built from m concatenated stationary problems, and the lower bound holds even for policies told where the changes are.",
+    "Practical version: mirror descent on the simplex clipped to [alpha, 1], because an unclipped rule commits too hard and cannot notice change points."
+   ],
+   "breakdown_regime": "If the environment changes continuously rather than in segments, the segment comparator is the wrong model (Sec 31.2 uses variation budgets for the stochastic case). The number of segments m must be guessed; too small a guess underfits the drift, too large inflates the bound.",
+   "domain": "nonstationary-bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every real signal the engine tracks decays, regimes rotate, and yesterday's best model is not today's. Tracking regret is the honest objective for that world: do not ask to match the best fixed model, ask to match the best piecewise-fixed sequence of models with a stated number of switches. The clipping trick carries the operational moral: never let any candidate's probability hit zero, because a dead candidate cannot be resurrected when the regime turns.",
+    "source_operator": "nonstationary_tracking_regret",
+    "telemetry": "regime change indicators, per-period best-model records, probability floors on candidates"
+   }
+  },
+  {
+   "primitive_id": "best_arm_identification_characteristic_time",
+   "name": "Best-arm identification at fixed confidence: sample complexity is c*(nu) log(1/delta), a transportation-cost optimisation over alternative instances; track-and-stop attains it (Thm 33.5, Thm 33.6)",
+   "verbatim_quote": "The objective in fixed confidence best-arm identification is to find a sound learner for which Eνπ [τ ] is minimised over environments ν ∈ E.",
+   "page": "Ch 33 Sec 33.2, printed pp. 406-411 (txt lines 21560-21845)",
+   "latex": "\\mathbb{E}_{\\nu}[\\tau] \\ge c^*(\\nu) \\log \\frac{1}{4\\delta}, \\qquad c^*(\\nu)^{-1} = \\sup_{\\alpha \\in \\mathcal{P}_{k-1}} \\inf_{\\nu' \\in \\mathcal{E}_{\\mathrm{alt}}(\\nu)} \\sum_{i=1}^{k} \\alpha_i D(\\nu_i, \\nu_i')",
+   "symbol_and_unit_ledger": {
+    "\\tau": "stopping time of the identification procedure [rounds]",
+    "\\delta": "allowed error probability [dimensionless]",
+    "c^*(\\nu)": "characteristic time of the instance [rounds per nat]",
+    "\\alpha": "sampling proportions over arms [probability vector]",
+    "\\mathcal{E}_{\\mathrm{alt}}(\\nu)": "instances whose optimal arm differs from nu's"
+   },
+   "assumptions": [
+    "Soundness: the probability of stopping and recommending a suboptimal arm is at most delta, for every instance.",
+    "Track-and-stop tracks the plug-in optimal proportions alpha*(nu-hat) and stops when the generalised likelihood ratio statistic Z_t crosses a threshold beta_t(delta) of order log(1/delta)."
+   ],
+   "breakdown_regime": "If the optimal arm is not unique, no sound procedure can stop in finite time with positive probability. The fixed-budget sibling problem (simple regret, Sec 33.1, minimised by sequential halving, Thm 33.10) has messier answers because the confidence is not controlled.",
+   "domain": "pure-exploration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's certification protocol for promoting a champion signal: state the error budget first, then let the characteristic time dictate both the total sample size and the exact proportions in which rivals must be tested, including generous samples of the arms most able to impersonate the champion. Promotion decisions made on raw sample counts without the alternative-instance calculation are uncertified by exactly the gap this theorem measures.",
+    "source_operator": "best_arm_identification_characteristic_time",
+    "telemetry": "candidate quality estimates, alternative-hypothesis divergences, optimal sampling proportions, stopping statistics"
+   }
+  },
+  {
+   "primitive_id": "thompson_sampling_probability_matching",
+   "name": "Thompson sampling: play each arm with the posterior probability that it is optimal (probability matching); Bayesian regret O(sqrt(nk log n)) (Alg 23, Thm 36.1)",
+   "verbatim_quote": "The idea of sampling from the posterior and playing the optimal action is called Thompson sampling, or posterior sampling.",
+   "page": "Ch 36 Sec 36.1, printed pp. 460-462 (txt lines 24560-24620); Bayesian regret defined Ch 34 Sec 34.6",
+   "latex": "\\mathbb{P}(A^* = \\cdot \\mid \\mathcal{F}_{t-1}) = \\mathbb{P}(A_t = \\cdot \\mid \\mathcal{F}_{t-1}) \\ \\text{a.s.}, \\qquad \\mathrm{BR}_n(\\pi, Q) \\le C \\sqrt{nk \\log n}",
+   "symbol_and_unit_ledger": {
+    "A^*": "the optimal arm under the true (posterior-random) environment",
+    "\\mathcal{F}_{t-1}": "history up to round t-1",
+    "Q": "prior over environments; BR_n is regret averaged over Q [reward units]",
+    "C": "universal constant [dimensionless]"
+   },
+   "assumptions": [
+    "Requires a maintained posterior over environments; each round samples one environment from the posterior and plays its optimal arm.",
+    "The Bayesian regret integrates the frequentist regret against the prior (Eq 4.4), so the guarantee is prior-averaged, not worst-case."
+   ],
+   "breakdown_regime": "A badly misspecified prior can poison the posterior for a long time, and exact posterior sampling is intractable in rich model classes. Frequentist guarantees (Sec 36.2-36.3) need additional arguments beyond the Bayesian proof's probability-matching identity.",
+   "domain": "bayesian-bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Probability matching is the engine's most natural exploration rule when it maintains genuine posterior beliefs: sample a plausible world from the posterior, act optimally inside it, and the frequency of trying each option automatically equals the posterior chance that the option is best. Exploration effort is therefore allocated in exact proportion to remaining doubt, with no separate exploration parameter to tune.",
+    "source_operator": "thompson_sampling_probability_matching",
+    "telemetry": "posterior samples over candidate qualities, posterior probability each candidate is best, action frequencies"
+   }
+  },
+  {
+   "primitive_id": "gittins_index_theorem",
+   "name": "Gittins index: for discounted Bayesian bandits each arm has an index (a fair retirement charge), and always playing the highest index is exactly Bayesian optimal (Eq 35.8-35.9, Thm 35.9)",
+   "verbatim_quote": "The Gittins index, or fair charge, of a state x is the smallest value of γ for which the learner is indifferent between retiring immediately and playing for at least one round",
+   "page": "Ch 35 Sec 35.4, printed pp. 448-451 (txt lines 23880-24035)",
+   "latex": "g(x) = \\inf\\{\\gamma \\in \\mathbb{R} : v_\\gamma(x) = 0\\} = \\sup_{\\tau \\ge 2} \\frac{\\mathbb{E}_x\\left[\\sum_{t=1}^{\\tau-1} \\alpha^{t-1} r(S_t)\\right]}{\\mathbb{E}_x\\left[\\sum_{t=1}^{\\tau-1} \\alpha^{t-1}\\right]}",
+   "symbol_and_unit_ledger": {
+    "g(x)": "Gittins index of an arm in state x [reward units]",
+    "v_\\gamma(x)": "value of the retirement game with charge gamma [reward units]",
+    "\\alpha": "discount factor in (0,1) [dimensionless]",
+    "r(S_t)": "reward of the arm's Markov state [reward units]",
+    "\\tau": "stopping time, the horizon of a single-arm excursion [rounds]"
+   },
+   "assumptions": [
+    "Arms evolve as independent Markov chains and only the played arm's state moves; rewards are discounted.",
+    "Each arm's index depends only on that arm's own state and dynamics, never on the other arms."
+   ],
+   "breakdown_regime": "The theorem is welded to its assumptions: undiscounted finite-horizon problems, restless arms whose states move while idle, and arms with coupled dynamics all fall outside it, and the index itself generally requires solving an optimal stopping problem per arm. It is a benchmark of what perfect decomposition looks like, rarely a directly computable policy.",
+   "domain": "bayesian-bandits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Gittins index is the ideal form of a per-signal score: a single number per option, computed from that option alone, that nonetheless yields globally optimal allocation when options are ranked by it. It sets the design target for the engine's signal scores: a score is trustworthy exactly to the extent that ranking by it approximates the optimal policy, and the fair-charge definition shows how to audit a score, by asking what constant reward would make the engine indifferent to retiring the option.",
+    "source_operator": "gittins_index_theorem",
+    "telemetry": "per-option state summaries, discount or horizon parameters, index-style scores and their audit values"
+   }
+  },
+  {
+   "primitive_id": "information_ratio_bound",
+   "name": "Information ratio analysis: if squared expected instantaneous regret is at most beta^2 times the information gained about the optimal action, Bayesian regret is at most beta sqrt(n diam_F) (Thm 36.6)",
+   "verbatim_quote": "The promised generic theorem bounds the regret in terms of an ‘information ratio’ that depends on the ratio of the squared expected instantaneous regret conditioned on the past and a Bregman divergence with respect to some convex function F to be chosen later.",
+   "page": "Ch 36 Sec 36.4, printed pp. 469-470 (txt lines 25040-25130)",
+   "latex": "\\mathbb{E}_{t-1}[\\Delta_t] \\le \\beta \\sqrt{\\mathbb{E}_{t-1}\\left[D_F\\left(P_t(A^* \\in \\cdot), P_{t-1}(A^* \\in \\cdot)\\right)\\right]} \\ \\Longrightarrow \\ \\mathrm{BR}_n \\le \\beta \\sqrt{n \\, \\mathrm{diam}_F(\\mathcal{P}_{k-1})}",
+   "symbol_and_unit_ledger": {
+    "\\Delta_t": "instantaneous regret in round t [reward units]",
+    "P_t(A^* \\in \\cdot)": "posterior distribution of the optimal action after round t [probability vector]",
+    "D_F": "Bregman divergence for a chosen convex F; entropy gives mutual information [nats]",
+    "\\beta": "information ratio bound [reward units per sqrt(nat)]",
+    "diam_F(\\mathcal{P}_{k-1})": "diameter of the probability simplex under F, log k for entropy [nats]"
+   },
+   "assumptions": [
+    "Applies to Thompson sampling in Bayesian settings, including the adversarial-reward Bayesian model of Sec 36.4 where it yields BR_n <= sqrt(nk log(k)/2) (Thm 36.5).",
+    "The proof telescopes the expected Bregman increments of the posterior, a martingale argument."
+   ],
+   "breakdown_regime": "The bound is only as good as the worst-round ratio beta: a single round type where regret is large but the posterior about A* barely moves blows up beta and the guarantee with it. It is a Bayesian-averaged statement and does not directly bound worst-case frequentist regret.",
+   "domain": "bayesian-bandits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The information ratio is a unit economics for learning: every decision the engine makes should be auditable as regret paid divided by information gained about which option is best. A policy that repeatedly pays full price for decisions that teach it nothing about the identity of the best option has an unbounded ratio and should be redesigned, whatever its short-term results look like.",
+    "source_operator": "information_ratio_bound",
+    "telemetry": "per-decision expected regret estimates, posterior movement about the best option per observation, ratio dashboards"
+   }
+  },
+  {
+   "primitive_id": "partial_monitoring_classification",
+   "name": "Partial monitoring classification: the feedback structure alone fixes the minimax regret exponent: 0, n^(1/2), n^(2/3), or linear (Thm 37.11)",
+   "verbatim_quote": "The terminology in the last section finally allows us to state the main theorem of this chapter that classifies finite adversarial partial monitoring games.",
+   "page": "Ch 37 Sec 37.3, printed p. 487 (txt lines 26067-26085)",
+   "latex": "R_n^*(G) = \\begin{cases} 0, & G \\text{ has no neighbouring action pairs} \\\\ \\Theta(n^{1/2}), & G \\text{ locally observable} \\\\ \\Theta(n^{2/3}), & G \\text{ globally but not locally observable} \\\\ \\Omega(n), & \\text{otherwise} \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "G = (L, \\Phi)": "partial monitoring game: loss matrix L and feedback matrix Phi [loss units / symbols]",
+    "neighbouring actions": "actions that are both undominated and adjacent on the Pareto frontier of expected losses",
+    "locally observable": "for every neighbouring pair, the loss difference is measurable from the feedback of the two actions themselves",
+    "globally observable": "the loss difference is measurable from feedback of some actions"
+   },
+   "assumptions": [
+    "Finite adversarial partial monitoring: the learner sees only the feedback symbol Phi[A_t, outcome], not the loss.",
+    "Bandits are the locally observable special case where feedback reveals the chosen action's loss."
+   ],
+   "breakdown_regime": "Hopeless games (not globally observable) admit no learning at all: two actions can be indistinguishable in feedback forever while differing in loss, so regret is linear for every policy. The classification also hides constants depending on k, outcomes and the game's geometry, which can dominate at practical horizons.",
+   "domain": "partial-monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before optimising any engine component, classify its feedback: if the observations a decision produces cannot, even in principle, reveal the loss difference between the leading alternatives, no algorithm fixes that and the correct move is to change the instrumentation, not the learner. The n^(2/3) middle class is the warning case: learning is possible but structurally slower, because information about the comparison must be bought by playing third-party probe actions.",
+    "source_operator": "partial_monitoring_classification",
+    "telemetry": "feedback channel specifications per decision type, observability classification, probe action requirements"
+   }
+  },
+  {
+   "primitive_id": "bellman_optimality_equation",
+   "name": "Bellman optimality equation for average-reward MDPs: a gain rho and differential value function v solving rho + v(s) = max_a (r_a(s) + <P_a(s), v>) certify an optimal deterministic memoryless policy (Eq 38.5, Thm 38.2)",
+   "verbatim_quote": "One way to find the optimal policy is as the greedy policy with respect to a value function that satisfies the Bellman optimality equation, which is",
+   "page": "Ch 38 Sec 38.2, printed pp. 517-518 (txt lines 27760-27790)",
+   "latex": "\\rho + v(s) = \\max_{a \\in A} \\left( r_a(s) + \\langle P_a(s), v \\rangle \\right) \\quad \\forall s \\in \\mathcal{S}",
+   "symbol_and_unit_ledger": {
+    "\\rho": "optimal gain, long-run average reward per step [reward units per round]",
+    "v(s)": "differential value of state s: long-run advantage of starting in s [reward units]",
+    "r_a(s)": "expected immediate reward of action a in state s [reward units]",
+    "P_a(s)": "transition distribution over next states [probability vector]",
+    "\\mathcal{S}, A": "state and action sets of a strongly connected MDP"
+   },
+   "assumptions": [
+    "Strongly connected (communicating) MDP, so the optimal gain is a constant independent of the start state.",
+    "Solutions exist (Thm 38.2a); any solution's greedy policy is optimal (Thm 38.2b), and a deterministic memoryless optimal policy always exists (Thm 38.2c). v is only unique up to additive constants, and sometimes not even that."
+   ],
+   "breakdown_regime": "Without strong connectivity the gain depends on the start state and the single-equation form breaks. The equation certifies optimality for a known model; with an unknown model it becomes the object that learning algorithms (UCRL2) solve optimistically over confidence sets of models.",
+   "domain": "markov-decision-processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Bellman equation is the engine's consistency condition for any sequential plan: a claimed long-run value is only coherent if, state by state, it equals the best immediate outcome plus the value of wherever the plan lands next. Reasoning traces that assert a strategy is best without satisfying some version of this recursion are asserting, not proving. It also fixes the representation: long-horizon quality splits into a steady rate (rho) plus a transient advantage per state (v), which is the right way to score positions that differ in both.",
+    "source_operator": "bellman_optimality_equation",
+    "telemetry": "state definitions for the decision process, transition estimates, per-state value estimates, gain estimates"
+   }
+  },
+  {
+   "primitive_id": "ucrl2_optimism_in_mdps",
+   "name": "UCRL2: optimism over confidence sets of transition models, recomputed in doubling phases, achieves regret O(D S sqrt(A n log)) in communicating MDPs (Sec 38.5, Thm 38.6)",
+   "verbatim_quote": "At the start of each phase, UCRL2 computes an optimal policy for the statistically plausible MDP with the largest optimal gain.",
+   "page": "Ch 38 Sec 38.4-38.5, printed pp. 523-525 (txt lines 28080-28190)",
+   "latex": "\\mathcal{C}_t(s, a) = \\left\\{P \\in \\mathcal{P}(\\mathcal{S}) : \\|P - \\hat{P}_{t-1,a}(s)\\|_1 \\le \\sqrt{\\frac{L_{t-1}(s, a)}{1 \\vee T_{t-1}(s, a)}}\\right\\}, \\qquad \\hat{R}_n < C D S \\sqrt{A n \\log(nSA/\\delta)}",
+   "symbol_and_unit_ledger": {
+    "D": "diameter of the MDP: worst-case shortest expected travel time between states [rounds]",
+    "S, A": "numbers of states and actions [counts]",
+    "T_{t-1}(s, a)": "visits to state-action pair (s, a) [count]",
+    "L_t(s, a)": "logarithmic confidence term of order log(S A t / delta) [dimensionless]",
+    "\\hat{P}": "empirical transition frequencies [probability vector]",
+    "C": "universal constant [dimensionless]"
+   },
+   "assumptions": [
+    "Rewards in [0, 1] and known in the chapter's simplification; transitions unknown; regret is against n times the optimal gain.",
+    "Phases end when some state-action visit count doubles; within a phase the optimistic policy is fixed. The optimistic model is found by solving the Bellman equation on the extended MDP whose actions include the choice of plausible transition vector (extended value iteration).",
+    "Thm 38.7 gives a matching-style lower bound of order sqrt(D S A n), so the rate in n, S and A is right up to the diameter and logarithmic factors."
+   ],
+   "breakdown_regime": "Recomputing the optimistic policy every round instead of in phases can cause dithering and linear regret (Exercise 38.19). Performance degrades with the diameter D, and the L1 confidence balls are loose in large state spaces; the whole construction also assumes the model class (finite communicating MDP) is correct.",
+   "domain": "markov-decision-processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "UCRL2 is optimism promoted from arms to whole world-models: maintain confidence sets over dynamics, plan optimally inside the most favourable plausible dynamics, and only replan when the evidence base for some component has doubled. The doubling schedule is a reusable governance rule for the engine: re-derive plans when information doubles, not on every new observation, because replanning on noise produces exactly the dithering the chapter warns about.",
+    "source_operator": "ucrl2_optimism_in_mdps",
+    "telemetry": "transition count tables, model confidence radii, phase boundaries by visit-count doubling, current optimistic plan"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "8dfdb8ea7ef78b30-t1",
+   "think": "This book is the reference treatment of multi-armed bandit algorithms, and its real subject is not any single algorithm but the complete logic of sequential decision-making under partial feedback. The architecture is deliberate. Part I builds the language: a bandit is a sequential game against an unknown environment drawn from a declared class, performance is regret against a declared competitor class, and two technical pillars are erected before any algorithm appears, namely measure-theoretic probability with filtrations and martingales, and finite-time concentration of measure. Everything later is assembled from those pillars, and the book keeps returning to them rather than importing new machinery per chapter.\n\nThe stochastic finite-armed core (Parts II and IV) is organised around one identity and one principle. The identity is the regret decomposition, which splits total regret into per-arm gaps times expected pull counts, converting algorithm design into the problem of controlling pull counts. The principle is optimism: score each arm by a plausible upper bound and let uncertainty itself drive exploration. Around that core the book runs a ratchet of refinements that is itself instructive. Explore-then-commit shows the cost of non-adaptive exploration. UCB makes exploration adaptive and gap-dependent. Sharper confidence schedules remove horizon knowledge and reach the optimal asymptotic constant. MOSS retunes the confidence level per arm to remove the last log factor and hit the minimax rate. KL-UCB replaces the Gaussian geometry of the confidence width with the KL geometry of the actual reward family and thereby matches the instance-dependent lower bound exactly on Bernoulli problems. Each step is a lesson in which term of the bound is loose and what mathematical object tightens it.\n\nPart IV then proves the floors that certify all of this. The minimax floor of order sqrt(kn) comes from a hypothesis-testing argument: perturb the least-explored arm until it becomes optimal, and price the indistinguishability with relative entropy through the Bretagnolle-Huber inequality and the divergence decomposition, which states that total evidence is pull counts times per-arm divergence. The instance-dependent floor replaces the perturbation argument with the d_inf functional, the cheapest divergence at which an arm could beat the optimum, and shows that KL-UCB and the tuned UCB pay exactly that price per arm per log n. The lower-bound machinery is not decoration; it is the book's auditing department, and it is what allows the word optimal to be used without embarrassment.\n\nThe adversarial half of the book (Parts III and VI) rebuilds the theory when no stochastic assumptions survive. The key invention is the importance-weighted estimator, which manufactures unbiased estimates of unplayed arms from bandit feedback at the cost of variance that explodes as play probabilities shrink. Exp3 wraps that estimator in exponential weights; Exp3-IX deliberately biases the estimator to buy high-probability control; mirror descent and follow-the-regularised-leader then reveal all of these as one geometric object, with the Bregman divergence of a chosen regulariser setting the trade between diameter and stability. Part V lifts everything to structure: contextual bandits and Exp4 for expert advice, linear bandits where one parameter vector couples all arms, confidence ellipsoids from ridge regression, the method of mixtures for time-uniform validity, Kiefer-Wolfowitz optimal design for choosing what to measure, and the online-to-confidence-set conversion that compiles any good online predictor into calibrated uncertainty. Part VII covers composite and drifting problems: combinatorial actions with semi-bandit feedback, non-stationary tracking regret, and pure exploration, where the objective changes from cumulative reward to certifying the best arm, with its own characteristic-time lower bound and track-and-stop algorithm. The Bayesian chapters (34 to 36) supply the alternative accounting system: priors, Bayesian regret, the Gittins index as the exactly optimal decomposition for discounted problems, Thompson sampling as probability matching, and the information ratio as a generic exchange rate between regret paid and information gained. Part VIII closes by showing bandits are one cell in a larger table: partial monitoring, where the feedback structure alone fixes the achievable regret exponent, and Markov decision processes, where optimism over confidence sets of transition models (UCRL2) extends the whole programme to stateful dynamics with the Bellman optimality equation as the planning core.\n\nTwo design habits recur so often that they deserve naming as part of the architecture. The first is the good-event method: define the event on which all confidence statements hold, bound the algorithm's behaviour deterministically on that event, and pay the failure probability once, globally. Nearly every proof in the book is a variation on this pattern, which is why the results compose so well. The second habit is reduction: contextual bandits reduce to expert advice, sparse linear bandits reduce to online prediction, adversarial linear bandits reduce to online linear optimisation, and MDP learning reduces to optimistic planning. The book consistently prefers to convert a new problem into a solved one over inventing a new analysis, and that preference is itself a transferable engineering doctrine.\n\nFor a reasoning engine the book changes three habits. First, every evaluation becomes a regret statement relative to a named competitor class and a named environment class; unanchored performance claims are not well formed. Second, uncertainty is carried as explicit finite-time confidence objects with stated tail assumptions, never as asymptotic standard errors, and exploration budgets are computed from divergence quantities rather than set by feel. Third, feedback structure is audited before algorithms are chosen, because the partial monitoring classification proves that some observation channels make learning structurally slow or impossible regardless of cleverness.\n\nThe limits are equally clear. The theory leans on stationarity or on explicitly modelled departures from it; on reward families whose tails are controlled; on action sets whose structure is known exactly; and on expectations, which suppress the tail risk a real operator cares about. Several crown results are asymptotic or worst-case and can mislead at the small horizons where practical systems live. The book knows this and says so in its notes, which is part of why it can be trusted as a foundation rather than a sales pitch.",
+   "retrocausal_genealogy": "The lineage starts with Thompson in 1933, who proposed posterior sampling in a medical context and was ignored for decades, and Robbins in 1952, who formalised the sequential sampling problem and introduced regret. Lai and Robbins in 1985 proved the asymptotic lower bound that organised the field around logarithmic regret and per-arm divergence constants. The finite-time era arrived with Auer, Cesa-Bianchi and Fischer in 2002, whose UCB and Exp3 analyses made bandits a computer science subject, and with Audibert and Bubeck, whose MOSS and KL-UCB work closed the minimax and instance-dependent gaps. Abbasi-Yadkori, Pal and Szepesvari supplied the self-normalised concentration that made linear bandits rigorous, Garivier and Cappe founded modern best-arm identification, and Russo and Van Roy added the information ratio. This 2020 volume is the consolidation of that ninety-year line into one notation and one standard of proof.",
+   "theory_of_mind": "The authors believe the reader is a practitioner in waiting, not a theorem consumer. The preface states the goal plainly: problems in theory are all alike, every application is different, so the reader must learn which assumptions in the theory are load-bearing and how to modify an algorithm when the assumptions change. Their model of the domain is that sequential decisions under uncertainty have a small set of reusable mechanisms (decomposition, concentration, optimism, exponential weighting, information-theoretic floors) that recur across superficially different problems, and that intuition for the mechanisms matters more than memorised bounds. They also model the reader as someone who will be tempted to overclaim, so every upper bound is shadowed by a lower bound that disciplines it.",
+   "cross_layer_veto": "This work vetoes several things at other layers. It vetoes any performance claim stated without a competitor class and an environment class, because regret is undefined without both. It vetoes asymptotic confidence intervals in live decision loops, because the finite-time bounds show how badly the central limit approximation can behave at the sample sizes and tail probabilities that matter. It vetoes exploration schedules set by habit, because the lower bounds price exploration in divergence units and show exactly which arms must be sampled more. And it vetoes instrumentation complacency: the partial monitoring classification proves some feedback channels cannot support learning at any algorithmic cleverness, so a layer that cannot observe the loss difference between its leading options must be re-instrumented, not re-optimised."
+  }
+ ],
+ "universal_lens": "Read outside its domain, the book is a general theory of how an agent should behave when it must act to learn and learn to act with the same budget. Its template is: declare what you are competing against, decompose total loss into per-choice contributions, carry uncertainty as explicit priced objects, spend trials where the divergence to the most dangerous alternative is cheapest to resolve, and let proven floors, not optimism about your own cleverness, set expectations. Any organisation that allocates experiments, attention or capital under partial feedback is running a bandit problem whether it names it or not, and the book's quantities (gaps, pull counts, divergences, characteristic times) are the correct bookkeeping for all of them.",
+ "gsi_mapping": "For the Galaxy Sports Institute this volume is core curriculum and a methods standard. It supplies the formal language for teaching sequential decision-making: regret against declared baselines, confidence as a finite-time object, exploration as a budgeted resource priced in divergence. Its lower bounds give the Institute its honesty instruments, letting any claimed method be located relative to what is provably achievable on the same problem class. The pure exploration and best-arm identification chapters define how the Institute should certify that one method, signal or model is genuinely better than another before teaching it as such, with stated error probability and computed sample sizes rather than narrative conviction.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine this book is the operating manual for signal management. Candidate signals and models are arms: the engine scores them with confidence-aware indices, allocates live trials in proportion to uncertainty and divergence-based value, grades policies by pseudo-regret against settled outcomes, and retires or promotes signals through best-arm identification protocols with explicit error budgets. The adversarial and non-stationary chapters govern behaviour when the environment drifts or pushes back, the linear bandit machinery governs feature-based projections, and the information ratio audits every decision for whether the price paid bought knowledge about which option is actually best. Nothing in this mapping concerns wagering mechanics; it is entirely about prediction quality under partial feedback."
+}

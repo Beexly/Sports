@@ -1,0 +1,767 @@
+{
+  "book_id": "15452dc5f38ae30a",
+  "source_status": "COMPLETE",
+  "source_note": "Bradley J. Congelio, Introduction to NFL Analytics with R, Chapman and Hall/CRC Press, Data Science Series, December 2023. Catalog correction: the author is Bradley J. Congelio (Assistant Professor, Kutztown University of Pennsylvania), not Anthony Congelio. Local file: a 43,266,760 byte PDF edition built locally 2026-11-06 from the author's own Quarto source repository (github.com/bcongelio/nfl-analytics-with-r-book, commit 969f30836d7cf29f3d55ef9cffa8e90ba2861922), with the rendered HTML printed to PDF via WeasyPrint; the PDF front matter describes the source repository as CC0 1.0 Universal while the online book page states the online version is CC BY-NC-ND 4.0. Full sha256 by the gatekeeper scan method (size prefix plus full file bytes): 15452dc5f38ae30a2256a5c7c4a6510c537d83fe5462d92ac4d7501eed1ced84. Text quality: clean born digital extraction (611,983 byte text file, 13,829 lines) with occasional glyph artifacts in displayed math and page break numerals embedded in the text; all quoted passages in this artifact were verified as exact normalized substrings of the extraction. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "investigative_inquiry_outline",
+      "name": "Investigative inquiry: a six step loop from a stated question to a communicated result",
+      "verbatim_quote": "we will define the process of investigative inquiry as one that seeks both knowledge and information about a problem/question through data-based research",
+      "page": "Ch 1.1-1.2, text lines ~706-810",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The question must be reconfigurable when the data it needs does not exist; Step 2 of the outline loops back to Step 1 when data is unavailable.",
+        "Communication to the public is a formal final step of the analysis, not an afterthought."
+      ],
+      "breakdown_regime": "The loop is a workflow discipline, not an estimator; it gives no protection against a badly specified question or a biased dataset beyond the analyst's critical thinking at the cleaning step.",
+      "domain": "research-method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The loop is the engine's outer control structure: every GSE inquiry starts from a stated question, checks data availability before committing to the question, and ends with a communicated, checkable claim. It vetoes dashboard-first analysis where metrics are computed because they are available rather than because they answer something.",
+        "source_operator": "investigative_inquiry_outline",
+        "telemetry": "question registry, dataset availability map, published claim log"
+      }
+    },
+    {
+      "primitive_id": "adjusted_defensive_impact",
+      "name": "Adjusted Defensive Impact: a hand weighted composite adjusting sacks for availability, solo share, unblocked share, and rush rate",
+      "verbatim_quote": "not all defensive sacks are created equal, as a player’s true impact is not always perfectly represented by top-level statistics",
+      "page": "Ch 1 introduction, text lines ~285-360",
+      "latex": "\\mathrm{ADI} = (17 - g)\\,(0.0058) + 0.9\\,S_{\\mathrm{solo}} - 0.14\\,S_{\\mathrm{unblocked}} + (0.81 - \\mathrm{rush\\%})",
+      "symbol_and_unit_ledger": {
+        "g": "games played by the defender [games]",
+        "S_solo": "solo sacks [count]",
+        "S_unblocked": "unblocked sacks [count]",
+        "rush%": "pass rushes divided by pass snaps [proportion]"
+      },
+      "assumptions": [
+        "Weights (0.0058 per missed game, 0.90 solo, minus 0.14 unblocked, 0.81 baseline rush rate) are the author's judgment, set by hand rather than fitted; the games adjustment is (17 minus games) times 0.0058, from 2,936 total player games divided by 17.",
+        "SIS hand charted data correctly labels solo, assisted, and unblocked sacks."
+      ],
+      "breakdown_regime": "Weights are unvalidated against any outcome; the composite ranks T.J. Watt first for 2021 largely by construction of the chosen adjustments, so it demonstrates the method rather than proving the ranking.",
+      "domain": "metric-design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "ADI is the template for transparent composite construction in the engine: each adjustment is a named, separately inspectable term, so a composite can be audited term by term and any term can be reweighted or removed without rebuilding the metric.",
+        "source_operator": "adjusted_defensive_impact",
+        "telemetry": "SIS style charted pass rush data: games, pass snaps, pass rushes, solo, assisted and unblocked sacks, hurries, hits"
+      }
+    },
+    {
+      "primitive_id": "unique_ol_combinations_snap_method",
+      "name": "Unit combination counting: define a game's starting unit as the five linemen with the highest snap share, then count distinct units",
+      "verbatim_quote": "we can make the argument that the five offensive line players with the highest percentage of snap counts for each unique game_id are to be considered the combination of players used most often in that game",
+      "page": "Ch 1.3.1, text lines ~1000-1060",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The five highest snap share linemen in a game stand in for the starting five, even when an injury replacement out-snapped a starter.",
+        "Position within the line (left versus right tackle) is ignored; combinations are sets of five names in alphabetical order, serialized with toString and counted with n_distinct."
+      ],
+      "breakdown_regime": "Participation data cannot be used naively: personnel strings include 6 and 7 lineman plays and one extra point attempt misclassified as a rush, which corrupts first play sampling. The snap share method avoids those traps but blurs true starters with heavy rotation players.",
+      "domain": "data-engineering",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE unit continuity features (offensive line, secondary, receiver groups) should be built the same way: define the unit by snap share within the game, serialize the set, and count distinct sets per team per season. The method transfers to any position group whose continuity is hypothesized to matter.",
+        "source_operator": "unique_ol_combinations_snap_method",
+        "telemetry": "nflreadr load_snap_counts: game_id, player, position, offense_pct"
+      }
+    },
+    {
+      "primitive_id": "adjusted_sack_rate_context",
+      "name": "Adjusted Sack Rate: sack rate adjusted for pass attempts, down, distance, and opponent",
+      "verbatim_quote": "Schatz designed Adjusted Sack Rate which accounts for the number of pass attempts, down, distance, and - importantly - the team’s opponent",
+      "page": "Ch 1.3.5, text lines ~1330-1365",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "League wide sack rate varies systematically by down and yards to go (Schatz's 2003 table), so raw sack rate confounds situation with line play.",
+        "Opponent adjustment is separable from the situational adjustment."
+      ],
+      "breakdown_regime": "The book uses Football Outsiders' published adjusted values rather than deriving them, and the 2020 season breaks the pattern: quick release quarterbacks (Roethlisberger 2.19 seconds, Rivers 2.39 seconds average time to throw) mask line churn, so the adjustment still omits quarterback release time.",
+      "domain": "metric-design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pass protection evaluation in the engine must be situation adjusted before it is compared across teams: down, distance, attempts, and opponent enter the expectation, and quarterback time to throw is a required additional covariate that the book itself identifies through its 2020 counterexample.",
+        "source_operator": "adjusted_sack_rate_context",
+        "telemetry": "play by play down, ydstogo, pass attempts, sacks, opponent; Next Gen average time to throw"
+      }
+    },
+    {
+      "primitive_id": "adjusted_line_yards_weighting",
+      "name": "Adjusted Line Yards: rushing credit assigned to the offensive line by fixed responsibility weights per run outcome band",
+      "verbatim_quote": "Any run that ends with a loss of yards results in 120% of the value being placed on the offensive line, while a 0-4 yard rush is 100%, a 5-10 yard rush is 50%, and anything over 11 yards is a 0% value",
+      "page": "Ch 1.3.6, text lines ~1470-1500",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The line's share of a run's value declines with run length: 120 percent of losses, 100 percent of 0 to 4 yards, 50 percent of 5 to 10 yards, 0 percent beyond 11 yards.",
+        "The metric itself is derived by Football Outsiders with a regression analysis, and one league wide weighting scheme applies to all teams."
+      ],
+      "breakdown_regime": "Football Outsiders itself warns the metric is contaminated by running back quality in both directions: a very good back lifts a bad line's number and a poor back drags a good line's number down, which is why the book later reweights it by elusive rating.",
+      "domain": "metric-design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Credit assignment by outcome band is a reusable engine pattern: when an outcome is jointly produced, assign fixed responsibility shares by outcome region and state them openly, then test sensitivity by reweighting with an independent measure of the partner's contribution (here, back elusiveness).",
+        "source_operator": "adjusted_line_yards_weighting",
+        "telemetry": "rushing attempts with yards gained bands; team run game totals"
+      }
+    },
+    {
+      "primitive_id": "zscore_standardized_weighting",
+      "name": "Z-score reweighting: standardize a confounder and subtract it to purify a target metric",
+      "verbatim_quote": "resulting in each team receiving what is called a ‘z-score’ (or the total standard deviations away from the mean)",
+      "page": "Ch 1.3.6, text lines ~1610-1665",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Elusive rating measures the running back's contribution independently of blocking, so subtracting its z-score (via the scale function) from Adjusted Line Yards isolates the line's share: weighted_aly equals adj_line_yards minus adjusted_elu in the book's code.",
+        "A linear subtraction of standard deviation units has the right scale relative to yards."
+      ],
+      "breakdown_regime": "Elementary by the book's own description: ranking, categorical, logarithmic, and regression coefficient weighting are named as alternatives, and a linear z subtraction can overcorrect when the confounder correlates with the line's own quality. The PCA chapter's printed standardization formula carries a glyph artifact, so no equation is transcribed here.",
+      "domain": "feature-engineering",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's confounder removal starter move: standardize the confounding measure across the comparison set and adjust the target metric by it, with the adjustment recorded as a separate layer so raw and adjusted values both survive for the reasoning layer.",
+        "source_operator": "zscore_standardized_weighting",
+        "telemetry": "PFF elusive rating by team; Football Outsiders Adjusted Line Yards"
+      }
+    },
+    {
+      "primitive_id": "explosive_play_td_drive_rate",
+      "name": "Explosive play dependence: the share of a team's touchdown drives that contained a play of 20 or more yards",
+      "verbatim_quote": "The important explosive_play metric is returned, in a binary 1 or 0 format, based on whether or not the max_yards in each drive was greater than or equal to 20 yards",
+      "page": "Ch 1.4, text lines ~1700-1770",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A drive's maximum play is the right summary of its explosiveness; one 20 yard play classifies the whole drive.",
+        "Only offensive touchdowns count: special teams plays and plays with a fumble or interception are filtered out, so totals run below official touchdown counts."
+      ],
+      "breakdown_regime": "A binary 20 yard threshold discards magnitude and field position context; a 19 yard play on a short field counts as methodical while a 20 yard play from midfield counts as explosive. In 2022 the measure runs from Carolina at about 82 percent of touchdown drives down to Indianapolis at about 52 percent.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Drive level aggregation with a max play feature is the engine pattern for scoring style classification: methodical versus explosive offenses carry different defensive matchup expectations, and drive level features avoid the single play framing error the book corrects in the Steelers example, where an eight yard longest touchdown play hid the explosive plays earlier on those drives.",
+        "source_operator": "explosive_play_td_drive_rate",
+        "telemetry": "play by play grouped by team, game, drive: yards_gained, fixed_drive_result"
+      }
+    },
+    {
+      "primitive_id": "boom_bust_epa_rates",
+      "name": "Boom and Bust rates: the share of attempts with EPA of at least plus 1, and the share at the minus 1 tail",
+      "verbatim_quote": "the Boom% correlates to any pass attempt by the quarterback that resulted in an expected points add (EPA) of at least 1 and Bust% is any pass attempt that resulted in an EPA of at least -1",
+      "page": "Ch 2.6, text lines ~2839-2845",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The printed text defines Bust% with the words 'at least -1'; Ch 5.3.1 states the rusher version as rushes with an EPA of less than -1, so the operative convention is a one point magnitude threshold in each direction.",
+        "EPA thresholds of plus and minus 1 point mark genuinely drive changing plays."
+      ],
+      "breakdown_regime": "Tail rates ignore the middle of the distribution entirely; two quarterbacks with identical Boom and Bust rates can have very different mean EPA. The book's worked table also carries a difference column (boom minus bust), which inherits both tails' sampling noise.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Tail rate pairs are the engine's volatility descriptor: a player's value is carried as a boom rate, a bust rate, and their difference, which separates high variance playmakers from steady ones in a way mean EPA alone cannot.",
+        "source_operator": "boom_bust_epa_rates",
+        "telemetry": "SIS charted quarterback data with per attempt EPA; any per play EPA feed"
+      }
+    },
+    {
+      "primitive_id": "missing_data_doctrine",
+      "name": "Missing data doctrine: impute only when the missing value is recoverable in principle; otherwise delete and say why",
+      "verbatim_quote": "Dealing with missing data is an important step in the exploratory data analysis process, as its inclusion can introduce bias, reduce statistical power, and ultimately influence the validity of your research findings",
+      "page": "Ch 2.6.2, text lines ~2936-2975",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The mice package offers predictive mean matching, logistic regression, Bayesian polytomous regression, and proportional odds imputation models; simple mean replacement is the crude end of the same spectrum.",
+        "In the worked example the missing row lacks the player's identity itself, so no imputation can be principled and deletion with na.omit is correct."
+      ],
+      "breakdown_regime": "Deletion biases results when missingness correlates with the outcome; the book's rule is judgment based on whether the value is identifiable, not a formal missingness mechanism test.",
+      "domain": "data-quality",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine ingestion law: a missing field whose identity is unknowable is dropped with the reason logged, while a missing measurement with a defensible conditional distribution may be imputed with the method named. Silent filling is prohibited in both directions.",
+        "source_operator": "missing_data_doctrine",
+        "telemetry": "dataset NA audit: which columns are missing, on which rows, and whether the row identity survives"
+      }
+    },
+    {
+      "primitive_id": "minimum_sample_thresholds",
+      "name": "Attempt floors: rate statistics are not reported or ranked below a minimum volume threshold",
+      "verbatim_quote": "You will often discover artificially-inflated statistics like above when the players have limited number of pass attempts/rushing attempts/receptions/etc. compared to the other players on the list",
+      "page": "Ch 3.1.1, text lines ~3850-3910; also Ch 2.6.4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The book's worked thresholds include 200 attempts for the SIS quarterback table, 300 attempts for CPOE leaders, 100 completions or attempts in appendix leaderboards, 50 attempts for situational splits, and 1000 completions for multi season air yards.",
+        "Below threshold, observed rates are dominated by variance rather than skill: the book's example has Nate Sudfeld at 21 adjusted yards per attempt on 2 attempts."
+      ],
+      "breakdown_regime": "A hard floor discards real information about low volume players and creates cliff effects at the boundary; the book offers no shrinkage or partial pooling alternative, so the floor is a blunt but honest guard.",
+      "domain": "data-quality",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every GSE leaderboard and player feature carries an explicit volume floor chosen per metric, and features below the floor are emitted as insufficient sample rather than as numbers. This is the veto that stops two attempt wonders from topping engine rankings.",
+        "source_operator": "minimum_sample_thresholds",
+        "telemetry": "attempt, carry, target, and snap counts attached to every rate feature"
+      }
+    },
+    {
+      "primitive_id": "nflverse_play_by_play_spine",
+      "name": "Play by play spine: one row per play with over 350 fields back to 1999 as the canonical analysis substrate",
+      "verbatim_quote": "load_pbp() will provide over 350 metrics for every single play of every single game dating back to 1999",
+      "page": "Ch 3.1, text lines ~3540-3560",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pre aggregated weekly stats (load_player_stats) suffice for official totals, but any contextual question requires the play level rows.",
+        "Model outputs ship inside the spine: ep, wp, cpoe, xyac, and xpass columns are part of load_pbp, and the nflreadr field dictionary is the authority for their meanings."
+      ],
+      "breakdown_regime": "The spine lacks tracking granularity: player locations, speeds, and separation at throw time exist only as Next Gen aggregates or Big Data Bowl samples, which the author flags as a real limit on what public analysis can claim.",
+      "domain": "data-engineering",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE mirrors this architecture: a single play level spine with model outputs (expected points, win probability, completion probability, expected yards after catch, pass probability) materialized as columns, so every downstream metric is a filter and aggregation over one trusted table.",
+        "source_operator": "nflverse_play_by_play_spine",
+        "telemetry": "nflreadr load_pbp seasons 1999 to present; load_player_stats weekly aggregates"
+      }
+    },
+    {
+      "primitive_id": "adjusted_yards_per_attempt",
+      "name": "Adjusted yards per attempt: yardage corrected by fixed bonuses and penalties for touchdowns and interceptions",
+      "verbatim_quote": "What if we wanted to find Mahomes’ adjusted yards gained per pass attempt for every one of his seasons between 2018 and 2022?",
+      "page": "Ch 3.1.1, text lines ~3760-3830; play level form in Ch 3.3",
+      "latex": "\\mathrm{AY/A} = \\frac{\\mathrm{yards} + 20 \\cdot \\mathrm{TD} - 45 \\cdot \\mathrm{INT}}{\\mathrm{attempts}}",
+      "symbol_and_unit_ledger": {
+        "yards": "passing yards [yards]",
+        "TD": "passing touchdowns [count]",
+        "INT": "interceptions thrown [count]",
+        "attempts": "pass attempts [count]"
+      },
+      "assumptions": [
+        "A touchdown is worth a flat 20 yard bonus and an interception a flat 45 yard penalty, the Pro Football Reference convention the book replicates exactly.",
+        "The play level form in Ch 3.3 substitutes yards_gained with touchdown and interception indicators inside the same formula."
+      ],
+      "breakdown_regime": "Fixed bonuses ignore field position and game state: a one yard touchdown pass and an 80 yard touchdown pass earn the same bonus, and the 45 yard interception penalty does not vary with return yardage or spot.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A compact worked example of outcome adjusted efficiency for the engine: raw yardage is corrected by event values before any comparison, and the event values are constants the reasoning layer can see and contest, unlike a black box rating.",
+        "source_operator": "adjusted_yards_per_attempt",
+        "telemetry": "quarterback season lines: yards, touchdowns, interceptions, attempts"
+      }
+    },
+    {
+      "primitive_id": "attempt_definition_replication",
+      "name": "Definition exact counting: an official pass attempt excludes spikes, scrambles, and sacks, and the grouping variable decides the count",
+      "verbatim_quote": "the passer variable is created by the nflverse and automatically removes spikes, scrambles, and sacks while passer_player_name includes all three",
+      "page": "Ch 3.2, text lines ~4760-4835",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Replicating official statistics from play by play requires filtering to complete, incomplete, or intercepted passes with a non missing down (a missing down usually indicates a two point conversion attempt).",
+        "The nflverse passer field is the preferred grouping for analysis; passer_player_name matches official books but includes the spikes."
+      ],
+      "breakdown_regime": "Three plausible methods (pass equals 1, play_type equals pass, the outcome filter) disagree by about 26 attempts on a 580 attempt season until the spike, scramble, and sack exclusions are applied; any pipeline that does not state its convention is not reproducible.",
+      "domain": "data-engineering",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine law: every counted event type carries an explicit inclusion rule, and derived fields that pre clean the data (like passer) are preferred over raw source fields for analysis, with the raw field kept for reconciliation against official totals.",
+        "source_operator": "attempt_definition_replication",
+        "telemetry": "play by play flags: complete_pass, incomplete_pass, interception, qb_spike, qb_scramble, sack, down"
+      }
+    },
+    {
+      "primitive_id": "qb_aggressiveness_third_down",
+      "name": "Quarterback aggressiveness: the share of third down attempts thrown at or beyond the line to gain",
+      "verbatim_quote": "A pass attempt is considered “aggressive” if the total air yards is equal to - or greater than - the needed yards to go",
+      "page": "Ch 3.2 (computation) and Ch 4.9 (definition), text lines ~4840-4890 and 8333",
+      "latex": "\\mathrm{AGG\\%} = \\frac{\\#\\{\\mathrm{air\\_yards} \\geq \\mathrm{ydstogo}\\}}{\\mathrm{attempts}}",
+      "symbol_and_unit_ledger": {
+        "air_yards": "yards the ball traveled in the air to the target point [yards]",
+        "ydstogo": "yards needed for a first down [yards]",
+        "attempts": "qualifying pass attempts; third down with 5 to 10 yards to go in the worked example [count]"
+      },
+      "assumptions": [
+        "The worked population is third down with 5 to 10 yards to go with at least 50 attempts; Mahomes leads 2022 at 0.733 before garbage time filtering and 0.716 after.",
+        "Throwing to the sticks is a decision signal separable from completion outcome, since air yards are measured to the target point on completions and incompletions alike."
+      ],
+      "breakdown_regime": "The metric credits intent, not wisdom: throws beyond the sticks into coverage count as aggressive even when a checkdown was correct, and receiver separation and pressure are not conditioned on.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Decision tendency features in the engine are built exactly this way: define the decision point, compare the chosen action's depth to the situational requirement, and report the share, so quarterback and coach tendencies are measured from choices rather than outcomes.",
+        "source_operator": "qb_aggressiveness_third_down",
+        "telemetry": "play by play: down, ydstogo, air_yards, passer, with an attempt floor"
+      }
+    },
+    {
+      "primitive_id": "garbage_time_filter_doctrine",
+      "name": "Garbage time doctrine: win probability filtering is question dependent; 5 to 95 for performance, 20 to 80 only for behavior questions",
+      "verbatim_quote": "20-80% should only be used as a filter for looking at how run-heavy a team is (because outside of this range is when teams change behavior a lot)",
+      "page": "Ch 3.2.0.1, text lines ~4891-4930",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Teams change behavior outside the 20 to 80 win probability band, which contaminates tendency measurement but not necessarily performance measurement (Baldwin's position, quoted in the book; Sebastian Carl advises a lower boundary around 5 percent).",
+        "The author's default is the 5 to 95 band combined with excluding the final two minutes of a half, and he often skips garbage time filtering entirely because public data lacks granularity and removal can do more harm than good."
+      ],
+      "breakdown_regime": "Any win probability filter throws away real plays and imports the win probability model's own errors, including market influenced vegas_wp reaching extreme values early. The worked example shows the filter is not cosmetic: Kenny Pickett falls from second to outside the top ten in aggressiveness once it is applied.",
+      "domain": "research-method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats game state filtering as a per question declaration, not a global preprocessing step: tendency features use the behavior band, performance features use the wide band or none, and the band used travels with the feature so the reasoning layer knows what population it describes.",
+        "source_operator": "garbage_time_filter_doctrine",
+        "telemetry": "play by play wp and half_seconds_remaining; two minute warning boundary at 120 seconds"
+      }
+    },
+    {
+      "primitive_id": "burke_offensive_line_value",
+      "name": "Offensive line value by opponent disruption: a unit with no direct stats is valued by the negative plays it allows, benchmarked against the league",
+      "verbatim_quote": "to measure the value of an offensive line’s play, we must determine the impact in which the opposing defensive line had on the game",
+      "page": "Ch 3.3.2, text lines ~4960-5070",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Negative events (sacks, tackles for loss, gains of 2 or fewer yards, scrambles, QB hits, and the book's engineered pairs of QB hit with incompletion and QB hit with interception) are attributable to line failure often enough to carry signal. Burke's original 2014 method is the source.",
+        "Win probability added on those plays, normalized per 100 plays and differenced against the league weekly average, isolates the unit from team context."
+      ],
+      "breakdown_regime": "Attribution is collective and confounded: coverage sacks, the quarterback holding the ball, and scheme all produce the same negative events, and the worked weekly values for Pittsburgh are small (plus 1.55 percent in week 1, plus 1.11 in week 11), near the noise floor the method can resolve.",
+      "domain": "metric-design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Absence defined units (offensive line, coverage shells) are valued in the engine by their failure event stream differenced against a league baseline on a per play basis, never by raw totals. The differencing step is what turns a counting stat into a value estimate.",
+        "source_operator": "burke_offensive_line_value",
+        "telemetry": "play by play: sack, tackled_for_loss, yards_gained, qb_scramble, qb_hit, wpa, posteam, defteam, week"
+      }
+    },
+    {
+      "primitive_id": "wopr_weighted_opportunity_rating",
+      "name": "Weighted opportunity rating: a two term weighted sum of target share and air yards share",
+      "verbatim_quote": "wopr which stands for Weighted Opportunity Rating, which is a weighted average that contextualizes how much value any one wide receivers bring to a fantasy football team",
+      "page": "Ch 3.1 (receiver statistics), text lines ~4027-4035",
+      "latex": "\\mathrm{WOPR} = 1.5 \\times \\mathrm{target\\ share} + 0.7 \\times \\mathrm{air\\ yards\\ share}",
+      "symbol_and_unit_ledger": {
+        "target share": "player targets divided by team pass attempts [proportion]",
+        "air yards share": "player air yards divided by team air yards [proportion]"
+      },
+      "assumptions": [
+        "Opportunity, not production, is the stable input: targets are weighted 1.5 and air yards 0.7 by the metric's established convention.",
+        "The book presents the equation as already built into the nflverse data; the weights are not fitted in the text."
+      ],
+      "breakdown_regime": "The weights are conventional rather than estimated, and opportunity share says nothing about efficiency or coverage difficulty; the book's follow up divides production by WOPR to expose players whose output lags or leads their opportunity.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Usage expectation in the engine is a weighted opportunity composite of the same shape: opportunity shares (targets, carries, routes) combined with stated weights to form an expected involvement baseline, against which actual production is then compared as a residual.",
+        "source_operator": "wopr_weighted_opportunity_rating",
+        "telemetry": "player stats: targets, team attempts, air yards, team air yards"
+      }
+    },
+    {
+      "primitive_id": "audience_first_visualization",
+      "name": "Audience first communication: plots carry directables that state the metric, the direction of good, and the formula",
+      "verbatim_quote": "the process of data visualization should allow for a great quantity of data to be distilled into an easily consumable (and understandable!) format",
+      "page": "Ch 4.1, text lines ~6528-6565",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Most consumers know basic statistics but not advanced metrics like EPA or CPOE, so the plot itself must teach the metric; the book follows Stikeleather's three characteristics: understand the audience, set up a clear framework, tell a story.",
+        "Chart versus table is decided by data type, purpose, and audience, per step 5 of the inquiry outline."
+      ],
+      "breakdown_regime": "Directables cost space and can oversimplify; a metric whose formula fits in a subtitle is favored over a better metric that cannot be explained, which biases public analysis toward simple measures.",
+      "domain": "communication",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI and GSE published outputs follow the same rule: every surfaced metric ships with its definition, its direction of good, and its population, inside the artifact itself, so a reader never has to trust a number they cannot reconstruct.",
+        "source_operator": "audience_first_visualization",
+        "telemetry": "publication checklist per artifact: metric definition, formula, population, direction of good"
+      }
+    },
+    {
+      "primitive_id": "expected_points_added",
+      "name": "Expected points and EPA: the value of a game state, and a play's value as the change in that value",
+      "verbatim_quote": "At its core, EPA is the difference in expected points before and after each play",
+      "page": "Appendix A.9, text lines ~13484-13505",
+      "latex": "\\mathrm{EPA} = \\mathrm{EP}_{\\mathrm{after}} - \\mathrm{EP}_{\\mathrm{before}}",
+      "symbol_and_unit_ledger": {
+        "EP_before": "expected points of the pre play state from historical data [points]",
+        "EP_after": "expected points of the post play state [points]"
+      },
+      "assumptions": [
+        "Expected points for a state are estimated from historical plays in the same situation: down, distance, field position, and related context.",
+        "The book's worked example: first and 10 at the own 20 is worth 0.5 expected points; after a 10 yard completion the new state is worth 0.8; the play's EPA is 0.3."
+      ],
+      "breakdown_regime": "EP is a model, not a measurement: its conditioning set is finite, it is estimated on historical league averages rather than the specific teams on the field, and score and clock effects are only partially captured.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "EPA is the engine's atomic value unit: a state value function over game situations with every play scored as a delta. The book's higher metrics (success rate, DAKOTA, boom and bust rates) are aggregations or transformations of this delta, and GSE inherits that stack unchanged.",
+        "source_operator": "expected_points_added",
+        "telemetry": "play by play ep and epa columns from load_pbp; weekly passing, rushing, and receiving EPA splits"
+      }
+    },
+    {
+      "primitive_id": "cpoe_completion_probability_model",
+      "name": "CPOE: completion percentage measured against a model expectation conditioned on situation",
+      "verbatim_quote": "A pre-calculated metric based on historical attempts in similar situations, CPOE take into account multiple variables, including: field position, down, yards to go, total air yards, etc.",
+      "page": "Appendix A.6, text lines ~13351-13390",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The completion probability model (Ben Baldwin's, shipped in nflfastR) conditions on field position, down, yards to go, and air yards among other inputs.",
+        "Raw completion percentage confounds accuracy with attempt difficulty, as the Sam Bradford 2016 case shows: a record 71.6 percent completion rate at just 6.4 yards per attempt."
+      ],
+      "breakdown_regime": "CPOE inherits its model's blind spots: receiver separation, weather, and pressure are not in the public conditioning set, and as a mean over attempts it hides distribution shape.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The over expected pattern the engine applies everywhere: model the probability of the observed event from context, then score the actor by actual minus expected. CPOE is the passing instance; the same construction yields rushing and receiving analogues.",
+        "source_operator": "cpoe_completion_probability_model",
+        "telemetry": "play by play cpoe column; passer attempts with a 300 attempt floor in the book's leaderboard"
+      }
+    },
+    {
+      "primitive_id": "dakota_composite",
+      "name": "DAKOTA: an EPA plus CPOE composite whose weights are refit each year to predict adjusted EPA per play",
+      "verbatim_quote": "A QB’s DAKOTA score is the adjusted EPA+CPOE composite that is based on the coefficients which best predicted the adjusted EPA/play in the prior year",
+      "page": "Appendix A.7, text lines ~13406-13415",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The composite's coefficients are those that best predicted adjusted EPA per play in the prior year, so the weighting is empirical and re estimated annually.",
+        "EPA per play and CPOE carry complementary signal about quarterback play."
+      ],
+      "breakdown_regime": "Prior year fitted weights can chase noise in a single season of quarterback data, and the book reports the definition without printing the coefficients, so the metric is consumed as a shipped column rather than audited.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Composite construction rule for the engine: when combining two proven signals, fit the combination weights on the most recent completed period against the target quantity, publish the weight provenance with the metric, and refit on schedule rather than freezing weights forever.",
+        "source_operator": "dakota_composite",
+        "telemetry": "load_player_stats dakota column; passing_epa and cpoe inputs"
+      }
+    },
+    {
+      "primitive_id": "success_rate_epa_definition",
+      "name": "Success rate, modern definition: the share of plays with EPA greater than zero",
+      "verbatim_quote": "modern success rate is determined simply by whether or not the specific play had an EPA greater than 0",
+      "page": "Appendix A.13, text lines ~13681-13695",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The legacy definition (40 percent of needed yards on first down, 60 percent on second, 100 percent on third and fourth) was superseded once EP models existed.",
+        "A play that improves expected points at all counts as a success regardless of down."
+      ],
+      "breakdown_regime": "A binary EPA threshold treats a plus 0.01 play and a plus 3.0 play identically, and can rate a short gain on third and long a success if field position math favors it, which clashes with conversion based intuition.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Consistency features in the engine use the EPA sign definition so success is comparable across downs and eras, with the legacy yardage definition retained only when reconciling against pre EP era sources.",
+        "source_operator": "success_rate_epa_definition",
+        "telemetry": "play by play success column; epa sign by play_type and team"
+      }
+    },
+    {
+      "primitive_id": "xyac_expected_models",
+      "name": "xYAC: modeled yards after catch, expressed as a success probability and as an expected mean yardage",
+      "verbatim_quote": "xYAC Success is the probability that a play results in positive EPA (relative to where the play started) based on where the receiver caught the ball",
+      "page": "Appendix A.10-A.11, text lines ~13550-13600",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Expected yards after catch is conditioned on where the receiver caught the ball and the nflfastR model's other inputs, so receivers are credited only for yardage beyond the catch point expectation.",
+        "The book aggregates both xYAC variants with a 100 reception floor; Diggs and Kelce top 2022 xYAC success at 0.872."
+      ],
+      "breakdown_regime": "The public model cannot see defender positions at the catch the way tracking data can, so xYAC residuals mix receiver skill with coverage busts and scheme manufactured space.",
+      "domain": "metrics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Post catch value in the engine is split at the catch point: quarterbacks own the air portion, receivers own the residual against xYAC expectation, which prevents deep threats and screen merchants from being scored by the same raw yardage.",
+        "source_operator": "xyac_expected_models",
+        "telemetry": "play by play xyac_success, xyac_mean_yardage, yards_after_catch by receiver"
+      }
+    },
+    {
+      "primitive_id": "simple_linear_regression_ols",
+      "name": "Ordinary least squares: the line minimizing total squared distance between observations and predictions",
+      "verbatim_quote": "A simple linear regression aims to fit a straight line through all the observed data points in such a way that the total squared distance between the actual observations and the values predicted by the model are minimal",
+      "page": "Ch 5.2.1, text lines ~9618-9660",
+      "latex": "Y = \\beta_0 + \\beta_1 X + \\epsilon",
+      "symbol_and_unit_ledger": {
+        "Y": "response variable; total points in the worked example [points per season]",
+        "X": "predictor variable; total yards in the worked example [yards per season]",
+        "beta_0": "intercept",
+        "beta_1": "slope; change in Y per unit of X",
+        "epsilon": "error term"
+      },
+      "assumptions": [
+        "Worked example: 2022 team totals give intercept minus 225.04, slope 0.1034 points per yard, multiple R squared 0.736, residual standard error about 32 points.",
+        "A perfect fit on real data is treated as a warning sign of overfitting, not a triumph."
+      ],
+      "breakdown_regime": "One predictor cannot carry context: red zone efficiency, turnovers, defensive scores, and opponent strength all sit in the residuals, and pooling 2012 to 2022 lowers multiple R squared to 0.683 because league style drifted, which a single line cannot express.",
+      "domain": "regression",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's baseline discipline: every advanced model must first beat the honest one variable line, and its coefficients must be interpretable as rates (points per yard) that the reasoning layer can quote and defend.",
+        "source_operator": "simple_linear_regression_ols",
+        "telemetry": "team season totals: yards, points; any paired continuous measures"
+      }
+    },
+    {
+      "primitive_id": "residual_diagnostics_shapiro_wilk",
+      "name": "Residual diagnostics: residuals are observed minus predicted, checked for size, symmetry, and normality with Shapiro-Wilk",
+      "verbatim_quote": "A model’s residuals are the calculated difference between the actual values of the predictor variables as found in the data and the values predicted by the regression model",
+      "page": "Ch 5.2.1, text lines ~9850-9910 and ~10085-10110",
+      "latex": "\\mathrm{residual} = \\mathrm{observed\\_value} - \\mathrm{predicted\\_value}",
+      "symbol_and_unit_ledger": {
+        "observed_value": "the actual value in the data [units of the response]",
+        "predicted_value": "the model's fitted value [units of the response]"
+      },
+      "assumptions": [
+        "A well performing model leaves residuals that are small and distributed evenly around zero; the book reads the min, quartiles, median, and max of the residual distribution as the first diagnostic.",
+        "Shapiro-Wilk: W near 1 with a p value above the 0.05 level supports treating residuals as normal; the pooled 2012 to 2022 model prints W of 1 and p of 0.8."
+      ],
+      "breakdown_regime": "Residual spread in football data is partly real context the model lacks (the book names red zone efficiency, turnovers, defensive scoring, opponent strength), so large residuals indict the feature set before they indict the estimator. Normality of residuals does not certify the model is right, only that its errors are well behaved.",
+      "domain": "regression",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "No engine model ships without a residual report: distribution summary, the worst over and under predictions named, and a normality check. The named worst residuals are a research queue, since they point at missing context the reasoning layer should hunt for.",
+        "source_operator": "residual_diagnostics_shapiro_wilk",
+        "telemetry": "fitted values and residuals from any regression; residual standard error relative to the response scale"
+      }
+    },
+    {
+      "primitive_id": "multicollinearity_singularity_check",
+      "name": "Multicollinearity check: singular fits drop a predictor, a correlation matrix finds the culprits, and the analyst chooses which survives",
+      "verbatim_quote": "“Singularities” occur in the data as a result of the dreaded multicollinearity between two or more predictors. The involved predictors were found to have a high amount of correlation between one another, meaning that one of the variables can be predicted in a near linear fashion with one or more of the other predictive variables.",
+      "page": "Ch 5.2.2, text lines ~10330-10430",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The stated rule: two predictors become problematic when the coefficient between them is above 0.7, or 0.8 given domain knowledge; strong negative correlations count as much as positive ones.",
+        "In the worked model, red zone touchdown and field goal efficiency are near perfectly related to overall red zone efficiency, so rz_fg_eff returns NA coefficients; the author instead drops both split predictors and keeps the aggregate, accepting adjusted R squared of 0.784 versus 0.807."
+      ],
+      "breakdown_regime": "The threshold is a rule of thumb, and dropping is a judgment call with real costs: the automatically dropped variable may be the substantively important one, which is exactly the author's objection to losing red zone field goal efficiency, a core source of points.",
+      "domain": "regression",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feature admission control for the engine: correlated feature families are screened before fitting, singularities are surfaced rather than silently absorbed, and the choice of which representative survives is a recorded decision the reasoning layer can revisit.",
+        "source_operator": "multicollinearity_singularity_check",
+        "telemetry": "predictor correlation matrix per model; count of coefficients dropped as undefined"
+      }
+    },
+    {
+      "primitive_id": "logistic_regression_sigmoid",
+      "name": "Logistic regression: a linear score passed through the sigmoid to model a categorical outcome's probability",
+      "verbatim_quote": "Logistic regressions are particularity useful when modeling the relationship between a categorical dependent variable and a given set of predictor variables",
+      "page": "Ch 5.2.3, text lines ~10608-10650",
+      "latex": "P(Y=1|X) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + \\ldots + \\beta_n X_n)}}",
+      "symbol_and_unit_ledger": {
+        "P(Y=1|X)": "probability of the event given the predictors [probability, 0 to 1]",
+        "X_1...X_n": "predictor variables",
+        "beta_0...beta_n": "fitted coefficients; the sign gives the direction of effect on the probability",
+        "e": "Euler's number, about 2.71828"
+      },
+      "assumptions": [
+        "Binary, multinomial, and ordinal variants cover two, many unordered, and many ordered outcome types; the chapter builds the binary and multinomial forms.",
+        "Coefficient interpretation: a positive coefficient raises and a negative coefficient lowers the modeled probability."
+      ],
+      "breakdown_regime": "The linear score inside the sigmoid cannot express interactions or thresholds without explicit feature construction, and rare outcomes trigger the separation failure the book hits in the MVP model (fitted probabilities numerically 0 or 1).",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "All engine probability heads (conversion, completion, play type, award races) use this shape: an auditable linear score whose terms can be listed, squashed to a probability. The term list is the explanation; there is no hidden layer to blame.",
+        "source_operator": "logistic_regression_sigmoid",
+        "telemetry": "binary and categorical play outcomes with situational predictors"
+      }
+    },
+    {
+      "primitive_id": "stratified_split_imbalance_evaluation",
+      "name": "Stratified splitting and imbalance aware evaluation: accuracy is meaningless for rare classes; report precision, recall, and F1",
+      "verbatim_quote": "Because of this, a model could always predict “not MVP” and, as a result, also have an accuracy of 97%",
+      "page": "Ch 5.2.3.1, text lines ~10820-11010",
+      "latex": "F_1 = \\frac{2 \\cdot \\mathrm{precision} \\cdot \\mathrm{recall}}{\\mathrm{precision} + \\mathrm{recall}}",
+      "symbol_and_unit_ledger": {
+        "precision": "positive predictive value; true positives divided by all positive predictions [proportion]",
+        "recall": "sensitivity; true positives divided by all actual positives [proportion]",
+        "F_1": "harmonic mean of precision and recall [0 to 1]"
+      },
+      "assumptions": [
+        "Stratified sampling (rsample initial_split with the strata argument) keeps the rare class proportion similar in training and testing sets; the MVP population is about 3 percent positives among 723 quarterback seasons.",
+        "Training and testing sets serve three purposes the book states: assessing performance on new data, detecting overfitting, and choosing among model types."
+      ],
+      "breakdown_regime": "Precision and recall from a single split carry their own variance, and the book's printed scores (accuracy 0.98, precision 0.989, recall 0.994, F1 0.991) partly reflect how separable award winners are on volume statistics; the evaluation discipline matters more than the specific values.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine evaluation law: any classifier over a rare event (turnovers, touchdowns, explosive plays) is judged on per class precision, recall, and F1 from a stratified holdout. A headline accuracy number is rejected on sight in review.",
+        "source_operator": "stratified_split_imbalance_evaluation",
+        "telemetry": "confusion matrix per model; class prevalence in train and test"
+      }
+    },
+    {
+      "primitive_id": "within_season_rank_normalization",
+      "name": "Within season rank normalization: replace raw totals with within season ranks to compare across eras",
+      "verbatim_quote": "This process allows us to normalize the data and takes into the account the change in play style in the NFL over the time span of the data frame",
+      "page": "Ch 5.2.3.1, text lines ~10680-10735",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Style of play drift makes raw totals non comparable across 2000 to 2022, but a player's rank among that season's peers is comparable; the MVP model ranks completions, attempts, yards, touchdowns, interceptions, and mean EPA within each season.",
+        "Seasons whose MVP was not a quarterback (2000, 2005, 2006, 2012) are removed from that model entirely, and a 150 attempt floor is applied."
+      ],
+      "breakdown_regime": "Ranks discard magnitude: the gap between rank 1 and rank 2 may be enormous or trivial, and rank features can produce sign surprises (the book's completions rank enters with the wrong sign, plausibly from correlation with attempts rank or simple noise).",
+      "domain": "feature-engineering",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cross era features in the engine default to within season ranks or percentiles, so a 2004 season and a 2024 season can sit in the same training frame; raw totals are kept alongside for magnitude sensitive reasoning.",
+        "source_operator": "within_season_rank_normalization",
+        "telemetry": "season grouped player totals converted to ranks per statistic"
+      }
+    },
+    {
+      "primitive_id": "multinomial_playcall_model",
+      "name": "Multinomial play call model: five class tendency prediction from game context, scored per class with ROC AUC",
+      "verbatim_quote": "A multinomial regression model is an extension of the binary model in that it allows for the dependent variable to have more than two unordered categories",
+      "page": "Ch 5.2.3.2, text lines ~11040-11125 and ~11680-11705",
+      "latex": "\\log\\left(\\frac{P(Y=k)}{P(Y=K)}\\right) = \\beta_{k0} + \\beta_{k1} X_1 + \\ldots + \\beta_{kp} X_p",
+      "symbol_and_unit_ledger": {
+        "Y": "categorical play call: run inside, run outside, short pass (air yards at most 5), medium pass (6 to 10), long pass (11 or more)",
+        "k": "a non reference category",
+        "K": "the number of categories, in the reference position of the log ratio",
+        "X_1...X_p": "context predictors: down, distance, yard line, score differential, shotgun, no huddle, timeouts, win probability, previous play, cumulative run and pass counts"
+      },
+      "assumptions": [
+        "The dependent variable is categorical with unordered categories, observations are independent, and predictors are not multicollinear; the softmax keeps class probabilities summing to 1.",
+        "Features include engineered binaries (in_red_zone at yardline_100 at most 20, in_fg_range at most 35, two_min_drill at half_seconds_remaining at most 120) plus previous play and in game cumulative counts; data starts in 2006 because air_yards exists only from then. Evaluation is per class ROC AUC, where 1 is perfect and 0.5 is coin flip performance."
+      ],
+      "breakdown_regime": "Even the most predictable team season (2017 New Orleans, 58.7 percent of plays called correctly) shows the ceiling: coordinated deception by play callers caps any tendency model, and the ROC curves show run outside is the most separable class while inside runs and short passes blur together.",
+      "domain": "classification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is the engine's defensive preparation kernel: a calibrated distribution over the opponent's next play family given context, with per class AUC published so the reasoning layer knows which classes are actually readable and which are noise.",
+        "source_operator": "multinomial_playcall_model",
+        "telemetry": "play by play 2006 onward context fields; per team season predictability rate"
+      }
+    },
+    {
+      "primitive_id": "pca_variance_components",
+      "name": "Principal component analysis: rotate correlated measures into variance ranked components and keep enough to cover the signal",
+      "verbatim_quote": "The first principal component produced (PC1) accounts for the largest amount of variance in the data, while PC2 accounts for the next largest amount with the continued results being cumulative in nature",
+      "page": "Ch 5.3.1.1-5.3.1.2, text lines ~11790-11960",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Variables are centered and scaled first (each to mean zero and standard deviation one), so units do not dominate the rotation; the book's printed scaling formula carries a glyph artifact, so the prose definition governs and no equation is transcribed.",
+        "In the worked rusher data, PC1 (35.8 percent of variance) reads as elusiveness and tackle breaking, PC2 (24.6 percent) as short yardage first down production; four components reach 85.1 percent cumulative variance."
+      ],
+      "breakdown_regime": "There is no certain rule for how many components are enough; the book uses the scree plot elbow (at the third component) as guidance, and component interpretation is a human naming act that can smuggle in stories the loadings do not support.",
+      "domain": "dimensionality-reduction",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Player description vectors in the engine are compressed through PCA before clustering or similarity search, with cumulative variance reported per retained component, so dimensionality claims always carry how much signal was kept and how much was discarded as noise.",
+        "source_operator": "pca_variance_components",
+        "telemetry": "scaled player metric matrices; eigenvalues and cumulative variance per component"
+      }
+    },
+    {
+      "primitive_id": "kmeans_archetype_clustering",
+      "name": "K-means archetypes: cluster players in component space and name the clusters from their trait profiles",
+      "verbatim_quote": "The algorithm aims to find similarities between data points and then group, or cluster, them into the same class (wherein “K” is the defined number of clusters for the data to be grouped into)",
+      "page": "Ch 5.3.1 and 5.3.1.3, text lines ~11745-11775 and ~12080-12260",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Closeness is Euclidean distance, typically in the PCA reduced space; a point nearer a cluster center is more related to that cluster. The lineage is Steinhaus 1956 and Lloyd 1957, named K-means in 1967.",
+        "The worked example clusters 2022 running backs with at least 50 attempts on seven SIS and PFF traits (elusive rating, broken and missed tackles, first down runs, stuffed rate, designed gap rate, boom and bust rates); the code sets K to 3 after the PCA discussion argues for four groupings, an inconsistency the text leaves standing."
+      ],
+      "breakdown_regime": "K must be chosen, results depend on seed and scaling, and the named archetypes (Feast or Famine, Blue Collar Backs, Cautious Carriers) are editorial labels over one season of data; membership for borderline backs is unstable.",
+      "domain": "clustering",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Archetype assignment is the engine's player similarity language: backs, receivers, and quarterbacks are carried as archetype members with distances, so matchup reasoning can substitute a little seen player with his archetype's known behavior.",
+        "source_operator": "kmeans_archetype_clustering",
+        "telemetry": "player trait vectors: elusive rating, broken and missed tackles, first down rate, stuffed rate, designed gap rate, boom and bust rates"
+      }
+    },
+    {
+      "primitive_id": "xgboost_gradient_boosting",
+      "name": "Gradient boosting: an ensemble of weak decision trees, each fitted against the gradient of the loss",
+      "verbatim_quote": "XGBoost seeks to iteratively build a collection of “bad” decision trees and then build an ensemble of these poor ones into a more accurate and robust model",
+      "page": "Ch 5.3.2.1, text lines ~12400-12435",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Trees are built iteratively, with each new tree correcting the errors of the ensemble so far, guided by the gradient (slope) of the loss function.",
+        "The technique serves supervised classification, regression, and ranking tasks."
+      ],
+      "breakdown_regime": "Boosted trees will memorize noise if depth, tree count, and learning rate are not controlled; the book's own tuning run needed 4.5 hours over 100 grid points, so the method's compute cost is part of its profile.",
+      "domain": "machine-learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's nonlinear workhorse for expectation models (yards, completion, expected points refinements) where interactions matter, always paired with the tuning and holdout discipline the book demonstrates rather than default settings.",
+        "source_operator": "xgboost_gradient_boosting",
+        "telemetry": "tabular play level features with continuous or categorical targets"
+      }
+    },
+    {
+      "primitive_id": "ryoe_over_expected_model",
+      "name": "Rushing yards over expected: gradient boosted play expectation, differenced against actual, recentered by the league mean",
+      "verbatim_quote": "what is the most likely amount of yards a running back is going to gain on a specific rushing play as predicted by the model on other similar situations?",
+      "page": "Ch 5.3.2 and 5.3.2.2, text lines ~12370-12395 and ~12560-12660",
+      "latex": "\\mathrm{RYOE} = \\mathrm{actual} - \\mathrm{expected} + \\mathrm{league\\ mean\\ RYOE}",
+      "symbol_and_unit_ledger": {
+        "actual": "yards gained on the rush [yards]",
+        "expected": "model predicted yards for the play's context [yards]",
+        "league mean RYOE": "season mean of actual minus expected, added back as a recentering term [yards]"
+      },
+      "assumptions": [
+        "Feature set: down, distance, field position, score, clock, shotgun, no huddle, expected pass probability (rush_prob is 1 minus xpass, scaled to 100), defenders in the box, a strat_score of rush probability divided by defenders in the box, personnel counts parsed from personnel strings, the defense's season yards per carry allowed, and Next Gen rates (eight plus defenders rate, time to line of scrimmage). The model descends from Tej Seth's RYOE and Michael Egle's college version.",
+        "Stability is honestly reported through Greer's analysis quoted in the book: RYOE's year to year R squared stays below 0.15 until a back's fourth season (0.263), while CPOE reaches 0.226 in a single season."
+      ],
+      "breakdown_regime": "Without tracking data the expectation cannot see blocking development or the back's vision, so residuals absorb scheme and line effects. The worked code also fits its final workflow on the testing data before predicting, a leakage slip readers should not copy.",
+      "domain": "machine-learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's player value template in full: context rich expectation, per play residual, league mean recentering, and a published stability coefficient so consumers know how much of the residual is signal. Every over expected metric the engine ships must report its stability the way this chapter reports RYOE's.",
+        "source_operator": "ryoe_over_expected_model",
+        "telemetry": "play by play rushing plays 2016 onward joined to participation data (formations, personnel, defenders in box) and Next Gen rushing aggregates"
+      }
+    },
+    {
+      "primitive_id": "lightgbm_leafwise_tuning",
+      "name": "Leaf wise boosting with Latin hypercube tuning: LightGBM grows trees vertically for speed, and hyperparameters are searched over a space filling grid selected by RMSE",
+      "verbatim_quote": "lightgbm performs significantly faster than xgboost, as it uses a histogram-based process for optimization that reduces the amount of data required to complete one tree in the ensemble",
+      "page": "Ch 5.3.2.2.2, text lines ~12790-12900",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "LightGBM and XGBoost return nearly identical results on the same data; leaf wise (vertical) growth with histogram binning is faster but more overfit prone, controlled through tuning.",
+        "The tuned optimum printed in the book: mtry 5, trees 644, min_n 37, tree_depth 8, learn_rate 0.0257, loss_reduction 0.0359, sample_size 0.533, stop_iter 9, num_leaves 71, selected by RMSE over 100 Latin hypercube points with cross validation folds."
+      ],
+      "breakdown_regime": "Tuning cost scales brutally (5 minutes at 30 grid points, 96 minutes at 60, 4.5 hours at 100), and a complex tuned configuration (644 trees at depth 8) may be capturing subtle patterns or subtle noise; only the withheld evaluation distinguishes them.",
+      "domain": "machine-learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine training protocol: space filling hyperparameter search, cross validated selection on a stated metric, the winning configuration published with the model, and training time reported as part of the model's cost profile. Speed choices (leaf wise over level wise) are made explicitly with their overfitting risk named.",
+        "source_operator": "lightgbm_leafwise_tuning",
+        "telemetry": "tuning grid results per configuration; RMSE per fold; wall clock training time"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "15452dc5f38ae30a-t1",
+      "think": "This book is a complete working pipeline for football reasoning disguised as a programming textbook, and its value to an engine is the pipeline, not any single number it prints. It begins with a discipline, investigative inquiry: state a question, check whether the data to answer it exists, clean with critical thought, analyze, visualize, and communicate. It then builds, layer by layer, the full stack that a reasoning engine needs: a canonical play level data spine through the nflverse, a state value function in expected points, a family of over expected metrics built on that value, a set of context adjustments, and a modeling ladder that climbs from a one variable regression to gradient boosted trees, with the failure mode of each rung shown in the open rather than hidden.\n\nThe deepest pattern in the book is the over expected construction. Expected points assign a value to every game state from historical data. EPA scores a play as the change in that value. CPOE then models the probability that a pass is completed given its situation and scores the quarterback by actual minus expected. xYAC does the same for yards after the catch, split at the catch point. DAKOTA blends EPA and CPOE with weights refit each year against adjusted EPA. Success rate reduces EPA to a sign. RYOE applies the identical template to rushing with a boosted model. Once this pattern is seen, the book stops being a catalog of metrics and becomes a grammar: pick a state value, model a conditional expectation, difference against reality, aggregate the residuals, and publish the stability of what you built. The chapter is honest that these residuals are not equally trustworthy: CPOE stabilizes quickly, RYOE barely stabilizes before a back's fourth season, and that difference is itself a finding the engine must carry.\n\nThe second pattern is adjustment under dispute. Adjusted Sack Rate exists because raw sack rate confounds down, distance, and opponent. Adjusted Line Yards assigns the line fixed responsibility shares by run outcome band, then the book itself shows the metric is contaminated by running back quality and repairs it by subtracting a z scored elusive rating. The garbage time fight is left unresolved on purpose: Carl and Baldwin argue that win probability bands are for behavior questions, not performance questions, and the author often refuses to filter at all. The 2020 season is used as a standing counterexample, where quick release quarterbacks break the line combination relationship entirely. The lesson is that every adjusted number must travel with its unadjusted twin and with the named covariate that could still break it.\n\nThe third pattern is guardrails. Rate statistics are fenced by attempt floors after the book shows a two attempt quarterback leading a national leaderboard. Counting itself is treated as a modeling decision: three reasonable ways to count pass attempts disagree until spikes, scrambles, and sacks are excluded by rule. Regressions are interrogated through residuals and a Shapiro-Wilk check, multicollinearity is caught when a coefficient comes back undefined, and the analyst, not the software, chooses which correlated predictor survives. The MVP logistic model produces a separation warning because the event is rare, then produces 98 percent accuracy that the book immediately explains is worthless, since always predicting the majority class scores the same; precision, recall, and F1 are the real report. Features are rank normalized within season so a 2004 player and a 2022 player can share a training frame. Even the boosting chapter reports its tuning bill in hours.\n\nFor a reasoning engine, the imports are concrete. Treat every metric as a model output with a stated conditioning set, never as a fact. Treat definitions as part of the model, versioned and contestable. Carry raw and adjusted views side by side and let the reasoning layer see the disagreement. Score players by residuals against context rich expectations, and attach a stability coefficient to each residual family before it is allowed to move a decision. Use archetype clusters and play call tendency distributions as the vocabulary for matchup reasoning, with per class accuracy attached so the engine knows which tendencies are real. What the book does not provide is equally clear: its hand set weights are unvalidated, its validation is mostly single splits, its public data has no tracking granularity, and several of its relationships are one season deep and judged by eye. It teaches a craft operating system. An engine that internalizes the loop, question, spine, definitions, expectations, residuals, honest evaluation, can absorb any future metric by asking two questions of it: what does it condition on, and what do its residuals mean.\n\nThe worked offensive line investigation in Chapter 1 deserves separate weight, because it is the book's method applied to a question where the answer mostly refuses to cooperate. The Rams hypothesis, that extreme line combination counts damaged the offense, is tested against win percentage, pressure rate, and quarterback hits, and shows little to nothing; against Adjusted Sack Rate it shows a broad relationship the author is careful not to call a correlation; against Adjusted Line Yards it shows a weak pattern that partly reverses once running back elusiveness is weighted in. A weaker text would have stopped at the first supportive plot. This one keeps going until the hypothesis is mostly dismantled, names the surviving fragment precisely, and identifies the missing covariate, quarterback time to throw, that would be needed to settle it. That is the reasoning standard the engine should import: a hypothesis is a loan taken out against future evidence, and the book repays its loans in public.\n\nThe delivery layer is part of the same system rather than decoration. The visualization chapter insists that a plot must teach its own metric through directables, that team identity is carried by logos and colors joined from a canonical teams table, and that tables and Shiny apps are first class outputs alongside charts. Feature engineering receives the same respect as modeling: personnel strings are parsed into position counts, participation data adds formations and defenders in the box, Next Gen aggregates add time to the line of scrimmage, and cumulative in game counts give the play call model a memory. The engine lesson is that representation decisions, how a unit is defined, how a drive is summarized, how a tendency is encoded, determine the ceiling of every model fitted afterward, and this book makes those decisions slowly and in writing.",
+      "retrocausal_genealogy": "The lineage runs from Carroll, Palmer, and Thorn's Hidden Game of Football through Brian Burke's early analytics writing and Aaron Schatz's Football Outsiders work (DVOA, the 2003 Adjusted Sack Rate table, Adjusted Line Yards), into the open source era: nflscrapr and nflfastR by Ben Baldwin and Sebastian Carl, which became the nflverse, carrying Baldwin's EP, WP, completion probability, and xYAC models inside the data itself. Next Gen Stats supplied tracking derived aggregates, the Big Data Bowl supplied public tracking samples, and Tej Seth's RYOE descended from Michael Egle's college model. The statistical machinery descends from Wickham's tidyverse into tidymodels, and the clustering from Steinhaus (1956) and Lloyd (1957).",
+      "theory_of_mind": "Congelio models his reader as a football literate student or fan blocked by tooling rather than by intelligence: domain knowledge is assumed, statistical formalism is not, so every method arrives as working code on real data with the oddities confessed in place. His model of the domain is that football's conventional wisdom is a stack of untested hypotheses, that publicly available data plus open tools can test them, and that an analysis is not finished until it has been communicated in a form the audience can actually absorb. He teaches the way he describes learning himself: self taught, allergic to jargon, and convinced the light bulb moment comes from doing the exercises, not from reading the definitions.",
+      "cross_layer_veto": "The book's layers veto each other constantly, and the vetoes are the point. The definition layer vetoes naive aggregation: attempt counts change when spikes, scrambles, and sacks are excluded, and the passer versus passer_player_name choice moves leaderboards. The sample layer vetoes rate stats without attempt floors. The behavior layer vetoes pooled tendencies across garbage time while refusing the same filter for performance. The collinearity layer vetoes kitchen sink regressions when a coefficient returns undefined. The era layer vetoes raw cross decade comparisons until features are rank normalized. The evaluation layer vetoes accuracy as evidence under class imbalance. Any engine importing these methods must import the vetoes with them, or it will believe numbers this book has already shown to be artifacts."
+    }
+  ],
+  "universal_lens": "Any field with an event log can be run on this template. Define a state value for the situations the domain produces, score every event by the change it causes in that value, build expectation models for the components people argue about, and evaluate actors by their residuals against context rather than by raw totals. Keep the definitions explicit and versioned, keep raw and adjusted views side by side, attach a stability estimate to every residual family, and let the residuals, not the totals, carry the argument about who is actually good.",
+  "gsi_mapping": "The Institute takes the curriculum shape: a teachable ladder that runs from data access, through cleaning doctrine and definition exact counting, up to expectation modeling, archetype clustering, and tuned boosting, with the appendix metric glossary serving as a definitions canon. It also takes the research posture: every metric is taught with its conditioning set, its failure cases, and its provenance, and every model with its residual report, so students learn to audit a number before they use it. The exercises and the honest negative results make it a training text, not just a reference.",
+  "gse_mapping": "The Edge engine takes the expectation and residual architecture whole: an EP style state value, over expected player metrics (CPOE, xYAC, DAKOTA, RYOE), a multinomial play call tendency model with per class AUC, and PCA plus K-means archetypes as reasoning inputs. It also takes the guardrails as engine law: attempt floors, definition exact counting, within season rank normalization, multicollinearity screening, stratified holdouts with per class metrics, and published stability coefficients before any signal is promoted. The value taken is prediction quality and reasoning depth: better state values, better residuals, and evaluation the reasoning layer can trust."
+}
