@@ -636,3 +636,4 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 07:00:19 | REFUSAL_ACCEPTED | 1e17e33e9c7dc608 | INSUFFICIENT_OCR: Image-only scanned PDF: 592 pages, 0 extractable text characters via pymupdf (every page returns empty get_text). The file is LS_Advanced_Calculus5.pdf (Loomis & Sternberg, Advanced Calculus) in G:/My
 - 2026-11-14 07:00:43 | CLAIMED | 1b88eba60078e401 | worker=hermes-inline shard03 file=physics_0505169.pdf
 - 2026-11-14 07:05:44 | COMPLETE | 1b88eba60078e401 | primitives=31 think_words=860
+- 2026-11-14 07:38:47 | COMPLETE | 327e964fe5c22e76 | primitives=35 think_words=931
