@@ -12,7 +12,10 @@ import {
   type ReactNode,
   type WheelEvent,
 } from "react";
-import type { PickPackageOffering } from "@/lib/packages/catalog";
+import {
+  WEEK8_GAME_DAY_CATALOG_METADATA,
+  type PickPackageOffering,
+} from "@/lib/packages/catalog";
 import {
   formatWindowSlotLabel,
   sanitizePlainFootballText,
@@ -38,6 +41,14 @@ interface RedlineWorldProps {
 
 const WHEEL_STEP = 0.00022; // 4x longer, deep scroll journey (~4,500px full field walk)
 const DRAG_RANGE = 1800; // long, smooth drag range across the full tunnel-to-endzone journey
+
+// The standing record is READ from the one committed source (catalog metadata)
+// and the settled Sunday summary -- never re-typed as a percentage into the plate
+// copy. Typed-out ledger numbers are how this page drifted to 36-13-1 / 73.5% while
+// the record of record was re-settled elsewhere.
+const LEDGER = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord;
+const LEDGER_LINE = `${LEDGER.verifiedRecord} (${LEDGER.verifiedWinPct} · ${LEDGER.verifiedUnits}; all-in secondary ${LEDGER.withGatedPropsRecord} (${LEDGER.withGatedPropsUnits}))`;
+const WEEK9_LINE = `W9 SUN ${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayOfficialPlayRecord} (${WEEK9_SUNDAY_SETTLED_PROOF_SUMMARY.sundayNetUnits})`;
 
 const SEALED_MAIN_CALLS = [
   { matchup: "DET @ MIA", selection: "[LOCKED  -  VIP ACCESS] Sunday Main Slate Spread Call (SETTLED WIN: DET -7.0)", market: "Spread", conf: "85/100", freeTeaser: false },
@@ -449,7 +460,7 @@ export function RedlineWorld({
           <div className="overhead-board plate-c" data-active={stage === 2} data-no-camera>
             <div className="overhead-header">
               <div>
-                <p className="plate-kicker">REDZONE STOREFRONT · SETTLED LEDGER 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) · W9 SUN 7-4-0 (+2.06u)</p>
+                <p className="plate-kicker">REDZONE STOREFRONT · SETTLED LEDGER {LEDGER_LINE} · {WEEK9_LINE}</p>
                 <h1>Pick your gate.</h1>
                 <p className="plate-deck">Select any Sunday &amp; MNF pack below to review what’s inside and unlock instant access.</p>
               </div>
@@ -503,7 +514,7 @@ export function RedlineWorld({
             <span className="brand-name">GALAXY SPORTS EDGE<small>REDZONE · NFL DESK</small></span>
           </Link>
           <div className="header-state">
-            <span className="live-dot" /> SETTLED LEDGER: 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u)) · W9 SUN: 7-4-0 (+2.06u)
+            <span className="live-dot" /> SETTLED LEDGER: {LEDGER_LINE} · {WEEK9_LINE}
           </div>
         </header>
 
@@ -683,7 +694,7 @@ export function RedlineWorld({
         )}
 
         {panel === "slate" && (
-          <PanelFrame eyebrow="Verified RedZone Board · 36-13-1 (73.5% · +20.14u; all-in secondary 47-19-1 (+24.92u))" title="Week 9 Sealed Board & Trench Matchup Breakdown" close={closePanel} className="slate-panel">
+          <PanelFrame eyebrow={`Verified RedZone Board · ${LEDGER_LINE}`} title="Week 9 Sealed Board & Trench Matchup Breakdown" close={closePanel} className="slate-panel">
             <h3 className="sub-heading">Free Matchup &amp; Game-Environment Analytics · Week 9 Sunday Main Slate &amp; MNF</h3>
             <div className="table-scroll" data-testid="slate-free-game-environment-analytics" style={{ marginBottom: 20 }}>
               <table className="world-table">
@@ -768,7 +779,7 @@ export function RedlineWorld({
               <div className="locked-paywall-modal">
                 <h4>🔒 Official Sealed Board</h4>
                 <p>
-                  Verified Season Record <strong>36-13-1 · +20.14u</strong> (73.5%) entering Week 9 Sunday &amp; MNF. Unlock all official Week 9 Sunday Main Slate (`DET @ MIA`, `GB @ NE`, `DAL @ IND`), Sunday Night Football (`TB @ CHI`), and Monday Night Football (`BUF @ MIN`) sides, totals, player props, and correlated Same-Game Parlays.
+                  Verified Season Record <strong>{LEDGER.verifiedRecord} · {LEDGER.verifiedUnits}</strong> ({LEDGER.verifiedWinPct}) entering Week 9 Sunday &amp; MNF. Unlock all official Week 9 Sunday Main Slate (`DET @ MIA`, `GB @ NE`, `DAL @ IND`), Sunday Night Football (`TB @ CHI`), and Monday Night Football (`BUF @ MIN`) sides, totals, player props, and correlated Same-Game Parlays.
                 </p>
                 <button
                   type="button"

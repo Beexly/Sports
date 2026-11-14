@@ -2,11 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { WEEK8_GAME_DAY_CATALOG_METADATA } from "@/lib/packages/catalog";
+
+/**
+ * Ledger numbers on this page come from the one committed source of record (the
+ * catalog metadata), never from a typed-out percentage. A hardcoded outcome
+ * percentage in the meta description is the same defect as one in the page body:
+ * a derived value that drifts silently the moment the record is re-settled.
+ */
+const LEDGER_OF_RECORD = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord;
 
 export const metadata: Metadata = {
   title: { absolute: "Calibration Proof Room | Galaxy Sports Edge" },
   description:
-    "Verified probability calibration, Brier score benchmarks, and official 47-19-1 (71.2% · +24.92u (with gated props)) NFL ledger for Galaxy Sports Edge (base 38-13-1 · +22.85u).",
+    `Verified probability calibration, Brier score benchmarks, and the official ` +
+    `${LEDGER_OF_RECORD.withGatedPropsRecord} (${LEDGER_OF_RECORD.withGatedPropsUnits}, all-in with ` +
+    `gated props; base ${LEDGER_OF_RECORD.baseRecord} · ${LEDGER_OF_RECORD.baseUnits}) NFL ledger for ` +
+    `Galaxy Sports Edge.`,
   alternates: { canonical: "/calibration" },
 };
 
