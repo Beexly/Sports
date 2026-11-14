@@ -1,0 +1,585 @@
+{
+  "book_id": "155682912bc04c44",
+  "shard": "1",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_FOOTBALL_MARKOV_CLEAN_OCR_PRINTED_EQ",
+  "source_note": "Goldner, 'A Markov Model of Football: Using Stochastic Processes to Model a Football Drive', Journal of Quantitative Analysis in Sports 2012, Manuscript 1400 (Keith Goldner, Northwestern University), DOI 10.1515/1559-0410.1400, 18 pages. A foundational absorbing-Markov drive model: state=(down,distance,yardline), 340 transient + 9 absorbing states (349 total) calibrated on 2005-2009 PBP (~200k plays/30k drives/1280 games), field binned into 20 five-yard zones and distance into 5-yard increments. Transition matrix partitioned Q/R/0/I; absorption probabilities B=(I-Q)^-1 R; expected absorption time t=(I-Q)^-1 c; expected points EP=rho_TD*7+rho_FG*3+rho_SAF*(-2)=B x A (TD valued 6.96 for 96% XP); Net Expected Points (NEP) = EP delta + points scored. Validated against actual drive endings with candid distance-binning bias (3rd-and-1 grouped with 3rd-and-5 underpredicts TD 37.9% vs 45.1%). Applied to 2010 team NEP (Eagles rushing +55.81 via Vick; run/pass on common EP scale). Extracted faithfully (not a derivative summary). Equations 1 (Markov property), 5 (absorption), 6 (expected time), 7 (EP) and the Q/R/0/I partition are printed as readable text math (not shifted-font) and rendered in labeled LaTeX. Domain football matches catalog; American football. The absorbing-chain drive model, absorption-probability and expected-points formulas, NEP play-value metric, distance-binning granularity tradeoff, and play-call non-Markovian caveat are directly isomorphic to GSE's drive-state, expected-points, and EPA layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "fourth_and_26_one_in_175",
+      "name": "Motivating case: 4th-and-26 from own 26 -> FG probability 1 in 175",
+      "verbatim_quote": "According to our model, a whopping 1 out of 175",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Keith Goldner, Northwestern; JQAS 2012 Manuscript 1400, DOI 10.1515/1559-0410.1400) opens with the 2003 playoff 4th-and-26 from the Eagles' own 25 (down 17-14 to Green Bay, 1:12 left, McNabb 25-yard slant to Freddie Mitchell): the model gives a drive containing that situation only a 1-in-175 chance of ending in a successful field goal, yet the Eagles converted and won in overtime."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The extreme-situation drive probability is the same low-probability state valuation GSE computes for long-shot conversions.",
+        "source_operator": "fourth_and_26_one_in_175",
+        "telemetry": "4th-and-26 own 25 -> FG 1/175; McNabb Eagles 2003 playoffs; model vs realized outcome"
+      }
+    },
+    {
+      "primitive_id": "state_down_distance_yardline",
+      "name": "State = (down 1-4, distance 1-100, yard line 1-99)",
+      "verbatim_quote": "A state is defined by down (1-4), distance to a first down (1-100), and yard line (1-99)",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each drive has a finite number of states defined by down (1-4), distance to a first down (1-100), and yard line (1-99); a drive ends in a finite number of ways (scoring, giving the ball back, end of half/game), and the model estimates the probability of each ending from any situation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The down-distance-yardline state is literally GSE's drive-state representation.",
+        "source_operator": "state_down_distance_yardline",
+        "telemetry": "state = (down 1-4, distance 1-100, yardline 1-99); finite drive endings"
+      }
+    },
+    {
+      "primitive_id": "markov_property",
+      "name": "Markov property: next state depends only on current state",
+      "verbatim_quote": "The essence of a Markov chain is that the next state depends only on the current state",
+      "page": 4,
+      "latex": "P(X_{n+1}=x\\mid X_1=x_1,\\dots,X_n=x_n)=P(X_{n+1}=x\\mid X_n=x_n)",
+      "symbol_and_unit_ledger": {
+        "X_n": "drive state at play n (down, distance, yardline)",
+        "x": "a candidate next state",
+        "P": "transition probability [dimensionless]"
+      },
+      "assumptions": [
+        "The Markov property (Eq 1) states P(X_{n+1}=x | X_1=x_1,...,X_n=x_n) = P(X_{n+1}=x | X_n=x_n): the next state depends only on the current state, all previous events having no effect; a discrete-time finite-state chain where each step is a play. Equation 1 is printed as readable text math and used directly.",
+        "Equation 1 (Markov property) printed as readable text math; rendered in labeled LaTeX."
+      ],
+      "breakdown_regime": "Markov assumption ignores play-call history (game-theoretic setup effects)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Markov property is the same state-only transition assumption underlying GSE's drive model.",
+        "source_operator": "markov_property",
+        "telemetry": "P(X_{n+1}|X_1..X_n)=P(X_{n+1}|X_n); discrete-time finite-state; step=play"
+      }
+    },
+    {
+      "primitive_id": "playcall_game_theory_caveat",
+      "name": "Caveat: prior play-calls affect future via game theory (run sets up play-action)",
+      "verbatim_quote": "previous play-calls may affect future decision-making beyond the most recent play",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Previous play-calls may affect future decision-making beyond the most recent play (e.g., running several times to set up a play-action pass changes success probability), but this is determined almost entirely by game theory; since run and pass are not model variables, only current down/distance/yardline determine future-event probabilities — an explicit non-Markovian limitation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The play-call-history caveat is the same non-Markovian limitation GSE acknowledges for game-theoretic setup.",
+        "source_operator": "playcall_game_theory_caveat",
+        "telemetry": "prior play-calls affect future (run->play-action); game theory; run/pass not variables; Markov limit"
+      }
+    },
+    {
+      "primitive_id": "absorbing_markov_drive",
+      "name": "Drive = absorbing Markov chain; drive-endings are absorbing states",
+      "verbatim_quote": "A football drive can be seen as an absorbing Markov chain",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A football drive is an absorbing Markov chain: as the number of plays goes to infinity the probability of ending in an absorbing state goes to 1, and it is impossible to leave an absorbing state (once a touchdown is scored the drive ends and the chain is absorbed); the drive-endings are the absorbing states."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The absorbing-chain drive framing is literally GSE's drive-as-absorbing-process model.",
+        "source_operator": "absorbing_markov_drive",
+        "telemetry": "absorbing Markov chain; P(absorbed)->1 as plays->inf; cannot leave absorbing state"
+      }
+    },
+    {
+      "primitive_id": "data_200k_plays_5seasons",
+      "name": "Data: 2005-2009 PBP, ~200,000 plays / 30,000 drives / 1,280 games",
+      "verbatim_quote": "This includes about 200,000 plays, 30,000 drives, and 1,280 games",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Play-by-play data from the 2005-2009 seasons (~200,000 plays, 30,000 drives, 1,280 games), provided by Albert Lyu / AdvancedNFLStats.com, checked for accuracy against Pro-Football-Reference.com for totals (touchdowns, field goals, safeties)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The multi-season PBP corpus is the same empirical transition-count source GSE uses.",
+        "source_operator": "data_200k_plays_5seasons",
+        "telemetry": "2005-2009 PBP; ~200k plays/30k drives/1280 games; Lyu/AdvancedNFLStats; checked vs PFR"
+      }
+    },
+    {
+      "primitive_id": "state_binning_20_zones",
+      "name": "Field binned into 20 five-yard zones; distance in 5-yd increments (>20 lumped)",
+      "verbatim_quote": "The field was divided into 20 zones, one for every 5 yards",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The field is divided into 20 zones (one per 5 yards) and distance-to-go into 5-yard increments (all >20 yards lumped into one), to ensure high enough frequencies per state; state visit frequencies range 6 to 6624 with average ~550, avoiding never-occurring states that would detract from accuracy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The frequency-driven state binning is the same granularity-vs-sample-size tradeoff GSE manages.",
+        "source_operator": "state_binning_20_zones",
+        "telemetry": "20 zones (5 yd); distance 5-yd bins (>20 lumped); freq 6-6624 avg ~550; avoid empty states"
+      }
+    },
+    {
+      "primitive_id": "340_transient_states",
+      "name": "340 transient states + 9 absorbing = 349 total",
+      "verbatim_quote": "There were a total of 340 transient states",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "There are 340 transient (non-drive-ending) states and 9 absorbing states, 349 total; the play-by-play is parsed for each play's start and end state to compute transition probabilities (e.g., state x visited 100 times, 40 to y and 60 to z gives P_{x,y}=0.4, P_{x,z}=0.6)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The 349-state transition count is the same empirical transition-matrix construction GSE uses.",
+        "source_operator": "340_transient_states",
+        "telemetry": "340 transient + 9 absorbing = 349; empirical P_{x,y}=count(x->y)/count(x)"
+      }
+    },
+    {
+      "primitive_id": "nine_absorbing_states",
+      "name": "Nine absorbing states: TD/FG/safety/missed FG/fumble/INT/downs/punt/end-half",
+      "verbatim_quote": "The absorbing states are as follows: touchdown, field goal, safety, missed field goal, fumble, interception, turnover on downs, punt, end of half or game",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The nine drive-ending absorbing states are touchdown, field goal, safety, missed field goal, fumble, interception, turnover on downs, punt, and end of half or game, fitting three categories (scoring, giving the ball back, end of half/game)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The nine-way drive-ending taxonomy is the same outcome set GSE's drive model absorbs into.",
+        "source_operator": "nine_absorbing_states",
+        "telemetry": "9 absorbing: TD/FG/safety/missed FG/fumble/INT/turnover-on-downs/punt/end-half"
+      }
+    },
+    {
+      "primitive_id": "transition_matrix_QR0I",
+      "name": "Transition matrix partitioned Q (transient), R, 0, I (absorbing)",
+      "verbatim_quote": "The whole transition matrix has n + r rows and columns, but can be divided into these four sub-matrices: Q, R, 0, I",
+      "page": 7,
+      "latex": "P=\\begin{pmatrix}Q & R\\\\ 0 & I\\end{pmatrix},\\quad Q\\in\\mathbb{R}^{n\\times n},\\ R\\in\\mathbb{R}^{n\\times r}",
+      "symbol_and_unit_ledger": {
+        "Q": "transient-to-transient transition block",
+        "R": "transient-to-absorbing transition block",
+        "0": "absorbing-to-transient block (all zero)",
+        "I": "absorbing-to-absorbing identity block",
+        "n": "number of transient states (340)",
+        "r": "number of absorbing states (9)"
+      },
+      "assumptions": [
+        "The 349x349 transition matrix is partitioned (Grinstead 1997) into Q (n x n transient-to-transient), R (n x r transient-to-absorbing), 0 (r x n, cannot start absorbing), and I (r x r identity, cannot leave absorbing); the first 340 columns of the last 9 rows are 0 and the last 9 columns of the last 9 rows are 0 except a diagonal of 1s. The partition is printed in Table 1 and rendered here.",
+        "Table 1 (absorbing transition matrix partition) printed; rendered in labeled LaTeX."
+      ],
+      "breakdown_regime": "Canonical absorbing-chain form; I diagonal = self-absorption probability 1",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Q/R/0/I canonical partition is the same absorbing-chain block structure GSE uses.",
+        "source_operator": "transition_matrix_QR0I",
+        "telemetry": "P=[[Q,R],[0,I]]; Q 340x340, R 340x9, 0 9x340, I 9x9"
+      }
+    },
+    {
+      "primitive_id": "absorption_B_formula",
+      "name": "Absorption probabilities B = (I-Q)^-1 R (340x9)",
+      "verbatim_quote": "We attain a 340-row, 9-column matrix, B, with absorption probabilities from each state",
+      "page": 7,
+      "latex": "B=(I-Q)^{-1}R",
+      "symbol_and_unit_ledger": {
+        "B": "absorption probability matrix (340x9) [dimensionless]",
+        "I": "340x340 identity",
+        "Q": "transient transition block",
+        "R": "transient-to-absorbing block",
+        "B_{i,j}": "P(absorbed in ending j | start in transient state i)"
+      },
+      "assumptions": [
+        "Absorption probabilities are computed as B = (I-Q)^{-1} R (Eq 5), a 340x9 matrix giving the probability of absorption into each ending from each transient state, where I is the 340x340 identity; the fundamental matrix (I-Q)^{-1} encodes expected visits. Equation 5 is printed as readable text math and used directly.",
+        "Equation 5 (absorption probabilities) printed as readable text math; rendered in labeled LaTeX."
+      ],
+      "breakdown_regime": "Requires spectral radius of Q < 1 (transient subchain) for (I-Q)^-1 to exist",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The absorption-probability formula is literally GSE's drive-outcome probability computation.",
+        "source_operator": "absorption_B_formula",
+        "telemetry": "B=(I-Q)^-1 R; 340x9; (I-Q)^-1 fundamental matrix; per-state ending probs"
+      }
+    },
+    {
+      "primitive_id": "first_and_10_punt_498",
+      "name": "1st-and-10 from own 20 ends in punt 49.8% of the time (league)",
+      "verbatim_quote": "We know a good portion of 1st-and-10 situations from our own 20 will end in a punt",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A 1st-and-10 from a team's own 20 ends in a punt with league-wide probability 49.8%; assigning exact values to every situation lets a coach compare his team's actual punts in that situation against the league expectation to evaluate situational efficiency."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The situational baseline probability is the same league-expectation benchmark GSE compares teams against.",
+        "source_operator": "first_and_10_punt_498",
+        "telemetry": "1st-and-10 own 20 -> punt 49.8%; coach compares actual vs league expectation"
+      }
+    },
+    {
+      "primitive_id": "accuracy_scenario1_fg",
+      "name": "Validation: 1st-and-10 own 20 FG model 9.3% vs actual 10.3% (avg dev 0.45%)",
+      "verbatim_quote": "The Markov Model predicts that 9.3% of drives containing a 1st-and-10 from a team's own 20 will end in a field goal",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Validation scenario 1 (1st-and-10, 80 yards from opponent end zone): the model predicts 9.3% of drives end in a field goal versus 10.3% actual (difference 1.0%), with average deviation across the 9 absorbing states of 0.45%; scenario 2 (2nd-and-5, freq 69 pooled to 345) TD 30.0% vs 31.3% (avg dev 0.78%)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The model-vs-actual absorption validation is the same calibration check GSE runs on drive probabilities.",
+        "source_operator": "accuracy_scenario1_fg",
+        "telemetry": "scenario1 FG 9.3% model vs 10.3% actual (dev 1.0%, avg 0.45%); scenario2 TD 30.0 vs 31.3 (avg 0.78%)"
+      }
+    },
+    {
+      "primitive_id": "third_and_1_grouped_with_5",
+      "name": "3rd-and-1 grouped with 3rd-and-5 -> TD underpredicted (37.9% vs 45.1%)",
+      "verbatim_quote": "the model groups 3rd-and-1 in with 3rd-and-5, with conversion becoming less and less likely as the yards-to-go increases",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Validation scenario 3 (3rd-and-1, freq 45 pooled to 235): the model estimates 37.9% touchdowns versus 45.1% actual (difference 7.2%, avg dev 1.9%), with field goals 6.8% less than expected, because the model groups 3rd-and-1 with 3rd-and-5 and conversion becomes less likely as yards-to-go increases, so teams convert more often than the grouped model suggests."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The distance-binning bias is literally GSE's state-granularity tradeoff: coarse bins underpredict short-yardage conversion.",
+        "source_operator": "third_and_1_grouped_with_5",
+        "telemetry": "3rd-and-1 grouped w/ 3rd-and-5; TD 37.9% model vs 45.1% actual (7.2%); FG -6.8%; coarse-bin bias"
+      }
+    },
+    {
+      "primitive_id": "grouping_deviation_55",
+      "name": "3rd-and-1 vs 3rd-and-5 deviation: avg 5.5%, punt 11.2%/TD 10.9%/FG 9.2%",
+      "verbatim_quote": "The average deviation between actual results in these two situations across the field is 5.5% with the largest being punt (11.2%), touchdown (10.9%) and field goal (9.2%)",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The average deviation between 3rd-and-1 and 3rd-and-5 actual results across the field is 5.5%, largest for punt (11.2%), touchdown (10.9%), and field goal (9.2%), with no other absorbing state over 5%; clustering is not optimal but necessary for frequencies, so probabilities and expected points should be adjusted slightly for TD/FG/punt (3rd-and-1 TD probabilities increased above the model)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The bin-deviation adjustment is the same granularity-correction GSE applies to short-yardage states.",
+        "source_operator": "grouping_deviation_55",
+        "telemetry": "3rd-1 vs 3rd-5 avg dev 5.5%; punt 11.2/TD 10.9/FG 9.2%; adjust TD/FG/punt; necessary binning"
+      }
+    },
+    {
+      "primitive_id": "expected_absorption_time_formula",
+      "name": "Expected plays to absorption t = (I-Q)^-1 c (c = ones)",
+      "verbatim_quote": "formula (6) gives an estimate for the length of remaining plays in a drive given that a team is in a specific state",
+      "page": 11,
+      "latex": "t=(I-Q)^{-1}\\mathbf{1}",
+      "symbol_and_unit_ledger": {
+        "t": "expected plays until absorption per transient state [plays]",
+        "(I-Q)^-1": "fundamental matrix (expected visits)",
+        "1": "all-ones vector (c)",
+        "t_i": "expected remaining plays from state i"
+      },
+      "assumptions": [
+        "The expected number of plays before absorption is t = (I-Q)^{-1} c (Eq 6, Grinstead 1997), a 340-vector summing the rows of the fundamental matrix, where c is the all-ones vector; it estimates remaining drive length from any state. Equation 6 is printed as readable text math and used directly.",
+        "Equation 6 (expected absorption time) printed as readable text math; rendered in labeled LaTeX."
+      ],
+      "breakdown_regime": "Same fundamental matrix as absorption probabilities; row sums",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The expected-absorption-time formula is the same drive-length estimate GSE computes from the fundamental matrix.",
+        "source_operator": "expected_absorption_time_formula",
+        "telemetry": "t=(I-Q)^-1 c; c=ones; 340-vector; sum rows of fundamental matrix; remaining plays"
+      }
+    },
+    {
+      "primitive_id": "expected_time_436_plays",
+      "name": "Example: 2nd-and-7 from opp 32 ~ 4.36 more plays; max 7.57, min 1",
+      "verbatim_quote": "knowing that a 2nd-and-7 from the opponents 32 should last approximately 4.36 more plays can help the play-calling process",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A 2nd-and-7 from the opponent's 32 should last approximately 4.36 more plays, aiding play-calling; the maximum expected absorption time is 7.57 plays (1st-and-5 from own 16-20) and the minimum is 1 play (e.g., 4th-and-extremely-long)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The drive-length estimate is the same tempo/remaining-play expectation GSE uses for game management.",
+        "source_operator": "expected_time_436_plays",
+        "telemetry": "2nd-and-7 opp 32 ~ 4.36 plays; max 7.57 (1st-5 own 16-20); min 1"
+      }
+    },
+    {
+      "primitive_id": "ep_lineage_carter",
+      "name": "EP lineage: Virgil Carter (Bengals 1971) -> Hidden Game (Carroll 1989) -> Burke/Schatz/Alamar",
+      "verbatim_quote": "The idea of expected points was first developed by Virgil Carter",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Expected points were first developed by Virgil Carter in Operations Research (with the Cincinnati Bengals, 1971) and refined in The Hidden Game of Football (Carroll et al. 1989); more recent work (Brian Burke at AdvancedNFLStats, Aaron Schatz at FootballOutsiders, Ben Alamar) improved estimation after recognizing the non-linear field-position-to-EP relationship."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The EP lineage is the same expected-points heritage GSE's drive valuation descends from.",
+        "source_operator": "ep_lineage_carter",
+        "telemetry": "EP: Carter (Bengals 1971) -> Hidden Game (Carroll 1989) -> Burke/Schatz/Alamar"
+      }
+    },
+    {
+      "primitive_id": "ep_nonlinear_field_position",
+      "name": "Field position -> EP is non-linear (not a straight line)",
+      "verbatim_quote": "there is not a linear relationship between field position and expected points",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "There is not a linear relationship between field position and expected points, a realization that drove improved EP estimation; EP = f(down, distance, yardline) assigns each situation the expected number of points a team will score, computable empirically or from the Markov model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The non-linear EP curve is the same non-linear state-value function GSE models.",
+        "source_operator": "ep_nonlinear_field_position",
+        "telemetry": "field position -> EP non-linear; EP=f(down,distance,yardline); empirical or Markov"
+      }
+    },
+    {
+      "primitive_id": "ep_scoring_values_7_3_neg2",
+      "name": "Scoring values: TD +7, FG +3, safety -2 (opponent gets 2)",
+      "verbatim_quote": "A team gains 7 points for a touchdown, 3 for a field goal, and loses 2 for a safety since the other team gets 2 points",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Empirical EP sums points scored on drives containing a situation divided by the number of such drives: a touchdown gains 7, a field goal 3, and a safety loses 2 (the opponent gets 2); e.g., 1st-and-10 own 20 in 100 drives with 14 TD/9 FG/1 safety gives EP = (14*7 + 9*3 + (-2)*1)/100 = 1.23."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The scoring-value vector is the same outcome-weighting GSE uses to convert drive probabilities to points.",
+        "source_operator": "ep_scoring_values_7_3_neg2",
+        "telemetry": "TD +7/FG +3/safety -2; empirical EP = sum(points)/drives; example 1.23"
+      }
+    },
+    {
+      "primitive_id": "ep_markov_absorption",
+      "name": "Markov EP = rho_TD*7 + rho_FG*3 + rho_SAF*(-2) = B x A",
+      "verbatim_quote": "we use the absorption probabilities rather than making calculations directly from the play-by-play",
+      "page": 12,
+      "latex": "EP_{x,y,z}=\\rho_{v,TD}\\cdot 7+\\rho_{v,FG}\\cdot 3+\\rho_{v,SAF}\\cdot(-2),\\qquad EP=B\\,A",
+      "symbol_and_unit_ledger": {
+        "rho_{v,a}": "absorption probability into ending a from state v [dimensionless]",
+        "A": "absorbing-state value vector (TD 7/6.96, FG 3, safety -2, others 0) [points]",
+        "B": "absorption probability matrix",
+        "EP_{x,y,z}": "expected points from state (down x, distance y, yardline z) [points]"
+      },
+      "assumptions": [
+        "The Markov EP model uses absorption probabilities rather than direct PBP calculation: EP_{x,y,z} = rho_{v,TD}*7 + rho_{v,FG}*3 + rho_{v,SAF}*(-2) (Eq 7), where rho_{v,a} is the absorption probability into ending a from state v; for 1st-and-10 own 20, 0.138*7 + 0.093*3 + (-2)*0.002 = 1.24; in matrix form EP = B x A where A is the absorbing-state value vector. Equation 7 is printed as readable text math and used directly.",
+        "Equation 7 (Markov expected points) printed as readable text math; rendered in labeled LaTeX."
+      ],
+      "breakdown_regime": "Only TD/FG/safety carry nonzero value; other endings contribute 0",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Markov EP formula is literally GSE's expected-points state value (absorption probabilities times scoring values).",
+        "source_operator": "ep_markov_absorption",
+        "telemetry": "EP=rho_TD*7+rho_FG*3+rho_SAF*(-2); EP=B x A; example 1.24; rho=absorption prob"
+      }
+    },
+    {
+      "primitive_id": "td_value_696_xp",
+      "name": "Touchdown valued at 6.96 (96% XP make; 2pt rare)",
+      "verbatim_quote": "we use 6.96 for the touchdown since there is a 96% chance of making the extra point",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In reality the touchdown value used is 6.96 rather than 7, since there is a 96% chance of making the extra point and two-point conversions are extremely rare — a calibration of the scoring-value vector to expected rather than nominal points."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The XP-adjusted TD value is the same expected-value scoring calibration GSE applies.",
+        "source_operator": "td_value_696_xp",
+        "telemetry": "TD value 6.96 (not 7); 96% XP make; 2pt rare; expected-value calibration"
+      }
+    },
+    {
+      "primitive_id": "ep_curve_1yd_line",
+      "name": "EP curve: own goal line 1st down ~0.72; opp 1-yd line ~6 (80.3% TD/12.6% FG)",
+      "verbatim_quote": "a first down on an opponent's 1-yard line is worth just less than six points (80.3% chance of a touchdown and 12.6% chance of a field goal)",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Expected points gradually increase toward the opponent's end zone: even backed up against its own goal line a team expects ~0.72 points on 1st down, while 1st down on the opponent's 1-yard line is worth just under six points (80.3% touchdown, 12.6% field goal)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The EP curve endpoints are the same field-position value anchors GSE uses.",
+        "source_operator": "ep_curve_1yd_line",
+        "telemetry": "EP own goal line 1st down ~0.72; opp 1-yd line ~6 (80.3% TD/12.6% FG); monotone increase"
+      }
+    },
+    {
+      "primitive_id": "nep_definition",
+      "name": "NEP = EP(play n+1) - EP(play n) + points scored; efficiency vs league",
+      "verbatim_quote": "NEP takes the difference in expected points between play n + 1 and play n to measure the efficiency of play n + 1",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Net Expected Points (NEP, Alamar 2010) is the difference in expected points between play n+1 and play n plus any points scored on the play, measuring play n+1's efficiency versus the league average in a similar situation; positive NEP means better than expected, negative worse — the football parallel to baseball's runs-added."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "NEP is literally GSE's EPA/play-value metric (expected-points delta plus realized points).",
+        "source_operator": "nep_definition",
+        "telemetry": "NEP=EP(n+1)-EP(n)+points scored; Alamar 2010; +better/-worse than expected; runs-added parallel"
+      }
+    },
+    {
+      "primitive_id": "eagles_vick_rushing",
+      "name": "2010 Eagles: +50.68 offense NEP, rushing +55.81 best in league (Vick)",
+      "verbatim_quote": "Their running game was the best in the league, thanks to Michael Vick",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The 2010 Eagles (10-6, NFC East, lost to Green Bay) scored 50.68 points above expectation on offense and prevented 25.19 on defense; passing was only slightly above average (+8.08) while rushing was the league best (+55.81, Michael Vick); rushing+passing exceeds total offense because pre-snap penalties and aborted snaps (No Play) decrease scoring chance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The team NEP decomposition is the same offense/defense/run/pass efficiency attribution GSE produces.",
+        "source_operator": "eagles_vick_rushing",
+        "telemetry": "2010 Eagles off +50.68/def -25.19; pass +8.08/rush +55.81 (Vick, league best); penalties/aborted snaps gap"
+      }
+    },
+    {
+      "primitive_id": "pnep_rnep_not_nep",
+      "name": "PNEP + RNEP != NEP: other play types (aborted snaps, penalties)",
+      "verbatim_quote": "This is because there are additional play types other than run or pass (including aborted snaps and penalties among others)",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Passing NEP plus rushing NEP does not equal total NEP because there are additional play types beyond run and pass (aborted snaps, penalties, etc.); run and pass efficiencies are computed on the net expected points of those specific play calls."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The play-type residual is the same accounting completeness GSE enforces in efficiency decomposition.",
+        "source_operator": "pnep_rnep_not_nep",
+        "telemetry": "PNEP+RNEP != NEP; aborted snaps/penalties/other play types; per-play-call NEP"
+      }
+    },
+    {
+      "primitive_id": "run_pass_same_scale",
+      "name": "Run and pass on the SAME EP scale (passing generally more efficient)",
+      "verbatim_quote": "Since run and pass are not variables in the model, we calculate them both on the same expected points scale",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Since run and pass are not model variables, both are calculated on the same expected-points scale because passing is generally the more efficient option; otherwise a team could show above-average rushing efficiency relative to other rushing teams yet still be detrimental given that passing is the better option — an opportunity-cost baseline."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The common-scale opportunity-cost baseline is the same pass-vs-run efficiency comparison GSE uses.",
+        "source_operator": "run_pass_same_scale",
+        "telemetry": "run/pass same EP scale; passing more efficient; above-avg rush can still be detrimental vs pass option"
+      }
+    },
+    {
+      "primitive_id": "conclusion_late_game_data",
+      "name": "Conclusion: separate late-game situations + more data improve accuracy",
+      "verbatim_quote": "the accuracy of the model can be increased slightly by separating late-game situations and adding more data to ensure higher frequencies",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The conclusion notes accuracy can be increased slightly by separating late-game situations and adding more data for higher frequencies, but the model gives a solid framework for basic analysis: teams compare actual performance against the model, gain situational understanding, and the absorption probabilities yield an accurate expected-points model for measuring play/player/team efficiency (used by Alamar for play-calling risk)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The late-game-separation improvement is the same context-split refinement GSE applies to drive states.",
+        "source_operator": "conclusion_late_game_data",
+        "telemetry": "future: separate late-game situations + more data (higher freq); solid framework; EP for efficiency; Alamar risk"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "markovdrive2012_trace",
+      "think": "The retrocausal genealogy of this paper is the founding of the absorbing-Markov drive model that underlies modern expected points. Keith Goldner, at Northwestern University, publishing in the Journal of Quantitative Analysis in Sports in 2012 as Manuscript 1400, builds on the expected-points lineage that began with Virgil Carter's Operations Research work for the Cincinnati Bengals in 1971, was refined in The Hidden Game of Football by Carroll and collaborators in 1989, and was advanced by Brian Burke, Aaron Schatz, and Ben Alamar after the recognition that field position and expected points are not linearly related. The motivating anecdote is the 2003 playoff fourth-and-twenty-six from the Eagles' own twenty-five, down three to Green Bay with seventy-two seconds left, which Donovan McNabb converted on a slant to Freddie Mitchell; the model assigns a drive containing that situation only a one-in-one-hundred-seventy-five chance of ending in a field goal. The recursive theory of mind is the absorbing Markov chain itself. A state is defined by down, distance to a first down, and yard line, and the Markov property says the next state depends only on the current one; the author explicitly qualifies that prior play-calls can affect the future through game theory, such as running to set up play-action, but since run and pass are not model variables the chain remains Markov in down-distance-yardline. The field is binned into twenty five-yard zones and distance into five-yard increments, with everything beyond twenty yards lumped, yielding three hundred forty transient states plus nine absorbing states — touchdown, field goal, safety, missed field goal, fumble, interception, turnover on downs, punt, and end of half or game — for three hundred forty-nine total, calibrated on roughly two hundred thousand plays across the 2005 to 2009 seasons. Cross-layer veto adjudication is the matrix algebra and its honest accuracy limits. The transition matrix is partitioned into Q, R, zero, and I; absorption probabilities are B equals the inverse of I minus Q times R; expected plays to absorption are t equals the inverse of I minus Q times the ones vector; and expected points are the absorption probabilities weighted by scoring values, EP equals rho-touchdown times seven plus rho-field-goal times three plus rho-safety times minus two, or in matrix form B times the value vector A, with the touchdown actually valued at six point nine six to reflect the ninety-six percent extra-point make rate. The validation is candid: a first-and-ten from the own twenty predicts field goals at nine point three percent versus ten point three actual, but the third-and-one state, grouped with third-and-five for frequency, underpredicts touchdowns at thirty-seven point nine percent versus forty-five point one actual, a seven-point-two gap that the author attributes to coarse distance binning and recommends correcting. The implementation invariants map directly onto GSE. The down-distance-yardline state is GSE's drive-state representation; the absorbing chain is GSE's drive-as-process model; the absorption-probability formula is GSE's drive-outcome computation; the expected-points formula is GSE's state value; and Net Expected Points, the difference in expected points across a play plus points scored, is GSE's EPA-style play value. The expected-absorption-time formula is GSE's drive-length estimate, and the common-scale run-versus-pass comparison is GSE's opportunity-cost baseline recognizing that passing is generally more efficient. The outputs are drive probabilities and expected points from play-by-play data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The application makes the efficiency decomposition concrete. The 2010 Eagles scored fifty point six eight points above expectation on offense and prevented twenty-five point one nine on defense, with passing only slightly above average at plus eight point zero eight but rushing the league best at plus fifty-five point eight one thanks to Michael Vick; passing plus rushing NEP does not equal total NEP because aborted snaps and pre-snap penalties are separate play types that typically reduce scoring chance. The league table shows New England's offense at plus one hundred sixty-nine point seven three and Pittsburgh's defense at minus one hundred fifty-four point three zero, illustrating how the same expected-points scale grades both sides of the ball. The caveats close the account with the granularity and Markov limits. The distance binning that groups third-and-one with third-and-five is necessary for sample frequency but biases short-yardage conversion, so the probabilities and expected points should be adjusted for touchdowns, field goals, and punts; the Markov assumption ignores game-theoretic play-call history; and accuracy could be improved by separating late-game situations and adding more data. The invariant for GSE is to carry the absorbing-chain drive model, the absorption-probability and expected-points formulas, and the NEP play-value metric while recording the distance-binning bias, the play-call non-Markovian caveat, and the late-game-separation refinement before any quantitative reuse, treating expected points as a situational league-expectation benchmark rather than a team-specific truth. Two further structural points deserve emphasis. The fundamental matrix inverse of I minus Q is not merely an algebraic convenience: its entries are the expected number of visits to each transient state before absorption, so the same object simultaneously yields absorption probabilities when multiplied by R, expected drive length when its rows are summed, and expected points when weighted by scoring values, a single unifying computation GSE can reuse. The fourth-down absorption curves show the decision geography clearly: around the thirty-yard line the missed-field-goal and turnover-on-downs probabilities rise sharply while punt and field-goal probabilities move inversely, marking the zone where a coach must choose between punting, attempting a long field goal, or going for it. The deeper philosophy is that expected points turns every situation into a comparable currency, so a team's actual outcomes can be graded against the league expectation in that exact state, which is precisely the situational efficiency audit GSE performs.",
+      "retrocausal_genealogy": "Founding absorbing-Markov drive model underlying modern EP. Keith Goldner, Northwestern; JQAS 2012 Manuscript 1400, DOI 10.1515/1559-0410.1400. EP lineage: Virgil Carter (Bengals 1971 Operations Research) -> Hidden Game (Carroll 1989) -> Burke/Schatz/Alamar (non-linear field-position EP). Motivating case: 2003 playoff 4th-and-26 own 25 (McNabb->Mitchell) -> FG 1/175. State=(down,distance,yardline); Markov property Eq1 (caveat: play-call game theory, run/pass not variables). Data 2005-2009 PBP ~200k plays/30k drives/1280 games (Lyu/AdvancedNFLStats, checked vs PFR). 20 zones (5yd)/distance 5-yd bins (>20 lumped); 340 transient + 9 absorbing = 349.",
+      "theory_of_mind": "9 absorbing: TD/FG/safety/missed FG/fumble/INT/downs/punt/end-half. Transition P partitioned Q(340x340)/R(340x9)/0/I (Grinstead 1997). Absorption B=(I-Q)^-1 R (Eq5). Expected time t=(I-Q)^-1 c (Eq6, c=ones); 2nd-7 opp32 ~4.36 plays, max 7.57/min 1. EP=rho_TD*7+rho_FG*3+rho_SAF*(-2) (Eq7)=B x A; TD value 6.96 (96% XP). Empirical EP example 1.23, Markov 1.24 (1st-10 own20). EP curve: own goal line ~0.72, opp 1-yd ~6 (80.3% TD/12.6% FG). NEP=EP(n+1)-EP(n)+points (Alamar 2010). Equations printed readable text math, rendered LaTeX.",
+      "cross_layer_veto": "Validation: 1st-10 own20 FG 9.3% model vs 10.3% actual (avg dev 0.45%); 2nd-5 TD 30.0 vs 31.3 (0.78%); 3rd-1 TD 37.9 vs 45.1 (7.2%, avg 1.9%) — grouped w/ 3rd-5 coarse-bin bias (3rd-1 vs 3rd-5 avg dev 5.5%, punt 11.2/TD 10.9/FG 9.2); adjust TD/FG/punt. 1st-10 own20 punt 49.8%. 2010 Eagles off +50.68/def -25.19, pass +8.08/rush +55.81 (Vick league best); PNEP+RNEP != NEP (aborted snaps/penalties); run/pass same EP scale (passing more efficient). NE top off +169.73, PIT def -154.30. Future: separate late-game + more data. Markov ignores play-call history. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A foundational absorbing-Markov model represents a football drive as transitions among 349 down-distance-yardline states (340 transient, 9 absorbing drive-endings), computes absorption probabilities B=(I-Q)^-1 R and expected plays to absorption t=(I-Q)^-1 c from a 2005-2009 play-by-play transition matrix, and converts absorption probabilities into expected points EP=rho_TD*7+rho_FG*3+rho_SAF*(-2) (touchdown valued 6.96 for the extra point), with Net Expected Points measuring play efficiency as the expected-points delta plus points scored; it is validated against actual drive endings and honestly flags the short-yardage distance-binning bias and the play-call non-Markovian limitation.",
+  "gsi_mapping": "GSI treats state=(down 1-4,distance 1-100,yardline 1-99); Markov Eq1 P(X_{n+1}|X_1..X_n)=P(X_{n+1}|X_n) (play-call game-theory caveat); 2005-2009 PBP ~200k plays/30k drives/1280 games; 20 five-yard zones + 5-yd distance bins (>20 lumped); 340 transient + 9 absorbing (TD/FG/safety/missed FG/fumble/INT/downs/punt/end-half)=349; P=[[Q,R],[0,I]]; B=(I-Q)^-1 R (Eq5); t=(I-Q)^-1 c (Eq6); EP=rho_TD*7+rho_FG*3+rho_SAF*(-2)=B x A (Eq7), TD 6.96 (96% XP); empirical EP 1.23/Markov 1.24; EP curve own goal line ~0.72/opp 1-yd ~6 (80.3% TD/12.6% FG); NEP=EP(n+1)-EP(n)+points (Alamar 2010); validation 1st-10 own20 FG 9.3 vs 10.3 (avg 0.45%), 3rd-1 TD 37.9 vs 45.1 (7.2% coarse-bin bias, 3rd-1 vs 3rd-5 dev 5.5%); 1st-10 own20 punt 49.8%; 2010 Eagles off +50.68/rush +55.81 (Vick), PNEP+RNEP != NEP, run/pass common scale; equations printed readable text math.",
+  "gse_mapping": "GSE lifts the absorbing-chain drive-state model, the absorption-probability formula B=(I-Q)^-1 R, the expected-points formula EP=B x A, the expected-absorption-time drive-length estimate, and the NEP play-value metric as its drive-state, expected-points, and EPA layer; treats the distance-binning short-yardage bias as a granularity-correction requirement, the play-call game-theory caveat as a non-Markovian limitation, the common-scale run/pass comparison as an opportunity-cost baseline, and the late-game-separation plus more-data refinement as honest improvement paths; all outputs are drive probabilities and expected points from play-by-play data, never sportsbook lines, and expected points is a situational league-expectation benchmark rather than a team-specific truth."
+}
