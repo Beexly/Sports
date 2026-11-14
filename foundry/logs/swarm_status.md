@@ -564,3 +564,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 02:22:07 | COMPLETE | 0be32c68562efac5 | primitives=27 think_words=850
 - 2026-11-14 02:22:48 | CLAIMED | 263c3bdd1ba6a0bf | worker=hermes-inline shard03 file=2017 - Projecting college basketball freshman performance using grassroots basketball statistics - Unknown Authors.pdf
 - 2026-11-14 02:25:54 | COMPLETE | 263c3bdd1ba6a0bf | primitives=18 think_words=850
+- 2026-11-14 02:26:34 | CLAIMED | 33819cf53272627c | worker=hermes-inline shard03 file=2015 - Assessing the offensive productivity of NHL players using in-game win probabilities - Unknown Authors.pdf
+- 2026-11-14 02:31:36 | COMPLETE | 33819cf53272627c | primitives=25 think_words=851
