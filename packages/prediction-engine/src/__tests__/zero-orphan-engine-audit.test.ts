@@ -155,6 +155,7 @@ describe("Zero-Orphan GSE Engine Audit & W1-W14 / F2-F3 Dossier Calculators", ()
     expect(agg.zeroOrphanResult?.batch3CircadianPenalty).toBeDefined();
     expect(agg.zeroOrphanResult?.batch4NeuroCollisionLoad).toBeDefined();
     expect(agg.zeroOrphanResult?.gapHuntHeuerAchDiagnosticity).toBeDefined();
+    expect(agg.zeroOrphanResult?.morningSweepSampleShrinkageReceipt.shrunk).toBeGreaterThan(0);
     expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.traceValid).toBe(true);
     expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.olToSchemeToQbOrderEnforced).toBe(true);
     expect(agg.zeroOrphanResult?.megaSweep5Track7StepTrace.uncheckedItemsAtL3OrDeeper).toBe(0);

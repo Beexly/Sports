@@ -56,6 +56,59 @@ HERMES_ENV_FILES: Tuple[Path, ...] = (
 )
 
 WT_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
+DEFAULT_SHARD_B_CATALOG = (
+    REPO_ROOT
+    / "docs"
+    / "engine"
+    / "research"
+    / "2026-11-13"
+    / "corpus_compilation"
+    / "shard_b_operators_and_vetoes_catalog.json"
+)
+
+
+def _normalize_source_stem(name_or_path: str) -> str:
+    stem = Path(str(name_or_path or "")).stem.lower()
+    return re.sub(r"[^a-z0-9]+", "", stem)
+
+
+def _load_shard_b_source_sets(
+    catalog_path: Path,
+    *,
+    completed_dirs: Sequence[Path] = (SHARED_PRIMITIVES_DIR, WT_PRIMITIVES_DIR),
+) -> Tuple[set, set, set]:
+    """Return (done_shas, exact_basenames, normalized_stems) already settled on disk or Shard-B."""
+    done_shas: set = set()
+    for d in completed_dirs:
+        pdir = Path(d)
+        if not pdir.is_dir():
+            continue
+        for p in pdir.glob("*.json"):
+            try:
+                payload = json.loads(p.read_text(encoding="utf-8", errors="replace"))
+                sha = str(payload.get("sha256") or "").strip().lower()
+                if sha:
+                    done_shas.add(sha)
+            except Exception:
+                continue
+
+    exact_basenames: set = set()
+    norm_stems: set = set()
+    cpath = Path(catalog_path)
+    if cpath.is_file():
+        try:
+            catalog = json.loads(cpath.read_text(encoding="utf-8", errors="replace"))
+            for entry in catalog.get("entries") or ():
+                src = str((entry or {}).get("source") or "").strip()
+                if not src:
+                    continue
+                exact_basenames.add(Path(src).name.lower())
+                ns = _normalize_source_stem(src)
+                if len(ns) >= 8:
+                    norm_stems.add(ns)
+        except Exception:
+            pass
+    return done_shas, exact_basenames, norm_stems
 OCR_RESCUE_DIR = (
     REPO_ROOT / "docs" / "engine" / "research" / "2026-11-13" / "ocr_rescue"
 )
@@ -376,6 +429,8 @@ def select_eligible_books_ro(
     include_ocr_classics: bool = True,
     max_books: int = 20,
     completed_dirs: Sequence[Path] = (SHARED_PRIMITIVES_DIR, WT_PRIMITIVES_DIR),
+    include_unmatched_delegated_gcp: bool = False,
+    shard_b_catalog_path: Path = DEFAULT_SHARD_B_CATALOG,
 ) -> List[Dict[str, Any]]:
     """Query `foundry.db` in strict URI `mode=ro` without overlapping Hermes (`0..3`) or GCP (`8..f`)."""
     resolved_db = Path(db_path).resolve()
@@ -410,19 +465,34 @@ def select_eligible_books_ro(
 
         normalized_tiers = tuple(str(t).upper() for t in tiers if str(t).strip()) or ("A",)
         tier_marks = ",".join("?" * len(normalized_tiers))
+        status_sql = (
+            "status IN ('PENDING', 'DELEGATED_GCP')"
+            if include_unmatched_delegated_gcp
+            else "status = 'PENDING'"
+        )
         rows_pending = conn.execute(
             f"""
             SELECT book_id, file_path, sha256, file_name, title, year, primary_domain, tier, status, pages_total
             FROM corpus_queue
-            WHERE status = 'PENDING' AND tier IN ({tier_marks})
+            WHERE {status_sql} AND tier IN ({tier_marks})
             ORDER BY
               CASE tier WHEN 'A' THEN 0 WHEN 'B' THEN 1 ELSE 2 END ASC,
+              CASE status WHEN 'PENDING' THEN 0 ELSE 1 END ASC,
               CASE WHEN primary_domain IN ('football', 'sports', 'math', 'stats', 'probability', 'psych', 'cs', 'ml') THEN 0 ELSE 1 END,
               COALESCE(file_size, 0) ASC,
               book_id ASC
             """,
             normalized_tiers,
         ).fetchall()
+
+        done_shas: set = set()
+        exact_basenames: set = set()
+        norm_stems: set = set()
+        if include_unmatched_delegated_gcp:
+            done_shas, exact_basenames, norm_stems = _load_shard_b_source_sets(
+                shard_b_catalog_path,
+                completed_dirs=completed_dirs,
+            )
 
         allowed_chars = {c.lower() for c in partition_prefixes}
         for r in rows_pending:
@@ -435,6 +505,15 @@ def select_eligible_books_ro(
                 continue
             if is_complete_artifact_present(bid, completed_dirs):
                 continue
+            if str(d.get("status") or "").upper() == "DELEGATED_GCP":
+                fn = str(d.get("file_name") or Path(str(d["file_path"])).name)
+                ns = _normalize_source_stem(fn)
+                if (
+                    (sha and sha in done_shas)
+                    or fn.lower() in exact_basenames
+                    or (len(ns) >= 8 and ns in norm_stems)
+                ):
+                    continue
             if not Path(str(d["file_path"])).exists():
                 continue
             ocr_txt = OCR_RESCUE_DIR / f"{bid}_vision_ocr_core.txt"
@@ -526,7 +605,27 @@ def extract_pdf_pages_fast(file_path: Path, max_pages: int = 36) -> Tuple[int, D
     return int(parsed["total_pages"]), {int(k): v for k, v in parsed["pages"].items()}
 
 
-PLAIN_TEXT_SUFFIXES = {".txt", ".md", ".markdown", ".rst", ".csv", ".json", ".html", ".htm"}
+PLAIN_TEXT_SUFFIXES = {".txt", ".md", ".markdown", ".rst", ".csv", ".json", ".html", ".htm", ".tex"}
+
+
+def _pretty_print_json_blocks(raw: str) -> str:
+    """Pretty-print raw minified JSON or fenced ```json``` blocks so quote extraction finds tokens."""
+    stripped = raw.lstrip()
+    if stripped.startswith(("{", "[")):
+        try:
+            return json.dumps(json.loads(stripped), indent=2, ensure_ascii=False)
+        except Exception:
+            pass
+
+    def _replace_fence(match: re.Match[str]) -> str:
+        body = match.group(1).strip()
+        try:
+            pretty = json.dumps(json.loads(body), indent=2, ensure_ascii=False)
+            return f"```json\n{pretty}\n```"
+        except Exception:
+            return match.group(0)
+
+    return re.sub(r"```json\s*(.*?)\s*```", _replace_fence, raw, flags=re.DOTALL | re.IGNORECASE)
 
 
 def _load_plain_text_virtual_pages(file_path: Path, max_pages: Optional[int] = None) -> Tuple[int, Dict[int, str]]:
@@ -539,6 +638,7 @@ def _load_plain_text_virtual_pages(file_path: Path, max_pages: Optional[int] = N
         return 1, {}
     if not raw:
         return 1, {}
+    raw = _pretty_print_json_blocks(raw)
     chunk_size = 3000
     chunks = [raw[i : i + chunk_size] for i in range(0, len(raw), chunk_size)]
     total = len(chunks)
@@ -1725,7 +1825,16 @@ def process_single_book(
     total_chars = sum(len(norm_text(v)) for v in pages.values())
     candidates = build_candidate_quotes_by_page(pages, max_candidates=14) if pages else []
 
-    if int(pages_total) <= 3 and (total_chars < 400 or len(candidates) < 3):
+    source_suffix = Path(str(book_row.get("file_path") or "")).suffix.lower()
+    is_plain_text = source_suffix in PLAIN_TEXT_SUFFIXES
+    if (int(pages_total) <= 3 and (total_chars < 400 or len(candidates) < 3)) or (
+        is_plain_text and len(candidates) < 3
+    ):
+        source_kind_label = (
+            f"Non-PDF plain-text/crawl ({source_suffix or 'text'})"
+            if is_plain_text
+            else "Download-bait/title-only stub PDF"
+        )
         snippet = _scrub_stub_snippet(" | ".join(norm_text(v)[:140] for _, v in sorted(pages.items()))[:280])
         raw_domain = str(book_row.get("primary_domain") or "other")
         valid_domains = _valid_domains(gatekeeper_mod)
@@ -1743,7 +1852,7 @@ def process_single_book(
             "ocr_rescued": False,
             "source_status": "INSUFFICIENT_SOURCE_ACCESS",
             "refusal_reason": (
-                f"Download-bait/title-only stub PDF ({pages_total} pages, {total_chars} extracted chars, "
+                f"{source_kind_label} ({pages_total} pages, {total_chars} extracted chars, "
                 f"{len(candidates)} candidate quotes < 3 minimum): {snippet!r}. "
                 "Fail-closed under Foundry Gatekeeper zero-fabrication contract."
             ),
@@ -1980,6 +2089,17 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         action="store_true",
         help="Re-extract even if a valid cached artifact already exists in --output-dir.",
     )
+    parser.add_argument(
+        "--include-unmatched-delegated-gcp",
+        action="store_true",
+        help="Also include corpus_queue status='DELEGATED_GCP' items not matched on disk or in Shard-B catalog.",
+    )
+    parser.add_argument(
+        "--shard-b-catalog",
+        type=Path,
+        default=DEFAULT_SHARD_B_CATALOG,
+        help="Path to Shard-B catalog JSON used to deduplicate DELEGATED_GCP items.",
+    )
     return parser.parse_args(argv)
 
 
@@ -2007,6 +2127,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             tiers=selected_tiers,
             include_ocr_classics=bool(args.include_ocr_classics),
             max_books=5 if args.ocr_only else args.max_books,
+            include_unmatched_delegated_gcp=bool(args.include_unmatched_delegated_gcp),
+            shard_b_catalog_path=args.shard_b_catalog,
         )
     if not books:
         print(json.dumps({"ok": True, "processed": 0, "note": "No eligible pending books found"}))

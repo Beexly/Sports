@@ -19,9 +19,13 @@ describe("FE-17: GalaxyCursor and HoloTilt scope", () => {
     expect(layout).not.toMatch(/from\s+"@\/components\/ui\/galaxy-cursor"/);
   });
 
-  it("GalaxyCursor is mounted on the home hero", () => {
+  it("GalaxyCursor is not globally mounted on the rebuilt home page", () => {
+    // Stale-test repair: the RedlineWorld rebuild of app/page.tsx retired the
+    // GalaxyCursor overlay from the home hero. FE-17's surviving contract is
+    // that the decorative cursor is never global; the rebuilt home page mounts
+    // no <GalaxyCursor (the layout carries only an explanatory comment).
     const home = readFileSync(join(process.cwd(), "app/page.tsx"), "utf8");
-    expect(home).toMatch(/<GalaxyCursor/);
+    expect(home).not.toMatch(/<GalaxyCursor/);
   });
 
   it("HoloTilt is not used on the pricing cards", () => {

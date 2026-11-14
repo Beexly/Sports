@@ -97,11 +97,13 @@ export function evaluateParlayConjunctionGate(
   if (!Array.isArray(legs) || legs.length === 0 || legs.some((leg) => !leg.publishAllowed || leg.decision !== "SPEAK")) {
     return { publishAllowed: false, decision: "PASS", reason: "PARLAY_CONTAINS_PASS_LEG", wilsonLower90: 0 };
   }
+if (!Number.isFinite(jointSimProb) || !Number.isFinite(bookParlayImpliedProb) || !Number.isFinite(nWorlds) || nWorlds <= 0 || jointSimProb < 0 || jointSimProb > 1 || bookParlayImpliedProb < 0 || bookParlayImpliedProb > 1) { return { publishAllowed: false, decision: "PASS", reason: "INVALID_PARLAY_PROBABILITY_INPUT", wilsonLower90: 0 }; }
   const lower = wilsonLower(jointSimProb * nWorlds, nWorlds);
   const edge = jointSimProb - bookParlayImpliedProb;
   if (structuralContradiction(legs) && !(edge >= JOINT_EDGE && lower > bookParlayImpliedProb)) {
     return { publishAllowed: false, decision: "PASS", reason: "SGP_STRUCTURAL_CONTRADICTION", wilsonLower90: lower };
   }
+  if (!(edge >= JOINT_EDGE && lower > bookParlayImpliedProb)) { return { publishAllowed: false, decision: "PASS", reason: "INSUFFICIENT_JOINT_WILSON_EDGE", wilsonLower90: lower }; }
   return { publishAllowed: true, decision: "SPEAK", reason: "PARLAY_CONJUNCTION_PASS", wilsonLower90: lower };
 }
 

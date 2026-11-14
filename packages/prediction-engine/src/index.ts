@@ -5946,3 +5946,36 @@ export type {
   FamilyGroundingAdjustment,
   SituationalFamily,
 } from "./literature/corpus-grounding.js";
+
+export {
+  SHRINK_PSEUDOCOUNT,
+  shrinkTowardBaseline,
+  parseCsv,
+  parseNum,
+  parsePercent,
+  parseQbEpaByDefTier,
+  parseGridironMatchup,
+  parseBarrettManZone,
+  parseDynatyzeCard,
+  parseJmThriveInjury,
+  parseFantasyPtsTprr,
+  parseBarrettDank2,
+  classifySweepFile,
+  loadMorningSweepSignals,
+} from "./nfl/morning-sweep-2026-11-14-signals.js";
+
+export type {
+  ShrunkEstimate,
+  CsvRow,
+  DefTier,
+  QbTierEpa,
+  QbEpaRow,
+  QbEpaByDefTierTable,
+  GridironMatchupRow,
+  ManZoneRow,
+  InjuryRow as MorningSweepInjuryRow,
+  TprrRow,
+  Dank2Row,
+  SweepFamily,
+  MorningSweepBundle,
+} from "./nfl/morning-sweep-2026-11-14-signals.js";

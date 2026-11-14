@@ -21,6 +21,8 @@ export default defineConfig({
       "src/reasoning/**/*.test.ts",
       "src/reasoning/**/*.spec.ts",
       "src/expected-metrics/**/*.test.ts",
+      "src/literature/**/*.test.ts",
+      "src/literature/**/*.spec.ts",
       "test/**/*.spec.ts",
       "test/**/*.test.ts",
     ],

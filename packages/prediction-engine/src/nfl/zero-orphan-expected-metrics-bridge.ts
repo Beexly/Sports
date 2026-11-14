@@ -51,6 +51,11 @@ import {
   evaluateFoundryCorpusSituationalPriors,
   type FoundryCorpusSituationalReceipt,
 } from "./foundry-corpus-situational-priors.js";
+import {
+  SHRINK_PSEUDOCOUNT,
+  shrinkTowardBaseline,
+  type ShrunkEstimate,
+} from "./morning-sweep-2026-11-14-signals.js";
 
 /**
  * Exhaustive manifest of every non-test module in `src/expected-metrics/` and `src/nfl/`.
@@ -123,7 +128,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "expected-metrics/win-probability.ts",
   "expected-metrics/wr-depth-after-leader.ts",
   "expected-metrics/yoy-persistence.ts",
-  // src/nfl/ (69 modules including this bridge)
+  // src/nfl/ (70 modules including this bridge)
   "nfl/all-in-one-research-signals.ts",
   "nfl/ats-ablation-harness.ts",
   "nfl/belichick-ten-metrics.ts",
@@ -155,6 +160,7 @@ export const REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES: readonly string[] = [
   "nfl/metric-core.ts",
   "nfl/metric-drift.ts",
   "nfl/metric-validation.ts",
+  "nfl/morning-sweep-2026-11-14-signals.ts",
   "nfl/ngs-adjacent-metrics.ts",
   "nfl/ngs-contextual-reconstructed.ts",
   "nfl/no-bet-gate.ts",
@@ -259,6 +265,7 @@ export interface ZeroOrphanOverlayResult {
   readonly fourMinuteMeasuredRunRate: number;
   readonly unifiedArchitectureReceipt: UnifiedArchitectureOverlayReceipt;
   readonly foundryCorpusPriorsReceipt: FoundryCorpusSituationalReceipt;
+  readonly morningSweepSampleShrinkageReceipt: ShrunkEstimate;
   readonly familyAdjustments: {
     readonly pressure: number;
     readonly coveragePersonnel: number;
@@ -460,6 +467,12 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     qbScriptStabilityZ: input.underCenterEpa - input.shotgunEpa,
     observedSampleSizeN: Math.max(12, input.cleanAttempts + input.pressuredAttempts),
   });
+  const morningSweepSampleShrinkageReceipt = shrinkTowardBaseline(
+    input.wrTargetSuccessRate,
+    Math.max(0, input.cleanAttempts),
+    0.50,
+    SHRINK_PSEUDOCOUNT,
+  );
 
   // Compute bounded family probability deltas
   const pressureDelta = Number(
@@ -541,6 +554,7 @@ export function evaluateZeroOrphanExpectedMetricsOverlay(
     fourMinuteMeasuredRunRate,
     unifiedArchitectureReceipt,
     foundryCorpusPriorsReceipt,
+    morningSweepSampleShrinkageReceipt,
     familyAdjustments: {
       pressure: pressureDelta,
       coveragePersonnel: coveragePersonnelDelta,

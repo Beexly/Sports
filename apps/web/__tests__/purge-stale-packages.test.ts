@@ -55,7 +55,7 @@ describe("POST /api/storefront/purge-stale-packages", () => {
     expect(mocks.cockpitTaskUpdateMany).not.toHaveBeenCalled();
   });
 
-  it("authorized requests archive stale WEEK_08 promotions/tasks and return 200 with active_slate_target: WEEK_09_LIVE", async () => {
+  it("authorized requests archive stale Week 8/9 promotions/tasks and return 200 with active_slate_target: WEEK_10_LIVE", async () => {
     mocks.promotionUpdateMany.mockResolvedValueOnce({ count: 3 });
     mocks.cockpitTaskUpdateMany.mockResolvedValueOnce({ count: 5 });
 
@@ -72,35 +72,40 @@ describe("POST /api/storefront/purge-stale-packages", () => {
     const body = (await res.json()) as Record<string, unknown>;
 
     expect(body.status).toBe("SUCCESS");
+    // Stale-test repair: 031f7160b rolled the storefront from expired Week 9 to
+    // live Week 10, so the purge now archives Week 8 AND Week 9 and targets WEEK_10_LIVE.
     expect(body.remediations).toEqual({
       stale_packages_deactivated: 3,
       cockpit_records_archived: 5,
-      active_slate_target: "WEEK_09_LIVE",
+      active_slate_target: "WEEK_10_LIVE",
     });
 
     expect(mocks.promotionUpdateMany).toHaveBeenCalledWith({
       where: {
         OR: [
           { slug: { contains: "week-8" } },
+          { slug: { contains: "week-9" } },
           { slug: { contains: "WEEK_08" } },
+          { slug: { contains: "WEEK_09" } },
           { headline: { contains: "Week 8" } },
+          { headline: { contains: "Week 9" } },
         ],
       },
       data: {
         status: "ARCHIVED",
         offerSummary:
-          "Archived historical Week 8 package — shifted cleanly to upcoming active Week 9 slate.",
+          "Archived historical prior-week package — shifted cleanly to the upcoming active Week 10 slate.",
       },
     });
 
     expect(mocks.cockpitTaskUpdateMany).toHaveBeenCalledWith({
       where: {
-        title: { contains: "Week 8" },
+        OR: [{ title: { contains: "Week 8" } }, { title: { contains: "Week 9" } }],
       },
       data: {
         status: "ARCHIVED",
         decisionNotes:
-          "Purged automatically via storefront recovery layer execution script (WEEK_09_LIVE).",
+          "Purged automatically via storefront recovery layer execution script (WEEK_10_LIVE).",
       },
     });
   });

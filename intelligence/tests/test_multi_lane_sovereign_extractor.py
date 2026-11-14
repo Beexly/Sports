@@ -408,3 +408,138 @@ def test_cli_help_partition_parser_and_budget_guardrails(monkeypatch, tmp_path: 
     with pytest.raises(RuntimeError, match="All inference providers failed|unexpected non-zero"):
         call_llm_json("sys", "usr", lane="free", max_cost_usd=0.0)
 
+
+def test_select_eligible_books_includes_only_unmatched_delegated_gcp(tmp_path: Path) -> None:
+    import json
+    import sqlite3
+    from intelligence.foundry_bridge.multi_lane_sovereign_extractor import select_eligible_books_ro
+
+    prim_dir = tmp_path / "primitives"
+    prim_dir.mkdir()
+    (prim_dir / "8doneid000000001.json").write_text(
+        json.dumps({"book_id": "8doneid000000001", "sha256": "8" + "f" * 63}),
+        encoding="utf-8",
+    )
+
+    f_pending = tmp_path / "pending.tex"
+    f_exact = tmp_path / "matched_exact.md"
+    f_norm = tmp_path / "NFL-Coaching_Guide_2025.txt"
+    f_unmatched = tmp_path / "truly_unmatched_book.tex"
+    f_done_sha = tmp_path / "done_sha_copy.md"
+    for p in (f_pending, f_exact, f_norm, f_unmatched, f_done_sha):
+        p.write_text("sample content", encoding="utf-8")
+
+    catalog_path = tmp_path / "shard_b_catalog.json"
+    catalog_path.write_text(
+        json.dumps(
+            {
+                "total_markdown_files": 500,
+                "entries": [
+                    {"doc_hash": "8aaaa00001", "source": "matched_exact.md"},
+                    {"doc_hash": "8aaaa00002", "source": "nfl coaching guide 2025.pdf"},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    db_path = tmp_path / "foundry.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.execute(
+        """
+        CREATE TABLE corpus_queue (
+            book_id TEXT PRIMARY KEY,
+            file_path TEXT,
+            sha256 TEXT,
+            file_name TEXT,
+            title TEXT,
+            year INTEGER,
+            primary_domain TEXT,
+            tier TEXT,
+            status TEXT,
+            pages_total INTEGER,
+            file_size INTEGER
+        )
+        """
+    )
+    rows = [
+        ("9pend00000000001", str(f_pending), "9" + "a" * 63, f_pending.name, "Pend Tex", 2025, "math", "C", "PENDING", 10, 100),
+        ("8exact0000000002", str(f_exact), "8" + "b" * 63, f_exact.name, "Exact Matched", 2025, "math", "C", "DELEGATED_GCP", 10, 100),
+        ("8norm00000000003", str(f_norm), "8" + "c" * 63, f_norm.name, "Norm Matched", 2025, "football", "B", "DELEGATED_GCP", 10, 100),
+        ("8unmatch00000004", str(f_unmatched), "8" + "d" * 63, f_unmatched.name, "Unmatched Tex", 2025, "football", "C", "DELEGATED_GCP", 10, 100),
+        ("8shacopy00000005", str(f_done_sha), "8" + "f" * 63, f_done_sha.name, "SHA Done Copy", 2025, "math", "A", "DELEGATED_GCP", 10, 100),
+    ]
+    conn.executemany("INSERT INTO corpus_queue VALUES (?,?,?,?,?,?,?,?,?,?,?)", rows)
+    conn.commit()
+    conn.close()
+
+    default_rows = select_eligible_books_ro(
+        db_path=db_path,
+        partition_prefixes=("8", "9"),
+        tiers=("A", "B", "C"),
+        include_ocr_classics=False,
+        max_books=20,
+        completed_dirs=(prim_dir,),
+    )
+    assert [r["book_id"] for r in default_rows] == ["9pend00000000001"]
+
+    unmatched_rows = select_eligible_books_ro(
+        db_path=db_path,
+        partition_prefixes=("8", "9"),
+        tiers=("A", "B", "C"),
+        include_ocr_classics=False,
+        max_books=20,
+        completed_dirs=(prim_dir,),
+        include_unmatched_delegated_gcp=True,
+        shard_b_catalog_path=catalog_path,
+    )
+    assert [r["book_id"] for r in unmatched_rows] == ["9pend00000000001", "8unmatch00000004"]
+
+
+def test_load_plain_text_virtual_pages_pretty_prints_minified_json(tmp_path: Path) -> None:
+    import json
+    import sys
+
+    extractor_mod = sys.modules[select_eligible_books_ro.__module__]
+    _load_plain_text_virtual_pages = extractor_mod._load_plain_text_virtual_pages
+    build_candidate_quotes_by_page = extractor_mod.build_candidate_quotes_by_page
+
+    minified_payload = json.dumps(
+        {
+            "teams": [
+                {
+                    "abbreviation": "KC",
+                    "name": "Kansas City Chiefs",
+                    "summary": "Offensive efficiency across early downs remains top tier against two high defensive shells in league play.",
+                },
+                {
+                    "abbreviation": "BUF",
+                    "name": "Buffalo Bills",
+                    "summary": "Quarterback dropback passing rate over expected surges on third and medium against zone blitz fronts.",
+                },
+                {
+                    "abbreviation": "BAL",
+                    "name": "Baltimore Ravens",
+                    "summary": "Heavy personnel rushing efficiency creates sustained red zone conversion leverage across divisional matchups.",
+                },
+            ]
+        },
+        separators=(",", ":"),
+    )
+    txt_file = tmp_path / "team_compare.txt"
+    txt_file.write_text(minified_payload, encoding="utf-8")
+
+    md_file = tmp_path / "teams.md"
+    md_file.write_text(
+        "# ESPN Teams Snapshot\n\n```json\n" + minified_payload + "\n```\n",
+        encoding="utf-8",
+    )
+
+    for sample_file in (txt_file, md_file):
+        total, pages = _load_plain_text_virtual_pages(sample_file)
+        assert total >= 1
+        assert pages
+        candidates = build_candidate_quotes_by_page(pages, max_candidates=14)
+        assert len(candidates) >= 3
+        assert all(len(c["verbatim_quote"].split()) >= 10 for c in candidates[:3])
+

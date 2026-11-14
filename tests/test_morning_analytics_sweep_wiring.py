@@ -65,7 +65,7 @@ def test_seattle_red_zone_inversion_and_player_highlights():
     assert hl["jsn_2026_yards_per_team_pass_att"] == 3.84
     assert hl["rec_yards_vs_2high_leaders"]["Jaxon Smith-Njigba"] == 565
     assert hl["ryoe_per_attempt_leaders"]["James Cook"] == 0.99
-    assert hl["drake_maye_splits"]["Maye vs rest (26g)"]["ypg"] == 258.9
+    assert hl["drake_maye_splits"]["Drake Maye vs rest (26g)"]["ypg"] == 258.9
 
 
 def test_pre_sim_layer_3_external_charting_wires_morning_sweep():
