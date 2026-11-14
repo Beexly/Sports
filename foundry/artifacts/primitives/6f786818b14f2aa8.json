@@ -1,0 +1,289 @@
+{
+  "book_id": "6f786818b14f2aa8",
+  "source_status": "COMPLETE",
+  "title": "0324-a-machine-learning-framework-for-off",
+  "file_name": "0324-a-machine-learning-framework-for-off.md",
+  "sha256": "6f786818b14f2aa8be4700dd3837c925cf08354cb3c9078976450d627d3489c6",
+  "primary_domain": "cs",
+  "pages_total": 6,
+  "pages_read": 6,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 6,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "Entropy expansion with K-cardinality and convergence sensitivity define dynamic play complexity; causal safety via forward probabilities mitigates future leakage. The continuous-discrete Hidden Markov Model (CDHMM) unifies spatial kinematics and discrete tactical assignments. By mapping defender trajectories to latent role states, we construct a rigorous probabilistic framework that quantifies defensive value through counterfactual ghost emissions, bridging geometric tracking data with abstract strategic state-spaces.",
+  "gsi_mapping": "Bayesian inference on GCA variance and β-convergence enables probabilistic play classification; normalized likelihood supports robust decision-making under uncertainty. GSI employs Bayesian inference over the CDHMM's emission densities to compute posterior role probabilities. Conformal prediction intervals bound the uncertainty of these latent states, ensuring robust opponent-adjusted baseline estimations for target-suppression metrics without relying on noisy, subjective human grading systems.",
+  "gse_mapping": "State-transition models with inswing preference and switching variability inform tactical reasoning; forward probabilities ensure causally safe policy updates. GSE translates the CDHMM's transition matrix into real-time situational reasoning. By modeling zone-to-man shifts as explicit state transitions, the engine dynamically evaluates coverage integrity, predicting optimal route adjustments based on the instantaneous geometric constraints of the active defensive assignment.",
+  "primitives": [
+    {
+      "primitive_id": "6f786818b14f2aa8_w0_g1",
+      "name": "0324-a-machine-learning-framework-for-off Ch.1 Grounded Operator",
+      "verbatim_quote": "# [0324] A Machine Learning Framework for Off Ball Defensive Role and Performance Evaluation in Football (arXiv:2601.00748v1) **Citation:** Sean Groom, Francisco Belo, Axl Rice, Liam Anderson, Shuo Wang (2026).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f786818b14f2aa8_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f786818b14f2aa8_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6f786818b14f2aa8_w0_g2",
+      "name": "0324-a-machine-learning-framework-for-off Ch.1 Grounded Operator",
+      "verbatim_quote": "*A Machine Learning Framework for Off Ball Defensive Role and Performance Evaluation in Football*.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f786818b14f2aa8_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f786818b14f2aa8_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6f786818b14f2aa8_w0_g3",
+      "name": "0324-a-machine-learning-framework-for-off Ch.1 Grounded Operator",
+      "verbatim_quote": "Research question How can off-ball defensive performance be evaluated when successful defense is defined by actions that *don't* occur (prevented passes/shots)?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f786818b14f2aa8_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f786818b14f2aa8_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6f786818b14f2aa8_w1_g1",
+      "name": "0324-a-machine-learning-framework-for-off Ch.2 Grounded Operator",
+      "verbatim_quote": "hibited (=0**, per coach guidance); zonal self p_z = σ(β_z⊤X^{(z)}); zonal→man (1-p_z)·softmax(β_s).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f786818b14f2aa8_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f786818b14f2aa8_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6f786818b14f2aa8_w1_g2",
+      "name": "0324-a-machine-learning-framework-for-off Ch.2 Grounded Operator",
+      "verbatim_quote": "Covariates (Table 1, standardized): distance/inverse distance to attacker, tangential relative velocity, heading alignment cos θ, convergence metric, attacker/defender heights+weights, Mahalanobis distance to zone.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f786818b14f2aa8_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f786818b14f2aa8_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6f786818b14f2aa8_w1_g3",
+      "name": "0324-a-machine-learning-framework-for-off Ch.2 Grounded Operator",
+      "verbatim_quote": "Training: EM (forward-backward E-step; M-step: closed-form zone/Γ updates, L-BFGS-B ≤100 iters for β with λ_m=λ_z=100, λ_s=1000); 10 models × 15 iterations per team×delivery, best by observation likelihood.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f786818b14f2aa8_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f786818b14f2aa8_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "gca_variance_expansion",
+      "name": "GCA Variance Expansion",
+      "verbatim_quote": "eries produce higher-entropy situations (more elite plays and more severe lapses); GCA variance expands with |K| (1→5).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'cardinality of play types (dimensionless)', 'GCA': 'Game Complexity Attribute (dimensionless)', 'entropy': 'information-theoretic measure (nats)'}",
+      "assumptions": "Play entropy increases monotonically with K; elite and lapse events are modeled as high-entropy outcomes.",
+      "breakdown_regime": "When K approaches 5, GCA variance saturates due to combinatorial explosion.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GCA variance maps to information-theoretic entropy in state-space exploration; used in GSI for uncertainty quantification.",
+        "source_operator": "gca_variance_expansion",
+        "telemetry": "Normalized entropy of observed play sequences"
+      }
+    },
+    {
+      "primitive_id": "beta_convergence_sensitivity",
+      "name": "Beta Convergence Sensitivity",
+      "verbatim_quote": "- Sensitivity: β_m, β_z converge quickly with sample size; β_s (switching) stays variable (rare events); inswing models achieve higher normalized likelihood than outswing.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'β_m': 'model parameter for motion dynamics (dimensionless)', 'β_z': 'model parameter for zone behavior (dimensionless)', 'β_s': 'switching rate parameter (dimensionless)', 'likelihood': 'normalized log-probability (log units)'}",
+      "assumptions": "Model parameters stabilize with increasing data; rare-event switching remains stochastic.",
+      "breakdown_regime": "β_s diverges when rare events dominate training set.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "β-convergence mirrors Bayesian posterior convergence in GSI; inswing/outswing reflects temporal policy shift in GSE.",
+        "source_operator": "beta_convergence_sensitivity",
+        "telemetry": "Normalized likelihood difference between inswing and outswing models"
+      }
+    },
+    {
+      "primitive_id": "future_leakage_obpr",
+      "name": "Future Leakage in OBPR",
+      "verbatim_quote": "Leakage & limitations - **Future leakage in OBPR**: uses full-sequence expected state occupancy γ_{tjk} (smoothed posteriors see the future) — authors explicitly flag this; forward probabilities are the causally-safe variant.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'γ_{tjk}': 'expected state occupancy (probability)', 't': 'time index (discrete steps)', 'j,k': 'state indices (discrete)', 'forward_prob': 'causally safe probability (dimensionless)'}",
+      "assumptions": "Smoothed posteriors incorporate future information; forward probabilities are temporally consistent.",
+      "breakdown_regime": "γ_{tjk} becomes invalid when future states are not causally accessible.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "OBPR's γ_{tjk} maps to GSI's causal inference framework; forward probabilities align with GSE's temporal consistency constraints.",
+        "source_operator": "future_leakage_obpr",
+        "telemetry": "Causal safety score of estimated state trajectories"
+      }
+    },
+    {
+      "primitive_id": "model_limitations_omissions",
+      "name": "Model Limitations and Omissions",
+      "verbatim_quote": "- **No uninvolved state, geometric durations, Gaussian zones, no velocity in emissions** — all acknowledged by authors; forced assignments and symmetry assumptions bias role estimates.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'uninvolved_state': 'absence of passive player state (boolean)', 'geometric_duration': 'duration modeled as fixed shape (dimensionless)', 'Gaussian_zone': 'zone assignment using normal distribution (dimensionless)', 'velocity_emission': 'emission model includes speed (dimensionless)'}",
+      "assumptions": "Omitted features introduce systematic bias in role estimation.",
+      "breakdown_regime": "Role estimation fails when spatial or temporal dynamics are non-Gaussian or time-varying.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model omissions map to GSI's assumption validation layer; GSE requires enriched emission models for accurate simulation.",
+        "source_operator": "model_limitations_omissions",
+        "telemetry": "Bias metrics in role assignment across simulated scenarios"
+      }
+    },
+    {
+      "primitive_id": "p1_coverage_cdhmm",
+      "name": "Coverage Continuous-Discrete HMM",
+      "verbatim_quote": "NGS tracking data: - **Data**: NGS tracking (10 Hz) for passing plays, 2022–2025; pre-snap → 3 s post-snap windows (the NFL analog of the corner sequence); defender/route-runner positions + velocities.",
+      "page": 5,
+      "latex": "P(S_t | S_{t-1}, \\mathbf{x}_{1:t}) = \\frac{\\pi_{ij} \\cdot \\mathcal{N}(\\mathbf{x}_t; \\boldsymbol{\\mu}_{j}, \\boldsymbol{\\Sigma}_{j})}{\\sum_{k} \\pi_{ik} \\cdot \\mathcal{N}(\\mathbf{x}_t; \\boldsymbol{\\mu}_{k}, \\boldsymbol{\\Sigma}_{k})",
+      "symbol_and_unit_ledger": "S_t: Latent coverage state (dimensionless), \\mathbf{x}_t: Defender/receiver kinematic vector (meters, m/s), \\pi_{ij}: State transition probability (dimensionless), \\mathcal{N}: Gaussian emission density (s^2/m^2).",
+      "assumptions": "Markovian property holds for tactical role transitions; local kinematic emissions are conditionally Gaussian given the current coverage landmark or man-marking offset.",
+      "breakdown_regime": "Singularity occurs during chaotic pre-snap alignment shifts where role definitions blur, or when tracking noise exceeds the variance threshold of the emission covariance matrices.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps soccer penalty-box tracking primitives to NFL pre-snap to post-snap coverage windows, preserving the underlying stochastic geometry of spatial suppression.",
+        "source_operator": "p1_coverage_cdhmm",
+        "telemetry": "Role agreement percentage across held-out game weeks."
+      }
+    },
+    {
+      "primitive_id": "p2_role_conditioned_ghosts",
+      "name": "Role-Conditioned Counterfactual Ghosts",
+      "verbatim_quote": "- **Role-conditioned ghosts**: for each coverage defender, sample counterfactual positions from the emission of the feasible role set (Eqs.",
+      "page": 5,
+      "latex": "\\hat{\\mathbf{x}}_t^{(r)} \\sim \\mathcal{N}(\\mathbf{x}_t; \\boldsymbol{\\mu}_{r}(\\mathbf{c}_t), \\boldsymbol{\\Sigma}_{r})",
+      "symbol_and_unit_ledger": "\\hat{\\mathbf{x}}_t^{(r)}: Counterfactual ghost position (meters), r: Feasible role index (dimensionless), \\mathbf{c}_t: Contextual covariates (meters, m/s), \\boldsymbol{\\mu}_{r}: Role-specific mean emission (meters).",
+      "assumptions": "Counterfactual defender positioning can be accurately synthesized by sampling from the learned emission distributions of the assigned tactical role.",
+      "breakdown_regime": "Fails if the role taxonomy is too granular, resulting in sparse emission data and degenerate covariance matrices for specific zone landmarks.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates the null-hypothesis distribution for defensive performance, isolating individual player execution from systemic scheme advantages.",
+        "source_operator": "p2_role_conditioned_ghosts",
+        "telemetry": "Variance reduction in target probability when comparing observed vs. ghost trajectories."
+      }
+    },
+    {
+      "primitive_id": "p3_gca_analog",
+      "name": "Group Coverage Advantage Analog",
+      "verbatim_quote": "14–15 ported), run through a target-probability model (replace Pr(atk) with P(target|receiver, defender position) — trainable from nflverse + tracking), compute GCA analog = min over role-ghosts of expected group target probability - observed.",
+      "page": 5,
+      "latex": "\\text{GCA} = \\min_{r \\in \\mathcal{R}} \\left( \\mathbb{E}_{\\hat{\\mathbf{x}} \\sim p_r} [P(\\text{target} | \\mathbf{x}_{rec}, \\hat{\\mathbf{x}})] \\right) - P(\\text{target} | \\mathbf{x}_{rec}, \\mathbf{x}_{obs})",
+      "symbol_and_unit_ledger": "GCA: Group Coverage Advantage (dimensionless probability), \\mathcal{R}: Set of feasible roles, P(target): Target probability (dimensionless), \\mathbf{x}_{rec}: Receiver position (meters), \\mathbf{x}_{obs}: Observed defender position (meters).",
+      "assumptions": "Target probability is strictly monotonic with respect to the Euclidean distance and relative velocity between the receiver and the nearest defender.",
+      "breakdown_regime": "Breaks down in highly compressed passing windows where multiple defenders simultaneously influence a single receiver, causing non-linear interference effects not captured by marginal expectations.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies the exact suppression value added by a defender, forming the core metric for GSE's opponent-adjustment engine.",
+        "source_operator": "p3_gca_analog",
+        "telemetry": "Incremental R^2 of GCA over PFF grade in predicting passer rating."
+      }
+    },
+    {
+      "primitive_id": "p4_semi_markov_duration",
+      "name": "Hidden Semi-Markov Duration Model",
+      "verbatim_quote": "If pattern-match states emerge unsupervised from NFL data, that alone is a publishable finding and a new coverage taxonomy for GSE content.",
+      "page": 6,
+      "latex": "P(D_t = d | S_t = i) = \\frac{e^{-\\lambda_i d}}{\\sum_{d'=1}^{D_{max}} e^{-\\lambda_i d'}}",
+      "symbol_and_unit_ledger": "D_t: Duration in state i (seconds), \\lambda_i: Decay rate for role persistence (1/s), D_{max}: Maximum allowable assignment duration (seconds).",
+      "assumptions": "Defenders hold specific tactical assignments (zones or man-marks) for explicit, non-memoryless durations governed by semi-Markov processes rather than simple Markov transitions.",
+      "breakdown_regime": "Degenerates if play-action sequences induce rapid, sub-sample-rate state flips that violate the minimum duration constraints of the semi-Markov formulation.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Extends the base CDHMM to capture temporal dependencies in coverage schemes, directly addressing the duration-model flaw identified in the source paper.",
+        "source_operator": "p4_semi_markov_duration",
+        "telemetry": "Correlation between predicted duration distributions and actual time-to-breakaway for receivers."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6f786818b14f2aa8_t0",
+      "think": "Window 1 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6f786818b14f2aa8_t1",
+      "think": "Window 2 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6f786818b14f2aa8_t2",
+      "think": "Chapter window 3 (page 4) outlines key methodological limitations and operational constraints in machine learning frameworks for soccer analytics. The core tension lies between model expressiveness and data availability. GCA variance scaling with K-cardinality implies that increasing tactical diversity leads to higher entropy, which complicates prediction. Sensitivity analysis reveals that while some parameters (β_m, β_z) stabilize with data, others (β_s) remain volatile due to rare-event dynamics. This suggests that models must balance generalization with adaptability. Future leakage in OBPR highlights a critical issue: smoothed posteriors that look into the future violate causal integrity. The authors' acknowledgment of this flaw underscores the need for forward-looking probabilistic models in GSE. Additionally, the absence of uninvolved states, geometric durations, and velocity in emissions introduces structural biases. These omissions reflect simplifying assumptions that may misrepresent real-world dynamics. The proprietary nature of data and code further restricts reproducibility and external validation. Thus, the chapter emphasizes the importance of causal modeling, transparency, and empirical rigor in deploying AI systems for tactical intelligence. Window 3 Synthesis: Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This chapter builds upon foundational work in probabilistic graphical models and causal inference, particularly in sports analytics. It extends earlier frameworks by acknowledging the interplay between model complexity and data scarcity, and by introducing explicit causal safety checks. Retrocausal Genealogy (Window 3): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The authors implicitly model opposing agents through their treatment of rare events and switching dynamics. They assume that defenders and attackers operate under distinct behavioral regimes, which are captured via β_s and GCA variance. However, the lack of velocity and geometric zones suggests an oversimplified view of player movement and positioning. Theory of Mind (Window 3): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is violated when β_s and GCA variance are conflated without sufficient data separation. Leakage veto applies when γ_{tjk} is used in place of forward probabilities. The model’s reliance on proprietary data and code precludes independent verification, undermining trustworthiness. Cross-Layer Veto (Window 3): Rooted in 0324-a-machine-learning-framework-for-off (6f786818b14f2aa8, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6f786818b14f2aa8_t3",
+      "think": "The foundational shift in this chapter window is the transposition of continuous-discrete Hidden Markov Models (CDHMMs) from soccer penalty-box dynamics to the high-frequency, multi-agent environment of NFL pass coverage. The core mathematical challenge lies in defining a latent state space that meaningfully captures the dichotomy between man-to-man marking and zonal responsibility. By redefining emission densities—shifting from static goal-line geometries to dynamic ball-position offsets and field-zone landmarks—we establish a rigorous probabilistic map of defensive intent. The introduction of 'role-conditioned ghosts' serves as a powerful counterfactual inference mechanism. Instead of evaluating a defender against a static average, we sample from the emission distribution of their assigned role to generate a distribution of optimal counterfactual positions. This allows us to isolate the geometric value-added of a specific player's execution from the inherent advantage of the scheme itself. Furthermore, the transition to a hidden semi-Markov model explicitly addresses the temporal persistence of coverage assignments. Defenders do not switch roles with memoryless probabilities; they commit to zones or marks for finite durations. Modeling these durations prevents the leakage flaws present in simpler Markov assumptions, ensuring that our evaluation metrics reflect genuine tactical discipline rather than transient positional noise. Ultimately, this framework transforms raw kinematic telemetry into a structured, opponent-adjusted measure of coverage efficacy, providing a mathematically sound basis for both predictive modeling and post-hoc analytical decomposition.",
+      "retrocausal_genealogy": "This primitive lineage traces back to early optical tracking analyses in baseball and basketball, which first attempted to quantify spatial suppression. However, it directly inherits its structural DNA from the TASC (Tracking-based Assignment and State Classification) work referenced in paper 0323. The evolution from simple clustering to CDHMMs represents a maturation in how we treat tactical roles—not as fixed labels, but as probabilistic attractors in a high-dimensional kinematic space. The specific adaptation to NFL coverage bridges the gap between European football's continuous flow and American football's discrete, phase-based engagements.",
+      "theory_of_mind": "Modeling opposing agents requires inferring the quarterback's and receiver's anticipation of these latent states. A sophisticated offensive line will attempt to manipulate the defender's transition probabilities, forcing premature zone-to-man switches that create separation. Our model must therefore account for the adversarial nature of the state emissions; the 'optimal' ghost position is not merely geometric but is conditioned on the likely route tree of the receiver. By training the target-probability model on historical tracking data, we implicitly learn the strategic priors of offensive coordinators, allowing the GSE to simulate how different defensive role executions alter the quarterback's decision-making landscape in real-time.",
+      "cross_layer_veto": "A critical veto condition arises if the inferred role agreement falls below 85%. If the CDHMM cannot consistently assign defenders to meaningful tactical states, the resulting 'roles' are merely statistical artifacts of noise rather than true football concepts. Furthermore, we must enforce strict forward filtering—using only information available up to time t—to prevent lookahead bias. If smoothed posterior probabilities are used to generate ghosts, the metric becomes contaminated by future knowledge, artificially inflating the perceived value of the defender. Finally, if the GCA metric shows no incremental explanatory power over existing subjective grades like PFF, the entire complex machinery collapses into a redundant restatement of known evaluations, warranting immediate rejection."
+    }
+  ]
+}

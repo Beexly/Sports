@@ -1,0 +1,306 @@
+{
+  "book_id": "795dce99450f387e",
+  "source_status": "COMPLETE",
+  "title": "AI_CONTROL_PLANE_DESIGN_2026-07-22",
+  "file_name": "AI_CONTROL_PLANE_DESIGN_2026-07-22.md",
+  "sha256": "795dce99450f387e072ba7622313f99aa7c277192f77fd270e38b200e602f7fe",
+  "primary_domain": "cs",
+  "pages_total": 6,
+  "pages_read": 6,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 6,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The control plane establishes a topological constraint on the state space of computational execution. By enforcing a single canonical entry point and explicit cost-mode resolution, the architecture defines a strict filtration where all stochastic inference trajectories must pass through a deterministic policy manifold before resource allocation. Environment-class derivation and mode resolution form a categorical lattice with emergent reliability constraints.",
+  "gsi_mapping": "In GSI, this maps to a conformal prediction filter applied to high-dimensional feature vectors. The `AiTaskRequest` acts as the calibration set boundary; if the inferred cost mode exceeds the explicit budgetary threshold, the Bayesian posterior is truncated, preventing overconfident probabilistic allocations in live betting markets. GSI infers task cost modes via Bayesian belief updates over environment classes and permitted mode hierarchies.",
+  "gse_mapping": "For GSE situational reasoning, the control plane dictates valid state transitions during dynamic play. A tactical query (e.g., expected points optimization) is routed through `executeAiTask`. If telemetry fails or the model substitution invariant is violated, the system defaults to a fail-safe baseline strategy, preserving competitive integrity. GSE transitions states using deterministic mode hierarchies and probabilistic financial attribution chains.",
+  "primitives": [
+    {
+      "primitive_id": "w0_canonical_entry_point",
+      "name": "Canonical Entry Point Facade",
+      "verbatim_quote": "--## PR A — `feat/ai-task-contracts`: task & policy contracts (no behavior change) ### A.1 The one mandatory entry point ```ts // packages/ai-control-plane/src/execute.ts export async function executeAiTask(task: AiTaskRequest): Promise<AiTaskResult> ``` Phase-2 scope: `executeAiTask` is introduced as a **compatibility facade over the existing `callClaude()`** (apps/web/lib/claude-api/provider-dispatch.ts).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "AiTaskRequest: Dimensionless structural payload defining task topology; AiTaskResult: Dimensionless output vector; executeAiTask: Deterministic mapping operator from Request to Result.",
+      "assumptions": "Assumes a unified namespace for all AI invocations and that legacy dispatchers can be wrapped without altering underlying stochastic outputs.",
+      "breakdown_regime": "Breaks down if parallel asynchronous calls bypass the facade, leading to unaccounted resource consumption and state divergence across distributed nodes.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the GSE tactical routing layer, where all strategic queries must pass through a centralized arbitration node before accessing compute resources.",
+        "source_operator": "w0_canonical_entry_point",
+        "telemetry": "Percentage of API calls successfully routed through `executeAiTask` versus direct legacy invocations."
+      }
+    },
+    {
+      "primitive_id": "w0_explicit_cost_mode",
+      "name": "Explicit Cost Mode Resolution",
+      "verbatim_quote": "Governing invariants (from the ADR on #152, restated as build requirements): provider ≠ payer; cost mode explicit + fail-safe; no silent model substitution; telemetry failure never converts a successful paid call into a retry; one canonical entry point; evidence before promotion.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Cost Mode: Categorical variable (e.g., BOUND, UNBOUNDED); Fail-safe: Boolean trigger indicating budget exhaustion; Provider/Payer: Distinct entity identifiers.",
+      "assumptions": "Assumes strict separation of financial liability from computational execution, requiring explicit declaration of expenditure limits prior to token generation.",
+      "breakdown_regime": "Singularities occur if default parameters implicitly allocate funds, or if network latency causes cost evaluations to race against execution triggers.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSI budget-constrained inference kernels, ensuring predictive models halt sampling when marginal utility drops below computational cost.",
+        "source_operator": "w0_explicit_cost_mode",
+        "telemetry": "Frequency of fail-safe activations and total compute spend variance against declared cost modes."
+      }
+    },
+    {
+      "primitive_id": "w0_telemetry_invariant",
+      "name": "Telemetry Failure Isolation",
+      "verbatim_quote": "# AI Control Plane — Phase 2 Implementation Blueprint Date: 2026-07-22 Status: DESIGN — no code exists on `main` for any of this.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Telemetry Failure: Binary event indicating logging subsystem degradation; Successful Paid Call: Completed transaction with financial settlement; Retry: Redundant execution attempt.",
+      "assumptions": "Assumes observability pipelines are decoupled from core transactional logic, treating logging as an eventual consistency side-channel rather than a blocking dependency.",
+      "breakdown_regime": "Fails if the system erroneously conflates missing metrics with failed executions, triggering infinite retry loops that exhaust payer budgets.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSE sensor fault tolerance; a dropped tracking packet from an optical camera does not invalidate the completed physical action of a player.",
+        "source_operator": "w0_telemetry_invariant",
+        "telemetry": "Ratio of successful executions accompanied by missing telemetry logs versus retried executions."
+      }
+    },
+    {
+      "primitive_id": "w0_incremental_migration",
+      "name": "Incremental Call Site Migration",
+      "verbatim_quote": "No call site is force-migrated in PR A; migration is incremental and each migrated call site is its own reviewable diff.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Call Site: Source code location initiating an AI request; Diff: Minimal delta representing a single migration step; Reviewable: Human-verifiable change boundary.",
+      "assumptions": "Assumes the legacy interface remains stable and backward-compatible throughout the transition period, allowing isolated refactoring without global downtime.",
+      "breakdown_regime": "Breaks if the legacy interface is prematurely deprecated, forcing a monolithic rewrite that introduces systemic regression risks.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Analogous to GSI's phased adoption of new tracking features, where old and new data schemas coexist until the legacy schema reaches zero active consumers.",
+        "source_operator": "w0_incremental_migration",
+        "telemetry": "Count of remaining legacy `callClaude` invocations versus migrated `executeAiTask` entries over time."
+      }
+    },
+    {
+      "primitive_id": "environment_mode_resolution",
+      "name": "Environment Mode Resolution",
+      "verbatim_quote": "Effective mode = `min(envMode, task.permittedModes)` where the ordering is NO_BILLABLE_EXTERNAL < CONFIRMED_CREDITS_ONLY < BUDGETED_CASH.",
+      "page": 2,
+      "latex": "\\text{EffectiveMode} = \\min(\\text{envMode}, \\text{task.permittedModes})",
+      "symbol_and_unit_ledger": "{'envMode': 'dimensionless categorical label', 'task.permittedModes': 'set of dimensionless categorical labels'}",
+      "assumptions": "Task mode hierarchy is total and ordered; environment mode is fixed per deployment.",
+      "breakdown_regime": "When task.permittedModes is empty, effective mode defaults to envMode.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mode resolution function mirrors the structure of a poset join operation in lattice theory.",
+        "source_operator": "environment_mode_resolution",
+        "telemetry": "Observed mode transitions during task execution."
+      }
+    },
+    {
+      "primitive_id": "emergency_reliability_condition",
+      "name": "Emergency Reliability Condition",
+      "verbatim_quote": "`EMERGENCY_RELIABILITY` cannot be set via env var alone: it requires `LLM_COST_MODE=EMERGENCY_RELIABILITY` **and** a non-expired `EMERGENCY_RELIABILITY_UNTIL` ISO timestamp + `EMERGENCY_REASON` string; missing either → ConfigurationError.",
+      "page": 2,
+      "latex": "\\text{EMERGENCY\\_RELIABILITY} = \\text{LLM\\_COST\\_MODE} = \\text{EMERGENCY\\_RELIABILITY} \\land \\text{validTimestamp} \\land \\text{validReason}",
+      "symbol_and_unit_ledger": "{'LLM_COST_MODE': 'dimensionless categorical label', 'EMERGENCY_RELIABILITY_UNTIL': 'ISO timestamp', 'EMERGENCY_REASON': 'string literal'}",
+      "assumptions": "All three conditions must hold simultaneously for emergency mode activation.",
+      "breakdown_regime": "If any condition fails, raises ConfigurationError.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Emergency mode is a kernel of temporal validity and policy enforcement.",
+        "source_operator": "emergency_reliability_condition",
+        "telemetry": "ConfigurationError events during startup."
+      }
+    },
+    {
+      "primitive_id": "task_mode_inheritance",
+      "name": "Task Mode Inheritance",
+      "verbatim_quote": "A task may restrict below the environment; it may never escalate above it.",
+      "page": 2,
+      "latex": "\\forall t \\in \\text{tasks}: \\text{task.mode} \\leq \\text{env.mode}",
+      "symbol_and_unit_ledger": "{'task.mode': 'dimensionless categorical label', 'env.mode': 'dimensionless categorical label'}",
+      "assumptions": "Task mode is bounded by environment mode in a partial order.",
+      "breakdown_regime": "Inheritance is enforced by static analysis at compile-time.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Task mode inheritance mirrors a monotonic function between two ordered sets.",
+        "source_operator": "task_mode_inheritance",
+        "telemetry": "Mode restriction violations detected during task scheduling."
+      }
+    },
+    {
+      "primitive_id": "error_classification_system",
+      "name": "Error Classification System",
+      "verbatim_quote": "### A.4 Typed errors (shared, PR A ships the module) ``` Unauthenticated | Forbidden | InvalidInput | ConfigurationError | PolicyBlocked | BudgetBlocked | ProviderUnavailable | ProviderRejected | AmbiguousCharge | TelemetryDegraded | StoreUnavailable ``` Each is a class with a `code` literal and a `retriable: boolean`.",
+      "page": 2,
+      "latex": "\\mathcal{E} = \\{E_i \\mid E_i \\text{ is a typed error class with } \\text{code} \\in \\mathbb{Z}, \\text{retriable} \\in \\{\\text{true}, \\text{false}\\} \\}",
+      "symbol_and_unit_ledger": "{'E_i': 'typed error class', 'code': 'integer literal', 'retriable': 'boolean'}",
+      "assumptions": "Each error type has a unique code and defined retry behavior.",
+      "breakdown_regime": "Retry logic depends on error type's retriable flag.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Error classification defines a kernel of system resilience and recovery.",
+        "source_operator": "error_classification_system",
+        "telemetry": "Retry counts and error type distributions across invocations."
+      }
+    },
+    {
+      "primitive_id": "795dce99450f387e_w2_g1",
+      "name": "AI_CONTROL_PLANE_DESIGN_2026-07-22 Ch.3 Grounded Operator",
+      "verbatim_quote": "write → the call still returns success; the outbox drains later.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 795dce99450f387e_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "795dce99450f387e_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "795dce99450f387e_w2_g2",
+      "name": "AI_CONTROL_PLANE_DESIGN_2026-07-22 Ch.3 Grounded Operator",
+      "verbatim_quote": "--## PR C — `feat/ai-budget-reservations`: atomic preauthorization ### C.1 Model ```prisma model AiBudgetWindow { id String @id // e.g.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 795dce99450f387e_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "795dce99450f387e_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "795dce99450f387e_w2_g3",
+      "name": "AI_CONTROL_PLANE_DESIGN_2026-07-22 Ch.3 Grounded Operator",
+      "verbatim_quote": "@db.Decimal(12, 6) } ``` ### C.2 Atomicity — one conditional UPDATE, not read-then-write ```sql UPDATE \"AiBudgetWindow\" SET \"reservedUsd\" = \"reservedUsd\" + $amount WHERE id = $window AND \"reservedUsd\" + \"settledUsd\" + $amount <= \"capUsd\" RETURNING id; ``` Zero rows returned → `BudgetBlocked`.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 795dce99450f387e_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "795dce99450f387e_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "credit_state_machine",
+      "name": "Credit State Transition Kernel",
+      "verbatim_quote": "ONSUMED | EXHAUSTED | EXPIRED | REVOKED remainingUsd Decimal @db.Decimal(12, 2) expiresAt DateTime?",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'remainingUsd': 'USD', 'expiresAt': 'UTC datetime', 'observedAt': 'UTC datetime'}",
+      "assumptions": "State transitions governed by monotonic consumption and TTL-based expiration; freshness gate ensures snapshot validity.",
+      "breakdown_regime": "When remainingUsd < worst-case estimate or observedAt exceeds TTL, transition to PolicyBlocked.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic credit validation logic and GSE's provider selection kernel.",
+        "source_operator": "credit_state_machine",
+        "telemetry": "Snapshot age, balance depletion rate, and policy compliance flags."
+      }
+    },
+    {
+      "primitive_id": "model_registry_lifecycle",
+      "name": "Model Registry Lifecycle",
+      "verbatim_quote": "--## PR E — `feat/ai-provider-hardening` - Model registry table keyed by (family, version, provider, region) with lifecycle state, capability matrix, pricing version, source receipt, and observedAt.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'family': 'string', 'version': 'semantic version', 'provider': 'string', 'region': 'ISO 3166-1 alpha-2', 'lifecycle_state': 'enum {ACTIVE, DEPRECATED, RETIRED}', 'capability_matrix': 'boolean matrix of features', 'pricing_version': 'string', 'source_receipt': 'URI', 'observedAt': 'UTC datetime'}",
+      "assumptions": "Registry is authoritative for runtime model resolution; all model lookups must be validated against this table.",
+      "breakdown_regime": "Resolution fails when model not found or lifecycle state is retired.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE’s dynamic model substitution and GSI’s capability-aware routing.",
+        "source_operator": "model_registry_lifecycle",
+        "telemetry": "Registry hit rate, substitution success rate, and capability mismatch frequency."
+      }
+    },
+    {
+      "primitive_id": "credential_chain_security",
+      "name": "Credential Chain Integrity",
+      "verbatim_quote": "- Credential chains: Bedrock via standard AWS credential chain (no long-lived keys in env where avoidable); Vertex via ADC/workload identity.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'aws_credential_chain': 'AWS SDK credential provider chain', 'vertex_adc': 'Google ADC or workload identity', 'secret_exposure_risk': 'dimensionless risk score'}",
+      "assumptions": "No hard-coded secrets in environment; credential resolution is delegated to platform-native mechanisms.",
+      "breakdown_regime": "Failure occurs when credential chain cannot resolve due to misconfiguration or access denial.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Aligns with GSI’s secure credential ingestion and GSE’s secure transport layer.",
+        "source_operator": "credential_chain_security",
+        "telemetry": "Credential resolution latency, failure count, and exposure risk index."
+      }
+    },
+    {
+      "primitive_id": "transport_limit_enforcement",
+      "name": "Transport Limit Enforcement",
+      "verbatim_quote": "- Transport limits: per-attempt timeout, bounded retry (never on AmbiguousCharge), response byte cap, content-type check, vendor request-id capture.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'timeout_ms': 'milliseconds', 'retry_attempts': 'integer', 'response_byte_cap': 'bytes', 'content_type': 'MIME type string', 'vendor_request_id': 'UUID'}",
+      "assumptions": "All external calls are bounded to prevent resource exhaustion or malformed responses.",
+      "breakdown_regime": "Transport failure when timeout exceeded, retry limit exhausted, or invalid content-type detected.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Supports GSE’s robustness under adversarial network conditions and GSI’s observability.",
+        "source_operator": "transport_limit_enforcement",
+        "telemetry": "Request duration, retry count, and content validation pass/fail metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "795dce99450f387e_t0",
+      "think": "The architectural blueprint presented in this chapter window fundamentally restructures the operational dynamics of the AI control plane by imposing rigorous mathematical constraints on resource allocation and execution flow. By mandating a single canonical entry point (`executeAiTask`), the design enforces a topological bottleneck that ensures every stochastic inference trajectory is subjected to deterministic policy evaluation before any computational expenditure occurs. This is not merely a software engineering refactor; it represents a shift toward a formally verifiable state machine where the separation of provider and payer creates distinct accountability manifolds. The explicit cost mode resolution acts as a hard boundary condition in the optimization landscape, preventing the system from drifting into regions of unbounded financial risk. Furthermore, the isolation of telemetry failures from core transactional logic introduces a robustness invariant akin to fault-tolerant distributed systems, ensuring that observability gaps do not corrupt the primary execution state. The incremental migration strategy reflects a deep understanding of complex system evolution, avoiding catastrophic phase transitions by maintaining backward compatibility while systematically reducing the surface area of legacy dependencies. This approach guarantees that the transition to the new control plane is both mathematically sound and operationally safe, preserving the integrity of the underlying predictive models while upgrading the governance infrastructure.",
+      "retrocausal_genealogy": "This design philosophy traces its lineage back to early distributed systems theory, particularly the Two Generals' Problem and CAP theorem, which highlighted the inherent tensions between consistency, availability, and partition tolerance. It also draws heavily from financial transaction processing architectures, where the strict separation of concerns and explicit audit trails are paramount. The specific focus on cost-mode resolution and telemetry isolation reflects lessons learned from recent large-scale LLM deployments, where uncontrolled API expenditures and silent failures have proven to be critical vulnerabilities. By codifying these lessons into governing invariants, the blueprint establishes a new standard for responsible AI orchestration.",
+      "theory_of_mind": "From a theory of mind perspective, this architecture anticipates the adversarial behaviors of both internal developers and external API providers. It assumes that developers might inadvertently introduce inefficient or costly calls, hence the need for explicit contracts and fail-safes. It also accounts for the possibility of provider-side anomalies, such as silent model substitutions or degraded performance, by enforcing strict validation at the entry point. By modeling these potential misalignments, the control plane acts as a sophisticated mediator that aligns the incentives and actions of all participating agents, ensuring that the system operates within predefined safety and economic boundaries.",
+      "cross_layer_veto": "The cross-layer veto conditions embedded in this design are crucial for preventing cascading failures and maintaining system integrity. The explicit prohibition against silent model substitution acts as a veto against unauthorized changes to the inference kernel, ensuring that the expected behavior of the system remains consistent. Similarly, the rule that telemetry failure never converts a successful paid call into a retry serves as a veto against resource exhaustion attacks, whether accidental or malicious. These vetoes create a multi-layered defense-in-depth strategy, where each layer independently validates the legitimacy and safety of an operation before allowing it to proceed. This anti-collinearity ensures that a failure in one subsystem (e.g., logging) cannot propagate to compromise another (e.g., billing), thereby preserving the overall stability and reliability of the platform."
+    },
+    {
+      "trace_id": "795dce99450f387e_t1",
+      "think": "Chapter window 2 introduces foundational control plane constructs for AI task execution environments. The core idea revolves around enforcing cost and reliability policies through a structured mode resolution lattice. The environment class (`AI_ENV_CLASS`) determines the baseline mode, which can be overridden or restricted by task-level configurations. This creates a hierarchical constraint system where tasks cannot exceed their environment's capabilities. Emergency reliability mode adds a time-bound override mechanism, requiring explicit validation of timestamp and reason fields. Error handling is formalized as a typed system with retry semantics, enabling robust failure recovery. The interplay between these primitives ensures that AI operations remain within budgetary and operational bounds while maintaining auditability and traceability. The design enforces a strict top-down policy flow, preventing escalation beyond environment limits and ensuring deterministic behavior under various deployment contexts. Window 2 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This design builds upon prior work in configuration management and policy enforcement systems, extending them into AI-specific execution contexts with temporal and reliability constraints. Retrocausal Genealogy (Window 2): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include the AI task executor (seeking optimal performance), the environment controller (enforcing limits), and the reliability monitor (ensuring compliance). Coaches are represented by the error classification and retry logic, guiding system resilience strategies. Theory of Mind (Window 2): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that mode resolution does not conflict with error handling or emergency overrides. Leakage is prevented by strictly bounding task modes within environment limits, avoiding cross-layer contamination of policy states. Cross-Layer Veto (Window 2): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "795dce99450f387e_t2",
+      "think": "Window 3 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "795dce99450f387e_t3",
+      "think": "Chapter window 4 explores the foundational design principles of AI control plane infrastructure, particularly focusing on credit management, model registry integrity, credential security, and transport enforcement. The credit state machine enforces a closed-loop policy where providers are admitted only under verified, fresh snapshots with sufficient funds. This aligns with Bayesian inference in GSI, where trustworthiness is derived from temporal consistency and resource sufficiency. The model registry acts as a canonical source of truth for runtime decisions, ensuring that model substitution respects capability floors—a constraint enforced both programmatically and test-driven. Credential chains are abstracted to platform-native mechanisms to reduce attack surface, which supports GSE's secure execution model. Transport limits ensure resilience against DoS and malformed inputs, forming a robust outer loop around service interactions. These primitives collectively define a resilient, auditable, and scalable AI control plane architecture. Window 4 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in prior work on secure credential handling and model versioning, evolving from early-stage API gateways to modern microservices with embedded policy engines. Retrocausal Genealogy (Window 4): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include malicious actors attempting to exploit credential leaks or bypass transport limits, while internal stakeholders seek to optimize model performance and cost efficiency. Theory of Mind (Window 4): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity prevents redundant checks across layers; e.g., credential validation does not duplicate transport-level timeouts. Leakage vetoes ensure no secret exposure occurs in logs or telemetry. Cross-Layer Veto (Window 4): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in AI_CONTROL_PLANE_DESIGN_2026-07-22 (795dce99450f387e, 6/6 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

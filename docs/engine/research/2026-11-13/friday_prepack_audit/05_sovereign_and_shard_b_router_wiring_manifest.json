@@ -1,6 +1,6 @@
 {
   "schema": "gse.sovereign_to_cognitive_router_wiring.v1",
-  "generated_at_utc": "2026-11-14T08:31:39.362066+00:00",
+  "generated_at_utc": "2026-11-14T09:17:38.347781+00:00",
   "mission_doctrine": "MIND-FIRST + WIRE-FIRST SEQUENCING (feeding intelligence & reasoning and wiring all signals; zero book-beating shortcuts)",
   "router_constants": {
     "MASK_BITS": 288,
@@ -9,16 +9,16 @@
     "MAX_ABS_DELTA_LOG_ODDS": 0.35
   },
   "counts": {
-    "sovereign_books_loaded": 331,
-    "refusal_receipts_fail_closed": 20,
-    "sovereign_primitives_routed": 3389,
-    "sovereign_reasoning_traces_routed": 724,
-    "gcp_shard_b_docs_routed": 4200,
+    "sovereign_books_loaded": 397,
+    "refusal_receipts_fail_closed": 22,
+    "sovereign_primitives_routed": 4368,
+    "sovereign_reasoning_traces_routed": 934,
+    "gcp_shard_b_docs_routed": 4359,
     "rules_rlvr_lessons_routed": 186,
     "drive_master_clusters_routed": 69,
     "drive_master_total_records_indexed": 1042184,
     "week10_entity_truth_rows": 35,
-    "total_routed_intelligence_units": 8499,
+    "total_routed_intelligence_units": 9847,
     "distinct_domains_seen": 30,
     "active_mask_bits_set": 276
   },
@@ -39,19 +39,19 @@
     "['psych', 'memory', 'learning', 'association']": 1,
     "['psych', 'psychophysics', 'discrimination', 'measurement']": 1,
     "basketball": 25,
-    "cs": 746,
+    "cs": 1022,
     "cs/operations-research": 19,
-    "football": 1098,
+    "football": 1471,
     "football/history": 3,
     "general": 134,
     "history": 6,
     "history/football": 1,
-    "math": 422,
+    "math": 660,
     "medicine": 5,
     "other": 535,
     "physics": 22,
     "physiology": 58,
-    "psych": 293,
+    "psych": 385,
     "strategy": 6
   },
   "context_mask_uint32_words_9": [
@@ -67,51 +67,51 @@
   ],
   "six_situational_families": {
     "pressure": {
-      "sovereign_primitives_routed": 182,
+      "sovereign_primitives_routed": 223,
       "gcp_shard_b_docs_routed": 39,
-      "combined_evidence_count": 221,
+      "combined_evidence_count": 262,
       "active_router_bits_count": 45,
-      "bounded_james_stein_log_odds_weight": 0.097591,
+      "bounded_james_stein_log_odds_weight": 0.105017,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_routed": 525,
-      "gcp_shard_b_docs_routed": 1290,
-      "combined_evidence_count": 1815,
+      "sovereign_primitives_routed": 673,
+      "gcp_shard_b_docs_routed": 1333,
+      "combined_evidence_count": 2006,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.192168,
+      "bounded_james_stein_log_odds_weight": 0.196707,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_routed": 382,
-      "gcp_shard_b_docs_routed": 1447,
-      "combined_evidence_count": 1829,
+      "sovereign_primitives_routed": 475,
+      "gcp_shard_b_docs_routed": 1511,
+      "combined_evidence_count": 1986,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.192517,
+      "bounded_james_stein_log_odds_weight": 0.196252,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_routed": 321,
-      "gcp_shard_b_docs_routed": 733,
-      "combined_evidence_count": 1054,
+      "sovereign_primitives_routed": 451,
+      "gcp_shard_b_docs_routed": 763,
+      "combined_evidence_count": 1214,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.167514,
+      "bounded_james_stein_log_odds_weight": 0.173924,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_routed": 1744,
-      "gcp_shard_b_docs_routed": 538,
-      "combined_evidence_count": 2282,
+      "sovereign_primitives_routed": 2240,
+      "gcp_shard_b_docs_routed": 546,
+      "combined_evidence_count": 2786,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.202552,
+      "bounded_james_stein_log_odds_weight": 0.211597,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_routed": 235,
-      "gcp_shard_b_docs_routed": 153,
-      "combined_evidence_count": 388,
+      "sovereign_primitives_routed": 306,
+      "gcp_shard_b_docs_routed": 167,
+      "combined_evidence_count": 473,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.12242,
+      "bounded_james_stein_log_odds_weight": 0.131297,
       "all_finite_non_nan": true
     }
   }

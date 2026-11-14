@@ -1,0 +1,323 @@
+{
+  "book_id": "7733f5c96d9e6c51",
+  "source_status": "COMPLETE",
+  "title": "2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias",
+  "file_name": "2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias.md",
+  "sha256": "7733f5c96d9e6c5199e1a22f775dbdb3830723a150c8dcfe64933ed23873bdb1",
+  "primary_domain": "psych",
+  "pages_total": 13,
+  "pages_read": 13,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 13,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fuzzy logic models tactical substitution decisions as a multi-criteria optimization under uncertainty, integrating performance, fatigue, and disciplinary risk via contextual role clustering. The fuzzy substitution primitive unifies discrete event streams and continuous physiological decay into a multi-dimensional state vector. By mapping raw match telemetry to normalized universes of discourse, the system establishes an isomorphic bridge between stochastic player fatigue and deterministic tactical risk.",
+  "gsi_mapping": "Bayesian belief updates on substitution likelihood using playerankScore, minutesPlayed, and TemCartaoAmarelo as evidence variables within a conformal predictive framework. GSI employs conformal inference over the consolidated dataset to generate dynamic prediction intervals for playerankScore degradation. Bayesian priors are updated using the fractional age feature and binary disciplinary flags, ensuring robust uncertainty quantification across varying role clusters and high-dimensional fatigue states.",
+  "gse_mapping": "Situation-aware state transitions in real-time game management governed by fuzzy substitution priorities derived from tactical posture and positional risk modulation. GSE translates the four fuzzy inputs into real-time situational reasoning nodes. The engine continuously evaluates state-transitions by calculating the intersection of fatigue accumulation and disciplinary risk, outputting optimal substitution vectors that maintain systemic team homeostasis under competitive pressure.",
+  "primitives": [
+    {
+      "primitive_id": "substitution_priority_fuzzy_logic",
+      "name": "Substitution Priority Fuzzy Logic",
+      "verbatim_quote": "Using fuzzy logic to model expert coaching knowledge, our system provides real-time substitution priorities by integrating validated performance metrics (playerankScore), fatigue (minutesPlayed), age, and disciplinary risk (TemCartaoAmarelo).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'playerankScore': 'dimensionless normalized score', 'minutesPlayed': 'min', 'age': 'years', 'TemCartaoAmarelo': 'dimensionless risk index'}",
+      "assumptions": "Performance metrics are temporally consistent; fuzzy membership functions capture expert knowledge; substitution decisions are contextually dependent.",
+      "breakdown_regime": "High-risk scenarios where fatigue and disciplinary risk outweigh performance gains.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps fuzzy rule-based substitution prioritization to GSI's probabilistic inference engine for real-time decision confidence.",
+        "source_operator": "substitution_priority_fuzzy_logic",
+        "telemetry": "Observed substitution timing vs. predicted priority rank"
+      }
+    },
+    {
+      "primitive_id": "contextual_disciplinary_risk_modulation",
+      "name": "Contextual Disciplinary Risk Modulation",
+      "verbatim_quote": "A key innovation is its contextual logic, which modulates disciplinary risk based on a player's tactical position (roleCluster), reflecting deeper tactical awareness.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'roleCluster': 'categorical label', 'disciplineRiskModulated': 'dimensionless adjusted risk'}",
+      "assumptions": "Tactical roles influence disciplinary behavior; risk varies with game phase and position.",
+      "breakdown_regime": "High-pressure game states where role-specific risk profiles diverge.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE’s positional risk kernel, enabling dynamic risk adjustment per role.",
+        "source_operator": "contextual_disciplinary_risk_modulation",
+        "telemetry": "Player yellow card frequency by role cluster"
+      }
+    },
+    {
+      "primitive_id": "real_time_performance_integration",
+      "name": "Real-Time Performance Integration",
+      "verbatim_quote": "Factors like \"the player looks tired,\" \"performance has recently 33 dropped,\" or \"the risk of expulsion is high\" are not binary, but rather gradual.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'performanceEvaluation': 'dimensionless score', 'tirednessFactor': 'normalized scale', 'riskOfExpulsion': 'probability'}",
+      "assumptions": "Performance is a continuous variable; subjective cues are encoded into fuzzy sets.",
+      "breakdown_regime": "Uncertain or ambiguous performance states where binary thresholds fail.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to simulate performance degradation over time using fuzzy temporal logic.",
+        "source_operator": "real_time_performance_integration",
+        "telemetry": "Match progression vs. performance decline curve"
+      }
+    },
+    {
+      "primitive_id": "economic_stakes_in_decision_making",
+      "name": "Economic Stakes in Tactical Decision Making",
+      "verbatim_quote": "1 17 Introduction 18 The financial stakes in modern soccer have never been higher, creating a vast economic 19 disparity between clubs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'financialStakes': 'USD', 'economicDisparity': 'ratio'}",
+      "assumptions": "Higher financial stakes correlate with increased decisional scrutiny and precision.",
+      "breakdown_regime": "High-value matches where substitution errors yield significant revenue loss.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSI's utility-weighted decision space, where economic impact defines substitution cost-benefit.",
+        "source_operator": "economic_stakes_in_decision_making",
+        "telemetry": "Revenue change post-substitution vs. expected value"
+      }
+    },
+    {
+      "primitive_id": "fuzzy_instance_vector",
+      "name": "Player-Match Instance Vectorization",
+      "verbatim_quote": "Each row of the final dataset represents a single \"player-match\" instance.",
+      "page": 4,
+      "latex": "I_{m,p} = \\left( S_{p,m}, \\tau_{p,m}, \\alpha_{p,m}, \\mathbb{1}_{\\text{card}}(p,m) \\right)",
+      "symbol_and_unit_ledger": "I: dimensionless instance vector; S: performance score (dimensionless); \\tau: minutes played (min); \\alpha: fractional age (yr); \\mathbb{1}: boolean indicator (dimensionless).",
+      "assumptions": "Assumes temporal stationarity within a single match window and independence of missing data mechanisms prior to pruning.",
+      "breakdown_regime": "Singularities emerge if \\tau exceeds maximum extra time bounds or if \\alpha falls outside the defined universe of discourse.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw CSV rows directly to GSE state-space coordinates.",
+        "source_operator": "fuzzy_instance_vector",
+        "telemetry": "Dataset completeness rate and row validation metrics."
+      }
+    },
+    {
+      "primitive_id": "fatigue_skew_distribution",
+      "name": "Asymmetric Fatigue Accumulation Kernel",
+      "verbatim_quote": "Table 1: Attributes of the Consolidated Dataset for the Fuzzy System Attribute Description ## Data type Identifiers Context (Rules) Fuzzy Input 1 Fuzzy Input 2 Fuzzy Input 3 Fuzzy Input 4 matchId, playerId roleCluster playerankScore minutesPlayed IdadeDoJogador TemCartaoAmarelo Identification keys.",
+      "page": 4,
+      "latex": "\\mathcal{F}(\\tau) \\sim \\text{SkewNormal}(\\xi=90, \\omega, \\alpha_{skew} < 0)",
+      "symbol_and_unit_ledger": "\\mathcal{F}: probability density function; \\tau: minutes played (min); \\xi: location parameter (min); \\omega: scale parameter (min); \\alpha_{skew}: shape parameter (dimensionless).",
+      "assumptions": "Fatigue accumulation follows a bounded, negatively skewed distribution heavily concentrated at the standard 90-minute mark.",
+      "breakdown_regime": "Model fails if substitution protocols fundamentally alter the upper bound of \\tau beyond 120 minutes.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines the membership function boundaries for the 'Fatigue' fuzzy set in GSE.",
+        "source_operator": "fatigue_skew_distribution",
+        "telemetry": "Empirical skewness metric (-1.40) and median alignment."
+      }
+    },
+    {
+      "primitive_id": "age_gaussian_kernel",
+      "name": "Chronological Performance Gaussian",
+      "verbatim_quote": "The age was then calculated in fractional years at the exact moment of the match.",
+      "page": 4,
+      "latex": "\\alpha_{p,m} = \\frac{D_m - B_p}{365.25}",
+      "symbol_and_unit_ledger": "\\alpha: fractional age (yr); D_m: match date (days); B_p: birth date (days); 365.25: Julian year conversion factor (days/yr).",
+      "assumptions": "Physiological capacity evolves smoothly with chronological time, approximating a normal distribution across the active population.",
+      "breakdown_regime": "Breaks down for extreme outliers (e.g., youth academy debuts below 15.89 years) falling outside the calibrated fuzzy sets.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates the symmetric 'Young', 'Peak', and 'Veteran' fuzzy sets for GSI aging models.",
+        "source_operator": "age_gaussian_kernel",
+        "telemetry": "Mean (26.68) and median (26.51) convergence metrics."
+      }
+    },
+    {
+      "primitive_id": "disciplinary_binary_risk",
+      "name": "Event-Driven Disciplinary Risk Flag",
+      "verbatim_quote": "We filtered all events that contained the tag 1702 (identified via tags2name.csv as 'yellow card') and created a boolean indicator for each (matchId, playerId) pair that received a card.",
+      "page": 4,
+      "latex": "R_{p,m} = \\begin{cases} 1, & \\exists e \\in E_{m} : \\text{tag}(e) = 1702 \\land \\text{actor}(e) = p \\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "R: disciplinary risk flag (dimensionless); E_m: event set for match m; tag(e): event classification integer; actor(e): player identifier.",
+      "assumptions": "Disciplinary risk is a discrete, non-recoverable state transition within the match timeframe, independent of continuous fatigue.",
+      "breakdown_regime": "Invalid if event tagging systems introduce latency or misclassification errors exceeding the 15.34% baseline prevalence.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps referee event logs to GSE binary risk constraints.",
+        "source_operator": "disciplinary_binary_risk",
+        "telemetry": "Card incidence rate (15.34%) and role-cluster dependency."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id",
+      "name": "Fuzzy Logic Age Operator",
+      "verbatim_quote": "ID Rule Table 3: Complete Set of Base Fuzzy Rules.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Age': 'dimensionless'}",
+      "assumptions": "Assumes age distribution follows a triangular/trapezoidal membership function centered around youth (peak ~26.7 years), capturing gradual transitions between age categories.",
+      "breakdown_regime": "Applicable across all game time windows; singularity occurs when age exactly equals 14.6, 22, 27, 32, or 42.7 years.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic player age distributions and GSE's temporal state variables for player aging.",
+        "source_operator": "w2_snake_case_id",
+        "telemetry": "Observed player age distributions within squad rosters."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_2",
+      "name": "Gaussian Risk Membership Function",
+      "verbatim_quote": "s concentrated after 70 minutes, reflecting the median at 90.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Risk': 'dimensionless', 'mean': 'dimensionless', 'sigma': 'dimensionless'}",
+      "assumptions": "Models risk as a binary-like continuous variable with sharp peaks at 0 and 1, assuming negligible overlap between 'NoRisk' and 'WithRisk' states.",
+      "breakdown_regime": "Applicable for any match minute; singularity occurs at exact risk values of 0 and 1.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal risk scoring models and GSE's tactical risk assessment state machines.",
+        "source_operator": "w2_snake_case_id_w2_2",
+        "telemetry": "Historical substitution data categorized by injury risk levels."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_3",
+      "name": "Contextual Position-Risk Adjustment",
+      "verbatim_quote": "nal priority is adjusted to a high minimum value (e.g., 8.0).",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Priority': 'dimensionless'}",
+      "assumptions": "Applies a hard threshold correction to the fuzzy inference output based on player position and risk status, overriding intermediate fuzzy logic results.",
+      "breakdown_regime": "Active only when player role is Defender and risk is present; otherwise, standard fuzzy rules apply.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Establishes correspondence with GSI's Bayesian hierarchical models for position-specific substitution decisions and GSE's defensive formation state transitions.",
+        "source_operator": "w2_snake_case_id_w2_3",
+        "telemetry": "Match statistics showing substitution patterns for defenders under pressure."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_4",
+      "name": "Performance-Based Priority Ceiling",
+      "verbatim_quote": "244 • If the player is a Midfielder ('MF'), has high risk, and is tired (Medium or High Fatigue), the final priority is adjusted to a medium-high minimum value (e.g., 7.5) .",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Priority': 'dimensionless'}",
+      "assumptions": "Introduces a conditional cap on priority for forwards facing risk, contingent on their current performance metric.",
+      "breakdown_regime": "Effective when player role is Forward and risk is active; performance threshold determines whether ceiling applies.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to GSI's predictive performance models and GSE's offensive strategy state machines.",
+        "source_operator": "w2_snake_case_id_w2_4",
+        "telemetry": "Observational data on forward substitutions tied to performance metrics and injury risks."
+      }
+    },
+    {
+      "primitive_id": "calculated_priority_distribution",
+      "name": "Calculated Priority Distribution",
+      "verbatim_quote": "The dis327 tribution of this variable provides an initial view of the model's recommendation profile.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{calc}': 'CalculatedPriority, dimensionless score ranging from 1 to 10'}",
+      "assumptions": "Distribution is generated via fuzzy inference system; scores reflect weighted combination of fatigue, performance, and tactical relevance.",
+      "breakdown_regime": "High variance in non-substituted players indicates influence of external tactical factors beyond individual metrics.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps empirical player state vectors to probabilistic substitution recommendations via kernel density estimation of P_calc.",
+        "source_operator": "calculated_priority_distribution",
+        "telemetry": "Histogram bin counts for P_calc ranges [1,4), [4,6), [6,10]"
+      }
+    },
+    {
+      "primitive_id": "substitution_decision_conflict",
+      "name": "Substitution Decision Conflict",
+      "verbatim_quote": "The system demonstrates the ability 323 to balance conflicting factors.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Conflict index, dimensionless measure of competing influences'}",
+      "assumptions": "Conflicts arise from fatigue, performance, and strategic considerations; modeled as overlapping fuzzy sets.",
+      "breakdown_regime": "When C > 0.7, substitution becomes ambiguous due to high conflict among criteria.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically maps conflict resolution in fuzzy logic to Bayesian belief updating in GSI.",
+        "source_operator": "substitution_decision_conflict",
+        "telemetry": "Standard deviation of P_calc across substituted vs. non-substituted groups"
+      }
+    },
+    {
+      "primitive_id": "fatigue_influence_modulation",
+      "name": "Fatigue Influence Modulation",
+      "verbatim_quote": "This pattern is partially influenced by the high 330 incidence of players who played 90 minutes or more (59.3%, see Section 5.1), frequently 331 activating rules associated with High Fatigue (e.g., A1, A3, A4, M2, M4, and R1), which 332 naturally increase the priority score.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Fatigue level, normalized [0,1]', 'R_{fatigue}': 'Rule activation function for fatigue-based priority'}",
+      "assumptions": "Fatigue increases priority linearly up to threshold; beyond threshold, marginal utility diminishes.",
+      "breakdown_regime": "At F ≥ 0.85, priority gain saturates due to diminishing returns in fatigue impact.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives modulation factor from fatigue state to adjust P_calc via kernel-weighted average.",
+        "source_operator": "fatigue_influence_modulation",
+        "telemetry": "Percentage of players with ≥90 min play time and corresponding rule activations"
+      }
+    },
+    {
+      "primitive_id": "tactical_context_bias",
+      "name": "Tactical Context Bias",
+      "verbatim_quote": "This result reflects the influence of fatigue, the 341 contextual nature of the metric, and the complexity of substitution decisions, which are 342 often driven by tactical factors (strategy changes, opponent response, score management) 343 not captured by the SCN's individual-condition variables.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{tac}': 'Tactical bias coefficient, dimensionless', 'P_{final}': 'Final calculated priority after bias adjustment'}",
+      "assumptions": "Bias arises from unmodeled strategic variables; modeled as additive correction term.",
+      "breakdown_regime": "When B_{tac} < 0.2, tactical influence is minimal; when B_{tac} > 0.8, substitution decisions deviate significantly from pure individual metrics.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps tactical context into GSI's Bayesian prior adjustments, aligning with coach decision-making.",
+        "source_operator": "tactical_context_bias",
+        "telemetry": "Mean and median P_calc for substituted vs. non-substituted players"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7733f5c96d9e6c51_t0",
+      "think": "Chapter 1 establishes the foundational tension between intuition-driven substitution decisions and the need for data-informed tactical rigor. It introduces a fuzzy logic system that operationalizes expert knowledge into real-time decision support. The core premise is that substitution decisions are inherently imprecise due to the qualitative nature of performance, fatigue, and risk. By modeling these factors as fuzzy variables, the system enables nuanced prioritization. The integration of validated metrics like playerankScore with contextual elements such as roleCluster and disciplinary risk reflects a sophisticated understanding of how tactical complexity interacts with human judgment. The paper positions itself as filling a gap in prior literature that either evaluates performance or models tactics in isolation, but not both in a unified decision engine. This approach aligns with recent trends in AI-assisted sports analytics, emphasizing interpretability and real-time adaptability. The use of fuzzy logic is justified by the non-binary nature of many tactical inputs—such as 'tiredness' or 'risk of expulsion'—which cannot be captured by traditional binary logic. The system's design implies a layered cognitive architecture where expert knowledge is encoded into fuzzy rules, which are then evaluated against live game data. This supports a Bayesian inference framework where each substitution decision is updated with new evidence. The economic disparities highlighted in the chapter underscore the strategic importance of such systems, especially for clubs operating under financial constraints. The chapter thus sets up a theoretical and methodological foundation for a decision-support system that bridges the gap between data science and tactical intuition.",
+      "retrocausal_genealogy": "Rooted in early fuzzy logic applications in sports analytics (Zadeh, 1965) and extended by Pappalardo et al. (2019) and Marliere (2017), this work builds upon the evolution from deterministic to probabilistic models of player performance and tactical decision-making. Retrocausal Genealogy (Window 1): Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agents as coaches who may rely on intuition or data, with the system simulating both perspectives to optimize substitution timing and positioning. The system assumes opposing coaches might prioritize different risk-reward trade-offs. Theory of Mind (Window 1): Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to performance metrics alone by enforcing contextual modulation of risk. Ensures that disciplinary risk is not treated uniformly across positions, avoiding leakage from role-specific tactical behaviors. Cross-Layer Veto (Window 1): Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7733f5c96d9e6c51_t1",
+      "think": "The foundational logic of this chapter window rests on the rigorous transformation of heterogeneous, high-frequency sports telemetry into a unified, low-dimensional fuzzy state space. Initially, raw data streams—comprising performance scores, temporal fatigue markers, chronological aging, and discrete disciplinary events—are subjected to a stringent cleaning and integration protocol. This process yields a consolidated matrix of 46,897 validated 'player-match' instances, effectively filtering out epistemic noise such as missing birth dates or malformed event tags. The mathematical elegance of this approach lies in its ability to treat disparate variables through a common lens of membership functions. For instance, the highly skewed distribution of minutes played (median 90, skewness -1.40) necessitates an asymmetric fuzzy kernel to accurately model the physiological reality that most players either complete a full match or are substituted early, with few intermediate states. Conversely, the chronological age variable exhibits a near-perfect Gaussian symmetry, allowing for balanced partitioning into Young, Peak, and Veteran domains. Crucially, the empirical analysis confirms the informational independence of these four primary axes; the correlation matrix reveals coefficients strictly bounded below |0.18|. This lack of collinearity is not merely a statistical curiosity but a fundamental prerequisite for the subsequent fuzzy control system. It ensures that the inference engine can isolate the marginal impact of accumulating fatigue from the sudden, binary shock of a yellow card. By establishing these distinct, orthogonal dimensions of player state, the framework successfully abstracts the chaotic reality of a football match into a tractable, multi-variable optimization problem, setting the stage for real-time, AI-assisted substitution decisions that dynamically balance performance preservation against tactical risk.",
+      "retrocausal_genealogy": "This methodology inherits deeply from Lotfi Zadeh’s original formulation of fuzzy logic, designed to handle human-centric vagueness in engineering systems. In sports analytics, it bridges the gap between classical deterministic biomechanics and modern probabilistic machine learning. Historically, substitution decisions were purely heuristic, reliant on a coach's subjective intuition. The shift toward data-driven management began with basic descriptive statistics, evolved through linear regression models predicting fatigue, and has now culminated in these sophisticated, multi-input fuzzy inference systems capable of navigating complex, non-linear state spaces in real-time.",
+      "theory_of_mind": "From a theory of mind perspective, the fuzzy system acts as a computational surrogate for the head coach's cognitive architecture. It attempts to model the opposing agent—the manager—who must simultaneously track individual player exhaustion, impending suspension risks, and the overarching tactical narrative. The system recognizes that a coach does not perceive raw numbers but rather linguistic variables: a player is 'tired', 'at risk', or 'aging'. By formalizing these intuitive concepts into mathematical membership functions, the AI mirrors the coach's decision-making process, anticipating their need to preserve key assets while mitigating the immediate threat of a red card or a performance collapse in the final minutes.",
+      "cross_layer_veto": "A critical cross-layer veto condition arises from the confirmed low mutual correlation among the input variables. If, hypothetically, fatigue and disciplinary risk were highly collinear (e.g., tired players always commit fouls), the fuzzy rule base would suffer from severe information redundancy, leading to unstable inference and overfitting. The empirical finding that defenders exhibit higher card propensity without compromising the overall independence of the four main inputs validates the architectural separation of these layers. This anti-collinearity ensures that the GSE can apply targeted vetoes—for instance, overriding a fatigue-based substitution recommendation if the disciplinary risk layer signals an imminent tactical crisis—without triggering cascading logical contradictions within the broader decision support framework."
+    },
+    {
+      "trace_id": "7733f5c96d9e6c51_t2",
+      "think": "This chapter introduces a hybrid fuzzy logic framework for real-time substitution decisions in soccer. It combines descriptive statistical analysis of player attributes (age, fatigue, performance) with a rule-based expert system informed by coaching philosophies. The core contribution is a contextual logic layer that adjusts fuzzy inference outputs based on player position and risk, creating a robust decision support tool. The methodology bridges prescriptive analytics (fuzzy rules) with situational awareness (contextual overrides), enabling dynamic management of team composition during matches. Window 3 Synthesis: Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in operations research optimization from the 1960s, evolved through fuzzy set theory in the 1970s, and integrates modern machine learning ensembles. Key predecessors include Markov decision processes for sports strategy and Bayesian networks for injury prediction. Retrocausal Genealogy (Window 3): Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches model opponents' tactical responses and player mental states. The fuzzy system simulates this by incorporating uncertainty in performance and risk, while the contextual overrides capture coaches' implicit rules about protecting key defenders versus rotating forwards. Theory of Mind (Window 3): Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Avoids collinearity by ensuring input variables (age, fatigue, performance) are independent; prevents leakage by separating fuzzy rule evaluation from contextual logic, maintaining clear separation of concerns. Cross-Layer Veto (Window 3): Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7733f5c96d9e6c51_t3",
+      "think": "Chapter 4 explores the application of fuzzy logic in real-time substitution decisions within football, focusing on how the System of Conditional Rules (SCN) aggregates multiple player attributes into a single CalculatedPriority score. The core methodology involves defining membership functions for key variables such as fatigue, performance, and tactical relevance, then applying a rule base to compute priority levels. The aggregated analysis reveals that most players receive Medium priority scores (range 4–6), primarily due to high fatigue levels from extended playing time. However, the distribution of these scores varies significantly between substituted and non-substituted players, with substituted players showing lower variance, suggesting consistent identification of fatigue-driven cases. Conversely, non-substituted players exhibit greater dispersion, implying that other factors—such as strategic intent, opponent dynamics, or score management—play a role in final decisions. This discrepancy highlights the limitations of purely individual-condition-based models and underscores the importance of incorporating broader tactical context. The study further emphasizes the need for iterative calibration of membership functions and rule bases through feedback from professional coaches and analysts to enhance practical applicability and trust in such systems. Window 4 Synthesis: Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early fuzzy logic applications to sports analytics (e.g., Pappalardo et al., 2019), this work builds upon earlier efforts to model player performance and decision-making under uncertainty, extending prior frameworks to incorporate real-time substitution logic. Retrocausal Genealogy (Window 4): Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing perspectives of coaches who may prioritize tactical flexibility over individual fatigue metrics, while players and analysts might emphasize performance consistency and injury risk mitigation. Theory of Mind (Window 4): Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to fatigue alone by ensuring that tactical and strategic variables remain orthogonal to individual condition scores, maintaining interpretability and avoiding leakage from unobserved game states. Cross-Layer Veto (Window 4): Rooted in 2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias (7733f5c96d9e6c51, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

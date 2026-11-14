@@ -1,0 +1,78 @@
+{
+  "book_id": "706d5ce4c7d85827",
+  "source_status": "COMPLETE",
+  "title": "2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell",
+  "file_name": "2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell.md",
+  "sha256": "706d5ce4c7d8582787d79b8a6df3fcd6dbe1cc6bf0080cfd7c05c0343d3ffc88",
+  "primary_domain": "football",
+  "pages_total": 15,
+  "pages_read": 15,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Markov chains model NFL overtime rules, capturing state transitions and absorption probabilities for team possession and game outcomes. Universal Lens: Rooted in 2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell (706d5ce4c7d85827), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps team possession advantage to win probabilities using empirical transition matrices derived from Markov models. GSI Mapping: Rooted in 2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell (706d5ce4c7d85827), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes overtime state-space transitions with probabilistic outcomes, enabling dynamic decision-making under uncertainty. GSE Mapping: Rooted in 2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell (706d5ce4c7d85827), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sudden_death_rule",
+      "name": "Sudden Death Rule",
+      "verbatim_quote": "Introduction** Prior to the 2010-2011 season, the NFL overtime rules stated that the first team to score a touchdown (TD), field goal (FG), or safety won the game whether or not both teams had received an opportunity to score.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Team A possesses the ball', 'U': 'Team B possesses the ball', 'W_A': 'Team A wins', 'W_B': 'Team B wins'}",
+      "assumptions": "Game ends upon first scoring event; no second chance for the non-scoring team.",
+      "breakdown_regime": "When either team scores first, the game terminates immediately.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State transition graph where T → W_A or U → W_B represents immediate termination.",
+        "source_operator": "sudden_death_rule",
+        "telemetry": "Probability of first-team scoring success."
+      }
+    },
+    {
+      "primitive_id": "modified_sudden_death_rule",
+      "name": "Modified Sudden Death Rule",
+      "verbatim_quote": "The new rule does not allow the initial receiving team to win with a FG on their first possession, only with a TD.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Field goal attempt', 'TD': 'Touchdown attempt', 'S': 'Safety attempt', 'A_pos': 'Team A has possession', 'B_pos': 'Team B has possession'}",
+      "assumptions": "Initial team must score TD to win; otherwise, normal overtime continues.",
+      "breakdown_regime": "Transition from A_pos to B_pos if no TD scored.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Conditional transition matrix where F and S do not lead to absorption unless followed by TD.",
+        "source_operator": "modified_sudden_death_rule",
+        "telemetry": "Probability of TD vs FG/S outcomes in first possession."
+      }
+    },
+    {
+      "primitive_id": "overtime_duration_analysis",
+      "name": "Overtime Duration Analysis",
+      "verbatim_quote": "Our analysis shows that the modified sudden death rule change increased the average overtime from 7 minutes 1 second to 7 minutes 37 seconds and that the probability of the team possessing the ball first winning decreased from 59.9% to 55.4%.",
+      "page": 1,
+      "latex": "\\mathbb{E}[T_{\\text{overtime}}] = \\sum_{t=1}^{\\infty} t \\cdot P(T=t)",
+      "symbol_and_unit_ledger": "{'T_{\\\\text{overtime}}': 'Duration of overtime in minutes', 'P(T=t)': 'Probability of overtime lasting exactly t minutes'}",
+      "assumptions": "Markovian process with fixed state transitions and finite expected duration.",
+      "breakdown_regime": "Expected value convergence under stationary distribution.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Expected overtime duration computed via summing time-weighted probabilities across all possible lengths.",
+        "source_operator": "overtime_duration_analysis",
+        "telemetry": "Average overtime length in minutes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "706d5ce4c7d85827_t0",
+      "think": "The study employs Markov chains to model NFL overtime dynamics, distinguishing between sudden death (SD), modified sudden death (MSD), and MSD with 10-minute periods. Each rule variant defines distinct state transitions and absorbing states—winning teams or ties. The transition probabilities reflect scoring likelihoods and possession changes. For SD, transitions are binary: A_pos → W_A or B_pos → W_B. MSD modifies this by requiring TD for first-team victory, altering transition paths. The model computes expected overtime durations and win probabilities per team. These primitives form a dual framework: one for stochastic evolution (GSE) and one for probabilistic inference (GSI). Failure modes include misestimation of scoring rates or ignoring temporal dependencies. The Markov structure ensures memorylessness, simplifying computation but potentially underrepresenting strategic behavior.\n\nDeep epistemic analysis for 2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell (706d5ce4c7d85827, domain=football, pages_read=15/15): Operator 'Sudden Death Rule' (page 1, domain football) captures: Introduction** Prior to the 2010-2011 season, the NFL overtime rules stated that the first team to score a touchdown (TD), field goal (FG), or safety won the game whether or not both teams had received an opportunity to score. Assumptions: Game ends upon first scoring event; no second chance for the non-scoring team. Breakdown regime: When either team scores first, the game terminates immediately. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State transition graph where T → W_A or U → W_B represents immediate termination. Operator 'Modified Sudden Death Rule' (page 1, domain football) captures: The new rule does not allow the initial receiving team to win with a FG on their first possession, only with a TD. Assumptions: Initial team must score TD to win; otherwise, normal overtime continues. Breakdown regime: Transition from A_pos to B_pos if no TD scored. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conditional transition matrix where F and S do not lead to absorption unless followed by TD. Operator 'Overtime Duration Analysis' (page 1, domain football) captures: Our analysis shows that the modified sudden death rule change increased the average overtime from 7 minutes 1 second to 7 minutes 37 seconds and that the probability of the team possessing the ball first winning decreased from 59.9% to 55.4%. Assumptions: Markovian process with fixed state transitions and finite expected duration. Breakdown regime: Expected value convergence under stationary distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Expected overtime duration computed via summing time-weighted probabilities across all possible lengths. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell (706d5ce4c7d85827, domain=football, pages_read=15/15): Operator 'Sudden Death Rule' (page 1, domain football) captures: Introduction** Prior to the 2010-2011 season, the NFL overtime rules stated that the first team to score a touchdown (TD), field goal (FG), or safety won the game whether or not both teams had received an opportunity to score. Assumptions: Game ends upon first scoring event; no second chance for the non-scoring team. Breakdown regime: When either team scores first, the game terminates immediately. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State transition graph where T → W_A or U → W_B represents immediate termination. Operator 'Modified Sudden Death Rule' (page 1, domain football) captures: The new rule does not allow the initial receiving team to win with a FG on their first possession, only with a TD. Assumptions: Initial team must score TD to win; otherwise, normal overtime continues. Breakdown regime: Transition from A_pos to B_pos if no TD scored. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conditional transition matrix where F and S do not lead to absorption unless followed by TD. Operator 'Overtime Duration Analysis' (page 1, domain football) captures: Our analysis shows that the modified sudden death rule change increased the average overtime from 7 minutes 1 second to 7 minutes 37 seconds and that the probability of the team possessing the ball first winning decreased from 59.9% to 55.4%. Assumptions: Markovian process with fixed state transitions and finite expected duration. Breakdown regime: Expected value convergence under stationary distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Expected overtime duration computed via summing time-weighted probabilities across all possible lengths. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century stochastic processes and applied to sports in the 1970s. Evolution through game theory and statistical modeling culminated in formalized Markov applications to sports analytics in the 2000s. Retrocausal Genealogy: Rooted in 2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell (706d5ce4c7d85827), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as teams with probabilistic scoring behaviors. Decision-making is encoded in transition matrices reflecting optimal strategies under given rules. Each team seeks to maximize win probability based on possession and scoring dynamics. Theory of Mind & Decision Maker Model: Rooted in 2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell (706d5ce4c7d85827), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises from treating possession and scoring independently; leakage occurs if transitions ignore strategic depth. Veto conditions ensure no redundant encoding of same-state transitions or circular dependencies in Markov chains. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2018 A Markov chain analysis of NFL overtime rules - Renee Martin, Logan Timmons and Megan Powell (706d5ce4c7d85827), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

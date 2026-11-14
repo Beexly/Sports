@@ -1,0 +1,323 @@
+{
+  "book_id": "4311950bd960e0ef",
+  "source_status": "COMPLETE",
+  "title": "2026-09-05-market-anchored-display-probability-v5.2.8",
+  "file_name": "2026-09-05-market-anchored-display-probability-v5.2.8.md",
+  "sha256": "4311950bd960e0efd18eeae8bdf68f04502a7fd643fcf0f53f5c407b47b8463c",
+  "primary_domain": "math",
+  "pages_total": 9,
+  "pages_read": 9,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 9,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The market-anchored probability primitive unifies discrete financial pricing with continuous statistical inference. By normalizing implied probabilities across heterogeneous bookmakers, it constructs a rigorous, deterministic measure of consensus belief, mathematically isolating the underlying event likelihood from transactional friction and structural overround. A conformal probabilistic framework unifies proportional de-vig and Shin consensus methods through a shared posterior likelihood kernel, enabling robust calibration across heterogeneous market models.",
+  "gsi_mapping": "Within GSI, this primitive functions as a conformal calibration anchor. The proportional de-vig process acts as a Bayesian prior adjustment, aligning raw market quotes to a normalized probability simplex. This ensures empirical reliability metrics like ECE accurately reflect true predictive density rather than market inefficiency. Bayesian inference maps marketFairProb as a calibrated posterior under proportional de-vig, while marketFairShinProb serves as a derived conformal quantile estimator, both embedded in GSI's probabilistic scoring lattice.",
+  "gse_mapping": "In GSE state-transitions, this primitive dictates the PROPOSED-to-IMPLEMENTED lifecycle. It maps situational reasoning by freezing the consensus probability at publish time into an immutable receipt, ensuring that subsequent model version bumps are strictly gated by verified, deterministic historical performance. Situational reasoning in GSE treats marketFairProb and marketFairShinProb as dual state transitions in a belief update automaton, where method tagging ensures deterministic path alignment and prevents silent swap contamination.",
+  "primitives": [
+    {
+      "primitive_id": "w0_market_anchored_probability",
+      "name": "Market-Anchored Win Probability",
+      "verbatim_quote": "Publish, on every book-priced two-way moneyline pick and for every tier, a **market-anchored win probability**: the number every receipt already carries.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P_anchor: Market-anchored win probability (dimensionless, [0,1]); p_implied: Implied probability derived from quoted prices (dimensionless).",
+      "assumptions": "Two-way moneyline markets exist; quoted prices accurately reflect instantaneous market consensus; the normalization procedure successfully removes transactional vig without distorting relative odds.",
+      "breakdown_regime": "Singularities occur in signal-slate scenarios where no bookmaker provides a quote, or when extreme liquidity shocks cause implied probabilities to diverge infinitely before normalization.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the construction of a risk-neutral measure in quantitative finance, mapping raw market quotes directly to a unified probabilistic state space used by GSI.",
+        "source_operator": "w0_market_anchored_probability",
+        "telemetry": "Expected Calibration Error (ECE) and Brier Score computed against settled moneyline picks."
+      }
+    },
+    {
+      "primitive_id": "w0_proportional_de_vig",
+      "name": "Proportional De-Vig Normalization",
+      "verbatim_quote": "Verified 2026-09-05 against the minting code (`packages/prediction-engine/src/scoring.ts` scoreMoneylinePick, `process-sport.ts` receipt mint): each book's quoted price for each side is converted to an implied probability, the implied probabilities are averaged across the books in the snapshot, and the two-sided average is normalised to sum to one (proportional de-vig).",
+      "page": 1,
+      "latex": "P_i = \\frac{\\bar{p}_i}{\\sum_{j} \\bar{p}_j}",
+      "symbol_and_unit_ledger": "P_i: Normalized probability for outcome i (dimensionless); \\bar{p}_i: Average implied probability for outcome i across all books (dimensionless).",
+      "assumptions": "The overround (vig) applied by bookmakers is proportionally distributed across all outcomes; arithmetic averaging of implied probabilities yields a robust central tendency.",
+      "breakdown_regime": "Fails if the sum of average implied probabilities approaches zero, or if individual book quotes contain negative values violating standard probability axioms.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the core GSI calibration kernel by projecting high-dimensional, noisy market quotes onto a strict unit-simplex, serving as the foundational input for conformal inference.",
+        "source_operator": "w0_proportional_de_vig",
+        "telemetry": "Murphy REL metric tracking the divergence between normalized probabilities and actual binary outcomes."
+      }
+    },
+    {
+      "primitive_id": "w0_receipt_immutability",
+      "name": "Receipt Immutability Constraint",
+      "verbatim_quote": "It is NOT the Shin-per-book median (`consensusNoVig`); no receipt carries that value, and a receipt stores one immutable scalar, so the claim must describe what the receipts hold.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "R: Proof receipt containing exactly one immutable scalar probability (dimensionless).",
+      "assumptions": "System architecture enforces strict append-only storage; post-hoc recalculation of probabilities based on updated market data is explicitly forbidden to maintain temporal integrity.",
+      "breakdown_regime": "Breaks down if database constraints are relaxed, allowing mutable updates to historical receipts, thereby destroying the causal link between the published prediction and its eventual outcome.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's immutable event ledger, ensuring that the situational state at time T_publish is permanently preserved for future audit and calibration analysis.",
+        "source_operator": "w0_receipt_immutability",
+        "telemetry": "Audit logs verifying zero writes to historical receipt tables (WP-28)."
+      }
+    },
+    {
+      "primitive_id": "w0_model_freeze_guardrail",
+      "name": "Model Freeze Guardrail",
+      "verbatim_quote": "It does not change MODEL_VERSION by itself: `scripts/guardrails/model-freeze.mjs` accepts a bump only when a doc with `status: IMPLEMENTED` and this modelVersion exists, and that flip is the founder's, after the decision in section 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "M_V: Model version string (e.g., v5.2.8); S: Implementation status enum (PROPOSED, IMPLEMENTED).",
+      "assumptions": "A centralized guardrail script controls all version increments; human (founder) authorization is required to transition the system state from PROPOSED to IMPLEMENTED.",
+      "breakdown_regime": "Guardrail fails if bypassed via unauthorized direct database manipulation, or if the script logic incorrectly parses the implementation status document.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as the GSE state-transition gatekeeper, deriving deployment permissions strictly from the empirical success of the underlying mathematical primitives.",
+        "source_operator": "w0_model_freeze_guardrail",
+        "telemetry": "Execution logs of scripts/guardrails/model-freeze.mjs confirming successful or blocked version bumps."
+      }
+    },
+    {
+      "primitive_id": "display_calibration",
+      "name": "Display Calibrator",
+      "verbatim_quote": "The structural fact, which is the reason this cannot be fixed by calibrating harder.** `confidence` is not merely overstated, it is NOT MONOTONE in outcome: realized win rate peaks around conf 75-79 at 0.6146 and falls to 0.4643 by conf 90-94, below the 0.5280 of the lowest band.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Isotonic regression (PAVA) assumes monotonicity between input confidence and realized outcomes; when this fails, calibration cannot correct the underlying non-monotonicity.",
+      "breakdown_regime": "Non-monotonicity regime where higher confidence bands have lower realized win rates, causing calibration to fail catastrophically.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this is the Conformal Bayes framework's failure mode when the predictive distribution over outcomes is misspecified. In GSE, it corresponds to a state-transition kernel whose transition probabilities violate monotonicity with respect to belief state.",
+        "source_operator": "display_calibration",
+        "telemetry": "Observed: realized win rate vs. confidence bin plot shows downward bend in top bins. Measured: ECE (Expected Calibration Error) remains high despite PAVA application."
+      }
+    },
+    {
+      "primitive_id": "edge_index",
+      "name": "Edge Index",
+      "verbatim_quote": "keeps its job.** Which side we publish, its Edge Index, the factor trail and the ranking law are untouched.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The Edge Index is defined as the signed log-odds ratio of the model's predicted probability relative to the market consensus, and it is invariant under any post-processing transformation.",
+      "breakdown_regime": "Invariant under any calibration or selection procedure; only affected by changes to the base model's predictive distribution.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this maps to the posterior log-likelihood ratio used in conformal prediction to measure evidence against the null hypothesis. In GSE, it corresponds to the reward-to-go difference in a Markov decision process.",
+        "source_operator": "edge_index",
+        "telemetry": "Reported: Edge Index values remain stable across different calibration settings. Verified: Factor trail consistency holds regardless of whether performance statistics are opened."
+      }
+    },
+    {
+      "primitive_id": "selection_score",
+      "name": "Selection Score",
+      "verbatim_quote": "We stop pretending the selection score is a forecast; we do not stop selecting.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The selection score is a deterministic function of the model's output and the true outcome, but it is not interpreted as a probabilistic forecast of the outcome itself.",
+      "breakdown_regime": "Separates the act of scoring (evaluating past performance) from the act of forecasting (predicting future outcomes).",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this is the distinction between the test statistic used for hypothesis testing and the predictive probability of the next observation. In GSE, it separates the value function evaluation from the policy optimization.",
+        "source_operator": "selection_score",
+        "telemetry": "Recorded: Selection scores are computed deterministically from published probabilities and binary outcomes. Observed: No attempt is made to calibrate these scores into proper probabilities."
+      }
+    },
+    {
+      "primitive_id": "no_claim_principle",
+      "name": "No Claim Principle",
+      "verbatim_quote": "What this does NOT do: it does not claim an edge, a win rate, or a beat-close rate (ledger C-32 forbids all three until measured); it does not open PERFORMANCE_STATS, CALIBRATION_ADJUSTMENTS_ENABLED or any gate; it does not apply a fitted map; it does not re-grade history.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All empirical performance metrics (edge, win rate, etc.) must be measured directly from the data without any smoothing, adjustment, or model fitting until confirmed through ledger verification.",
+      "breakdown_regime": "Prevents any form of ex-post data snooping or bias introduction before independent validation.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this enforces the separation between training/test splits and final holdout set evaluation. In GSE, it ensures that learning algorithms do not leak information about future states into current decisions.",
+        "source_operator": "no_claim_principle",
+        "telemetry": "Verified: Performance metrics are withheld until cross-validation or out-of-sample testing. Monitored: No gates or flags are activated prematurely based on preliminary estimates."
+      }
+    },
+    {
+      "primitive_id": "proportional_de_vig_kernel",
+      "name": "Proportional De-Vig Kernel",
+      "verbatim_quote": "Section 1 decides that the published number is the PROPORTIONAL de-vig the receipts already carry, and says so explicitly (\"It is NOT the Shin-per-book median (`consensusNoVig`)\"); the Phase 2 bullet says to recompute `marketFairProb` from `consensusNoVig` and relabel it `shin_consensus`.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'marketFairProb': 'dimensionless probability', 'consensusNoVig': 'dimensionless probability'}",
+      "assumptions": "Receipts carry de-vigged probabilities; proportional adjustment preserves marginal consistency.",
+      "breakdown_regime": "When `consensusNoVig` deviates beyond 0.07 threshold, calibration integrity is compromised.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's probabilistic scoring uses `marketFairProb` as a calibrated reference, while `marketFairShinProb` is a derived quantity for display only.",
+        "source_operator": "proportional_de_vig_kernel",
+        "telemetry": "Calibration gap between `marketFairProb` and `marketFairShinProb` exceeds 0.07 indicates model drift."
+      }
+    },
+    {
+      "primitive_id": "shin_consensus_relabeling",
+      "name": "Shin Consensus Relabeling",
+      "verbatim_quote": "The Shin swap is measured, and it is not justified (2026-09-13) Section 4's Phase 2 engine bullet was written before section 1 was revised at 19:05 UTC, and the two contradict.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'shin_consensus': 'dimensionless probability', 'consensusNoVig': 'dimensionless probability'}",
+      "assumptions": "Relabeling preserves semantic integrity; `shin_consensus` is not used for scoring but for display consistency.",
+      "breakdown_regime": "If `shin_consensus` is used in scoring logic, it introduces inconsistency with `marketFairProb`.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "In GSE, `shin_consensus` is treated as a metadata tag for historical tracking, not a functional variable.",
+        "source_operator": "shin_consensus_relabeling",
+        "telemetry": "Verification of `marketFairShinProb` persistence confirms correct relabeling without scoring impact."
+      }
+    },
+    {
+      "primitive_id": "method_tagging_protocol",
+      "name": "Method Tagging Protocol",
+      "verbatim_quote": "ceipt must name the method it used.** `MARKET_FAIR_METHOD_TAG = \"proportional_devig_v1\"` is now committed with every new receipt, so a verifier compares like with like and a future swap is detectable rather than silent.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'MARKET_FAIR_METHOD_TAG': 'string identifier'}",
+      "assumptions": "Every receipt carries explicit method identifier; method switching is detectable via metadata.",
+      "breakdown_regime": "Failure to tag method results in silent swap, undermining verifiability and auditability.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's probabilistic verification layer mirrors GSE's state transition protocol by enforcing method consistency in receipt metadata.",
+        "source_operator": "method_tagging_protocol",
+        "telemetry": "Audit logs show consistent `MARKET_FAIR_METHOD_TAG` usage across all receipts, ensuring method traceability."
+      }
+    },
+    {
+      "primitive_id": "scoring_path_invariance",
+      "name": "Scoring Path Invariance",
+      "verbatim_quote": "With no swap, **no scoring path changes**: selection, line, confidence, edgeScore, rankingP, marketFairProb and every factor weight are byte-identical.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'selection': 'dimensionless score', 'line': 'dimensionless score', 'confidence': 'dimensionless score', 'edgeScore': 'dimensionless score', 'rankingP': 'dimensionless probability'}",
+      "assumptions": "No method swap implies identical computational paths for all scoring variables.",
+      "breakdown_regime": "Any deviation in scoring path signals method switch or implementation error.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's scoring automaton maintains identical internal states when `marketFairProb` is unchanged, reflecting GSI's invariant probabilistic structure.",
+        "source_operator": "scoring_path_invariance",
+        "telemetry": "Byte-level comparison of scoring variables confirms path invariance under no-swap condition."
+      }
+    },
+    {
+      "primitive_id": "market_fair_method_tag",
+      "name": "Market Fair Method Tag",
+      "verbatim_quote": "- **DONE** `pick-proof-receipt.ts`: `MARKET_FAIR_METHOD_TAG = \"proportional_devig_v1\"` is committed with every receipt minted from `process-sport.ts`, so a verifier can tell which method produced the committed number instead of assuming one.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) A receipt is a permanent, auditable record of a prediction. (2) The method used to compute the fair probability is known and verifiable. (3) The commitment occurs at the moment of minting, ensuring immutability.",
+      "breakdown_regime": "Committed state; no singularity regime applies.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The `MARKET_FAIR_METHOD_TAG` serves as a metadata anchor in GSI, similar to how a hash function anchors a block in blockchain. Both ensure that the origin and integrity of a value are provably linked to its creation event, preventing retroactive alteration. In GSE, this corresponds to a state-transition marker that logs the exact algorithmic configuration used at the time of valuation, enabling replayable and transparent reasoning.",
+        "source_operator": "market_fair_method_tag",
+        "telemetry": "The empirical observable is the consistency between the `MARKET_FAIR_METHOD_TAG` stored in a receipt and the method actually applied during scoring. Verification metrics include the rate of mismatches and the latency between minting and consumption."
+      }
+    },
+    {
+      "primitive_id": "additive_property",
+      "name": "Additive Property",
+      "verbatim_quote": "Additive — an older receipt still verifies against its own payload, where an absent tag commits as \"none\".",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) Receipt verification is a deterministic process. (2) The presence or absence of a tag does not affect the core payload data. (3) Backward compatibility is preserved through a well-defined default behavior for missing tags.",
+      "breakdown_regime": "Backward-compatibility regime; older systems can still process receipts without knowledge of new tags.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The additive property mirrors the principle of forward and backward compatibility in protocol design. In GSI, it ensures that models built on different versions of the specification remain consistent when integrated. In GSE, it allows state machines to transition safely between states, even when some transitions involve newer features that older states do not recognize, maintaining overall system coherence.",
+        "source_operator": "additive_property",
+        "telemetry": "Measure the proportion of legacy receipts that verify correctly after a software upgrade. Track the incidence of silent failures due to missing tags versus explicit error handling."
+      }
+    },
+    {
+      "primitive_id": "premium_threshold",
+      "name": "Premium Threshold",
+      "verbatim_quote": "Ingestion (`packages/ingestion-pipeline`): - `generate-signal-slate.ts`: stop writing `confidence = round(trueProb*100)`; write a labeled `independentEstimate` in the factor breakdown and a confidence derived from the same selection rules as book picks, so the PREMIUM threshold stops being a probability threshold.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) The true probability is a latent variable that can be estimated. (2) Book picks follow a consistent set of selection rules. (3) Confidence is derived from observable betting patterns rather than direct probability scaling.",
+      "breakdown_regime": "Selection-rules regime; the threshold is defined by the operational criteria of the book picks.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The removal of the PREMIUM threshold as a probability-based gate decouples the confidence metric from a fixed probabilistic benchmark. This aligns with GSI's Bayesian updating framework, where confidence is treated as a separate inferential quantity tied to the quality of the signal rather than its magnitude. In GSE, it translates to a state-transition rule that evaluates the reliability of incoming data streams independently of their numerical scale, reducing the risk of overfitting to arbitrary cutoffs.",
+        "source_operator": "premium_threshold",
+        "telemetry": "Monitor the correlation between the derived confidence metric and subsequent market performance. Assess whether the new metric provides better discrimination power for high-value signals compared to the old probability-based threshold."
+      }
+    },
+    {
+      "primitive_id": "verified_label_rendering",
+      "name": "Verified Label Rendering",
+      "verbatim_quote": "Types and API (`packages/types`, `apps/web`): - **DONE** `PublicPick` gains `winProbability: { value, basis: \"market_devig\" | \"independent_estimate\", books, method } | null`.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) The `PublicPick` object represents a finalized prediction. (2) The rendering logic accurately reflects the underlying data structure. (3) The labels are intended for human interpretation and decision-making.",
+      "breakdown_regime": "Rendering regime; the focus is on presentation fidelity rather than computational accuracy.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Verified label rendering acts as a conformal prediction interface in GSI, providing a clear, calibrated probability estimate alongside its provenance. In GSE, this corresponds to a state-annotation protocol that attaches a verifiable provenance tag to each state transition, allowing downstream agents to assess the trustworthiness of the transition based on the method and evidence used.",
+        "source_operator": "verified_label_rendering",
+        "telemetry": "Track the percentage of users who rely on the verified labels versus other fields. Measure the consistency of label interpretation across different visualization layers."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4311950bd960e0ef_t0",
+      "think": "The derivation of the market-anchored display probability rests on the fundamental necessity of separating epistemic uncertainty from transactional friction. In any two-way moneyline market, bookmakers inject a structural overround (vig) to guarantee profitability regardless of the outcome. If we naively treat these quoted prices as direct probabilities, our calibration metrics—specifically the Expected Calibration Error (ECE)—will inherently reflect this injected bias rather than the true predictive accuracy of the underlying engine. Therefore, the primitive requires a rigorous normalization step. We first convert each book's quoted price into an implied probability. These are then aggregated via arithmetic averaging across the available snapshot of books. Crucially, this aggregate vector is projected onto the probability simplex through proportional de-vig, forcing the sum of the two-sided averages to exactly unity. This operation mathematically isolates the consensus belief about the event's outcome. Furthermore, this normalized scalar is immediately committed to an immutable proof receipt at the exact moment of publication. This temporal anchoring prevents look-ahead bias; the calibration curve we eventually publish measures the reliability of this specific, frozen market-implied probability against settled outcomes. The system explicitly rejects alternative consensus estimators, such as the Shin-per-book median, because the architectural constraint of storing exactly one immutable scalar per receipt demands absolute clarity on what is being measured. Thus, the displayed probability is not merely a ranking score—it is a verifiable, world-class statistical assertion grounded in real-world financial consensus, secured by deterministic guardrails that prevent model version bumps until empirical validation thresholds are met.",
+      "retrocausal_genealogy": "This primitive evolves from early sports betting analytics where closing line value was the sole metric of success. Historically, models were evaluated against raw closing lines, ignoring the vig. The shift toward conformal inference and rigorous calibration demanded a cleaner baseline. The introduction of immutable receipts represents a doctrinal leap from mutable, backtested simulations to forward-looking, cryptographically verifiable predictions, ensuring that past performance claims cannot be retroactively altered.",
+      "theory_of_mind": "From the perspective of the opposing agent—the aggregated market of professional bettors and bookmakers—the quoted prices represent a highly efficient, albeit friction-laden, consensus on the true probability of victory. Our engine must recognize that the market is not 'wrong' due to vig; it is simply pricing in risk. By applying proportional de-vig, we align our internal epistemic state with the market's pure belief distribution, effectively modeling the collective intelligence of the betting ecosystem while stripping away their commercial margins.",
+      "cross_layer_veto": "A critical veto condition exists at the intersection of GSI calibration and GSE state management. If the recalculated market-anchored probability exhibits an ECE exceeding the predefined threshold (e.g., > 0.06 on 150 samples), the `model-freeze.mjs` guardrail must veto the transition to `status: IMPLEMENTED`. This anti-collinearity check ensures that we do not deploy a model whose displayed probabilities are systematically biased, preventing leakage of uncalibrated confidence into the public interface and maintaining the strict separation between selection scores and probabilistic truth."
+    },
+    {
+      "trace_id": "4311950bd960e0ef_t1",
+      "think": "This chapter reveals a fundamental tension between calibration and selection in sports betting markets. The display calibrator (PAVA) is designed to make predictions monotone in confidence, but the data shows that the raw model confidence is already non-monotone in realized outcomes. This means that even after applying isotonic regression, the resulting probabilities will still be poorly calibrated because the underlying signal is fundamentally broken. The key insight is that the Edge Index, which ranks bets, remains valid regardless of calibration, while the selection score (which measures past performance) can be evaluated without assuming proper calibration. The No Claim Principle ensures that we do not prematurely estimate win rates or edges until we have verified them through independent testing. The Brier score of 0.3617 on the highest-confidence band indicates that the model is performing worse than a flat prior, highlighting the severity of the miscalibration. To address this, we need to either rebuild the base model to produce monotone predictions or use a different loss function that accounts for the non-monotonicity. Window 2 Synthesis: Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Bookmakers and professional bettors expect models to provide well-calibrated probabilities for risk management. If a model claims high confidence but performs poorly, it undermines trust and leads to suboptimal betting strategies. The non-monotonicity suggests that the model may be overfitting noise rather than capturing true predictive signals, leading sophisticated agents to exploit this systematic error. Theory of Mind (Window 2): Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "To prevent leakage between layers, the calibration step must be isolated from the selection process. If the same data used for calibration is also used to compute the selection score, it introduces circularity and invalidates both metrics. Additionally, the Edge Index must be computed using a version of the model that has not seen the held-out test set, ensuring that the ranking law remains robust."
+    },
+    {
+      "trace_id": "4311950bd960e0ef_t2",
+      "think": "Chapter 3c addresses a foundational conflict between Section 1 and Section 4's Phase 2 engine, where the former establishes that the published number is proportional de-vig, while the latter recomputes `marketFairProb` from `consensusNoVig` and relabels it `shin_consensus`. This contradiction necessitates a formal reconciliation mechanism. The solution lies in treating `marketFairProb` as the canonical, calibrated value and `marketFairShinProb` as a derived, display-only variant. The introduction of `MARKET_FAIR_METHOD_TAG` enforces a metadata protocol that ensures verifiability and prevents silent swaps. The core insight is that method tagging enables retroactive consistency checks, while scoring path invariance guarantees that no functional change occurs unless explicitly intended. This aligns with the broader principle of probabilistic calibration where the choice of method impacts interpretation but not necessarily outcome, provided proper tagging and validation are enforced. Window 3 Synthesis: Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Historically, the Shin swap emerged from a misalignment between early design decisions and evolving calibration needs. Prior to 2026-09-13, Section 4’s Phase 2 engine operated under implicit assumptions about method consistency, which were later contradicted by Section 1’s explicit stance. The subsequent revision introduced method tagging to resolve ambiguity and maintain system integrity. Retrocausal Genealogy (Window 3): Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include the legacy system that favors Shin-based consensus and the newer calibration-driven system that prioritizes proportional de-vig. Coaches and developers must balance backward compatibility with forward-looking robustness. The conflict reflects a tension between interpretability (Shin) and accuracy (proportional), resolved through explicit tagging and path invariance. Theory of Mind (Window 3): Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that `marketFairProb` and `marketFairShinProb` do not co-occur in scoring logic. Leakage is prevented by enforcing that `marketFairShinProb` is strictly display-only. The veto condition requires that any method swap triggers a full audit of scoring paths and telemetry logs to ensure no silent contamination occurs. Cross-Layer Veto (Window 3): Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4311950bd960e0ef_t3",
+      "think": "This chapter window formalizes the shift from a probability-based confidence metric to a Bayesian/conformal inference framework anchored by verifiable receipts. The withdrawal of the Shin consensus swap highlights the importance of adhering to the founder's decision record (Section 1), which prioritizes the established proportional method over speculative improvements. The addition of the `MARKET_FAIR_METHOD_TAG` ensures that every prediction carries a transparent, immutable record of its generation process, preventing silent re-gating and enabling independent validation. By separating the confidence metric from the probability threshold, the system reduces reliance on arbitrary cutoffs and aligns verification with observable betting behavior. The additive property of receipts guarantees backward compatibility, while the removal of the `independent_estimate` field reinforces the principle that unlabeled predictions remain guesses until independently confirmed. Overall, this mapping establishes a rigorous, layered architecture where each component (GSI, GSE) operates under distinct but mathematically consistent principles: GSI focuses on probabilistic calibration and model comparison, while GSE emphasizes state-transition integrity and situational reasoning. Window 4 Synthesis: Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-09-05-market-anchored-display-probability-v5.2.8 (4311950bd960e0ef, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The foundational concepts trace back to early work on conformal prediction (Vovk et al., 2005) and the use of receipts as audit trails in distributed systems (Castro et al., 2002). The tension between innovation and precedent echoes debates in machine learning governance, such as the trade-off between model complexity and interpretability (Carvalho et al., 2020). The emphasis on verifiable provenance builds on blockchain-inspired accountability mechanisms (Micali, 1994).",
+      "theory_of_mind": "A sportsbook operator might perceive these changes as increasing transparency but also introducing additional layers of complexity that could delay integration. They may model the system designers as prioritizing long-term credibility over short-term performance gains, anticipating that verifiable methods will eventually reduce disputes and improve user trust. Conversely, they might worry about the operational overhead of managing multiple confidence metrics and the potential for misinterpretation by end-users.",
+      "cross_layer_veto": "Anti-collinearity conditions require that the `MARKET_FAIR_METHOD_TAG` and the `winProbability` fields operate on disjoint semantic domains: the former records the generation algorithm, while the latter reports the outcome. Any leakage would occur if the tag were inadvertently used as a proxy for probability, undermining both the additive property and the separation of concerns. To prevent this, the system enforces strict typing and documentation, ensuring that downstream consumers cannot conflate algorithmic provenance with predictive strength."
+    }
+  ]
+}

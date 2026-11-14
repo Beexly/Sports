@@ -1,14 +1,14 @@
 {
   "schema": "gse.arxiv_and_sovereign_equation_synthesis.v1",
-  "generated_at_utc": "2026-11-14T08:28:41Z",
+  "generated_at_utc": "2026-11-14T09:13:09Z",
   "counts": {
-    "complete_sovereign_books": 305,
-    "refused_stub_books_fail_closed": 20,
+    "complete_sovereign_books": 363,
+    "refused_stub_books_fail_closed": 22,
     "gatekeeper_validation_failures": 0,
-    "total_sovereign_primitives": 2814,
-    "total_sovereign_reasoning_traces": 697,
-    "total_pages_inspected": 25977,
-    "trainer_feed_records_emitted": 3511,
+    "total_sovereign_primitives": 3580,
+    "total_sovereign_reasoning_traces": 899,
+    "total_pages_inspected": 26521,
+    "trainer_feed_records_emitted": 4479,
     "active_router_mask_bits": 276,
     "arxiv_program_unique_ids_indexed": 6183,
     "sovereign_books_with_explicit_arxiv_id": 1
@@ -26,40 +26,40 @@
   ],
   "track_counts": {
     "arxiv_and_preprints": 1,
-    "football_coaching_rules_and_scouting": 8,
-    "graduate_math_stats_physics_textbooks": 262,
+    "football_coaching_rules_and_scouting": 9,
+    "graduate_math_stats_physics_textbooks": 313,
     "nfl_war_and_fourth_down_decision": 4,
-    "sports_psychology_and_cognition": 30
+    "sports_psychology_and_cognition": 36
   },
   "six_situational_family_weights": {
     "pressure": {
-      "sovereign_primitives_count": 154,
-      "bounded_james_stein_weight": 0.166988,
+      "sovereign_primitives_count": 209,
+      "bounded_james_stein_weight": 0.170226,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_count": 390,
-      "bounded_james_stein_weight": 0.174627,
+      "sovereign_primitives_count": 480,
+      "bounded_james_stein_weight": 0.17561,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_count": 343,
-      "bounded_james_stein_weight": 0.173915,
+      "sovereign_primitives_count": 423,
+      "bounded_james_stein_weight": 0.175034,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_count": 294,
-      "bounded_james_stein_weight": 0.172941,
+      "sovereign_primitives_count": 366,
+      "bounded_james_stein_weight": 0.174286,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_count": 1424,
-      "bounded_james_stein_weight": 0.178496,
+      "sovereign_primitives_count": 1826,
+      "bounded_james_stein_weight": 0.178825,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_count": 209,
-      "bounded_james_stein_weight": 0.170226,
+      "sovereign_primitives_count": 276,
+      "bounded_james_stein_weight": 0.1725,
       "all_finite_non_nan": true
     }
   },
@@ -125,9 +125,9 @@
     "partition_tier_summary": {
       "0..3|tier_A": {
         "total": 110,
-        "completed_or_extracted": 72,
-        "pending_unextracted": 35,
-        "pending_with_local_file": 35
+        "completed_or_extracted": 78,
+        "pending_unextracted": 29,
+        "pending_with_local_file": 29
       },
       "0..3|tier_B": {
         "total": 835,
@@ -145,9 +145,9 @@
       },
       "4..7|tier_B": {
         "total": 814,
-        "pending_unextracted": 677,
-        "pending_with_local_file": 677,
-        "completed_or_extracted": 137
+        "pending_unextracted": 617,
+        "pending_with_local_file": 617,
+        "completed_or_extracted": 197
       },
       "4..7|tier_C": {
         "total": 3347,
@@ -169,7 +169,7 @@
     },
     "shard_4to7_tier_a_remaining_with_file": 0,
     "shard_4to7_tier_a_remaining_preview": [],
-    "shard_4to7_tier_b_pending_candidates_count": 677,
+    "shard_4to7_tier_b_pending_candidates_count": 617,
     "shard_4to7_tier_b_pending_candidates": [
       {
         "book_id": "4030a352319afc8b",
@@ -520,8 +520,18 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "4fd844e5436b9d53",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_4fd844e5436b9d53",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "51810ec3502aa6a7",
       "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "520a9397c35b434d",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_520a9397c35b434d",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -665,6 +675,17 @@
         "pages_total": 282,
         "primitives_count": 19,
         "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "6ff528712ff6105a",
+        "title": "2022 - The Racial Imbalance in College Football Coaching - Unknown Authors",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 8,
+        "pages_total": 8,
+        "primitives_count": 16,
+        "traces_count": 4,
         "arxiv_ids": []
       },
       {
@@ -1125,6 +1146,17 @@
         "arxiv_ids": []
       },
       {
+        "book_id": "5a75d09797238577",
+        "title": "undated - Beyond the Box Score Using Psychological Metrics to Forecast NBA Success - Farrell et al",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 14,
+        "pages_total": 14,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "5f458169bc4c660a",
         "title": "06-multi-brain-council-and-758-skills",
         "primary_domain": "psych",
@@ -1144,6 +1176,17 @@
         "pages_total": 2,
         "primitives_count": 8,
         "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "60e4309596b605f6",
+        "title": "decision-log",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 16,
+        "pages_total": 16,
+        "primitives_count": 3,
+        "traces_count": 1,
         "arxiv_ids": []
       },
       {
@@ -1235,6 +1278,17 @@
         "arxiv_ids": []
       },
       {
+        "book_id": "758a3caa67e2f97e",
+        "title": "2014 - A Data-driven Method for In-game Decision Making in MLB - Unknown Authors",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 9,
+        "pages_total": 9,
+        "primitives_count": 15,
+        "traces_count": 4,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "760af10970a7d3e2",
         "title": "1947-conditional-generative-modeling-for-decision-making",
         "primary_domain": "psych",
@@ -1257,47 +1311,14 @@
         "arxiv_ids": []
       },
       {
-        "book_id": "775c5e0a62772269",
-        "title": "ISSUE_419_DECISION_PACKET",
+        "book_id": "77291a84a2473b52",
+        "title": "cognitive_signals",
         "primary_domain": "psych",
         "track": "sports_psychology_and_cognition",
-        "pages_read": 2,
-        "pages_total": 2,
-        "primitives_count": 8,
-        "traces_count": 2,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "7763224d3895c486",
-        "title": "2026 - Kicking for Goal or Touch An Expected Points Framework for Penalty Decisions in Rugby Union - Watts et al",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 22,
-        "pages_total": 22,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "795dc273e6915773",
-        "title": "1030-action-recognition-framework-video-highlights",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 3,
-        "pages_total": 3,
-        "primitives_count": 12,
-        "traces_count": 3,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "79e17070823c1f15",
-        "title": "1176-predictive-decision-synthesis-for-portfolios",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 3,
-        "pages_total": 3,
-        "primitives_count": 12,
-        "traces_count": 3,
+        "pages_read": 8,
+        "pages_total": 8,
+        "primitives_count": 16,
+        "traces_count": 4,
         "arxiv_ids": []
       }
     ]
