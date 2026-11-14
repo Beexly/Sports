@@ -534,3 +534,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 00:38:35 | COMPLETE | 0bd41b9e64e0dc57 | primitives=25 think_words=858
 - 2026-11-14 00:39:32 | CLAIMED | 2cd9c8ea04dcc2a4 | worker=hermes-inline shard03 file=2020 Forecasting college football game outcomes using modern modeling techniques - Charles South and Edward Egros.pdf
 - 2026-11-14 00:44:31 | COMPLETE | 2cd9c8ea04dcc2a4 | primitives=27 think_words=887
+- 2026-11-14 00:45:09 | CLAIMED | 03758c7b1508cfe0 | worker=hermes-inline shard03 file=2020 The year-two effect - Evidence and antecedents for second season success in NCAA division I football - N. David Pifer and Matt R. Huml.pdf
+- 2026-11-14 00:50:39 | COMPLETE | 03758c7b1508cfe0 | primitives=24 think_words=898
