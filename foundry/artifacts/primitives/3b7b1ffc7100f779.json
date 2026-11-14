@@ -1,0 +1,896 @@
+{
+ "book_id": "3b7b1ffc7100f779",
+ "source_status": "COMPLETE",
+ "source_note": "Sebastien Bubeck (Theory Group, Microsoft Research), Convex Optimization: Algorithms and Complexity, Foundations and Trends in Machine Learning, Vol. 8, No. 3-4 (2015), pp. 231-358, DOI 10.1561/2200000050; also arXiv:1405.4980v2 (16 Nov 2015). Local file is the publisher PDF in books-must-have, 1163209 bytes, full sha256 3b7b1ffc7100f779871fa2bfd41e0372c42efd4208d0f187cebfaff2d2d95230, book_id is the first 16 hex of that digest over (str(size) + bytes). Extracted text (278248 chars, 5789 lines) is clean two-column extraction; some displays lose root and fraction glyphs, so all verbatim quotes were chosen from clean single-page prose passages and each was proven a contiguous substring of the text file under gatekeeper normalization before writing. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "convex_set_function_definition",
+   "name": "Convexity: a set contains all its segments and a convex function lies below its chords (Definition 1.1)",
+   "verbatim_quote": "A set X ⊂ Rn is said to be convex if it contains all of its segments, that is",
+   "page": "Section 1, Definition 1.1 (p. 232)",
+   "latex": "f((1-\\gamma)x + \\gamma y) \\le (1-\\gamma) f(x) + \\gamma f(y)",
+   "symbol_and_unit_ledger": {
+    "x, y": "points in the feasible set X, dimensionless model vectors",
+    "\\gamma": "mixing weight in [0, 1], dimensionless",
+    "f": "convex objective function, value in objective units"
+   },
+   "assumptions": [
+    "X is a subset of R^n",
+    "the inequality must hold for every pair x, y in X and every gamma in [0, 1]"
+   ],
+   "breakdown_regime": "Fails for discrete or non-convex feasible sets and for objectives with multiple separated basins; interpolation between two feasible points may leave the set or raise the objective.",
+   "domain": "convex analysis foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats blended hypotheses the way convexity treats blended points: a mixture of two admissible model states stays admissible, and the loss of the mixture is no worse than the mixture of losses, so ensemble averaging inside the engine carries a guarantee rather than a hope.",
+    "source_operator": "convex_set_function_definition",
+    "telemetry": "per-model loss values on shared evaluation windows, mixture weights over candidate models"
+   }
+  },
+  {
+   "primitive_id": "separation_theorem",
+   "name": "Separation theorem: a point outside a closed convex set is strictly separated from it by a hyperplane (Theorem 1.1)",
+   "verbatim_quote": "Let X ⊂ Rn be a closed convex set, and x0 ∈ Rn \\ X . Then, there exists w ∈ Rn and t ∈ R such that",
+   "page": "Section 1.2, Theorem 1.1 (p. 234)",
+   "latex": "w^\\top x_0 < t, \\quad w^\\top x \\ge t \\ \\forall x \\in X",
+   "symbol_and_unit_ledger": {
+    "w": "normal vector of the separating hyperplane, same units as model coordinates",
+    "t": "separation threshold, inner-product units",
+    "x_0": "the excluded point, model coordinates",
+    "X": "closed convex set"
+   },
+   "assumptions": [
+    "X is closed and convex",
+    "x0 is not in X"
+   ],
+   "breakdown_regime": "If X is not closed only the non-strict separation survives; for non-convex X a separating hyperplane need not exist at all.",
+   "domain": "convex geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any candidate explanation that falls outside the convex hull of admissible evidence can be cut off by a single linear test: the engine keeps a separating witness (one violated linear constraint) instead of re-litigating the whole evidence set when it rejects an out-of-support hypothesis.",
+    "source_operator": "separation_theorem",
+    "telemetry": "violated constraint identities and margins for rejected candidates, feasibility flags per signal family"
+   }
+  },
+  {
+   "primitive_id": "subgradient_existence",
+   "name": "Subgradients: a convex function admits a global linear underestimator at every interior point, and the gradient is a subgradient when it exists (Definition 1.2, Proposition 1.1)",
+   "verbatim_quote": "g ∈ Rn is a subgradient of f at x ∈ X if for any y ∈ X one has",
+   "page": "Section 1.2, Definition 1.2 and Proposition 1.1 (p. 235)",
+   "latex": "f(x) - f(y) \\le g^\\top (x - y)",
+   "symbol_and_unit_ledger": {
+    "g": "subgradient vector in R^n, objective units per coordinate unit",
+    "\\partial f(x)": "subdifferential, the set of all subgradients at x",
+    "x, y": "points in X"
+   },
+   "assumptions": [
+    "f is convex on X",
+    "x lies in the interior (or relative interior) of X for guaranteed existence"
+   ],
+   "breakdown_regime": "At boundary points of a non-closed domain the subdifferential can be empty; for non-convex f the linear bound is not globally valid.",
+   "domain": "convex analysis foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Local sensitivity information in the engine is promoted to a global bound: a measured local slope of a convex scoring surface yields a valid linear lower bound everywhere, which is how the engine turns point evaluations into certified statements about unexplored parameter regions.",
+    "source_operator": "subgradient_existence",
+    "telemetry": "local slope estimates of scoring surfaces, bound certificates attached to unexplored regions"
+   }
+  },
+  {
+   "primitive_id": "local_minima_are_global",
+   "name": "Local to global phenomenon: every local minimum of a convex function is global, certified by 0 in the subdifferential (Proposition 1.2)",
+   "verbatim_quote": "Another instance of this local to global phenomenon is that local minima of convex functions are in fact global minima:",
+   "page": "Section 1.3, Proposition 1.2 (p. 237)",
+   "latex": "0 \\in \\partial f(x)",
+   "symbol_and_unit_ledger": {
+    "\\partial f(x)": "subdifferential of f at x",
+    "0": "zero vector, the stationarity witness"
+   },
+   "assumptions": [
+    "f is convex",
+    "x is a local minimum of f"
+   ],
+   "breakdown_regime": "Entirely a convexity phenomenon: with multiple basins, local stationarity certifies nothing global and search can strand in a poor basin.",
+   "domain": "optimality theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine's calibration surface is convex in the tuned parameters, a locally verified optimum is the global optimum, so the engine can stop searching on a stationarity certificate instead of budgeting for global search; when convexity is not established, the certificate is void and the engine must say so.",
+    "source_operator": "local_minima_are_global",
+    "telemetry": "stationarity residuals for tuned parameters, convexity diagnostics of calibration surfaces"
+   }
+  },
+  {
+   "primitive_id": "black_box_oracle_complexity",
+   "name": "Black-box model: the objective is accessible only through zeroth and first order oracles, and the currency of the theory is oracle complexity, the number of queries necessary and sufficient for an epsilon-approximate minimum",
+   "verbatim_quote": "In this context we are interested in understanding the oracle complexity of convex optimization, that is how many queries to the oracles are necessary and sufficient to find an ε-approximate minima of a convex function.",
+   "page": "Section 1.4 (pp. 238-239)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "the constraint set X is known",
+    "unlimited computation is allowed between queries",
+    "oracle answers are exact in Chapters 2 to 5"
+   ],
+   "breakdown_regime": "The model ignores per-query cost differences, memory, and parallelism; it also says nothing when only a zeroth order (derivative free) oracle exists, a setting the monograph explicitly excludes.",
+   "domain": "complexity theory of optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine budgets information, not computation: every data source is an oracle with a query cost, and a reasoning procedure is judged by how many queries it needs to reach a target accuracy, which is the discipline the engine applies when it decides whether another data pull can change a conclusion.",
+    "source_operator": "black_box_oracle_complexity",
+    "telemetry": "query counts per data source, accuracy gained per query, marginal value of the next query"
+   }
+  },
+  {
+   "primitive_id": "center_of_gravity_method",
+   "name": "Center of gravity method: query at the centroid of the current localization set, cut with the subgradient hyperplane, and the error decays as 2B(1 - 1/e)^(t/n) (Theorem 2.1)",
+   "verbatim_quote": "This procedure is known as the center of gravity method, it was discovered independently on both sides of the Wall by Levin [1965] and Newman [1965].",
+   "page": "Section 2.1, Theorem 2.1 (p. 245)",
+   "latex": "f(x_t) - \\min_{x \\in X} f(x) \\le 2B\\left(1 - \\frac{1}{e}\\right)^{t/n}",
+   "symbol_and_unit_ledger": {
+    "B": "bound on the objective, |f| <= B on X, objective units",
+    "t": "number of oracle queries, count",
+    "n": "ambient dimension, count",
+    "e": "Euler number, dimensionless",
+    "x_t": "best point queried up to time t"
+   },
+   "assumptions": [
+    "f is convex and continuous on a convex body X",
+    "a first order oracle is available at the exact centroid",
+    "each cut removes at least a 1/e fraction of the remaining volume (Grunbaum lemma)"
+   ],
+   "breakdown_regime": "Computing the exact centroid of a general convex body is intractable, so the optimal oracle complexity is bought with an unrealistic per-iteration cost; Section 6.7 repairs this only approximately, by random sampling.",
+   "domain": "cutting plane methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hypothesis localization in the engine follows the same geometry: keep the full set of still-possible explanations, query at its center of mass, and let each answer cut away a guaranteed fraction of the set, so uncertainty shrinks geometrically in the number of informative queries rather than by intuition.",
+    "source_operator": "center_of_gravity_method",
+    "telemetry": "posterior mass of the surviving hypothesis set per query, cut fractions realized per evidence item"
+   }
+  },
+  {
+   "primitive_id": "ellipsoid_method",
+   "name": "Ellipsoid method: maintain the minimum volume ellipsoid over the localization set; each cut shrinks volume by exp(-1/(2n)) and O(n^2 log(R/r)) oracle calls suffice (Lemma 2.3, Theorem 2.4)",
+   "verbatim_quote": "We describe now the ellipsoid method, which only assumes a separation oracle for the constraint set X (in particular it can be used to solve the feasibility problem mentioned at the beginning of the chapter).",
+   "page": "Section 2.2, Lemma 2.3 and Theorem 2.4 (pp. 247-250)",
+   "latex": "\\mathrm{vol}(E) \\le \\exp\\left(-\\frac{1}{2n}\\right) \\mathrm{vol}(E_0)",
+   "symbol_and_unit_ledger": {
+    "E_0, E": "successive ellipsoids {x : (x - c)^T H^{-1} (x - c) <= 1}",
+    "n": "dimension, count",
+    "R, r": "radii of balls containing X and contained in X, coordinate units"
+   },
+   "assumptions": [
+    "a separation oracle for X exists",
+    "X is sandwiched between balls of radii r and R"
+   ],
+   "breakdown_regime": "The volume decrease is essentially always tight, so the method cannot exploit easy instances; oracle complexity O(n^2 log(1/epsilon)) is worse than the centroid method and per-iteration cost is a matrix update.",
+   "domain": "cutting plane methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's tractable surrogate for the centroid scheme: maintain an ellipsoidal confidence region over model parameters, update it in closed form with each new separating observation, and quote the volume shrinkage as the measured rate at which evidence is localizing the answer.",
+    "source_operator": "ellipsoid_method",
+    "telemetry": "confidence ellipsoid volumes over parameter blocks, separation margins per observation"
+   }
+  },
+  {
+   "primitive_id": "vaidya_volumetric_barrier",
+   "name": "Vaidya's method: minimize the volumetric barrier (1/2) log det of the log-barrier Hessian and add or drop constraints by leverage scores, reaching O(n log(nR/r)) oracle complexity at polynomial per-step cost (Section 2.3)",
+   "verbatim_quote": "We describe here the beautiful algorithm of Vaidya [1989, 1996] which has oracle complexity O(n log(n)) and computational complexity O(n4 ), thus getting the best of both the center of gravity and the ellipsoid method.",
+   "page": "Section 2.3 (pp. 250-253)",
+   "latex": "v(x) = \\frac{1}{2} \\log\\det\\left(\\nabla^2 F(x)\\right)",
+   "symbol_and_unit_ledger": {
+    "F": "logarithmic barrier of the current polytope, dimensionless",
+    "\\nabla^2 F(x)": "barrier Hessian, inverse coordinate units squared",
+    "v": "volumetric barrier, log-volume units",
+    "\\sigma_i(x)": "leverage score of constraint i, dimensionless"
+   },
+   "assumptions": [
+    "the feasible set is tracked as a polytope built from separation cuts",
+    "the volumetric barrier is self-concordant, so Newton steps minimize it efficiently",
+    "constraints with leverage score below a small constant can be dropped safely"
+   ],
+   "breakdown_regime": "Analysis is delicate (approximate Newton decrement bounds), constants matter, and the method addresses the feasibility form directly; optimization needs the standard adaptations.",
+   "domain": "cutting plane methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Constraint management in the engine mirrors the leverage score rule: an evidence constraint that carries almost no curvature information about the current feasible set can be retired, and one that would add curvature must be admitted, keeping the active evidence set near minimal without losing localization power.",
+    "source_operator": "vaidya_volumetric_barrier",
+    "telemetry": "per-constraint leverage style scores in the active evidence set, add and drop events with their measured effect"
+   }
+  },
+  {
+   "primitive_id": "conjugate_gradient",
+   "name": "Conjugate gradient: exact minimization of a convex quadratic in at most n steps along A-conjugate directions built from gradients alone, and an epsilon optimum in O(sqrt(kappa) log(1/epsilon)) iterations (Section 2.4)",
+   "verbatim_quote": "Given an orthogonal set {p0 , . . . , pn−1 } for h·, ·iA we will minimize f by sequentially minimizing it along the directions given by this orthogonal set.",
+   "page": "Section 2.4 (pp. 258-261)",
+   "latex": "x_n = x^*, \\quad T_\\epsilon = O\\left(\\sqrt{\\kappa} \\log(1/\\epsilon)\\right)",
+   "symbol_and_unit_ledger": {
+    "A": "positive definite matrix of the quadratic f(x) = (1/2) x^T A x - b^T x",
+    "\\kappa": "condition number of A, ratio of extreme eigenvalues, dimensionless",
+    "p_t": "A-conjugate search directions",
+    "T_\\epsilon": "iterations to epsilon accuracy, count"
+   },
+   "assumptions": [
+    "the objective is exactly quadratic with positive definite A",
+    "exact line minimization along each direction",
+    "directions are maintained A-conjugate via the Fletcher-Reeves recurrence"
+   ],
+   "breakdown_regime": "Exact finite termination is a quadratic-only phenomenon; the nonlinear (Fletcher-Reeves, Polak-Ribiere) variants are heuristics without the same guarantees and can stall without careful line search.",
+   "domain": "first order methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Successive corrections in the engine should be conjugate, not redundant: a new adjustment direction is chosen to not undo progress along previous directions, which is the discipline that keeps iterative recalibration from oscillating over the same error components.",
+    "source_operator": "conjugate_gradient",
+    "telemetry": "inner products between successive correction directions under the local curvature metric, residual norm per iteration"
+   }
+  },
+  {
+   "primitive_id": "projected_subgradient_descent",
+   "name": "Projected subgradient descent: subgradient step plus projection attains RL/sqrt(t) for L-Lipschitz convex f on a radius R set, and the rate is unimprovable in the black-box model (Theorem 3.2)",
+   "verbatim_quote": "We will show in Section 3.5 that the rate given in Theorem 3.2 is unimprovable from a black-box perspective.",
+   "page": "Section 3.1, Theorem 3.2 (pp. 263-265)",
+   "latex": "f\\left(\\frac{1}{t}\\sum_{s=1}^{t} x_s\\right) - f(x^*) \\le \\frac{RL}{\\sqrt{t}}",
+   "symbol_and_unit_ledger": {
+    "R": "radius of a ball around x_1 containing X, coordinate units",
+    "L": "Lipschitz constant, bound on subgradient norms, objective units per coordinate unit",
+    "t": "iteration count",
+    "\\eta = R/(L sqrt(t))": "step size, coordinate units per objective unit"
+   },
+   "assumptions": [
+    "f is convex with all subgradient norms bounded by L on X",
+    "X is contained in a ball of radius R around the start",
+    "iterate averaging is used for the guarantee"
+   ],
+   "breakdown_regime": "Theta(1/epsilon^2) oracle complexity: dimension free but slow in accuracy; the tuned step size depends on the horizon t, and the projection step can itself be an expensive optimization.",
+   "domain": "first order methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's worst case fallback learner: when a scoring surface is convex but not smooth, small subgradient steps with projection back to the feasible region and averaging over iterates deliver a guaranteed, if slow, error decay, and the matching lower bound tells the engine not to promise better from this information alone.",
+    "source_operator": "projected_subgradient_descent",
+    "telemetry": "subgradient norm bounds, feasible radius, averaged iterate error certificates"
+   }
+  },
+  {
+   "primitive_id": "smoothness_quadratic_sandwich",
+   "name": "Smoothness characterization: f is convex and beta-smooth iff its first order Taylor model sandwiches it with a quadratic of curvature beta/2 (Lemma 3.4, Eq. (3.4))",
+   "verbatim_quote": "In particular this lemma shows that if f is convex and β-smooth, then for any x, y ∈ Rn , one has",
+   "page": "Section 3.2, Lemma 3.4 and Eq. (3.4) (p. 267)",
+   "latex": "0 \\le f(x) - f(y) - \\nabla f(y)^\\top (x - y) \\le \\frac{\\beta}{2}\\|x - y\\|^2",
+   "symbol_and_unit_ledger": {
+    "\\beta": "smoothness constant, Lipschitz constant of the gradient, objective units per coordinate unit squared",
+    "\\nabla f(y)": "gradient at y",
+    "\\|x - y\\|": "Euclidean distance, coordinate units"
+   },
+   "assumptions": [
+    "f is continuously differentiable with beta-Lipschitz gradient",
+    "for the lower bound, f is convex"
+   ],
+   "breakdown_regime": "The quadratic upper model is only as good as the global beta; a locally larger curvature invalidates the step sizes derived from it.",
+   "domain": "smooth convex optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A measured smoothness constant turns a local linear read of a scoring surface into a certified quadratic envelope: the engine can bound how wrong a linear extrapolation can be over a stated distance, which is what licenses aggressive steps when the envelope is tight and forbids them when it is not.",
+    "source_operator": "smoothness_quadratic_sandwich",
+    "telemetry": "estimated gradient Lipschitz constants per surface, envelope widths at working distances"
+   }
+  },
+  {
+   "primitive_id": "gradient_descent_smooth_rate",
+   "name": "Gradient descent on smooth convex functions: step 1/beta gives f(x_t) - f(x*) <= 2 beta ||x_1 - x*||^2 / (t - 1) (Theorem 3.3)",
+   "verbatim_quote": "xt+1 = xt − η∇f (xt ), attains a much faster rate in this situation than in the non-smooth case of the previous section.",
+   "page": "Section 3.2, Theorem 3.3 (p. 267)",
+   "latex": "f(x_t) - f(x^*) \\le \\frac{2\\beta \\|x_1 - x^*\\|^2}{t - 1}",
+   "symbol_and_unit_ledger": {
+    "\\beta": "smoothness constant",
+    "\\eta = 1/\\beta": "step size",
+    "x_1": "initial point",
+    "x^*": "minimizer",
+    "t": "iteration count"
+   },
+   "assumptions": [
+    "f convex and beta-smooth on R^n",
+    "unconstrained case as stated; the constrained projected version has the analogous bound of Theorem 3.7"
+   ],
+   "breakdown_regime": "Without smoothness the same method falls back to the 1/sqrt(t) regime; the rate is a factor sqrt(kappa) off optimal in the strongly convex case, which is the gap acceleration closes.",
+   "domain": "first order methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Baseline descent rule for the engine's smooth calibration surfaces: fixed step set by the measured curvature, monotone error decay with an explicit 1/t certificate the engine can quote instead of a heuristic convergence claim.",
+    "source_operator": "gradient_descent_smooth_rate",
+    "telemetry": "per-iteration error certificates on smooth calibration runs, curvature estimates feeding the step size"
+   }
+  },
+  {
+   "primitive_id": "frank_wolfe_conditional_gradient",
+   "name": "Frank-Wolfe (conditional gradient): replace projection by linear minimization over X, keep smoothness in an arbitrary norm, attain 2 beta R^2/(t + 1), and produce sparse iterates (Theorem 3.8)",
+   "verbatim_quote": "We describe now an alternative algorithm to minimize a smooth convex function f over a compact convex set X .",
+   "page": "Section 3.3, Theorem 3.8 (pp. 271-273)",
+   "latex": "f(x_t) - f(x^*) \\le \\frac{2\\beta R^2}{t + 1}",
+   "symbol_and_unit_ledger": {
+    "\\beta": "smoothness constant with respect to the chosen norm, measured in the dual norm",
+    "R": "diameter of X in that norm, sup over x, y in X of ||x - y||",
+    "\\gamma_s = 2/(s+1)": "step size schedule, dimensionless",
+    "y_t": "linear minimization oracle output, a vertex of X"
+   },
+   "assumptions": [
+    "f convex and beta-smooth with respect to some norm",
+    "a linear minimization oracle over X is available and cheaper than projection",
+    "X is compact"
+   ],
+   "breakdown_regime": "The rate stalls at 1/t for smooth objectives without strong convexity and away-step variants; the iterates zigzag when the optimum lies on a face, and everything hinges on the linear oracle being genuinely cheap.",
+   "domain": "first order methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When projecting a candidate state back into the engine's constraint set is expensive but picking the best extreme admissible state is cheap, the engine moves toward extreme points and mixes: after t rounds the state is a combination of at most t extreme states, so explanations stay sparse and auditable by construction.",
+    "source_operator": "frank_wolfe_conditional_gradient",
+    "telemetry": "linear oracle winners per round, mixture weights over extreme states, sparsity count of active states"
+   }
+  },
+  {
+   "primitive_id": "strong_convexity_definition",
+   "name": "Strong convexity: the subgradient inequality gains a quadratic term (alpha/2)||x - y||^2; equivalently f minus (alpha/2)||x||^2 is convex (Eq. (3.13))",
+   "verbatim_quote": "We say that f : X → R is α-strongly convex if it satisfies the following improved subgradient inequality:",
+   "page": "Section 3.4, Eq. (3.13) (p. 276)",
+   "latex": "f(x) - f(y) \\le \\nabla f(x)^\\top (x - y) - \\frac{\\alpha}{2}\\|x - y\\|^2",
+   "symbol_and_unit_ledger": {
+    "\\alpha": "strong convexity parameter, objective units per coordinate unit squared",
+    "\\nabla f(x)": "gradient at x, replaceable by any subgradient in the non-smooth case"
+   },
+   "assumptions": [
+    "f satisfies the improved inequality for all x, y in X",
+    "alpha > 0; linear functions have alpha = 0"
+   ],
+   "breakdown_regime": "Curvature is often only local or only in some directions; a global alpha estimated from a quiet region overstates the pull toward the optimum elsewhere.",
+   "domain": "curvature theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Strong convexity is the engine's measurable notion of identifiability: a positive alpha means the loss surface itself pulls estimates toward the optimum at a quadratic rate, so distance to optimum can be inferred from gradient size, and flat directions (alpha near zero) are flagged as unidentifiable rather than averaged over silently.",
+    "source_operator": "strong_convexity_definition",
+    "telemetry": "curvature lower bounds per parameter block, gradient norm to distance conversion factors"
+   }
+  },
+  {
+   "primitive_id": "strongly_convex_smooth_linear_rate",
+   "name": "Strongly convex and smooth: projected gradient descent converges linearly with rate exp(-t/kappa), kappa = beta/alpha, and the optimal step 2/(alpha + beta) improves the constant (Theorems 3.10 and 3.12)",
+   "verbatim_quote": "As we will see now, having both strong convexity and smoothness allows for a drastic improvement in the convergence rate.",
+   "page": "Section 3.4.2, Theorems 3.10 and 3.12 (pp. 278-279)",
+   "latex": "\\|x_{t+1} - x^*\\|^2 \\le \\exp\\left(-\\frac{t}{\\kappa}\\right) \\|x_1 - x^*\\|^2, \\quad \\kappa = \\frac{\\beta}{\\alpha}",
+   "symbol_and_unit_ledger": {
+    "\\kappa": "condition number beta/alpha, dimensionless",
+    "\\alpha": "strong convexity parameter",
+    "\\beta": "smoothness constant",
+    "t": "iteration count"
+   },
+   "assumptions": [
+    "f is both alpha-strongly convex and beta-smooth",
+    "step size 1/beta for Theorem 3.10, or 2/(alpha + beta) unconstrained for Theorem 3.12"
+   ],
+   "breakdown_regime": "When kappa is huge the linear rate is linear in name only; misestimated alpha or beta breaks the contraction, and the improved constant of Theorem 3.12 is an unconstrained result.",
+   "domain": "first order methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's contraction certificate for well conditioned calibration problems: error shrinks by a fixed factor per pass, so the engine can state in advance how many passes a target tolerance needs, with kappa naming exactly which problems will be slow.",
+    "source_operator": "strongly_convex_smooth_linear_rate",
+    "telemetry": "condition numbers of calibration surfaces, realized contraction factors per pass versus the certificate"
+   }
+  },
+  {
+   "primitive_id": "oracle_lower_bounds",
+   "name": "Black-box lower bounds: for span-restricted procedures, error is at least RL/(2(1 + t)) non-smooth, 3 beta ||x_1 - x*||^2/(32 (t+1)^2) smooth, and ((sqrt(kappa) - 1)/(sqrt(kappa) + 1))^{2(t-1)} strongly convex smooth, via resisting oracle constructions (Theorems 3.13 to 3.15)",
+   "verbatim_quote": "In general a black-box procedure is a mapping from \"history\" to the next query point, that is it maps (x1 , g1 , . . . , xt , gt ) (with gs ∈ ∂f (xs )) to xt+1 .",
+   "page": "Section 3.5, Theorems 3.13, 3.14 and 3.15 (pp. 280-284)",
+   "latex": "\\min_{1 \\le s \\le t} f(x_s) - f(x^*) \\ge \\frac{3\\beta \\|x_1 - x^*\\|^2}{32 (t + 1)^2}",
+   "symbol_and_unit_ledger": {
+    "t": "number of oracle calls, count",
+    "n": "dimension; the polynomial lower bounds require t <= n or t <= (n - 1)/2",
+    "\\beta": "smoothness constant of the resisting quadratic",
+    "R, L": "radius and Lipschitz constant in the non-smooth bound"
+   },
+   "assumptions": [
+    "the procedure's iterates stay in the span of past oracle answers (assumption (3.15))",
+    "the adversary may choose the function and oracle answers adaptively (resisting oracle)"
+   ],
+   "breakdown_regime": "The bounds are for the black-box model only: structure (finite sums, saddle form, self-concordance) legitimately beats them, which is exactly the subject of Chapters 5 and 6.",
+   "domain": "complexity theory of optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's impossibility ledger: for a stated information budget and a stated problem class there is a floor no procedure can beat, proven by adversarial construction; the engine uses the same move to mark a question as information-starved rather than merely unanswered, and to refuse accuracy promises beyond the floor.",
+    "source_operator": "oracle_lower_bounds",
+    "telemetry": "information budgets per question, adversarial worst case constructions, floors attached to accuracy claims"
+   }
+  },
+  {
+   "primitive_id": "geometric_descent",
+   "name": "Geometric descent: maintain a ball certified to contain x*, shrink its squared radius by (1 - 1/sqrt(kappa)) per step using line search plus past balls, closing the acceleration gap geometrically (Theorem 3.17)",
+   "verbatim_quote": "In this section we close these gaps with the geometric descent method which was recently introduced in Bubeck et al. [2015b].",
+   "page": "Section 3.6, Theorem 3.17 (pp. 284-289)",
+   "latex": "\\|x^* - c_t\\|^2 \\le \\left(1 - \\frac{1}{\\sqrt{\\kappa}}\\right)^t R_0^2",
+   "symbol_and_unit_ledger": {
+    "c_t": "center of the enclosing ball at step t",
+    "R_0^2": "initial squared radius, from (1 - 1/kappa)||grad f(x_0)||^2/alpha^2",
+    "\\kappa": "condition number beta/alpha",
+    "x^+ = x - (1/beta) grad f(x), x^{++} = x - (1/alpha) grad f(x)": "the two canonical gradient steps"
+   },
+   "assumptions": [
+    "f is smooth and strongly convex, unconstrained",
+    "a line search oracle along segments is available",
+    "previous enclosing balls are retained so new function values can shrink them retroactively"
+   ],
+   "breakdown_regime": "The transparent geometry is bought with a line search oracle, which the pure first order model does not provide; the presentation is for the strongly convex case, with the smooth case reached by adding (epsilon)||x||^2 regularization.",
+   "domain": "first order methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Acceleration in the engine can be run as certified set shrinkage rather than momentum folklore: keep a ball that provably contains the optimum, and let each new evaluation shrink not only the current ball but every earlier ball, which is the mechanism that earns the sqrt(kappa) speedup and can be audited step by step.",
+    "source_operator": "geometric_descent",
+    "telemetry": "enclosing ball radii per step, retroactive shrink amounts credited to each new evaluation"
+   }
+  },
+  {
+   "primitive_id": "nesterov_agd_strongly_convex",
+   "name": "Nesterov accelerated gradient descent, strongly convex case: momentum coefficient built from sqrt(kappa) yields exp(-(t - 1)/sqrt(kappa)) decay, matching the lower bound (Theorem 3.18)",
+   "verbatim_quote": "We describe here the original Nesterov's method which attains the optimal oracle complexity for smooth convex optimization.",
+   "page": "Section 3.7.1, Theorem 3.18 (pp. 290-293)",
+   "latex": "f(y_t) - f(x^*) \\le \\frac{\\alpha + \\beta}{2} \\|x_1 - x^*\\|^2 \\exp\\left(-\\frac{t - 1}{\\sqrt{\\kappa}}\\right)",
+   "symbol_and_unit_ledger": {
+    "\\kappa = \\beta/\\alpha": "condition number",
+    "y_t": "primary (output) sequence",
+    "x_t": "momentum mixture sequence",
+    "\\Phi_s": "estimate sequence, alpha-strongly convex quadratic lower models in the proof"
+   },
+   "assumptions": [
+    "f is alpha-strongly convex and beta-smooth",
+    "alpha and beta are known to set the momentum",
+    "the proof maintains quadratic lower models Phi_s that squeeze f from below"
+   ],
+   "breakdown_regime": "Parameter free in appearance only: wrong kappa mis-sets momentum and can destroy the rate; the method is not monotone, so the last iterate is not automatically the best.",
+   "domain": "first order methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's optimal updater for well conditioned smooth surfaces: a momentum mixture whose coefficient is set by measured conditioning reaches the information theoretic speed limit, and the estimate sequence idea gives the engine a running lower model that certifies the gap while it iterates.",
+    "source_operator": "nesterov_agd_strongly_convex",
+    "telemetry": "momentum coefficients versus measured kappa, lower model gap certificates during accelerated runs"
+   }
+  },
+  {
+   "primitive_id": "nesterov_agd_smooth",
+   "name": "Nesterov accelerated gradient descent, smooth case: with the lambda_t recurrence the rate improves from 1/t to 2 beta ||x_1 - x*||^2 / t^2 (Theorem 3.19)",
+   "verbatim_quote": "In this section we show how to adapt Nesterov's accelerated gradient descent for the case α = 0, using a time-varying combination of the elements in the primary sequence (yt ).",
+   "page": "Section 3.7.2, Theorem 3.19 (pp. 293-295)",
+   "latex": "f(y_t) - f(x^*) \\le \\frac{2\\beta \\|x_1 - x^*\\|^2}{t^2}",
+   "symbol_and_unit_ledger": {
+    "\\lambda_t": "recurrence weights, lambda_0 = 0, lambda_t = (1 + sqrt(1 + 4 lambda_{t-1}^2))/2",
+    "\\gamma_t = (1 - \\lambda_t)/\\lambda_{t+1}": "mixture coefficient",
+    "\\beta": "smoothness constant"
+   },
+   "assumptions": [
+    "f convex and beta-smooth, no strong convexity",
+    "beta known for the step size 1/beta"
+   ],
+   "breakdown_regime": "Acceleration is fragile under noise: with stochastic gradients the momentum accumulates error, which is why Chapter 6 needs mini-batches and variance reduction rather than raw accelerated SGD.",
+   "domain": "first order methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For smooth but not strongly convex engine surfaces (regularization off), the time varying momentum schedule still buys the quadratic speedup in iterations; the engine treats this as the default updater for large smooth fitting problems and watches realized versus certified decay to detect curvature misreads.",
+    "source_operator": "nesterov_agd_smooth",
+    "telemetry": "iteration counts to tolerance on smooth fits, lambda schedule in use, realized decay exponents"
+   }
+  },
+  {
+   "primitive_id": "mirror_map_bregman_divergence",
+   "name": "Mirror maps and Bregman divergence: in a Banach space the gradient lives in the dual space, so map primal to dual with grad Phi, step there, and map back; distance is D_Phi(x, y) = Phi(x) - Phi(y) - grad Phi(y)^T (x - y) (Chapter 4, Section 4.1)",
+   "verbatim_quote": "The great insight of Nemirovski and Yudin is that one can still do a gradient descent by first mapping the point x ∈ B into the dual space B ∗ , then performing the gradient update in the dual space, and finally mapping back the resulting point to the primal space B.",
+   "page": "Chapter 4 introduction and Section 4.1 (pp. 296-298)",
+   "latex": "D_\\Phi(x, y) = \\Phi(x) - \\Phi(y) - \\nabla \\Phi(y)^\\top (x - y)",
+   "symbol_and_unit_ledger": {
+    "\\Phi": "mirror map, strictly convex and differentiable with grad Phi onto R^n and blowing up at the boundary of D",
+    "D_\\Phi": "Bregman divergence, divergence units induced by Phi",
+    "\\nabla \\Phi": "primal to dual map"
+   },
+   "assumptions": [
+    "Phi satisfies the three mirror map properties of Section 4.1",
+    "X sits in the closure of the open convex domain D and meets D"
+   ],
+   "breakdown_regime": "A mismatched mirror map is worse than Euclidean descent: the whole gain comes from Phi's strong convexity in the norm that actually controls the gradients.",
+   "domain": "non-Euclidean optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Geometry is a choice in the engine: states that live on constrained sets (weights that must sum to one, spectra, counts) get a distance matched to that set, and updates are performed in the dual coordinates where the evidence actually arrives, then mapped back; Euclidean distance is demoted to the special case it is.",
+    "source_operator": "mirror_map_bregman_divergence",
+    "telemetry": "chosen mirror map per state block, Bregman distances of updates, dual norm sizes of incoming evidence"
+   }
+  },
+  {
+   "primitive_id": "mirror_descent_theorem",
+   "name": "Mirror descent: proximal form x_{t+1} = argmin eta g_t^T x + D_Phi(x, x_t) attains RL sqrt(2/(rho t)) when Phi is rho-strongly convex in the working norm (Theorem 4.2)",
+   "verbatim_quote": "It gives a proximal point of view on mirror descent: the method is trying to minimize the local linearization of the function while not moving too far away from the previous point, with distances measured via the Bregman divergence of the mirror map.",
+   "page": "Section 4.2, Theorem 4.2 (pp. 299-301)",
+   "latex": "f\\left(\\frac{1}{t}\\sum_{s=1}^{t} x_s\\right) - f(x^*) \\le RL\\sqrt{\\frac{2}{\\rho t}}",
+   "symbol_and_unit_ledger": {
+    "\\rho": "strong convexity constant of Phi with respect to the chosen norm",
+    "R^2 = sup Phi(x) - Phi(x_1)": "mirror radius of X, divergence units",
+    "L": "Lipschitz constant measured in the dual norm",
+    "\\eta": "step size, tuned as R sqrt(2 rho)/(L sqrt(t))"
+   },
+   "assumptions": [
+    "Phi is a mirror map, rho-strongly convex on X in the chosen norm",
+    "subgradients bounded by L in the dual norm",
+    "Bregman projection onto X is computable"
+   ],
+   "breakdown_regime": "Same 1/sqrt(t) exponent as Euclidean subgradient descent; the win is entirely in the constants R, L, rho, which can hide dimension dependence if the geometry is chosen badly.",
+   "domain": "non-Euclidean optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's generic constrained learner: linearize the current loss, penalize movement by the Bregman distance of the block's own geometry, and average; the rate certificate is stated in the block's native constants, which is how the engine keeps high dimensional blocks honest about their real difficulty.",
+    "source_operator": "mirror_descent_theorem",
+    "telemetry": "per-block R, L, rho constants, averaged iterate gaps, Bregman step sizes realized"
+   }
+  },
+  {
+   "primitive_id": "simplex_negentropy_setup",
+   "name": "Simplex setup: negative entropy mirror map gives multiplicative updates, KL divergence as distance, Pinsker strong convexity in the l1 norm, and rate sqrt(log n / t) where Euclidean descent pays sqrt(n / t) (Section 4.3)",
+   "verbatim_quote": "Furthermore it is also easy to verify that Φ is 1-strongly convex w.r.t. k · k1 on ∆n (this result is known as Pinsker's inequality).",
+   "page": "Section 4.3, simplex setup (pp. 301-302)",
+   "latex": "y_{t+1}(i) = x_t(i) \\exp\\left(-\\eta \\, [\\nabla f(x_t)](i)\\right)",
+   "symbol_and_unit_ledger": {
+    "\\Phi(x) = sum_i x(i) log x(i)": "negative entropy mirror map, nats",
+    "D_\\Phi": "Kullback-Leibler divergence, nats",
+    "R^2 = log n": "mirror radius of the simplex, nats",
+    "i": "coordinate index in [n]"
+   },
+   "assumptions": [
+    "the feasible set is the probability simplex",
+    "subgradients are bounded in the l-infinity norm",
+    "projection is renormalization to sum one"
+   ],
+   "breakdown_regime": "Only as good as the l-infinity control of gradients; a single unbounded coordinate breaks the constant, and coordinates at zero can only recover multiplicatively.",
+   "domain": "non-Euclidean optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Probability weights inside the engine are updated multiplicatively, exponentiated evidence in, renormalize out: the cost of maintaining a distribution over n alternatives grows like log n, not n, which is the difference between a usable and an unusable weighting layer at engine scale.",
+    "source_operator": "simplex_negentropy_setup",
+    "telemetry": "weight vectors over alternatives, KL movement per update, log n versus n scaling in realized runtimes"
+   }
+  },
+  {
+   "primitive_id": "dual_averaging",
+   "name": "Dual averaging (lazy mirror descent): accumulate gradients in the dual and map back only on demand, x_t = argmin eta sum_{s<t} g_s^T x + Phi(x), with the mirror descent rate preserved up to constants (Theorem 4.3)",
+   "verbatim_quote": "In other words instead of going back and forth between the primal and the dual, dual averaging simply averages the gradients in the dual, and if asked for a point in the primal it simply maps the current dual point to the primal using the same methodology as mirror descent.",
+   "page": "Section 4.4, Theorem 4.3 (pp. 303-304)",
+   "latex": "x_t = \\arg\\min_{x \\in X \\cap D} \\left\\{ \\eta \\sum_{s=1}^{t-1} g_s^\\top x + \\Phi(x) \\right\\}",
+   "symbol_and_unit_ledger": {
+    "g_s": "subgradients accumulated in the dual, dual units",
+    "\\Phi": "mirror map, also the regularizer of the lazy form",
+    "\\eta": "step size, set as (L/R) sqrt(rho/(2t)) in Theorem 4.3"
+   },
+   "assumptions": [
+    "same mirror map assumptions as mirror descent",
+    "grad Phi(y_1) = 0 initialization"
+   ],
+   "breakdown_regime": "Laziness defers but does not remove the primal mapping cost when a primal point is demanded every round; constants are slightly worse than eager mirror descent.",
+   "domain": "non-Euclidean optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Evidence accumulation in the engine is lazy in the same way: scores add up in dual space as they arrive, and a concrete state is materialized only when a decision needs one, which suits distributed evidence streams where most updates never need a primal snapshot.",
+    "source_operator": "dual_averaging",
+    "telemetry": "dual accumulator norms, number of primal materializations versus updates, staleness of materialized states"
+   }
+  },
+  {
+   "primitive_id": "mirror_prox",
+   "name": "Mirror prox: a predictor step to y_{t+1} and a corrector step using the gradient at y_{t+1} upgrades mirror descent to the 1/t rate beta R^2/(rho t) for smooth objectives (Theorem 4.4)",
+   "verbatim_quote": "This method is called mirror prox and it was introduced in Nemirovski [2004a].",
+   "page": "Section 4.5, Theorem 4.4 (pp. 305-307)",
+   "latex": "f\\left(\\frac{1}{t}\\sum_{s=1}^{t} y_{s+1}\\right) - f(x^*) \\le \\frac{\\beta R^2}{\\rho t}",
+   "symbol_and_unit_ledger": {
+    "\\beta": "smoothness constant in the chosen norm",
+    "\\rho": "strong convexity of the mirror map",
+    "R^2": "mirror radius sup Phi(x) - Phi(x_1)",
+    "\\eta = \\rho/\\beta": "step size"
+   },
+   "assumptions": [
+    "f convex and beta-smooth with respect to the working norm",
+    "two gradient evaluations and two Bregman projections per round"
+   ],
+   "breakdown_regime": "Needs smoothness; for merely Lipschitz objectives the extra gradient evaluation buys nothing over mirror descent, and the gain is in the exponent, not in per-round cost.",
+   "domain": "non-Euclidean optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Predictor corrector updating for the engine's smooth blocks: probe where the current evidence points, evaluate the field at the probe, and only then commit; the engine uses this wherever a committed state is expensive to revise, because the corrector step is what converts smoothness into a faster certified rate.",
+    "source_operator": "mirror_prox",
+    "telemetry": "probe versus committed state gaps, corrector improvement per round, smoothness estimates per block"
+   }
+  },
+  {
+   "primitive_id": "ista_proximal_gradient",
+   "name": "ISTA and the proximal operator: for f smooth plus g simple, replace the linearization of g by g itself; for g = lambda ||x||_1 the step is coordinatewise soft thresholding tau_alpha(x) = (|x| - alpha)_+ sign(x) (Section 5.1)",
+   "verbatim_quote": "The algorithm described by the above iteration is known as ISTA (Iterative Shrinkage-Thresholding Algorithm).",
+   "page": "Section 5.1 (pp. 310-311)",
+   "latex": "\\tau_\\alpha(x) = (|x| - \\alpha)_+ \\, \\mathrm{sign}(x)",
+   "symbol_and_unit_ledger": {
+    "\\tau_\\alpha": "shrinkage (soft thresholding) operator",
+    "\\alpha = \\lambda \\eta": "threshold, product of l1 weight lambda and step size eta, coordinate units",
+    "(z)_+": "positive part max(z, 0)"
+   },
+   "assumptions": [
+    "f convex and beta-smooth, accessed by first order oracle",
+    "g convex and simple: its proximal step (5.1) is computable in closed form or cheaply, e.g. separable g"
+   ],
+   "breakdown_regime": "If the proximal step is itself hard, ISTA is not an algorithm but a reformulation; the rate matches plain gradient descent on f (1/t) until accelerated.",
+   "domain": "structured optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Composite objectives in the engine are split, never blended: the smooth evidence term is linearized and stepped, the structural term (sparsity, grouping, known shape) is applied exactly through its proximal map, which is how the engine enforces structure without paying subgradient rates for it.",
+    "source_operator": "ista_proximal_gradient",
+    "telemetry": "proximal step costs, sparsity levels induced per threshold, split objective values per term"
+   }
+  },
+  {
+   "primitive_id": "fista_accelerated_proximal",
+   "name": "FISTA: Nesterov momentum wrapped around the ISTA proximal step restores the 1/t^2 rate for the composite objective f + g (Section 5.1)",
+   "verbatim_quote": "An obvious idea is to combine Nesterov's accelerated gradient descent (which results in a 1/t2 rate to optimize f ) with ISTA.",
+   "page": "Section 5.1, FISTA (p. 311)",
+   "latex": "f(y_t) + g(y_t) - \\left(f(x^*) + g(x^*)\\right) \\le \\frac{2\\beta \\|x_1 - x^*\\|^2}{t^2}",
+   "symbol_and_unit_ledger": {
+    "f": "smooth part, beta-smooth",
+    "g": "simple non-smooth part handled by its proximal operator",
+    "y_t": "primary sequence",
+    "\\lambda_t, \\gamma_t": "the Nesterov recurrence weights of Section 3.7.2"
+   },
+   "assumptions": [
+    "same split assumptions as ISTA",
+    "beta known for the proximal step size 1/beta"
+   ],
+   "breakdown_regime": "Non-monotone like all accelerated schemes; restarts are used in practice when the objective rises, and the guarantee is for the primary sequence value, not every iterate.",
+   "domain": "structured optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's default solver shape for regularized fitting: momentum on the smooth evidence term, exact proximal handling of the structural term, certified 1/t^2 decay; it is the concrete reason the engine can fit sparse models at scale without surrendering rate guarantees.",
+    "source_operator": "fista_accelerated_proximal",
+    "telemetry": "composite objective traces, threshold induced sparsity over time, certified versus realized decay"
+   }
+  },
+  {
+   "primitive_id": "saddle_point_mirror_prox",
+   "name": "Saddle point mirror prox: min max phi with phi smooth in blocks is solved at rate O(1/t) by running mirror prox on the joint vector field, with the duality gap controlled like a suboptimality gap (Eq. (5.3), Theorem 5.2)",
+   "verbatim_quote": "The key observation is that the duality gap can be controlled similarly to the suboptimality gap f (x) − f (x∗ ) in a simple convex optimization problem.",
+   "page": "Sections 5.2.1 and 5.2.3, Eq. (5.3) and Theorem 5.2 (pp. 313-316)",
+   "latex": "\\max_{y \\in Y} \\phi(\\tilde x, y) - \\min_{x \\in X} \\phi(x, \\tilde y) \\le g(\\tilde z)^\\top (\\tilde z - z)",
+   "symbol_and_unit_ledger": {
+    "\\phi": "convex in x, concave in y saddle function",
+    "g(z) = (g_X, g_Y)": "joint subgradient vector field on Z = X x Y",
+    "\\beta_{11}, \\beta_{12}, \\beta_{21}, \\beta_{22}": "block smoothness constants coupling the two players",
+    "R_X, R_Y": "mirror radii of the two sets"
+   },
+   "assumptions": [
+    "Sion's minimax theorem applies: a saddle point exists",
+    "phi is block smooth with the four constants of Section 5.2.3",
+    "mirror maps on both sets, negentropy on simplex factors"
+   ],
+   "breakdown_regime": "Without smoothness the same construction (SP-MD) falls back to 1/sqrt(t); block constants can be dominated by the cross terms beta_12, beta_21, which is the price of coupling.",
+   "domain": "saddle point optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Adversarial pairs inside the engine (a model versus its stress test, a forecast versus its worst case weighting) are one saddle problem, not two optimizations: the engine runs the joint field, quotes the duality gap as the certificate, and gets 1/t convergence exactly when the interaction is smooth.",
+    "source_operator": "saddle_point_mirror_prox",
+    "telemetry": "duality gap certificates for paired estimations, block coupling constants, worst case weighting drift"
+   }
+  },
+  {
+   "primitive_id": "self_concordance_newton_decrement",
+   "name": "Self-concordance: measure third derivative in the function's own Hessian metric; inside the Newton decrement ball lambda_f(x) <= 1/4, Newton iterates contract quadratically, lambda_f(x+) <= 2 lambda_f(x)^2 (Definition 5.1, Theorem 5.4)",
+   "verbatim_quote": "In other words the above theorem states that, if initialized at a point x0 such that λf (x0 ) ≤ 1/4, then Newton's iterates satisfy λf (xk+1 ) ≤ 2λf (xk )2 .",
+   "page": "Section 5.3.3, Definitions 5.1 and 5.2, Theorem 5.4 (pp. 322-324)",
+   "latex": "\\nabla^3 f(x)[h, h, h] \\le M \\|h\\|_x^3, \\quad \\|h\\|_x = \\sqrt{h^\\top \\nabla^2 f(x) h}",
+   "symbol_and_unit_ledger": {
+    "M = 2": "standard self-concordance constant, dimensionless",
+    "\\lambda_f(x) = ||grad f(x)||^*_x": "Newton decrement, dimensionless, in the dual local norm",
+    "\\nabla^3 f(x)[h,h,h]": "third directional derivative, objective units"
+   },
+   "assumptions": [
+    "f is C^3 and convex on the interior of X",
+    "the local norm is induced by the Hessian of f itself, which makes the theory affine invariant"
+   ],
+   "breakdown_regime": "Self-concordance is a strong structural property; generic objectives do not have it with a small constant, and outside the decrement ball Newton can diverge arbitrarily badly.",
+   "domain": "interior point methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine measures closeness to a solution in the problem's own metric: when a subproblem has self-concordant structure, the Newton decrement is a dimensionless certificate that says whether a fast local method is inside its quadratic basin, replacing norm dependent guesses about being close enough.",
+    "source_operator": "self_concordance_newton_decrement",
+    "telemetry": "Newton decrements for structured subproblems, basin entry events, quadratic contraction realized per step"
+   }
+  },
+  {
+   "primitive_id": "path_following_ipm_complexity",
+   "name": "Path following with a nu-self-concordant barrier: raise the penalty parameter by the factor (1 + 1/(13 sqrt(nu))) per Newton step and reach epsilon accuracy in O(sqrt(nu) log(nu/epsilon)) Newton steps (Theorems 5.5 and 5.6)",
+   "verbatim_quote": "The next theorem shows that after O ν log t0νε iterations of the path-following scheme one obtains an ε-optimal point.",
+   "page": "Sections 5.3.4 to 5.3.6, Theorems 5.5 and 5.6 (pp. 324-328)",
+   "latex": "N = O\\left(\\sqrt{\\nu} \\log\\frac{\\nu}{\\epsilon}\\right)",
+   "symbol_and_unit_ledger": {
+    "\\nu": "barrier parameter: F is (1/nu)-exp-concave; for the orthant and the PSD cone the log barriers have nu = n",
+    "N": "Newton steps on the central path, count",
+    "t_0": "initial penalty parameter",
+    "M (in Section 5.3.6)": "cost of one Newton direction, Hessian inversion"
+   },
+   "assumptions": [
+    "a nu-self-concordant barrier for X with computable gradient and Hessian exists",
+    "an initial point with Newton decrement <= 1/4 is obtained by the auxiliary path trick of Section 5.3.5",
+    "linear objective after the epigraph reformulation"
+   ],
+   "breakdown_regime": "The iteration count is superb but each iteration inverts a Hessian; for very large sparse problems the per-step cost dominates and first order methods win in wall clock despite worse oracle counts.",
+   "domain": "interior point methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For the engine's structured feasibility cores (linear and semidefinite relaxations), the barrier parameter is the honest price tag: total work scales with sqrt(nu) log(1/epsilon), so the engine sizes relaxation problems by their barrier parameter before committing to a solve, not by their raw variable count.",
+    "source_operator": "path_following_ipm_complexity",
+    "telemetry": "barrier parameters of posed relaxations, Newton step counts realized versus the sqrt(nu) budget, central path residuals"
+   }
+  },
+  {
+   "primitive_id": "stochastic_mirror_descent",
+   "name": "Stochastic oracles: unbiased gradient estimates with E||g(x)||_*^2 <= B^2 leave the non-smooth rate unchanged, E f(average) - min f <= RB sqrt(2/t), and strongly convex SGD keeps the 1/(alpha t) rate (Theorems 6.1 and 6.2)",
+   "verbatim_quote": "A key insight, going back to Robbins and Monro [1951], is that first order methods are quite robust: the gradients do not have to be computed exactly to ensure progress towards the optimum.",
+   "page": "Chapter 6 introduction (p. 329) and Section 6.1, Theorems 6.1 and 6.2 (pp. 330-331)",
+   "latex": "\\mathbb{E} f\\left(\\frac{1}{t}\\sum_{s=1}^{t} x_s\\right) - \\min_{x \\in X} f(x) \\le RB\\sqrt{\\frac{2}{t}}",
+   "symbol_and_unit_ledger": {
+    "\\tilde g(x)": "stochastic oracle output, random vector with E tilde g(x) in the subdifferential",
+    "B^2": "bound on the expected squared dual norm of the oracle output",
+    "R^2": "mirror radius sup Phi(x) - Phi(x_1)",
+    "\\alpha": "strong convexity parameter in Theorem 6.2"
+   },
+   "assumptions": [
+    "the oracle is unbiased, including conditionally on the query point",
+    "second moment bound B^2 holds uniformly on X",
+    "mirror map 1-strongly convex in the working norm"
+   ],
+   "breakdown_regime": "Biased oracles are a different world (the monograph points elsewhere for them); unbiasedness plus a second moment bound is exactly what the proof consumes, and heavy tailed noise violates the bound.",
+   "domain": "stochastic optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine learns from sampled evidence without pretending the samples are exact: as long as gradient estimates are unbiased on average with bounded energy, the averaged state carries the same rate certificate as exact computation, which is the license for the engine's streaming updates and the stated limit of that license.",
+    "source_operator": "stochastic_mirror_descent",
+    "telemetry": "oracle bias audits, second moment estimates of gradient noise, averaged state certificates under sampling"
+   }
+  },
+  {
+   "primitive_id": "minibatch_sgd_variance_interpolation",
+   "name": "Mini-batch SGD: averaging m oracle calls divides the gradient variance (E||average - grad f||^2 <= 2B^2/m), interpolating between the stochastic sqrt rate and the deterministic smooth rate of Theorem 6.3",
+   "verbatim_quote": "Mini-batch SGD can be a better option than basic SGD in at least two situations: (i) When the computation for an iteration of mini-\nbatch SGD can be distributed between multiple processors.",
+   "page": "Section 6.2, Theorem 6.3 and mini-batch analysis (pp. 332-334)",
+   "latex": "\\mathbb{E}\\left\\|\\frac{1}{m}\\sum_{i=1}^{m} \\tilde g_i(x) - \\nabla f(x)\\right\\|_2^2 \\le \\frac{2B^2}{m}",
+   "symbol_and_unit_ledger": {
+    "m": "batch size, number of independent oracle calls per iteration",
+    "\\tilde g_i(x)": "independent stochastic gradient estimates at the same point",
+    "B^2": "uniform bound on E||tilde g(x)||_2^2",
+    "\\sigma^2": "variance bound E||grad f(x) - tilde g(x)||_*^2 in Theorem 6.3"
+   },
+   "assumptions": [
+    "batch samples are independent conditionally on the current point",
+    "f is beta-smooth for the interpolation bound",
+    "batch size kept below the threshold m <= (B/(R beta)) sqrt(t) for the stated corollary rate"
+   ],
+   "breakdown_regime": "For a general stochastic oracle smoothness buys no acceleration (Tsybakov lower bound cited in the text); batching reduces variance but cannot beat the statistical term R sigma sqrt(2/t).",
+   "domain": "stochastic optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Batching is the engine's variance dial: independent evidence pulls at the same state are averaged before the state moves, trading parallel compute for a strictly smaller noise floor per step, with the interpolation bound stating exactly when more batching stops paying.",
+    "source_operator": "minibatch_sgd_variance_interpolation",
+    "telemetry": "batch sizes per update, realized variance reduction versus 1/m, parallel speedup of batched evaluations"
+   }
+  },
+  {
+   "primitive_id": "svrg_variance_reduction",
+   "name": "SVRG: center the stochastic gradient at a snapshot, v = grad f_i(x) - grad f_i(y) + grad f(y), so variance vanishes at the optimum and the finite sum problem gets a linear rate with total complexity O((m + kappa) log(1/epsilon)) (Lemma 6.4, Theorem 6.5)",
+   "verbatim_quote": "The idea of SVRG is to \"center\" the output of the stochastic oracle in order to reduce the variance.",
+   "page": "Section 6.3, Lemma 6.4 and Theorem 6.5 (pp. 335-337)",
+   "latex": "\\mathbb{E} f(y^{(s+1)}) - f(x^*) \\le 0.9^s \\left(f(y^{(1)}) - f(x^*)\\right)",
+   "symbol_and_unit_ledger": {
+    "m": "number of component functions f_i",
+    "y^{(s)}": "snapshot (centering) point of epoch s, refreshed every k = 20 kappa inner steps",
+    "\\eta = 1/(10 beta)": "inner step size",
+    "\\kappa = beta/alpha": "condition number of the sum"
+   },
+   "assumptions": [
+    "each f_i is convex and beta-smooth",
+    "the sum f is alpha-strongly convex",
+    "a full gradient at the snapshot is computed once per epoch"
+   ],
+   "breakdown_regime": "The trick is specific to finite sums with reusable components; for a true expectation oracle there is no snapshot gradient to center at, and without strong convexity the stated linear rate does not hold.",
+   "domain": "stochastic optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine refits a fixed finite dataset, it centers stochastic updates at a periodically refreshed full evaluation: the noise of each cheap update is tied to the distance from the snapshot, so noise dies as the fit improves and high accuracy stops costing the SGD premium; this is the engine's route to exact refits on stored data.",
+    "source_operator": "svrg_variance_reduction",
+    "telemetry": "snapshot refresh cadence, centered gradient norms per epoch, epoch contraction factors realized"
+   }
+  },
+  {
+   "primitive_id": "random_coordinate_descent",
+   "name": "Random coordinate descent with importance sampling p_gamma(i) proportional to beta_i^gamma: directional smoothness replaces the global beta, giving E f(x_t) - f(x*) <= 2 R_{1-gamma}^2 sum_i beta_i^gamma / (t - 1), and a linear rate under strong convexity (Theorems 6.7 and 6.8)",
+   "verbatim_quote": "Somewhat unsurprisingly RCD requires n times more iterations than gradient descent to obtain the same accuracy.",
+   "page": "Section 6.4 and 6.4.1, Theorems 6.7 and 6.8 (pp. 338-342)",
+   "latex": "\\mathbb{E} f(x_t) - f(x^*) \\le \\frac{2 R_{1-\\gamma}^2(x_1) \\sum_{i=1}^{n} \\beta_i^\\gamma}{t - 1}",
+   "symbol_and_unit_ledger": {
+    "\\beta_i": "directional smoothness along coordinate i, (Hessian diagonal bound)",
+    "p_\\gamma(i) = beta_i^gamma / sum_j beta_j^gamma": "sampling distribution over coordinates",
+    "R_{1-\\gamma}(x_1)": "radius of the initial level set in the weighted norm ||.||_[1-gamma]",
+    "\\kappa_\\gamma": "effective condition number (sum_i beta_i^gamma)/alpha for the linear rate"
+   },
+   "assumptions": [
+    "f differentiable with coordinatewise smoothness constants beta_i",
+    "coordinates sampled independently from p_gamma",
+    "for Theorem 6.8, alpha-strong convexity in the weighted norm"
+   ],
+   "breakdown_regime": "Uniform sampling without directional smoothness loses a factor n against full gradient descent; the gains appear only when coordinate smoothness is heterogeneous and coordinate steps are genuinely cheaper.",
+   "domain": "stochastic optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Blockwise updating for the engine: when one coordinate block of a model can be refreshed at a fraction of the full cost, sample blocks in proportion to their curvature and the engine keeps a rate certificate in the weighted geometry, which is how partial refits stay principled instead of ad hoc.",
+    "source_operator": "random_coordinate_descent",
+    "telemetry": "per-coordinate curvature estimates, sampling frequencies realized, cost per coordinate update versus full update"
+   }
+  },
+  {
+   "primitive_id": "goemans_williamson_rounding",
+   "name": "Goemans-Williamson: solve the SDP relaxation of MAXCUT and round with a Gaussian vector, zeta = sign(xi), xi ~ N(0, Sigma); E zeta^T L zeta >= 0.878 max x^T L x via E zeta_i zeta_j = (2/pi) arcsin(Sigma_ij) (Theorem 6.11, Lemma 6.12)",
+   "verbatim_quote": "Next we show that one can obtain an even better approximation ratio by combining the power of convex optimization and randomization.",
+   "page": "Section 6.6, Theorem 6.11 and Lemma 6.12 (pp. 344-346)",
+   "latex": "\\mathbb{E} \\zeta^\\top L \\zeta \\ge 0.878 \\max_{x \\in \\{-1, 1\\}^n} x^\\top L x",
+   "symbol_and_unit_ledger": {
+    "L = D - A": "graph Laplacian of the weight matrix A >= 0",
+    "\\Sigma": "optimal solution of the SDP relaxation with unit diagonal",
+    "\\zeta = sign(xi)": "rounded cut vector in {-1, 1}^n",
+    "0.878": "approximation constant from (1 - (2/pi) arcsin t) >= 0.878 (1 - t)"
+   },
+   "assumptions": [
+    "the combinatorial problem is a quadratic form over the hypercube",
+    "the SDP relaxation is solved to optimality (interior point methods apply)",
+    "weights A_ij are non-negative for the 0.878 constant; Nesterov's variant gives 2/pi for general PSD B"
+   ],
+   "breakdown_regime": "The constant is problem specific (it exploits the Laplacian structure and non-negative weights); relaxations can have integrality gaps, in which case no rounding of that relaxation can certify more.",
+   "domain": "convex relaxation and rounding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Relax then round is the engine's pattern for discrete decisions: solve the convex relaxation exactly, then map back to a discrete choice by a randomized rule whose expected quality is a proven fraction of the relaxation bound, so the engine can quote an approximation guarantee for a combinatorial pick instead of a heuristic hope.",
+    "source_operator": "goemans_williamson_rounding",
+    "telemetry": "relaxation optimal values as upper bounds, rounded solution values, realized approximation ratios per instance"
+   }
+  },
+  {
+   "primitive_id": "randomized_center_gravity_hitandrun",
+   "name": "Randomized center of gravity: replace the exact centroid by a sample average from hit-and-run random walks, keep the set near-isotropic, and recover the centroid method's speed with polynomial sampling cost (Lemma 6.14, Section 6.7)",
+   "verbatim_quote": "Randomization naturally suggests itself in the center of gravity method (see Section 2.1), as a way to circumvent the exact calculation of the center of gravity.",
+   "page": "Section 6.7, Lemma 6.14 (pp. 347-349)",
+   "latex": "\\mathrm{Vol}\\left(K \\cap \\{x : (x - z)^\\top w \\ge 0\\}\\right) \\ge \\left(\\frac{1}{e} - \\|z\\|_2\\right) \\mathrm{Vol}(K)",
+   "symbol_and_unit_ledger": {
+    "z": "displacement of the cut point from the true centroid, coordinate units",
+    "K": "convex set in (near) isotropic position: E X = 0, E X X^T near I_n",
+    "O(n^3)": "hit-and-run steps for the walk to be near uniform in total variation"
+   },
+   "assumptions": [
+    "uniform samples from the current localization set are available via the hit-and-run walk",
+    "the set is put in near-isotropic position with O(n) samples (Rudelson bound)",
+    "the previous round's distribution warm-starts the next walk"
+   ],
+   "breakdown_regime": "Guarantees are probabilistic and the total random walk cost is O(n^5) steps in the monograph's accounting; mixing bounds degrade for badly conditioned bodies despite isotropic repositioning.",
+   "domain": "random walk methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exact centers of the engine's hypothesis sets are intractable, so the engine samples them: a maintained random walk over the surviving set gives centroid estimates good enough that the guaranteed cut fraction survives, closing the loop between the optimal localization scheme and a runnable one.",
+    "source_operator": "randomized_center_gravity_hitandrun",
+    "telemetry": "walk mixing diagnostics, centroid estimate errors, isotropic repositioning frequency, realized cut fractions"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "3b7b1ffc7100f779-t1",
+   "think": "This monograph is a complete map of what first order information can and cannot buy in convex optimization, organized as a single ascending argument. It begins with the definition of convexity and its two elementary miracles: subgradients turn local information into global linear lower bounds, and local minima are automatically global. Everything after that is a negotiation between three currencies: the number of oracle queries, the computational cost per query, and the structural assumptions one is willing to make about the objective and the feasible set. The black-box model fixes the terms of the negotiation by counting queries to zeroth and first order oracles, and the rest of the book is a sequence of matching upper and lower bounds inside that model and then a sequence of controlled escapes from it. Chapter 2 works in finite dimension: cutting plane methods localize the optimum inside a shrinking set, with the center of gravity method achieving the optimal linear in dimension oracle complexity at an intractable per-step cost, the ellipsoid method trading a factor of n for computability, and Vaidya's volumetric barrier recovering nearly optimal complexity on both axes at once. Chapter 3 changes the question by asking for dimension-free rates and finds them in gradient methods, at the price of slower dependence on accuracy: 1/sqrt(t) for Lipschitz objectives, 1/t for smooth ones, and linear convergence when strong convexity is added. The lower bounds of Section 3.5 are the pivot of the whole text, because they prove these exponents are not artifacts of weak analysis but properties of the information itself, constructed through resisting oracles that reveal one coordinate of the solution per query. Acceleration then appears not as a trick but as the unique way to close the remaining sqrt(kappa) gap between gradient descent and the lower bound, achieved twice: once transparently by geometric descent, which re-reads acceleration as retroactive shrinkage of enclosing balls, and once by Nesterov's estimate sequences, which squeeze the objective between the iterates and a maintained quadratic lower model. Chapter 4 observes that all of this was silently Euclidean, and rebuilds the theory on mirror maps: the gradient lives in the dual space, distance becomes a Bregman divergence, and the choice of geometry becomes an algorithmic decision with measurable consequences, as the simplex setup shows by replacing a sqrt(n) factor with sqrt(log n). Mirror prox adds a predictor corrector structure that converts smoothness into a 1/t rate in any geometry and, crucially, generalizes from functions to vector fields, which is what lets the same machinery solve saddle point problems with the duality gap playing the role of the suboptimality gap. Chapter 5 then leaves the black-box model deliberately: when non-smoothness has a known source, a smooth plus simple split restores accelerated rates through proximal steps (ISTA and FISTA), a max of smooth functions is handled as a saddle problem, and when the feasible set carries a self-concordant barrier, interior point methods follow the central path with an iteration count that depends on the barrier parameter nu rather than on black-box lower bounds, because a Newton step consumes second order structure the oracle model refuses to count. Chapter 6 closes the loop by randomizing the oracle itself: unbiased noisy gradients cost nothing in the non-smooth rate, mini-batching interpolates between stochastic and deterministic regimes by dividing variance, SVRG eliminates the noise floor entirely for finite sums by centering at a snapshot, coordinate descent trades full gradients for curvature weighted coordinate sampling, and randomization finally re-enters through the side door of rounding, where an SDP relaxation plus a Gaussian sign rounding certifies a 0.878 approximation for an NP-hard problem, and through random walks, which make the intractable centroid of Chapter 2 approximately computable. Table 1.1, printed before the theory even starts, is the book in miniature: rows are problem classes, columns are algorithm, rate, iteration count, and cost per iteration, and the entire monograph can be read as an argument that every cell of that table is simultaneously an achievement and a limit. Two recurring technical devices deserve notice because they carry more weight than their modest appearance suggests. The first is averaging: in the non-smooth and stochastic results the guarantee is almost never about the last iterate but about the mean of the iterates, because convexity converts a sum of per-step progress inequalities into a bound on the average through Jensen's inequality, and the telescoping potential arguments in the proofs are all engineered to land on that average. The second is the potential or Lyapunov viewpoint itself, made most explicit by the estimate sequences of Nesterov and by the Bregman divergence bookkeeping of mirror descent, where the whole proof is the statement that a single scalar quantity decreases at a controlled rate. The applications threaded through the text are chosen to prove that the abstractions pay rent: Frank-Wolfe solves a structured sparsity regression whose dictionary is exponentially large because the linear oracle and the sparsity of iterates do the work that dimension would otherwise forbid; saddle point mirror prox prices matrix games and max-margin classification in terms of block smoothness constants; and the stochastic saddle point variant achieves a complexity sublinear in the size of the game matrix, an outcome that is only visible because the oracle model counts information rather than arithmetic. The book is equally deliberate about what it refuses to claim. Parameters are assumed known and adaptivity is waved to logarithmic factors; duality based derivations are omitted; distributed methods and the practical quasi-Newton machinery are pointed to other books; and the theory of using convex methods inside non-convex problems is acknowledged as a separate, unwritten volume. These refusals matter for any system built on the text, because they mark the boundary between what carries a certificate and what is engineering judgment. Read as one object, the book's lesson is that convergence rates are accounting identities over information, geometry, and structure: every speedup in the text is purchased by naming exactly which of the three was spent, and every lower bound is a proof that no unnamed currency exists.",
+   "retrocausal_genealogy": "The lineage runs from Cauchy's 1847 steepest descent and the 1960s cutting plane work of Levin and Newman, through the ellipsoid era and Nemirovski and Yudin's 1983 black-box complexity theory, which supplied both the oracle model and the resisting oracle lower bound technique the monograph is built on. Nesterov's 1983 accelerated method and his later smoothing and self-concordance work with Nemirovski supply the two great escapes from gradient rates, while Vaidya's volumetric barrier and the Bertsimas and Vempala random walk program connect the cutting plane line to sampling. The stochastic line descends from Robbins and Monro 1951 through Nemirovski's mirror descent to the machine learning era results the final chapter collects: mini-batch analysis, SAG and SDCA, and Johnson and Zhang's SVRG.",
+   "theory_of_mind": "Bubeck writes for a reader who wants theorems, not recipes: every algorithm is presented as the constructive half of a complexity statement, and every rate is paired with the lower bound or the structural assumption that explains it. His model of the domain is austere on purpose. Parameters such as Lipschitz constants, smoothness, and strong convexity are assumed known, heuristics and duality based methods are explicitly declared out of scope, and the disclaimer in Section 1.6 owns those omissions rather than hiding them. The author's bet is that the clean theory is the first term in the Taylor series of practice, Cover's line that he quotes with approval, so simplified proofs with slightly worse constants are preferred whenever they expose the mechanism.",
+   "cross_layer_veto": "Several results in this text veto habits that other optimization layers encourage. The lower bounds veto any promise of faster black-box rates from clever step sizes alone: past the proven floor, improvement must come from structure, geometry, or second order information, never from tuning. The stochastic chapters veto naive acceleration, since momentum amplifies oracle noise, and they veto exactness demands on sampled gradients, since unbiasedness with bounded variance already buys the full non-smooth rate. Self-concordance vetoes norm based reasoning about Newton's method, insisting distance be measured in the function's own metric, and the mirror descent chapter vetoes Euclidean defaults wherever the constraint geometry is non-Euclidean."
+  }
+ ],
+ "universal_lens": "Convex optimization here is a general template for deciding under a budget of questions: fix what counts as a query, prove how many queries any procedure needs, then design procedures that spend structure, geometry, or randomness to need fewer. The same accounting applies to any iterative inference process: maintain a set or a distribution over what is still possible, choose measurements that shrink it at a certified rate, distrust any claimed rate that no lower bound has been checked against, and treat the choice of distance on the state space as a first class design variable rather than a default.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the monograph as a methods curriculum and a standards document: oracle complexity accounting for data acquisition decisions, matching upper and lower bounds as the criterion for calling a method understood, mirror geometries for probability valued states, and relaxation plus rounding as the certified route to discrete model choices. Its research value is the discipline of naming the currency behind every speedup, so institute work can separate genuine structural insight from tuning folklore and can teach the resisting oracle technique as the canonical way to prove that a data source is exhausted.",
+ "gse_mapping": "The Galaxy Sports Edge reasoning engine takes its iterative inference machinery from this text: subgradient and mirror updates with rate certificates for streaming recalibration, exponentiated gradient weighting over competing models at log n cost, variance reduced refits on stored finite datasets via SVRG centering, coordinate updates for cheap partial refits, saddle formulations with duality gap certificates for model versus stress test pairs, and barrier sized relaxations when a discrete selection must be made with an approximation guarantee. Equally important are the vetoes: the engine inherits the lower bound ledger, so its stated confidence in any iterated estimate is capped by the information actually queried."
+}

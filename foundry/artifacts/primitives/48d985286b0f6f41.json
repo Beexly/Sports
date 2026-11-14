@@ -1,0 +1,811 @@
+{
+  "book_id": "48d985286b0f6f41",
+  "source_status": "COMPLETE",
+  "source_note": "True work: Mykel J. Kochenderfer, Tim A. Wheeler, and Kyle H. Wray, 'Algorithms for Decision Making', 2022, MIT Press, shared under a Creative Commons CC-BY-NC-ND license (license line printed on every page of the file). Local file: PDF at ~/workspace/full-library-2026-11-12/library/books-c-systems/Kochenderfer-Wheeler-Wray-2022-AlgorithmsForDecisionMaking.pdf, 12,111,874 bytes; scan digest sha256(str(size) + file bytes) = 48d985286b0f6f41b70ee7d7579bd2e9ab9515b04f694acfb1316c642e00d521, book_id is its first 16 hex chars; plain sha256 of the file bytes = 297196f2cad5ab23cf4855f815fd69e7b7ee9c31255f743b668416677ad24e. Extraction text: matching .txt under ~/workspace/full-library-2026-11-12/text/books-c-systems/ (2,161,098 bytes, 34,262 lines), a two-column layout extraction with margin notes interleaved; quotes below were chosen from single-column passages inside one page and verified as contiguous normalized substrings of that text file. The book has five parts (probability, estimation and decisions under full observability, sequential fully observed problems, partially observable problems, multiagent problems) plus appendices A-G, with Julia implementations for nearly every algorithm. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "bn_chain_rule_factorization",
+      "name": "Bayesian network chain rule: the joint distribution factors into a product of local conditional distributions given parents",
+      "verbatim_quote": "The chain rule for Bayesian networks specifies how to construct a joint distribution from the local conditional probability distributions.",
+      "page": "Ch 2, Sec 2.4, eq. (2.31), p. 33 (text lines ~2110-2117)",
+      "latex": "P(x_{1:n}) = \\prod_{i=1}^{n} P(x_i \\mid \\mathrm{pa}(x_i))",
+      "symbol_and_unit_ledger": {
+        "P(x_{1:n})": "probability of a full assignment to all n variables, dimensionless",
+        "P(x_i | pa(x_i))": "local conditional probability of variable i given the assignment to its parents, dimensionless",
+        "pa(x_i)": "the parent set of variable i in the directed acyclic graph",
+        "n": "number of variables in the network, count"
+      },
+      "assumptions": [
+        "The graph is a directed acyclic graph and each local factor is a proper conditional distribution.",
+        "The parent assignment is fully specified when evaluating each factor."
+      ],
+      "breakdown_regime": "The factorization is exact for any Bayesian network, but it buys nothing when the graph is dense: parent sets grow, local tables grow exponentially in parent count, and the parameter savings over the full joint vanish.",
+      "domain": "probabilistic-modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine joint over game state variables (health, usage, matchup, situation) should be stored as local conditional factors over a sparse graph, not as one giant joint table, so each factor can be re-estimated from its own data slice without refitting the whole model.",
+        "source_operator": "bn_chain_rule_factorization",
+        "telemetry": "Per-factor sample counts and conditional frequency tables from play by play and participation data."
+      }
+    },
+    {
+      "primitive_id": "independence_factorization_savings",
+      "name": "Independence collapses the parameter count of a joint distribution from exponential to linear, at the price of a usually false assumption",
+      "verbatim_quote": "Independence can result in an enormous savings in terms of representational complexity, but it is often a poor assumption.",
+      "page": "Ch 2, Sec 2.3.1, p. 25 (text lines ~1650-1656)",
+      "latex": "P(x_{1:n}) = \\prod_{i=1}^{n} P(x_i)",
+      "symbol_and_unit_ledger": {
+        "P(x_{1:n})": "joint probability over n binary variables, dimensionless",
+        "P(x_i)": "marginal probability of variable i, dimensionless",
+        "n": "number of variables; the unfactored joint needs up to 2^n - 1 independent parameters, the independent factorization needs n",
+        "count": "parameters"
+      },
+      "assumptions": [
+        "All variables are mutually independent, so each realization leaves the others' distributions unchanged."
+      ],
+      "breakdown_regime": "Fails exactly where structure matters: correlated variables (shared causes, shared opponents, shared game script) make the independent product badly miscalibrated even when every marginal is correct.",
+      "domain": "probabilistic-modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Same game parlay style independence assumptions are this exact failure: multiplying marginal leg probabilities prices the joint as if legs were independent. The primitive is the warning label and the accounting identity for what independence would cost if it were true.",
+        "source_operator": "independence_factorization_savings",
+        "telemetry": "Measured pairwise and joint hit rates of combined events versus the product of their marginals."
+      }
+    },
+    {
+      "primitive_id": "sum_product_variable_elimination",
+      "name": "Sum-product variable elimination does exact inference by multiplying factors and marginalizing variables out one at a time; the elimination order controls the cost",
+      "verbatim_quote": "For many networks, variable elimination allows inference to be done in an amount of time that scales linearly with the size of the network, but it has exponential time complexity in the worst case.",
+      "page": "Ch 3, Sec 3.3, p. 52 (text lines ~3006-3012)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model is given as a set of factors over discrete variables.",
+        "An elimination ordering is supplied; intermediate factor size depends on that ordering."
+      ],
+      "breakdown_regime": "Worst case exponential even under the optimal ordering when the graph has large induced width; dense or loopy high treewidth models force approximate inference instead.",
+      "domain": "exact-inference",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Any exact marginal the engine needs (probability a player clears a threshold given correlated teammates) is a variable elimination problem; the ordering heuristic of eliminating low degree variables first transfers directly, and the NP-hardness result caps how large an exact query can be before the engine must switch to sampling.",
+        "source_operator": "sum_product_variable_elimination",
+        "telemetry": "Query graph sizes and induced widths logged per inference request."
+      }
+    },
+    {
+      "primitive_id": "em_two_step_incomplete_data",
+      "name": "Expectation-maximization fits parameters with missing or latent data by alternating inference of completions (E-step) with maximum likelihood on the completed data (M-step)",
+      "verbatim_quote": "The second step is called the maximization step (M-step), where we attempt to find a new θ̂ that maximizes the likelihood of the completed data.",
+      "page": "Ch 4, Sec 4.4.2, p. 87 (text lines ~4756-4766)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An initial parameter estimate exists (guess, prior sample, or a complete data method).",
+        "The M-step estimator for the completed data is available in closed form or numerically."
+      ],
+      "breakdown_regime": "Not guaranteed to reach the global likelihood maximum; it converges to local optima, so the book prescribes restarts from many initial points and keeping the best. Identifiability failures (latent variables with symmetric roles) make some parameters unrecoverable at any sample size.",
+      "domain": "parameter-learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine quantities that are never directly observed (true snap share intent, hidden injury severity, play caller tendency) are latent variables; EM is the fitting loop that alternates between inferring their posterior per game and refitting the observation model, with restarts as the guard against local optima.",
+        "source_operator": "em_two_step_incomplete_data",
+        "telemetry": "Partially observed game logs with missing fields, snap counts, and injury reports of varying reliability."
+      }
+    },
+    {
+      "primitive_id": "maximum_expected_utility",
+      "name": "Maximum expected utility principle: a rational agent chooses the action with the highest probability-weighted utility of outcomes",
+      "verbatim_quote": "The principle of maximum expected utility says that a rational agent should choose the action that maximizes expected utility:",
+      "page": "Ch 6, Sec 6.4, eqs. (6.7)-(6.8), p. 116 (text lines ~6092-6100)",
+      "latex": "a^* = \\arg\\max_a \\mathrm{EU}(a \\mid o), \\qquad \\mathrm{EU}(a \\mid o) = \\sum_{s'} P(s' \\mid a, o)\\, U(s')",
+      "symbol_and_unit_ledger": {
+        "a*": "the optimal action",
+        "EU(a | o)": "expected utility of action a given observation o, in utility units",
+        "P(s' | a, o)": "probability of outcome state s' under action a and observation o, dimensionless",
+        "U(s')": "utility of outcome state s', in utility units"
+      },
+      "assumptions": [
+        "A utility function over outcomes exists and encodes the decision maker's preferences.",
+        "Outcome probabilities under each action can be computed or estimated."
+      ],
+      "breakdown_regime": "Only as good as the utility and the probabilities fed into it: a mis-specified utility (for example maximizing win probability when the real objective is expected value against a price) yields decisions that are optimal for the wrong problem.",
+      "domain": "decision-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine decision surface (project, rank, pass) is an argmax over expected utility under a stated utility; the primitive forces the utility to be written down explicitly so a pass is a computed optimum, not a mood.",
+        "source_operator": "maximum_expected_utility",
+        "telemetry": "Outcome distributions per candidate action from the projection layer, plus the standing utility definition."
+      }
+    },
+    {
+      "primitive_id": "value_of_information",
+      "name": "Value of information: the expected utility gain from observing a variable before deciding; it is never negative and is zero when the observation cannot change the decision",
+      "verbatim_quote": "The value of information is never negative. The expected utility can increase only if additional observations can lead to different optimal decisions.",
+      "page": "Ch 6, Sec 6.6, eq. (6.9), p. 121 (text lines ~6354-6360)",
+      "latex": "\\mathrm{VOI}(O' \\mid o) = \\sum_{o'} P(o' \\mid o)\\, \\mathrm{EU}^*(o, o') - \\mathrm{EU}^*(o)",
+      "symbol_and_unit_ledger": {
+        "VOI(O' | o)": "value of observing variable O' given current observation o, in utility units",
+        "P(o' | o)": "probability of the new observation value, dimensionless",
+        "EU*(o, o')": "expected utility of the optimal action after also observing o', utility units",
+        "EU*(o)": "expected utility of the optimal action with current information only, utility units"
+      },
+      "assumptions": [
+        "The observation arrives before the action must be chosen.",
+        "The decision maker re-optimizes after observing; a fixed action makes VOI zero."
+      ],
+      "breakdown_regime": "The greedy one-variable-at-a-time VOI ranking the book describes is only a heuristic for sequencing observations; VOI also ignores observation cost unless costs are subtracted explicitly, and it is computed under the current model, so model error inflates the value of observations the model happens to be uncertain about.",
+      "domain": "decision-theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "VOI is the scheduler for the engine research queue: a signal family (a new data feed, an injury update, a tracking metric) is worth acquiring exactly when knowing it could change a projection or a pass decision, and its price is the expected decision change, not curiosity.",
+        "source_operator": "value_of_information",
+        "telemetry": "Decision flip rates when candidate signals are added in shadow mode, per signal family."
+      }
+    },
+    {
+      "primitive_id": "sparse_sampling_complexity",
+      "name": "Sparse sampling: forward search that branches on m sampled next states per action, with complexity exponential in depth but independent of state space size",
+      "verbatim_quote": "A method known as sparse sampling3 (algorithm 9.4) attempts to reduce the",
+      "page": "Ch 9, Sec 9.5, p. 187 (text lines ~9467-9476)",
+      "latex": "O\\big((m \\times |\\mathcal{A}|)^d\\big)",
+      "symbol_and_unit_ledger": {
+        "m": "number of sampled next states per action node, count",
+        "|A|": "number of actions, count",
+        "d": "search depth, count of decision steps",
+        "O(.)": "computational complexity of the sampled lookahead tree"
+      },
+      "assumptions": [
+        "A generative model exists that can sample next states and rewards without enumerating the transition distribution.",
+        "A value function estimate is available at the leaf depth."
+      ],
+      "breakdown_regime": "Still exponential in depth, and the sampled tree is an approximation: rare high impact transitions are missed with probability that grows as m shrinks, so tail outcomes are systematically underweighted.",
+      "domain": "online-planning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Game script simulation in the engine is sparse sampling over a generative play model: branch on sampled next states rather than the full state space, with the explicit warning that small m hides tail scripts (blowouts, injury exits) that dominate some projections.",
+        "source_operator": "sparse_sampling_complexity",
+        "telemetry": "Sampled play sequences from the generative game model; leaf values from the projection layer."
+      }
+    },
+    {
+      "primitive_id": "mcts_ucb1_simulation",
+      "name": "Monte Carlo tree search: repeated simulations from the current state with UCB1 action selection build action value estimates without exponential horizon cost",
+      "verbatim_quote": "Monte Carlo tree search guides search to promising areas of the search space by taking actions that balance exploration with exploitation.",
+      "page": "Ch 9, Secs 9.6 and 9.11 (method and summary), eq. (9.1), pp. 187-209 (text lines ~9482-9494 and summary bullets)",
+      "latex": "a = \\arg\\max_a \\left[ Q(s,a) + c \\sqrt{\\frac{\\ln N(s)}{N(s,a)}} \\right]",
+      "symbol_and_unit_ledger": {
+        "Q(s, a)": "estimated action value from simulations, in reward units",
+        "N(s)": "number of visits to state s, count",
+        "N(s, a)": "number of times action a was selected in state s, count",
+        "c": "exploration constant balancing value against visit counts, dimensionless"
+      },
+      "assumptions": [
+        "A simulator can roll out episodes from any reached state.",
+        "Rewards are bounded so the confidence term is meaningful."
+      ],
+      "breakdown_regime": "Estimates are only as good as the rollout policy and simulation count; with few simulations the tree is shallow and the UCB bonus dominates, and a biased simulator produces confidently wrong values.",
+      "domain": "online-planning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Weekly slate exploration is an MCTS-shaped problem: simulate many game scripts, spend simulation budget where value estimates are close and visit counts low, and let the UCB bonus decide which matchups deserve deeper analysis rather than spreading effort evenly.",
+        "source_operator": "mcts_ucb1_simulation",
+        "telemetry": "Simulation counts and value spreads per matchup from the pregame pipeline."
+      }
+    },
+    {
+      "primitive_id": "trpo_surrogate_objective",
+      "name": "Trust region policy optimization: maximize an importance-weighted surrogate objective subject to a bound on expected KL divergence from the current policy",
+      "verbatim_quote": "The quality of the approximation degrades as θ0 gets further from θ, but it is hypothesized that it is acceptable within the trust region.",
+      "page": "Ch 12, Sec 12.4, eqs. (12.18)-(12.19), p. 256 (text lines ~13084-13102)",
+      "latex": "f(\\theta, \\theta') = \\mathbb{E}_{s \\sim b_{\\gamma,\\theta}} \\mathbb{E}_{a \\sim \\pi_\\theta(\\cdot|s)} \\left[ \\frac{\\pi_{\\theta'}(a \\mid s)}{\\pi_\\theta(a \\mid s)} Q_\\theta(s, a) \\right], \\qquad g(\\theta, \\theta') = \\mathbb{E}_{s \\sim b_{\\gamma,\\theta}} \\big[ D_{KL}(\\pi_\\theta(\\cdot \\mid s) \\, \\| \\, \\pi_{\\theta'}(\\cdot \\mid s)) \\big] \\le \\epsilon",
+      "symbol_and_unit_ledger": {
+        "pi_theta(a | s)": "current policy probability of action a in state s, dimensionless",
+        "pi_theta'(a | s)": "candidate policy probability, dimensionless",
+        "Q_theta(s, a)": "action value under the current policy, reward units",
+        "b_{gamma,theta}": "discounted state visitation distribution under the current policy",
+        "D_KL": "Kullback-Leibler divergence between action distributions, in nats",
+        "epsilon": "trust region radius bound on expected KL, in nats"
+      },
+      "assumptions": [
+        "Trajectories sampled from the current policy are available for estimating both the objective and the constraint.",
+        "The candidate policy stays close enough that the surrogate approximates the true objective."
+      ],
+      "breakdown_regime": "Outside the trust region the surrogate is not a reliable stand-in for true performance, so step size control is the algorithm, not an accessory; the line search it requires is also sensitive to noisy KL estimates from few trajectories.",
+      "domain": "policy-gradient",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model weight updates in the engine should be trust region updates: a refit may move ratings only within a measured divergence budget of the previous model, verified on held out games, so one hot week cannot rewrite the whole rating surface.",
+        "source_operator": "trpo_surrogate_objective",
+        "telemetry": "Per-update divergence between successive rating distributions and held out scoring deltas."
+      }
+    },
+    {
+      "primitive_id": "ppo_clamped_surrogate",
+      "name": "Proximal policy optimization: a pessimistic lower bound built from the minimum of the surrogate objective and its ratio-clamped version replaces the trust region constraint",
+      "verbatim_quote": "The probability ratio πθ0 ( a | s)/πθ ( a | s) can be overly optimistic. A pessimistic lower bound on the objective can significantly improve performance:",
+      "page": "Ch 12, Sec 12.5, eq. (12.22), p. 257 (text lines ~13136-13148)",
+      "latex": "\\mathbb{E} \\left[ \\min \\left( \\frac{\\pi_{\\theta'}(a \\mid s)}{\\pi_\\theta(a \\mid s)} A_\\theta(s, a),\\; \\mathrm{clamp} \\left( \\frac{\\pi_{\\theta'}(a \\mid s)}{\\pi_\\theta(a \\mid s)}, 1 - \\epsilon, 1 + \\epsilon \\right) A_\\theta(s, a) \\right) \\right]",
+      "symbol_and_unit_ledger": {
+        "pi_theta'(a | s) / pi_theta(a | s)": "probability ratio between candidate and current policy, dimensionless",
+        "A_theta(s, a)": "advantage of action a in state s under the current policy, reward units",
+        "epsilon": "clamping half width, dimensionless, typically 0.2 per the text",
+        "clamp(x, a, b)": "forces x into the interval [a, b]"
+      },
+      "assumptions": [
+        "Advantage estimates are available for sampled state action pairs.",
+        "Multiple epochs of updates reuse the same batch, which the clamp is designed to keep safe."
+      ],
+      "breakdown_regime": "The clamp ignores ratio movement once the objective stops improving, which also removes gradient signal in exactly the regions where the advantage estimate may be wrong; it is a heuristic bound, not the true objective, and can stall learning on plateaus.",
+      "domain": "policy-gradient",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The pessimistic minimum is a general update rule for engine parameters: when a proposed adjustment and its capped version disagree, take the worse one. Applied to rating moves and signal weights, it prevents a single optimistic estimate from sizing an update.",
+        "source_operator": "ppo_clamped_surrogate",
+        "telemetry": "Proposed versus clamped parameter deltas and their realized out of sample effects."
+      }
+    },
+    {
+      "primitive_id": "gae_lambda_bias_variance",
+      "name": "Generalized advantage estimation: an exponentially weighted average of k-step advantage estimates with parameter lambda trading bias against variance",
+      "verbatim_quote": "The approach taken by generalized advantage estimation is to balance between these two extremes of using temporal difference residuals and full rollouts.",
+      "page": "Ch 13, Sec 13.2, eqs. (13.11)-(13.21), pp. 269-271 (text lines ~13736-13790)",
+      "latex": "\\hat{A}(s, a) = \\sum_{\\ell=1}^{\\infty} (\\gamma \\lambda)^{\\ell - 1} \\delta_\\ell, \\qquad \\delta_t = r_t + \\gamma U(s_{t+1}) - U(s_t)",
+      "symbol_and_unit_ledger": {
+        "A_hat(s, a)": "estimated advantage of action a in state s, reward units",
+        "delta_l": "temporal difference residual at step l, reward units",
+        "gamma": "discount factor, dimensionless, in [0, 1]",
+        "lambda": "exponential weighting parameter, dimensionless, in [0, 1]; lambda near 0 is low variance and biased, lambda near 1 is unbiased and high variance",
+        "U(s)": "value function estimate, reward units"
+      },
+      "assumptions": [
+        "A value function estimate U is available along sampled trajectories.",
+        "Trajectories are sampled from the current policy."
+      ],
+      "breakdown_regime": "There is no free setting of lambda: with a poor value function the low variance end inherits its bias, and with short or noisy trajectories the high end is dominated by variance. The dial must be tuned to the estimator quality, which the formula itself does not reveal.",
+      "domain": "actor-critic",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Player and team form estimation has the same dial: one game residuals are low variance but biased by matchup, full season rollups are less biased but noisy. GAE is the template for blending multi horizon residuals with an explicit lambda instead of an unexamined window choice.",
+        "source_operator": "gae_lambda_bias_variance",
+        "telemetry": "Per game residuals at multiple horizons from box scores and play by play."
+      }
+    },
+    {
+      "primitive_id": "bayes_adaptive_mdp",
+      "name": "Bayes-adaptive MDP: acting optimally under an unknown model is an MDP over the product of the physical state and the belief over model parameters",
+      "verbatim_quote": "We can formulate the problem of acting optimally in an MDP with an unknown model as a higher-dimensional MDP with a known model.",
+      "page": "Ch 16, Sec 16.5, eqs. (16.7)-(16.10), p. 329 (text lines ~16744-16776)",
+      "latex": "T(s', b' \\mid s, b, a) = \\delta_{\\tau(s, b, a, s')}(b')\\, P(s' \\mid s, b, a), \\qquad U^*(s, b) = \\max_a \\left[ R(s, a) + \\gamma \\sum_{s'} P(s' \\mid s, b, a)\\, U^*\\big(s', \\tau(s, b, a, s')\\big) \\right]",
+      "symbol_and_unit_ledger": {
+        "s, s'": "current and next physical states",
+        "b, b'": "current and next beliefs over model parameters theta",
+        "tau(s, b, a, s')": "deterministic Bayes rule update of the belief after observing the transition, a function",
+        "P(s' | s, b, a)": "predictive transition probability obtained by integrating the model against the belief, dimensionless",
+        "delta": "Kronecker delta, 1 when the updated belief equals tau and 0 otherwise",
+        "gamma": "discount factor, dimensionless"
+      },
+      "assumptions": [
+        "A prior belief over model parameters exists and is updated by Bayes rule.",
+        "The belief is a sufficient statistic for the interaction history."
+      ],
+      "breakdown_regime": "The belief space is continuous and high dimensional even when the physical state space is small, so exact solution is out of reach; the formulation is a correctness reference that practical methods (posterior sampling, myopic exploration bonuses) approximate.",
+      "domain": "model-uncertainty",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine situation early in a season or after a trade: the state is the matchup, the belief is the posterior over what these teams now are. Decisions that ignore the belief component act as if the model were known and systematically undervalue information gathering matchups.",
+        "source_operator": "bayes_adaptive_mdp",
+        "telemetry": "Posterior parameter distributions per team and player, updated game by game."
+      }
+    },
+    {
+      "primitive_id": "posterior_sampling_exploration",
+      "name": "Posterior sampling: sample one model from the current belief, act optimally for that sampled model, then update the belief and repeat",
+      "verbatim_quote": "We then update our belief, draw a new sample, and solve the corresponding MDP.",
+      "page": "Ch 16, Sec 16.6, p. 330 (text lines ~16803-16819)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Models can be sampled from the posterior (for discrete MDPs, Dirichlet posteriors over transitions).",
+        "A sampled MDP can be solved exactly or approximately at each step."
+      ],
+      "breakdown_regime": "Each step requires solving an MDP, which the text flags as expensive; it also commits fully to one sampled world per step, so in nonstationary settings a stale posterior produces confidently wrong commitments.",
+      "domain": "model-uncertainty",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Posterior sampling is the engine scenario generator: draw one plausible world (ratings, health states, tendencies) from the posterior, project the slate inside that world, repeat. The spread across worlds is the honest uncertainty, and no heuristic exploration knob is needed.",
+        "source_operator": "posterior_sampling_exploration",
+        "telemetry": "Posterior samples per team and player; projection distributions aggregated across samples."
+      }
+    },
+    {
+      "primitive_id": "q_learning_update",
+      "name": "Q-learning: off-policy temporal difference update of the action value function toward the reward plus the discounted maximum next action value",
+      "verbatim_quote": "Instead of using T and R, we can rewrite the equation above in terms of an expectation over samples of reward r and the next state s0 :",
+      "page": "Ch 17, Sec 17.2, eq. (17.10), p. 338 (text lines ~17120-17140)",
+      "latex": "Q(s, a) \\leftarrow Q(s, a) + \\alpha \\left[ r + \\gamma \\max_{a'} Q(s', a') - Q(s, a) \\right]",
+      "symbol_and_unit_ledger": {
+        "Q(s, a)": "estimated action value, reward units",
+        "alpha": "learning rate, dimensionless, in (0, 1]",
+        "r": "observed reward, reward units",
+        "gamma": "discount factor, dimensionless",
+        "s'": "observed next state",
+        "max over a'": "value of the best next action, which is what makes the update off-policy"
+      },
+      "assumptions": [
+        "An exploration policy (for example epsilon greedy or softmax) visits all state action pairs often enough.",
+        "The learning rate schedule decays appropriately; constant rates leave the estimate fluctuating."
+      ],
+      "breakdown_regime": "The maximization inside the target introduces overestimation bias (the text points to double Q-learning as the correction), and with function approximation plus bootstrapping the update can diverge; the text also shows convergence is not guaranteed if the learning rate decays too quickly.",
+      "domain": "model-free-rl",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Incremental rating updates after each game are Q updates in spirit: nudge the estimate toward observed result plus discounted future value, with the learning rate as the explicit recency dial and the maximization bias warning applying to any best case next state assumption.",
+        "source_operator": "q_learning_update",
+        "telemetry": "Sequential game results and state descriptors feeding per entity value estimates."
+      }
+    },
+    {
+      "primitive_id": "sarsa_on_policy_update",
+      "name": "Sarsa: on-policy temporal difference update that uses the action actually taken next, estimating the value of the exploration policy being followed",
+      "verbatim_quote": "Sarsa is referred to as a type of on-policy reinforcement learning method because it attempts to directly estimate the value of the exploration policy as it follows it.",
+      "page": "Ch 17, Sec 17.3, eq. (17.11), p. 340 (text lines ~17330-17340)",
+      "latex": "Q(s, a) \\leftarrow Q(s, a) + \\alpha \\left[ r + \\gamma Q(s', a') - Q(s, a) \\right]",
+      "symbol_and_unit_ledger": {
+        "Q(s, a)": "estimated action value of the policy being followed, reward units",
+        "a'": "the action actually selected in the next state by the exploration policy",
+        "alpha": "learning rate, dimensionless",
+        "gamma": "discount factor, dimensionless",
+        "r": "observed reward, reward units"
+      },
+      "assumptions": [
+        "The behavior policy is the policy whose value is wanted, or it converges to the greedy policy.",
+        "Experiences arrive as (s, a, r, s', a') tuples from interaction."
+      ],
+      "breakdown_regime": "It evaluates the exploration policy, not the optimal one, so persistent exploration noise is priced into the values; the text's hex world comparison shows Sarsa converging more slowly than Q-learning to the true action value function.",
+      "domain": "model-free-rl",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The on-policy versus off-policy distinction maps to evaluating what a team actually does versus what it optimally should do: a Sarsa style estimate prices a coach's real tendencies including his mistakes, a Q style estimate prices the best response. Projections need the first; matchup edges come from the gap between the two.",
+        "source_operator": "sarsa_on_policy_update",
+        "telemetry": "Observed play call sequences and outcomes, tagged by the policy that actually generated them."
+      }
+    },
+    {
+      "primitive_id": "eligibility_traces_credit_assignment",
+      "name": "Eligibility traces: an exponentially decaying visit count per state action pair spreads each temporal difference error backward to the actions that led to the reward",
+      "verbatim_quote": "Q-learning and Sarsa can be modified to propagate reward backward to the states and actions leading to the source of the reward using eligibility traces.",
+      "page": "Ch 17, Sec 17.4, eqs. (17.12)-(17.14), p. 341 (text lines ~17400-17440)",
+      "latex": "\\delta = r + \\gamma Q(s', a') - Q(s, a), \\qquad Q(s, a) \\leftarrow Q(s, a) + \\alpha \\delta N(s, a), \\qquad N(s, a) \\leftarrow \\gamma \\lambda N(s, a)",
+      "symbol_and_unit_ledger": {
+        "delta": "temporal difference error, reward units",
+        "N(s, a)": "eligibility trace, an exponentially decaying visit count, dimensionless",
+        "lambda": "trace decay parameter, dimensionless, in (0, 1)",
+        "alpha": "learning rate, dimensionless",
+        "gamma": "discount factor, dimensionless"
+      },
+      "assumptions": [
+        "Credit should decay exponentially with distance from the reward.",
+        "Traces are incremented on visit and decayed every step for all pairs."
+      ],
+      "breakdown_regime": "With sparse rewards it is a large win, but the decay is a blunt instrument: it credits every recent action including irrelevant ones, and maintaining traces over all state action pairs is memory heavy in large spaces.",
+      "domain": "model-free-rl",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Postgame attribution in the engine is a credit assignment problem: a late collapse should update the early decisions that set it up, with decay. Eligibility traces give the exact bookkeeping form, including the warning that indiscriminate credit smears blame onto irrelevant plays.",
+        "source_operator": "eligibility_traces_credit_assignment",
+        "telemetry": "Play by play sequences with outcomes, enabling per decision credit decay curves."
+      }
+    },
+    {
+      "primitive_id": "experience_replay_anti_forgetting",
+      "name": "Experience replay: storing recent experience tuples and training on uniformly sampled batches counteracts catastrophic forgetting under global function approximation",
+      "verbatim_quote": "Catastrophic forgetting can be mitigated with experience replay,14 where a fixed",
+      "page": "Ch 17, Sec 17.7, eq. (17.22), pp. 345-348 (text lines ~17573-17600)",
+      "latex": "\\theta \\leftarrow \\theta + \\alpha \\frac{1}{m_{\\mathrm{grad}}} \\sum_i \\left( r^{(i)} + \\gamma \\max_{a'} Q_\\theta(s'^{(i)}, a') - Q_\\theta(s^{(i)}, a^{(i)}) \\right) \\nabla_\\theta Q_\\theta(s^{(i)}, a^{(i)})",
+      "symbol_and_unit_ledger": {
+        "theta": "function approximation parameters",
+        "m_grad": "minibatch size drawn from replay memory, count",
+        "(s, a, r, s') superscript (i)": "the i-th replayed experience tuple",
+        "Q_theta": "parameterized action value function, reward units",
+        "alpha": "learning rate, dimensionless"
+      },
+      "assumptions": [
+        "A fixed size buffer of recent tuples is representative enough of earlier regimes.",
+        "Uniform sampling from the buffer is used (the text notes prioritized variants exist)."
+      ],
+      "breakdown_regime": "A finite buffer still forgets old regimes once they age out, and uniform replay wastes updates on already mastered regions; replaying stale off-distribution tuples can also pull the approximator toward obsolete dynamics.",
+      "domain": "model-free-rl",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine refits must replay history, not just fit the recent window: a model trained only on the last month forgets rare but recurring regimes (weather games, backup quarterbacks, short rest spots) exactly the way a replay free learner forgets low reward regions.",
+        "source_operator": "experience_replay_anti_forgetting",
+        "telemetry": "The full historical game archive as the replay buffer, with regime tags per game."
+      }
+    },
+    {
+      "primitive_id": "behavioral_cloning_mle",
+      "name": "Behavioral cloning: imitation as supervised learning, fitting a parameterized stochastic policy by maximum likelihood of expert actions given states",
+      "verbatim_quote": "As done in earlier chapters, we can transform the maximization over the product over πθ ( a | s) to a sum over log πθ ( a | s).",
+      "page": "Ch 18, Sec 18.1, eq. (18.1), p. 355 (text lines ~18030-18045)",
+      "latex": "\\max_{\\theta} \\prod_{(s, a) \\in D} \\pi_\\theta(a \\mid s)",
+      "symbol_and_unit_ledger": {
+        "pi_theta(a | s)": "parameterized policy probability of the expert action a in state s, dimensionless",
+        "theta": "policy parameters",
+        "D": "data set of expert state action pairs",
+        "product over D": "likelihood of the demonstration data under the policy"
+      },
+      "assumptions": [
+        "Expert state action pairs are available and the expert is worth imitating.",
+        "States in the data cover the states the learned policy will visit."
+      ],
+      "breakdown_regime": "The better the expert, the better the clone, but coverage is the binding constraint: states with no demonstrations get an arbitrary (in the discrete case, uniform) action distribution, which is what makes the cascading error failure possible.",
+      "domain": "imitation-learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Baseline tendency models in the engine are behavioral clones: fit play caller and team tendencies by maximum likelihood on observed decisions. The primitive supplies both the estimator and its standing warning that the clone is only defined where the observed data actually went.",
+        "source_operator": "behavioral_cloning_mle",
+        "telemetry": "Historical decision logs (play calls, rotations, fourth down choices) as demonstration data."
+      }
+    },
+    {
+      "primitive_id": "behavioral_cloning_cascading_errors",
+      "name": "Cascading errors: small imitation inaccuracies compound over a rollout, drifting the agent into states the expert never visited where the clone has no information",
+      "verbatim_quote": "The state space is not fully covered by expert demonstrations, which is typical of imitation learning problems.",
+      "page": "Ch 18, Sec 18.1, Example 18.1 and Sec 18.1 discussion, pp. 355-357 (text lines ~18100-18210)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The learned policy is rolled out in the real environment, whose state distribution differs from the demonstration distribution.",
+        "Errors are not self correcting; a mistake changes the next state distribution."
+      ],
+      "breakdown_regime": "Severity grows with horizon: the text stresses long horizon problems suffer most. It does not apply to one step prediction tasks where the input distribution is fixed by the data rather than by the model's own actions.",
+      "domain": "imitation-learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any engine component whose outputs feed its own future inputs (in game win probability driving decisions that change the game) inherits cascade risk: evaluate such components on their own induced distribution, not on held out data drawn from someone else's policy.",
+        "source_operator": "behavioral_cloning_cascading_errors",
+        "telemetry": "Rollout traces from simulated games compared against the state distribution of real games."
+      }
+    },
+    {
+      "primitive_id": "dagger_dataset_aggregation",
+      "name": "Dataset aggregation (DAgger): alternate between rolling out the current learned policy and asking the expert to label the states it actually visits, aggregating all data and retraining",
+      "verbatim_quote": "These interactive demonstrations iteratively build a data set covering the regions of the state space that the agent is likely to encounter, based on previous learning iterations.",
+      "page": "Ch 18, Sec 18.2, p. 358 (text lines ~18193-18215)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An expert can be queried interactively on states the learner generates.",
+        "Retraining from scratch on the aggregated set is affordable each round."
+      ],
+      "breakdown_regime": "The text is explicit that sequential interactive demonstration is not guaranteed to converge on its own; the following section's stochastic mixing exists to restore a convergence guarantee. It also presumes expert availability, which is the usual practical blocker.",
+      "domain": "imitation-learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "DAgger is the fix pattern for engine models that fail off distribution: generate the states the current model produces in simulation, get those specific states labeled by review or by realized outcomes, aggregate, retrain. Labeling budget goes to the model's own failure region, not to more of what it already handles.",
+        "source_operator": "dagger_dataset_aggregation",
+        "telemetry": "Simulated game states where projections diverged most from realized outcomes, queued for labeling."
+      }
+    },
+    {
+      "primitive_id": "maxent_irl_trajectory_distribution",
+      "name": "Maximum entropy inverse reinforcement learning: plain IRL is underspecified because many policies match the expert feature expectations; choosing the maximum entropy trajectory distribution, with probability proportional to exponentiated reward, resolves the ambiguity",
+      "verbatim_quote": "there are often multiple policies that can produce the same feature expectations as the expert demonstrations.",
+      "page": "Ch 18, Sec 18.5, eqs. (18.8)-(18.10), p. 368 (text lines ~18737-18760)",
+      "latex": "P_\\phi(\\tau) = \\frac{1}{Z(\\phi)} \\exp\\big( R_\\phi(\\tau) \\big), \\qquad Z(\\phi) = \\sum_\\tau \\exp\\big( R_\\phi(\\tau) \\big), \\qquad R_\\phi(\\tau) = \\sum_{k=1}^{d} \\gamma^{k-1} R_\\phi(s^{(k)}, a^{(k)})",
+      "symbol_and_unit_ledger": {
+        "P_phi(tau)": "probability of trajectory tau under reward parameters phi, dimensionless",
+        "R_phi(tau)": "discounted total reward of the trajectory, reward units",
+        "Z(phi)": "partition function normalizing over all trajectories, dimensionless",
+        "gamma": "discount factor, dimensionless",
+        "d": "trajectory length, count of steps"
+      },
+      "assumptions": [
+        "Expert feature expectations are the constraint to match; demonstrations are given.",
+        "The reward parameterization is differentiable so maximum likelihood can be optimized by gradient ascent."
+      ],
+      "breakdown_regime": "Plain inverse reinforcement learning is underspecified (many rewards explain the same behavior); maximum entropy resolves the ambiguity by fiat, preferring the least committed explanation, which can understate how deliberate the expert actually was. The partition function sums over all trajectories and is intractable without sampling or dynamic programming structure.",
+      "domain": "imitation-learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Inferring what a team is optimizing (win probability, margin, player health, future weeks) from its decisions is IRL; the maximum entropy form is the discipline of explaining observed behavior with the least additional structure, and it prices each observed game plan by exponentiated inferred reward.",
+        "source_operator": "maxent_irl_trajectory_distribution",
+        "telemetry": "Observed decision sequences per team with candidate feature sets for the inferred reward."
+      }
+    },
+    {
+      "primitive_id": "gail_saddle_point",
+      "name": "Generative adversarial imitation learning: a discriminator trained to separate expert from policy state action pairs supplies the learning signal, and policy and discriminator are optimized to a saddle point",
+      "verbatim_quote": "The discriminator provides a learning signal to the policy similar to the way that a reward signal would if it were known.",
+      "page": "Ch 18, Sec 18.6, eq. (18.19), pp. 369-371 (text lines ~18829-18940)",
+      "latex": "\\max_{\\phi} \\min_{\\theta} \\; \\mathbb{E}_{(s, a) \\sim \\pi_\\theta} \\big[ \\log C_\\phi(s, a) \\big] + \\mathbb{E}_{(s, a) \\sim D} \\big[ \\log \\big( 1 - C_\\phi(s, a) \\big) \\big]",
+      "symbol_and_unit_ledger": {
+        "C_phi(s, a)": "discriminator output, its probability that the pair came from the learned policy, dimensionless",
+        "pi_theta": "the learned policy being trained",
+        "D": "expert demonstration data set",
+        "theta, phi": "policy and discriminator parameters",
+        "expectations": "over policy generated pairs and expert pairs respectively"
+      },
+      "assumptions": [
+        "Both policy and discriminator are differentiable parameterized models, typically neural networks.",
+        "Fresh policy trajectories can be generated on demand for each discriminator update."
+      ],
+      "breakdown_regime": "No reward function is recovered, so the result cannot be transferred to a changed environment the way an inferred reward can; adversarial training also inherits saddle point instability, and a discriminator that wins too easily starves the policy of gradient.",
+      "domain": "imitation-learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The discriminator pattern is a realism auditor: train a classifier to distinguish simulated game scripts from real ones, and its accuracy is a measurable defect score for the simulator. Where it separates easily is exactly where the engine world model is wrong.",
+        "source_operator": "gail_saddle_point",
+        "telemetry": "Real versus simulated play sequences and game scripts with per feature discriminator attributions."
+      }
+    },
+    {
+      "primitive_id": "kalman_filter_predict_update",
+      "name": "Kalman filter: exact belief update for linear Gaussian dynamics, a predict step propagating mean and covariance through the dynamics and an update step correcting with the observation through the Kalman gain",
+      "verbatim_quote": "The integration above can be challenging unless we make some assumptions about the form of T, O, and b.",
+      "page": "Ch 19, Sec 19.3, eqs. (19.12)-(19.16), pp. 383-385 (text lines ~19410-19480)",
+      "latex": "\\mu_p \\leftarrow T_s \\mu_b + T_a a, \\qquad \\Sigma_p \\leftarrow T_s \\Sigma_b T_s^{\\top} + \\Sigma_s, \\qquad K \\leftarrow \\Sigma_p O_s^{\\top} \\big( O_s \\Sigma_p O_s^{\\top} + \\Sigma_o \\big)^{-1}, \\qquad \\mu_b \\leftarrow \\mu_p + K \\big( o - O_s \\mu_p \\big), \\qquad \\Sigma_b \\leftarrow (I - K O_s) \\Sigma_p",
+      "symbol_and_unit_ledger": {
+        "mu_b, Sigma_b": "belief mean vector and covariance matrix over the state",
+        "mu_p, Sigma_p": "predicted mean and covariance after the transition step",
+        "T_s, T_a": "state and action matrices of the linear transition model",
+        "O_s": "observation matrix of the linear observation model",
+        "Sigma_s, Sigma_o": "process and observation noise covariances",
+        "K": "Kalman gain, weighting the observation surprise by relative uncertainty",
+        "o": "the observation vector"
+      },
+      "assumptions": [
+        "Transition and observation models are linear with Gaussian noise.",
+        "The prior belief is Gaussian, which the update preserves."
+      ],
+      "breakdown_regime": "Exactness dies with the assumptions: nonlinear dynamics or non Gaussian, multimodal beliefs (a player who is either fully healthy or out) are outside the filter, which is why the book moves to sigma point and particle methods next.",
+      "domain": "state-estimation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Latent form tracking is a Kalman problem: a player's true level is a hidden state, each game is a noisy linear observation, and the gain formula is the principled answer to how much one game should move the estimate given prior uncertainty versus game noise.",
+        "source_operator": "kalman_filter_predict_update",
+        "telemetry": "Per game performance observations with estimated observation noise per stat."
+      }
+    },
+    {
+      "primitive_id": "particle_filter_resampling",
+      "name": "Particle filter: represent the belief by a set of sampled states, propagate each through the transition model, and resample with weights given by the observation likelihood",
+      "verbatim_quote": "In problems with discrete observations, we can also perform particle belief updates with rejection. We repeat the following process m times to generate the set of next state samples.",
+      "page": "Ch 19, Sec 19.6, p. 390 (text lines ~19799-19830)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "States can be sampled from the transition distribution and the observation likelihood can be evaluated pointwise.",
+        "The particle count m is large enough to cover the plausible state region."
+      ],
+      "breakdown_regime": "Particle deprivation: low coverage plus stochastic resampling can leave no particles near the true state, at which point the filter is confidently wrong; the text's mitigations are rejection updates and particle injection, both of which cost accuracy elsewhere.",
+      "domain": "state-estimation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Injury and availability states that are discrete, multimodal, and nonlinear are particle filter territory: maintain weighted scenario particles per player, propagate through the week, weight by each new report, resample. The deprivation warning maps to scenario sets collapsing onto one outcome too early.",
+        "source_operator": "particle_filter_resampling",
+        "telemetry": "Timestamped injury reports, practice participation, and beat updates as observation likelihoods."
+      }
+    },
+    {
+      "primitive_id": "particle_deprivation_adaptive_injection",
+      "name": "Particle deprivation and adaptive injection: when all particles disagree with observations the belief collapses; injecting particles from a broad distribution, with the count driven by fast versus slow moving averages of mean particle weight, restores coverage",
+      "verbatim_quote": "Low particle coverage and the stochastic nature of the resampling procedure can cause there to be no particles near the true state.",
+      "page": "Ch 19, Secs 19.6-19.7, eq. (19.29), pp. 390-395 (text lines ~19830-20040)",
+      "latex": "m_{\\mathrm{inject}} = m \\max \\left( 0, \\; 1 - \\nu \\frac{w_{\\mathrm{fast}}}{w_{\\mathrm{slow}}} \\right)",
+      "symbol_and_unit_ledger": {
+        "m_inject": "number of particles injected from the broad distribution, count",
+        "m": "total particle count",
+        "w_fast, w_slow": "fast and slow exponential moving averages of the mean particle weight, dimensionless",
+        "nu": "injection tuning parameter, dimensionless, at least 1; recommended values in the text use nu = 2",
+        "alpha_fast, alpha_slow": "moving average rates with alpha_slow below alpha_fast"
+      },
+      "assumptions": [
+        "An injection distribution broader than the current belief exists (for example uniform over poses or states).",
+        "Mean particle weight is a usable health signal for the filter."
+      ],
+      "breakdown_regime": "Injection trades accuracy for survival: injected particles dilute the posterior, and the text warns that keying injection off mean weight alone is sensitive to naturally low observation probabilities early on or under high sensor noise, which is why the fast to slow ratio is used instead.",
+      "domain": "state-estimation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Any engine belief tracker needs a deprivation alarm: when every scenario in the set contradicts the latest observations, inject broad scenarios instead of renormalizing a dead set. The fast versus slow weight ratio is a concrete, tunable collapse detector.",
+        "source_operator": "particle_deprivation_adaptive_injection",
+        "telemetry": "Mean scenario likelihood per update cycle, tracked at two time constants."
+      }
+    },
+    {
+      "primitive_id": "pomdp_alpha_vectors_piecewise_linear_convex",
+      "name": "POMDP alpha vectors: each conditional plan induces a vector of per state utilities, the value at a belief is its dot product with the belief, and the optimal value function is the upper envelope, piecewise linear and convex",
+      "verbatim_quote": "Each alpha vector defines a hyperplane in belief space. The optimal value function given in equation (20.11) is the maximum over these hyperplanes:",
+      "page": "Ch 20, Sec 20.3, eqs. (20.11)-(20.12), p. 411 (text lines ~20860-20890)",
+      "latex": "U^*(b) = \\max_{\\pi} \\alpha_\\pi^{\\top} b, \\qquad U^\\pi(b) = \\sum_s b(s)\\, U^\\pi(s) = \\alpha_\\pi^{\\top} b",
+      "symbol_and_unit_ledger": {
+        "alpha_pi": "alpha vector of plan pi, one utility per state, reward units",
+        "b": "belief state, a probability vector over states, dimensionless, sums to 1",
+        "U*(b)": "optimal value at belief b, reward units",
+        "U^pi(s)": "expected utility of executing plan pi starting from state s, reward units"
+      },
+      "assumptions": [
+        "Finite state, action, and observation spaces with a known model.",
+        "Policies are represented as finite horizon conditional plans."
+      ],
+      "breakdown_regime": "The representation is exact but the plan set explodes combinatorially with horizon, which the next primitive quantifies; practical solvers keep only a pruned subset of vectors and accept approximate value functions.",
+      "domain": "pomdp-planning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Value as a maximum over scenario hyperplanes is a reusable shape: price a decision at a belief by scoring a library of contingency plans against the current belief and taking the best, with each plan carrying the action to execute now. It keeps uncertainty explicit instead of collapsing to a point estimate first.",
+        "source_operator": "pomdp_alpha_vectors_piecewise_linear_convex",
+        "telemetry": "Belief vectors over hidden states (health, intentions) with a plan library scored per belief."
+      }
+    },
+    {
+      "primitive_id": "pomdp_plan_enumeration_intractable",
+      "name": "Conditional plan enumeration grows exponentially in the horizon, so solving a POMDP by enumerating all plans is intractable even at modest horizons",
+      "verbatim_quote": "Solving an h-step POMDP by directly enumerating all h-step conditional plans is generally computationally intractable, as shown in figure 20.2.",
+      "page": "Ch 20, Sec 20.3, p. 411 (text lines ~20830-20855)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Plans are trees branching on every observation at every step.",
+        "Counts use the text's figure: two actions and two observations already produce explosive growth in h."
+      ],
+      "breakdown_regime": "This is a negative result, not a method: it vetoes brute force belief space planning and forces the approximate, point based, and online methods of the following chapters.",
+      "domain": "pomdp-planning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The same counting argument vetoes exhaustive game tree reasoning over a full week of contingencies in the engine: any planning layer must prune, sample, or work at sampled belief points, and the growth formula is the budget check that proves it before compute is spent.",
+        "source_operator": "pomdp_plan_enumeration_intractable",
+        "telemetry": "Branching factor estimates (actions times observations) per planning problem."
+      }
+    },
+    {
+      "primitive_id": "pbvi_point_based_backup",
+      "name": "Point-based value iteration: maintain one alpha vector per sampled belief point and improve each by a backup that picks, per action and observation, the existing vector that is best at the resulting belief",
+      "verbatim_quote": "The backup operation (algorithm 21.6) takes a belief b and a set of alpha vectors Γ and constructs a new alpha vector.",
+      "page": "Ch 21, Sec 21.4, eqs. (21.7)-(21.10), pp. 431-432 (text lines ~21880-21940)",
+      "latex": "\\alpha^a(s) = R(s, a) + \\gamma \\sum_{s', o} O(o \\mid a, s')\\, T(s' \\mid s, a)\\, \\alpha^{a, o}(s'), \\qquad \\alpha^{a, o} = \\arg\\max_{\\alpha \\in \\Gamma} \\alpha^{\\top} \\mathrm{Update}(b, a, o)",
+      "symbol_and_unit_ledger": {
+        "Gamma": "the maintained set of alpha vectors",
+        "B": "the set of sampled belief points, one per vector",
+        "alpha^{a,o}": "the existing vector maximizing value at the belief reached by action a and observation o",
+        "Update(b, a, o)": "the belief update function",
+        "R(s, a)": "reward, reward units",
+        "gamma": "discount factor, dimensionless"
+      },
+      "assumptions": [
+        "Belief points are sampled from the reachable belief region (selection methods are treated in the book's Sec 21.7).",
+        "The initial vector set is a valid lower bound, for example the best action worst state bound."
+      ],
+      "breakdown_regime": "Accuracy is only guaranteed near the sampled points; beliefs far from every point in B get whatever the nearest vectors imply, so point selection is the real algorithm design problem, and the maintained bound property depends on starting from a true lower bound.",
+      "domain": "pomdp-planning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Evaluate engine policies at sampled belief points drawn from realistic situations (specific injury uncertainty states, specific market independent game states) rather than trying to solve the whole belief space; each point gets its own best contingency plan, and coverage of the point set is the quality metric.",
+        "source_operator": "pbvi_point_based_backup",
+        "telemetry": "Sampled situation beliefs from the season so far, with realized outcomes for validation."
+      }
+    },
+    {
+      "primitive_id": "nash_equilibrium_best_response",
+      "name": "Nash equilibrium: a joint policy in which every agent is playing a best response to the others, so no agent can gain by unilaterally switching",
+      "verbatim_quote": "Any deviation by any agent will result in a −4 reward for that agent; hence, there is no incentive to deviate.",
+      "page": "Ch 24, Sec 24.4, eq. (24.5), p. 498 (text lines ~25407-25440)",
+      "latex": "\\min_{\\pi, U} \\sum_i \\Big( U^i - U^i(\\pi) \\Big) \\quad \\text{subject to} \\quad U^i \\ge U^i(a_i, \\pi_{-i}) \\; \\forall i, a_i, \\qquad \\sum_{a_i} \\pi_i(a_i) = 1, \\qquad \\pi_i(a_i) \\ge 0",
+      "symbol_and_unit_ledger": {
+        "pi": "joint policy, one distribution per agent",
+        "pi_{-i}": "the policies of all agents except i",
+        "U^i(pi)": "agent i expected utility under the joint policy, utility units",
+        "U^i(a_i, pi_{-i})": "agent i utility from deviating to action a_i against the fixed others, utility units",
+        "objective": "zero exactly at a Nash equilibrium"
+      },
+      "assumptions": [
+        "Finite action spaces guarantee existence (possibly in stochastic policies).",
+        "Agents choose independently; correlated play is the separate correlated equilibrium concept."
+      ],
+      "breakdown_regime": "Equilibria are not unique and not necessarily good: the prisoner's dilemma equilibrium in the text is worse for both agents than mutual cooperation, and equilibrium selection is left unresolved by the definition.",
+      "domain": "game-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Two sided matchup modeling is equilibrium reasoning: a play caller and a defense adjust to each other, so projecting either side's tendencies in isolation double counts the adjustment. The equilibrium check asks whether the projected tendencies are mutual best responses or an exploitable snapshot.",
+        "source_operator": "nash_equilibrium_best_response",
+        "telemetry": "Tendency estimates for both sides of a matchup plus realized adjustment rates in rematches."
+      }
+    },
+    {
+      "primitive_id": "nash_computation_ppad_complete",
+      "name": "Computing a Nash equilibrium is PPAD-complete, with no known polynomial time algorithm, so equilibrium solving must be budgeted as a hard problem",
+      "verbatim_quote": "Computing a Nash equilibrium is PPAD-complete, a class that",
+      "page": "Ch 24, Sec 24.4, p. 498 (text lines ~25413-25425)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The statement is for general finite games; special structure (two player zero sum, potential games) can be easier."
+      ],
+      "breakdown_regime": "A complexity classification, not an algorithm: it rules out exact equilibrium computation at scale and justifies the iterative approximations (iterated best response, fictitious play, gradient ascent) the book develops around it.",
+      "domain": "game-theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The complexity result is a standing veto on exact equilibrium layers in the engine: use iterative best response style approximations with iteration budgets, and treat any claimed exact equilibrium over a large strategy space as a red flag to audit.",
+        "source_operator": "nash_computation_ppad_complete",
+        "telemetry": "Strategy space sizes for any proposed equilibrium computation in the pipeline."
+      }
+    },
+    {
+      "primitive_id": "fictitious_play_opponent_model",
+      "name": "Fictitious play in Markov games: model each opponent by the empirical frequencies of their past actions per state, and play a best response to that model, updating utilities only periodically",
+      "verbatim_quote": "In fictitious play, π−i is determined by equation (25.9). Instead of solving an MDP at each update, it is common to apply the update periodically, a strategy adopted from asynchronous value iteration.",
+      "page": "Ch 25, Sec 25.4, eqs. (25.9)-(25.11), pp. 523-524 (text lines ~26870-26900)",
+      "latex": "N(j, a_j, s) \\leftarrow N(j, a_j, s) + 1, \\qquad a_i = \\arg\\max_a Q^i(s, a, \\pi_{-i})",
+      "symbol_and_unit_ledger": {
+        "N(j, a_j, s)": "count of times agent j chose action a_j in state s, count; normalized counts form the opponent model",
+        "pi_{-i}": "modeled policies of the other agents from those frequencies",
+        "Q^i(s, a, pi_{-i})": "agent i action value against the modeled opponents, utility units"
+      },
+      "assumptions": [
+        "Opponents are approximately stationary, so historical frequencies predict future play.",
+        "Joint actions are observed so the counts can be updated."
+      ],
+      "breakdown_regime": "Against adaptive opponents the frequency model lags reality and can be exploited or cycle without converging; convergence is guaranteed only in restricted game classes, which is why the text presents it as a practical scheme rather than a solver.",
+      "domain": "multiagent-learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Opponent tendency modeling in the engine is fictitious play: empirical frequencies of an opponent's choices by situation, best response computed against them, refreshed periodically rather than continuously. The stationarity assumption is the explicit risk to monitor when a coach changes scheme midseason.",
+        "source_operator": "fictitious_play_opponent_model",
+        "telemetry": "Per situation action counts for opposing play callers and coordinators, with change point checks."
+      }
+    },
+    {
+      "primitive_id": "pomg_generalization",
+      "name": "Partially observable Markov game: the general multiagent model with a shared hidden state, local observations, and joint actions; it generalizes both Markov games and POMDPs, and POMDP style belief updates are unavailable because joint actions and observations are not observed",
+      "verbatim_quote": "A POMG (algorithm 26.1) can be seen as either an extension of MGs to partial observability or as an extension of POMDPs to multiple agents.",
+      "page": "Ch 26, Sec 26.1, pp. 533-534 (text lines ~27323-27360)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A shared underlying state exists even though no agent observes it fully.",
+        "Each agent acts on local observations only."
+      ],
+      "breakdown_regime": "Belief based planning breaks: inferring others' actions requires reasoning about their reasoning in infinite regress (the text points to interactive POMDPs), so the book restricts attention to belief free representations, conditional plans and controllers.",
+      "domain": "multiagent-systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A game between two staffs under partial information is a POMG, not a POMDP: the engine cannot maintain one true belief because the opponent's information and intent are unobserved. Models that assume a single belief holder should be restricted to the single agent parts of the pipeline.",
+        "source_operator": "pomg_generalization",
+        "telemetry": "Local observation streams per agent (public information only), never a fused omniscient state."
+      }
+    },
+    {
+      "primitive_id": "decpomdp_shared_objective",
+      "name": "Dec-POMDP: a POMG in which all agents share one objective and one reward, making the problem collaborative and more amenable to scalable approximate algorithms than equilibrium seeking",
+      "verbatim_quote": "A Dec-POMDP (algorithm 27.1) is a POMG where all agents share the same objective.",
+      "page": "Ch 27, Sec 27.1, p. 545 (text lines ~27971-27985)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "All agents share the reward function R(s, a) and the goal of maximizing shared expected return.",
+        "Agents still act on local observation histories, not on the shared state."
+      ],
+      "breakdown_regime": "Shared reward does not restore belief state methods: the text notes the general inability of agents to maintain a belief state persists, and optimal Dec-POMDP solution is still severely intractable in the worst case, so subclasses and approximations carry the practical load.",
+      "domain": "multiagent-systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Units within one team (offense, defense, special teams; or position groups within a projection) form a Dec-POMDP: one shared objective, local information. Coordination gains come from joint policy structure, not from giving every submodel the full state, and the model tells the engine to look for coordination failures as a distinct error class.",
+        "source_operator": "decpomdp_shared_objective",
+        "telemetry": "Per unit decisions and outcomes with the shared game result as the common reward."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "48d985286b0f6f41-t1",
+      "think": "This book is a complete decision making stack organized as a single ascent in difficulty, and its architecture is the first thing a reasoning engine should copy. Part I builds the probabilistic substrate: joint distributions, factorization through the Bayesian network chain rule, d-separation as the test for when information is irrelevant, and then exact and approximate inference, because every later chapter consumes posterior beliefs and inherits their failure modes. Part II turns belief into action for one step problems: parameter learning from data including learning with missing values, structure learning scored by fit penalized for complexity, utility theory with the maximum expected utility principle as the definition of rational choice, and value of information as the priced answer to the question of what to measure next. Part III is the sequential fully observed core: the MDP formalism, Bellman equations, exact dynamic programming, then the online planning family (forward search, branch and bound, sparse sampling, Monte Carlo tree search) that trades exactness for a compute budget, then function approximation, policy gradient methods with the trust region and clamped surrogate refinements, actor critic methods with generalized advantage estimation as an explicit bias variance dial, deep reinforcement learning, and finally the model uncertainty chapters where the Bayes adaptive MDP states the correct problem and posterior sampling states the practical one. Part IV adds partial observability honestly: beliefs as sufficient statistics, the Kalman filter as the exact Gaussian special case, particle filters with their deprivation failure and injection repair, value functions as maxima over alpha vectors, the counting argument that kills enumeration, and point based methods that accept coverage limits. Part V adds other agents: equilibrium concepts with their computational complexity stated plainly, fictitious play as frequency based opponent modeling, and the POMG and Dec-POMDP generalizations with the admission that belief methods mostly stop working there. Two design commitments run through all of it. First, every method ships with its breakdown regime attached: Q-learning carries its maximization bias, behavioral cloning carries cascading errors, particle filters carry deprivation, Nash computation carries PPAD completeness. The book never presents a technique without the condition under which it stops working, which makes it usable as an engineering reference rather than a catalog of optimism. Second, almost every algorithm is given as runnable Julia code against explicit data structures, so the definitions are operational: a POMDP is a struct with named fields, a belief update is a function with a stated fallback when the observation has zero likelihood, and the gap between the mathematics and an implementation is deliberately small. For a reasoning engine, the deepest transferable idea is the layering discipline: inference quality bounds decision quality, decision quality under model uncertainty requires the belief over models to be a first class state component, and multiagent settings require checking whether a single belief holder even exists before using belief machinery. The second deepest is that exploration, information gathering, and update step sizes are all the same species of decision, each with a priced trade: value of information prices observations, UCB prices simulation allocation, the trust region prices policy movement, lambda in generalized advantage estimation prices horizon. An engine that adopts this book wholesale would stop treating those as knobs and start treating them as computed quantities with assumptions attached. The chapters weighted least in the primitive set still carry load bearing structure. Structure learning scores candidate graphs by a fit term against a complexity term, the same Occam accounting the chain rule makes possible, and greedy search over graph space inherits every local optimum problem that expectation maximization has. The online planning chapters show branch and bound earning its speedup purely from bound quality, a lesson that transfers to any pruned search. The policy search chapters contribute the cross entropy method and the likelihood ratio gradient with its baseline correction: the baseline result, that subtracting a state dependent constant from the return leaves the gradient unbiased while cutting variance, is one of the most reusable single facts in the book, and it reappears inside the actor critic machinery as the advantage function itself. The exploration chapters make a parallel point in three dialects, epsilon greedy as the crude floor, upper confidence bounds as optimism with a proof shaped bonus, and posterior sampling as the Bayesian answer that needs no tuned knob. The belief planning chapters after point based value iteration add the upper bound side of the ledger, QMDP, the fast informed bound, and the sawtooth construction, so a solver can bracket the true value from both sides and stop when the bracket is narrow enough for the decision at hand, which is the correct stopping rule for any approximate planner. The online belief chapters then close the loop back to sparse sampling and tree search, now run over histories, showing that the fully observed online methods survive the move to partial observability with beliefs or histories substituted for states. Even the appendices pull weight: the probability and optimization summaries are the reference the main text quietly assumes, and the complexity appendix is what makes the PPAD and NP-hardness warnings precise rather than rhetorical. Taken together, the book is less a menu of algorithms than a single argument repeated at five levels of difficulty: represent what you believe, price what you do not know, bound what you cannot compute exactly, and never let an approximation travel without its error term attached. One more structural choice deserves emphasis: the crying baby problem and the hex world recur across all five parts, so each new layer of machinery is benchmarked against a problem the reader already understands, and the cost of each added realism is visible as added machinery on a fixed example rather than asserted in the abstract.",
+      "retrocausal_genealogy": "The lineage is the postwar decision sciences converging into one curriculum. The chain rule and d-separation descend from Pearl's Bayesian network program of the 1980s; variable elimination from the probabilistic inference work of Shafer, Shenoy, and Lauritzen. Kalman filtering is 1960 aerospace estimation. The MDP core is Bellman's 1950s dynamic programming, with value iteration and policy iteration as its direct children, and the model free line runs from Watkins's 1989 Q-learning thesis through Sutton's temporal difference work to the deep reinforcement learning synthesis of the 2010s. Trust region and proximal methods are Schulman's 2015 to 2017 response to policy gradient instability; generalized advantage estimation is from the same laboratory and years. Imitation runs from Pomerleau's 1991 behavioral cloning through Ross and Bagnell's DAgger reductions to Ziebart's maximum entropy inverse reinforcement learning and Ho and Ermon's adversarial formulation. POMDP machinery descends from Cassandra, Kaelbling, and Littman's alpha vector work and Pineau's point based value iteration. The game chapters reach back to Nash 1951 and forward to the PPAD completeness results of Daskalakis, Goldberg, and Papadimitriou. The authors, based at Stanford's aeronautics and astronautics community, assembled the lineage because their application domain, safety critical aerospace decision systems, needed all of it at once.",
+      "theory_of_mind": "The authors model their reader as an engineer who will implement these methods on systems where failure has consequences, and they write accordingly: every abstraction is immediately grounded in a data structure and code, every algorithm gets its complexity stated, and toy problems like the crying baby and the hex world are used as instruments that recur across chapters so the reader can watch the same problem absorb each new layer of machinery. Their model of the domain is that decision making under uncertainty is one subject, not five: probability, estimation, sequential choice, partial observability, and strategic interaction are presented as successive relaxations of a single problem, each chapter removing an assumption the previous chapters relied on. They also assume the reader's binding constraint is correctness under finite compute, which is why approximation is never treated as a confession: sparse sampling, point based backups, and posterior sampling are presented as the principled forms of the exact objects, with the approximation error located and named rather than hidden.",
+      "cross_layer_veto": "Several results in this book veto designs in other layers outright. The plan enumeration counting argument and the PPAD completeness of Nash equilibrium veto any engine layer that promises exact belief space planning or exact equilibrium solving at scale; those layers must be rebuilt as sampled or iterative approximations with budgets. The POMG analysis vetoes belief state machinery in genuinely multiagent components, because the single belief holder the machinery presumes does not exist there. Particle deprivation vetoes naive scenario tracking for hidden states: a scenario set without a collapse detector and an injection mechanism is a defect, not a simplification. Behavioral cloning's cascading error result vetoes evaluating any self feeding model on data drawn from a different policy's distribution. And the maximization bias inside the Q-learning target vetoes optimistic best case bootstrapping in incremental rating updates unless a double estimator correction is in place. Each veto is constructive: in every case the book supplies the replacement method in the same or the following chapter."
+    }
+  ],
+  "universal_lens": "Read as a general template, this work says that every hard choice problem decomposes into the same five questions: what is the state and what do I believe about it, how does the world change when I act, what do I actually want, what is it worth learning before I commit, and who else is choosing at the same time. Its lasting contribution is not any single algorithm but the discipline of attaching to each answer its assumptions and its failure regime, so a system built from these parts knows the conditions under which its own reasoning stops being valid.",
+  "gsi_mapping": "For the Galaxy Sports Institute, this book is curriculum grade source material for teaching decision science from primary sources: the five part structure is a syllabus, the recurring crying baby and hex world problems are laboratory exercises that scale with the student, and the Julia implementations make every concept executable rather than decorative. The institute takes the pedagogical pattern as much as the content: introduce each method together with the exact conditions that break it, and require the failure regime to be stated before any method is applied to a live problem.",
+  "gse_mapping": "For the Galaxy Sports Edge engine, this book supplies the decision layer reference implementations and their guardrails: factorization and inference discipline for the probabilistic core, value of information as the research scheduling rule, sparse sampling and tree search budgets for game script simulation, trust region style limits on rating updates, particle methods with deprivation alarms for hidden availability states, alpha vector and point based evaluation at sampled situation beliefs, and fictitious play opponent models with the POMG warning that belief machinery stops at the multiagent boundary."
+}

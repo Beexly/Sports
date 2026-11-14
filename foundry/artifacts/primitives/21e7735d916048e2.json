@@ -1,0 +1,833 @@
+{
+  "book_id": "21e7735d916048e2",
+  "source_status": "COMPLETE",
+  "source_note": "Claude E. Shannon and Warren Weaver, The Mathematical Theory of Communication. Local file: ShannonWeaver-1963-MathematicalTheoryOfCommunication.pdf, 10,871,535 bytes, in the must-have bucket of the local library copy; extracted text 247,423 characters with OCR noise, so all quotations were taken from clean passages and machine verified as contiguous substrings of the extracted text. Edition correction: the catalog year 1963 in the filename is the first paperbound edition; the physical copy digitized here is the University of Illinois Press tenth printing of 1964 (title page: Urbana 1964; copyright 1949; Library of Congress Card No. 49-11922), as stated on the title and copyright pages of the file itself. Weaver's exposition occupies printed pages 1-28 and Shannon's 1948 paper is reprinted at printed pages 29-125; page anchors cite the printed pagination recovered from the text.",
+  "primitives": [
+    {
+      "primitive_id": "message_selection_framing",
+      "name": "Communication is reproduction of a message selected from a set of possible messages; the system must be designed for every possible selection, not the one that happens to be chosen",
+      "verbatim_quote": "The significant aspect is that the actual message is one selected from a set of possible messages. The system must be designed to operate for each possible selection, not just the one which will actually be chosen since this is unknown at the time of design.",
+      "page": "Shannon, Introduction, printed p. 31; txt lines 1171-1175",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The message set and its selection are well defined before design begins",
+        "Semantic aspects are set aside as irrelevant to the engineering problem"
+      ],
+      "breakdown_regime": "Breaks when the set of possible messages cannot be enumerated or keeps changing while the system runs",
+      "domain": "information theory / problem framing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats every forecast as one selection from an explicit set of possible outcomes, and the reasoning stack is designed and scored against the whole set, never tuned to the single outcome that occurred. Coverage of the possibility set is a design requirement, not a post hoc check.",
+        "source_operator": "message_selection_framing",
+        "telemetry": "Outcome logs with the full candidate set recorded at decision time, plus the realized outcome"
+      }
+    },
+    {
+      "primitive_id": "weaver_three_levels",
+      "name": "Weaver's three levels of communication problems: Level A technical accuracy of symbol transmission, Level B semantic precision of meaning conveyed, Level C effectiveness of received meaning on conduct",
+      "verbatim_quote": "LEVEL A. How accurately can the symbols of communication be transmitted? (The technical problem.) LEVEL B. How precisely do the transmitted symbols convey the desired meaning? (The semantic problem.) LEVEL C. How effectively does the received meaning affect con duct in the desired way? (The effectiveness problem.)",
+      "page": "Weaver, section 1.2, printed p. 4; txt lines 114-121",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The three levels overlap; Level A limits discovered by the theory bind levels B and C as well"
+      ],
+      "breakdown_regime": "The levels are a framing device, not separable modules; treating Level A results as settling B or C is the misuse Weaver warns the reader to examine",
+      "domain": "communication theory / problem taxonomy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine work is audited at three levels matching Weaver's: signal fidelity (did the data arrive intact), semantic fidelity (does the representation mean what the source meant), and decision effect (did the output change the downstream choice correctly). A failure is localized to its level before repair.",
+        "source_operator": "weaver_three_levels",
+        "telemetry": "Pipeline integrity checks, representation audits, and decision outcome reviews tagged by level"
+      }
+    },
+    {
+      "primitive_id": "information_as_freedom_of_choice",
+      "name": "Weaver: information in this theory measures one's freedom of choice when selecting a message, and applies to the whole situation, not to any individual message",
+      "verbatim_quote": "That is, information is a measure of one's freedom of choice when one selects a message.",
+      "page": "Weaver, section 2.2, printed p. 9; txt lines 320-321",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Information is a property of the source situation as a whole, not of a single message",
+        "It must not be confused with meaning"
+      ],
+      "breakdown_regime": "Breaks if read as a property of one message; a single realized message carries no information value in this sense by itself",
+      "domain": "information theory / interpretation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Probabilities and confidence inside the engine attach to situations and ensembles, not to single picks or single games. Any score quoted for one event is read as a statement about the process that generated the forecast, which is what makes calibration over many events the governing metric.",
+        "source_operator": "information_as_freedom_of_choice",
+        "telemetry": "Forecast archives with pre-event probability assignments across many events"
+      }
+    },
+    {
+      "primitive_id": "noiseless_channel_capacity",
+      "name": "Capacity of a discrete noiseless channel is C = lim log N(T) / T, where N(T) is the number of allowed signals of duration T; in the equal-duration teletype case every symbol choice is free and the rate is immediate",
+      "verbatim_quote": "In the teletype case where all symbols are of the same duration, and any sequence of the 32 symbols is allowed, the answer is easy.",
+      "page": "Shannon, section 1, printed pp. 36-37; txt lines 1354-1356",
+      "latex": "C = \\lim_{T\\to\\infty} \\frac{\\log N(T)}{T}",
+      "symbol_and_unit_ledger": {
+        "C": "channel capacity, bits per second",
+        "N(T)": "number of allowed signals of duration T, count",
+        "T": "duration, seconds"
+      },
+      "assumptions": [
+        "The limit exists and is finite in most cases of interest",
+        "Symbol durations may differ and sequences may be constrained"
+      ],
+      "breakdown_regime": "Fails for channels whose allowed-signal count grows super-exponentially or where the limit does not settle",
+      "domain": "information theory / channel capacity",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any feed or model interface in the engine has a hard ceiling on the rate at which it can carry distinguishable states per unit time. Feature pipelines are sized against that ceiling: states that cannot be distinguished at the delivered rate are not information, however rich they look offline.",
+        "source_operator": "noiseless_channel_capacity",
+        "telemetry": "Feed throughput logs, state counts per interval, and timestamp resolution audits"
+      }
+    },
+    {
+      "primitive_id": "discrete_source_stochastic_process",
+      "name": "A discrete information source is a stochastic process: it chooses successive symbols according to probabilities depending in general on preceding choices, and any such process producing symbols from a finite set is a discrete source",
+      "verbatim_quote": "It will choose successive symbols according to certain probabilities depending, in general, on preceding choices as well as the particular symbols in question. A physical system, or a mathematical model of a system which produces such a sequence of symbols governed by a set of probabilities, is known as a stochastic process",
+      "page": "Shannon, section 2, printed p. 40; txt lines 1491-1495",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Successive choices are governed by probabilities that may depend on the preceding choices",
+        "The symbol set is finite"
+      ],
+      "breakdown_regime": "The model is silent about meaning; two sources with identical statistics are the same source for this theory even if one is language and the other noise",
+      "domain": "information theory / source modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every data generating process the engine consumes, a team's play sequence, a market's quote sequence, an injury report stream, is modeled as a stochastic process with history-dependent probabilities, never as a bag of independent draws, unless independence is itself verified.",
+        "source_operator": "discrete_source_stochastic_process",
+        "telemetry": "Sequential event logs with timestamps sufficient to estimate history-conditioned frequencies"
+      }
+    },
+    {
+      "primitive_id": "markoff_source_transition_structure",
+      "name": "In the simplest dependent case a symbol choice depends only on the preceding letter; the structure is then specified by transition probabilities p_i(j), with digram probabilities p(i,j) = p(i) p_i(j)",
+      "verbatim_quote": "In the simplest case of this type a choice depends only on the preceding letter and not on ones before that.",
+      "page": "Shannon, section 2, printed p. 41; txt lines 1529-1531",
+      "latex": "p(i,j) = p(i)\\, p_i(j)",
+      "symbol_and_unit_ledger": {
+        "p(i)": "probability of symbol i",
+        "p_i(j)": "transition probability that symbol i is followed by symbol j",
+        "p(i,j)": "digram probability of the pair i followed by j"
+      },
+      "assumptions": [
+        "First-order dependence: the choice depends on the preceding symbol only",
+        "Trigram and n-gram generalizations extend the conditioning depth at the cost of far more parameters"
+      ],
+      "breakdown_regime": "First-order structure misses longer-range dependence; Shannon notes reasonable structure appears out to about twice the modeled range and no further",
+      "domain": "information theory / source modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sequence features in the engine are built as explicit order-k Markov structure: the conditioning depth is a declared parameter, estimated transition tables are stored, and any claim of pattern is checked against the entropy drop that the added depth actually buys.",
+        "source_operator": "markoff_source_transition_structure",
+        "telemetry": "Transition count tables at several conditioning depths with held-out entropy comparisons"
+      }
+    },
+    {
+      "primitive_id": "ergodic_sources",
+      "name": "Except when the contrary is stated the source is assumed ergodic, which identifies averages along one long sequence with averages over the ensemble of possible sequences, the probability of a discrepancy being zero",
+      "verbatim_quote": "Except when the contrary is stated we shall assume a source to be ergodic. This assumption enables one to identify averages along a sequence with averages over the ensemble of possible sequences (the probability of a discrepancy being zero).",
+      "page": "Shannon, section 5, printed p. 48; txt lines 1855-1860",
+      "latex": "p_j = \\sum_i p_i\\, p_i(j)",
+      "symbol_and_unit_ledger": {
+        "p_j": "equilibrium probability of state j",
+        "p_i": "probability of state i",
+        "p_i(j)": "transition probability from state i to state j"
+      },
+      "assumptions": [
+        "The state graph satisfies the two ergodicity conditions: no two mutually unreachable parts, and circuit lengths with greatest common divisor one",
+        "Mixed sources are mixtures of ergodic pure components chosen once at the start"
+      ],
+      "breakdown_regime": "Non-ergodic or drifting sources violate the identification of time averages with ensemble averages; a mixed source misread as ergodic yields confident averages of a component that was never selected",
+      "domain": "information theory / statistical foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Before any historical average is used as a property of a process, the engine checks the ergodicity question explicitly: whether the series is one homogeneous process or a mixture of regimes selected once, because the two cases license completely different inferences from the same numbers.",
+        "source_operator": "ergodic_sources",
+        "telemetry": "Regime segmentation tests and within-segment versus pooled statistic comparisons"
+      }
+    },
+    {
+      "primitive_id": "entropy_uniqueness_theorem_2",
+      "name": "Theorem 2: the only measure of choice or uncertainty satisfying continuity, monotonicity in the number of equally likely events, and the weighted-sum grouping property is H = -K sum p_i log p_i, with K a choice of unit",
+      "verbatim_quote": "If there is such a measure, say H (PI, P2, •.• ,Pn), it is reasonable to require of it the following properties:",
+      "page": "Shannon, section 6, Theorem 2 and Appendix 2, printed pp. 49-50 and 117-118; txt lines 1892-1897",
+      "latex": "H = -K \\sum_{i=1}^{n} p_i \\log p_i",
+      "symbol_and_unit_ledger": {
+        "H": "entropy, in bits when K = 1 and log base is 2",
+        "p_i": "probability of event i",
+        "K": "positive constant fixing the unit of measure"
+      },
+      "assumptions": [
+        "The three stated axioms: continuity in the p_i, monotonic increase with n for equal probabilities, and the grouping or weighted-sum property for decomposed choices"
+      ],
+      "breakdown_regime": "The theorem justifies the form but Shannon is explicit that the real justification of the definition resides in its implications, not in the axioms",
+      "domain": "information theory / entropy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Entropy is the engine's single sanctioned uncertainty measure because it is the unique one compatible with consistent bookkeeping when choices are grouped or split. Any ad hoc uncertainty score that violates the grouping property is rejected at review, since it will double count or drop uncertainty when events are aggregated.",
+        "source_operator": "entropy_uniqueness_theorem_2",
+        "telemetry": "Entropy audits on grouped versus ungrouped event taxonomies"
+      }
+    },
+    {
+      "primitive_id": "conditioning_reduces_entropy",
+      "name": "Conditional entropy and the chain rule: H(x,y) = H(x) + H_x(y), and the uncertainty of y is never increased by knowledge of x, decreasing unless x and y are independent",
+      "verbatim_quote": "The uncertainty of y is never increased by knowledge of x. It will be decreased unless x and yare independent events, in which case it is not changed.",
+      "page": "Shannon, section 6, properties 5 and 6, printed pp. 52-53; txt lines 2039-2041",
+      "latex": "H(x,y) = H(x) + H_x(y), \\qquad H_x(y) \\le H(y)",
+      "symbol_and_unit_ledger": {
+        "H(x,y)": "joint entropy of x and y, bits",
+        "H_x(y)": "conditional entropy of y given x, bits",
+        "H(y)": "entropy of y, bits"
+      },
+      "assumptions": [
+        "Conditional entropy is the probability-weighted average of the entropy of y over the values of x"
+      ],
+      "breakdown_regime": "Equality holds under independence, so a signal statistically independent of the target provably buys nothing, whatever its surface relevance",
+      "domain": "information theory / entropy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every candidate signal is priced by the conditional entropy it removes: the drop from H(target) to H(target given signal) on held-out data. A signal whose measured drop is zero is dead weight in the reasoning layer and is reported as such, not narrated as insight.",
+        "source_operator": "conditioning_reduces_entropy",
+        "telemetry": "Paired entropy estimates with and without each signal on held-out windows"
+      }
+    },
+    {
+      "primitive_id": "source_entropy_rate",
+      "name": "The entropy of a finite-state source is the state-probability-weighted average of the per-state symbol entropies, H = - sum_i P_i sum_j p_i(j) log p_i(j), giving information produced per symbol or per second",
+      "verbatim_quote": "Consider a discrete source of the finite state type considered above. For each possible state i there will be a set of probabilities Pi (j) of producing the various possible symbols j. Thus there is an entropy Hi for each state. The entropy of the source will be defined as the average of these Hi weighted in accordance with the probability of occurrence of the states in question:",
+      "page": "Shannon, section 7, printed p. 53; txt lines 2043-2050",
+      "latex": "H = -\\sum_i P_i \\sum_j p_i(j) \\log p_i(j)",
+      "symbol_and_unit_ledger": {
+        "H": "entropy of the source, bits per symbol",
+        "P_i": "probability of state i",
+        "p_i(j)": "probability of producing symbol j in state i"
+      },
+      "assumptions": [
+        "The source is of finite-state type with a stationary state distribution",
+        "Multiplying by the average symbol rate gives entropy per second"
+      ],
+      "breakdown_regime": "If the state distribution is not stationary, the per-symbol rate is a moving quantity and a single H misstates the source",
+      "domain": "information theory / source coding",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Each source family in the engine carries an estimated entropy rate per event, which is the floor on how cheaply its stream can be represented and the ceiling on how much novel information it can deliver per step. Streams whose entropy rate collapses are flagged as redundant before they consume modeling capacity.",
+        "source_operator": "source_entropy_rate",
+        "telemetry": "Per-stream entropy rate estimates refreshed on rolling windows"
+      }
+    },
+    {
+      "primitive_id": "asymptotic_equipartition",
+      "name": "Theorems 3 and 4 (asymptotic equipartition): for large N, H is approximately the logarithm of the reciprocal probability of a typical long sequence divided by N, so long sequences behave as if there were just 2^{HN} of them, each with probability 2^{-HN}",
+      "verbatim_quote": "H is thus approximately the logarithm of the reciprocal probability of a typical long sequence divided by the number of symbols in the sequence.",
+      "page": "Shannon, section 7, Theorems 3 and 4, printed p. 54; txt lines 2078-2084",
+      "latex": "\\frac{\\log p^{-1}}{N} \\to H",
+      "symbol_and_unit_ledger": {
+        "p": "probability of a typical long sequence",
+        "N": "sequence length, symbols",
+        "H": "entropy of the source, bits per symbol"
+      },
+      "assumptions": [
+        "Sequences are long; the result is asymptotic in N",
+        "The source is ergodic so the strong law of large numbers applies (Appendix 3)"
+      ],
+      "breakdown_regime": "Short sequences show wide dispersion around H; treating small samples as typical is the classic misuse of this result",
+      "domain": "information theory / source coding",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sample-size discipline in the engine is set by typicality: conclusions are drawn only from sequence counts large enough that the observed set behaves like the typical set, and surprise is measured as log reciprocal probability per step, which separates genuine novelty from ordinary fluctuation.",
+        "source_operator": "asymptotic_equipartition",
+        "telemetry": "Sequence-length and log-probability-per-step diagnostics on evaluation samples"
+      }
+    },
+    {
+      "primitive_id": "relative_entropy_and_redundancy",
+      "name": "Relative entropy is the ratio of a source's entropy to the maximum possible with the same symbols; one minus the relative entropy is the redundancy, and ordinary English is roughly 50 percent redundant",
+      "verbatim_quote": "The ratio of the entropy of a source to the maximum value it could have while still restricted to the same symbols will be called its relative entropy.",
+      "page": "Shannon, section 7, printed pp. 56-57; txt lines 2170-2174",
+      "latex": "\\text{redundancy} = 1 - \\frac{H}{H_{\\max}}",
+      "symbol_and_unit_ledger": {
+        "H": "entropy of the source, bits per symbol",
+        "H_max": "maximum entropy with the same symbol set, log of the number of symbols, bits per symbol"
+      },
+      "assumptions": [
+        "Relative entropy is also the maximum compression possible when encoding into the same alphabet",
+        "The English figure counts statistical structure out to about eight letters; longer structure raises it slightly"
+      ],
+      "breakdown_regime": "Redundancy is defined relative to a chosen alphabet and structure depth; change the representation and the number changes",
+      "domain": "information theory / compression",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Redundancy is measured for every representation the engine stores: the gap between raw size and entropy bound is recoverable budget, and a representation with near zero redundancy is treated as fragile, since nothing in it can be reconstructed when part is lost or corrupted.",
+        "source_operator": "relative_entropy_and_redundancy",
+        "telemetry": "Compression ratios and redundancy estimates per stored representation"
+      }
+    },
+    {
+      "primitive_id": "transducer_entropy_theorem_7",
+      "name": "Theorem 7: the output of a finite state transducer driven by a finite state statistical source is a finite state statistical source with entropy per unit time no greater than the input, and equal to it if the transducer is non-singular",
+      "verbatim_quote": "Theorem 7: The output of a finite state transducer driven by a finite state statistical source is a finite .state .statistical source, with entropy (per unit time) less than or equal to that of the input. If the transducer is non-singular they at e equal.",
+      "page": "Shannon, section 8, Theorem 7, printed p. 57; txt lines 2244-2247",
+      "latex": "y_n = f(x_n, a_n), \\qquad a_{n+1} = g(x_n, a_n)",
+      "symbol_and_unit_ledger": {
+        "y_n": "output symbol produced at step n",
+        "x_n": "input symbol at step n",
+        "a_n": "internal state of the transducer at step n",
+        "f, g": "output and next-state functions of the transducer"
+      },
+      "assumptions": [
+        "The transducer has finitely many internal states",
+        "Non-singular means an inverse transducer exists that recovers the input from the output"
+      ],
+      "breakdown_regime": "A singular (many-to-one) transducer strictly destroys entropy; no downstream processing can recover what the mapping merged",
+      "domain": "information theory / transducers",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every transformation in the engine's pipeline is classified as non-singular or singular with respect to the distinctions the reasoning layer needs. Singular steps, binning, rounding, thresholding, are placed only where the lost distinctions are provably irrelevant, because Theorem 7 guarantees the loss is permanent.",
+        "source_operator": "transducer_entropy_theorem_7",
+        "telemetry": "Pipeline stage inventories with invertibility status per stage"
+      }
+    },
+    {
+      "primitive_id": "noiseless_fundamental_theorem_9",
+      "name": "Theorem 9, the fundamental theorem for a noiseless channel: a source of entropy H bits per symbol can be encoded for transmission over a channel of capacity C bits per second at an average rate arbitrarily close to C/H symbols per second, and no greater rate is possible",
+      "verbatim_quote": "that by devising proper coding procedures for the transmitter it is possible to transmit symbols over the channel at an average rate\" which is nearly C/H, but which, no matter how clever the coding, can never be made to exceed C/H.",
+      "page": "Weaver, section 2.3, printed p. 15 (prose statement of Shannon's Theorem 9, section 9); txt offset 37349",
+      "latex": "\\frac{C}{H} - \\varepsilon",
+      "symbol_and_unit_ledger": {
+        "C": "channel capacity, bits per second",
+        "H": "entropy of the source, bits per symbol",
+        "epsilon": "arbitrarily small positive slack"
+      },
+      "assumptions": [
+        "Encoding delay may grow without bound as the slack shrinks",
+        "The transmitter must be non-singular so the channel input entropy equals the source entropy"
+      ],
+      "breakdown_regime": "Finite delay coding pays an excess bounded by the block entropy gap plus 1/N per symbol; the theorem is an asymptotic statement",
+      "domain": "information theory / source coding",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The pair (source entropy, channel capacity) is the engine's feasibility test for any representation task: if the entropy rate of what must be carried exceeds the capacity of the channel that must carry it, the design is impossible and no amount of clever encoding fixes it; the only moves are to cut entropy or add capacity.",
+        "source_operator": "noiseless_fundamental_theorem_9",
+        "telemetry": "Entropy rate and capacity figures placed side by side in design reviews"
+      }
+    },
+    {
+      "primitive_id": "cumulative_probability_prefix_coding",
+      "name": "The constructive coding of Theorem 9's second proof: order messages by decreasing probability, expand each cumulative probability in binary, and high probability messages are represented by short codes while low probability messages get long codes; this is substantially Fano's method",
+      "verbatim_quote": "Thus the messages of high probability are represented by short codes and those of low probability by long codes.",
+      "page": "Shannon, section 9, printed p. 60; txt lines 2368-2369",
+      "latex": "\\log_2 \\frac{1}{P_s} \\le m_s < \\log_2 \\frac{1}{p_s} + 1",
+      "symbol_and_unit_ledger": {
+        "m_s": "length of the binary code for message s, bits",
+        "P_s": "cumulative probability of all messages before s in probability order",
+        "p_s": "probability of message s"
+      },
+      "assumptions": [
+        "Messages are blocks of N source symbols, with N large for efficiency near H",
+        "Codes are uniquely decodable because each code differs from all later ones within its length"
+      ],
+      "breakdown_regime": "Per-symbol overhead vanishes only as block length grows; coding symbol by symbol leaves a gap of up to one bit per symbol",
+      "domain": "information theory / coding construction",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Description length inside the engine follows probability: common patterns get short codes and rare patterns get long ones, in storage formats, in explanation templates, and in the reasoning traces themselves, so average cost tracks entropy instead of worst case size.",
+        "source_operator": "cumulative_probability_prefix_coding",
+        "telemetry": "Code length versus log probability scatter for stored pattern libraries"
+      }
+    },
+    {
+      "primitive_id": "equivocation_definition",
+      "name": "With noise, the received signal E determines the transmitted message only partially; equivocation H_y(x) is the conditional entropy of the transmitted messages given the received signal, the average uncertainty of what was sent given what arrived",
+      "verbatim_quote": "Evidently the proper correction to apply to the amount of in formation transmitted is the amount of this information which is missing in the received signal, or alternatively the uncertainty when we have received a signal of what was actually sent.",
+      "page": "Shannon, section 12, printed p. 65; txt offset 134900",
+      "latex": "H_y(x) = -\\sum_{x,y} P(x,y) \\log P_y(x)",
+      "symbol_and_unit_ledger": {
+        "H_y(x)": "equivocation, bits",
+        "P(x,y)": "joint probability of transmitted message x and received signal y",
+        "P_y(x)": "a posteriori probability that x was sent given y received"
+      },
+      "assumptions": [
+        "Equivocation depends on the statistical structure of the messages as well as on the noise",
+        "The rate of actual transmission R equals the entropy of the transmitted messages minus the equivocation"
+      ],
+      "breakdown_regime": "Equivocation is an average; individual received signals can leave the message nearly certain or nearly free",
+      "domain": "information theory / noisy channels",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every noisy observation in the engine carries an equivocation estimate: the residual uncertainty about the underlying state given the observation. Decisions are gated on equivocation, not on the raw observation, so a clean-looking report with high equivocation is treated as weak evidence by construction.",
+        "source_operator": "equivocation_definition",
+        "telemetry": "Per-observation equivocation estimates logged with the observations"
+      }
+    },
+    {
+      "primitive_id": "mutual_rate_of_transmission",
+      "name": "The rate of actual transmission is R = H(x) - H_y(x) = H(y) - H_x(y), symmetric in its two forms, and channel capacity is defined as the maximum of R over all possible input sources; capacity is an invariant of the channel alone",
+      "verbatim_quote": "We therefore define the channel capacity by C = Max (H (x) - Hy(x)) where the maximum is with respect to all possible information sources used as input to the channel.",
+      "page": "Shannon, section 12, printed p. 70; txt offset 141300",
+      "latex": "R = H(x) - H_y(x) = H(y) - H_x(y), \\qquad C = \\max_{\\text{inputs}} R",
+      "symbol_and_unit_ledger": {
+        "R": "rate of actual transmission, bits per second or per symbol",
+        "H(x)": "entropy of the transmitted messages",
+        "H_y(x)": "equivocation of the received signal about the transmitted message",
+        "H_x(y)": "conditional entropy of the received signal given the transmitted message",
+        "C": "channel capacity, the maximum of R over input ensembles"
+      },
+      "assumptions": [
+        "The maximum is taken over all possible input ensembles for a fixed duration T, then over T",
+        "For memoryless or finite-memory channels the limit in T is handled by the theorems of section 13"
+      ],
+      "breakdown_regime": "If the maximization over inputs is done on a restricted family, the computed C understates the channel; capacity claims are only as good as the input search",
+      "domain": "information theory / noisy channels",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Channel quality in the engine is never judged at the operating point alone: each source and feed is also characterized by its best case rate over input choices, so a feed that looks weak under today's usage but has high capacity is a different asset from one that is weak at its maximum.",
+        "source_operator": "mutual_rate_of_transmission",
+        "telemetry": "Capacity estimates per feed from input distribution searches"
+      }
+    },
+    {
+      "primitive_id": "correction_channel_theorem_10",
+      "name": "Theorem 10: if the correction channel has capacity equal to the equivocation, the received signal can be corrected to the transmitted message, since the equivocation is precisely the rate at which additional information must be supplied at the receiving point",
+      "verbatim_quote": "Theorem 10: If the correction channel has a capacity equal to Hy(x) it is possible to so encode the correction data as to 8end it over this channel and correct all but an arbitrarily small fraction e of the errors. This is not possible if the channel capacity is less than Hy(x).",
+      "page": "Shannon, section 13, Theorem 10, printed p. 70; txt lines 2680-2687",
+      "latex": "C_{cor} = H_y(x)",
+      "symbol_and_unit_ledger": {
+        "C_cor": "capacity required of the correction channel, bits per unit time",
+        "H_y(x)": "equivocation of the channel, bits per unit time"
+      },
+      "assumptions": [
+        "The equivocation rate is stationary over the interval considered",
+        "The correction channel is noiseless or itself correctable"
+      ],
+      "breakdown_regime": "Sizing a correction channel below the equivocation leaves uncorrectable errors; sizing above it buys nothing further for correction",
+      "domain": "information theory / error correction",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Redundancy and verification budgets in the engine are sized by equivocation: the amount of cross-checking, redundant sourcing, and audit capacity assigned to a stream is set to the measured equivocation of that stream, not to a flat policy, because Theorem 10 makes that the exact break-even size.",
+        "source_operator": "correction_channel_theorem_10",
+        "telemetry": "Equivocation versus verification budget comparisons per stream"
+      }
+    },
+    {
+      "primitive_id": "noisy_channel_fundamental_theorem_11",
+      "name": "Theorem 11, the fundamental theorem for a channel with noise: if the source entropy per second H is below the channel capacity C, there exists a coding system transmitting with arbitrarily small frequency of errors or arbitrarily small equivocation; it is not possible to transmit at a rate greater than C",
+      "verbatim_quote": "Theorem 11: Let a discrete channel have the capacity C and a discrete source the entropy per second H. If H < C there exists a coding system such that the output of the source can be transmitted over the channel with an arbitrarily small frequency of errors (or an arbitrarily small equivocation).",
+      "page": "Shannon, section 13, Theorem 11, printed p. 71; txt offset 143806",
+      "latex": "H \\le C",
+      "symbol_and_unit_ledger": {
+        "H": "entropy of the source, bits per second",
+        "C": "capacity of the channel, bits per second"
+      },
+      "assumptions": [
+        "Coding delay is allowed to grow; the statement is about existence at long block lengths",
+        "Above capacity the equivocation is at least H - C by the converse half of Theorem 11"
+      ],
+      "breakdown_regime": "The theorem gives no finite-length construction and no error exponent; practical systems operate strictly inside the bound",
+      "domain": "information theory / noisy channels",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine's master feasibility inequality: the entropy rate of what a component must communicate can never exceed the capacity of the path it communicates over. Architecture reviews test H against C explicitly before any component is promised, and violations are resolved by reducing entropy or raising capacity, never by optimism.",
+        "source_operator": "noisy_channel_fundamental_theorem_11",
+        "telemetry": "Architecture review checklists with explicit H and C figures per interface"
+      }
+    },
+    {
+      "primitive_id": "random_coding_existence_argument",
+      "name": "The proof of Theorem 11 averages over random codings rather than exhibiting one code; Shannon's own discussion concedes the demonstration is not a pure existence proof yet has some of the deficiencies of such proofs, and that no explicit series of approximations to the ideal coding has been found",
+      "verbatim_quote": "The demonstration of Theorem 11, while not a pure existence proof, has some of the deficIencIes of such proofs.",
+      "page": "Shannon, section 14, printed p. 75; txt offset 150400",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The ensemble average of equivocation can be made small for long blocks when H < C",
+        "Decoding uses joint typicality by looking for the unique jointly typical input"
+      ],
+      "breakdown_regime": "The argument proves existence, not a construction; extracting an explicit good code requires search or structure the theorem does not supply",
+      "domain": "information theory / proof method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensemble averaging is a standing proof technique in the engine's own evaluations: a method is first judged by its average behavior over a randomized ensemble of configurations or resamples, and only then by its best case, which inverts the usual temptation to showcase the single best run.",
+        "source_operator": "random_coding_existence_argument",
+        "telemetry": "Evaluation protocols that report ensemble averages before best cases"
+      }
+    },
+    {
+      "primitive_id": "converse_bound_h_minus_c",
+      "name": "Theorem 11, converse half: if H > C it is possible to encode the source so that the equivocation is less than H - C plus an arbitrarily small term, and there is no method of encoding which gives an equivocation less than H - C",
+      "verbatim_quote": "If H > C it is possible to encode the source so that the equivocation is less than H - C + f. where f. is arbitrarily small. There is no method of encoding which gives an equivocation less than H - C.",
+      "page": "Shannon, section 13, Theorem 11 (converse half), printed p. 71; txt offset 143806",
+      "latex": "H_y(x) \\ge H - C - \\varepsilon'",
+      "symbol_and_unit_ledger": {
+        "H_y(x)": "equivocation, bits per second",
+        "H": "entropy of the source, bits per second",
+        "C": "capacity of the channel, bits per second",
+        "epsilon prime": "a term tending to zero as the frequency of errors tends to zero"
+      },
+      "assumptions": [
+        "The bound holds for any coding system, with no exceptions for cleverness",
+        "The vanishing term ties the bound to near-error-free operation"
+      ],
+      "breakdown_regime": "The converse does not forbid errors from being concentrated; it bounds the average equivocation, so worst-case guarantees need separate arguments",
+      "domain": "information theory / converse bounds",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Converse bounds are used in the engine as impossibility certificates: when a target performance would require equivocation below H - C for the available channel, the target is rejected outright with the arithmetic shown, instead of being pursued and quietly missed.",
+        "source_operator": "converse_bound_h_minus_c",
+        "telemetry": "Impossibility notes filed with their H, C, and equivocation arithmetic"
+      }
+    },
+    {
+      "primitive_id": "symmetric_channel_capacity_formula",
+      "name": "For the special case of section 16 the output entropy is maximized at log m, where m is the number of output symbols, by making the input symbols equally probable, giving capacity C = log m + sum p_i log p_i, that is, log of the output count minus the entropy of the transition row",
+      "verbatim_quote": "The maximum of H (y) is clearly log m where m is the number of output symbols, since it is possible to make them all equally probable by making the input symbols equally probable.",
+      "page": "Shannon, section 16, printed p. 79; txt offset 158600",
+      "latex": "C = \\log m + \\sum_i p_i \\log p_i = \\log m - H(\\text{row})",
+      "symbol_and_unit_ledger": {
+        "C": "capacity, bits per symbol",
+        "m": "number of output symbols",
+        "p_i": "transition probabilities from any input symbol (the noise row)",
+        "H(row)": "entropy of a transition row, bits"
+      },
+      "assumptions": [
+        "Rows are permutations of each other and columns are permutations of each other",
+        "Equally likely inputs are then capacity achieving"
+      ],
+      "breakdown_regime": "Approximate symmetry in measured matrices does not guarantee the formula; the maximization must then be done numerically",
+      "domain": "information theory / channel capacity",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Symmetric confusion structures, where each class is confused with the others in the same pattern, get the closed-form capacity treatment in the engine: log of the class count minus the row entropy. Classifier and signal quality are thereby expressed in bits on the same scale as every other channel in the system.",
+        "source_operator": "symmetric_channel_capacity_formula",
+        "telemetry": "Confusion matrices with symmetry tests and implied capacities in bits"
+      }
+    },
+    {
+      "primitive_id": "hamming_seven_block_code",
+      "name": "The Hamming example: an efficient seven-symbol block code allowing complete correction of errors, in which four symbols (X3, X5, X6, X7) are message symbols chosen freely and three redundant symbols X4, X2, X1 are chosen so the parity sums alpha, beta, gamma are even; on receipt the binary number alpha beta gamma gives the subscript of the incorrect symbol, or zero if there was no error",
+      "verbatim_quote": "An efficient code, allowing complete correction of errors and transmitting at the rate 0, is the following (found by a method due to R. Hamming)",
+      "page": "Shannon, section 17, printed p. 84; txt offset 160400",
+      "latex": "\\alpha = X_4 + X_5 + X_6 + X_7 \\equiv 0 \\pmod 2, \\quad \\beta = X_2 + X_3 + X_6 + X_7 \\equiv 0 \\pmod 2, \\quad \\gamma = X_1 + X_3 + X_5 + X_7 \\equiv 0 \\pmod 2",
+      "symbol_and_unit_ledger": {
+        "X1..X7": "the seven symbols of the block; X3, X5, X6, X7 are message symbols and X4, X2, X1 are redundant check symbols",
+        "alpha, beta, gamma": "the three parity sums, each computed mod 2 (even means 0, odd means 1)"
+      },
+      "assumptions": [
+        "The channel changes at most one digit in a block of seven",
+        "Two errors can be detected but not located; two check digits are the minimum for single-error correction in this scheme"
+      ],
+      "breakdown_regime": "Two or more errors in a block defeat correction, and the scheme's efficiency rests entirely on the bounded-error assumption",
+      "domain": "information theory / error correcting codes",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Parity-style cross-checks are the engine's cheapest integrity layer: redundant check quantities computed from disjoint subsets of a record let a single corrupted field be located and repaired from the checks alone, exactly as X, Y, Z locate the flipped digit, provided the corruption budget stays within the designed bound.",
+        "source_operator": "hamming_seven_block_code",
+        "telemetry": "Check-field designs with stated single-error budgets per record type"
+      }
+    },
+    {
+      "primitive_id": "ensemble_definition",
+      "name": "An ensemble is a set of functions or sequences together with a probability measure on the set; for spaces of functions the measure assigns probabilities to regions of the function space, and ensembles are the objects the continuous theory averages over",
+      "verbatim_quote": "An ensemble of functions is a set of functions together with a probability measure whereby we may determine the probability of a function in the set having certain properties.",
+      "page": "Shannon, section 18, printed p. 86; txt offset 163900",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The probability measure on the function space is part of the definition, not an afterthought",
+        "Ensembles of functions are generated by stochastic processes such as filtered noise"
+      ],
+      "breakdown_regime": "Results about ensembles say nothing about any particular member; a specific realized signal can be wildly atypical of its ensemble",
+      "domain": "information theory / continuous channels",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Forecasts and signals in the engine are always stated as ensembles with their measure: a distribution over outcomes with explicit probabilities, never a bare point estimate dressed as knowledge. Atypical realizations are then recognizable as such instead of being read as model failures.",
+        "source_operator": "ensemble_definition",
+        "telemetry": "Ensemble forecast records with full probability assignments"
+      }
+    },
+    {
+      "primitive_id": "sampling_theorem_13",
+      "name": "Theorem 13, the sampling theorem: a function containing no frequencies higher than W cycles per second is completely determined by its ordinates at points spaced 1/(2W) seconds apart, so a T-second bandlimited message has exactly 2TW degrees of freedom",
+      "verbatim_quote": "it is completely determined by giving its ordinates at a series of discrete points spaced 2~ seconds apart in the manner indicated by the following result.",
+      "page": "Shannon, section 19, Theorem 13, printed p. 87; txt offset 172150",
+      "latex": "n = 2TW",
+      "symbol_and_unit_ledger": {
+        "n": "number of coordinates or degrees of freedom",
+        "T": "duration of the message, seconds",
+        "W": "bandwidth, cycles per second (hertz)"
+      },
+      "assumptions": [
+        "The function is strictly bandlimited to W",
+        "Sampling is at exactly the Nyquist spacing 1/(2W) or finer"
+      ],
+      "breakdown_regime": "Any energy above W aliases into the samples and the reconstruction is wrong with no internal warning; the theorem is exact only under the bandlimit",
+      "domain": "information theory / continuous channels",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sampling rates for every time series the engine ingests are set by the bandwidth of the underlying process: sample at twice the highest frequency that matters or accept aliasing, where fast structure folds into slow structure and corrupts it invisibly. Series whose sampling cannot be justified against a bandwidth claim are marked as aliasing-suspect.",
+        "source_operator": "sampling_theorem_13",
+        "telemetry": "Sampling rate versus process bandwidth justifications per ingested series"
+      }
+    },
+    {
+      "primitive_id": "continuous_entropy_coordinate_dependence",
+      "name": "The entropy of a continuous distribution, H(x) = - integral p(x) log p(x) dx, is relative to the coordinate system: changing coordinates multiplies the density by the Jacobian and the new entropy exceeds the old by the average of log |J|, so continuous entropy measures volume in the chosen coordinates",
+      "verbatim_quote": "Thus the new entropy is the old entropy less the expected log arithm of the Jacobian",
+      "page": "Shannon, section 20, printed p. 91; txt offset 179850",
+      "latex": "H(y) = H(x) - \\overline{\\log J}",
+      "symbol_and_unit_ledger": {
+        "H(x)": "differential entropy of x, in nats or bits depending on log base",
+        "J": "Jacobian of the coordinate transformation, as defined in the text",
+        "overline": "expectation under the density of x"
+      },
+      "assumptions": [
+        "Densities exist and the coordinate change is smooth with nonzero Jacobian",
+        "Differences of entropies, and mutual information, are coordinate invariant even though absolute values are not"
+      ],
+      "breakdown_regime": "Quoting an absolute continuous entropy without naming coordinates is a category error; the discrete high-resolution limit adds the log of the quantization cell",
+      "domain": "information theory / continuous entropy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Continuous uncertainty figures in the engine are reported only with their coordinates and units attached, and comparisons are made on differences and mutual informations, which are representation invariant, never on raw differential entropies across different parameterizations.",
+        "source_operator": "continuous_entropy_coordinate_dependence",
+        "telemetry": "Uncertainty reports carrying explicit coordinate and unit declarations"
+      }
+    },
+    {
+      "primitive_id": "gaussian_max_entropy_white_noise",
+      "name": "Of all ensembles with a given average power, white noise (the Gaussian ensemble) has the maximum possible entropy, which follows from the maximizing properties of the Gaussian distribution for a given second moment",
+      "verbatim_quote": "For a given average power N, white noise has the maximum possible entropy. This follows from the maximizing properties of the Gaussian distribution noted above.",
+      "page": "Shannon, section 21, printed p. 93; txt offset 183050",
+      "latex": "H = \\frac{1}{2} \\log 2\\pi e N",
+      "symbol_and_unit_ledger": {
+        "H": "entropy per degree of freedom of the Gaussian ensemble, nats with natural log",
+        "N": "variance, i.e. average power, of the noise"
+      },
+      "assumptions": [
+        "The comparison class is all distributions with the same second moment",
+        "The function-space statement assumes bandlimitation to W and duration T"
+      ],
+      "breakdown_regime": "The maximizer is Gaussian only under a second-moment constraint; other constraints give other maximizers, so the result is not a universal law of noise shape",
+      "domain": "information theory / maximum entropy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "When only a variance is known about a disturbance, the engine's default model is the Gaussian, not from habit but because it is the maximum entropy choice: it assumes the least beyond what is measured. Any non-Gaussian noise model must earn its extra assumptions with measured structure.",
+        "source_operator": "gaussian_max_entropy_white_noise",
+        "telemetry": "Noise model registry with the measured constraint justifying each choice"
+      }
+    },
+    {
+      "primitive_id": "entropy_power_inequality_theorem_15",
+      "name": "Entropy power generalizes variance to arbitrary ensembles as the power of a Gaussian of the same entropy. Theorem 15: the entropy power of the sum of two ensembles is bounded between the sum of their entropy powers and the sum of their average powers; and white Gaussian noise absorbs any added ensemble, the resultant entropy power being approximately the sum of the noise power and the signal power when the signal is small compared to the noise",
+      "verbatim_quote": "White Gaussian noise has the peculiar property that it can absorb any other noise or signal ensemble which may be added to it with a resultant entropy power approximately equal to the sum of the white noise power and the signal power (measured from the average signal value, which is normally zero), provided the signal power is small, in a certain sense, compared to the noise.",
+      "page": "Shannon, section 22, Theorem 15, printed p. 96; txt offset 192050",
+      "latex": "\\mathcal{N}_1 + \\mathcal{N}_2 \\le \\mathcal{N}_{sum} \\le N_1 + N_2",
+      "symbol_and_unit_ledger": {
+        "script N_1, script N_2": "entropy powers of the two ensembles, same units as power",
+        "N_1, N_2": "average powers of the two ensembles",
+        "N_sum": "entropy power of the sum ensemble"
+      },
+      "assumptions": [
+        "The two ensembles are statistically independent",
+        "Equality holds only when both are Gaussian"
+      ],
+      "breakdown_regime": "Dependence between the added ensembles breaks the inequality's premise; correlated noise can combine destructively in ways the bound does not describe",
+      "domain": "information theory / entropy power",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Noise floors in the engine are computed by entropy power addition: independent disturbances combine with entropy powers adding, which gives a floor on the combined uncertainty that no filtering narrative can argue below, and the floor is reported alongside any claimed signal quality.",
+        "source_operator": "entropy_power_inequality_theorem_15",
+        "telemetry": "Entropy power budgets for combined noise sources in signal assessments"
+      }
+    },
+    {
+      "primitive_id": "filter_entropy_loss_theorem_14",
+      "name": "Theorem 14 and its consequence: passing an ensemble through a linear filter with characteristic gamma(f) shifts its entropy per degree of freedom by the band average of log |gamma(f)| squared, so the final entropy power is the initial entropy power multiplied by the geometric mean gain of the filter (in decibels, the output entropy power changes by the arithmetic mean dB gain over the band)",
+      "verbatim_quote": "The final entropy power is the initial entropy power multiplied by the geometric mean gain of the filter.",
+      "page": "Shannon, section 22, Theorem 14, printed p. 95; txt offset 190400",
+      "latex": "\\mathcal{N}_{out} = \\mathcal{N}_{in} \\cdot \\exp\\left( \\frac{1}{W} \\int_0^W \\log |\\gamma(f)|^2 \\, df \\right) \\text{ (geometric-mean form)}",
+      "symbol_and_unit_ledger": {
+        "N_out, N_in": "entropy powers of the output and input ensembles",
+        "gamma(f)": "characteristic (gain) of the filter at frequency f",
+        "W": "bandwidth, hertz"
+      },
+      "assumptions": [
+        "Input is white noise with flat density N across the band",
+        "The filter is linear with a defined gain function"
+      ],
+      "breakdown_regime": "The arithmetic mean of log gain is what matters, so a filter with deep narrow notches loses more entropy power than its average gain suggests",
+      "domain": "information theory / filtering",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every filter, screen, or selection rule applied to engine data is charged its entropy cost on the geometric mean of its pass profile: aggressive selective filtering destroys information out of proportion to how much data it visibly removes, and that cost is computed before the filter is adopted.",
+        "source_operator": "filter_entropy_loss_theorem_14",
+        "telemetry": "Filter adoption reviews with geometric-mean pass-profile calculations"
+      }
+    },
+    {
+      "primitive_id": "continuous_capacity_definition",
+      "name": "For continuous channels the rate is R = H(x) - H_y(x) and capacity C is its maximum over input ensembles; because the underlying integral form is a ratio of densities, R and C are independent of the coordinate system, and with log base two C is the maximum number of binary digits that can be sent per second over the channel with arbitrarily small equivocation",
+      "verbatim_quote": "is the maximum number of binary digits that can be sent per second over the channel with arbitrarily small equivocation, just as in the discrete case.",
+      "page": "Shannon, section 23, printed p. 99; txt offset 195600",
+      "latex": "R = H(x) - H_y(x), \\qquad C = \\max R",
+      "symbol_and_unit_ledger": {
+        "R": "rate of transmission, nats or bits per second",
+        "H(x)": "entropy rate of the input ensemble",
+        "H_y(x)": "equivocation rate, entropy of input given output",
+        "C": "channel capacity, the supremum of R over input ensembles"
+      },
+      "assumptions": [
+        "Input ensembles are constrained, typically by average power",
+        "The coordinate dependence of the two entropies cancels in the difference"
+      ],
+      "breakdown_regime": "Without a constraint on the input (power or bandwidth) the continuous capacity is infinite and the definition is vacuous",
+      "domain": "information theory / continuous channels",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Rate accounting for continuous-valued signals in the engine, scores, ratings, prices, uses the difference form: information conveyed equals input uncertainty minus residual uncertainty given the observation, which stays meaningful under rescaling, whereas raw continuous entropies do not.",
+        "source_operator": "continuous_capacity_definition",
+        "telemetry": "Rate computations stored as differences with their constraint sets named"
+      }
+    },
+    {
+      "primitive_id": "data_processing_theorem",
+      "name": "A cascade bound: H(x) - H_y(x) is at least H(u) - H_v(u) for message u, signal x, received signal y, and recovered message v, regardless of what operations are performed to obtain x from u or v from y; no encoding or decoding makes the discrete rate for the message exceed the channel capacity",
+      "verbatim_quote": "regardless of what operations are performed on u to obtain x or on y to obtain v. Thus no matter how we encode the binary digits to obtain the signal, or how we decode the received signal to recover the message, the discrete rate for the binary digits does not exceed the channel capacity we have defined.",
+      "page": "Shannon, section 23, printed p. 99; txt offset 197300",
+      "latex": "H(x) - H_y(x) \\ge H(u) - H_v(u)",
+      "symbol_and_unit_ledger": {
+        "u": "the message",
+        "x": "the transmitted signal",
+        "y": "the received signal perturbed by noise",
+        "v": "the recovered message",
+        "H_y(x)": "equivocation of the signal given the received signal",
+        "H_v(u)": "equivocation of the message given the recovered message"
+      },
+      "assumptions": [
+        "The processing is any function of the received signal alone",
+        "The bound is about information concerning the transmitted signal, not about usefulness for other purposes"
+      ],
+      "breakdown_regime": "Processing can still create value for other questions; the theorem forbids only creating new information about what was transmitted",
+      "domain": "information theory / data processing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "No downstream model in the engine can recover information about a source that its input feed never carried: post-processing, however sophisticated, is bounded by the capacity of the original channel. Claims that a model extracted signal the feed could not contain are rejected by this bound alone.",
+        "source_operator": "data_processing_theorem",
+        "telemetry": "Feed capacity figures cited in model capability reviews"
+      }
+    },
+    {
+      "primitive_id": "shannon_hartley_theorem_17",
+      "name": "Theorem 17: the capacity of a channel of band W perturbed by white thermal noise of power N, when the average transmitter power is limited to P, is C = W log((P+N)/N); by sufficiently involved encoding, binary digits can be transmitted at that rate with arbitrarily small frequency of errors, and no encoding transmits at a higher rate without a definite positive frequency of errors",
+      "verbatim_quote": "possible to transmit at a higher rate by any encoding system without a definite positive frequency of errors.",
+      "page": "Shannon, section 24, Theorem 17, printed p. 102; txt offset 200450",
+      "latex": "C = W \\log \\frac{P + N}{N}",
+      "symbol_and_unit_ledger": {
+        "C": "channel capacity, bits per second with log base 2",
+        "W": "bandwidth, hertz",
+        "P": "average transmitted power",
+        "N": "noise power of white thermal noise"
+      },
+      "assumptions": [
+        "Noise is white and Gaussian",
+        "The constraint is on average power, not peak power"
+      ],
+      "breakdown_regime": "Colored or non-Gaussian noise and peak power constraints change the formula; Theorem 18 bounds the white-noise case between the perturbed-power extremes",
+      "domain": "information theory / continuous channels",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Signal to noise budgeting in the engine uses the Shannon-Hartley form as the reference curve: capacity grows only logarithmically with power, so doubling a signal budget buys a fixed small increment of rate, which is why the engine prefers widening bandwidth (more independent observations) over amplifying a single signal.",
+        "source_operator": "shannon_hartley_theorem_17",
+        "telemetry": "Capacity reference curves in data acquisition planning"
+      }
+    },
+    {
+      "primitive_id": "rate_distortion_fidelity_framework",
+      "name": "Part V's framework: the source is given by its density P(x), a fidelity evaluation v is determined by a distance function rho(x, y) between messages and reconstructions (assumed continuous in both arguments), and a system's quality is the probability-weighted average v = double integral of rho(x, y) P(x, y) dx dy, so the source is characterized by a rate for each fidelity rather than by a single number",
+      "verbatim_quote": "and an evaluation v determined by a distance function p (x, y) which will be assumed continuous in both x and y.",
+      "page": "Shannon, section 28, printed p. 112; txt offset 221750",
+      "latex": "v = \\iint \\rho(x, y)\\, P(x, y)\\, dx\\, dy",
+      "symbol_and_unit_ledger": {
+        "v": "average distortion or infidelity of the system",
+        "P(x, y)": "joint density of source message x and reconstruction y",
+        "rho(x, y)": "distance function between a message and its reconstruction (printed as p(x, y) in the text)"
+      },
+      "assumptions": [
+        "A distance function appropriate to the application is chosen in advance",
+        "Quality is an average over the joint distribution, not a worst case"
+      ],
+      "breakdown_regime": "A badly chosen distance function certifies useless fidelity: the framework optimizes exactly the distortion it is handed, including the wrong one",
+      "domain": "information theory / rate distortion",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Approximation quality in the engine is always stated against a declared distance: summaries, compressions, and model surrogates each name the distortion they are allowed (what counts as close) before they are judged, and the fidelity figure is the average distortion under the real distribution, not a hand-picked example.",
+        "source_operator": "rate_distortion_fidelity_framework",
+        "telemetry": "Declared distortion functions attached to each approximation artifact"
+      }
+    },
+    {
+      "primitive_id": "rate_distortion_theorem_21",
+      "name": "Theorem 21: if a source has a rate R1 for a valuation v1, it is possible to encode the output of the source and transmit it over a channel of capacity C with fidelity as near v1 as desired provided R1 < C; this is not possible if R1 > C",
+      "verbatim_quote": "Theorem 21: If a source has a rate R l for a valuation VI it is possible to encode the output of the source and transmit it over a channel of capacity C with fidelity as near VI as desired provided R 1 < C. This is not possible if R 1 > C.",
+      "page": "Shannon, section 28, Theorem 21, printed p. 113; txt offset 222950",
+      "latex": "R_1 < C",
+      "symbol_and_unit_ledger": {
+        "R_1": "rate of the source for the valuation v1, bits per second",
+        "v_1": "the fidelity valuation (allowed distortion level)",
+        "C": "capacity of the channel, bits per second"
+      },
+      "assumptions": [
+        "The rate R1 is the least rate over systems achieving the valuation, as defined in section 28",
+        "The proof's first part follows the random coding method of Theorem 11"
+      ],
+      "breakdown_regime": "The statement is asymptotic in block length and message duration; finite systems sit strictly inside the bound",
+      "domain": "information theory / rate distortion",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Fidelity promises in the engine are checked against channel budgets exactly as Theorem 21 prescribes: a representation may promise a stated fidelity only if the rate the source needs at that fidelity is below the capacity of the path carrying it; otherwise the promise is arithmetically impossible and is rejected at design time.",
+        "source_operator": "rate_distortion_theorem_21",
+        "telemetry": "Rate-for-fidelity versus capacity checks in representation design reviews"
+      }
+    },
+    {
+      "primitive_id": "weaver_semantic_receiver",
+      "name": "Weaver's semantic receiver proposal: between the engineering receiver and the destination sits a semantic receiver that subjects the received signal to a second decoding matched to the statistical semantic characteristics of the message, the exact counterpart of the engineering correction channel one level up",
+      "verbatim_quote": "This semantic receiver subjects the message to a second decoding, the demand on this one being that it must match the statistical semantic characteristics of the message to the statistical semantic capacities of the totality of receivers, or of that subset of receivers which constitute the audience one wishes to affect.",
+      "page": "Weaver, section 3.3, printed p. 27; txt offset 57850",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Statistical semantic characteristics of messages exist in some form, as the success of translation machines partially shows",
+        "The proposal is a speculation Weaver offers by analogy, not a theorem"
+      ],
+      "breakdown_regime": "No construction is given; the semantic noise statistics it requires are not measurable in the theory's own terms, which Weaver acknowledges",
+      "domain": "communication theory / semantics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine separates decoding into two stages matching Weaver's diagram: a technical decoder that recovers what was sent, and a semantic stage that interprets it against the domain's statistical semantics, with the second stage's uncertainty reported separately instead of being folded into the first stage's confidence.",
+        "source_operator": "weaver_semantic_receiver",
+        "telemetry": "Two-stage decode logs with separate technical and semantic confidence fields"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "shannon-weaver-1963-rt-01",
+      "think": "Shannon's 1948 paper, as printed in this volume with Weaver's exposition in front of it, is the founding compression and transmission theory of the information age, and reading it as an engine builder rather than as a historian changes what stands out. The paper begins by refusing the semantic question entirely: the message has meaning, but meaning is irrelevant to the engineering problem, and that refusal is what buys the precision of everything after it. The discrete noiseless theory then does something subtler than it first appears. Capacity is not a property of the wire; it is a property of the set of allowed sequences, and Theorem 1 computes it from the constraint graph, so the same physical channel has different capacities under different alphabets and rules. The source theory mirrors this: a source is a stochastic process, its entropy is a weighted average over states, and the asymptotic equipartition results say that long sequences collapse onto a typical set of size 2 to the HN. The practical content for any system that stores or moves representations is Theorem 9: the ratio C over H is a hard exchange rate between capacity and content, and the constructive proof, sorting messages by probability and reading off binary expansions of cumulative probabilities, is the direct ancestor of every arithmetic coder and every probability weighted description scheme since. The noisy half of the paper is where the doctrine sharpens. Equivocation names the residual uncertainty honestly instead of hiding it inside an error count, and the rate of transmission R as H(x) minus H_y(x) is symmetric, which is why the theory can define capacity as a maximum over inputs and treat it as a property of the channel alone. Theorem 11 is the famous surprise, reliable communication at any rate below capacity, but the working engineer should pair it with its own converse half, printed inside the same theorem, which prices every attempt to exceed capacity in units of unremovable equivocation: no encoding gives an equivocation less than H - C. The random coding proof matters as a method: average over an ensemble of codes, conclude that a typical code is good, and accept an existence result where a construction would be better but is not available. The continuous half repeats the architecture with ensembles of functions, the sampling theorem turning bandwidth and duration into a finite count of degrees of freedom, differential entropy demoted to a coordinate relative quantity, entropy power invented to restore a variance-like calculus, and the Shannon-Hartley law C equals W log((P+N)/N) giving the logarithmic price of power. Part V then quietly generalizes the whole enterprise: once a fidelity criterion is a distance function, the source is characterized by a curve R(d), and exact transmission becomes the d equals zero endpoint of a trade-off that every real system actually lives on. Weaver's half of the book does different work: the three levels keep the technical result from being overclaimed, and the semantic receiver is an honest speculation that a second decoding stage, matched to semantic statistics, must exist wherever messages are interpreted rather than merely received. Three further threads decide how the book should be used rather than merely admired. The first is measurement practice. Before any coding theorem applies, the source must be estimated, and Shannon's own treatment of printed English, zero, first, and second order approximations built from letter and digram frequencies, then word frequencies, is a worked lesson in estimating a process at increasing fidelity and watching the entropy fall as structure is captured. The redundancy figure for English is not a curiosity; it is the measured gap between the maximum entropy of the alphabet and the entropy of the actual source, and every compression or error correcting scheme in the book is sized by exactly such gaps. The second thread is finiteness. Every limit theorem in the volume buys its certainty with unbounded delay and block length: Theorem 9 needs long blocks, Theorem 11 needs long codes, the typical set needs long sequences. Shannon does not hide this. The discussion section after Theorem 11 states plainly that following the proof's method is generally impractical and that no explicit series of approximations to the ideal has been found, with the Hamming code of section 17 standing as the exception that shows what a real construction looks like: finite, checkable, and exact within its stated error budget. A reader who takes the limit theorems as engineering recipes without the finiteness warnings has misread the book's own self assessment. The third thread is the correction channel, which converts equivocation from a definition into an operational quantity: an observer who sees both what was sent and what was recovered transmits correction data at exactly the equivocation rate, and the errors become removable. That construction is the book's bridge between counting errors and measuring information, because it prices residual uncertainty in the same units as the channel itself, bits per second of side information, and it is the template for every later scheme in which verification, redundancy, or feedback is budgeted against measured noise rather than against anxiety. Weaver, finally, marks the boundary of the whole enterprise from inside it: his semantic noise box and his three levels concede that the theory settles the technical level only, while his sampling and capacity summaries show how much of the engineering content survives translation into plain language without loss. The volume is therefore two books in one cover by design, a proof text that refuses interpretation and an interpretation that refuses to masquerade as proof, and its authority comes precisely from keeping those two voices distinct.",
+      "retrocausal_genealogy": "Read backward from the present, the book's genealogy runs through almost everything the engine already depends on. The cumulative probability coding of section 9 is the grandparent of arithmetic coding and of the probability ordered representations used in modern learned compressors; the typical set argument is the grandparent of every sample complexity intuition that says long records behave like their entropy rate; the equivocation calculus is the grandparent of mutual information feature scoring, which is H(target) minus H(target given signal) under another name. The Hamming block code in section 17, included almost as an aside, founded coding theory as a practice rather than a bound: three parity digits locating one flipped digit in seven is the ancestor of every checksum, parity field, and error correcting memory in service today. The rate distortion part is the ancestor of lossy media compression and, more importantly for a reasoning engine, of the idea that a summary is a code with a declared distortion, so its quality is a number rather than an impression. Even Weaver's speculative semantic receiver has descendants: every two stage system that first recovers a signal and then interprets it against domain statistics is living in his diagram, including this engine's split between data ingestion and reasoning. Tracing the genealogy matters because it shows which of the book's results are load bearing in current practice and which, like the exact capacity computations for exotic channels, were scaffolding for the theorems that turned out to matter.",
+      "theory_of_mind": "Shannon writes as an engineer who trusts the reader to follow a proof and distrusts any intuition that has not been turned into one. His characteristic move is to define a quantity operationally, prove the theorem that makes the definition inevitable, and only then interpret: entropy is not introduced as disorder or surprise but as the unique measure satisfying three bookkeeping axioms, and he says plainly that the real justification of the definition resides in its implications. He thinks in ensembles and averages, is comfortable with existence proofs that give no construction, and repeatedly warns where an average conceals dispersion, as in the spread of log probability around H for short sequences. Weaver's mind is different and complementary: he is a science administrator translating for outsiders, generous with analogy, careful to mark where the mathematics stops, and intellectually honest enough to raise the semantic problem his co-author bracketed and to label his own semantic receiver a suggestion rather than a result. Together the volume models a division of cognitive labor the engine should copy: one voice that proves and refuses to overclaim, and one voice that interprets and explicitly prices the interpretation as speculation.",
+      "cross_layer_veto": "The book vetoes several tempting cross layer moves. From the veto side: the data processing bound of section 23 vetoes any claim that downstream processing created information about a source that the feed never carried; the converse half of Theorem 11 vetoes any architecture promising fidelity above what H minus C leaves over; the coordinate dependence of continuous entropy vetoes comparisons of raw differential entropy across parameterizations; and the ergodicity discussion vetoes reading ensemble averages off a single drifting or mixed process. From the permission side: Theorem 11 licenses noisy inputs when redundancy is matched to noise, Weaver's level analysis licenses using Level A results to bound Levels B and C without pretending to settle them, and the rate distortion framework licenses lossy summaries provided their distortion function is declared. The standing rule extracted for the engine is that a layer may veto another layer only with a theorem shaped reason, a bound, an invariance failure, or a broken premise, never with a preference; and every veto must name the condition under which it lifts, as each of Shannon's bounds names exactly the capacity or entropy condition that would change the verdict."
+    }
+  ],
+  "universal_lens": "The universal lens of this book is that information is a measurable property of selection among possibilities, governed by hard exchange rates between content, capacity, noise, and fidelity that no cleverness repeals. Entropy prices content, capacity prices channels, equivocation prices noise, and the rate distortion curve prices approximation, and the four prices form one accounting system: every system that represents, transmits, or summarizes anything is a set of trades inside that accounting, whether its builders know it or not. The deepest habit the book teaches is to ask of any representation three questions in order: what is the entropy of what must be carried, what is the capacity of what must carry it, and what distortion has been declared acceptable, and to refuse to discuss performance until all three are numbers.",
+  "gsi_mapping": "For the institute layer, the book supplies the measurement spine of any general intelligence program: ensembles instead of point claims, entropy and mutual information as the common currency across modalities, maximum entropy as the disciplined default under partial knowledge, and converse bounds as the standard form for impossibility results. The three level analysis from Weaver generalizes into an audit template for any intelligent system, separating signal fidelity, semantic fidelity, and effect on action, and the semantic receiver speculation marks the open frontier honestly: interpretation layers exist and work, but their statistics are not yet a theory, which is exactly where a research institute should aim its effort rather than pretend the problem is solved.",
+  "gse_mapping": "For the sports engine specifically, the mappings are operational. Every feed is a channel with a measurable capacity and equivocation; every signal is priced by the conditional entropy it removes on held-out data; every pipeline stage is classified singular or non-singular so information destruction is deliberate; sampling and update rates are justified against the bandwidth of the underlying process to avoid aliasing fast structure into slow features; redundancy is budgeted against measured noise so error rates are engineered targets rather than surprises; and every published summary or projection carries a declared fidelity notion, so what the reasoning layer claims is always traceable to what the channels underneath could actually carry. Nothing in this mapping involves wagering mechanics; it is the measurement discipline that any evidence driven reasoning system, sports or otherwise, runs on."
+}

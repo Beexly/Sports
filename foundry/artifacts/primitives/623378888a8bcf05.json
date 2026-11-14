@@ -1,0 +1,879 @@
+{
+  "book_id": "623378888a8bcf05",
+  "source_status": "FULL_TEXT",
+  "source_note": "Roman Garnett, Bayesian Optimization, Cambridge University Press, first published 2023, ISBN 978-1-108-42578-0 (hardback), DOI 10.1017/9781108348973; companion site bayesoptbook.com. Local source: publisher free-to-view personal-use PDF, Garnett-2023-BayesianOptimization.pdf, 16032941 bytes, scan digest sha256(str(size) + file bytes) = 623378888a8bcf051f116144e6c029cf4769481cde8d67f84035220a7439715f (book_id is its first 16 hex characters); plain sha256 of the PDF bytes = 1138209c25aeee45665323a2daf56973813927d17cca96b6568330174e18dda3. Extracted text: Garnett-2023-BayesianOptimization.pdf.txt, 19144 lines; every verbatim quote was verified as a contiguous substring of that text file under the verifier's normalization. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "gaussian_conditioning_update",
+      "name": "Gaussian conditioning: posterior mean is a covariance-weighted correction and posterior covariance shrinks independently of the observed values (a.14; GP form 2.9-2.10)",
+      "verbatim_quote": "Notably, the correction to the covariance matrix does not depend on the observed values.",
+      "page": "Appendix A, sec. a.2, p. 300 (eq. a.14); Gaussian process form sec. 2.2, eqs. 2.9-2.10",
+      "latex": "\\mu_{1|2} = \\mu_1 + \\Sigma_{12}\\Sigma_{22}^{-1}(x_2 - \\mu_2), \\qquad \\Sigma_{11|2} = \\Sigma_{11} - \\Sigma_{12}\\Sigma_{22}^{-1}\\Sigma_{21}",
+      "symbol_and_unit_ledger": {
+        "mu_1, mu_2": "prior mean vectors of the two blocks of a joint Gaussian vector (units of the modeled quantity)",
+        "Sigma_12": "cross-covariance between the unknown block and the observed block (squared units of the quantity)",
+        "Sigma_22": "covariance of the observed block (squared units); must be invertible",
+        "Sigma_11|2": "posterior covariance of the unknown block after conditioning (squared units)",
+        "x_2 - mu_2": "surprise: deviation of the observed values from their prior mean (units of the quantity)"
+      },
+      "assumptions": [
+        "The unknown and observed quantities are jointly Gaussian, so all conditional distributions are Gaussian in closed form.",
+        "The prior mean vector and covariance matrix are known or already estimated when conditioning is applied."
+      ],
+      "breakdown_regime": "Breaks when the joint distribution is materially non-Gaussian (heavy tails, discrete outcomes), when Sigma_22 is near singular so the inverse amplifies noise, and when the covariance itself was fit to the same data being conditioned on, which double counts evidence.",
+      "domain": "gaussian processes / probabilistic inference",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the update rule of the whole belief engine: every new observation revises a correlated belief state by a covariance-weighted surprise term, and uncertainty contracts by an amount fixed before the value is seen. In the GSE reasoning engine, player and team strength beliefs are joint states, so one game result must revise correlated beliefs about teammates, opponents, and shared situational factors through exactly this correction, never as isolated point edits.",
+        "source_operator": "gaussian_conditioning_update",
+        "telemetry": "Game results, play by play outcomes, injury return timelines, and any sensor or tracking feed that reports a value for one component of a correlated belief state."
+      }
+    },
+    {
+      "primitive_id": "ard_weighted_distance",
+      "name": "Automatic relevance determination: per-dimension length scales turn covariance distance into a learned weighted distance, and an irrelevant dimension is nullified by a long length scale (3.24-3.25)",
+      "verbatim_quote": "The contribution to the weighted distance (3.24) for that dimension would then be effectively nullified, and the resulting covariance would effectively \"ignore\" that dimension.",
+      "page": "sec. 3.4, p. 56 (eqs. 3.24-3.25)",
+      "latex": "d_\\ell(x, x')^2 = \\sum_j \\frac{(x_j - x_j')^2}{\\ell_j^2}, \\qquad K(x, x') = K(d_\\ell(x, x'))",
+      "symbol_and_unit_ledger": {
+        "ell_j": "length scale for input dimension j (units of dimension j); large ell_j means weak dependence on that dimension",
+        "d_ell": "dimensionless weighted distance between two inputs after per-dimension rescaling",
+        "K": "stationary covariance function evaluated at the weighted distance (squared units of the objective)"
+      },
+      "assumptions": [
+        "The covariance is stationary, so similarity depends on the inputs only through a distance.",
+        "Length scales are positive and are inferred from data, typically by marginal likelihood or a model posterior."
+      ],
+      "breakdown_regime": "Breaks when relevance is not axis aligned (interactions rotate the relevant directions, needing the full Mahalanobis form), when length scales are fit on tiny samples and collapse to zero or infinity, and when a dimension matters only in a subregion, which a single global scale cannot express.",
+      "domain": "gaussian processes / covariance design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "ARD is a learned feature relevance gate for the reasoning engine: situational inputs such as rest days, travel, weather, and matchup history enter similarity computations with data-driven weights, and a signal family the data finds irrelevant is automatically damped toward zero weight instead of being deleted by hand. The weights themselves become telemetry, showing which situational dimensions the engine currently believes drive similarity between games.",
+        "source_operator": "ard_weighted_distance",
+        "telemetry": "Fitted length scales per input dimension across rolling training windows, logged with the marginal likelihood of each refit."
+      }
+    },
+    {
+      "primitive_id": "model_evidence_posterior",
+      "name": "Model posterior: belief over models or hyperparameters is prior times marginal likelihood, so data support flows to models through their evidence (4.7)",
+      "verbatim_quote": "The model posterior provides support to the models most consistent with our prior beliefs and the observed data.",
+      "page": "sec. 4.2, p. 71 (eq. 4.7)",
+      "latex": "p(\\theta \\mid D) \\propto p(\\theta)\\, p(y \\mid x, \\theta)",
+      "symbol_and_unit_ledger": {
+        "theta": "model index or hyperparameter vector indexing a family of objective models (dimensionless index or physical parameter units)",
+        "p(y | x, theta)": "marginal likelihood or model evidence: probability density of the observed data under model theta (units of inverse data volume)",
+        "p(theta)": "prior belief over models before seeing the dataset (probability or density)"
+      },
+      "assumptions": [
+        "A model space and a prior over it are specified before conditioning.",
+        "The marginal likelihood is computable, which for latent function models means the latent values at observed locations have been integrated out."
+      ],
+      "breakdown_regime": "Breaks when the true structure lies outside the model space, since posterior mass then concentrates on the least wrong member; also degrades when evidence integrals are approximated crudely, because small evidence errors are amplified by normalization across models.",
+      "domain": "bayesian model selection",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine should hold a posterior over its own model variants, weighting each projection model by how well it predicted the data actually observed, rather than crowning one configuration. Game outcomes then shift weight continuously between, for example, pace-driven and matchup-driven model variants, and the shift is auditable through the evidence term each variant earned.",
+        "source_operator": "model_evidence_posterior",
+        "telemetry": "Out-of-sample predictive log scores per model variant per week, stored as evidence contributions to the model posterior."
+      }
+    },
+    {
+      "primitive_id": "bayesian_occam_razor",
+      "name": "Bayesian Occam's razor: marginal likelihood automatically penalizes complexity because a model that spreads probability over more possible datasets must dilute support for each one (4.8)",
+      "verbatim_quote": "penalty for model complexity, an effect known as Bayesian Occam's razor.",
+      "page": "sec. 4.2, p. 71; restated in the sec. 5.5 summary, p. 107 (GP log marginal likelihood eq. 4.8)",
+      "latex": "\\log p(y \\mid x, \\theta) = -\\frac{1}{2}(y - m)^\\top C^{-1}(y - m) - \\frac{1}{2}\\log |C| - \\frac{n}{2}\\log(2\\pi)",
+      "symbol_and_unit_ledger": {
+        "y - m": "residual of observations against the prior mean function (units of the objective)",
+        "C": "observation covariance matrix, prior covariance plus noise (squared units of the objective)",
+        "log |C|": "complexity penalty term: log volume of datasets the model spreads mass over (dimensionless, nats)",
+        "n": "number of observations (count)"
+      },
+      "assumptions": [
+        "Models are compared through a proper probability distribution over all datasets they could generate, so total probability mass is conserved.",
+        "For Gaussian process models with additive Gaussian noise the evidence is available in closed form."
+      ],
+      "breakdown_regime": "The penalty is only as meaningful as the prior: an arbitrarily diffuse prior can make a good model look complex, and with misspecified noise the evidence may punish the right structure for the wrong reason. It also says nothing about which complex model to prefer when two explain the data equally.",
+      "domain": "bayesian model selection",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This gives the engine a principled complexity budget when absorbing new signal families: a richer situational model must earn its extra dimensions in evidence on real games, and the fit term and the complexity term are reported separately, so a rejected signal is recorded as rejected by evidence rather than deleted. That is the quantitative form of the rule that nothing enters the published reasoning without paying for its complexity.",
+        "source_operator": "bayesian_occam_razor",
+        "telemetry": "Marginal likelihood decompositions (fit term versus log determinant term) logged for every candidate signal family evaluation."
+      }
+    },
+    {
+      "primitive_id": "model_averaging",
+      "name": "Model averaging: predictions marginalize over the model posterior instead of committing to one selected model, yielding mixture predictive distributions (4.11-4.12, 8.64-8.65)",
+      "verbatim_quote": "Bayesian model averaging over this space yields marginal posterior and predictive distributions",
+      "page": "sec. 4.4, p. 74 (eqs. 4.11-4.12); computation in sec. 8.10, p. 192 (eqs. 8.64-8.65)",
+      "latex": "p(f \\mid D) = \\int p(f \\mid D, \\theta)\\, p(\\theta \\mid D)\\, d\\theta",
+      "symbol_and_unit_ledger": {
+        "p(f | D, theta)": "objective posterior under one fixed model or hyperparameter setting (density over functions)",
+        "p(theta | D)": "model posterior weight earned from the data (density over the model space)",
+        "p(f | D)": "model-marginal posterior: a mixture over models, generally non-Gaussian even when each component is a Gaussian process"
+      },
+      "assumptions": [
+        "The model posterior is available exactly or through samples, Laplace approximation, or a discrete set of candidate models.",
+        "Each component model can produce its own posterior and predictive distribution."
+      ],
+      "breakdown_regime": "Breaks down computationally as the model space grows, since every component must be conditioned and stored; it also inherits the model space limitation, because averaging over a family that excludes the truth only averages wrong answers, and mixture predictive intervals can look calibrated while every component is biased the same way.",
+      "domain": "bayesian model selection / robust prediction",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Published projections should be model-marginal: the engine averages over its plausible hyperparameter and structure settings, weighted by evidence, so a single lucky fit cannot dominate a forecast. The width added by disagreement between high-weight models is itself information, separating uncertainty about the game from uncertainty about which model of the game is right.",
+        "source_operator": "model_averaging",
+        "telemetry": "Per-model predictive distributions and posterior weights retained for every published projection, plus the mixture variance decomposition."
+      }
+    },
+    {
+      "primitive_id": "bellman_optimal_policy",
+      "name": "Optimal sequential policy: value satisfies the Bellman recursion, one-step gain plus expected optimal future value, derived by induction on the remaining horizon (5.15-5.18)",
+      "verbatim_quote": "assume the optimality of all future decisions. This is known as bellman's principle of optimality.",
+      "page": "sec. 5.2, pp. 99-101 (eqs. 5.15-5.18); summary statement sec. 5.5, p. 107",
+      "latex": "\\alpha_\\tau(x; D) = \\alpha_1(x; D) + \\mathbb{E}\\left[\\alpha_{\\tau-1}^{*}(D') \\,\\middle|\\, x, D\\right], \\qquad \\alpha_\\tau^{*}(D) = \\max_{x \\in X} \\alpha_\\tau(x; D)",
+      "symbol_and_unit_ledger": {
+        "alpha_1": "expected marginal utility gain from one observation (utility units)",
+        "alpha_tau*": "optimal expected total future gain with tau decisions remaining (utility units)",
+        "D'": "dataset after the proposed observation, a random variable through the unknown observed value",
+        "tau": "remaining decision horizon (count of observations)"
+      },
+      "assumptions": [
+        "Preferences over final datasets are fully captured by a utility function of the data.",
+        "Future decisions are assumed optimal, which is what licenses the recursion; the horizon or an equivalent stopping structure is defined."
+      ],
+      "breakdown_regime": "Exact computation grows exponentially in the horizon, so the recursion is a definition of optimality rather than a practical algorithm beyond tiny horizons. It also inherits any misspecification of the utility: a perfectly optimal policy for the wrong utility is still the wrong policy.",
+      "domain": "decision theory / sequential experimental design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the formal spine for any multi-step reasoning schedule in the engine: the value of gathering one more piece of evidence is its immediate gain plus the expected value of the improved decisions it enables later in the week. The weekly cycle of usage, health, matchup, and situation layers is a horizon problem, and this recursion is what myopic one-layer-at-a-time scoring is an approximation to.",
+        "source_operator": "bellman_optimal_policy",
+        "telemetry": "Decision logs showing, for each evidence-gathering step, the immediate gain estimate and the assumed remaining horizon value."
+      }
+    },
+    {
+      "primitive_id": "simple_and_global_reward",
+      "name": "Simple reward versus global reward: terminal-recommendation utility is the best posterior mean over evaluated points (6.3) or over the whole domain (6.5), and the larger action space is riskier",
+      "verbatim_quote": "The larger action space underlying global reward leads to a markedly different and somewhat riskier recommendation.",
+      "page": "sec. 6.1, pp. 112-113 (eqs. 6.3 and 6.5)",
+      "latex": "u(D) = \\max_{x \\in X} \\mu_D(x)",
+      "symbol_and_unit_ledger": {
+        "mu_D(x)": "posterior mean of the objective at location x after data D (units of the objective)",
+        "X": "full feasible domain of the terminal recommendation (the global reward action space)",
+        "u(D)": "expected utility of the optimal risk-neutral terminal recommendation (units of the objective)"
+      },
+      "assumptions": [
+        "The terminal decision is risk neutral, valuing a recommendation by its posterior mean alone.",
+        "A posterior mean function over the domain exists, which for the global reward requires a model that can evaluate unevaluated locations."
+      ],
+      "breakdown_regime": "The global reward can recommend a point whose high posterior mean rests on almost no data, so its realized value is far less certain than the simple reward's evaluated incumbent; under noise the two diverge sharply, and choosing between them is a real risk posture decision, not a technicality.",
+      "domain": "decision theory / utility design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every engine output is a terminal recommendation problem: a projection published for an unevaluated matchup is a global-reward act, while restating the best-supported estimate is a simple-reward act. Scoring the engine with the global-reward utility forces honesty about extrapolation risk, because the gap between the two rewards measures how much of a forecast's value comes from places the data has not touched.",
+        "source_operator": "simple_and_global_reward",
+        "telemetry": "For each published projection, the best evaluated-anchor estimate alongside the global posterior-mean maximum, so the extrapolation gap is visible."
+      }
+    },
+    {
+      "primitive_id": "information_gain_utility",
+      "name": "Information gain utility: value of a dataset is the reduction in entropy of a target quantity from prior to posterior, equivalently a KL divergence (6.8-6.9)",
+      "verbatim_quote": "However, the previous definition as the direct reduction in entropy may be more intuitive.",
+      "page": "sec. 6.3, p. 115 (eqs. 6.8-6.9)",
+      "latex": "u(D) = H[\\omega] - H[\\omega \\mid D] = D_{\\mathrm{kl}}\\left(p(\\omega \\mid D) \\,\\|\\, p(\\omega)\\right)",
+      "symbol_and_unit_ledger": {
+        "omega": "target quantity the experimenter wants to learn about, such as the optimum location or value (units depend on the target)",
+        "H": "differential entropy of the belief about omega (nats)",
+        "D_kl": "Kullback-Leibler divergence between posterior and prior beliefs about omega (nats)"
+      },
+      "assumptions": [
+        "A target quantity omega is named in advance; information about anything else earns no utility.",
+        "Prior and posterior beliefs about omega are proper distributions whose entropies or divergence can be evaluated or approximated."
+      ],
+      "breakdown_regime": "A single realized dataset can show negative entropy reduction even though the expected gain is nonnegative, and entropy of a continuous target depends on parameterization choices; the utility also ignores whether the learned information changes any decision, so it can reward learning that has no downstream value.",
+      "domain": "decision theory / information theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the scoring rule for pure learning steps inside the engine: a film study, tracking feed, or situational dataset is worth the expected entropy it removes about a named target, such as which coverage a defense will favor, not the volume of data it adds. Naming the target first prevents the engine from crediting itself for learning things that never touch a projection.",
+        "source_operator": "information_gain_utility",
+        "telemetry": "Entropy estimates for named belief targets before and after each major data ingestion, stored as information gain per source."
+      }
+    },
+    {
+      "primitive_id": "bandit_exploration_exploitation",
+      "name": "Multi-armed bandit reduction: sequential choice among uncertain options forces an exploration-exploitation dilemma that any policy must resolve (sec. 7.7)",
+      "verbatim_quote": "The agent thus faces an exploration-exploitation dilemma, constantly forced to decide whether to select an arm believed to have high expected reward (exploitation)",
+      "page": "sec. 7.7, pp. 142-143",
+      "latex": "x^{*} \\in \\arg\\max_{x \\in X} \\mathbb{E}[y \\mid x] = \\arg\\max_{x \\in X} f(x), \\qquad f^{*} = \\max_{x \\in X} f(x)",
+      "symbol_and_unit_ledger": {
+        "E[y | x]": "expected reward of arm x under its unknown reward distribution (units of the reward)",
+        "f": "vector of expected rewards over the finite arm set (units of the reward)",
+        "x*, f*": "an optimal arm and its expected reward (index; reward units)"
+      },
+      "assumptions": [
+        "Rewards are stationary and conditionally independent given the chosen arm in the classical formulation.",
+        "Learning about an arm requires allocating observations to it; there is no free information."
+      ],
+      "breakdown_regime": "The classical bandit assumes arms teach nothing about each other, which fails when options are correlated, as options in a reasoning engine always are; it also frames value as cumulative reward, which can mislead when the real goal is a single best final recommendation.",
+      "domain": "sequential decision making / bandits",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine faces this dilemma every cycle: lean on the best-supported read of a matchup or spend scarce analysis capacity probing an uncertain signal that might change several projections at once. The bandit framing makes the tradeoff explicit and countable, and its regret accounting exposes policies that feel productive while systematically under-exploring the signals that matter late in the week.",
+        "source_operator": "bandit_exploration_exploitation",
+        "telemetry": "Per-signal-family allocation logs: how often each family was consulted, its posterior uncertainty at consultation time, and the resulting change in projections."
+      }
+    },
+    {
+      "primitive_id": "optimism_upper_confidence_bound",
+      "name": "Optimism in the face of uncertainty: act on the highest plausible value, the predictive quantile, so uncertainty itself earns an exploration bonus (7.18, 8.25)",
+      "verbatim_quote": "the arm with the highest plausible expected reward given the currently available information. Arms with highly uncertain reward will have a correspondingly wide range of plausible values",
+      "page": "sec. 7.8, p. 145 (eq. 7.18); Gaussian form sec. 8.4, p. 170 (eq. 8.25)",
+      "latex": "\\alpha_{\\mathrm{ucb}}(x; D, \\pi) = q(\\pi; x, D) = \\mu + \\beta\\sigma, \\qquad \\beta = \\Phi^{-1}(\\pi)",
+      "symbol_and_unit_ledger": {
+        "q(pi; x, D)": "pi-quantile of the predictive distribution at x (units of the objective)",
+        "mu, sigma": "predictive mean and standard deviation at x (units of the objective)",
+        "beta": "exploration parameter: number of predictive standard deviations credited to uncertainty (dimensionless)",
+        "pi": "confidence level in (0, 1) (probability)"
+      },
+      "assumptions": [
+        "A predictive distribution with computable quantiles is maintained at every candidate location.",
+        "The confidence parameter is chosen externally; theory requires it to grow toward 1 over time at a controlled rate."
+      ],
+      "breakdown_regime": "If predictive uncertainty is miscalibrated, the bonus rewards the wrong places: an overconfident model starves exploration, an underconfident one wastes the budget. The quantile is also a pointwise bound, so maximizing it ignores how observations correlate across locations.",
+      "domain": "bandits / optimization policy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The upper confidence bound is a clean operator for ranking uncertain matchup reads inside the engine: each candidate interpretation of a game is scored at mean plus beta times its honest uncertainty, so an under-studied but plausible storyline can outrank a well-worn one exactly when its uncertainty is decision-relevant. Beta becomes a single auditable dial for how aggressive the reasoning is allowed to be.",
+        "source_operator": "optimism_upper_confidence_bound",
+        "telemetry": "Predictive mean and standard deviation pairs for candidate reads at decision time, with the beta schedule used and the realized outcomes for calibration."
+      }
+    },
+    {
+      "primitive_id": "thompson_sampling",
+      "name": "Thompson sampling: sample the next evaluation from the posterior distribution of the optimum's location, equivalently maximize a random draw from the function posterior (7.19-7.20)",
+      "verbatim_quote": "This procedure elegantly addresses the exploration-exploitation dilemma: sampling observations proportional to their probability of optimality automatically encourages exploitation, while the inherent randomness of the policy guarantees constant exploration.",
+      "page": "sec. 7.9, p. 148 (eqs. 7.19-7.20)",
+      "latex": "x \\sim p(x^{*} \\mid D), \\qquad \\alpha_{\\mathrm{ts}}(x; D) \\sim p(f \\mid D), \\quad x \\in \\arg\\max_{x' \\in X} \\alpha_{\\mathrm{ts}}(x'; D)",
+      "symbol_and_unit_ledger": {
+        "p(x* | D)": "posterior distribution over the location of the global optimum (density over the domain)",
+        "p(f | D)": "posterior distribution over the objective function itself (density over functions)",
+        "alpha_ts": "one sampled plausible objective function, maximized to produce the next evaluation (units of the objective)"
+      },
+      "assumptions": [
+        "The posterior over the objective can be sampled, exactly or approximately, and sampled functions can be optimized.",
+        "Probability matching is accepted as the exploration mechanism; no explicit bonus parameter is tuned."
+      ],
+      "breakdown_regime": "Sampling from a function posterior is computationally hard outside special cases, and approximate samplers bias the induced distribution over optima; the policy is also stochastic, so individual decisions cannot be justified one by one, only in aggregate frequency.",
+      "domain": "bandits / optimization policy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Thompson sampling gives the engine a disciplined way to distribute attention across plausible best reads of a week: candidate focal matchups are sampled in proportion to their posterior probability of being the most informative or most valuable, which automatically balances proven lines of analysis against neglected ones without a hand-tuned exploration schedule.",
+        "source_operator": "thompson_sampling",
+        "telemetry": "Posterior samples of candidate focal analyses per cycle and the frequency with which each was selected, compared against realized value."
+      }
+    },
+    {
+      "primitive_id": "posterior_mean_myopia_failure",
+      "name": "Posterior mean maximization is a degenerate policy: one-step lookahead for cumulative reward reduces to the posterior mean and can lock onto the incumbent forever; two-step lookahead adds a knowledge gradient exploration term (7.22)",
+      "verbatim_quote": "In our example, the posterior mean is maximized at the previously best-seen point, so the policy will select this point forevermore.",
+      "page": "sec. 7.10, pp. 155-156 (eq. 7.22)",
+      "latex": "\\alpha_2(x; D) = \\mu_D(x) + \\alpha_{\\mathrm{kg}}(x; D)",
+      "symbol_and_unit_ledger": {
+        "mu_D(x)": "posterior mean at x, the pure exploitation score (units of the objective)",
+        "alpha_kg": "knowledge gradient: expected gain in the global reward from one more observation (units of the objective)",
+        "alpha_2": "two-step lookahead acquisition for cumulative reward (units of the objective)"
+      },
+      "assumptions": [
+        "Observations carry zero-mean additive noise, so the posterior mean is the expected observed value.",
+        "The failure example assumes the posterior mean is maximized at an already evaluated point, which noisy re-evaluation cannot improve in expectation."
+      ],
+      "breakdown_regime": "The decomposition is specific to two-step lookahead under cumulative reward; it shows exploration only enters through the second step, and even the two-step policy can still stall from overexploitation, as the book's own example run demonstrates.",
+      "domain": "optimization policy / failure modes",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is a named failure mode the engine must test itself against: any ranking rule that scores only by current best estimate will re-select the incumbent read forever and call it confidence. The decomposition gives the corrective shape: every selection score in the reasoning engine should be auditable as an exploitation term plus an explicit exploration term, and a score with a zero exploration term is flagged, not trusted.",
+        "source_operator": "posterior_mean_myopia_failure",
+        "telemetry": "Selection-score decompositions for engine decisions: exploitation component and exploration component logged separately for audit."
+      }
+    },
+    {
+      "primitive_id": "expected_improvement_closed_form",
+      "name": "Expected improvement in closed form: the expected gain over the incumbent splits into an exploitation term and an exploration term, and increases monotonically in both predictive mean and predictive standard deviation (8.9)",
+      "verbatim_quote": "Increasing a point's expected value naturally makes the point more favorable for exploitation, and increasing its uncertainty makes it more favorable for exploration.",
+      "page": "sec. 8.2, p. 159 (eq. 8.9)",
+      "latex": "\\alpha_{\\mathrm{ei}}(x; D) = (\\mu - \\phi^{*})\\, \\Phi\\!\\left(\\frac{\\mu - \\phi^{*}}{\\sigma}\\right) + \\sigma\\, \\phi\\!\\left(\\frac{\\mu - \\phi^{*}}{\\sigma}\\right)",
+      "symbol_and_unit_ledger": {
+        "mu, sigma": "predictive mean and standard deviation of the objective at x under a Gaussian process posterior (units of the objective)",
+        "phi*": "incumbent best objective value or current simple reward (units of the objective)",
+        "Phi, phi": "standard normal cdf and pdf (dimensionless; density per standard deviation)"
+      },
+      "assumptions": [
+        "Observations are exact in this form, so improvement is measured against a known incumbent value.",
+        "The predictive distribution at the candidate point is Gaussian with positive variance."
+      ],
+      "breakdown_regime": "With noisy observations the incumbent is not known exactly and this formula silently answers the wrong question; it also only sees the marginal predictive distribution, so it cannot value an observation for what it teaches about other locations.",
+      "domain": "optimization policy / gaussian processes",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expected improvement is the engine's template for valuing one more measurement of anything: a candidate data pull is worth the probability-weighted amount by which it could beat the current best estimate, and the closed form exposes the two levers, raising the expected value or raising the honest uncertainty. Any internal score that cannot be decomposed this way is hiding which lever it pulls.",
+        "source_operator": "expected_improvement_closed_form",
+        "telemetry": "Candidate measurement evaluations scored with predictive mean, predictive standard deviation, and incumbent value at decision time."
+      }
+    },
+    {
+      "primitive_id": "noisy_expected_improvement_envelope",
+      "name": "Noisy expected improvement is exactly computable: the updated posterior mean is linear in the observation, so the updated simple reward is the upper envelope of lines in the z-score and its expectation is a finite sum (8.10-8.16)",
+      "verbatim_quote": "how can we determine whether a particularly high observed value reflects a true underlying effect or is merely an artifact of noise?",
+      "page": "sec. 8.2, pp. 160-163 (eqs. 8.10-8.16)",
+      "latex": "g(a, b) = \\sum_i \\left[ a_i \\left( \\Phi(c_{i+1}) - \\Phi(c_i) \\right) + b_i \\left( \\phi(c_i) - \\phi(c_{i+1}) \\right) \\right], \\qquad \\alpha_{\\mathrm{ei}}(x; D) = g(a, b) - \\mu^{*}",
+      "symbol_and_unit_ledger": {
+        "a, b": "intercepts and slopes of the updated posterior mean at each candidate point as a function of the observation z-score; b_i is the posterior covariance with the proposed point divided by predictive standard deviation s (units of the objective)",
+        "c_i": "z-score breakpoints where the identity of the maximizing point changes (dimensionless)",
+        "mu*": "current simple reward, the maximum posterior mean before observing (units of the objective)",
+        "g(a, b)": "expected updated simple reward after the observation (units of the objective)"
+      },
+      "assumptions": [
+        "The objective posterior is a Gaussian process and observation noise is additive Gaussian, making the updated posterior mean exactly linear in the observed value.",
+        "The candidate set for the updated maximum is finite or discretized so the envelope has finitely many segments."
+      ],
+      "breakdown_regime": "Cost grows with the candidate set size and the exact form still assumes the Gaussian model is right; the popular plug-in shortcuts the book surveys behave badly in high noise, which is precisely the regime where the exact computation matters most.",
+      "domain": "optimization policy / gaussian processes",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The envelope construction is a general reasoning pattern: when a belief update is linear in incoming evidence, the value of the updated best conclusion is a piecewise linear envelope over evidence outcomes, and its expectation can be computed exactly instead of sampled. Inside the engine, this is how the value of a noisy signal, a beat report or a tracking metric with known error, should be priced: by how the best conclusion moves across the whole range of what the signal might say.",
+        "source_operator": "noisy_expected_improvement_envelope",
+        "telemetry": "Posterior covariance of each candidate conclusion with each incoming signal, plus signal noise scales, retained so envelope values can be recomputed."
+      }
+    },
+    {
+      "primitive_id": "probability_of_improvement_risk_aversion",
+      "name": "Probability of improvement: the monotone transform (mu - tau)/sigma shares the maxima of the Gaussian exceedance probability, and the policy is risk averse once the mean clears the target (8.21-8.22)",
+      "verbatim_quote": "Probability of improvement favors a relatively safe option returning a certain but modest improvement over a more-risky",
+      "page": "sec. 8.3, pp. 167-169 (eqs. 8.21-8.22)",
+      "latex": "\\alpha_{\\mathrm{pi}}(x; D, \\tau) = \\Phi\\!\\left(\\frac{\\mu - \\tau}{\\sigma}\\right), \\qquad \\alpha_{\\mathrm{pi}}'(x; D, \\tau) = \\frac{\\mu - \\tau}{\\sigma}",
+      "symbol_and_unit_ledger": {
+        "tau": "improvement target the observation must exceed (units of the objective)",
+        "mu, sigma": "predictive mean and standard deviation at x (units of the objective)",
+        "alpha_pi'": "monotone transform of the improvement probability with the same maximizers but a nonvanishing gradient (dimensionless)"
+      },
+      "assumptions": [
+        "The predictive distribution is Gaussian in the exact form stated.",
+        "A target tau is supplied; the policy's behavior is entirely relative to that target."
+      ],
+      "breakdown_regime": "The score counts any exceedance equally, so it prefers a certain small gain over a risky large one, and once the predictive mean exceeds the target it actively penalizes uncertainty, the opposite of exploration; with a badly set target the policy degenerates to pure caution or pure gambling.",
+      "domain": "optimization policy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Probability of improvement is the right internal score when the engine's question is binary, will this read clear a stated bar, and the wrong score when the question is how much value is at stake. Keeping both scores in the toolbox, and recording which one justified a decision, prevents threshold-clearing logic from silently replacing magnitude reasoning in projection work.",
+        "source_operator": "probability_of_improvement_risk_aversion",
+        "telemetry": "Decision records tagged by scoring rule used, with target values and predictive moments preserved for later review."
+      }
+    },
+    {
+      "primitive_id": "pi_ucb_equivalence",
+      "name": "For Gaussian processes, probability of improvement and upper confidence bound have identical maximizing sets under a data-dependent target transform, so a fixed beta schedule is not a fixed target schedule (8.26)",
+      "verbatim_quote": "sequentially maximizing an upper confidence bound with a fixed exploration parameter is not equivalent to maximizing probability of improvement with a fixed improvement target.",
+      "page": "sec. 8.4, pp. 170-171 (eq. 8.26)",
+      "latex": "x \\in \\arg\\min_{x' \\in X} \\frac{\\tau(\\beta) - \\mu}{\\sigma}, \\qquad \\tau(\\beta) = \\max_{x' \\in X} \\left( \\mu + \\beta\\sigma \\right)",
+      "symbol_and_unit_ledger": {
+        "tau(beta)": "improvement target induced by exploration parameter beta: the optimal upper confidence bound value (units of the objective)",
+        "beta": "exploration parameter, predictive standard deviations credited (dimensionless)",
+        "mu, sigma": "predictive mean and standard deviation, implicit functions of the candidate point (units of the objective)"
+      },
+      "assumptions": [
+        "The objective model is a Gaussian process, so predictive quantiles are affine in the predictive standard deviation.",
+        "The comparison is for exact observations; the equivalence is between the induced point sets, not the acquisition values."
+      ],
+      "breakdown_regime": "The induced target changes with the data and the model at every iteration, so intuitions carried from one parameterization to the other mislead; the correspondence also fails for non-Gaussian predictive distributions where quantiles are not mean plus a multiple of a scale.",
+      "domain": "optimization policy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This equivalence is a warning label for engine tuning: two dials that look like different philosophies, clear a target versus credit uncertainty, are secretly the same dial under a Gaussian belief, with a conversion factor that drifts as data arrives. The engine should therefore expose one canonical exploration parameter and derive the other view from it, instead of tuning both and double counting the same preference.",
+        "source_operator": "pi_ucb_equivalence",
+        "telemetry": "Exploration parameter settings and their induced target equivalents logged per decision cycle."
+      }
+    },
+    {
+      "primitive_id": "knowledge_gradient_computation",
+      "name": "Knowledge gradient: expected gain in the global reward requires an inner global maximization inside the expectation, exactly computable on discrete domains through the same envelope function as noisy expected improvement, and intractable in continuous domains (8.30)",
+      "verbatim_quote": "The culprit is the nonconvex global optimization in (8.30), which makes the knowledge gradient intractable except in a few special cases.",
+      "page": "sec. 8.6, pp. 173-175 (eq. 8.30)",
+      "latex": "\\alpha_{\\mathrm{kg}}(x; D) = \\int \\left[ \\max_{x' \\in X} \\mu_{D'}(x') - \\mu^{*} \\right] p(y \\mid x, D)\\, dy, \\qquad \\mu^{*} = \\max_{x \\in X} \\mu_D(x)",
+      "symbol_and_unit_ledger": {
+        "mu_D'(x')": "posterior mean after the proposed observation, a function of the unknown observed value (units of the objective)",
+        "p(y | x, D)": "predictive density of the observation at x (per unit of the objective)",
+        "mu*": "current global reward, the best posterior mean before observing (units of the objective)"
+      },
+      "assumptions": [
+        "The utility is the global reward, so value is judged by the best recommendation after the observation, anywhere in the domain.",
+        "Exact computation needs a discrete domain or special Markov structure; continuous use relies on quadrature over the observation and repeated inner optimization."
+      ],
+      "breakdown_regime": "Approximation error enters twice, in the observation integral and in each inner maximization, and the cheap continuous-parameters approximation collapses back to expected improvement exactly when the incumbent already leads, hiding the cases where the true knowledge gradient differs most.",
+      "domain": "optimization policy / computation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The knowledge gradient is the correct value measure for evidence whose worth is only realized through a better final recommendation somewhere else in the slate, which is most evidence in a connected reasoning engine. Its intractability is equally instructive: the engine must budget computation for valuing information, using quadrature and cached inner optimizations, rather than pretending a local score captures global value.",
+        "source_operator": "knowledge_gradient_computation",
+        "telemetry": "Quadrature node counts and inner-optimization tolerances recorded with each knowledge-gradient style valuation the engine performs."
+      }
+    },
+    {
+      "primitive_id": "predictive_entropy_search",
+      "name": "Predictive entropy search: mutual information with the optimum's location is computed in predictive form and approximated as log s minus the average log conditional predictive scale over Thompson samples of the optimum, with expectation propagation supplying the conditional beliefs (8.36-8.41)",
+      "verbatim_quote": "The approximation is excellent and induces a nearoptimal decision.",
+      "page": "sec. 8.8, pp. 180-186 (eqs. 8.36-8.41)",
+      "latex": "\\alpha_{\\mathrm{pes}}(x; D) \\approx \\log s - \\frac{1}{n} \\sum_{i=1}^{n} \\log s_i^{*}",
+      "symbol_and_unit_ledger": {
+        "s": "predictive standard deviation of the observation at x (units of the objective)",
+        "s_i*": "approximate predictive standard deviation at x after conditioning on the i-th sampled optimum location being the true optimum (units of the objective)",
+        "n": "number of Thompson samples of the optimum location (count)",
+        "log s - average log s*": "approximate expected entropy reduction about the optimum location (nats)"
+      },
+      "assumptions": [
+        "Optimum locations can be sampled from the posterior, and conditioning on a sampled optimum is approximated by Gaussian expectation propagation through gradient, Hessian, and dominance factors.",
+        "The objective model is a Gaussian process with additive Gaussian noise so predictive entropies have the log-scale form used."
+      ],
+      "breakdown_regime": "Every layer is approximate: the samples carry Monte Carlo error, the expectation propagation fit of the constrained posterior is biased, and the Hessian constraints imposed are stricter than true local optimality, so the score is a well-engineered estimate, not the mutual information itself.",
+      "domain": "information-theoretic optimization policy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Predictive entropy search is the engine's pattern for valuing a measurement by how much it would shrink uncertainty about where the best conclusion lies, computed by simulating plausible worlds, conditioning on each, and averaging the shrinkage. That sample-condition-average loop is reusable far beyond optimization: it is how the engine can price a scouting report by the worlds it would rule out.",
+        "source_operator": "predictive_entropy_search",
+        "telemetry": "Thompson sample counts, expectation propagation convergence status, and per-sample conditional scales stored with each information valuation."
+      }
+    },
+    {
+      "primitive_id": "max_value_entropy_search",
+      "name": "Max-value entropy search: mutual information with the optimum's value is estimated from samples of the optimal value through a truncated normal predictive, with a tractable closed form estimator over value quantiles (8.53-8.60)",
+      "verbatim_quote": "This approach overestimates the true mutual information by assuming exact observations, but serves as a reasonable approximation when the signal-to-noise ratio is high.",
+      "page": "sec. 8.9, pp. 187-190 (eqs. 8.53-8.60)",
+      "latex": "\\alpha_{\\mathrm{mes}}(x; D) \\approx \\frac{1}{2n} \\sum_{i=1}^{n} \\left[ z_i \\frac{\\phi(z_i)}{\\Phi(z_i)} - \\log \\Phi(z_i) \\right], \\qquad z_i = \\frac{f_i^{*} - \\mu}{\\sigma}",
+      "symbol_and_unit_ledger": {
+        "f_i*": "i-th sampled optimal objective value, taken at quantiles of its posterior distribution (units of the objective)",
+        "mu, sigma": "predictive mean and standard deviation at x (units of the objective)",
+        "z_i": "standardized gap between sampled optimum value and predictive mean (dimensionless)",
+        "phi, Phi": "standard normal pdf and cdf (dimensionless)"
+      },
+      "assumptions": [
+        "Samples of the optimal value can be drawn, for instance at equally spaced quantiles of its fitted distribution.",
+        "Conditioning on the optimal value truncates the predictive distribution above, and the truncated normal entropy is bounded or approximated in closed form."
+      ],
+      "breakdown_regime": "The independent representer approximation behind the sampled values overestimates the maximum by Slepian's lemma, the exact-observation surrogate inflates the information estimate when noise is material, and expectation propagation refinement of the truncated moments adds its own bias.",
+      "domain": "information-theoretic optimization policy",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Where predictive entropy search asks where the best conclusion is, max-value entropy search asks how good it could be, which is the natural valuation when the engine tracks projected ceilings, such as a player's realistic best case or a unit's best plausible performance. Sampling plausible ceilings and scoring measurements by the entropy they remove about the ceiling keeps upside reasoning honest and comparable across candidates.",
+        "source_operator": "max_value_entropy_search",
+        "telemetry": "Posterior samples of optimal-value targets per tracked entity, with the signal-to-noise ratio at valuation time."
+      }
+    },
+    {
+      "primitive_id": "gp_inference_cholesky_scaling",
+      "name": "Gaussian process inference is linear algebra: conditioning reduces to solving systems with the observation covariance, done once through a Cholesky factorization at cubic cost with quadratic solves, and standardized coefficients and the log marginal likelihood follow from the same factor (9.1-9.2)",
+      "verbatim_quote": "Gaussian process inference requires solving a system of linear equations whose size grows with the number of observed values (9.2).",
+      "page": "sec. 9.1, pp. 201-206 (eqs. 9.1-9.2); summary sec. 9.4, p. 212",
+      "latex": "\\mu_D(x) = \\mu(x) + \\kappa(x)^\\top C^{-1} (y - m), \\qquad \\alpha = C^{-1}(y - m), \\qquad L = \\operatorname{chol} C, \\quad C = LL^\\top",
+      "symbol_and_unit_ledger": {
+        "C": "observation covariance: prior covariance at observed locations plus the noise covariance (squared units of the objective)",
+        "L": "lower triangular Cholesky factor of C (units of the objective)",
+        "alpha": "standardized coefficients reused by every posterior mean evaluation (per unit of the objective)",
+        "kappa(x)": "prior covariance vector between the evaluation point and observed locations (squared units of the objective)"
+      },
+      "assumptions": [
+        "The observation covariance is symmetric positive definite, numerically as well as in exact arithmetic.",
+        "One factorization is amortized across all subsequent mean, variance, and derivative evaluations."
+      ],
+      "breakdown_regime": "Near-duplicate, highly correlated observations make C nearly singular, producing numerically negative eigenvalues and failed factorizations; cost also becomes the binding constraint as datasets grow, since every new observation enlarges the system for everyone.",
+      "domain": "gaussian processes / computation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This sets the engine's compute contract: belief updates are factorizations, and their cost grows cubically in accumulated evidence unless structure is exploited. Any always-on reasoning service must therefore budget refits, reuse factorizations across queries, and treat dataset growth as a compute decision, not just a data decision. The standardized coefficient vector alpha is the reusable asset: compute it once, answer many questions cheaply.",
+        "source_operator": "gp_inference_cholesky_scaling",
+        "telemetry": "Factorization counts, matrix sizes, and solve times per belief update, plus condition estimates of the observation covariance."
+      }
+    },
+    {
+      "primitive_id": "sparse_inducing_nystrom",
+      "name": "Sparse Gaussian process approximation: conditioning on a modest set of inducing values through a Nystrom low-rank covariance approximation cuts inference from cubic to O(n m^2) and scales to hundreds of thousands of observations (9.5-9.6)",
+      "verbatim_quote": "we approximate an intractable posterior Gaussian process with a Gaussian process conditioned on carefully designed, fictitious observations at locations called inducing points",
+      "page": "sec. 9.1, pp. 206-207 (eqs. 9.5-9.6); summary sec. 9.4, p. 212",
+      "latex": "K(x, x') \\approx k(x)^\\top \\Sigma^{-1} k(x'), \\qquad k(x) = \\left[ K(x, z_i) \\right]_{i=1}^{m}",
+      "symbol_and_unit_ledger": {
+        "z_i": "inducing locations, designed fictitious observation points in the input space",
+        "Sigma": "prior covariance matrix among the inducing values (squared units of the objective)",
+        "k(x)": "covariance vector between an input and the inducing set (squared units of the objective)",
+        "m": "number of inducing points, with m much smaller than the observation count n (count)"
+      },
+      "assumptions": [
+        "The covariance is well approximated by its action through the inducing set, which holds when inducing locations cover the regions where predictions are needed.",
+        "The inducing values are treated as latent variables and integrated or conditioned on within the same Gaussian machinery."
+      ],
+      "breakdown_regime": "Regions far from every inducing point revert toward the prior and can be silently wrong; the approximation also flattens fine structure the full process would keep, and poorly placed inducing points waste the entire budget while appearing numerically healthy.",
+      "domain": "gaussian processes / scalable inference",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Inducing points are the engine's compression discipline: a small set of representative situations carries the belief state, and new evidence is folded in through them. Choosing the representatives is the consequential act, exactly like choosing which past games are allowed to stand for a class of matchups, and the approximation error concentrates precisely where representation is thin.",
+        "source_operator": "sparse_inducing_nystrom",
+        "telemetry": "Inducing set membership and coverage diagnostics per belief state: distance from prediction targets to the nearest inducing representative."
+      }
+    },
+    {
+      "primitive_id": "acquisition_vanishing_gradient",
+      "name": "Acquisition functions have vanishing gradients far from data because both posterior moments flatten, which strands gradient-based search and worsens sharply with dimension (sec. 9.2)",
+      "verbatim_quote": "This vanishing gradient is especially problematic in high-dimensional spaces, where the acquisition function will be flat on an overwhelming fraction of the domain unless the prior encodes absurdly long-scale correlations, a consequence of the unshakable curse of dimensionality.",
+      "page": "sec. 9.2, pp. 207-208",
+      "latex": "\\frac{\\partial \\mu}{\\partial x} \\approx 0, \\qquad \\frac{\\partial s}{\\partial x} \\approx 0 \\quad \\text{far from observed data}",
+      "symbol_and_unit_ledger": {
+        "mu, s": "predictive mean function and predictive standard deviation function (units of the objective)",
+        "partial mu / partial x": "gradient of the posterior mean with respect to the candidate location (objective units per input unit)",
+        "partial s / partial x": "gradient of the predictive scale (objective units per input unit)"
+      },
+      "assumptions": [
+        "The covariance decays with distance, as all standard stationary covariances do, so influence of data fades to zero.",
+        "The acquisition function is a function of the posterior moments alone, so flat moments imply a flat score."
+      ],
+      "breakdown_regime": "This is a failure of the optimizer, not of the score: the global maximum may sit in the flat region's unexplored interior. Remedies are structural, including multistart local search from space-filling starts and acquisition designs with nonvanishing signal, and in very high dimensions the flat fraction dominates everything.",
+      "domain": "optimization computation / failure modes",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Any scoring surface the engine optimizes over a rich space of candidate analyses inherits this trap: scores built only from current beliefs go flat exactly where the engine knows least, so naive search reports that nothing is worth investigating. The corrective is procedural, seeding searches from space-filling starting points and treating a flat score as ignorance, not as evidence of low value.",
+        "source_operator": "acquisition_vanishing_gradient",
+        "telemetry": "Score-surface diagnostics: fraction of the candidate space where the acquisition gradient is numerically zero at search time."
+      }
+    },
+    {
+      "primitive_id": "acquisition_threshold_stopping",
+      "name": "Stopping rule: terminate data collection when the best acquisition value net of observation cost turns negative, making termination itself a decision inside the same framework (9.9)",
+      "verbatim_quote": "it is natural to terminate optimization when the maximum of our chosen acquisition function drops below some threshold",
+      "page": "sec. 9.3, p. 211 (eq. 9.9)",
+      "latex": "\\max_{x \\in X} \\alpha(x; D) - c(x) < 0",
+      "symbol_and_unit_ledger": {
+        "alpha(x; D)": "expected marginal utility gain of observing at x (utility units)",
+        "c(x)": "cost of the observation at x, expressed in the same utility (utility units)",
+        "max over X": "best available net gain; when negative for every candidate, no observation can pay for itself"
+      },
+      "assumptions": [
+        "Observation costs are commensurable with utility, so the subtraction is meaningful.",
+        "The acquisition function in use honestly reflects the decision maker's marginal gain, including future value where relevant."
+      ],
+      "breakdown_regime": "A myopic acquisition makes the rule stop too early, because it prices only the next step's direct gain; costs that are uncertain or lumpy, such as a fixed weekly analysis budget, also break the simple threshold form.",
+      "domain": "decision theory / stopping",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine needs an explicit stop rule for analysis depth per game: keep digging only while the best remaining line of inquiry has positive expected value net of its cost in time and compute. Without the rule, effort allocation is set by habit and deadline panic; with it, shallow coverage of a low-value matchup and deep coverage of a pivotal one are both defensible, auditable choices.",
+        "source_operator": "acquisition_threshold_stopping",
+        "telemetry": "Per-game analysis effort logs with the stopping acquisition value and cost estimate recorded at termination."
+      }
+    },
+    {
+      "primitive_id": "needle_density_worst_case",
+      "name": "Worst-case regret is unbounded on infinite domains at every finite stage, and convergence on all continuous objectives holds exactly when evaluation points are always dense (sec. 10.2)",
+      "verbatim_quote": "Unless the domain is finite, running any policy for any finite number of iterations will leave unobserved \"holes\" that we can fill in with arbitrarily tall \"needles,\" and thus the worst-case regret will be unbounded at every stage of the algorithm.",
+      "page": "sec. 10.2, pp. 216-217",
+      "latex": "r_\\tau = f^{*} - \\max \\phi_\\tau, \\qquad R_\\tau = \\sum_{i=1}^{\\tau} \\rho_i = \\tau f^{*} - \\sum_{i=1}^{\\tau} \\phi_i, \\qquad r_\\tau \\le \\frac{R_\\tau}{\\tau}",
+      "symbol_and_unit_ledger": {
+        "r_tau": "simple regret: gap between the true optimum value and the best value actually evaluated (units of the objective)",
+        "R_tau": "cumulative regret over tau evaluations (units of the objective)",
+        "rho_i": "instantaneous regret of the i-th evaluation (units of the objective)",
+        "f*": "global maximum value of the objective (units of the objective)"
+      },
+      "assumptions": [
+        "The adversary may choose any continuous objective after seeing the policy's evaluation pattern.",
+        "The domain is infinite, so finitely many evaluations always leave gaps of positive size."
+      ],
+      "breakdown_regime": "This is the pessimistic limit of the theory, not a practical forecast: real objectives have bounded variation, and the result's constructive content is the density condition, which says guaranteed learning requires eventually sampling everywhere, a standard no finite budget can meet on rich domains.",
+      "domain": "regret theory / fundamental limits",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The needle construction is the engine's humility theorem: on a rich space of possible game scripts, any finite set of studied scenarios leaves room for an unstudied one that dominates. Guarantees must therefore be stated relative to a smoothness class or a prior, never absolutely, and coverage metrics should report how dense the studied scenario set is rather than implying completeness.",
+        "source_operator": "needle_density_worst_case",
+        "telemetry": "Scenario coverage density per analysis cycle: fill distance of evaluated scenario sets within each matchup family."
+      }
+    },
+    {
+      "primitive_id": "rkhs_norm_mahalanobis_identity",
+      "name": "The RKHS norm of the posterior mean equals the Mahalanobis norm of the observed data under their Gaussian prior, tying function complexity directly to how surprising the data were (10.10)",
+      "verbatim_quote": "That is, the rkhs norm of the posterior mean is the Mahalanobis norm of the observed data y under their Gaussian prior distribution (2.2-2.3).",
+      "page": "sec. 10.2, p. 220 (eq. 10.10)",
+      "latex": "\\lVert \\mu_D \\rVert_{H_K}^2 = y^\\top \\Sigma^{-1} y",
+      "symbol_and_unit_ledger": {
+        "H_K": "reproducing kernel Hilbert space of the covariance K: functions whose complexity the norm measures (function space)",
+        "mu_D": "posterior mean function after data D (units of the objective)",
+        "Sigma": "prior covariance matrix of the observed values (squared units of the objective)",
+        "y^T Sigma^{-1} y": "squared Mahalanobis norm of the data under the prior (dimensionless)"
+      },
+      "assumptions": [
+        "The posterior mean lies in the RKHS even though sample paths of the process almost surely do not.",
+        "Observed values are noiseless in the identity as stated; noise changes the covariance used."
+      ],
+      "breakdown_regime": "The identity equates two complexity measures but does not bound either: data that are surprising under the prior certify a complex posterior mean, which is exactly the overfitting direction. It is a diagnostic identity, not a guarantee.",
+      "domain": "function spaces / regret theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This gives the engine a one-number complexity audit for any fitted read: the norm of the posterior mean is computable from the data and the prior alone, and a read whose norm is large relative to historical reads is, provably, a complex story extracted from surprising data. That is the quantitative tripwire for narratives that fit last week's result too eagerly.",
+        "source_operator": "rkhs_norm_mahalanobis_identity",
+        "telemetry": "RKHS norm of fitted belief states per cycle, tracked against the distribution of norms from prior cycles."
+      }
+    },
+    {
+      "primitive_id": "information_capacity_smoothness",
+      "name": "Information capacity gamma_tau bounds how much tau noisy observations can teach about the function, and it grows slowly for smooth covariances and polynomially for rough ones (10.13-10.16)",
+      "verbatim_quote": "The correct interpretation of this result is that the smoother sample paths require less information to describe, and thus the maximum amount of information one could learn is limited compared to rougher sample paths.",
+      "page": "sec. 10.3, pp. 222-223 (eqs. 10.13-10.16)",
+      "latex": "I(y; f) = \\frac{1}{2} \\log \\left| I + \\sigma_n^{-2} \\Sigma \\right|, \\qquad \\gamma_\\tau = \\sup_{|x| = \\tau} I(y; f), \\qquad \\gamma_\\tau = O\\!\\left(\\tau^{\\alpha} (\\log \\tau)^{1-\\alpha}\\right), \\; \\alpha = \\frac{d}{2\\nu + d}",
+      "symbol_and_unit_ledger": {
+        "I(y; f)": "mutual information between observations and the latent function (nats)",
+        "sigma_n": "observation noise standard deviation (units of the objective)",
+        "Sigma": "prior covariance of the function at the chosen locations (squared units of the objective)",
+        "nu": "Matern smoothness parameter; sample paths are ceil(nu) minus 1 times differentiable (dimensionless)",
+        "d": "input dimension (count)"
+      },
+      "assumptions": [
+        "Observation noise is additive Gaussian with known scale in the stated form.",
+        "The supremum is over all designs of size tau, so capacity is a property of the model class and noise, not of one dataset."
+      ],
+      "breakdown_regime": "Capacity bounds the total learnable information but says nothing about whether a given policy extracts it; the rates also depend on the covariance family being correctly specified, and misspecifying smoothness misstates capacity in both directions.",
+      "domain": "information theory / regret theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Information capacity is the engine's budget law for data feeds: each feed's noise level and the smoothness of what it measures jointly cap how much any amount of collection can teach. A noisy feed about a rough, fast-changing quantity saturates quickly, and continued collection past saturation is waste that this bound exposes before the compute is spent.",
+        "source_operator": "information_capacity_smoothness",
+        "telemetry": "Per-feed noise estimates and effective information gained per collection batch, compared against the capacity curve for the assumed smoothness."
+      }
+    },
+    {
+      "primitive_id": "gp_ucb_regret_bound",
+      "name": "GP-UCB regret bound: universally valid confidence intervals convert directly into per-step regret bounds, giving cumulative regret of order sqrt(tau gamma_tau log |X|) (10.19-10.25)",
+      "verbatim_quote": "that if the confidence intervals in (10.20) are universally valid, then we can bound the instantaneous regret of the policy in every iteration by noting that the confidence interval of the chosen point always contains the global optimum",
+      "page": "sec. 10.4, pp. 224-226 (eqs. 10.19-10.25)",
+      "latex": "R_\\tau = O^{*}\\!\\left( \\sqrt{\\tau \\, \\gamma_\\tau \\log |X|} \\right), \\qquad \\phi \\in \\left[ \\mu - \\beta_i \\sigma, \\; \\mu + \\beta_i \\sigma \\right]",
+      "symbol_and_unit_ledger": {
+        "beta_i": "confidence width multiplier at step i; for finite domains, beta_i^2 = 2 log(i^2 pi^2 |X| / 6 delta) (dimensionless)",
+        "gamma_tau": "information capacity after tau observations (nats)",
+        "delta": "allowed failure probability of the universal validity statement (probability)",
+        "|X|": "size of the finite domain in the stated bound (count)",
+        "O*": "big-O notation hiding logarithmic factors (dimensionless)"
+      },
+      "assumptions": [
+        "Confidence intervals are simultaneously valid at all points and steps with probability at least 1 minus delta.",
+        "The objective is a sample from the Gaussian process prior in the Bayesian setting of this bound."
+      ],
+      "breakdown_regime": "The bound's constants and log factors are pessimistic, the required beta schedule is more conservative than practice, and validity collapses if the prior understates the objective's variability; the continuous-domain extension pays an additional discretization and Lipschitz price.",
+      "domain": "regret theory / bandits",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the template for honest performance accounting in the engine: if its intervals are calibrated, then the cost of its exploration is provably controlled, and if realized shortfalls breach the bound, the intervals, not luck, are indicted. Publishing the beta schedule and the interval hit rates turns calibration from a claim into the load-bearing assumption of a theorem.",
+        "source_operator": "gp_ucb_regret_bound",
+        "telemetry": "Interval coverage audits per forecast family: empirical hit rate of stated confidence intervals against realized outcomes."
+      }
+    },
+    {
+      "primitive_id": "fill_distance_contraction",
+      "name": "Fill distance controls worst-case posterior uncertainty: the largest gap between domain points and observations shrinks the maximum posterior standard deviation like a power of the gap for Matern-class covariances (10.45-10.47)",
+      "verbatim_quote": "the largest distance from a point in the domain to the closest observation",
+      "page": "sec. 10.6, p. 238 (eqs. 10.45-10.47)",
+      "latex": "\\delta_x = \\max_{x \\in X} \\min_{x_i \\in x} |x - x_i|, \\qquad \\bar{\\sigma}_x \\le c \\, \\delta_x^{\\nu}, \\qquad \\bar{\\sigma}_x = O\\!\\left( \\tau^{-\\nu/d} \\right) \\text{ on a grid}",
+      "symbol_and_unit_ledger": {
+        "delta_x": "fill distance of the observation set (units of the input space)",
+        "sigma_bar_x": "largest posterior standard deviation anywhere in the domain (units of the objective)",
+        "nu": "covariance smoothness parameter (dimensionless)",
+        "c": "constant depending on the domain and covariance (objective units per input unit to the nu)"
+      },
+      "assumptions": [
+        "Observations are exact in this section, so posterior uncertainty is purely interpolation error.",
+        "The objective lies in the RKHS ball of the covariance, giving the smoothness the rate spends."
+      ],
+      "breakdown_regime": "Rates degrade brutally with dimension through the tau to the minus nu over d term, and exact observations are an idealization: with noise, uncertainty floors at the noise level no matter how dense the design becomes.",
+      "domain": "approximation theory / experimental design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Fill distance is the right coverage metric for the engine's situational memory: the worst-supported matchup type is the one farthest from anything studied, and its uncertainty bound is set by that distance, not by the average density of the library. Reporting worst-case coverage per family, and shrinking the largest gaps first, follows directly from this contraction law.",
+        "source_operator": "fill_distance_contraction",
+        "telemetry": "Fill distance per situational family: maximum distance from any live matchup profile to the nearest studied profile."
+      }
+    },
+    {
+      "primitive_id": "hyperparameter_estimation_breaks_guarantees",
+      "name": "Learning hyperparameters from data can destroy convergence: maximum likelihood length scales with expected improvement provably fail on simple objectives, and the fix is to inflate the assumed function class or constrain estimates (sec. 10.7)",
+      "verbatim_quote": "there are extremely simple (piecewise linear!) functions for which this algorithm does not recover the optimum",
+      "page": "sec. 10.7, pp. 241-242",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The counterexamples pair expected improvement with maximum likelihood hyperparameter estimation, the most common practical configuration.",
+        "The failure functions are deliberately elementary: a Wiener process sample path setting and piecewise linear objectives."
+      ],
+      "breakdown_regime": "This is the breakdown itself: adaptivity invalidates the fixed-prior theory, because the estimated model can assign the truth near-zero prior mass in regions never sampled. Safeguards exist, including output scale inflation and priors that keep the model class expanding, but they must be imposed deliberately.",
+      "domain": "regret theory / failure modes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's standing warning: a model that tunes itself on the games it has seen can tune itself into blindness about the games it has not. The safeguard transfers directly: keep the assumed variability floored, widen the plausible class as evidence accumulates, and treat any hyperparameter estimate that shrinks uncertainty over time as a defect to be caught in review, not as learning.",
+        "source_operator": "hyperparameter_estimation_breaks_guarantees",
+        "telemetry": "Hyperparameter trajectories per model family, with alarms when estimated output scales or length scales drift monotonically downward."
+      }
+    },
+    {
+      "primitive_id": "unknown_observation_costs",
+      "name": "Unknown costs: when evaluation costs are themselves uncertain and possibly correlated with the objective, inference about costs runs alongside inference about the objective and the decision integrates over both (11.1)",
+      "verbatim_quote": "The natural solution is to perform inference about observation costs throughout optimization and use the resulting beliefs to guide our decisions",
+      "page": "sec. 11.1, p. 247 (eq. 11.1)",
+      "latex": "\\mathbb{E}\\left[ u(D_1) \\mid x, D \\right] = \\iint u\\!\\left( D \\cup \\{x, y, z\\} \\right) p(y, z \\mid x, D)\\, dy\\, dz, \\qquad \\alpha_{\\mathrm{ec}}(x; D) = \\frac{\\alpha_1(x; D)}{\\mathbb{E}[\\kappa \\mid x, D]}",
+      "symbol_and_unit_ledger": {
+        "z": "observed cost outcome accompanying an evaluation (cost units)",
+        "kappa = c(x)": "latent cost of evaluating at x (cost units)",
+        "p(y, z | x, D)": "joint predictive density of the objective observation and the cost observation (per unit of each)",
+        "alpha_ec": "expected improvement per unit expected cost heuristic (utility per cost unit)"
+      },
+      "assumptions": [
+        "Costs are observable after the fact through their own observation model, so a cost belief state can be maintained.",
+        "Objective and cost may be dependent, which the joint predictive distribution is allowed to express."
+      ],
+      "breakdown_regime": "The per-unit-cost ratio is only a heuristic: it ignores that an expensive observation may unlock disproportionate future value, and with a hard total budget the optimal policy depends on the remaining budget, which the ratio never sees.",
+      "domain": "decision theory / cost-aware optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analysis costs in the engine are uncertain in exactly this sense: a film pull or a data join may take minutes or fail after an hour, and costly lines of inquiry correlate with valuable ones. Maintaining a cost belief per source type, and ranking inquiries by expected gain per expected cost with the joint model available when correlation matters, replaces fixed effort budgets with learned ones.",
+        "source_operator": "unknown_observation_costs",
+        "telemetry": "Realized cost per inquiry type (time, compute, failure rate) logged against predicted cost at request time."
+      }
+    },
+    {
+      "primitive_id": "constraint_information_value",
+      "name": "Constrained optimization: value is expected improvement weighted by the probability of feasibility, observations at infeasible points still carry information, and the recommendation rule (observed, all, or confidence feasible) is an explicit risk choice (11.3-11.6)",
+      "verbatim_quote": "an observation of the objective at an infeasible point may yield useful information regarding behavior on the feasible region, and could represent an optimal decision if that information were compelling enough",
+      "page": "sec. 11.2, pp. 249-251 (eqs. 11.3-11.6)",
+      "latex": "\\alpha(x; D) = \\alpha_{\\mathrm{ei}}(x; D, \\mu^{*}) \\, \\Pr(x \\in F \\mid x, D), \\qquad F(\\delta) = \\left\\{ x \\in X \\,\\middle|\\, \\Pr(x \\in F \\mid D) \\ge 1 - \\delta \\right\\}",
+      "symbol_and_unit_ledger": {
+        "F": "feasible region defined by constraint functions g_i(x) at most 0 (subset of the domain)",
+        "Pr(x in F | x, D)": "posterior probability that the candidate satisfies all constraints (probability)",
+        "mu*": "best objective value among confidently feasible evaluated points (units of the objective)",
+        "delta": "allowed probability of recommending an infeasible point (probability)"
+      },
+      "assumptions": [
+        "Constraint functions are modeled probabilistically alongside the objective, so feasibility is a belief, not a certainty, at unevaluated points.",
+        "The factorization into improvement times feasibility probability assumes the objective observation does not itself change feasibility belief at the same point beyond the stated model."
+      ],
+      "breakdown_regime": "When no feasible point has been observed, the incumbent is undefined and the policy degenerates to pure feasibility search; correlated constraints and objectives break the clean factorization, and a hard feasibility requirement makes the confidence-feasible recommendation rule the only defensible one.",
+      "domain": "constrained optimization / decision theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine recommendations live under hard constraints: data availability, publication rules, and integrity limits define a feasible region that is itself only partially known. The transferable structure is threefold: score candidates by value times probability of being admissible, keep learning from inadmissible-region evidence without publishing from it, and state the recommendation rule's risk level delta explicitly.",
+        "source_operator": "constraint_information_value",
+        "telemetry": "Constraint belief states per recommendation class: feasibility probabilities and the delta used for each published output."
+      }
+    },
+    {
+      "primitive_id": "batch_simultaneous_evaluation",
+      "name": "Batch optimization: the one-step gain of a simultaneous batch integrates the utility over the joint predictive distribution of all batch outcomes, optimal batches spread around the incumbent, and Monte Carlo gradients through the Cholesky factor scale the computation (11.7-11.16)",
+      "verbatim_quote": "In both cases, the optimal batch measures on either side of the previously best-seen point; however, knowledge gradient is more tolerant of batches containing only one observation in this region.",
+      "page": "sec. 11.3, pp. 252-258 (eqs. 11.7-11.16)",
+      "latex": "\\beta_1(\\mathbf{x}; D) = \\mathbb{E}\\left[ u(D_1) \\mid \\mathbf{x}, D \\right] - u(D) = \\int u(D_1)\\, p(y \\mid \\mathbf{x}, D)\\, dy",
+      "symbol_and_unit_ledger": {
+        "x (bold)": "a batch of b evaluation locations chosen before any of their outcomes are seen (domain points)",
+        "p(y | x, D)": "joint predictive distribution of the whole batch's outcomes, with correlations between batch members (density)",
+        "beta_1": "expected utility gain of the batch as a single decision (utility units)",
+        "u(D_1)": "utility of the dataset augmented by all batch outcomes at once (utility units)"
+      },
+      "assumptions": [
+        "Batch members are selected simultaneously, so no member may condition on another member's outcome.",
+        "The joint predictive distribution over the batch is available, which for Gaussian processes means the full predictive covariance, not just marginals."
+      ],
+      "breakdown_regime": "Exact batch expected improvement is practical only for small batches; Monte Carlo estimators trade exactness for scale and inject gradient noise, and greedy sequential heuristics such as the constant liar bake in a fictitious outcome that biases the rest of the batch.",
+      "domain": "parallel experimental design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A week of engine work is a batch problem: many analyses are commissioned before any results return, and their joint value depends on their correlations, since two studies of the same storyline are worth little more than one. Scoring commissions jointly, with diversity emerging from the joint predictive covariance rather than from a hand-written variety rule, is exactly this construction.",
+        "source_operator": "batch_simultaneous_evaluation",
+        "telemetry": "Commissioned analysis batches logged with pairwise similarity estimates, so realized redundancy can be audited against the joint score."
+      }
+    },
+    {
+      "primitive_id": "multifidelity_joint_model",
+      "name": "Multifidelity optimization: cheap surrogate evaluations are modeled jointly with the expensive objective, often with a separable product covariance across input and fidelity, under a cost-adjusted utility (11.18)",
+      "verbatim_quote": "If surrogate observations are to be useful, they must provide information about the objective function",
+      "page": "sec. 11.5, pp. 263-265 (eq. 11.18)",
+      "latex": "K\\!\\left( [x, i], [x', i'] \\right) = K_X(x, x')\\, K_I(i, i'), \\qquad u(D) = u'(D) - \\sum_i c_i",
+      "symbol_and_unit_ledger": {
+        "i, i'": "fidelity indices, from pure approximations to the true objective (index)",
+        "K_X": "covariance over inputs within a fidelity (squared units)",
+        "K_I": "covariance across fidelities; its off-diagonal entries encode how informative a surrogate is about the objective (dimensionless correlation scale)",
+        "c_i": "cost of one evaluation at fidelity i (cost units)"
+      },
+      "assumptions": [
+        "A joint prior over the objective and all surrogates exists, so cross-fidelity correlation is a modeled quantity.",
+        "The separable product form assumes input similarity and fidelity similarity factorize, a real restriction."
+      ],
+      "breakdown_regime": "A surrogate uncorrelated with the objective is pure cost, and the model only learns that after spending on it; biased surrogates are worse, since high cross-correlation with a systematically shifted surrogate imports the bias into objective beliefs at full confidence.",
+      "domain": "multifidelity modeling / experimental design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's evidence stack is a fidelity ladder: quick statistical summaries, charting data, tracking data, and full film study are surrogates of rising cost for the same underlying matchup truth. Modeling them jointly, with learned cross-fidelity correlation per source, lets cheap evidence steer expensive effort and lets the engine state, in numbers, how much a summary statistic is worth relative to film.",
+        "source_operator": "multifidelity_joint_model",
+        "telemetry": "Cross-fidelity correlation estimates per source pair, refreshed as paired observations accumulate, with cost per fidelity level."
+      }
+    },
+    {
+      "primitive_id": "pareto_multiobjective",
+      "name": "Multiobjective optimization: with conflicting objectives there is no unambiguously optimal point, only a Pareto frontier of nondominated tradeoffs, valued by dominated hypervolume or by scalarizations with known blind spots (sec. 11.7)",
+      "verbatim_quote": "It is clearly impossible to identify an unambiguously optimal location, even in this relatively simple example.",
+      "page": "sec. 11.7, pp. 269-272 (eqs. 11.19-11.20)",
+      "latex": "g_{\\mathrm{lin}}(x; w) = \\sum_i w_i \\phi_i, \\qquad g_{\\mathrm{ac}}(x; w, \\rho) = \\min_i w_i (\\phi_i - r_i) + \\rho \\, g_{\\mathrm{lin}}(x; w)",
+      "symbol_and_unit_ledger": {
+        "phi_i": "value of objective i at a location (units of objective i)",
+        "w": "scalarization weights across objectives (dimensionless, nonnegative)",
+        "r": "reference point for hypervolume and Chebyshev scalarization (units of each objective)",
+        "rho": "small augmentation weight keeping the Chebyshev scalarization from ignoring total value (dimensionless)"
+      },
+      "assumptions": [
+        "Dominance is defined componentwise: a point dominates another when it is no worse in every objective and strictly better in one.",
+        "The Pareto frontier is the set of points dominated by no other feasible point."
+      ],
+      "breakdown_regime": "Linear scalarization provably cannot recover frontier points in nonconcave regions, so a weighted-sum habit silently deletes real tradeoffs; hypervolume methods need a reference point whose choice moves the answer, and every scalarization smuggles in a preference that should be owned explicitly.",
+      "domain": "multiobjective optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine outputs trade objectives against each other constantly: accuracy against coverage, depth against timeliness, caution against decisiveness. The Pareto discipline forbids collapsing these into one score without declaring the weights, and the scalarization blind-spot theorem warns that the declared weighting scheme itself decides which good compromises are even visible.",
+        "source_operator": "pareto_multiobjective",
+        "telemetry": "For multi-objective publications, the weight vector or reference point used, recorded alongside the output so the tradeoff taken is auditable."
+      }
+    },
+    {
+      "primitive_id": "gaussian_expectation_propagation",
+      "name": "Expectation propagation: a posterior with intractable likelihood factors is approximated by Gaussian site factors whose parameters are set by moment matching against cavity distributions, giving closed-form rank-one updates (b.3-b.10)",
+      "verbatim_quote": "for our Gaussian approximation (b.5), this is achieved through moment matching",
+      "page": "Appendix B, sec. b.2, pp. 303-305 (eqs. b.3-b.10)",
+      "latex": "\\tilde{\\mu} = \\bar{\\mu} + \\alpha \\gamma, \\qquad \\tilde{\\sigma}^2 = \\gamma - \\bar{\\sigma}^2, \\qquad \\gamma = \\frac{Z}{\\alpha}\\left( \\frac{\\bar{\\sigma}^2}{\\beta} - 1 \\right)",
+      "symbol_and_unit_ledger": {
+        "cavity distribution": "approximate posterior with one site factor removed, the context against which that factor is refit (Gaussian)",
+        "Z": "zeroth moment of the tilted distribution: the exact factor times the cavity (probability mass)",
+        "alpha, beta": "logarithmic derivatives of Z with respect to cavity mean and variance parameters (dimensionless ratios)",
+        "tilde mu, tilde sigma^2": "mean and variance parameters of the refit Gaussian site factor (units of the variable; squared units)"
+      },
+      "assumptions": [
+        "Each intractable factor depends on a single variable or a low-dimensional projection, so tilted moments are computable.",
+        "The prior is Gaussian, making products and ratios of the Gaussian site factors closed form."
+      ],
+      "breakdown_regime": "Expectation propagation is not guaranteed to converge and can oscillate or settle at different fixed points by damping and ordering; its moment matching is also a specific divergence choice, excellent for marginal accuracy and poor when the true posterior is multimodal, since one Gaussian must cover all modes at once.",
+      "domain": "approximate inference",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expectation propagation is the engine's recipe for folding hard, non-Gaussian evidence, like threshold events, discrete outcomes, and win-loss indicators, into a Gaussian belief state without abandoning closed-form updates: refit each evidence factor against the belief with that factor removed, match moments, and iterate. The cavity idea is the transferable core: judge each piece of evidence against everything except itself.",
+        "source_operator": "gaussian_expectation_propagation",
+        "telemetry": "Per-factor update logs for non-Gaussian evidence integration: cavity moments, refit site parameters, and iteration counts to convergence or damping."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "garnett-bo-trace-01",
+      "think": "The core claim of this book is that optimization under uncertainty is a decision problem before it is a search problem, and this extraction follows that claim from its foundations to its failure modes. The foundation is Gaussian conditioning. When beliefs about an unknown function are jointly Gaussian with the observations, the posterior has a closed form: the mean moves by a covariance-weighted surprise, and the covariance contracts by an amount that does not depend on the values observed. That single update carries the entire book. Its practical face is that inference is linear algebra, executed through a Cholesky factorization whose cost grows cubically with the number of observations unless the covariance is compressed through inducing points. Its modeling face is that covariance design is where prior knowledge enters: stationary kernels, per-dimension length scales that learn which inputs matter, warping of the input space, and composition of simple covariances into structured ones.\n\nOn top of inference sits model choice. The marginal likelihood prices a model by the probability it assigned to the data before seeing it, which produces an automatic penalty for complexity, and the model posterior lets predictions average over plausible models instead of committing to one. Averaging matters because the alternative is not merely inelegant. The convergence theory shows that selecting hyperparameters by maximum likelihood can be catastrophic: the fitted model can assign the truth negligible prior mass in regions never sampled, and expected improvement then fails even on piecewise linear functions. A reasoning system that tunes itself on its own history therefore needs floors under its assumed variability and a model class that keeps expanding. That is a design rule earned by counterexample, not a taste.\n\nThe decision layer separates what is wanted from how to search. A utility function over final datasets defines value. Simple reward and global reward differ only in whether the terminal recommendation may be an unevaluated point, and that small difference carries real risk, because the global version can crown a point supported by almost no data. Information gain defines a different value entirely, entropy removed about a named target, and the book insists the target be named in advance, since information about anything else earns nothing. Given a utility, the optimal policy is defined by Bellman's recursion, one-step gain plus the expected optimal value of everything after, and the recursion's exponential cost in the horizon is precisely why the field lives on one-step lookahead: an acquisition function is the expected marginal gain of a single observation, maximized greedily, and every named policy is a particular answer to that one-step question.\n\nExpected improvement has a Gaussian closed form that splits visibly into an exploitation term and an exploration term. Probability of improvement counts only exceedance of a target and turns risk averse once the mean clears it. The upper confidence bound prices optimism directly through a predictive quantile, and for Gaussian beliefs it is the same policy as probability of improvement under a target that drifts with the data. The knowledge gradient measures gain in the global reward and pays for that correctness with an intractable inner maximization. Thompson sampling replaces valuation with probability matching, choosing points as often as they might be optimal. The mutual information policies ask what an observation teaches about the optimum's location or its value, and their predictive forms become computable through Thompson samples, truncated normal approximations, and expectation propagation. Each policy also fails in a characteristic way: posterior mean maximization never explores at all and can repeat the incumbent forever, expected improvement needs a different construction under noise because the incumbent itself becomes uncertain, plug-in incumbents bias exploration, and the cheapest approximations are worst exactly in the high-noise regime where care matters most.\n\nComputation gets its own veto power. Optimizing an acquisition function is itself a global optimization problem with vanishing gradients far from data, worst in high dimensions, so multistart search from space-filling designs is the practical standard, and imperfect optimization is sometimes even advantageous. Stopping is folded back into the decision framework: collect more data only while the best acquisition value exceeds its cost. The theory chapter then converts practice into accounting. Regret decomposes performance into per-step shortfalls against the optimum. Universally valid confidence intervals bound those shortfalls for the upper confidence bound policy, information capacity bounds how much any policy could possibly learn with smoothness setting the rate, and fill distance bounds worst-case uncertainty when observations are exact. Without a smoothness class the worst case is vacuous, since arbitrarily tall needles hide in the holes of any finite design, so every honest guarantee names its function class.\n\nThe extensions show the framework stretching instead of breaking. Unknown costs become a second inferred quantity with its own belief state. Constraints become probabilistic, feasibility becomes a probability multiplying improvement, and even infeasible observations earn their keep as information. Batches become single decisions over joint outcomes, which is where diversity comes from. Fidelities become correlated levels of one joint model under a cost-adjusted utility. Multiple objectives become a Pareto frontier with scalarizations whose blind spots are theorems, not surprises. Derivatives become extra observation channels in the same joint Gaussian. The through-line across all of it is that growth is handled by enlarging the state and the decision, never by bolting on an unexamined heuristic, and the book's own counterexamples are placed exactly where the enlargement is only approximate. A final thread worth naming is the book's honesty about provenance: its history chapter shows that nearly every policy it teaches was discovered, forgotten, and rediscovered at least once across five decades, which is itself an argument for recording reasoning in a durable form that survives its author, so the next generation inherits the operators and their failure regimes instead of reinventing both.",
+      "retrocausal_genealogy": "The genealogy of these primitives runs through several distinct lineages that the book deliberately braids. Gaussian conditioning descends from geostatistics and from Wiener and Kolmogorov filtering, reaching this text through Rasmussen and Williams, whose posterior formulas supply the computational core. The policy lineage begins with Kushner in 1962 and 1964, who first paired a Gaussian process model of an unknown objective with upper confidence bound and probability of improvement rules, and who already saw the optimal knowledge gradient style policy and dismissed it as virtually impossible to compute. Saltenis produced expected improvement in 1971, Mockus produced the knowledge gradient idea in 1972, and Jones, Schonlau, and Welch rediscovered expected improvement as the EGO algorithm in 1998, which is why the same operator carries several names. The information lineage runs from Shannon in 1948 through Lindley's 1956 expected information gain for experimental design, then to entropy search, predictive entropy search, and max-value entropy search. The regret lineage is younger: Srinivas and coauthors converted information capacity into Gaussian process upper confidence bound guarantees, and Bull and others then mapped where those guarantees fail once hyperparameters are estimated. The extension chapters graft on Kennedy and O'Hagan style multifidelity modeling, Pareto optimality from multiobjective optimization, and expectation propagation from Minka's approximate inference work.",
+      "theory_of_mind": "The book is written for a reader who controls a real evaluation budget and is afraid of wasting it, and its rhetoric is organized around that reader's decisions. It assumes the reader can hold a probability distribution over an unknown function and will accept an approximation only when its error is named and located. Against the heuristic tinkerer, its recurring move is exposure: every folk rule is shown to be a utility function and a lookahead depth in disguise, so the reader is never allowed to believe a policy choice is innocent. Against the pure theorist, it places counterexamples immediately beside the methods they limit, teaching that a guarantee is a contract with conditions rather than a decoration. It also models its own author as a referee between camps, giving Bayesian average-case and worst-case RKHS analyses separate chapters of respect, and letting each veto the other's overclaims. The intended effect is a practitioner who chooses policies the way the book chooses words: by stating the objective, the assumptions, and the failure regime before acting.",
+      "cross_layer_veto": "The layers of the book veto each other in specific, checkable places, and the extraction preserves those vetoes rather than smoothing them over. The computation layer vetoes the decision layer's exactness: the knowledge gradient and the entropy search policies are normatively right and practically intractable in continuous domains, so quadrature, discretization, and expectation propagation approximations are admitted with their biases attached. The theory layer vetoes the modeling layer: hyperparameter estimation by maximum likelihood, the default practice, is shown to void convergence guarantees, so the theory imposes scale inflation and expanding model classes as conditions. The noise model vetoes the closed forms: expected improvement and probability of improvement in their textbook shapes answer the wrong question once observations are noisy, and the envelope construction replaces them. The decision layer vetoes pure information gain whenever learning does not change any terminal recommendation. The constraint layer vetoes unconstrained acquisition maxima by multiplying value with feasibility probability. No primitive in this artifact should be applied from a single layer without checking the vetoes recorded in its breakdown regime."
+    }
+  ],
+  "universal_lens": "Read as a universal method, the book defines a complete grammar for acting under uncertainty when evaluations are expensive: maintain a probabilistic surrogate of the unknown quantity, state value as an explicit utility over final states rather than as a habit, price every probe by its expected marginal gain under that utility, and keep accounts in regret and information so that performance claims are auditable. Growth is handled by enlarging the state, adding cost beliefs, feasibility beliefs, fidelity levels, extra objectives, or derivative channels, while the decision rule's shape stays fixed. Approximations are permitted everywhere except in one place: the failure regime of each approximation must be stated next to it. Any field whose work is sequential measurement toward a recommendation, from laboratory science to forecasting, can be rewritten in this grammar without loss.",
+  "gsi_mapping": "For the Galaxy Sports Institute's research programs, the transferable machinery is experimental and inferential rather than predictive. Study design becomes Bayesian optimization over measurement choices: which biomechanical or tracking measurement to fund next is scored by expected marginal gain in a named utility, with knowledge gradient style valuation when the payoff is a better final conclusion. Competing analytical frameworks for the same phenomenon are held as a model posterior and averaged by evidence instead of being settled by preference. Information capacity bounds how much a planned data collection can teach given its noise level, which disciplines sample size promises. Expectation propagation integrates threshold and event outcomes into Gaussian belief states for longitudinal athlete studies. Multifidelity modeling joins simulation output, laboratory measurement, and field observation in one joint model with learned cross-fidelity correlation, and the stopping rule tells a study when additional collection no longer pays for itself.",
+  "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the book supplies the decision architecture around the forecasting core. Belief states over team and player strength are updated by Gaussian conditioning, so one result revises correlated beliefs jointly rather than as isolated edits, and automatic relevance determination learns which situational inputs deserve weight in similarity judgments. Weekly analysis effort is allocated as an acquisition problem: candidate lines of inquiry are scored by expected improvement in the final projection, by knowledge gradient when their value flows through other games, and by information gain about named targets such as an opponent's coverage tendency. The stopping rule ends work on a matchup when the best remaining inquiry no longer covers its cost. Calibration is enforced by the theory layer: confidence intervals must be universally valid for regret accounting to mean anything, hyperparameter estimates are floored so the engine cannot tune itself into blindness, and batch commissioning of analyses uses joint predictive value so redundant studies are not double counted. Model averaging over engine configurations, weighted by out-of-sample evidence, produces the published projections."
+}
