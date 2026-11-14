@@ -552,3 +552,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 01:43:06 | COMPLETE | 3578988030a30ccf | primitives=26 think_words=852
 - 2026-11-14 01:45:31 | CLAIMED | 160042f33805434e | worker=hermes-inline shard03 file=2023 - Contextualized Generative Ghosting Model as Benchmark for Evaluating Player Movement in Football - Unknown Authors.pdf
 - 2026-11-14 01:52:23 | COMPLETE | 160042f33805434e | primitives=10 think_words=854
+- 2026-11-14 01:53:09 | CLAIMED | 1add9f4d39de0d09 | worker=hermes-inline shard03 file=2023 - Aiming for Competitive Balance Designing Fair Handicap Systems for Darts using a Markov Decision Process Framework - Unknown Authors.pdf
+- 2026-11-14 01:57:21 | COMPLETE | 1add9f4d39de0d09 | primitives=28 think_words=858
