@@ -566,3 +566,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 02:25:54 | COMPLETE | 263c3bdd1ba6a0bf | primitives=18 think_words=850
 - 2026-11-14 02:26:34 | CLAIMED | 33819cf53272627c | worker=hermes-inline shard03 file=2015 - Assessing the offensive productivity of NHL players using in-game win probabilities - Unknown Authors.pdf
 - 2026-11-14 02:31:36 | COMPLETE | 33819cf53272627c | primitives=25 think_words=851
+- 2026-11-14 02:32:16 | CLAIMED | 181310dec4740603 | worker=hermes-inline shard03 file=2018 - Using Computer Vision and Machine Learning to Automatically Classify NFL Game Film and Develop a Player Tracking System - Unknown Authors.pdf
+- 2026-11-14 02:35:52 | COMPLETE | 181310dec4740603 | primitives=25 think_words=851
