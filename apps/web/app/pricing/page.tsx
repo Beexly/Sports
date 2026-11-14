@@ -179,7 +179,7 @@ export default async function PricingPage(): Promise<JSX.Element> {
             Honest Football Grading &amp; Strict Pass Discipline
           </p>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-[#C4BFB6]">
-            Every call published on Galaxy Sports Edge is built from coaching tendencies, offensive and defensive line pass-protection matchups, active injury reports, and de-vigged sportsbook price comparisons. If a game or prop does not give us a clear edge over the market number, we mark it <strong>PASS · NO BET</strong>. We never force action. Every paid plan also includes a 3-day money-back window: cancel and request a refund within 3 days of your initial charge and we will refund it, no questions asked. Outside that window, refunds are at our discretion.
+            Every call published on Galaxy Sports Edge is built from coaching tendencies, offensive and defensive line pass-protection matchups, active injury reports, and de-vigged sportsbook price comparisons. If a game or prop does not give us a clear edge over the market number, we mark it <strong>PASS · NO BET</strong>. We never force action.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-6 text-xs text-[#8F8A82]">
             <span>✓ Settled Record: 47-19-1 (71.2% · +24.92u (with gated props))</span>
