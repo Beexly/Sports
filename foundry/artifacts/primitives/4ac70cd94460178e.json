@@ -1,0 +1,323 @@
+{
+  "book_id": "4ac70cd94460178e",
+  "source_status": "COMPLETE",
+  "title": "2211.02219v3",
+  "file_name": "2211.02219v3.pdf",
+  "sha256": "4ac70cd94460178e929f0bc4a56ef9520cd0c2b356a23b192b30a44085c6a4b1",
+  "primary_domain": "other",
+  "pages_total": 13,
+  "pages_read": 13,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 13,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "\\mathcal{M}^{\\text{VLM}}_{\\text{CoOp}} \\xrightarrow{\\text{SubPT}} \\mathcal{M}^{\\text{VLM}}_{\\text{SubPT+NFL}} \\oplus \\mathcal{H}_{\\text{grad}}^{\\text{low-rank}} \\otimes \\mathcal{H}_{\\text{novel}}^{\\text{gen}} Gradient flow analysis in prompt tuning reveals overfitting via low-rank subspace projection and novel feature learning. Universal Lens: Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian prompt posterior $ p(\\theta | \\mathcal{D}_{\\text{base}}) $ constrained via conformal predictive intervals on $ \\mathcal{H}_{\\text{grad}}^{\\text{low-rank}} $, enabling robust generalization to novel classes. Bayesian inference models prompt embeddings as posterior distributions; SubPT aligns with conformal prediction by reducing spurious variance in learned features.",
+  "gse_mapping": "Situational reasoning engine maps $ \\mathcal{M}^{\\text{VLM}}_{\\text{CoOp}} $ to $ \\mathcal{M}^{\\text{VLM}}_{\\text{SubPT+NFL}} $ via state transitions defined by gradient subspace projection and novel feature learning. Situational reasoning maps gradient dynamics to state transitions in prompt optimization; NFL enables novel category generalization through zero-shot alignment.",
+  "primitives": [
+    {
+      "primitive_id": "subpt_gradient_projection",
+      "name": "Subspace Prompt Tuning Gradient Projection",
+      "verbatim_quote": "Given those observations, we propose Subspace Prompt Tuning (SubPT) to project the gradients in back-propagation onto the low-rank subspace spanned by the early-stage gradient flow eigenvectors during the entire training process and successfully eliminate the overfitting problem.",
+      "page": 1,
+      "latex": "\\mathbf{g}_t^{\\text{proj}} = \\Pi_{\\mathcal{U}_\\text{early}}(\\nabla_{\\theta} \\mathcal{L}(\\theta))",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{g}_t^{\\\\text{proj}}': '\\\\text{Projected gradient vector, } \\\\mathbb{R}^d', '\\\\Pi_{\\\\mathcal{U}_\\\\text{early}}': '\\\\text{Projection operator onto early-stage subspace } \\\\mathcal{U}_\\\\text{early}', '\\\\nabla_{\\\\theta} \\\\mathcal{L}(\\\\theta)': '\\\\text{Gradient of loss w.r.t. prompt parameters } \\\\theta'}",
+      "assumptions": "Early-stage gradient eigenvectors span a low-rank subspace; gradient flow is stable enough to define meaningful directions.",
+      "breakdown_regime": "When gradient flow becomes non-stationary or eigenvector basis degrades due to overfitting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "SubPT maps the prompt tuning kernel into a low-rank subspace, reducing overfitting by constraining optimization dynamics.",
+        "source_operator": "subpt_gradient_projection",
+        "telemetry": "Test accuracy on base and novel classes during training epochs."
+      }
+    },
+    {
+      "primitive_id": "nfl_feature_enhancement",
+      "name": "Novel Feature Learner",
+      "verbatim_quote": "In addition, we equip CoOp with a Novel Feature Learner (NFL) to enhance the generalization ability of the learned prompts onto novel categories beyond the training set, needless of image training data.",
+      "page": 1,
+      "latex": "\\mathcal{F}_{\\text{novel}} = \\text{NFL}(\\mathcal{T}_{\\text{base}}, \\mathcal{P}_{\\text{prompt}})",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{F}_{\\\\text{novel}}': '\\\\text{Learned novel category features, } \\\\mathbb{R}^{d_{\\\\text{feat}}}', '\\\\text{NFL}': '\\\\text{Novel Feature Learner function}', '\\\\mathcal{T}_{\\\\text{base}}': '\\\\text{Base class text prompts, } \\\\mathbb{R}^{N \\\\times d_{\\\\text{prompt}}}', '\\\\mathcal{P}_{\\\\text{prompt}}': '\\\\text{Prompt embedding space, } \\\\mathbb{R}^{d_{\\\\text{prompt}}}'}",
+      "assumptions": "Textual prompts encode sufficient semantic information for novel category generalization without image data.",
+      "breakdown_regime": "When textual semantics are insufficiently discriminative for unseen categories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "NFL establishes isomorphism between base-class prompt space and novel-category feature space via semantic alignment.",
+        "source_operator": "nfl_feature_enhancement",
+        "telemetry": "Zero-shot accuracy on novel classes across datasets."
+      }
+    },
+    {
+      "primitive_id": "coop_overfitting_analysis",
+      "name": "Context Optimization Overfitting Analysis",
+      "verbatim_quote": "Despite the performance improvements on downstream tasks, several studies have reported that CoOp suffers from the overfitting issue in two aspects: (i) the test accuracy on base classes first improves and then worsens during training;(ii) the test accuracy on novel classes keeps decreasing.",
+      "page": 1,
+      "latex": "\\frac{d}{dt} \\mathcal{L}_{\\text{test}}^{\\text{base}}(t) = \\alpha(t) - \\beta(t), \\quad \\frac{d}{dt} \\mathcal{L}_{\\text{test}}^{\\text{novel}}(t) < 0",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{L}_{\\\\text{test}}^{\\\\text{base}}(t)': '\\\\text{Base class test loss at time } t', '\\\\mathcal{L}_{\\\\text{test}}^{\\\\text{novel}}(t)': '\\\\text{Novel class test loss at time } t', '\\\\alpha(t)': '\\\\text{Improvement rate of base class accuracy}', '\\\\beta(t)': '\\\\text{Degradation rate of base class accuracy}'}",
+      "assumptions": "Overfitting manifests as temporal loss dynamics in test accuracy for both base and novel classes.",
+      "breakdown_regime": "When training diverges beyond optimal point for base classes and fails to generalize to novel ones.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Identifies overfitting kernel in CoOp's loss landscape through temporal derivative analysis.",
+        "source_operator": "coop_overfitting_analysis",
+        "telemetry": "Accuracy curves for base and novel classes over training steps."
+      }
+    },
+    {
+      "primitive_id": "gradient_flow_eigendecomposition",
+      "name": "Gradient Flow Eigendecomposition",
+      "verbatim_quote": "Comparative experiments reveal that CoOp favors generalizable and spurious features in the early and later training stages, respectively, leading to the non-overfitting and overfitting phenomena.",
+      "page": 1,
+      "latex": "\\nabla_{\\theta} \\mathcal{L}(\\theta) = \\sum_{i=1}^{r} \\lambda_i \\mathbf{u}_i \\mathbf{u}_i^T \\nabla_{\\theta} \\mathcal{L}(\\theta)",
+      "symbol_and_unit_ledger": "{'\\\\nabla_{\\\\theta} \\\\mathcal{L}(\\\\theta)': '\\\\text{Gradient vector, } \\\\mathbb{R}^d', '\\\\lambda_i': '\\\\text{i-th eigenvalue of gradient covariance matrix}', '\\\\mathbf{u}_i': '\\\\text{i-th eigenvector of gradient covariance matrix}'}",
+      "assumptions": "Gradient covariance matrix is symmetric and positive semi-definite; eigendecomposition captures dominant directions.",
+      "breakdown_regime": "When dominant eigenvalues shift toward spurious features post-initial training.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Eigendecomposition links gradient behavior to feature preference shifts in CoOp.",
+        "source_operator": "gradient_flow_eigendecomposition",
+        "telemetry": "Eigenvalue spectrum of gradient covariance matrix over training epochs."
+      }
+    },
+    {
+      "primitive_id": "gradient_flow_subspace_projection",
+      "name": "Subspace Prompt Tuning",
+      "verbatim_quote": "The second term can be confirmed as a constant matrix1 since both C and Z are fixed, so the gradient flow ̇vt is governed by the first term ∇vg([vt, C]), which denotes the gradient from output to input on the text encoder g(·) and varies over time t.",
+      "page": 4,
+      "latex": "\\dot{v}_t = \\nabla_{v} g([v_t, C])",
+      "symbol_and_unit_ledger": "{'v_t': 'learnable prompt vector at time t', 'C': 'fixed text encoder weights', 'g(\\\\cdot)': 'text encoder function', 't': 'time step'}",
+      "assumptions": "Neural tangent kernel (NTK) is low-rank under infinite-width assumption; gradient flow evolves in dominant eigenspace.",
+      "breakdown_regime": "When gradient flow deviates from low-rank subspace, overfitting occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "SubPT projects gradients into dominant eigenspace of early-stage NTK to constrain overfitting.",
+        "source_operator": "gradient_flow_subspace_projection",
+        "telemetry": "Eigenvalue spectrum of NTK and gradient norm decay rate."
+      }
+    },
+    {
+      "primitive_id": "novel_feature_similarity_loss",
+      "name": "Novel Feature Learner",
+      "verbatim_quote": "The PCA procedure is formulated as max U ∥V -V U ⊺U∥2 F , s.t.",
+      "page": 4,
+      "latex": "L_{cs}(v) = \\|f_{\\text{CoOp}}(v) - f_{\\text{CLIP}}\\|^2_F",
+      "symbol_and_unit_ledger": "{'L_{cs}': 'similarity loss function', 'f_{\\\\text{CoOp}}': 'feature from CoOp model', 'f_{\\\\text{CLIP}}': 'zero-shot CLIP feature', 'v': 'learnable prompt vector'}",
+      "assumptions": "Zero-shot CLIP provides stable reference for novel category features; similarity loss preserves semantic consistency.",
+      "breakdown_regime": "When novel category features diverge from CLIP, generalization degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "NFL aligns CoOp's novel category features with CLIP's zero-shot representations via similarity loss.",
+        "source_operator": "novel_feature_similarity_loss",
+        "telemetry": "Cosine similarity between CoOp and CLIP features on novel classes."
+      }
+    },
+    {
+      "primitive_id": "low_rank_gradient_approximation",
+      "name": "Low-Rank Gradient Approximation",
+      "verbatim_quote": "prove that both ∇vg([vt, C]) and ̇vt can be approximated by low-rank matrices, because only a small part of eigenvalues dominates the spectrum of neural tangent kernel (NTK) under the infinite-width assumption [46], and NTK is defined as Θt = ∇vg([vt, C]) · ∇vg([vt, C])⊺.",
+      "page": 4,
+      "latex": "\\Theta_t = \\nabla_v g([v_t, C]) \\cdot \\nabla_v g([v_t, C])^\\top",
+      "symbol_and_unit_ledger": "{'\\\\Theta_t': 'neural tangent kernel at time t', 'g(\\\\cdot)': 'text encoder function', 'v_t': 'prompt vector at time t'}",
+      "assumptions": "Infinite-width limit ensures low-rank structure of NTK; dominant eigenvalues govern dynamics.",
+      "breakdown_regime": "High-dimensional non-low-rank regimes lead to instability in gradient updates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Low-rank approximation enables efficient gradient projection in SubPT.",
+        "source_operator": "low_rank_gradient_approximation",
+        "telemetry": "Singular value decomposition of NTK and rank ratio."
+      }
+    },
+    {
+      "primitive_id": "overfitting_induced_by_spurious_features",
+      "name": "Spurious Feature Overfitting",
+      "verbatim_quote": "Therefore, an intuitive idea to understand the overfitting problem in prompt tuning is that CoOp favors the generalizable/spurious feature direction in the early/later training stage.",
+      "page": 4,
+      "latex": "L_{\\text{train}}(v) \\approx L_{\\text{test}}(v) + \\epsilon_{\\text{spurious}}",
+      "symbol_and_unit_ledger": "{'L_{\\\\text{train}}': 'training loss', 'L_{\\\\text{test}}': 'test loss', '\\\\epsilon_{\\\\text{spurious}}': 'spurious overfitting error'}",
+      "assumptions": "Overfitting arises from alignment with spurious rather than generalizable features.",
+      "breakdown_regime": "Training/test mismatch due to spurious feature dominance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Spurious features induce overfitting in prompt tuning; SubPT mitigates this by restricting to low-rank subspace.",
+        "source_operator": "overfitting_induced_by_spurious_features",
+        "telemetry": "Difference in training vs test accuracy across epochs."
+      }
+    },
+    {
+      "primitive_id": "subpt_performance_gain",
+      "name": "SubPT Harmonic Mean Improvement",
+      "verbatim_quote": "Compared with the zero-shot CLIP baseline, the proposed SubPT can consistently and substantially outperform the average accuracy by 2.37% with 1 training sample per class and 15.45% with 16 training samples per class.",
+      "page": 7,
+      "latex": "\\Delta \\text{HM}_{\\text{SubPT}} = \\frac{\\text{HM}_{\\text{CoOp+SubPT}} - \\text{HM}_{\\text{CoOp}}}{\\text{HM}_{\\text{CoOp}}} \\times 100\\%",
+      "symbol_and_unit_ledger": "{'ΔHM': 'Relative change in harmonic mean accuracy, dimensionless', 'HM_CoOp': 'Harmonic mean accuracy of CoOp, percentage', 'HM_CoOp+SubPT': 'Harmonic mean accuracy of CoOp+SubPT, percentage'}",
+      "assumptions": "Accuracy improvements are monotonic with increasing training samples; harmonic mean captures balanced performance across datasets.",
+      "breakdown_regime": "When training samples per class < 16, SubPT provides marginal gains; beyond 16 samples, gains plateau.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SubPT's effect mirrors kernel regularization in Bayesian linear regression, where prior constraints reduce variance in low-data regimes.",
+        "source_operator": "subpt_performance_gain",
+        "telemetry": "Change in harmonic mean accuracy over 11 datasets"
+      }
+    },
+    {
+      "primitive_id": "nfl_accuracy_boost",
+      "name": "NFL Incremental Accuracy Boost",
+      "verbatim_quote": "Then, NFL can further increase the accuracy by 0.11% to 0.73%.",
+      "page": 7,
+      "latex": "\\Delta \\text{Acc}_{\\text{NFL}} = \\text{Acc}_{\\text{CoOp+SubPT+NFL}} - \\text{Acc}_{\\text{CoOp+SubPT}}",
+      "symbol_and_unit_ledger": "{'ΔAcc_NFL': 'Incremental accuracy gain from NFL, percentage', 'Acc_CoOp+SubPT': 'Accuracy of CoOp+SubPT, percentage', 'Acc_CoOp+SubPT+NFL': 'Accuracy of CoOp+SubPT+NFL, percentage'}",
+      "assumptions": "NFL operates as a post-processing correction layer; additive gains assumed within bounded range.",
+      "breakdown_regime": "Applicable when CoOp+SubPT has already achieved near-optimal performance in base classes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "NFL acts as a derived kernel that adjusts decision boundaries post-SubPT, enhancing robustness against overfitting.",
+        "source_operator": "nfl_accuracy_boost",
+        "telemetry": "Per-class accuracy difference between CoOp+SubPT and CoOp+SubPT+NFL"
+      }
+    },
+    {
+      "primitive_id": "overfitting_divergence",
+      "name": "Overfitting Divergence Metric",
+      "verbatim_quote": "The overfitting problem in CoOp is reflected by the divergence of test set accuracies between base and novel classes.",
+      "page": 7,
+      "latex": "\\Delta \\text{Acc}_{\\text{base vs novel}} = \\text{Acc}_{\\text{base}} - \\text{Acc}_{\\text{novel}}",
+      "symbol_and_unit_ledger": "{'ΔAcc_base_vs_novel': 'Difference in accuracy between base and novel classes, percentage', 'Acc_base': 'Accuracy on base classes, percentage', 'Acc_novel': 'Accuracy on novel classes, percentage'}",
+      "assumptions": "Base and novel classes are distinguishable; divergence indicates model instability.",
+      "breakdown_regime": "Divergence increases with fewer training samples; critical at 1-shot and 4-shot scenarios.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Overfitting divergence mirrors information-theoretic mutual information loss between learned representations and true class labels.",
+        "source_operator": "overfitting_divergence",
+        "telemetry": "Difference in test accuracy between base and novel classes"
+      }
+    },
+    {
+      "primitive_id": "coop_generalization_gap",
+      "name": "CoOp Generalization Gap",
+      "verbatim_quote": "For example, CoOp can boost the average performance of zero-shot CLIP on base classes with an absolute 6.93% margin over 11 datasets, but can also degrade CLIP's performance on novel classes by an absolute 10.30% margin.",
+      "page": 7,
+      "latex": "\\Delta \\text{Acc}_{\\text{CoOp}} = \\text{Acc}_{\\text{CoOp, base}} - \\text{Acc}_{\\text{CLIP, novel}}",
+      "symbol_and_unit_ledger": "{'ΔAcc_CoOp': 'Performance gap of CoOp between base and novel classes, percentage', 'Acc_CoOp_base': 'Accuracy of CoOp on base classes, percentage', 'Acc_CLIP_novel': 'Accuracy of CLIP on novel classes, percentage'}",
+      "assumptions": "Zero-shot CLIP serves as stable baseline; CoOp's performance varies significantly across domains.",
+      "breakdown_regime": "Occurs when CoOp fails to generalize beyond its training domain; most pronounced in cross-domain settings.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CoOp’s generalization gap reflects a derived kernel that maps input features into a latent space where base and novel classes become misaligned.",
+        "source_operator": "coop_generalization_gap",
+        "telemetry": "Absolute difference in accuracy between base and novel class predictions"
+      }
+    },
+    {
+      "primitive_id": "subpt_early_training_projection",
+      "name": "Early Training Gradient Subspace Projection",
+      "verbatim_quote": "SubPT only has two hyperparameters, namely tearly and r, in which tearly denotes the last epoch of the early training stage.",
+      "page": 10,
+      "latex": "\\mathcal{P}_{\\text{early}}^{(r)} = \\text{proj}_{\\mathcal{U}_{\\text{early}}}^{(r)} \\left( \\nabla \\mathcal{L} \\right)",
+      "symbol_and_unit_ledger": "{'r': 'rank of subspace, dimensionless', 't_early': 'epoch index, integer', 'U_{early}': 'matrix of early gradient eigenvectors, (d × t_early)', '\\\\nabla \\\\mathcal{L}': 'gradient of loss function, (d × 1)'}",
+      "assumptions": "The early training gradient flow captures dominant variance; rank reduction preserves essential information.",
+      "breakdown_regime": "When t_early approaches total epochs, U_{early} loses specificity and overfitting increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "SubPT's kernel is derived from the low-rank projection of early-stage gradients into a constrained subspace, enabling robust generalization.",
+        "source_operator": "subpt_early_training_projection",
+        "telemetry": "mIoU-novel improvement over CoOp baseline"
+      }
+    },
+    {
+      "primitive_id": "subpt_prompt_ranking",
+      "name": "Prompt Subspace Rank Optimization",
+      "verbatim_quote": "Method SubPT NFL Training time (s) CoOp 0.19 CoOp ✓ 0.20 CoOp ✓ 0.20 CoOp ✓ ✓ 0.22 CoCoOp 1.40 early-stage gradient flow during back-propagation.",
+      "page": 10,
+      "latex": "\\mathcal{L}_{\\text{prompt}}(r) = \\sum_{i=1}^{N} \\left\\| \\mathbf{p}_i - \\mathbf{p}_{\\text{opt}}^{(r)} \\right\\|^2",
+      "symbol_and_unit_ledger": "{'r': 'subspace rank, dimensionless', '\\\\mathbf{p}_i': 'learned prompt vector, (d × 1)', '\\\\mathbf{p}_{\\\\text{opt}}^{(r)}': 'optimized prompt under rank constraint, (d × 1)'}",
+      "assumptions": "Optimal rank minimizes prompt deviation while preserving discriminability.",
+      "breakdown_regime": "Rank too high causes overfitting; rank too low reduces expressiveness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Prompt optimization under rank constraint mirrors kernel regression in GSE's latent space.",
+        "source_operator": "subpt_prompt_ranking",
+        "telemetry": "pACC-novel performance gain"
+      }
+    },
+    {
+      "primitive_id": "subpt_token_generalization",
+      "name": "Token-to-Novel Generalization Mapping",
+      "verbatim_quote": "As depicted in Table VII, a larger tearly leads to less satisfying few-shot classification performance.",
+      "page": 10,
+      "latex": "\\mathcal{G}(\\mathbf{T}) = \\arg\\max_{c \\in \\mathcal{C}_{\\text{novel}}} \\text{sim}(\\mathbf{T}, \\mathbf{p}_c)",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{T}': 'tokenized input, (d × 1)', '\\\\mathcal{C}_{\\\\text{novel}}': 'set of novel classes, set', '\\\\mathbf{p}_c': 'class-specific prompt, (d × 1)', '\\\\text{sim}(\\\\cdot, \\\\cdot)': 'cosine similarity, dimensionless'}",
+      "assumptions": "Generalization improves with token richness and prompt alignment.",
+      "breakdown_regime": "Too few tokens reduce discrimination; too many cause overfitting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Token generalization kernel emerges from prompt similarity in GSI's belief space.",
+        "source_operator": "subpt_token_generalization",
+        "telemetry": "Base-to-novel HM score"
+      }
+    },
+    {
+      "primitive_id": "subpt_template_influence",
+      "name": "Template Influence on Prompt Learning",
+      "verbatim_quote": "When tearly equals the total epoch, the performance approximates that of the original CoOp, indicating that the computed eigenvectors U early represent the gradient flow of the entire training process and lose the ability to mitigate overfitting.",
+      "page": 10,
+      "latex": "\\mathcal{F}(\\mathcal{T}) = \\mathbb{E}_{\\mathcal{T}} \\left[ \\mathcal{L}_{\\text{train}} \\right] - \\mathbb{E}_{\\mathcal{T}} \\left[ \\mathcal{L}_{\\text{val}} \\right]",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{T}': 'template set, set', '\\\\mathcal{L}_{\\\\text{train}}, \\\\mathcal{L}_{\\\\text{val}}': 'training/validation loss, scalar', '\\\\mathcal{F}(\\\\mathcal{T})': 'generalization gap, scalar'}",
+      "assumptions": "Template choice affects gradient dynamics and thus final model generalization.",
+      "breakdown_regime": "Manual templates may induce suboptimal gradient paths.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Template influence maps to GSE's policy selection in decision-making under uncertainty.",
+        "source_operator": "subpt_template_influence",
+        "telemetry": "HM score variation with template type"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4ac70cd94460178e_t0",
+      "think": "This chapter introduces Context Optimization (CoOp) as a method for learning continuous prompts in vision-language models (VLMs), particularly in few-shot settings. It identifies a critical overfitting phenomenon where base class performance degrades after initial improvement, and novel class performance continues to decline. The paper argues that existing methods fail to mitigate this issue effectively. The core contribution lies in proposing Subspace Prompt Tuning (SubPT), which projects gradients onto a low-rank subspace derived from early-stage gradient flows. This mechanism aims to suppress overfitting by constraining optimization dynamics. Additionally, a Novel Feature Learner (NFL) is introduced to improve generalization to unseen categories without requiring new image data. These techniques are evaluated across multiple datasets and downstream tasks, showing consistent performance gains over state-of-the-art approaches like CoCoOp. The theoretical underpinning involves understanding how gradient flow evolves during training and how it correlates with feature selection—generalizable vs. spurious features. The work contributes to the broader field of prompt tuning by offering a principled way to stabilize training and enhance generalization in VLMs. Window 1 Synthesis: Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon CLIP and ALIGN, CoOp emerged as a key development in prompt tuning for vision-language tasks. Prior works like ProGrad and VPT attempted to address overfitting but added complexity. This work uniquely isolates the root cause in gradient flow behavior and proposes a low-rank projection strategy. Retrocausal Genealogy (Window 1): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The authors model the agent (CoOp) as optimizing a prompt space under constraints of limited data and high-dimensional feature spaces. Opposing forces include the tendency to memorize base classes versus the need to generalize to novel classes. The proposed SubPT and NFL act as regulatory mechanisms to balance these competing objectives. Theory of Mind (Window 1): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring gradient projections are orthogonal to spurious feature directions. Leakage is mitigated by restricting NFL’s feature extraction to semantic dimensions only, avoiding entanglement with image-specific biases. Cross-Layer Veto (Window 1): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4ac70cd94460178e_t1",
+      "think": "Chapter window 2 explores prompt tuning's overfitting problem through gradient flow analysis. The authors observe that while empirical risk minimization and i.i.d. assumptions dominate ML theory, they fail in practice, causing poor generalization. By analyzing the neural tangent kernel (NTK), they show that gradients evolve in a low-rank subspace, enabling Subspace Prompt Tuning (SubPT). This method projects gradients onto dominant eigenvectors to reduce spurious directions. Additionally, the Novel Feature Learner (NFL) enhances generalization by aligning novel category features with zero-shot CLIP outputs. These primitives form a coherent framework for robust prompt tuning, addressing both overfitting and zero-shot generalization challenges. Window 2 Synthesis: Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in No Free Lunch theorem and empirical risk minimization, this work builds upon prior studies in prompt tuning and gradient-based optimization, extending them with low-rank kernel approximations and novel feature alignment. Retrocausal Genealogy (Window 2): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include the overfitting tendency of CoOp and the spurious feature bias in gradient descent. The proposed SubPT and NFL act as corrective mechanisms, modeling adversarial feature learning as a constrained optimization problem. Theory of Mind (Window 2): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by projecting gradients into orthogonal subspaces; leakage is mitigated by ensuring NFL operates independently of base class training. These constraints prevent cross-layer contamination of spurious features. Cross-Layer Veto (Window 2): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4ac70cd94460178e_t2",
+      "think": "Chapter window 3 focuses on evaluating the efficacy of SubPT and NFL in improving few-shot classification accuracy over CoOp. The core argument hinges on mitigating overfitting in CoOp through structured perturbations and neural feature learning. The harmonic mean accuracy across 11 datasets demonstrates consistent improvements with SubPT alone and further enhancements with NFL. These methods address the fundamental tension between base-class performance and novel-class generalization. The empirical evidence suggests that while CoOp excels in base-class recognition, it suffers from significant degradation on novel classes—a phenomenon termed 'overfitting divergence'. SubPT introduces a regularization mechanism that stabilizes the model’s response to unseen data, whereas NFL refines this stabilization through adaptive feature adjustment. This dual strategy aligns with recent advances in meta-learning and domain adaptation, where robustness is achieved through ensemble-like mechanisms and dynamic reweighting of learned features. The implications extend beyond classification to broader applications in transfer learning and continual learning paradigms. Window 3 Synthesis: Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on zero-shot learning and fine-tuning strategies, particularly CLIP and CoOp, which established foundational frameworks for few-shot adaptation. SubPT and NFL build upon these by introducing structured perturbation and neural feature refinement techniques. Retrocausal Genealogy (Window 3): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include the adversarial nature of overfitting, where models learn spurious correlations in base classes, and the need for robust generalization. Players are represented by datasets and their class distributions, while coaches are the SubPT and NFL modules guiding optimization towards stable representations. Theory of Mind (Window 3): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that SubPT and NFL do not redundantly penalize similar aspects of model behavior. Leakage veto prevents the propagation of noise from one module to another, maintaining distinct roles in regularization and refinement. Cross-Layer Veto (Window 3): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4ac70cd94460178e_t3",
+      "think": "Chapter 4 explores SubPT’s efficacy in few-shot learning by leveraging early-stage gradient subspace projections to mitigate overfitting. The method introduces two key hyperparameters: t_early, defining the epoch range for early training, and r, the rank of the subspace used for gradient projection. Through ablation studies, it is demonstrated that optimal t_early balances between retaining gradient information and avoiding overfitting. As t_early increases toward full training epochs, the method converges to standard CoOp, losing its regularization benefit. Similarly, increasing the rank r beyond an optimal value degrades performance due to overparameterization. The framework also evaluates token count impact on base-to-novel generalization, showing that richer token sets improve transferability. Template influence is analyzed via manual vs learned templates, revealing that learned templates yield superior performance. These findings align with broader trends in prompt learning and gradient-based optimization, where careful control of training dynamics and representation capacity is critical for robust generalization. Window 4 Synthesis: Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon CoOp and NFL frameworks, SubPT inherits core ideas from prompt tuning and gradient surgery literature, particularly leveraging early-gradient information to stabilize training and improve few-shot performance. Retrocausal Genealogy (Window 4): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents might include adversarial prompt designs or noisy data that could degrade SubPT’s gradient subspace estimation. Coaches or researchers may attempt to optimize for speed rather than accuracy, leading to suboptimal t_early or r values. Theory of Mind (Window 4): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that the early gradient subspace does not become redundant with later stages. Leakage veto prevents information from leaking into validation metrics during early training, maintaining integrity of performance estimates. Cross-Layer Veto (Window 4): Rooted in 2211.02219v3 (4ac70cd94460178e, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

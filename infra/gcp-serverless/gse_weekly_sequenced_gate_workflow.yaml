@@ -1,0 +1,105 @@
+# Google Cloud Workflows v1 Specification: GSE Scale-to-Zero Serverless Weekly Gate (GCP-LEV-05)
+# Project: galaxysportsedge | Region: us-central1 | Always-Free Tier ($0.00/month)
+# Budgets:
+#   - Cloud Workflows: <= 5,000 internal steps/month Always-Free (this workflow uses ~14 steps/run)
+#   - Cloud Run Jobs: <= 180,000 vCPU-sec & 360,000 GiB-sec/month Always-Free (scale-to-zero, 0 idle instances)
+#   - Cloud Scheduler: <= 3 jobs/account Always-Free (tuesday-baseline, wed-fri-delta, gameday-t85m-lock)
+#   - Artifact Registry: us-central1-docker.pkg.dev/galaxysportsedge/gse/weekly-gate-runner
+
+main:
+  params: [args]
+  steps:
+    - init_defaults:
+        assign:
+          - project_id: ${default(map.get(args, "project_id"), "galaxysportsedge")}
+          - location: ${default(map.get(args, "location"), "us-central1")}
+          - job_name: ${default(map.get(args, "job_name"), "gse-weekly-sequenced-gate-job")}
+          - nfl_week: ${default(map.get(args, "nfl_week"), "auto")}
+          - gate_mode: ${default(map.get(args, "gate_mode"), "t85m-lock")}
+          - model_lane: ${default(map.get(args, "model_lane"), "free")}
+          - max_cost_usd: ${default(map.get(args, "max_cost_usd"), 0.0)}
+          - live_board: false
+          - publish_ledger: false
+          - public_picks: false
+          - performance_stats: false
+          - calibration_adjustments_enabled: false
+          - week10_held_for_corpus_completion: true
+
+    - enforce_zero_cost_and_fail_closed_invariants:
+        switch:
+          - condition: ${max_cost_usd > 0.0 or model_lane != "free"}
+            raise:
+              code: 400
+              message: "FAIL_CLOSED_COST_DOCTRINE: Serverless weekly gate requires model_lane='free' and max_cost_usd=0.0"
+          - condition: ${live_board or publish_ledger or public_picks or performance_stats or calibration_adjustments_enabled}
+            raise:
+              code: 403
+              message: "FAIL_CLOSED_PUBLIC_GATE: Public and calibration gates must remain false until Tier-A corpus reaches 0 pending"
+          - condition: ${not week10_held_for_corpus_completion}
+            raise:
+              code: 403
+              message: "MIND_FIRST_HOLD_REQUIRED: WEEK10_HELD_FOR_CORPUS_COMPLETION must remain true while Tier-A pending > 0"
+
+    - check_bigquery_corpus_readiness:
+        call: googleapis.bigquery.v2.jobs.query
+        args:
+          projectId: ${project_id}
+          body:
+            useLegacySql: false
+            query: "SELECT COUNT(*) AS wired_primitives FROM `galaxysportsedge.gse_data.sovereign_primitives`"
+        result: bq_readiness
+
+    - trigger_scale_to_zero_cloud_run_job:
+        call: googleapis.run.v2.projects.locations.jobs.run
+        args:
+          name: ${"projects/" + project_id + "/locations/" + location + "/jobs/" + job_name}
+          body:
+            overrides:
+              taskCount: 1
+              containerOverrides:
+                - args:
+                    - "python"
+                    - "scripts/ops/run_permanent_sequenced_weekly_pipeline.py"
+                    - "--week"
+                    - ${nfl_week}
+                    - "--mode"
+                    - ${gate_mode}
+                    - "--skip-js-guards"
+                  env:
+                    - name: "GSE_NFL_WEEK"
+                      value: ${nfl_week}
+                    - name: "GSE_MODEL_LANE"
+                      value: "free"
+                    - name: "GSE_MAX_COST_USD"
+                      value: "0.0"
+                    - name: "LIVE_BOARD"
+                      value: "false"
+                    - name: "PUBLISH_LEDGER"
+                      value: "false"
+                    - name: "PUBLIC_PICKS"
+                      value: "false"
+                    - name: "PERFORMANCE_STATS"
+                      value: "false"
+                    - name: "CALIBRATION_ADJUSTMENTS_ENABLED"
+                      value: "false"
+                    - name: "WEEK10_HELD_FOR_CORPUS_COMPLETION"
+                      value: "true"
+        result: run_execution
+
+    - emit_workflow_receipt:
+        return:
+          status: "SCALE_TO_ZERO_GATE_DISPATCHED"
+          project_id: ${project_id}
+          location: ${location}
+          job_name: ${job_name}
+          nfl_week: ${nfl_week}
+          gate_mode: ${gate_mode}
+          cost_usd: 0.0
+          fail_closed_flags:
+            LIVE_BOARD: ${live_board}
+            PUBLISH_LEDGER: ${publish_ledger}
+            PUBLIC_PICKS: ${public_picks}
+            PERFORMANCE_STATS: ${performance_stats}
+            CALIBRATION_ADJUSTMENTS_ENABLED: ${calibration_adjustments_enabled}
+            WEEK10_HELD_FOR_CORPUS_COMPLETION: ${week10_held_for_corpus_completion}
+          execution_name: ${run_execution.name}

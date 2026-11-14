@@ -40,6 +40,9 @@ from intelligence.foundry_bridge.week10_reasoning_mind_bridge import (
 from intelligence.foundry_bridge.gcp_entity_and_injury_truth_reconciler import (
     build_week10_entity_and_venue_truth_rows,
 )
+from intelligence.foundry_bridge.gcp_video_intelligence_extractor import (
+    build_gcp_platform_leverage_wiring_rows,
+)
 
 MASK_BITS = 288
 MASK_WORDS = 9
@@ -491,6 +494,13 @@ def run_wiring_and_export(
                     "non_nan": True,
                 }
             )
+
+    for gcp_row in build_gcp_platform_leverage_wiring_rows(now_iso=now_iso):
+        g_fam = gcp_row["situational_family"]
+        g_bit = int(gcp_row["router_bit_index"])
+        all_bits.add(g_bit)
+        fam_bit_sets[g_fam].add(g_bit)
+        wiring_rows.append(gcp_row)
 
     entity_rows, entity_reconciliation_summary = build_week10_entity_and_venue_truth_rows(
         now_iso=now_iso,

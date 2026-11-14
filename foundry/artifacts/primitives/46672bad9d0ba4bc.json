@@ -1,0 +1,323 @@
+{
+  "book_id": "46672bad9d0ba4bc",
+  "source_status": "COMPLETE",
+  "title": "2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al",
+  "file_name": "2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al.pdf",
+  "sha256": "46672bad9d0ba4bcaa6706c15938281170981c6947093f405f811443725e3ba5",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 10,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Vision transformers with focal loss and Taguchi L18 augmentation enable reproducible risky tackle detection via 5-fold cross-validation. Vision transformers process spatiotemporal video clips via tokenized patches; risk detection relies on geometric change cues and temporal alignment of FPOC.",
+  "gsi_mapping": "Bayesian risk assessment models integrate ViViT predictions with SATT-3 rubric labels using conformal prediction intervals for uncertain classifications. Bayesian inference models tackle risk using probabilistic classification over augmented video features, conditioned on FPOC localization and geometric stability.",
+  "gse_mapping": "Situational reasoning engine maps FPOC localization and frame-level actions into state transitions for real-time tackle risk scoring during practice videos. Situational reasoning maps athlete kinematics through state transitions defined by FPOC timing and visual augmentation regimes, enabling dynamic risk prediction.",
+  "primitives": [
+    {
+      "primitive_id": "vivit_focal_loss_augmentation",
+      "name": "Video Vision Transformer with Focal Loss and Augmentation",
+      "verbatim_quote": "The original work fine-tuned a Video Vision Transformer (ViViT) on 733 clips labeled with the SATT-3 rubric.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'Video input tensor, dimensionless', 'L': 'Loss function, dimensionless', 'A': 'Augmentation strategy, dimensionless'}",
+      "assumptions": "Labels are binary (safe/risky), data is temporally ordered, and augmentation preserves semantic integrity.",
+      "breakdown_regime": "When label imbalance exceeds 3:1, focal loss mitigates underrepresentation of risky classes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ViViT encoder-decoder architecture maps spatiotemporal video features to binary classification logits; focal loss adjusts gradient magnitude based on class confidence.",
+        "source_operator": "vivit_focal_loss_augmentation",
+        "telemetry": "Risky-class recall and F1 scores across 5-fold CV folds."
+      }
+    },
+    {
+      "primitive_id": "taguchi_l18_augmentation",
+      "name": "Taguchi L18 Design for Data Augmentation",
+      "verbatim_quote": "It used focal loss, Taguchi L18 augmentation, and 5-fold cross-validation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{18}': 'Orthogonal array design, dimensionless', 'σ': 'Standard deviation of Gaussian noise, dimensionless', 'β': 'Brightness reduction factor, dimensionless'}",
+      "assumptions": "Each augmentation parameter varies independently, and combinations are sampled uniformly from L18 orthogonal array.",
+      "breakdown_regime": "When computational budget limits full factorial exploration, L18 enables efficient variance decomposition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "L18 design generates 18 unique augmentation configurations; kernel computes mean performance over these variants.",
+        "source_operator": "taguchi_l18_augmentation",
+        "telemetry": "Fold-mean risky recall and F1 scores under augmented vs. non-augmented conditions."
+      }
+    },
+    {
+      "primitive_id": "fpoc_localization",
+      "name": "First Point of Contact Localization",
+      "verbatim_quote": "Without augmentation, ViViT reaches risky recall of 0.545 and does not exceed the C3D baseline of 0.583.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'FPOC': 'First point of contact, temporal index', 't': 'Temporal frame index, seconds', 's': 'Spatial coordinate, meters'}",
+      "assumptions": "FPOC occurs at a deterministic but manually annotated time step; spatial resolution is fixed per clip.",
+      "breakdown_regime": "If FPOC is mislocalized, model accuracy degrades due to incorrect feature alignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "FPOC serves as anchor for temporal cropping; ViViT processes 32-frame windows centered around FPOC.",
+        "source_operator": "fpoc_localization",
+        "telemetry": "Recall improvement when FPOC is correctly localized versus random or noisy localization."
+      }
+    },
+    {
+      "primitive_id": "imbalanced_label_distribution",
+      "name": "Imbalanced Label Distribution in Tackle Clips",
+      "verbatim_quote": "The raw clips show identifiable student athletes, so they cannot be redistributed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_{safe}': 'Probability of safe clip, dimensionless', 'p_{risky}': 'Probability of risky clip, dimensionless'}",
+      "assumptions": "Class priors remain stable across training and test sets; rare events require specialized handling.",
+      "breakdown_regime": "When p_{risky} < 0.3, standard metrics like accuracy become misleading indicators of model utility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Imbalance ratio influences loss weighting; focal loss dynamically adjusts contribution of easy-to-predict samples.",
+        "source_operator": "imbalanced_label_distribution",
+        "telemetry": "Performance degradation in recall when minority class is underrepresented in training."
+      }
+    },
+    {
+      "primitive_id": "w1_vivt_checkpoint_cache",
+      "name": "ViViT Checkpoint Caching Operator",
+      "verbatim_quote": "conda env create -f Environment.yml conda activate vivit_pyt Four dependency risks matter.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes offline training environment with restricted network access.",
+      "breakdown_regime": "Singular at zero storage capacity; linear scaling with cache size up to system limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Replicates the checkpoint caching mechanism as a state-transition kernel in GSE, enabling efficient model reloading during live inference. Maps to GSI's sequential decision-making framework by treating cached checkpoints as prior distributions updated via conformal prediction.",
+        "source_operator": "w1_vivt_checkpoint_cache",
+        "telemetry": "Cache hit rate and retrieval latency serve as empirical observables for verifying correct implementation."
+      }
+    },
+    {
+      "primitive_id": "w1_gradient_accumulation",
+      "name": "Gradient Accumulation Operator",
+      "verbatim_quote": "It also includes torchvision 0.17.2, transformers 4.51.3, timm 0.4.12, decord 0.6.0, opencv-python 4.10, numpy 1.23.5, and scikit-learn 1.4.2.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes independent gradient estimates and constant learning rate.",
+      "breakdown_regime": "Singularity occurs when accumulated gradients exceed numerical precision limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's multi-step action planning by accumulating loss gradients across frames to simulate larger batch processing. Aligns with GSI's online learning paradigm where gradients act as Bayesian updates to model parameters.",
+        "source_operator": "w1_gradient_accumulation",
+        "telemetry": "Effective batch size consistency verifies correct gradient scaling."
+      }
+    },
+    {
+      "primitive_id": "w1_heatmap_threshold_tuning",
+      "name": "Heatmap Threshold Tuning Operator",
+      "verbatim_quote": "This confirms that the heatmap lineage is threshold-tuned, not an argmax-only lineage.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a fixed set of evaluation metrics and a predefined threshold grid.",
+      "breakdown_regime": "Discontinuity at optimal threshold; flat regions indicate robustness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents a conformal prediction region in GSI, where the tuned threshold defines a predictive set. In GSE, it maps to a decision rule that transitions between high-confidence actions based on predicted risk levels.",
+        "source_operator": "w1_heatmap_threshold_tuning",
+        "telemetry": "Optimal recall and F1 scores serve as verification metrics for the tuning process."
+      }
+    },
+    {
+      "primitive_id": "w1_fold_cross_validation",
+      "name": "Fold Cross-Validation Operator",
+      "verbatim_quote": "The ViViT checkpoint should be cached if the training system has limited internet access.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes data independence within folds and identical distribution across splits.",
+      "breakdown_regime": "Singularity at zero folds; convergence to true error as number of folds approaches total samples.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's ensemble averaging framework, where each fold provides an independent estimate of model performance. In GSE, it represents a state-transition kernel that averages over multiple possible game states to improve robustness.",
+        "source_operator": "w1_fold_cross_validation",
+        "telemetry": "Variance reduction across folds indicates successful cross-validation implementation."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id",
+      "name": "Taguchi_variance_analysis",
+      "verbatim_quote": "Factor Code Levels Count Noise A None; Gaussian noise 2 Brightness B Static increase; static decrease; same 3 Rotate C Left; right; none 3 Flip D Horizontal; vertical; none 3 Full factorial space 54 L18 runs 18 Table 5.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes independent factor contributions and linear additivity.",
+      "breakdown_regime": "Breaks down when interactions exceed second-order terms.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction intervals via variance decomposition.",
+        "source_operator": "w2_snake_case_id",
+        "telemetry": "Fold-wise variance reduction in recall metrics."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_2",
+      "name": "Focal_loss_weighting",
+      "verbatim_quote": "4 in [8] reports all five heatmap metrics for run_15.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes balanced class distribution prior to weighting.",
+      "breakdown_regime": "Degenerates when extreme weights cause vanishing gradients.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE state-transition reward shaping.",
+        "source_operator": "w2_snake_case_id_w2_2",
+        "telemetry": "Clip-class probability adjustments."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_3",
+      "name": "Early_stopping_patience",
+      "verbatim_quote": "6 Syed Ahsan Masud Zaidi, Lior Shamir, and Scott Dietrich Table 2.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes stationary validation error landscape.",
+      "breakdown_regime": "Breaks when validation set shifts out-of-distribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Bayesian online updating with stopping rules.",
+        "source_operator": "w2_snake_case_id_w2_3",
+        "telemetry": "Epoch count at convergence."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_4",
+      "name": "Threshold_tuning_macroF1",
+      "verbatim_quote": "This is why Table 3 and Table 6 use threshold-tuned fold means.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes fixed trade-off between precision and recall.",
+      "breakdown_regime": "Breaks when multi-objective optimization becomes non-convex.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE multi-hypothesis filtering.",
+        "source_operator": "w2_snake_case_id_w2_4",
+        "telemetry": "Classification threshold values."
+      }
+    },
+    {
+      "primitive_id": "risk_detection_stability",
+      "name": "Risk Detection Stability",
+      "verbatim_quote": "Large geometric changes can disturb orientation cues that matter for tackle form.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Geometric change magnitude (dimensionless)', 'O': 'Orientation cue stability (dimensionless)'}",
+      "assumptions": "Stable orientation cues are necessary for accurate risk classification.",
+      "breakdown_regime": "When G > threshold, O becomes unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Risk classification kernel derived from geometric stability of player form during tackle.",
+        "source_operator": "risk_detection_stability",
+        "telemetry": "Orientation cue variance across frames"
+      }
+    },
+    {
+      "primitive_id": "augmentation_effectiveness",
+      "name": "Augmentation Effectiveness",
+      "verbatim_quote": "The best observed run combines noise with brightness decrease and uses no rotation and no flip.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Augmentation strategy (categorical)', 'E': 'Effectiveness score (dimensionless)'}",
+      "assumptions": "Specific augmentation combinations improve model robustness.",
+      "breakdown_regime": "When A includes rotation or flip, E decreases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to data augmentation strategies in CNNs, adapted for ViViT.",
+        "source_operator": "augmentation_effectiveness",
+        "telemetry": "Model recall improvement post-augmentation"
+      }
+    },
+    {
+      "primitive_id": "fold_stratification",
+      "name": "Fold Stratification",
+      "verbatim_quote": "Folds are assigned at the clip level using stratified splitting.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Fold assignment (integer)', 'S': 'Stratification parameter (dimensionless)'}",
+      "assumptions": "Clip-level stratification ensures balanced class representation.",
+      "breakdown_regime": "When S < 0.5, class imbalance occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel for cross-validation design ensuring class balance per fold.",
+        "source_operator": "fold_stratification",
+        "telemetry": "Class distribution variance across folds"
+      }
+    },
+    {
+      "primitive_id": "temporal_windowing",
+      "name": "Temporal Windowing",
+      "verbatim_quote": "The window contains 15 frames before the annotated FPOC and 16 frames after it.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Window size (frames)', 'FPOC': 'Frame of Player Outward Contact (frame index)', 'T': 'Temporal span (frames)'}",
+      "assumptions": "Fixed temporal window around FPOC captures relevant motion dynamics.",
+      "breakdown_regime": "When T < 32, motion context is insufficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to sliding window techniques in time-series analysis.",
+        "source_operator": "temporal_windowing",
+        "telemetry": "Motion energy within window"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "46672bad9d0ba4bc_t0",
+      "think": "Chapter window 1 introduces a reproducibility study focused on risky tackle detection using vision transformers. The core methodology involves fine-tuning a Video Vision Transformer (ViViT) on 733 labeled clips from the SATT-3 rubric, applying focal loss to handle class imbalance, and employing Taguchi L18 design for data augmentation. These techniques aim to improve model generalization while respecting computational constraints and ethical guidelines governing athlete data. The paper emphasizes that the original study achieved a risky-class recall of 0.67 and F1 of 0.59, which are reproduced through careful tracking of scripts, fold outputs, and aggregation files. The companion artifact ensures transparency by providing a public sample for pipeline validation without redistributing sensitive footage. The use of 5-fold cross-validation allows robust estimation of model performance, while the combination of Gaussian noise and brightness adjustment forms part of a minimal yet effective augmentation strategy. The main-effect analysis reveals that noise has the largest impact on recall compared to other augmentations, suggesting that visual variability plays a key role in model robustness. Furthermore, the absence of rotation and flipping in the augmentation scheme reflects practical limitations such as motion blur and identity preservation. The study's constraints—label imbalance, early discriminative signals, high computational cost, and privacy concerns—define a challenging domain where traditional machine learning approaches must be adapted for real-world deployment. The derived primitives encapsulate these methodological choices into formalized operators that can be integrated into broader frameworks for sports intelligence and situational reasoning engines.",
+      "retrocausal_genealogy": "This work builds upon prior research in video classification and action recognition using vision transformers, extending earlier studies on tackle detection by incorporating reproducibility practices and advanced regularization techniques. Retrocausal Genealogy (Window 1): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include coaches seeking to prevent injuries, athletes who may be unaware of their risk levels, and researchers aiming to validate models through controlled experiments. Each agent operates within different information states and objectives, influencing how data is interpreted and applied. Theory of Mind (Window 1): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that each primitive addresses distinct aspects of the problem: one focuses on model architecture, another on data preprocessing, a third on temporal anchoring, and the fourth on statistical balance. Leakage is prevented by keeping augmentation strategies separate from model training logic and by enforcing strict separation between training and testing phases. Cross-Layer Veto (Window 1): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "46672bad9d0ba4bc_t1",
+      "think": "The chapter establishes a rigorous computational pipeline for reproducing ViViT-based risky tackle detection in football. It details the exact configuration settings (α = 0.55, γ = 1.3) and the systematic evaluation of twenty augmentation schedules using five-fold cross-validation. The focus is on translating these methodological choices into formal mathematical operators that can be integrated into GSI's probabilistic forecasting and GSE's tactical reasoning engines. Key primitives include checkpoint management for offline environments, gradient scaling for memory-constrained GPUs, threshold optimization for heatmap predictions, and cross-validation for robust performance estimation. These operators form a compositional foundation for building adaptive models that learn from spatio-temporal video data. Window 2 Synthesis: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The lineage traces back to early work on convolutional neural networks for action recognition and later developments in transformer architectures for sequence modeling. The Taguchi method for experimental design provides the statistical backbone for hyperparameter tuning. Retrocausal Genealogy (Window 2): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts seek reliable indicators of dangerous tackles to inform training adjustments. By providing a transparent and verifiable pipeline, the authors address the cognitive bias toward interpretability and the practical need for consistent performance metrics. Theory of Mind (Window 2): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions require ensuring that augmentation transformations are decorrelated to avoid overfitting to specific image artifacts. Leakage is prevented by strictly separating training, validation, and test sets, especially when using frame-level annotations. Cross-Layer Veto (Window 2): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "46672bad9d0ba4bc_t2",
+      "think": "The Taguchi method systematically explores the 54-element factorial space using only 18 experiments, leveraging orthogonal arrays to isolate main effects. This reduces computational cost while quantifying the impact of data augmentation factors (noise, brightness, rotation, flip) on model performance. By analyzing the range of recall improvements across folds, we can identify robust augmentation policies that generalize beyond overfitting to specific train-test splits. The systematic variance partitioning also reveals that horizontal flipping has the strongest influence, suggesting that symmetries in football footage are critical for risk detection. Window 3 Synthesis: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in industrial quality control by Genichi Taguchi, adapted from manufacturing variation reduction to hyperparameter optimization in deep learning. Retrocausal Genealogy (Window 3): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts seek stable performance across different game contexts, requiring models that are resilient to environmental changes. Theory of Mind (Window 3): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid leakage between training and validation sets, ensuring that augmentation transformations are independently sampled for each fold. Cross-Layer Veto (Window 3): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "46672bad9d0ba4bc_t3",
+      "think": "Chapter 4 focuses on reproducing ViViT-based risky tackle detection using a standardized experimental protocol. The core methodology involves processing video clips through a Vision Transformer architecture, specifically focusing on the temporal dynamics around the Frame of Player Outward Contact (FPOC). The study evaluates various augmentation strategies and their impact on model performance, particularly in terms of risky tackle recall. It emphasizes the importance of geometric stability and orientation cues in detecting risky tackles. The experimental setup includes stratified cross-validation at the clip level, ensuring that each fold maintains a representative sample of both safe and risky actions. The results indicate that while ViViT without augmentation underperforms compared to C3D, specific augmentations—particularly brightness decrease—can enhance performance. The paper also highlights limitations such as clip-level fold construction and suggests future work involving athlete-stratified evaluation. This chapter contributes to the broader field of sports analytics by providing a reproducible framework for risk detection using modern vision transformers. Window 4 Synthesis: Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon prior work in action recognition with CNNs and video transformers, this chapter extends earlier findings by applying ViViT to tackle detection, emphasizing reproducibility and augmentation effects. Retrocausal Genealogy (Window 4): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The authors consider how different augmentation strategies might mislead models into learning artifacts rather than true risk indicators, thus advocating for careful augmentation selection and validation. Theory of Mind (Window 4): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that augmentation artifacts do not dominate class separation, and leakage is mitigated by avoiding athlete overlap between training and validation sets. Cross-Layer Veto (Window 4): Rooted in 2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al (46672bad9d0ba4bc, 10/10 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

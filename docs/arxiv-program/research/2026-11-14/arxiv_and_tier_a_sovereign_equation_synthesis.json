@@ -1,17 +1,17 @@
 {
   "schema": "gse.arxiv_and_sovereign_equation_synthesis.v1",
-  "generated_at_utc": "2026-11-14T09:47:51Z",
+  "generated_at_utc": "2026-11-14T10:20:49Z",
   "counts": {
-    "complete_sovereign_books": 418,
+    "complete_sovereign_books": 488,
     "refused_stub_books_fail_closed": 22,
     "gatekeeper_validation_failures": 0,
-    "total_sovereign_primitives": 4465,
-    "total_sovereign_reasoning_traces": 1130,
-    "total_pages_inspected": 29081,
-    "trainer_feed_records_emitted": 5595,
+    "total_sovereign_primitives": 5431,
+    "total_sovereign_reasoning_traces": 1382,
+    "total_pages_inspected": 31412,
+    "trainer_feed_records_emitted": 6813,
     "active_router_mask_bits": 276,
     "arxiv_program_unique_ids_indexed": 6183,
-    "sovereign_books_with_explicit_arxiv_id": 9
+    "sovereign_books_with_explicit_arxiv_id": 30
   },
   "context_mask_uint32_words_9": [
     4294967295,
@@ -25,41 +25,42 @@
     1048575
   ],
   "track_counts": {
-    "arxiv_and_preprints": 9,
+    "arxiv_and_preprints": 30,
     "football_coaching_rules_and_scouting": 10,
-    "graduate_math_stats_physics_textbooks": 356,
+    "graduate_math_stats_physics_textbooks": 404,
+    "mit_sloan_jqas_nessis_conferences": 1,
     "nfl_war_and_fourth_down_decision": 4,
     "sports_psychology_and_cognition": 39
   },
   "six_situational_family_weights": {
     "pressure": {
-      "sovereign_primitives_count": 240,
-      "bounded_james_stein_weight": 0.171429,
+      "sovereign_primitives_count": 267,
+      "bounded_james_stein_weight": 0.172258,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_count": 597,
-      "bounded_james_stein_weight": 0.176453,
+      "sovereign_primitives_count": 725,
+      "bounded_james_stein_weight": 0.177069,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_count": 504,
-      "bounded_james_stein_weight": 0.175814,
+      "sovereign_primitives_count": 580,
+      "bounded_james_stein_weight": 0.176351,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_count": 448,
-      "bounded_james_stein_weight": 0.175304,
+      "sovereign_primitives_count": 528,
+      "bounded_james_stein_weight": 0.176,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_count": 2336,
-      "bounded_james_stein_weight": 0.17908,
+      "sovereign_primitives_count": 2906,
+      "bounded_james_stein_weight": 0.17926,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_count": 340,
-      "bounded_james_stein_weight": 0.173864,
+      "sovereign_primitives_count": 425,
+      "bounded_james_stein_weight": 0.175057,
       "all_finite_non_nan": true
     }
   },
@@ -125,9 +126,9 @@
     "partition_tier_summary": {
       "0..3|tier_A": {
         "total": 110,
-        "completed_or_extracted": 82,
-        "pending_unextracted": 25,
-        "pending_with_local_file": 25
+        "completed_or_extracted": 86,
+        "pending_unextracted": 21,
+        "pending_with_local_file": 21
       },
       "0..3|tier_B": {
         "total": 835,
@@ -145,9 +146,9 @@
       },
       "4..7|tier_B": {
         "total": 814,
-        "completed_or_extracted": 252,
-        "pending_unextracted": 562,
-        "pending_with_local_file": 562
+        "completed_or_extracted": 322,
+        "pending_unextracted": 492,
+        "pending_with_local_file": 492
       },
       "4..7|tier_C": {
         "total": 3347,
@@ -169,324 +170,324 @@
     },
     "shard_4to7_tier_a_remaining_with_file": 0,
     "shard_4to7_tier_a_remaining_preview": [],
-    "shard_4to7_tier_b_pending_candidates_count": 562,
+    "shard_4to7_tier_b_pending_candidates_count": 492,
     "shard_4to7_tier_b_pending_candidates": [
       {
-        "book_id": "431a4e8aec54d7f5",
-        "title": "2019 - The Evolution of Curling Analytics - Unknown Authors",
-        "file_name": "2019 - The Evolution of Curling Analytics - Unknown Authors.pdf",
+        "book_id": "4c24275ec28c3c37",
+        "title": "Appliance_of_Neural_Networks_in_Basketba",
+        "file_name": "Appliance_of_Neural_Networks_in_Basketba.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "43215701b4047b1e",
-        "title": "mlgm_epfl_book",
-        "file_name": "mlgm_epfl_book.pdf",
+        "book_id": "4c2cd7e92fc12456",
+        "title": "arxiv_2502.21085v4",
+        "file_name": "arxiv_2502.21085v4.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "434fd642fa6ce700",
-        "title": "1912.11762",
-        "file_name": "1912.11762.pdf",
+        "book_id": "4c39f2a41898de93",
+        "title": "arxiv_2203.00734v2",
+        "file_name": "arxiv_2203.00734v2.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "4399c54a07d067a6",
-        "title": "arxiv_2603.17336v1",
-        "file_name": "arxiv_2603.17336v1.pdf",
+        "book_id": "4c462f9e7e62281a",
+        "title": "ssrn-3393127",
+        "file_name": "ssrn-3393127.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "43b01007d03a204f",
-        "title": "2022 - Winning duels in VALORANT, a visualization of optimal positioning - DeRover",
-        "file_name": "2022 - Winning duels in VALORANT, a visualization of optimal positioning - DeRover.pdf",
+        "book_id": "4c5d662249b5ac34",
+        "title": "openalex_W2142957722",
+        "file_name": "openalex_W2142957722.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "43bdd0e33a04f9a7",
-        "title": "cond-mat_9803134",
-        "file_name": "cond-mat_9803134.pdf",
+        "book_id": "4cdd81779f32bcce",
+        "title": "2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al",
+        "file_name": "2022 - Finding the NBA Draft Diamonds in the Rough - Batra et al.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "44288099d3201d64",
-        "title": "V11I6-1147",
-        "file_name": "V11I6-1147.pdf",
+        "book_id": "4cdfba35dd25dc71",
+        "title": "arxiv_2412.00692v3",
+        "file_name": "arxiv_2412.00692v3.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "4442e31a640059cb",
-        "title": "arxiv_2311.03561v2",
-        "file_name": "arxiv_2311.03561v2.pdf",
+        "book_id": "4ce25a7acb6cce18",
+        "title": "openalex_W4385800687",
+        "file_name": "openalex_W4385800687.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "448a9f24fcc1ce66",
-        "title": "2510.12323v1",
-        "file_name": "2510.12323v1.pdf",
+        "book_id": "4cf0ae5f042ea39d",
+        "title": "openalex_W2952964002",
+        "file_name": "openalex_W2952964002.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "44c3190a3d0eb35e",
-        "title": "openalex_W2951695555",
-        "file_name": "openalex_W2951695555.pdf",
+        "book_id": "4d1d855ee35af5d1",
+        "title": "openalex_W4281711932",
+        "file_name": "openalex_W4281711932.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "44f184d1e9852cb3",
-        "title": "arxiv_2104.10916v1",
-        "file_name": "arxiv_2104.10916v1.pdf",
+        "book_id": "4d244b8ef6061767",
+        "title": "openalex_W7210193024",
+        "file_name": "openalex_W7210193024.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "4509b58ac5e05fa9",
-        "title": "openalex_W2783762233",
-        "file_name": "openalex_W2783762233.pdf",
+        "book_id": "4d255303c01ab454",
+        "title": "bookchapterPolypathology",
+        "file_name": "bookchapterPolypathology.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "4546fadf4b2bf7af",
-        "title": "2025 - A Fatigue Penalty Model for x G Conor Malone - Unknown Authors",
-        "file_name": "2025 - A Fatigue Penalty Model for x G Conor Malone - Unknown Authors.pdf",
+        "book_id": "4d2e4547139f03f1",
+        "title": "2012 CourtVision",
+        "file_name": "2012 CourtVision.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "456772444fedc340",
-        "title": "openalex_W4415004602",
-        "file_name": "openalex_W4415004602.pdf",
+        "book_id": "4d55ff9435f22044",
+        "title": "2022 - Sports narrative enhancement with natural language generation - Wang et al",
+        "file_name": "2022 - Sports narrative enhancement with natural language generation - Wang et al.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "456cd8c277cd8fa7",
-        "title": "openalex_W2794497862",
-        "file_name": "openalex_W2794497862.pdf",
+        "book_id": "4d6076eb55a3f867",
+        "title": "openalex_W4309231083",
+        "file_name": "openalex_W4309231083.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "4574064e395a043e",
-        "title": "openalex_W2994375231",
-        "file_name": "openalex_W2994375231.pdf",
+        "book_id": "4d8fddcd44a0fd5d",
+        "title": "2019 - Data-driven lowlight and highlight reel creation based on explainable temporal game models - Unknown Authors",
+        "file_name": "2019 - Data-driven lowlight and highlight reel creation based on explainable temporal game models - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "458c8c4092bcb34f",
-        "title": "openalex_W7202381665",
-        "file_name": "openalex_W7202381665.pdf",
+        "book_id": "4defc3bd4d94f111",
+        "title": "numpybook",
+        "file_name": "numpybook.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "45a869f7c1cf01ec",
-        "title": "arxiv_2404.11335v1",
-        "file_name": "arxiv_2404.11335v1.pdf",
+        "book_id": "4df1358ae551a1c2",
+        "title": "2025 - Analyze Tennis Winning Factors Across Different Surfaces By Utilizing Random Forest - Deng",
+        "file_name": "2025 - Analyze Tennis Winning Factors Across Different Surfaces By Utilizing Random Forest - Deng.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "45b272e8efa97bf0",
-        "title": "arxiv_1909.03343v4",
-        "file_name": "arxiv_1909.03343v4.pdf",
+        "book_id": "4e2721c17c57a1a6",
+        "title": "arxiv_1902.10106v1",
+        "file_name": "arxiv_1902.10106v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "45b9f03bd9c13b47",
-        "title": "pyth win steven j miller 2",
-        "file_name": "pyth win steven j miller 2.pdf",
+        "book_id": "4e6796ef57810661",
+        "title": "2606.24916",
+        "file_name": "2606.24916.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "45c9fa39872b9156",
-        "title": "arxiv_2003.03271v2",
-        "file_name": "arxiv_2003.03271v2.pdf",
+        "book_id": "4e82502a0380c57b",
+        "title": "2019 - Choke or Shine Quantifying Soccer Players' Abilities to Perform Under Mental Pressure - Unknown Authors",
+        "file_name": "2019 - Choke or Shine Quantifying Soccer Players' Abilities to Perform Under Mental Pressure - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "45d6176f8094d94c",
-        "title": "2026 - AI Soccer Analyst Stage-Aware and Verifiable Human-AI Collaboration for Soccer Data Analysis - Yeung et al",
-        "file_name": "2026 - AI Soccer Analyst Stage-Aware and Verifiable Human-AI Collaboration for Soccer Data Analysis - Yeung et al.pdf",
-        "primary_domain": "history",
-        "tier": "B",
-        "file_size_mb": 0.0
-      },
-      {
-        "book_id": "45df6aa92a495043",
-        "title": "2024 - Match Phases in Practice - Unknown Authors",
-        "file_name": "2024 - Match Phases in Practice - Unknown Authors.pdf",
+        "book_id": "4e8eb73dd03796cd",
+        "title": "arxiv_2503.10386v3",
+        "file_name": "arxiv_2503.10386v3.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "45e2f608ee8164a9",
-        "title": "openalex_W2397986404",
-        "file_name": "openalex_W2397986404.pdf",
+        "book_id": "4eca22357e5deacb",
+        "title": "arxiv_2101.02702v3",
+        "file_name": "arxiv_2101.02702v3.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "45e398f4aeae1fda",
-        "title": "openalex_W2058625733",
-        "file_name": "openalex_W2058625733.pdf",
+        "book_id": "4f406a7c5e48fe94",
+        "title": "2021 - Which Teams Would Have Won the 2020 NCAA Men's and Women's Basketball Tournaments - Unknown Authors",
+        "file_name": "2021 - Which Teams Would Have Won the 2020 NCAA Men's and Women's Basketball Tournaments - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "45f0c799efcdf27f",
-        "title": "arxiv_2602.22941v2",
-        "file_name": "arxiv_2602.22941v2.pdf",
+        "book_id": "4f8eb955ff5bd398",
+        "title": "2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors",
+        "file_name": "2019 - TRAP A Predictive Framework for Trail Running Assessment Performance - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "4604f66ce624c8a2",
-        "title": "13235 Dairy Asford striping",
-        "file_name": "13235 Dairy Asford striping.pdf",
+        "book_id": "4fd29813f07fa938",
+        "title": "arxiv_2506.03335v1",
+        "file_name": "arxiv_2506.03335v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "462962d911b6110b",
-        "title": "arxiv_2204.07482v1",
-        "file_name": "arxiv_2204.07482v1.pdf",
+        "book_id": "4ff5907d9d7ac668",
+        "title": "2011 Player Eval Techniques - NBA",
+        "file_name": "2011 Player Eval Techniques - NBA.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "464d357ebf276e3e",
-        "title": "1912.06804",
-        "file_name": "1912.06804.pdf",
+        "book_id": "5042efaa50bb44cc",
+        "title": "_OceanofPDF.com_Flawed_Prophets_-_Tirthak_Saha",
+        "file_name": "_OceanofPDF.com_Flawed_Prophets_-_Tirthak_Saha.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "465090465559dc46",
-        "title": "arxiv_2003.06994v1",
-        "file_name": "arxiv_2003.06994v1.pdf",
+        "book_id": "50453e212f818fa3",
+        "title": "arxiv_2511.09455v1",
+        "file_name": "arxiv_2511.09455v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "46672bad9d0ba4bc",
-        "title": "2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al",
-        "file_name": "2026 - Revisiting Risky Tackle Detection with Vision Transformers - Zaidi et al.pdf",
+        "book_id": "508d643cf778b89f",
+        "title": "openalex_W7166835043",
+        "file_name": "openalex_W7166835043.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "466e1c7a1d28139a",
-        "title": "1909.12938",
-        "file_name": "1909.12938.pdf",
+        "book_id": "50b2fc24f9b4cb98",
+        "title": "2021 - Routine Inspection A playbook for corner kicks - Unknown Authors",
+        "file_name": "2021 - Routine Inspection A playbook for corner kicks - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "46a2a4b154b39b99",
-        "title": "openalex_W4205183153",
-        "file_name": "openalex_W4205183153.pdf",
+        "book_id": "50b6239a1779280c",
+        "title": "openalex_W4390754447",
+        "file_name": "openalex_W4390754447.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "46a42dda557227ed",
-        "title": "The_Complete_Plus_Minus_A_Case_Study_of",
-        "file_name": "The_Complete_Plus_Minus_A_Case_Study_of.pdf",
+        "book_id": "50cca9ec2bd4826f",
+        "title": "arxiv_2311.11471v1",
+        "file_name": "arxiv_2311.11471v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "472ff460f9176916",
-        "title": "iss4",
-        "file_name": "iss4.pdf",
+        "book_id": "50cdb8291aa7aa91",
+        "title": "2024 Approaching In-Venue Quality Tracking from Broadcast Video using Generative AI",
+        "file_name": "2024 Approaching In-Venue Quality Tracking from Broadcast Video using Generative AI.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "47368c2a6651ce26",
-        "title": "2017 Body Shots - Analyzing Shooting Styles in the NBA using Body-Pose Attributes",
-        "file_name": "2017 Body Shots - Analyzing Shooting Styles in the NBA using Body-Pose Attributes.pdf",
+        "book_id": "50f2f761246398c7",
+        "title": "2211.14921",
+        "file_name": "2211.14921.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "47381c22c8e650b0",
-        "title": "openalex_W7160830021",
-        "file_name": "openalex_W7160830021.pdf",
+        "book_id": "50f5fefe63af4d6d",
+        "title": "openalex_W2106438008",
+        "file_name": "openalex_W2106438008.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "47d3673640610263",
-        "title": "[15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game",
-        "file_name": "[15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game.pdf",
+        "book_id": "511a91283c650770",
+        "title": "2020 Nuclear penalized multiomial regression with an application to prediction at bat outcomes in baseball - Powers, Tibshirani, Hastie",
+        "file_name": "2020 Nuclear penalized multiomial regression with an application to prediction at bat outcomes in baseball - Powers, Tibshirani, Hastie.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "4807adae265c2836",
-        "title": "arxiv_2603.17866v3",
-        "file_name": "arxiv_2603.17866v3.pdf",
+        "book_id": "513c8319702acb05",
+        "title": "arxiv_2502.20111v1",
+        "file_name": "arxiv_2502.20111v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "48159e5a5008fd67",
-        "title": "2003 Colley Matrix Method",
-        "file_name": "2003 Colley Matrix Method.pdf",
+        "book_id": "514b0430231afd6d",
+        "title": "openalex_W4405693943",
+        "file_name": "openalex_W4405693943.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "516c48b1b0d70abe",
+        "title": "openalex_W2781474777",
+        "file_name": "openalex_W2781474777.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
@@ -712,6 +713,175 @@
         ]
       },
       {
+        "book_id": "434fd642fa6ce700",
+        "title": "1912.11762",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 32,
+        "pages_total": 48,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "1912.11762"
+        ]
+      },
+      {
+        "book_id": "4399c54a07d067a6",
+        "title": "arxiv_2603.17336v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 19,
+        "pages_total": 19,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2603.17336"
+        ]
+      },
+      {
+        "book_id": "4442e31a640059cb",
+        "title": "arxiv_2311.03561v2",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 8,
+        "pages_total": 8,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2311.03561"
+        ]
+      },
+      {
+        "book_id": "448a9f24fcc1ce66",
+        "title": "2510.12323v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 18,
+        "pages_total": 18,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2510.12323"
+        ]
+      },
+      {
+        "book_id": "44f184d1e9852cb3",
+        "title": "arxiv_2104.10916v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 10,
+        "pages_total": 10,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2104.10916"
+        ]
+      },
+      {
+        "book_id": "45a869f7c1cf01ec",
+        "title": "arxiv_2404.11335v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 17,
+        "pages_total": 17,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2404.11335"
+        ]
+      },
+      {
+        "book_id": "45b272e8efa97bf0",
+        "title": "arxiv_1909.03343v4",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 7,
+        "pages_total": 7,
+        "primitives_count": 14,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "1909.03343"
+        ]
+      },
+      {
+        "book_id": "45c9fa39872b9156",
+        "title": "arxiv_2003.03271v2",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 25,
+        "pages_total": 25,
+        "primitives_count": 15,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2003.03271"
+        ]
+      },
+      {
+        "book_id": "45f0c799efcdf27f",
+        "title": "arxiv_2602.22941v2",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 25,
+        "pages_total": 25,
+        "primitives_count": 15,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2602.22941"
+        ]
+      },
+      {
+        "book_id": "462962d911b6110b",
+        "title": "arxiv_2204.07482v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 15,
+        "pages_total": 15,
+        "primitives_count": 15,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2204.07482"
+        ]
+      },
+      {
+        "book_id": "464d357ebf276e3e",
+        "title": "1912.06804",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 11,
+        "pages_total": 11,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "1912.06804"
+        ]
+      },
+      {
+        "book_id": "465090465559dc46",
+        "title": "arxiv_2003.06994v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 11,
+        "pages_total": 11,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2003.06994"
+        ]
+      },
+      {
+        "book_id": "466e1c7a1d28139a",
+        "title": "1909.12938",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 9,
+        "pages_total": 9,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "1909.12938"
+        ]
+      },
+      {
         "book_id": "46e377123f662ec5",
         "title": "arxiv_1803_00567_peyre_cuturi_computational_optimal_transport_book",
         "primary_domain": "cs",
@@ -722,6 +892,45 @@
         "traces_count": 1,
         "arxiv_ids": [
           "1803.00567"
+        ]
+      },
+      {
+        "book_id": "4807adae265c2836",
+        "title": "arxiv_2603.17866v3",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 32,
+        "pages_total": 32,
+        "primitives_count": 15,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2603.17866"
+        ]
+      },
+      {
+        "book_id": "4976b9a326ff29c0",
+        "title": "arxiv_2310.09511v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 10,
+        "pages_total": 10,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2310.09511"
+        ]
+      },
+      {
+        "book_id": "49ef491902061145",
+        "title": "arxiv_2406.17220v2",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 34,
+        "pages_total": 34,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2406.17220"
         ]
       }
     ],
@@ -1111,6 +1320,19 @@
         "pages_total": 8,
         "primitives_count": 6,
         "traces_count": 2,
+        "arxiv_ids": []
+      }
+    ],
+    "mit_sloan_jqas_nessis_conferences": [
+      {
+        "book_id": "4aff948b6e732bdf",
+        "title": "2019 Rao-Blackwellizing field goal percentage - dalygrafstein_jqas_2019",
+        "primary_domain": "other",
+        "track": "mit_sloan_jqas_nessis_conferences",
+        "pages_read": 11,
+        "pages_total": 11,
+        "primitives_count": 15,
+        "traces_count": 4,
         "arxiv_ids": []
       }
     ],

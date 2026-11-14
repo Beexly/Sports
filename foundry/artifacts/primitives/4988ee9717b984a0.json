@@ -1,0 +1,323 @@
+{
+  "book_id": "4988ee9717b984a0",
+  "source_status": "COMPLETE",
+  "title": "undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al",
+  "file_name": "undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al.pdf",
+  "sha256": "4988ee9717b984a0e07ba434f9802e1daefd2773fdbb2022f847d11bab077876",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 15,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Semi-supervised graph neural networks enable equivariant pattern recognition in team sports by leveraging permutation-invariant node representations and sequential variational autoencoders for tactical phase classification. Spatiotemporal trajectory encoding via variational recurrent neural networks with graph-based interaction modeling.",
+  "gsi_mapping": "Bayesian inference framework maps tactical pattern likelihoods via posterior distributions over graph-structured player states, integrating expert-labeled training pairs with unlabeled motion trajectories. Bayesian inference on player states using variational autoencoders with label regularization for semi-supervised tactical pattern recognition.",
+  "gse_mapping": "Situation-aware state transitions model coordinated player movements through temporal graph convolutions, enabling real-time tactical pattern detection and adaptive response generation within dynamic game phases. Situation-aware state transitions through recurrent graph neural networks capturing player dynamics and interaction kernels.",
+  "primitives": [
+    {
+      "primitive_id": "perm_equivariant_gnn",
+      "name": "Permutation-Equivariant Graph Neural Network",
+      "verbatim_quote": "Hence, the pattern detector must be in- or equivariant with respect to the ordering of players.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Players are modeled as nodes in a graph; edge weights represent spatial or temporal relationships; network outputs are invariant under permutations of player indices.",
+      "breakdown_regime": "When player roles shift or substitutions occur, model performance degrades without proper equivariance handling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps ordered player configurations to equivalent graph embeddings via symmetric functions, enabling consistent pattern recognition regardless of lineup order.",
+        "source_operator": "perm_equivariant_gnn",
+        "telemetry": "Accuracy of pattern classification across varying player permutations."
+      }
+    },
+    {
+      "primitive_id": "semi_supervised_vae",
+      "name": "Semi-Supervised Variational Autoencoder",
+      "verbatim_quote": "The data used for the training is assembled by forming pairs of situations (the input) and corresponding manual labels (the output) where the classifier learns to act as a function approximator that transforms situations into labels.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Labeled data is scarce but unlabeled data is abundant; latent space encodes meaningful tactical features.",
+      "breakdown_regime": "Performance drops when labeled examples do not adequately cover the feature distribution of unlabeled data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes tactical situations into probabilistic latent vectors that support both supervised classification and unsupervised clustering of similar patterns.",
+        "source_operator": "semi_supervised_vae",
+        "telemetry": "Reconstruction error and KL divergence during training reflect model learning efficiency."
+      }
+    },
+    {
+      "primitive_id": "tactical_pattern_definition",
+      "name": "Tactical Pattern Definition",
+      "verbatim_quote": "A tactical pattern is defined as repeatable, coordinated movements of either the whole team or a group of players and conducted in specific situations [1],[2],[3].",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Patterns are temporally localized and spatially coherent; they occur frequently enough to be statistically significant.",
+      "breakdown_regime": "Patterns become indistinguishable from noise if too few repetitions exist or if movement lacks coordination.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models tactical patterns as structured subgraphs within larger game graphs, allowing comparison between known and novel tactical behaviors.",
+        "source_operator": "tactical_pattern_definition",
+        "telemetry": "Frequency count and recurrence rate of detected patterns over multiple games."
+      }
+    },
+    {
+      "primitive_id": "sequential_graph_convolution",
+      "name": "Sequential Graph Convolution",
+      "verbatim_quote": "Introduction In a fluent invasion sport like soccer, tactical analysis typically breaks a match down to distinct game-phases in which teams perform tactical patterns.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Game dynamics evolve sequentially; each phase contains unique tactical structures that can be captured by temporal graph convolution.",
+      "breakdown_regime": "Temporal resolution insufficient to capture rapid tactical shifts or long-term strategic evolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applies convolution operations across time-stamped player positions to extract evolving tactical configurations.",
+        "source_operator": "sequential_graph_convolution",
+        "telemetry": "Temporal coherence score of learned tactical features across consecutive game moments."
+      }
+    },
+    {
+      "primitive_id": "velocity_vector_reconstruction",
+      "name": "Velocity Vector Reconstruction",
+      "verbatim_quote": "Note that this does not involve any loss of information with respect to player locations since the movement can be reconstructed from the x/y-coordinate of the first timestep and the subsequent velocity vectors.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v(t)': 'velocity vector at time t (m/s)', 'x_0, y_0': 'initial position coordinates (m)', 'v_{\\\\text{seq}}': 'sequence of velocity vectors'}",
+      "assumptions": "Player motion is deterministic and recoverable from initial position and velocity sequence.",
+      "breakdown_regime": "When velocity vectors are not observable or corrupted.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps spatiotemporal trajectories to velocity fields via finite difference approximation.",
+        "source_operator": "velocity_vector_reconstruction",
+        "telemetry": "Reconstruction error between original and reconstructed positions."
+      }
+    },
+    {
+      "primitive_id": "vae_semisupervised_learning",
+      "name": "Variational Autoencoder for Semi-Supervised Learning",
+      "verbatim_quote": "VAEs use neural networks to parametrize a generative model (or encoder) and an associated variational distribution (or decoder), and aim to reconstruct the given input data via a low-dimensional bottleneck z.",
+      "page": 4,
+      "latex": "\\mathcal{L}_{\\text{VAE}} = \\mathbb{E}_{q(z|x)}[\\log p(x|z)] - D_{\\text{KL}}(q(z|x) || p(z))",
+      "symbol_and_unit_ledger": "{'x': 'input data (trajectory features)', 'z': 'latent variable (dimensionality d)', 'p(x|z)': 'decoder likelihood', 'q(z|x)': 'encoder posterior', 'D_{\\\\text{KL}}': 'Kullback-Leibler divergence'}",
+      "assumptions": "Latent space encodes meaningful structure; data is generated from a probabilistic model.",
+      "breakdown_regime": "When latent space collapses or reconstruction fails due to poor initialization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes trajectory data into compact latent representations for downstream classification tasks.",
+        "source_operator": "vae_semisupervised_learning",
+        "telemetry": "Reconstruction loss and KL divergence across training batches."
+      }
+    },
+    {
+      "primitive_id": "sequential_m2_framework",
+      "name": "Sequential M2 Framework",
+      "verbatim_quote": "Due to the sequential nature of spatiotemporal tracking data, it is vital to elevate the M2 principle to a sequential definition.",
+      "page": 4,
+      "latex": "\\mathcal{L}_{\\text{SeqM2}} = \\sum_{t=1}^{T} \\left[ \\mathbb{E}_{q(y,z|x_t,h_{t-1})}[\\log p(x_t|y,z,h_{t-1})] - D_{\\text{KL}}(q(y,z|x_t,h_{t-1}) || p(y,z|h_{t-1})) \\right]",
+      "symbol_and_unit_ledger": "{'h_{t-1}': 'RNN hidden state at previous timestep', 'T': 'number of timesteps', 'x_t': 'observation at time t', 'y': 'label variable', 'z': 'continuous latent variable'}",
+      "assumptions": "Temporal dependencies are captured by RNN hidden states; labels are conditionally independent given latent variables.",
+      "breakdown_regime": "When temporal coherence is lost or RNN fails to maintain long-term memory.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Extends M2 objective to time-series data using recurrent state dynamics.",
+        "source_operator": "sequential_m2_framework",
+        "telemetry": "Per-timestep ELBO value and label prediction accuracy."
+      }
+    },
+    {
+      "primitive_id": "graph_neural_interaction",
+      "name": "Graph Neural Network Interaction Modeling",
+      "verbatim_quote": "Figure 1: Each players' trajectory is fed through a recurrent neural network (RNN) with shared parameters and subsequently updated by a GNN.",
+      "page": 4,
+      "latex": "h_i^{(l+1)} = \\sigma\\left(\\sum_{j \\in \\mathcal{N}(i)} \\frac{1}{|\\mathcal{N}(i)|} W^{(l)} h_j^{(l)} + W^{(l)} h_i^{(l)} \\right)",
+      "symbol_and_unit_ledger": "{'h_i^{(l)}': 'node embedding at layer l for player i', '\\\\mathcal{N}(i)': 'neighborhood of player i', 'W^{(l)}': 'learnable weight matrix at layer l', '\\\\sigma': 'activation function'}",
+      "assumptions": "Players interact locally within neighborhood; message passing preserves spatial relationships.",
+      "breakdown_regime": "When graph connectivity is sparse or node degrees vary significantly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models player interactions as graph convolution operations on trajectory features.",
+        "source_operator": "graph_neural_interaction",
+        "telemetry": "Node embedding similarity and inter-player influence scores."
+      }
+    },
+    {
+      "primitive_id": "unsupervised_graph_regularization",
+      "name": "Unsupervised Graph Regularization",
+      "verbatim_quote": "The performance disparity to the (highly overfitting) purely supervised baseline highlights the importance of an effective regularization mechanism that operates solely on the surplus of unsupervised positional data.",
+      "page": 8,
+      "latex": "\\mathcal{L}_{total} = \\mathcal{L}_{sup}(\\theta) + \\lambda \\mathcal{R}_{graph}(\\mathbf{X}, \\mathcal{A})",
+      "symbol_and_unit_ledger": "\\mathcal{L}_{total}: Total loss (dimensionless), \\mathcal{L}_{sup}: Supervised cross-entropy loss (dimensionless), \\lambda: Regularization hyperparameter (dimensionless), \\mathcal{R}_{graph}: Graph Laplacian regularization term (dimensionless), \\mathbf{X}: Unlabeled spatio-temporal coordinate matrix (meters), \\mathcal{A}: Adjacency matrix of agent interactions (dimensionless).",
+      "assumptions": "Agent trajectories lie on a low-dimensional Riemannian manifold; local neighborhood structures in unlabeled data reflect true tactical geometries.",
+      "breakdown_regime": "Fails when the manifold assumption breaks due to chaotic, highly stochastic player movements lacking spatial coherence, or when labeled and unlabeled data distributions diverge significantly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's Conformal Manifold Learning, utilizing unlabeled data geometry to bound predictive variance.",
+        "source_operator": "unsupervised_graph_regularization",
+        "telemetry": "Discrepancy between supervised-only F1-Score and Semi-supervised F1-Score."
+      }
+    },
+    {
+      "primitive_id": "latent_tactical_amplitude",
+      "name": "Latent Tactical Amplitude",
+      "verbatim_quote": "The blue vertical indicator reflects a probability amplitude within the shown game excerpt.",
+      "page": 8,
+      "latex": "p(y_t | \\mathbf{H}_{t-1}, \\mathbf{X}_{t}) = \\sigma(\\mathbf{W}^T \\cdot \\text{GRU}(\\mathbf{h}_{t-1}, \\mathbf{x}_t))",
+      "symbol_and_unit_ledger": "p(y_t): Probability amplitude of tactical event at time t (dimensionless), \\mathbf{H}_{t-1}: Hidden state of recurrent network (dimensionless), \\mathbf{X}_{t}: Current frame agent coordinates (meters), \\sigma: Sigmoid activation function (dimensionless), \\mathbf{W}: Output weight matrix (dimensionless).",
+      "assumptions": "Tactical events exhibit temporal continuity and can be probabilistically inferred from sequential spatio-temporal embeddings.",
+      "breakdown_regime": "Singularities occur during instantaneous, discontinuous state changes (e.g., sudden stoppages, injuries) where temporal dependencies vanish abruptly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSE's Situational Probability Kernel, driving real-time tactical state estimations.",
+        "source_operator": "latent_tactical_amplitude",
+        "telemetry": "Area Under the Curve (AUC) of the probability amplitude distribution."
+      }
+    },
+    {
+      "primitive_id": "spatial_pitch_control_augmentation",
+      "name": "Spatial Pitch Control Augmentation",
+      "verbatim_quote": "Also, this demonstrates the universal applicability of the proposed concept, which underlines its advantage over task-specific rule-based solutions.",
+      "page": 8,
+      "latex": "\\Delta \\Psi(x,y) = \\sum_{i \\in \\text{Pattern}} \\left( C_i(x,y,t+\\delta) - C_i(x,y,t) \\right)",
+      "symbol_and_unit_ledger": "\\Delta \\Psi(x,y): Change in pitch control potential at spatial coordinate (x,y) (square meters), C_i: Individual player pitch control field (square meters), t: Time of pattern initiation (seconds), \\delta: Duration of tactical pattern (seconds).",
+      "assumptions": "Tactical patterns fundamentally alter the spatial dominance fields (pitch control) of involved agents across the pitch topology.",
+      "breakdown_regime": "Breaks down in static set-piece scenarios where dynamic spatial control shifts are minimal or pre-determined by rigid formations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's Spatial Value Transition Operator, quantifying space creation via pattern execution.",
+        "source_operator": "spatial_pitch_control_augmentation",
+        "telemetry": "Variance in expected goals (xG) following detected pattern instances."
+      }
+    },
+    {
+      "primitive_id": "empirical_frequency_baseline",
+      "name": "Empirical Frequency Baseline",
+      "verbatim_quote": "As can be seen, the model assigns the highest probability value to the location of the ground-truth assignment, highlighting its potential in learning the inherent patterns of agent-level game situations.",
+      "page": 8,
+      "latex": "f_{pattern} = \\frac{N_{detected}}{T_{match}} \\times 100\\%",
+      "symbol_and_unit_ledger": "f_{pattern}: Frequency of pattern occurrence per match (percentage), N_{detected}: Count of successfully identified pattern instances (dimensionless), T_{match}: Total active match duration (minutes).",
+      "assumptions": "The frequency of specific tactical actions serves as a stable, observable proxy for team strategy and individual player roles.",
+      "breakdown_regime": "Invalid when sample sizes are too small (e.g., single match analysis) to establish statistically significant behavioral baselines.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives GSI's Scouting Metric Normalization, adjusting raw action counts for contextual match tempo.",
+        "source_operator": "empirical_frequency_baseline",
+        "telemetry": "Deviation of observed pattern frequency from historical team averages."
+      }
+    },
+    {
+      "primitive_id": "spatiotemporal_trajectory_clustering",
+      "name": "Spatiotemporal Trajectory Clustering Operator",
+      "verbatim_quote": "Lucey, \"Quantifying the Value of Transitions in Soccer via Spatiotemporal Trajectory Clustering,\" MIT Sloan Sport.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: Time duration (s), P_t: Positional vector (m, m), C: Cluster assignment (dimensionless)",
+      "assumptions": "Player trajectories can be discretized into meaningful segments; spatial proximity implies tactical similarity.",
+      "breakdown_regime": "Breaks down during highly chaotic transitions where individual trajectories decouple from team-wide geometric constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw tracking data to discrete tactical states, forming the foundational input layer for the GNN's temporal reasoning.",
+        "source_operator": "spatiotemporal_trajectory_clustering",
+        "telemetry": "Silhouette score of clustered trajectories against expert-labeled game phases."
+      }
+    },
+    {
+      "primitive_id": "graph_network_inductive_bias",
+      "name": "Relational Inductive Bias Network",
+      "verbatim_quote": "Battaglia et al., \"Relational inductive biases, deep learning, and graph networks,\" Preprint (ArXiv).",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "G=(V,E): Graph structure (dimensionless), h_v: Node feature vector (dimensionless), A: Adjacency matrix (dimensionless)",
+      "assumptions": "Interactions between agents are localized and can be represented by a sparse adjacency matrix; permutation equivariance holds.",
+      "breakdown_regime": "Fails when global field dynamics override local pairwise interactions, or when the graph topology changes instantaneously without smooth interpolation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides the core message-passing kernel for GSE, allowing the propagation of tactical intent across the player network.",
+        "source_operator": "graph_network_inductive_bias",
+        "telemetry": "Gradient flow stability during backpropagation through dynamic graph edges."
+      }
+    },
+    {
+      "primitive_id": "latent_variable_sequence_model",
+      "name": "Recurrent Latent Variable Sequencer",
+      "verbatim_quote": "Bengio, \"A recurrent latent variable model for sequential data,\" in Advances in Neural Information Processing Systems, 2015, vol.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "z_t: Latent state at time t (dimensionless), x_t: Observed data (m), p(z_t|z_{t-1}): Transition probability (1/s)",
+      "assumptions": "Underlying tactical states evolve according to a Markovian process; observations are conditionally independent given the latent state.",
+      "breakdown_regime": "Singularity occurs when the latent space collapses due to insufficient observational variance or overly restrictive priors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the GSI temporal belief updater, maintaining a rolling distribution over unobserved tactical intentions.",
+        "source_operator": "latent_variable_sequence_model",
+        "telemetry": "Reconstruction error of the variational autoencoder over held-out game segments."
+      }
+    },
+    {
+      "primitive_id": "movement_pattern_l2_error",
+      "name": "Trajectory Forecasting Error Metric",
+      "verbatim_quote": "Lames, \"Football-specific validity of TRACAB's optical video tracking systems,\" PLoS One, vol.",
+      "page": 13,
+      "latex": "E_{L2} = \\frac{1}{N T} \\sum_{i=1}^{N} \\sum_{t=1}^{T} || \\mathbf{x}_{i,t} - \\hat{\\mathbf{x}}_{i,t} ||^2",
+      "symbol_and_unit_ledger": "E_{L2}: Mean squared error (m^2), N: Number of agents (dimensionless), T: Timesteps (dimensionless), x: True position (m), x_hat: Predicted position (m)",
+      "assumptions": "Euclidean distance accurately reflects the cost of predictive deviation; all agents are equally weighted in the error calculation.",
+      "breakdown_regime": "Becomes ill-posed if agents swap identities frequently without proper track-ID resolution, leading to artificially inflated errors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Directly feeds the GSE optimization loop, serving as the loss function for adjusting defensive formation parameters.",
+        "source_operator": "movement_pattern_l2_error",
+        "telemetry": "Final L2-error at the last timestep compared against baseline persistence models."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4988ee9717b984a0_t0",
+      "think": "Chapter 1 introduces the core motivation for automating tactical pattern detection in soccer using semi-supervised graph neural networks. It establishes that traditional manual annotation is laborious and subjective, prompting a shift toward scalable computational methods. The paper defines tactical patterns as coordinated, repeatable actions performed in specific game situations. This definition sets up the foundational premise for modeling team behavior as structured interactions among players. The introduction of permutation equivariance addresses a critical challenge: in team sports, the same tactical action may manifest differently depending on player orderings, making models sensitive to arbitrary labeling conventions. By employing graph neural networks, the approach inherently supports permutation invariance, allowing the system to generalize across various lineups and substitutions. The use of semi-supervised learning acknowledges the scarcity of labeled data while leveraging abundant unlabeled tracking data. This dual strategy enables robust pattern recognition even when expert annotations are limited. The proposed method integrates sequential processing with graph-based representation, capturing both spatial and temporal aspects of tactical behavior. Such integration allows for nuanced understanding of how tactical patterns unfold over time, supporting real-time decision-making in sports analytics. Finally, the application of variational autoencoders suggests a probabilistic framework for encoding complex tactical structures, offering interpretability alongside predictive power.",
+      "retrocausal_genealogy": "This work builds upon prior research in graph neural networks applied to spatiotemporal domains, particularly invasion sports, extending earlier efforts in semi-supervised learning and pattern recognition to address permutation challenges in multi-agent systems. Retrocausal Genealogy (Window 1): Rooted in undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al (4988ee9717b984a0, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The model accounts for opposing agent strategies by treating them as part of the overall graph structure, enabling prediction of defensive responses and counter-tactics based on observed offensive patterns. Theory of Mind (Window 1): Rooted in undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al (4988ee9717b984a0, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that the model does not overfit to superficial features like absolute player positions, instead focusing on relational structures and movement dynamics that distinguish meaningful tactical patterns from random motion. Cross-Layer Veto (Window 1): Rooted in undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al (4988ee9717b984a0, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4988ee9717b984a0_t1",
+      "think": "The chapter introduces a novel framework combining variational autoencoders (VAEs) with graph neural networks (GNNs) to detect tactical patterns in sports. It leverages semi-supervised learning principles from Kingma et al. [18], extending their M2 model to handle sequential data through a VRNN architecture. The method uses velocity vectors derived from positional data to preserve motion integrity while enabling efficient processing. Player trajectories are encoded via RNNs, followed by GNN updates that incorporate spatial relationships among players. This dual approach allows for robust pattern recognition even with limited labeled examples. The integration of graph structures enables modeling of complex player interactions, enhancing predictive accuracy. The framework's strength lies in its ability to jointly optimize reconstruction and classification objectives, making it suitable for real-world applications where annotations are scarce but valuable. Window 2 Synthesis: Rooted in undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al (4988ee9717b984a0, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al (4988ee9717b984a0, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in probabilistic graphical models and variational inference, building upon Kingma et al.'s M2 framework and extending it to sequential domains via VRNNs, aligning with prior work in semi-supervised learning and spatiotemporal modeling. Retrocausal Genealogy (Window 2): Rooted in undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al (4988ee9717b984a0, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models players as agents with latent states influenced by both personal history and environmental context. Coaches may interpret these latent representations as tactical intentions or formations, while opponents might infer defensive or offensive strategies based on observed player dynamics. Theory of Mind (Window 2): Rooted in undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al (4988ee9717b984a0, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by ensuring that label inference does not dominate the latent space, maintaining a balance between supervised and unsupervised learning components. Anti-leakage mechanisms ensure that distant player influences do not corrupt local interaction models, preserving signal-to-noise ratios in graph-based computations. Cross-Layer Veto (Window 2): Rooted in undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al (4988ee9717b984a0, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4988ee9717b984a0_t2",
+      "think": "The mathematical foundation of this chapter window rests upon the transition from deterministic, hand-crafted rule systems to probabilistic, semi-supervised manifold learning. Traditional sports analytics relied heavily on explicit logical predicates (e.g., IF player A crosses line L AND player B is within radius R THEN pattern exists). However, as highlighted by the failure of rule-based detectors for complex events like 'chance without shot', such approaches lack the capacity to model the continuous, high-dimensional geometry of multi-agent interactions. The SequentialM2 model introduces a profound shift by treating the surplus of unlabeled positional data not as noise, but as a structural prior. Mathematically, this is achieved through a graph-based regularization term applied to the embedding space of the neural network. The agents' trajectories are mapped onto a Riemannian manifold where geodesic distances approximate tactical similarity. The regularization forces the decision boundary of the supervised classifier to align with the intrinsic curvature of this unlabeled data manifold. Consequently, the model learns a latent representation where tactical patterns emerge as distinct topological features rather than arbitrary coordinate thresholds. The resulting probability amplitudes provide a continuous measure of tactical likelihood, enabling the system to identify subtle precursors to major events. This approach inherently handles the stochastic nature of sports, replacing brittle rules with robust statistical inferences grounded in the collective dynamics of the players.",
+      "retrocausal_genealogy": "This methodology inherits deeply from the evolution of computer vision and computational social science. Historically, it traces back to the limitations of template matching in early video analysis, evolving through the adoption of Hidden Markov Models for sequential data. The pivotal leap comes from semi-supervised learning theories developed in the early 2000s, specifically Laplacian Support Vector Machines and Graph Neural Networks, which posited that unlabeled data defines the underlying data geometry. In sports, this mirrors the shift from basic counting stats to spatial metrics like Expected Threat (xT), formalizing the intuition that player positioning dictates future outcomes.",
+      "theory_of_mind": "Modeling opposing agents requires inferring their internal strategic states from external kinematic outputs. The 'chance without shot' detection exemplifies this: the model must deduce that an attacker perceived a higher-value passing option or anticipated a defensive block, despite no shot occurring. By analyzing the probability amplitudes leading up to the event, we reconstruct the cognitive timeline of the players. For coaches, this translates into understanding not just what happened, but why certain tactical options were implicitly rejected. It allows GSE to simulate how an opposing coach might manipulate spatial constraints to force specific, predictable reactions from their players.",
+      "cross_layer_veto": "To prevent anti-collinearity and leakage between layers, strict veto conditions are enforced. First, the unsupervised geometric regularization must not inadvertently encode team-specific biases present only in the labeled subset; thus, the manifold construction relies exclusively on raw kinematics, vetted against team identifiers. Second, the translation of probability amplitudes into discrete GSE state-transitions requires a dynamic thresholding mechanism to avoid collinearity with simple possession metrics. If the detected pattern frequency correlates perfectly with basic pass completion rates, the primitive is vetoed as redundant. Finally, any inferred tactical intent must be causally separable from the immediate physical outcome to ensure the theory-of-mind layer captures genuine strategic reasoning rather than post-hoc rationalization of ball trajectory."
+    },
+    {
+      "trace_id": "4988ee9717b984a0_t4",
+      "think": "The chapter window delineates the transition from pure detection to generative modeling within the semi-supervised graph neural framework. Historically, tactical analysis relied on static clustering (e.g., k-means on spatial bins) or rigid topic models. The introduction of relational inductive biases (Battaglia et al.) fundamentally alters this by treating the pitch as a dynamic graph where nodes are players and edges represent interaction potentials. The derivation hinges on the assumption that future agent behavior is a deterministic function of the current graph embedding plus stochastic noise. By employing a recurrent latent variable model, the system ingests an initial observation phase—encoding x/y positions and weak location-based labels—and projects this state forward. The 'Appendix Modeling Movement Patterns' explicitly validates this by testing on NBA SportVU data, demonstrating that the GNN does not merely classify past events but actively simulates the differential equations governing player motion. The Mean L2-error serves as the empirical anchor, measuring the divergence between the simulated rollout and ground truth. This bridges the gap between discrete event mining (like counterpressing detection) and continuous trajectory forecasting, establishing a unified mathematical primitive for sports intelligence. Window 4 Synthesis: Rooted in undated - Detection of tactical patterns using semi-supervised graph neural networks - Anzer et al (4988ee9717b984a0, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This approach inherits from early self-organizing maps used in soccer (Memmert, Perl) which struggled with temporal continuity. It evolves through the adoption of dynamic controlled neural networks and eventually converges on graph convolutional networks (Power) and relational networks (Battaglia). The lineage represents a shift from pixel/coordinate-level processing to topological reasoning, acknowledging that sports are inherently relational systems governed by local interaction rules rather than independent particle motions.",
+      "theory_of_mind": "Modeling opposing agents requires attributing intentionality to trajectory deviations. The GNN acts as a theory-of-mind engine by inferring latent variables that represent tactical goals (e.g., creating a passing lane, executing a screen). When the model predicts a sharp change in movement direction, it is effectively hypothesizing about the opponent's internal decision-making process. The color intensity of location-based labels in Figure 5 reflects the model's confidence in these inferred intentions, allowing the system to anticipate not just where a player will be, but why they are moving there, thereby outmaneuvering reactive defenses.",
+      "cross_layer_veto": "Anti-collinearity vetoes are critical when the graph structure becomes degenerate, such as during full-team presses where individual distinctions blur. If the node features become too similar, the message-passing mechanism may suffer from over-smoothing, leading to identical embeddings for distinct tactical roles. Furthermore, leakage vetoes must prevent future label information from contaminating the observation phase during training. The system must strictly enforce temporal causality; any correlation between the final L2-error and future unobserved events indicates a failure in the isolation of the latent state, necessitating a reset of the conformal prediction intervals to maintain epistemic rigor."
+    }
+  ]
+}

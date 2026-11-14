@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0.0",
+  "task_id": "GCP-LEV-05",
+  "generated_at_utc": "2026-11-14T10:19:18.438923+00:00",
+  "project_id": "galaxysportsedge",
+  "region": "us-central1",
+  "artifact_registry_repository": {
+    "name": "projects/galaxysportsedge/locations/us-central1/repositories/gse",
+    "format": "DOCKER",
+    "verified_live_on_gcp": true
+  },
+  "workflow_yaml_verification": {
+    "repo_relative_path": "infra/gcp-serverless/gse_weekly_sequenced_gate_workflow.yaml",
+    "exists": true,
+    "sha256": "7d4df5de05d2a70fd5311372936ca8db00afb41138026cf1300128f184750425",
+    "contains_fail_closed_switches": true
+  },
+  "cloud_run_job_v2": {
+    "apiVersion": "run.googleapis.com/v2",
+    "kind": "Job",
+    "metadata": {
+      "name": "projects/galaxysportsedge/locations/us-central1/jobs/gse-weekly-sequenced-gate-job",
+      "labels": {
+        "platform": "galaxy-sports-edge",
+        "tier": "always-free-scale-to-zero",
+        "gcp-leverage-id": "gcp-lev-05"
+      }
+    },
+    "template": {
+      "taskCount": 1,
+      "parallelism": 1,
+      "template": {
+        "maxRetries": 1,
+        "timeout": "900s",
+        "executionEnvironment": "EXECUTION_ENVIRONMENT_GEN2",
+        "containers": [
+          {
+            "name": "weekly-sequenced-gate",
+            "image": "us-central1-docker.pkg.dev/galaxysportsedge/gse/weekly-gate-runner:v2026.11.14",
+            "command": [
+              "python"
+            ],
+            "args": [
+              "scripts/ops/run_permanent_sequenced_weekly_pipeline.py",
+              "--week",
+              "auto",
+              "--mode",
+              "t85m-lock",
+              "--skip-js-guards"
+            ],
+            "resources": {
+              "limits": {
+                "cpu": "1",
+                "memory": "2Gi"
+              }
+            },
+            "env": [
+              {
+                "name": "CALIBRATION_ADJUSTMENTS_ENABLED",
+                "value": "false"
+              },
+              {
+                "name": "GSE_MAX_COST_USD",
+                "value": "0.0"
+              },
+              {
+                "name": "GSE_MODEL_LANE",
+                "value": "free"
+              },
+              {
+                "name": "LIVE_BOARD",
+                "value": "false"
+              },
+              {
+                "name": "PERFORMANCE_STATS",
+                "value": "false"
+              },
+              {
+                "name": "PUBLIC_PICKS",
+                "value": "false"
+              },
+              {
+                "name": "PUBLISH_LEDGER",
+                "value": "false"
+              },
+              {
+                "name": "WEEK10_HELD_FOR_CORPUS_COMPLETION",
+                "value": "true"
+              },
+              {
+                "name": "GSE_NFL_WEEK",
+                "value": "auto"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "scale_to_zero_guarantees": {
+      "min_instance_count": 0,
+      "idle_cpu_allocation": false,
+      "billing_mode": "TASK_EXECUTION_DURATION_ONLY"
+    }
+  },
+  "cloud_scheduler_jobs": [
+    {
+      "name": "projects/galaxysportsedge/locations/us-central1/jobs/gse-01-tuesday-roster-baseline",
+      "schedule": "0 15 * * 2",
+      "timeZone": "UTC",
+      "estimated_runs_per_month": 5,
+      "httpTarget": {
+        "uri": "https://workflowexecutions.googleapis.com/v1/projects/galaxysportsedge/locations/us-central1/workflows/gse-weekly-sequenced-gate-workflow/executions",
+        "httpMethod": "POST",
+        "body": {
+          "nfl_week": "auto",
+          "gate_mode": "tuesday-baseline",
+          "model_lane": "free",
+          "max_cost_usd": 0.0
+        }
+      }
+    },
+    {
+      "name": "projects/galaxysportsedge/locations/us-central1/jobs/gse-02-wed-fri-practice-delta",
+      "schedule": "0 21 * * 3,4,5",
+      "timeZone": "UTC",
+      "estimated_runs_per_month": 14,
+      "httpTarget": {
+        "uri": "https://workflowexecutions.googleapis.com/v1/projects/galaxysportsedge/locations/us-central1/workflows/gse-weekly-sequenced-gate-workflow/executions",
+        "httpMethod": "POST",
+        "body": {
+          "nfl_week": "auto",
+          "gate_mode": "practice-delta",
+          "model_lane": "free",
+          "max_cost_usd": 0.0
+        }
+      }
+    },
+    {
+      "name": "projects/galaxysportsedge/locations/us-central1/jobs/gse-03-gameday-t85m-sequenced-lock",
+      "schedule": "35 16,19,23 * * 0,1,4",
+      "timeZone": "UTC",
+      "estimated_runs_per_month": 39,
+      "httpTarget": {
+        "uri": "https://workflowexecutions.googleapis.com/v1/projects/galaxysportsedge/locations/us-central1/workflows/gse-weekly-sequenced-gate-workflow/executions",
+        "httpMethod": "POST",
+        "body": {
+          "nfl_week": "auto",
+          "gate_mode": "t85m-lock",
+          "model_lane": "free",
+          "max_cost_usd": 0.0
+        }
+      }
+    }
+  ],
+  "always_free_budget_projection": {
+    "estimated_monthly_runs": 58,
+    "avg_job_duration_seconds": 180.0,
+    "cloud_scheduler_jobs_count": 3,
+    "cloud_scheduler_free_limit": 3,
+    "cloud_run_vcpu_seconds": 10440.0,
+    "cloud_run_vcpu_utilization_ratio": 0.058,
+    "cloud_run_gib_seconds": 20880.0,
+    "cloud_run_gib_utilization_ratio": 0.058,
+    "cloud_workflows_steps": 812,
+    "cloud_workflows_utilization_ratio": 0.1624,
+    "projected_monthly_cost_usd": 0.0,
+    "within_always_free_safety_envelope": true
+  },
+  "validation": {
+    "passed": true,
+    "errors": []
+  }
+}

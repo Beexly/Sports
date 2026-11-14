@@ -1,0 +1,306 @@
+{
+  "book_id": "47d3673640610263",
+  "source_status": "COMPLETE",
+  "title": "[15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game",
+  "file_name": "[15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game.pdf",
+  "sha256": "47d36736406102630697bc9faa53ad0ba38d329fd43229c367b9655bd354509a",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 9,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Implied volatility as a scaling factor in stochastic game models links initial uncertainty to conditional win probabilities via Gaussian distributions and Monte Carlo simulations. Implied volatility in sports games maps to stochastic process variance via betting market dynamics, linking pregame spreads to outcome probability distributions.",
+  "gsi_mapping": "Bayesian updating of win probabilities using conformal predictive distributions derived from observed score dynamics and volatility estimates. GSI employs Bayesian updating of game state probabilities using conformal predictive distributions derived from pregame odds, enabling real-time risk assessment.",
+  "gse_mapping": "Situation-aware state transitions in sports games modeled through Brownian motion paths conditioned on halftime scores and evolving volatility parameters. GSE models game evolution through state transitions governed by lead dynamics and temporal volatility, integrating power outage events as exogenous shocks.",
+  "primitives": [
+    {
+      "primitive_id": "47d3673640610263_w0_g1",
+      "name": "[15590410 - Journal of Quantitative Analys Ch.1 Grounded Operator",
+      "verbatim_quote": "Stern, Department of Statistics, University of California, Irvine, CA, USA, e-mail: sternh@uci.edu Nicholas G.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 47d3673640610263_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "47d3673640610263_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "47d3673640610263_w0_g2",
+      "name": "[15590410 - Journal of Quantitative Analys Ch.1 Grounded Operator",
+      "verbatim_quote": "Polson: University of Chicago Booth School of Business, Chicago, IL, USA Nicholas G.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 47d3673640610263_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "47d3673640610263_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "47d3673640610263_w0_g3",
+      "name": "[15590410 - Journal of Quantitative Analys Ch.1 Grounded Operator",
+      "verbatim_quote": "Stern* The implied volatility of a sports game Abstract: In this paper we provide a method for calculating the implied volatility of the outcome of a sports game.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 47d3673640610263_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "47d3673640610263_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "initial_outcome_distribution",
+      "name": "Initial Outcome Distribution",
+      "verbatim_quote": "The outcome distribution from the perspective of team B under our normal assumption is X(1) ∼ N(-4, 10.62).",
+      "page": 3,
+      "latex": "X(1) \\sim \\mathcal{N}(-4, 10.62)",
+      "symbol_and_unit_ledger": "{'X(1)': 'score difference at game end (dimensionless)', '-4': 'expected score deficit for team B (points)', '10.62': 'variance of score difference (points²)'}",
+      "assumptions": "Normality of score differences, constant volatility across game duration.",
+      "breakdown_regime": "Pre-game state with full uncertainty.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps initial belief about team B's chance to win into probabilistic forecast using Gaussian kernel density estimation.",
+        "source_operator": "initial_outcome_distribution",
+        "telemetry": "Probability of team B winning (0.35) from shaded area under curve."
+      }
+    },
+    {
+      "primitive_id": "volatility_scaling_factor",
+      "name": "Volatility Scaling Factor",
+      "verbatim_quote": "All but a few of the paths now show team B winning.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'σ': 'implied volatility parameter (dimensionless)', 't': 'time variable (fraction of game)', 'B': 'Brownian motion paths'}",
+      "assumptions": "Stochastic process governed by geometric Brownian motion with volatility σ.",
+      "breakdown_regime": "Post-halftime information update regime.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between volatility parameter and market-implied risk premium in betting markets.",
+        "source_operator": "volatility_scaling_factor",
+        "telemetry": "Simulation-based win probability shift after halftime."
+      }
+    },
+    {
+      "primitive_id": "conditional_win_probability",
+      "name": "Conditional Win Probability",
+      "verbatim_quote": "The bottom left panel shows the outcome ­distribution given the ­conditional mean ( (1 ) 15 4 0.5 13) l t μ + = × = and standard ­deviation ( 10.6/ 2 7.5).",
+      "page": 3,
+      "latex": "\\mu_{\\text{cond}} = 13, \\sigma_{\\text{cond}} = \\frac{10.6}{\\sqrt{2}} \\approx 7.5",
+      "symbol_and_unit_ledger": "{'\\\\mu_{\\\\text{cond}}': 'conditional mean score differential (points)', '\\\\sigma_{\\\\text{cond}}': 'conditional standard deviation (points)', '13': 'updated expected lead at halftime (points)', '7.5': 'reduced volatility post-halftime (points)'}",
+      "assumptions": "Conditional normality of remaining score differences given halftime data.",
+      "breakdown_regime": "Halftime information update with reduced uncertainty.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives updated win probability using conditional Gaussian distribution with adjusted mean and variance.",
+        "source_operator": "conditional_win_probability",
+        "telemetry": "Area under updated red-shaded region representing new win probability."
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_simulation",
+      "name": "Monte Carlo Simulation Framework",
+      "verbatim_quote": "Here we show a set of simulated Brownian motion paths with the given volatility.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B(t)': 'Brownian motion path (dimensionless)', 'T': 'total game time (units)', 'N': 'number of simulations (dimensionless)'}",
+      "assumptions": "Independent realizations of stochastic process over time intervals.",
+      "breakdown_regime": "Dynamic evolution of game states under uncertainty.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps stochastic simulation paths to empirical outcome frequencies for probabilistic inference.",
+        "source_operator": "monte_carlo_simulation",
+        "telemetry": "Percentage of simulated paths ending with team B ahead (~35%)."
+      }
+    },
+    {
+      "primitive_id": "volatility_index",
+      "name": "Implied Volatility Index",
+      "verbatim_quote": "Stern: The implied volatility of a sports game 149 example, Glickman and Stern (1998) and the ­references therein.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'σ_implied': 'dimensionless volatility index'}",
+      "assumptions": "Market efficiency implies volatility reflects true uncertainty; pregame odds encode rational expectations.",
+      "breakdown_regime": "When betting markets become illiquid or exhibit arbitrage opportunities.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps betting market variance to stochastic volatility of game outcomes via risk-neutral pricing.",
+        "source_operator": "volatility_index",
+        "telemetry": "Deviation between implied and realized game outcome probabilities."
+      }
+    },
+    {
+      "primitive_id": "lead_dynamics",
+      "name": "Lead Dynamics Process",
+      "verbatim_quote": "We applied the model of Section 2 from the viewpoint of the Ravens so that X(t) corresponds to the Raven's lead over the 49ers at time t.",
+      "page": 5,
+      "latex": "X(t) = \\text{Ravens' lead at time } t",
+      "symbol_and_unit_ledger": "{'X(t)': 'points, lead difference'}",
+      "assumptions": "Game lead evolves as a continuous-time stochastic process with drift and diffusion components.",
+      "breakdown_regime": "At halftime or during critical scoring windows where momentum shifts occur.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Brownian motion with absorbing barriers representing game conclusion.",
+        "source_operator": "lead_dynamics",
+        "telemetry": "Time-series of lead changes during quarters."
+      }
+    },
+    {
+      "primitive_id": "power_outage_event",
+      "name": "Power Outage Event",
+      "verbatim_quote": "This was followed by a rather unusual event – the stadium suffered a 34 min power outage.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_outage': 'minutes, duration of outage'}",
+      "assumptions": "Outage introduces stochastic delay in game progression and alters player behavior.",
+      "breakdown_regime": "During active play when timing-sensitive decisions are made.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models outage as external perturbation affecting transition probabilities in game state space.",
+        "source_operator": "power_outage_event",
+        "telemetry": "Change in scoring rate before/after outage."
+      }
+    },
+    {
+      "primitive_id": "market_vig",
+      "name": "Market Vigilance Factor",
+      "verbatim_quote": "The initial point spread established the Ravens as a 4 point underdog so we set the mean of our outcome, X(1), as ( ) (1) 4.",
+      "page": 5,
+      "latex": "p_{\\text{Bal}} = 0.353, \\quad p_{\\text{SF}} = 0.647",
+      "symbol_and_unit_ledger": "{'p_Bal': 'probability of Baltimore win', 'p_SF': 'probability of San Francisco win'}",
+      "assumptions": "Bookmakers apply uniform edge across all outcomes to ensure profitability.",
+      "breakdown_regime": "When total implied probability exceeds unity due to vig.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a convex combination of outcome probabilities adjusted for bookmaker margin.",
+        "source_operator": "market_vig",
+        "telemetry": "Sum of implied probabilities minus 1 (e.g., 0.078 for 7.8% vig)."
+      }
+    },
+    {
+      "primitive_id": "implied_volatility_inversion",
+      "name": "Inverse CDF Volatility Extraction",
+      "verbatim_quote": "Stern: The implied volatility of a sports game 151 1 4 10.60 0.377 ( ) IV p μ σ Φ= = = (the value we have been using throughout the article) where we have used Φ-1(p) = qnorm(0.353) = -0.377.",
+      "page": 7,
+      "latex": "\\sigma_{IV} = \\frac{\\mu}{\\Phi^{-1}(p)} = \\frac{-4}{-0.377} = 10.60",
+      "symbol_and_unit_ledger": "\\sigma_{IV}: Implied standard deviation (points), \\mu: Pregame expected margin (points), p: Market win probability (dimensionless), \\Phi^{-1}: Inverse standard normal CDF (dimensionless).",
+      "assumptions": "Final score differentials follow a normal distribution; betting markets accurately reflect true probabilistic expectations without arbitrage.",
+      "breakdown_regime": "Fails when score distributions exhibit heavy tails or extreme skewness, or when market liquidity causes significant bid-ask spread distortions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps Black-Scholes implied volatility extraction to sports betting odds inversion.",
+        "source_operator": "implied_volatility_inversion",
+        "telemetry": "Discrepancy between model-derived win probability and closing market moneyline."
+      }
+    },
+    {
+      "primitive_id": "volatility_scale_normalization",
+      "name": "Z-Score Advantage Normalization",
+      "verbatim_quote": "So on a volatility scale the 4 point pregame advantage assessed for the 49ers is less than 0.5 .",
+      "page": 7,
+      "latex": "z = \\frac{\\Delta S}{\\sigma_{IV}} < 0.5",
+      "symbol_and_unit_ledger": "z: Standardized advantage (dimensionless), \\Delta S: Point spread advantage (points), \\sigma_{IV}: Implied standard deviation (points).",
+      "assumptions": "Volatility remains constant across the specific matchup context; linear scaling applies to advantage metrics.",
+      "breakdown_regime": "Breaks down during regime shifts where historical volatility drastically diverges from event-specific volatility (e.g., weather anomalies).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Normalizes raw point advantages into GSI's standardized risk manifold for cross-sport comparability.",
+        "source_operator": "volatility_scale_normalization",
+        "telemetry": "Real-time z-score of current lead relative to remaining game clock volatility."
+      }
+    },
+    {
+      "primitive_id": "conditional_state_update",
+      "name": "Halftime Conditional Projection",
+      "verbatim_quote": "Using this assumption we applied the formula derived earlier with conditional mean for the final outcome 15 + 0.5*(-4) = 13 and conditional volatility 10.6 1 0.5 7.5.",
+      "page": 7,
+      "latex": "\\mu_{cond} = L_{HT} + \\alpha \\mu_{pregame}, \\quad \\sigma_{cond} = \\sigma_{IV} \\sqrt{1 - t}",
+      "symbol_and_unit_ledger": "\\mu_{cond}: Conditional final margin expectation (points), L_{HT}: Halftime lead (points), \\alpha: Time-weighting factor (dimensionless), \\sigma_{cond}: Remaining volatility (points), t: Fraction of game elapsed (dimensionless).",
+      "assumptions": "Game dynamics are temporally homogeneous; variance scales linearly with remaining time fraction.",
+      "breakdown_regime": "Invalidates under non-Markovian conditions such as star player injuries or drastic coaching strategy pivots post-halftime.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Brownian motion bridge updates in GSE situational reasoning engines.",
+        "source_operator": "conditional_state_update",
+        "telemetry": "Divergence between conditional model probability and live in-play betting market probability."
+      }
+    },
+    {
+      "primitive_id": "dynamic_volatility_calibration",
+      "name": "Regime Shift Volatility Adjustment",
+      "verbatim_quote": "A second estimate of the probability of Baltimore winning given their half time lead can be obtained directly from the betting market.",
+      "page": 7,
+      "latex": "P_{mkt}(Win | L_{HT}) \\rightarrow \\hat{\\sigma}_{inplay}",
+      "symbol_and_unit_ledger": "P_{mkt}: Market-implied conditional win probability (dimensionless), \\hat{\\sigma}_{inplay}: Inferred in-play volatility (points).",
+      "assumptions": "In-play markets efficiently aggregate new information regarding team strategies and environmental factors.",
+      "breakdown_regime": "Market illiquidity in early in-play phases leads to noisy volatility proxies and false regime shift signals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Feeds observed market probabilities back into GSI to update the posterior volatility kernel dynamically.",
+        "source_operator": "dynamic_volatility_calibration",
+        "telemetry": "Ratio of inferred in-play volatility to pregame implied volatility."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "47d3673640610263_t0",
+      "think": "Window 1 Synthesis: Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "47d3673640610263_t1",
+      "think": "Chapter window 2 explores how implied volatility governs the probabilistic structure of sports outcomes. Starting from an initial Gaussian distribution of score differences, the framework uses Bayesian updating to refine win probabilities based on halftime performance. The core idea is that volatility acts as a calibration mechanism linking betting market data—specifically money-line odds and point spreads—to the underlying stochastic model. At the outset, team B’s expected deficit is -4 points with variance 10.62, yielding a 35% win probability. As information becomes available at halftime, the model updates its estimate using conditional means and variances derived from observed leads. This transition reflects a shift from prior uncertainty to posterior knowledge, where the volatility parameter adjusts dynamically to reflect changing game dynamics. Monte Carlo simulations visualize these transitions, showing how different paths evolve toward final outcomes. The framework thus bridges discrete betting markets with continuous stochastic processes, enabling dynamic risk assessment throughout the game. Window 2 Synthesis: Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 20th-century developments in financial mathematics and stochastic calculus, particularly the Black-Scholes model for option pricing. Adapted to sports analytics by extending volatility concepts from finance to athletic competition modeling. Retrocausal Genealogy (Window 2): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing strategies through dual-agent perspectives: one assumes fixed volatility while another adapts beliefs based on evolving score dynamics. Coaches and analysts must account for both static risk profiles and adaptive decision-making during gameplay. Theory of Mind (Window 2): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents conflating deterministic score prediction with probabilistic forecasting; avoids overfitting to historical data by maintaining stochastic integrity. Ensures that volatility remains a calibrated scalar rather than a learned parameter, preserving model interpretability. Cross-Layer Veto (Window 2): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "47d3673640610263_t2",
+      "think": "Chapter window 3 explores how implied volatility in sports games can be modeled using stochastic processes derived from betting markets. The analysis centers on Super Bowl XLVII, where the Ravens' underdog status and eventual upset are contextualized within a probabilistic framework. The lead dynamics process X(t) captures the evolving advantage of one team over another, modeled as a continuous-time stochastic variable. Implied volatility emerges from the dispersion of pregame odds, reflecting market consensus about game uncertainty. The power outage introduces an exogenous shock that disrupts normal game progression, altering both the temporal dynamics and outcome probabilities. The market vig, or bookmaker’s edge, ensures that total implied probabilities exceed unity, creating a systematic bias in favor of the house. These elements combine to form a coherent model of how real-world game events translate into quantifiable probabilistic structures. Window 3 Synthesis: Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Glickman and Stern (1998), who pioneered the use of statistical models to analyze sports outcomes through betting market data, laying groundwork for modern quantitative sports analytics. Retrocausal Genealogy (Window 3): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Modeling opposing strategies involves treating each team's performance as a stochastic process influenced by internal dynamics (e.g., momentum) and external factors (e.g., power outages), with coaches adjusting tactics based on evolving game states. Theory of Mind (Window 3): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity prevents overfitting by ensuring volatility estimates are independent of lead dynamics and market vig. Leakage vetoes exclude spurious correlations between outage durations and final scores, maintaining model integrity. Cross-Layer Veto (Window 3): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "47d3673640610263_t3",
+      "think": "The mathematical derivation within pages 7 through 9 establishes a rigorous framework for treating sports competitions as stochastic processes governed by Gaussian distributions. Initially, the authors invert the standard normal cumulative distribution function to extract an 'implied volatility' directly from static pregame market inputs—specifically the point spread and the win probability. This transforms discrete betting lines into a continuous variance parameter, effectively quantifying the market's expectation of game chaos. \n\nSubsequently, the text demonstrates how this volatility parameter serves as the foundational kernel for dynamic state updates. By observing the halftime score, the system calculates a conditional mean and a reduced conditional volatility, assuming variance scales proportionally with the remaining game time. This mirrors the properties of a Wiener process. However, the authors astutely introduce a secondary calibration mechanism: comparing the mathematically derived conditional win probability against the actual in-play betting market probability. If these diverge, it signals that the assumption of constant volatility is flawed. The market might be pricing in exogenous shocks, such as altered weather or desperate strategic pivots by trailing teams. Thus, the epistemic trace moves from static parameter extraction to dynamic Bayesian updating, ultimately utilizing market discrepancies to detect structural breaks in the underlying stochastic model.",
+      "retrocausal_genealogy": "This methodology inherits directly from Hull’s financial derivatives pricing and Stern’s prior 1991/1994 works on NFL scoring distributions. It retroactively validates the application of Black-Scholes mechanics to athletic contests, bridging the gap between quantitative finance and sports analytics by treating point spreads as option strikes and game outcomes as underlying asset trajectories. Retrocausal Genealogy (Window 4): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The framework implicitly models the cognitive states of coaches and bettors. A massive halftime deficit forces a trailing coach to abandon optimal conservative play-calling for high-variance strategies. Simultaneously, the betting market aggregates these anticipated behavioral shifts. The divergence between the constant-volatility model and the in-play market captures this collective theory of mind regarding adaptive human agency under pressure. Theory of Mind (Window 4): Rooted in [15590410 - Journal of Quantitative Analysis in Sports] The implied volatility of a sports game (47d3673640610263, 9/9 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "To prevent anti-collinearity and leakage, the veto condition triggers if the pregame implied volatility and the in-play inferred volatility are perfectly correlated. We must ensure that the dynamic adjustment layer captures genuine regime shifts rather than merely echoing the static pregame priors. If the market simply scales linearly with the halftime score without adjusting for strategic desperation, the dynamic primitive provides no marginal informational gain over the base conditional projection."
+    }
+  ]
+}
