@@ -554,3 +554,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 01:52:23 | COMPLETE | 160042f33805434e | primitives=10 think_words=854
 - 2026-11-14 01:53:09 | CLAIMED | 1add9f4d39de0d09 | worker=hermes-inline shard03 file=2023 - Aiming for Competitive Balance Designing Fair Handicap Systems for Darts using a Markov Decision Process Framework - Unknown Authors.pdf
 - 2026-11-14 01:57:21 | COMPLETE | 1add9f4d39de0d09 | primitives=28 think_words=858
+- 2026-11-14 01:57:58 | CLAIMED | 0634f061aa5c6c5f | worker=hermes-inline shard03 file=2023 - A Comprehensive Survey of the Home Advantage in American football - Unknown Authors.pdf
+- 2026-11-14 02:04:11 | COMPLETE | 0634f061aa5c6c5f | primitives=20 think_words=852

@@ -1,0 +1,419 @@
+{
+  "book_id": "0634f061aa5c6c5f",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_ABSTRACT_BAYESIAN_CLEAN",
+  "source_note": "Thompson Bliss & Michael Lopez (National Football League) and Luke Benz (Harvard T.H. Chan School of Public Health, Dept of Biostatistics), 'A Comprehensive Survey of the Home Advantage in American Football', NESSIS 2023 one-page abstract. Substantive abstract with printed Bayesian framework, priors, three trend models, and headline results; extracted faithfully (not a derivative summary). fi/fl ligatures, en/em-dash and U+2212 folded; line-break hyphens de-hyphenated; the three model equations and priors reconstructed as labeled LaTeX from the printed math (the linear model's doubled comma is a source typo). Outputs are posterior HA estimates and points/year trend rates; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "ha_definition",
+      "name": "Home advantage: the benefit of playing at home",
+      "verbatim_quote": "the benefit a sports team receives when playing at home",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Home advantage (HA) is the benefit a team receives when playing at home, studied across sport; the abstract surveys its drivers and temporal change."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Home advantage is the same venue-effect term GSE includes in its game-state value model.",
+        "source_operator": "ha_definition",
+        "telemetry": "HA = benefit of playing at home"
+      }
+    },
+    {
+      "primitive_id": "prior_research_limited",
+      "name": "Prior HA research is league- and time-limited",
+      "verbatim_quote": "Most research on this topic is restricted to individual leagues in short time frames",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Single-league, short-window studies limit understanding of HA drivers and prevent extrapolation; this work spans NFL, NCAA, and high school over ~two decades."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A narrow temporal/league sample limits generalization; GSE pools across levels and seasons for the same extrapolation goal.",
+        "source_operator": "prior_research_limited",
+        "telemetry": "prior work: single league, short window"
+      }
+    },
+    {
+      "primitive_id": "two_decades_multi_level",
+      "name": "Nearly two decades of NFL, NCAA, and high-school data",
+      "verbatim_quote": "Using nearly two decades of data from the National Football League (NFL)",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The framework uses ~2004-2022 data from the NFL, NCAA, and US high schools (50 states, 4 NCAA divisions) to estimate HA across levels."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A multi-level, multi-season corpus is the same breadth GSE uses to estimate stable venue effects.",
+        "source_operator": "two_decades_multi_level",
+        "telemetry": "~2 decades, NFL+NCAA+HS"
+      }
+    },
+    {
+      "primitive_id": "ha_temporal_question",
+      "name": "Question: whether/how much HA has changed over time",
+      "verbatim_quote": "whether/how much home advantage has changed over time",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The central question is whether and how much home advantage has changed over time, motivating constant/linear/time-varying trend models."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Testing whether a structural effect drifts over time is the same temporal-stability question GSE asks of its priors.",
+        "source_operator": "ha_temporal_question",
+        "telemetry": "does HA change over time?"
+      }
+    },
+    {
+      "primitive_id": "stan_bayesian_paired_comparison",
+      "name": "STAN Bayesian paired-comparison regression framework",
+      "verbatim_quote": "Our statistical framework leverages STAN to fit a suite of Bayesian linear regression based",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Models are Bayesian linear regressions on paired comparisons (team i at team j), fit in STAN, with team-strength and HA parameters."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A Bayesian paired-comparison model is the same team-strength rating engine GSE uses, with HA as an additive venue term.",
+        "source_operator": "stan_bayesian_paired_comparison",
+        "telemetry": "STAN Bayesian paired-comparison"
+      }
+    },
+    {
+      "primitive_id": "bayesian_priors",
+      "name": "Hierarchical priors on team strength, HA, and variance",
+      "verbatim_quote": "with various plausible temporal trends for home advantage",
+      "page": 1,
+      "latex": "\\theta_i\\sim N(0,\\sigma_\\theta^2),\\ \\sigma_\\theta\\sim IG(1,1);\\ \\alpha\\sim N(0,\\sigma_\\alpha^2),\\ \\sigma_\\alpha\\sim IG(1,1);\\ \\sigma\\sim IG(1,1)",
+      "symbol_and_unit_ledger": {
+        "theta_i": "team i strength",
+        "alpha": "home advantage",
+        "sigma": "score-differential SD",
+        "IG": "inverse-gamma"
+      },
+      "assumptions": [
+        "Team strengths theta_i ~ Normal(0, sigma_theta^2) with sigma_theta ~ InverseGamma(1,1); HA alpha ~ Normal(0, sigma_alpha^2) with sigma_alpha ~ InverseGamma(1,1); score-differential sigma ~ InverseGamma(1,1). Priors printed on the abstract."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Weakly-informative hierarchical priors with inverse-gamma variance are the same partial-pooling regularization GSE applies to team ratings.",
+        "source_operator": "bayesian_priors",
+        "telemetry": "theta~N(0,s^2), s~InvGamma(1,1)"
+      }
+    },
+    {
+      "primitive_id": "score_differential_model",
+      "name": "Score differential = strength gap + HA + noise",
+      "verbatim_quote": "Let Yijt denote the score differential of a game where team i plays at team j in year t",
+      "page": 1,
+      "latex": "Y_{ijt}\\sim N(\\theta_i-\\theta_j+\\alpha,\\ \\sigma^2)",
+      "symbol_and_unit_ledger": {
+        "Y_ijt": "score differential, team i at team j, year t",
+        "theta_i-theta_j": "strength gap",
+        "alpha": "home advantage"
+      },
+      "assumptions": [
+        "The constant-HA model (1) is Yijt ~ N(theta_i - theta_j + alpha, sigma^2); the score differential decomposes into a strength gap plus a venue term plus noise."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An additive strength-gap-plus-venue model of the margin is the same margin decomposition GSE uses for game prediction.",
+        "source_operator": "score_differential_model",
+        "telemetry": "Y = theta_i - theta_j + alpha + noise"
+      }
+    },
+    {
+      "primitive_id": "three_temporal_ha_models",
+      "name": "Three HA trend models: constant, linear, time-varying",
+      "verbatim_quote": "a constant home advantage over time, a linear home advantage trend over time, and a trend in which home advantage is allowed to vary freely over time",
+      "page": 1,
+      "latex": "(1)\\ Y_{ijt}\\sim N(\\theta_i-\\theta_j+\\alpha,\\sigma^2);\\ (2)\\ Y_{ijt}\\sim N(\\theta_i-\\theta_j+\\alpha_0+\\alpha_1 t,\\sigma^2);\\ (3)\\ Y_{ijt}\\sim N(\\theta_i-\\theta_j+\\alpha_t,\\sigma^2)",
+      "symbol_and_unit_ledger": {
+        "alpha": "constant HA",
+        "alpha_0+alpha_1 t": "linear HA trend",
+        "alpha_t": "free time-varying HA"
+      },
+      "assumptions": [
+        "Model (1) constant HA alpha; Model (2) linear HA alpha_0 + alpha_1*t; Model (3) time-varying HA alpha_t. Equations printed on the abstract (the linear model's extra comma is a source typo)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A nested constant/linear/free trend family is the same temporal-flexibility ladder GSE uses to test whether an effect drifts.",
+        "source_operator": "three_temporal_ha_models",
+        "telemetry": "constant / linear / time-varying HA"
+      }
+    },
+    {
+      "primitive_id": "alpha1_points_per_year",
+      "name": "alpha1: HA change in points per year",
+      "verbatim_quote": "the slope of the linear trend for HA in Model (2), which denotes the change in home advantage in points/year",
+      "page": 1,
+      "latex": "\\alpha_1=\\frac{d\\,HA}{dt}\\ \\text{[points/year]}",
+      "symbol_and_unit_ledger": {
+        "alpha_1": "linear HA slope (points/year)"
+      },
+      "assumptions": [
+        "alpha1 is the slope of the linear HA trend, interpretable as the change in home advantage in points per year."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An interpretable drift rate (points/year) is the same physical-unit trend parameter GSE insists on for temporal effects.",
+        "source_operator": "alpha1_points_per_year",
+        "telemetry": "alpha1 = dHA/dt [pts/yr]"
+      }
+    },
+    {
+      "primitive_id": "alpha1_sign_interpretation",
+      "name": "Sign of alpha1: decline vs increase in HA",
+      "verbatim_quote": "Negative values of α1 denote a decline in HA while positive values of α1 denote an increase in HA",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Negative alpha1 means HA is declining; positive means increasing; the posterior over alpha1 quantifies the direction and uncertainty of the trend."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A signed, uncertainty-quantified trend is the same directional drift test GSE applies to structural effects.",
+        "source_operator": "alpha1_sign_interpretation",
+        "telemetry": "alpha1<0 decline, >0 increase"
+      }
+    },
+    {
+      "primitive_id": "observed_ha_overstates",
+      "name": "Observed HOME-AWAY margin overstates model HA",
+      "verbatim_quote": "suggesting failure to account for team strength may lead to incorrect conclusions",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The raw (HOME - AWAY) score differential is much larger than any model-based HA estimate in most leagues, because it confounds team strength with venue."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A raw margin that confounds strength and venue is the same biased estimator GSE replaces with a strength-adjusted venue term.",
+        "source_operator": "observed_ha_overstates",
+        "telemetry": "observed HOME-AWAY >> model HA"
+      }
+    },
+    {
+      "primitive_id": "constant_ha_preferred",
+      "name": "Constant HA preferred in the majority of leagues",
+      "verbatim_quote": "a constant home advantage trend was preferred in the majority of states",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Across 50 high-school states, 4 NCAA divisions, and the NFL, a constant HA trend was preferred in the majority of states."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A stable-effect preference across most units is the same parsimony result GSE expects when a structural effect is stationary.",
+        "source_operator": "constant_ha_preferred",
+        "telemetry": "constant HA preferred (majority)"
+      }
+    },
+    {
+      "primitive_id": "credible_interval_7_of_55",
+      "name": "Linear HA trend significant in only 7/55 leagues",
+      "verbatim_quote": "95% posterior credible intervals for α1, the linear home advantage trend in Model (2), do not contain 0 in only 7/55",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "95% posterior credible intervals for alpha1 exclude zero in only 7 of 55 leagues, so a linear HA trend is rarely supported."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A credible-interval exclusion count is the same Bayesian significance tally GSE uses to decide whether a trend is real.",
+        "source_operator": "credible_interval_7_of_55",
+        "telemetry": "alpha1 CI excludes 0 in 7/55"
+      }
+    },
+    {
+      "primitive_id": "elpd_loo_model_comparison",
+      "name": "ELPD via LOO confirms the constant-HA preference",
+      "verbatim_quote": "formally comparing models on the basis of expected log pointwise predictive density (ELPD) estimated via the",
+      "page": 1,
+      "latex": "\\text{ELPD}_{LOO}\\ \\text{(Vehtari-Gelman-Gabry 2017)}",
+      "symbol_and_unit_ledger": {
+        "ELPD": "expected log pointwise predictive density",
+        "LOO": "leave-one-out CV"
+      },
+      "assumptions": [
+        "Model comparison by expected log pointwise predictive density estimated via leave-one-out cross-validation (Vehtari, Gelman, Gabry 2017) yields similar results to the credible-interval analysis."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "LOO-ELPD model comparison is the same out-of-sample predictive adjudication GSE uses to select among trend models.",
+        "source_operator": "elpd_loo_model_comparison",
+        "telemetry": "ELPD via LOO (Vehtari 2017)"
+      }
+    },
+    {
+      "primitive_id": "fbs_largest_decline",
+      "name": "FBS shows the largest HA decline: ~0.11 pts/year",
+      "verbatim_quote": "FBS exhibits the largest estimated decline in HA, with a drop of roughly 0.11 points/year between 2004-2022",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "FBS has the largest estimated HA decline, roughly 0.11 points per year over 2004-2022."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A quantified level-specific drift is the same heterogeneous temporal effect GSE estimates per competition level.",
+        "source_operator": "fbs_largest_decline",
+        "telemetry": "FBS: -0.11 pts/yr (2004-2022)"
+      }
+    },
+    {
+      "primitive_id": "ncaa_nfl_decline_more",
+      "name": "HA declined more in NCAA/NFL than high school",
+      "verbatim_quote": "HA has declined more in NCAA/NFL over the past 2 decades than in high school, where changes in HA are far more heterogeneous",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "HA has declined more in NCAA/NFL over the past two decades than in high school, where changes are far more heterogeneous across states."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Level-dependent drift with heterogeneous lower levels is the same hierarchical temporal pattern GSE models.",
+        "source_operator": "ncaa_nfl_decline_more",
+        "telemetry": "NCAA/NFL decline > HS (heterogeneous)"
+      }
+    },
+    {
+      "primitive_id": "team_strength_adjustment_critical",
+      "name": "Properly adjusting for team strength is critical",
+      "verbatim_quote": "the importance of properly adjusting for team strength when estimating home advantage",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The underappreciated point is that HA estimation must adjust for team strength, otherwise the venue effect is confounded."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Controlling for strength to isolate a venue effect is the same confounding control GSE applies to its home-field term.",
+        "source_operator": "team_strength_adjustment_critical",
+        "telemetry": "adjust for team strength to isolate HA"
+      }
+    },
+    {
+      "primitive_id": "nfl_playoff_hosting_confounds",
+      "name": "NFL: better teams host playoffs, attenuating model HA",
+      "verbatim_quote": "better teams host playoff games, and so even with more balanced schedules, one would expect model based estimates of HA to be attenuated compared to empirical observations",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "In the NFL better teams host playoff games, so even with balanced schedules model-based HA is attenuated relative to empirical observations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Selection of strong teams into home playoff games is the same endogenous-hosting confound GSE controls for in venue estimation.",
+        "source_operator": "nfl_playoff_hosting_confounds",
+        "telemetry": "strong teams host playoffs -> HA attenuated"
+      }
+    },
+    {
+      "primitive_id": "lower_levels_host_more_win_bigger",
+      "name": "Lower levels: better teams host more and win bigger",
+      "verbatim_quote": "better teams are both more likely to host more home games (perhaps due to better facilities and larger athletic budgets) and win by larger amounts",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "In college and high school, better teams host more home games (better facilities, larger budgets) and win by larger margins, compounding the confound."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Resource-driven home-game scheduling plus larger wins is the same compound confound GSE adjusts for at lower competition levels.",
+        "source_operator": "lower_levels_host_more_win_bigger",
+        "telemetry": "better teams: more home games + bigger wins"
+      }
+    },
+    {
+      "primitive_id": "confounding_biases_and_overstates_trend",
+      "name": "Strength confounding biases HA and overstates trends",
+      "verbatim_quote": "failure to properly account for confounding by team strength would lead one to not only produce estimates of HA that are severely biased, but also overstate the extent to which strong temporal HA trends exist",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Failing to account for team-strength confounding produces severely biased HA estimates and overstates strong temporal HA trends (e.g. Tennessee)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An uncontrolled confound that both biases a level and fabricates a trend is the same dual failure GSE's strength adjustment prevents.",
+        "source_operator": "confounding_biases_and_overstates_trend",
+        "telemetry": "confound: biased HA + spurious trend"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "homeadvantage2023_trace",
+      "think": "The retrocausal genealogy of this abstract is the long-standing study of home advantage across sport and the limitation that most prior work is restricted to individual leagues over short time frames, which prevents a thorough understanding of the drivers and blocks extrapolation. Thompson Bliss and Michael Lopez of the National Football League, with Luke Benz of the Harvard T.H. Chan School of Public Health, answer this by pooling nearly two decades of data from the NFL, the NCAA, and high schools across the United States, covering 50 high-school states and four NCAA divisions. The central question is whether and how much home advantage has changed over time. The methodological lineage is Bayesian paired-comparison rating, fit in STAN, with model evaluation by the leave-one-out expected log pointwise predictive density of Vehtari, Gelman, and Gabry. The statistical framework is a suite of Bayesian linear regression paired-comparison models. Let Yijt be the score differential of a game where team i plays at team j in year t. The constant-home-advantage model is Yijt distributed Normal with mean theta_i minus theta_j plus alpha and variance sigma squared; the linear model replaces alpha with alpha_0 plus alpha_1 times t; and the time-varying model uses a free alpha_t. The priors are hierarchical and weakly informative: team strengths theta_i are Normal with mean zero and variance sigma_theta squared, with sigma_theta inverse-gamma(1,1); home advantage alpha is Normal with mean zero and variance sigma_alpha squared, with sigma_alpha inverse-gamma(1,1); and the score-differential scale sigma is inverse-gamma(1,1). The slope alpha_1 is interpretable as the change in home advantage in points per year, with negative values denoting a decline and positive values an increase. The recursive theory of mind is the separation of a team's strength from the venue effect, and the recognition that the two are confounded in raw data. The model reasons about each team as a latent strength theta and about the game as a strength gap plus a venue term plus noise, so that the home advantage alpha is identified only after strength is accounted for. The authors' key insight is that better teams are systematically selected into home games: in the NFL better teams host playoff games, and in college and high school better teams host more home games because of better facilities and larger athletic budgets and also win by larger amounts. A model that ignores this selection attributes the strong teams' margins to the venue, inflating the apparent home advantage. Cross-layer veto adjudication is the rejection of the naive observed home advantage and of strong temporal trends. The raw HOME-minus-AWAY score differential is much larger than any model-based estimate in the vast majority of leagues, so failing to account for team strength leads to incorrect conclusions. Across the 55 leagues, a constant home-advantage trend is preferred in the majority, and the 95 percent posterior credible intervals for the linear slope alpha_1 exclude zero in only 7 of 55; formal model comparison by LOO-ELPD gives similar results. The largest estimated decline is in FBS, roughly 0.11 points per year between 2004 and 2022, and home advantage has declined more in the NCAA and NFL than in high school, where changes are far more heterogeneous. The veto is explicit: failure to adjust for team-strength confounding not only biases the home-advantage estimate severely but also overstates the extent to which strong temporal trends exist, as in the Tennessee example. The implementation invariants map directly onto GSE. The additive strength-gap-plus-venue margin model is GSE's game-prediction decomposition; the hierarchical inverse-gamma priors are GSE's partial-pooling regularization; the constant/linear/time-varying trend family is GSE's temporal-stability ladder; and LOO-ELPD is GSE's out-of-sample model adjudication. The central discipline, controlling for team strength before estimating a venue effect, is exactly the confounding control GSE applies to its home-field term, and the endogenous-hosting mechanism is the same selection bias GSE guards against. The outputs are posterior home-advantage estimates and trend rates in points per year, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The corpus spans roughly 2004 to 2022 across the NFL, four NCAA divisions, and 50 high-school states; the model parameters are team strengths theta, home advantage alpha (or alpha_0, alpha_1, alpha_t), and scale sigma, with inverse-gamma(1,1) hyperpriors; the trend unit is points per year; and significance is tallied by 95 percent credible intervals excluding zero (7 of 55) and confirmed by LOO-ELPD. This is a one-page conference abstract, so the full posterior computations and figures live in the authors' broader work, but the framework, priors, models, and headline results are printed and extracted faithfully here. The invariant for GSE is to carry the strength-adjusted Bayesian home-advantage estimator and the constant-versus-trend adjudication, while recording that the raw observed margin is a confounded, upward-biased proxy that must never be used as the venue effect. The practical consequence for GSE is that any home-field adjustment must be estimated jointly with team strength, never read off the raw home-away margin, and that a temporal trend in home advantage should be adopted only when the credible interval and the LOO-ELPD comparison both support it over the constant model.",
+      "retrocausal_genealogy": "The abstract originates in home-advantage research limited to single leagues and short windows, which blocks extrapolation. Bliss/Lopez (NFL) and Benz (Harvard Biostatistics) pool ~2004-2022 NFL, NCAA (4 divisions), and high-school (50 states) data to ask whether/how much HA changed over time. Lineage: Bayesian paired-comparison ratings fit in STAN, model evaluation via Vehtari-Gelman-Gabry 2017 LOO-ELPD. The contribution is a strength-adjusted, multi-level, temporal HA framework.",
+      "theory_of_mind": "The model separates latent team strength theta from the venue effect alpha, reasoning that Yijt = theta_i - theta_j + alpha + noise identifies HA only after strength is controlled. The key insight is endogenous hosting: NFL better teams host playoffs; college/HS better teams host more home games (facilities, budgets) and win bigger, so raw margins confound strength with venue. Hierarchical weakly-informative priors (theta~N(0,s^2), s~InvGamma(1,1)) partially pool strengths.",
+      "cross_layer_veto": "The naive observed HOME-AWAY margin is vetoed: it far exceeds model HA in most leagues. Constant HA preferred in the majority of 55 leagues; alpha_1 95% credible intervals exclude 0 in only 7/55; LOO-ELPD confirms. FBS has the largest decline (~0.11 pts/yr 2004-2022); NCAA/NFL declined more than heterogeneous high school. Explicit veto: unadjusted team-strength confounding severely biases HA AND overstates temporal trends (e.g. Tennessee). Three trend models: constant alpha, linear alpha_0+alpha_1*t, free alpha_t."
+    }
+  ],
+  "universal_lens": "Home advantage in American football is estimated by strength-adjusted Bayesian paired-comparison models across NFL, NCAA, and high school over ~two decades, with constant/linear/time-varying trend variants, showing HA is mostly stable (linear trend significant in only 7/55 leagues) and that raw observed margins severely overstate HA by confounding team strength with venue.",
+  "gsi_mapping": "GSI treats Yijt~N(theta_i-theta_j+alpha,sigma^2) with hierarchical priors theta~N(0,s_theta^2), s_theta~InvGamma(1,1), alpha~N(0,s_alpha^2), sigma~InvGamma(1,1), fit in STAN; three trends (constant alpha, linear alpha_0+alpha_1*t, free alpha_t); alpha_1 in points/year; model selection by 95% credible intervals (7/55 exclude 0) and LOO-ELPD; FBS decline ~0.11 pts/yr.",
+  "gse_mapping": "GSE lifts the strength-adjusted Bayesian home-advantage estimator, the additive strength-gap-plus-venue margin decomposition, hierarchical partial-pooling priors, the constant-vs-trend stability ladder, and LOO-ELPD adjudication; the raw observed HOME-AWAY margin is a recorded confounded proxy never used as the venue effect; all outputs are posterior HA estimates, never sportsbook lines."
+}
