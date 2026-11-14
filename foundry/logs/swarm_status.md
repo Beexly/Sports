@@ -480,3 +480,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 21:08:45 | COMPLETE | 6bbdbe4a5b49d89d | primitives=20 think_words=1061
 - 2026-11-13 21:09:57 | CLAIMED | 210fff49ce7fc373 | worker=hermes-inline file=2011 Using Cumulative Win Probabilities to Predict NCAA Performance - Bashuk.pdf
 - 2026-11-13 21:14:32 | COMPLETE | 210fff49ce7fc373 | primitives=16 think_words=1045
+- 2026-11-13 21:19:12 | CLAIMED | 62e572bc9a9bde38 | worker=hermes-inline file=2011 Optimizing NBA Free Agency Choices.pdf
+- 2026-11-13 21:31:19 | COMPLETE | 62e572bc9a9bde38 | primitives=19 think_words=881
