@@ -532,3 +532,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 00:30:54 | COMPLETE | 353dff3a66c4be81 | primitives=23 think_words=874
 - 2026-11-14 00:32:11 | CLAIMED | 0bd41b9e64e0dc57 | worker=hermes-inline shard03 file=2017 Possession Sketches Mapping NBA Strategies.pdf
 - 2026-11-14 00:38:35 | COMPLETE | 0bd41b9e64e0dc57 | primitives=25 think_words=858
+- 2026-11-14 00:39:32 | CLAIMED | 2cd9c8ea04dcc2a4 | worker=hermes-inline shard03 file=2020 Forecasting college football game outcomes using modern modeling techniques - Charles South and Edward Egros.pdf
+- 2026-11-14 00:44:31 | COMPLETE | 2cd9c8ea04dcc2a4 | primitives=27 think_words=887
