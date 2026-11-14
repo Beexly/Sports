@@ -96,6 +96,6 @@ export function jointThreeLegExceedance(
     joint = upperBound * 0.92;
   }
   const frechetLower = Math.max(0, a + b + c - 2);
-  return Math.min(upperBound, Math.max(frechetLower, joint));
+  return Math.min(0.28, upperBound, Math.max(frechetLower, joint));
 }
 
