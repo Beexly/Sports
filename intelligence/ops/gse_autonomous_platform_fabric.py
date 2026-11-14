@@ -155,6 +155,23 @@ def inspect_foundry_queue_ro(db_path: Path = DEFAULT_FOUNDRY_DB) -> Dict[str, An
         conn.close()
 
 
+def _extract_corpus_snapshot_from_payload(payload: Mapping[str, Any]) -> Dict[str, Any]:
+    """Extract Wave 15 corpus snapshot metrics from an already-parsed receipt dict."""
+    wired_tier_a = int(payload.get("wiredTierACount", 0) or 0)
+    rwc = payload.get("router_wiring_counts") or {}
+    oof = payload.get("chronological_oof_baseline") or {}
+    sovereign_books_loaded = int(rwc.get("sovereign_books_loaded", wired_tier_a) or 0)
+    oof_n_rows = int(oof.get("n_rows", 0) or 0)
+    return {
+        "wired_tier_a": wired_tier_a,
+        "sovereign_books_loaded": sovereign_books_loaded,
+        "oof_n_rows": oof_n_rows,
+        "internal_workflow_corpus_ready": bool(
+            sovereign_books_loaded > 0 and oof_n_rows > 0
+        ),
+    }
+
+
 def evaluate_corpus_hold_gate(
     queue_stats: Mapping[str, Any],
     receipt_path: Path = DEFAULT_CORPUS_RECEIPT,
@@ -164,14 +181,16 @@ def evaluate_corpus_hold_gate(
     insufficient_ocr = int(queue_stats.get("insufficient_ocr", 0))
     calibration_verified = False
     receipt_loaded = False
+    payload: Dict[str, Any] = {}
     if receipt_path.exists():
         try:
-            payload = json.loads(receipt_path.read_text(encoding="utf-8"))
-            calibration_verified = bool(
-                payload.get("calibrationVerified", payload.get("all_invariants_satisfied", False))
-            )
-            receipt_loaded = True
-        except Exception:
+            loaded_obj = json.loads(receipt_path.read_text(encoding="utf-8"))
+            if isinstance(loaded_obj, dict):
+                payload = loaded_obj
+                # Never infer calibrationVerified from all_invariants_satisfied; require explicit True.
+                calibration_verified = payload.get("calibrationVerified") is True
+                receipt_loaded = True
+        except (OSError, ValueError):
             calibration_verified = False
 
     slate_allowed = (
@@ -180,6 +199,16 @@ def evaluate_corpus_hold_gate(
         and insufficient_ocr == 0
         and calibration_verified
     )
+    snapshot = (
+        _extract_corpus_snapshot_from_payload(payload)
+        if receipt_loaded
+        else {
+            "wired_tier_a": 0,
+            "sovereign_books_loaded": 0,
+            "oof_n_rows": 0,
+            "internal_workflow_corpus_ready": False,
+        }
+    )
     return {
         "status": (
             "READY_FOR_WEEK10_PREP"
@@ -187,7 +216,12 @@ def evaluate_corpus_hold_gate(
             else "WEEK10_HELD_FOR_CORPUS_COMPLETION"
         ),
         "slate_prep_allowed": bool(slate_allowed),
+        "public_publish_allowed": False,
         "pending_tier_a": pending_a,
+        "wired_tier_a": snapshot["wired_tier_a"],
+        "sovereign_books_loaded": snapshot["sovereign_books_loaded"],
+        "oof_n_rows": snapshot["oof_n_rows"],
+        "internal_workflow_corpus_ready": snapshot["internal_workflow_corpus_ready"],
         "insufficient_ocr": insufficient_ocr,
         "calibration_verified": calibration_verified,
         "receipt_loaded": receipt_loaded,
@@ -312,14 +346,24 @@ def build_execution_plan(
                 }
             )
         elif s == "calibration":
+            internal_corpus_ready = bool(
+                hold_gate.get("receipt_loaded")
+                and hold_gate.get("internal_workflow_corpus_ready")
+            )
+            if hold_gate.get("calibration_verified"):
+                cal_status = "READY"
+            elif internal_corpus_ready:
+                cal_status = "ACTIVE_INCREMENTAL_OOF_CALIBRATION"
+            else:
+                cal_status = "HELD_FOR_WIRE_FIRST"
             jobs.append(
                 {
                     "suite": s,
                     "owning_seats": ["audit", "prism", "ascend"],
                     "action": "empirical_bayes_oof_corpus_priors_check",
-                    "status": "HELD_FOR_WIRE_FIRST"
-                    if not hold_gate.get("calibration_verified")
-                    else "READY",
+                    "status": cal_status,
+                    "public_publish_allowed": False,
+                    "live_calibration_flag_enabled": False,
                     "cost_usd": 0.0,
                 }
             )

@@ -43,49 +43,81 @@ export interface CorpusFamilyBaselineEvidence {
 }
 
 /**
- * Snapshot compiled from verified GCP Shard B (6,310 docs / 27,874 equations) +
- * Drive Masters (940,102 equations + 102,082 situational records) + Sovereign base.
+ * Snapshot compiled from Wave 15 verified corpus:
+ * Sovereign (1,064 books / 14,667 primitives / 3,405 traces) +
+ * GCP Shard B (7,846 markdown files / 8,143 routed docs / 26,723 equations) +
+ * Drive Masters (1,042,184 indexed records) + Motif Sweep (9,944 X/IG records).
+ * Matches `empirical_bayes_six_family_priors` in `07_corpus_wired_calibration_and_hold_gate_receipt.json`.
  */
 export const FOUNDRY_CORPUS_BASELINE_SNAPSHOT: Readonly<
   Record<CorpusSituationalFamily, CorpusFamilyBaselineEvidence>
 > = {
   pressure: {
-    sovereignPrimitives: 30,
-    shardBDocs: 52,
-    driveMasterRecords: 2905,
-    priorWeightLogOdds: 0.052,
+    sovereignPrimitives: 560,
+    shardBDocs: 297,
+    driveMasterRecords: 3007,
+    priorWeightLogOdds: 0.137048,
   },
   weather: {
-    sovereignPrimitives: 136,
-    shardBDocs: 4574,
-    driveMasterRecords: 12309,
-    priorWeightLogOdds: 0.236,
+    sovereignPrimitives: 803,
+    shardBDocs: 5197,
+    driveMasterRecords: 1704,
+    priorWeightLogOdds: 0.178466,
   },
   restFatigue: {
-    sovereignPrimitives: 98,
-    shardBDocs: 338,
-    driveMasterRecords: 3490,
-    priorWeightLogOdds: 0.129,
+    sovereignPrimitives: 1564,
+    shardBDocs: 644,
+    driveMasterRecords: 2325,
+    priorWeightLogOdds: 0.16654,
   },
   coveragePersonnel: {
-    sovereignPrimitives: 85,
-    shardBDocs: 431,
-    driveMasterRecords: 14379,
-    priorWeightLogOdds: 0.135,
+    sovereignPrimitives: 1013,
+    shardBDocs: 485,
+    driveMasterRecords: 3210,
+    priorWeightLogOdds: 0.15429,
   },
   qbSkillScript: {
-    sovereignPrimitives: 194,
-    shardBDocs: 173,
-    driveMasterRecords: 10588,
-    priorWeightLogOdds: 0.122,
+    sovereignPrimitives: 9231,
+    shardBDocs: 143,
+    driveMasterRecords: 7176,
+    priorWeightLogOdds: 0.219027,
   },
   marketMicrostructure: {
-    sovereignPrimitives: 187,
-    shardBDocs: 742,
-    driveMasterRecords: 896431,
-    priorWeightLogOdds: 0.163,
+    sovereignPrimitives: 1496,
+    shardBDocs: 1080,
+    driveMasterRecords: 1024762,
+    priorWeightLogOdds: 0.246823,
   },
 } as const;
+
+export const CORPUS_SNAPSHOT_METADATA = {
+  sovereignBooksLoaded: 1064,
+  sovereignPrimitivesRouted: 14667,
+  sovereignTracesRouted: 3405,
+  shardBDocsRouted: 8143,
+  shardBMarkdownFiles: 7846,
+  driveMasterRecordsIndexed: 1042184,
+  motifSweepTotalRecords: 9944,
+  oofNRows: 4823,
+  oofBrierRaw: 0.261209,
+  oofBrierCalibrated: 0.247983,
+  oofEce: 0.022581,
+  calibrationVerified: false,
+} as const;
+
+/**
+ * 6x6 symmetric positive-definite correlation matrix regularized via
+ * 0.9 * DEFAULT_SIX_FAMILY_CORRELATION_MATRIX + 0.1 * I to reflect effective
+ * rank expansion across Wave 15 Sovereign + Shard B + Drive + Motif corpora.
+ */
+export const CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX: readonly (readonly number[])[] = [
+  [1.0, 0.162, 0.108, 0.198, 0.18, 0.045],
+  [0.162, 1.0, 0.09, 0.072, 0.054, 0.018],
+  [0.108, 0.09, 1.0, 0.135, 0.108, 0.027],
+  [0.198, 0.072, 0.135, 1.0, 0.225, 0.036],
+  [0.18, 0.054, 0.108, 0.225, 1.0, 0.054],
+  [0.045, 0.018, 0.027, 0.036, 0.054, 1.0],
+];
 
 export interface FoundryCorpusSituationalInput {
   readonly pressureSignalZ?: number;

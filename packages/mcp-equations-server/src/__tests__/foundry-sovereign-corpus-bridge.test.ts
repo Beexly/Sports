@@ -9,7 +9,9 @@ import {
   evaluateFoundrySovereignCorpusPrior,
   evaluateSovereignStageCDCoupling,
   FOUNDRY_SITUATIONAL_FAMILIES,
+  loadCalibratedCorpusWeightsReceipt,
   loadFoundrySovereignCorpusManifest,
+  loadMotifSweepSummary,
   loadShardBCatalogSummary,
   shrinkPositivePartJamesStein,
 } from "../foundry-sovereign-corpus-bridge.js";
@@ -87,8 +89,8 @@ describe("foundry-sovereign-corpus-bridge", () => {
   it("reads Shard B compiled catalog summary cleanly without failing", () => {
     const catalog = loadShardBCatalogSummary();
     expect(catalog).not.toBeNull();
-    expect(catalog?.total_markdown_files).toBeGreaterThanOrEqual(6310);
-    expect(catalog?.total_extracted_equations).toBeGreaterThanOrEqual(27000);
+    expect(catalog?.total_markdown_files).toBeGreaterThanOrEqual(7846);
+    expect(catalog?.total_extracted_equations).toBeGreaterThanOrEqual(26700);
   });
 
   it("composes Sovereign priors and derived kernels through Stage C spectral orthogonalization and Stage D Jacobian/James-Stein coupling", () => {
@@ -185,5 +187,48 @@ describe("foundry-sovereign-corpus-bridge", () => {
     expect(extremeCoupled.allFiniteNonNan).toBe(true);
     expect(extremeCoupled.stageDResult.clampedTotalLogOddsDelta).toBe(MAX_ABS_DELTA_LOG_ODDS);
     expect(extremeCoupled.stageDResult.clamped).toBe(true);
+  });
+
+  it("loads Wave 15 OOF empirical-Bayes calibration receipt and Motif 9,944 sweep governance summary", () => {
+    const manifest = loadFoundrySovereignCorpusManifest();
+    expect(manifest.counts.sovereign_books_loaded).toBeGreaterThanOrEqual(1064);
+    expect(manifest.counts.sovereign_primitives_routed).toBeGreaterThanOrEqual(14667);
+    expect(manifest.counts.gcp_shard_b_docs_routed).toBeGreaterThanOrEqual(8143);
+    expect(manifest.counts.rules_rlvr_lessons_routed).toBeGreaterThanOrEqual(200);
+    expect(manifest.counts.active_mask_bits_set).toBeGreaterThanOrEqual(276);
+
+    const calReceipt = loadCalibratedCorpusWeightsReceipt();
+    expect(calReceipt).not.toBeNull();
+    expect(calReceipt!.chronological_oof_baseline.n_rows).toBeGreaterThanOrEqual(4823);
+    expect(calReceipt!.chronological_oof_baseline.brier_oof).toBeLessThan(
+      calReceipt!.chronological_oof_baseline.brier_raw,
+    );
+    expect(calReceipt!.chronological_oof_baseline.ece_oof).toBeLessThan(0.03);
+    expect(calReceipt!.calibrationVerified).toBe(false);
+    for (const fam of FOUNDRY_SITUATIONAL_FAMILIES) {
+      const famPrior = calReceipt!.empirical_bayes_six_family_priors[fam];
+      expect(famPrior.all_finite_non_nan).toBe(true);
+      expect(Math.abs(famPrior.bounded_eb_log_odds_prior)).toBeLessThanOrEqual(
+        MAX_ABS_DELTA_LOG_ODDS,
+      );
+    }
+
+    const sweepSummary = loadMotifSweepSummary();
+    expect(sweepSummary).not.toBeNull();
+    expect(sweepSummary!.totalRecords).toBeGreaterThanOrEqual(9944);
+    expect(sweepSummary!.igForYouCount).toBe(2720);
+    expect(sweepSummary!.xForYouCount).toBe(5609);
+    expect(sweepSummary!.xAnalyticsCount).toBe(1615);
+    expect(sweepSummary!.excludedKillOrWithdrawnCount).toBe(12);
+    expect(sweepSummary!.adoptCount).toBe(36);
+    expect(sweepSummary!.watchOrSkippedQuarantinedCount).toBeGreaterThanOrEqual(0);
+    expect(sweepSummary!.allFeedsLoaded).toBe(true);
+    expect(sweepSummary!.learnOnlyOrContextOnlyCount).toBeGreaterThan(0);
+    expect(sweepSummary!.cached).toBe(true);
+    // Repeated calls hit process-level caches for both sweep summary and 10.4 MB Shard-B summary
+    expect(loadMotifSweepSummary()).toBe(sweepSummary);
+    const shardSummary = loadShardBCatalogSummary();
+    expect(shardSummary).not.toBeNull();
+    expect(loadShardBCatalogSummary()).toBe(shardSummary);
   });
 });

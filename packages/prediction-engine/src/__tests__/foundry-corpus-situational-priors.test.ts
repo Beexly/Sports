@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   computePositivePartJamesSteinShrinkage,
+  CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX,
   CORPUS_SITUATIONAL_FAMILIES,
+  CORPUS_SNAPSHOT_METADATA,
   evaluateFoundryCorpusSituationalPriors,
   evaluateRulebookAndPsychologyOverlay,
   evaluateSplitFieldCoverageOverlay,
@@ -14,6 +16,10 @@ import {
   SPLIT_FIELD_QUARTERS_COVERAGE_OPERATORS,
   SPORTS_PSYCHOLOGY_PRESSURE_OPERATORS,
 } from "../nfl/foundry-corpus-situational-priors.js";
+import {
+  choleskyDecompose,
+  DEFAULT_SIX_FAMILY_CORRELATION_MATRIX,
+} from "../nfl/master-situational-reasoning-aggregator.js";
 import {
   evaluateZeroOrphanExpectedMetricsOverlay,
   REGISTERED_NFL_AND_EXPECTED_METRIC_MODULES,
@@ -242,5 +248,26 @@ describe("foundry-corpus-situational-priors", () => {
     );
     expect(anomaly.disposition).toBe("QUARANTINED_SOURCE_ANOMALY");
     expect(anomaly.eligibleForStage0).toBe(false);
+  });
+
+  it("exposes Wave 15 empirical-Bayes snapshot counts and SPD corpus-regularized 6-family correlation matrix", () => {
+    expect(FOUNDRY_CORPUS_BASELINE_SNAPSHOT.pressure.sovereignPrimitives).toBeGreaterThanOrEqual(560);
+    expect(FOUNDRY_CORPUS_BASELINE_SNAPSHOT.weather.shardBDocs).toBeGreaterThanOrEqual(5197);
+    expect(FOUNDRY_CORPUS_BASELINE_SNAPSHOT.qbSkillScript.sovereignPrimitives).toBeGreaterThanOrEqual(9231);
+    expect(FOUNDRY_CORPUS_BASELINE_SNAPSHOT.marketMicrostructure.driveMasterRecords).toBeGreaterThanOrEqual(1024762);
+
+    expect(CORPUS_SNAPSHOT_METADATA.sovereignBooksLoaded).toBeGreaterThanOrEqual(1064);
+    expect(CORPUS_SNAPSHOT_METADATA.oofNRows).toBeGreaterThanOrEqual(4823);
+    expect(CORPUS_SNAPSHOT_METADATA.oofBrierCalibrated).toBeLessThan(
+      CORPUS_SNAPSHOT_METADATA.oofBrierRaw,
+    );
+    expect(CORPUS_SNAPSHOT_METADATA.calibrationVerified).toBe(false);
+
+    expect(CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX).toHaveLength(6);
+    const L = choleskyDecompose(CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX);
+    expect(L).toHaveLength(6);
+    expect(CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX[0]![1]!).not.toBe(
+      DEFAULT_SIX_FAMILY_CORRELATION_MATRIX[0]![1]!,
+    );
   });
 });

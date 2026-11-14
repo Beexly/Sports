@@ -36,6 +36,102 @@ from week8_forensic_kernels import (  # noqa: E402
 
 QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947
 LEAGUE_TARGET_HHI = 0.135
+DEFAULT_CORPUS_RECEIPT_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "docs"
+    / "engine"
+    / "research"
+    / "2026-11-13"
+    / "corpus_compilation"
+    / "07_corpus_wired_calibration_and_hold_gate_receipt.json"
+)
+
+
+def load_live_corpus_situational_conditioner(
+    receipt_path: Path | None = None,
+) -> dict:
+    """Load Wave 15 EB six-family priors from the calibration hold receipt."""
+    target = Path(receipt_path) if receipt_path is not None else DEFAULT_CORPUS_RECEIPT_PATH
+    if not target.exists():
+        return {
+            "loaded": False,
+            "sovereign_books_loaded": 0,
+            "sovereign_primitives_routed": 0,
+            "gcp_shard_b_docs_routed": 0,
+            "drive_master_total_records_indexed": 0,
+            "oof_n_rows": 0,
+            "six_family_priors": {},
+        }
+    payload = json.loads(target.read_text(encoding="utf-8"))
+    rwc = payload.get("router_wiring_counts") or {}
+    oof = payload.get("chronological_oof_baseline") or {}
+    priors = (
+        payload.get("empirical_bayes_six_family_priors")
+        or payload.get("six_family_empirical_bayes_priors")
+        or {}
+    )
+    return {
+        "loaded": True,
+        "sovereign_books_loaded": int(rwc.get("sovereign_books_loaded", 0) or 0),
+        "sovereign_primitives_routed": int(rwc.get("sovereign_primitives_routed", 0) or 0),
+        "gcp_shard_b_docs_routed": int(rwc.get("gcp_shard_b_docs_routed", 0) or 0),
+        "drive_master_total_records_indexed": int(
+            rwc.get("drive_master_total_records_indexed", 0) or 0
+        ),
+        "oof_n_rows": int(oof.get("n_rows", 0) or 0),
+        "six_family_priors": dict(priors),
+    }
+
+
+def _extract_family_prior_scalar(entry: object) -> float | None:
+    if isinstance(entry, dict):
+        for key in ("bounded_eb_log_odds_prior", "posterior_weight_mean", "weight"):
+            val = entry.get(key)
+            if not isinstance(val, bool) and isinstance(val, (int, float)) and math.isfinite(val):
+                return float(val)
+        return None
+    if not isinstance(entry, bool) and isinstance(entry, (int, float)) and math.isfinite(entry):
+        return float(entry)
+    return None
+
+
+def _apply_corpus_conditioner_to_luts(
+    net_epa_lut: np.ndarray,
+    pace_lut: np.ndarray,
+    sack_prob_lut: np.ndarray,
+    corpus_conditioner: dict | None,
+) -> bool:
+    """Apply bounded Wave 15 EB family regularization before the PBP loop; no RNG draws."""
+    if not isinstance(corpus_conditioner, dict) or corpus_conditioner.get("loaded") is False:
+        return False
+    priors = (
+        corpus_conditioner.get("six_family_priors")
+        or corpus_conditioner.get("empirical_bayes_six_family_priors")
+    )
+    if not isinstance(priors, dict) or len(priors) == 0:
+        return False
+    family_weights = [
+        max(0.0, min(0.35, abs(val)))
+        for val in (_extract_family_prior_scalar(entry) for entry in priors.values())
+        if val is not None
+    ]
+    if len(family_weights) == 0:
+        return False
+    mean_weight = sum(family_weights) / len(family_weights)
+    eb_shrink = max(0.0, min(0.04, mean_weight * 0.25))
+    mean_epa = float(np.mean(net_epa_lut))
+    net_epa_lut[:] = net_epa_lut * (1.0 - eb_shrink) + mean_epa * eb_shrink
+    pressure_raw = _extract_family_prior_scalar(priors.get("pressure"))
+    if pressure_raw is not None:
+        pressure_rel = abs(pressure_raw) - mean_weight
+        sack_delta = max(-0.003, min(0.003, pressure_rel * 0.04))
+        sack_prob_lut[:] = np.clip(sack_prob_lut + sack_delta, 0.02, 0.16)
+    weather_raw = _extract_family_prior_scalar(priors.get("weather"))
+    if weather_raw is not None:
+        weather_rel = abs(weather_raw) - mean_weight
+        pace_delta = max(-0.15, min(0.15, weather_rel * 1.0))
+        pace_lut[:] = np.clip(pace_lut + pace_delta, 22.0, 34.0)
+    return True
 
 DEFAULT_SEALED_BASELINE = {
     "version": "v1.0",
@@ -1110,6 +1206,7 @@ def simulate_matchup_pbp(
     jev_state_tensor: dict | None = None,
     posted_home_spread: float | None = None,
     posted_total: float | None = None,
+    corpus_conditioner: dict | None = None,
 ) -> dict:
     assert sealed_state["tau"] == 0.42 and canonical_hash(sealed_state) == expected_hash
     rng = np.random.default_rng(seed)
@@ -1408,6 +1505,9 @@ def simulate_matchup_pbp(
     int_mult_lut = np.array([away_int_mult, home_int_mult], dtype=np.float64)
     sack_prob_lut = np.array([away_sack_prob, home_sack_prob], dtype=np.float64)
     scramble_p_lut = np.array([0.145, 0.115], dtype=np.float64)
+    corpus_conditioner_applied = _apply_corpus_conditioner_to_luts(
+        net_epa_lut, pace_lut, sack_prob_lut, corpus_conditioner
+    )
 
     spatial_rush_delta_lut = np.zeros(2, dtype=np.float64)
     spatial_pass_mu_delta_lut = np.zeros(2, dtype=np.float64)
@@ -1927,6 +2027,7 @@ def simulate_matchup_pbp(
     out["fourth_down_wp_gap_mean"] = fd["fourth_down_wp_gap_mean"]
     out["fourth_down_statistically_distinct_rate"] = fd["fourth_down_statistically_distinct_rate"]
     out["fourth_down_reason"] = fd["reason"]
+    out["corpus_situational_conditioner_applied"] = bool(corpus_conditioner_applied)
     return out
 
 
@@ -1961,7 +2062,17 @@ def main():
         action="store_true",
         help="WP-7 T-00: validate every remaining Week 10 game is simulation-ready (no sims, no JEV calls)",
     )
+    ap.add_argument(
+        "--with-corpus-priors",
+        action="store_true",
+        help="Apply Wave 15 EB six-family corpus priors to the PBP matchup LUTs before snap execution",
+    )
     args = ap.parse_args()
+    cli_corpus_conditioner = (
+        load_live_corpus_situational_conditioner()
+        if getattr(args, "with_corpus_priors", False)
+        else None
+    )
 
     if args.dry_run_pre_sim:
         gate = Path(__file__).resolve().parent / "gates" / "t00_dry_run_pre_sim.py"
@@ -2014,6 +2125,7 @@ def main():
             digest,
             n_sims=args.sims,
             seed=700,
+            corpus_conditioner=cli_corpus_conditioner,
         )
         res["from_context_packet"] = args.from_context_packet
         res["from_reasoning_trace"] = args.from_reasoning_trace
@@ -2073,7 +2185,17 @@ def main():
             ("BUF", "BAL", [],                  [],                  "OVER (+40)",+0.63, "OVER +40",         "BOARD_SHARPEST_OVER",  7),
         ]
     for idx, (aw, hm, ai, hi, play, edge, sharp, flag, rank) in enumerate(slate):
-        r = simulate_matchup_pbp(aw, hm, ai, hi, sealed_obj, digest, n_sims=args.sims, seed=700 + idx)
+        r = simulate_matchup_pbp(
+            aw,
+            hm,
+            ai,
+            hi,
+            sealed_obj,
+            digest,
+            n_sims=args.sims,
+            seed=700 + idx,
+            corpus_conditioner=cli_corpus_conditioner,
+        )
         print(f"#{rank} {r['matchup']:9s} | {play:10s} | MedTot: {r['median_total']:5.2f} | MedSprd(H): {r['median_spread_home']:+6.2f} | Pace: {r['median_pace_sec']:5.2f}s | Edge: {edge:+5.2f} | Sharp: {sharp:16s} | {flag}")
 
 

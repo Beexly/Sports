@@ -48,6 +48,16 @@ def test_inspect_foundry_queue_ro_and_hold_gate(tmp_path: Path) -> None:
     assert gate_ready["slate_prep_allowed"] is True
     assert gate_ready["status"] == "READY_FOR_WEEK10_PREP"
 
+    # Receipt with all_invariants_satisfied=True but calibrationVerified=False must stay fail-closed
+    receipt_partial = tmp_path / "partial_receipt.json"
+    receipt_partial.write_text(
+        json.dumps({"all_invariants_satisfied": True, "calibrationVerified": False}),
+        encoding="utf-8",
+    )
+    gate_partial = evaluate_corpus_hold_gate(stats_done, receipt_partial)
+    assert gate_partial["calibration_verified"] is False
+    assert gate_partial["slate_prep_allowed"] is False
+
 
 def test_build_execution_plan_covers_all_councils_and_respects_zero_cost() -> None:
     plan = build_execution_plan(
@@ -56,7 +66,13 @@ def test_build_execution_plan_covers_all_councils_and_respects_zero_cost() -> No
         max_cost_usd=0.50,
         dry_run=True,
         queue_stats={"exists": True, "pending_tier_a": 10},
-        hold_gate={"slate_prep_allowed": False, "status": "WEEK10_HELD_FOR_CORPUS_COMPLETION"},
+        hold_gate={
+            "slate_prep_allowed": False,
+            "status": "WEEK10_HELD_FOR_CORPUS_COMPLETION",
+            "receipt_loaded": True,
+            "internal_workflow_corpus_ready": True,
+            "calibration_verified": False,
+        },
         jules_audit={"live_api_queried": False, "sources_count": 28, "total_sessions": 167, "state_counts": {}},
         providers={"default_lane": "hybrid_auto", "free_endpoints_ready": ["MODELSCOPE_API_KEY"]},
         week_info=resolve_auto_nfl_week(),
@@ -68,3 +84,22 @@ def test_build_execution_plan_covers_all_councils_and_respects_zero_cost() -> No
     assert plan["council_coverage"]["governed_workflows"] == 14
     assert plan["total_estimated_cost_usd"] == 0.0
     assert len(plan["jobs"]) == 6
+
+    cal_job = [j for j in plan["jobs"] if j["suite"] == "calibration"][0]
+    assert cal_job["status"] == "ACTIVE_INCREMENTAL_OOF_CALIBRATION"
+    assert cal_job["public_publish_allowed"] is False
+    assert cal_job["live_calibration_flag_enabled"] is False
+
+    # Zero wired corpus / missing receipt still falls back to HELD_FOR_WIRE_FIRST
+    unwired_plan = build_execution_plan(
+        model_lane="free",
+        suite="calibration",
+        max_cost_usd=0.0,
+        dry_run=True,
+        queue_stats={"exists": False, "pending_tier_a": -1},
+        hold_gate={"slate_prep_allowed": False, "calibration_verified": False, "receipt_loaded": False},
+        jules_audit={},
+        providers={"default_lane": "hybrid_auto", "free_endpoints_ready": []},
+        week_info=resolve_auto_nfl_week(),
+    )
+    assert unwired_plan["jobs"][0]["status"] == "HELD_FOR_WIRE_FIRST"

@@ -18,6 +18,12 @@ describe("Master Situational Pre-Projection & Simulation Conditioned Overlay E2E
       },
       marketAnchorProb: 0.56,
       independentEdgeDecision: "SPEAK",
+      foundryCorpusModulation: {
+        pressureSignalZ: 1.4,
+        coverageMismatchZ: 1.2,
+        qbScriptStabilityZ: 0.9,
+        observedSampleSizeN: 120,
+      },
     });
     const elapsedMs = performance.now() - t0;
 
@@ -50,6 +56,9 @@ describe("Master Situational Pre-Projection & Simulation Conditioned Overlay E2E
       "15J:evaluateUniversalNfl360MetricAndSituationalDossier",
     );
     expect(streamNames).toContain("15K:evaluateMegaSweep20261106Pipeline");
+    expect(streamNames).toContain("15L:evaluateFoundryCorpusSituationalPriors");
+    expect(res.foundryCorpusPriors?.allFiniteNonNan).toBe(true);
+    expect(res.orthogonalization.correlationMatrixSource).toBe("caller");
   });
 
   it("computes computePreProjectionAndSimulationConditionedOverlay with trajectory conditioners for 10,000 worlds x 175 snaps in < 100ms", () => {
@@ -91,6 +100,13 @@ describe("Master Situational Pre-Projection & Simulation Conditioned Overlay E2E
       conditioned.simulationTrajectoryConditioners.gsiReturnToPlaySnapCap,
     ).toBeLessThan(1.0);
     expect(conditioned.masterOverlayResult.publishAllowed).toBe(true);
+    expect(conditioned.masterOverlayResult.foundryCorpusPriors?.allFiniteNonNan).toBe(true);
+    expect(
+      conditioned.masterOverlayResult.streamCalls.find(
+        (c) => c.stream === "15L:evaluateFoundryCorpusSituationalPriors",
+      )?.called,
+    ).toBe(true);
+    expect(conditioned.masterOverlayResult.orthogonalization.correlationMatrixSource).toBe("caller");
   });
 
   it("enforces PASS discipline when independentEdgeDecision is PASS", () => {

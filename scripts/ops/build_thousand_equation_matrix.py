@@ -1080,6 +1080,209 @@ def build_thousand_equation_matrix() -> Dict[str, Any]:
                     "source": item.get("source_path") or item.get("source") or "MIND_CORPUS_3000.jsonl",
                 })
 
+    # -------------------------------------------------------------------------
+    # Shared helper + 6-family mapping for Sections 8, 9, 10
+    # -------------------------------------------------------------------------
+    FAMILY_ROUTER_MAP = {
+        "pressure": ("C", 0, 46, "trench_pressure"),
+        "weather": ("A", 46, 46, "weather_aerodynamics"),
+        "restFatigue": ("B", 92, 46, "biomechanical_rest_fatigue"),
+        "coveragePersonnel": ("D", 138, 46, "coverage_personnel"),
+        "qbSkillScript": ("E", 184, 46, "qb_skill_script"),
+        "marketMicrostructure": ("F", 230, 46, "market_microstructure"),
+    }
+    family_cursors: Dict[str, int] = {k: 0 for k in FAMILY_ROUTER_MAP}
+
+    def _next_family_meta(fam: str) -> tuple[str, int, str]:
+        cat, base_lo, span, cluster_name = FAMILY_ROUTER_MAP.get(
+            fam, ("F", 230, 46, "market_microstructure")
+        )
+        key = fam if fam in family_cursors else "marketMicrostructure"
+        c = family_cursors[key]
+        family_cursors[key] = c + 1
+        return cat, base_lo + (c % span), cluster_name
+
+    try:
+        import sys as _sys
+        if str(ROOT) not in _sys.path:
+            _sys.path.insert(0, str(ROOT))
+        from intelligence.foundry_bridge.shard_b_and_drive_master_compiler import (
+            classify_situational_family as _classify_family,
+        )
+    except Exception:
+        def _classify_family(text: str) -> str:  # type: ignore[misc]
+            return "marketMicrostructure"
+
+    def _safe_latex_text(raw: Any, limit: int = 160) -> str:
+        s = re.sub(r"\s+", " ", str(raw or "").strip())
+        return s.replace('"', "'")[:limit]
+
+    seen_ids = {e["id"] for e in equations}
+
+    # -------------------------------------------------------------------------
+    # 8. SOVEREIGN FOUNDRY PRIMITIVES (EQ-SOV-*)
+    # -------------------------------------------------------------------------
+    primitives_dir = ROOT / "foundry" / "artifacts" / "primitives"
+    if primitives_dir.exists():
+        sov_candidates: List[Dict[str, Any]] = []
+        for p_file in sorted(primitives_dir.glob("*.json")):
+            try:
+                doc = json.loads(p_file.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            status_val = str(doc.get("source_status") or "COMPLETE").upper()
+            if status_val in {"REFUSED", "FAIL_CLOSED", "QUARANTINED", "INSUFFICIENT_SOURCE_ACCESS"}:
+                continue
+            book_id = str(doc.get("book_id") or p_file.stem)[:12]
+            book_title = str(doc.get("title") or p_file.stem)[:70]
+            prims = doc.get("primitives") or []
+            if not isinstance(prims, list) or not prims:
+                continue
+            # Prefer primitives with explicit LaTeX equations; ensure every complete book contributes <= 3 items
+            with_latex = [pr for pr in prims if isinstance(pr, dict) and str(pr.get("latex") or "").strip()]
+            without_latex = [pr for pr in prims if isinstance(pr, dict) and not str(pr.get("latex") or "").strip()]
+            chosen = (with_latex[:3] + without_latex[:max(0, 2 - len(with_latex))])[:3]
+            for idx_p, pr in enumerate(chosen):
+                name = _safe_latex_text(pr.get("name") or f"{book_title} op {idx_p + 1}", 120)
+                quote = _safe_latex_text(pr.get("verbatim_quote") or "", 140)
+                latex_expr = _safe_latex_text(pr.get("latex") or "", 180)
+                fam = _classify_family(f"{book_title} {name} {pr.get('domain', '')} {quote[:100]}")
+                cat, fam_idx, cluster_name = _next_family_meta(fam)
+                has_latex = bool(latex_expr)
+                eq_id = f"EQ-SOV-{book_id}-{idx_p}"
+                if eq_id in seen_ids:
+                    continue
+                seen_ids.add(eq_id)
+                sov_candidates.append({
+                    "id": eq_id,
+                    "title": name,
+                    "category": cat,
+                    "signalFamilyIdx": fam_idx,
+                    "equationLatex": latex_expr if has_latex else f"\\text{{{_safe_latex_text(name, 100)}}}",
+                    "verificationStatus": "CITABLE_VERIFIED" if has_latex else "COMPUTED",
+                    "load_bearing": True,
+                    "noyes_z_eff": 3.45 if has_latex else 3.05,
+                    "priorWeight": 0.84 if has_latex else 0.76,
+                    "rawLogOddsDelta": 0.03 if has_latex else 0.015,
+                    "jacobianSensitivity": 1.05 if has_latex else 1.01,
+                    "cluster": cluster_name,
+                    "source": f"foundry/artifacts/primitives/{p_file.name}",
+                })
+        equations.extend(sov_candidates[:3000])
+
+    # -------------------------------------------------------------------------
+    # 9. GCP SHARD B XML-TAGGED OPERATORS & EQUATIONS (EQ-SHARDB-*)
+    # -------------------------------------------------------------------------
+    shard_b_path = ROOT / "docs" / "engine" / "research" / "2026-11-13" / "corpus_compilation" / "shard_b_operators_and_vetoes_catalog.json"
+    if shard_b_path.exists():
+        try:
+            sb_data = json.loads(shard_b_path.read_text(encoding="utf-8"))
+        except Exception:
+            sb_data = {}
+        sb_entries = sb_data.get("entries") or []
+        shard_b_emitted = 0
+        for idx_s, entry in enumerate(sb_entries):
+            if shard_b_emitted >= 3000:
+                break
+            eqs_list = entry.get("equations") or []
+            if not eqs_list:
+                continue
+            doc_hash = str(entry.get("doc_hash") or f"sb{idx_s:05d}")[:12]
+            fam = str(entry.get("family") or "marketMicrostructure")
+            if fam not in FAMILY_ROUTER_MAP:
+                fam = _classify_family(f"{entry.get('source', '')} {entry.get('veto_excerpt', '')}")
+            cat, fam_idx, cluster_name = _next_family_meta(fam)
+            eq_id = f"EQ-SHARDB-{doc_hash}-{idx_s}"
+            if eq_id in seen_ids:
+                continue
+            seen_ids.add(eq_id)
+            raw_eq = _safe_latex_text(eqs_list[0], 180)
+            src_name = _safe_latex_text(entry.get("source") or entry.get("file_name") or doc_hash, 90)
+            equations.append({
+                "id": eq_id,
+                "title": f"ShardB Operator ({src_name})"[:120],
+                "category": cat,
+                "signalFamilyIdx": fam_idx,
+                "equationLatex": raw_eq,
+                "verificationStatus": "COMPUTED",
+                "load_bearing": True,
+                "noyes_z_eff": 3.10,
+                "priorWeight": 0.78,
+                "rawLogOddsDelta": 0.025,
+                "jacobianSensitivity": 1.02,
+                "cluster": f"shard_b_{cluster_name}",
+                "source": str(entry.get("file_name") or shard_b_path.name),
+            })
+            shard_b_emitted += 1
+
+    # -------------------------------------------------------------------------
+    # 10. MOTIF X/IG SWEEP FEEDS (EQ-SWEEP-*, FAIL-CLOSED VERDICT GOVERNANCE)
+    # -------------------------------------------------------------------------
+    sweep_dir = ROOT / "docs" / "data-sources" / "research" / "2026-11-14" / "sweep-ingestion"
+    if sweep_dir.exists():
+        kill_withdrawn_re = re.compile(r"\b(?:KILL|WITHDRAWN)\b", re.I)
+        # Strict exact ADOPT verdict only: never match parenthetical notes such as "TEST (adopt ...)".
+        strict_adopt_re = re.compile(r"^\s*ADOPT(?:\s*[:(\[]|\s*$)", re.I)
+        for feed_name in ("ig-for-you-feed.jsonl", "x-for-you-feed.jsonl", "x-analytics-feed.jsonl"):
+            feed_path = sweep_dir / feed_name
+            if not feed_path.exists():
+                continue
+            lane_tag = feed_name.split("-")[0].upper()
+            with feed_path.open("r", encoding="utf-8") as sf:
+                for idx_w, line in enumerate(sf):
+                    if not line.strip():
+                        continue
+                    try:
+                        row = json.loads(line)
+                    except json.JSONDecodeError:
+                        continue
+                    verdict_str = str(row.get("verdict") or "").strip()
+                    if not verdict_str:
+                        continue
+                    # Strict exclusion: KILL / WITHDRAWN items never enter the matrix
+                    if kill_withdrawn_re.search(verdict_str):
+                        continue
+
+                    # Strict promote-only gate: only exact prefix ADOPT is load-bearing.
+                    # LEARN-ONLY / CONTEXT-ONLY / WATCH / SKIPPED / TEST / NEW stay quarantined at INFERENCE / 0.0.
+                    if strict_adopt_re.match(verdict_str):
+                        v_status = "CITABLE_VERIFIED"
+                        is_lb = True
+                        delta = 0.04
+                        z_val = 3.55
+                        p_wt = 0.86
+                    else:
+                        v_status = "INFERENCE"
+                        is_lb = False
+                        delta = 0.0
+                        z_val = 2.0
+                        p_wt = 0.55
+
+                    title = _safe_latex_text(row.get("title_or_hook") or row.get("item_key") or f"Sweep {idx_w}", 120)
+                    summary = _safe_latex_text(row.get("summary") or "", 140)
+                    fam = _classify_family(f"{title} {summary}")
+                    cat, fam_idx, cluster_name = _next_family_meta(fam)
+                    eq_id = f"EQ-SWEEP-{lane_tag}-{_hash_id(feed_name, str(row.get('item_key') or idx_w))[len(feed_name) + 1:]}-{idx_w}"
+                    if eq_id in seen_ids:
+                        continue
+                    seen_ids.add(eq_id)
+                    equations.append({
+                        "id": eq_id,
+                        "title": title,
+                        "category": cat,
+                        "signalFamilyIdx": fam_idx,
+                        "equationLatex": f"\\text{{Sweep[{_safe_latex_text(verdict_str, 32)}]: }} \\Delta \\text{{logit}} = {delta}",
+                        "verificationStatus": v_status,
+                        "load_bearing": is_lb,
+                        "noyes_z_eff": z_val,
+                        "priorWeight": p_wt,
+                        "rawLogOddsDelta": delta,
+                        "jacobianSensitivity": 1.0 if is_lb else 0.0,
+                        "cluster": f"sweep_{cluster_name}",
+                        "source": f"{feed_name}#{_safe_latex_text(row.get('item_key') or idx_w, 60)}",
+                        "sweepVerdict": verdict_str,
+                    })
+
     # Summary statistics
     total_eqs = len(equations)
     citable_count = sum(1 for e in equations if e["verificationStatus"] == "CITABLE_VERIFIED")

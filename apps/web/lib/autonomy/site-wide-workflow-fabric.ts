@@ -56,8 +56,19 @@ export interface CorpusGateCheckInput {
   readonly calibrationVerified?: boolean;
 }
 
+export interface CorpusActiveSnapshot {
+  readonly wiredBooks: number;
+  readonly sovereignPrimitives: number;
+  readonly shardBDocs: number;
+  readonly driveMasterRecords: number;
+  readonly oofNRows: number;
+}
+
 export interface CorpusGateStatus {
   readonly slatePrepAllowed: boolean;
+  readonly publicBoardPublishAllowed: boolean;
+  readonly internalWorkflowCorpusReady: boolean;
+  readonly activeCorpusSnapshot: CorpusActiveSnapshot;
   readonly status: "WEEK10_HELD_FOR_CORPUS_COMPLETION" | "READY_FOR_WEEK10_PREP";
   readonly reason: string;
   readonly pendingTierACount: number;
@@ -152,15 +163,76 @@ export function resolveRepoRelativeCorpusStatusPath(): string {
  * run while any Tier-A book remains unextracted (`PENDING > 0`) or calibration
  * verification has not passed after full corpus wiring.
  */
+const EMPTY_CORPUS_SNAPSHOT: CorpusActiveSnapshot = {
+  wiredBooks: 0,
+  sovereignPrimitives: 0,
+  shardBDocs: 0,
+  driveMasterRecords: 0,
+  oofNRows: 0,
+};
+
+interface ParsedCorpusReceipt {
+  readonly pending: number;
+  readonly wired: number;
+  readonly calOk: boolean;
+  readonly snapshot: CorpusActiveSnapshot;
+}
+
+function readCorpusReceiptFromDisk(targetPath: string): ParsedCorpusReceipt | null {
+  if (!existsSync(targetPath)) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(readFileSync(targetPath, "utf8")) as {
+      readonly pendingTierACount?: number;
+      readonly wiredTierACount?: number;
+      readonly calibrationVerified?: boolean;
+      readonly router_wiring_counts?: {
+        readonly sovereign_books_loaded?: number;
+        readonly sovereign_primitives_routed?: number;
+        readonly gcp_shard_b_docs_routed?: number;
+        readonly drive_master_total_records_indexed?: number;
+      };
+      readonly chronological_oof_baseline?: {
+        readonly n_rows?: number;
+      };
+    };
+    const pending = typeof parsed.pendingTierACount === "number" ? parsed.pendingTierACount : 131;
+    const wired = typeof parsed.wiredTierACount === "number" ? parsed.wiredTierACount : 0;
+    const calOk = parsed.calibrationVerified === true;
+    const rwc = parsed.router_wiring_counts;
+    const oof = parsed.chronological_oof_baseline;
+    const snapshot: CorpusActiveSnapshot = {
+      wiredBooks: typeof rwc?.sovereign_books_loaded === "number" ? rwc.sovereign_books_loaded : wired,
+      sovereignPrimitives: typeof rwc?.sovereign_primitives_routed === "number" ? rwc.sovereign_primitives_routed : 0,
+      shardBDocs: typeof rwc?.gcp_shard_b_docs_routed === "number" ? rwc.gcp_shard_b_docs_routed : 0,
+      driveMasterRecords: typeof rwc?.drive_master_total_records_indexed === "number" ? rwc.drive_master_total_records_indexed : 0,
+      oofNRows: typeof oof?.n_rows === "number" ? oof.n_rows : 0,
+    };
+    return { pending, wired, calOk, snapshot };
+  } catch (err) {
+    console.warn(`[site-wide-workflow-fabric] Failed parsing corpus receipt ${targetPath}:`, err);
+    return null;
+  }
+}
+
 export function checkCorpusCompletionBeforeSlatePrep(
   input: CorpusGateCheckInput = {},
 ): CorpusGateStatus {
+  // Keep explicit caller override isolated from disk state so mocks never leak production disk telemetry.
   if (typeof input.pendingTierACount === "number") {
-    const wired = input.wiredTierACount ?? 0;
+    const wired = typeof input.wiredTierACount === "number" ? input.wiredTierACount : 0;
+    const snapshot: CorpusActiveSnapshot = {
+      ...EMPTY_CORPUS_SNAPSHOT,
+      wiredBooks: wired,
+    };
     const calOk = input.calibrationVerified ?? false;
     const allowed = input.pendingTierACount === 0 && calOk;
     return {
       slatePrepAllowed: allowed,
+      publicBoardPublishAllowed: false,
+      internalWorkflowCorpusReady: wired > 0,
+      activeCorpusSnapshot: snapshot,
       status: allowed ? "READY_FOR_WEEK10_PREP" : "WEEK10_HELD_FOR_CORPUS_COMPLETION",
       reason: allowed
         ? "All Tier-A books extracted, wired, and calibration-verified."
@@ -172,34 +244,31 @@ export function checkCorpusCompletionBeforeSlatePrep(
   }
 
   const targetPath = input.corpusStatusPath ?? resolveRepoRelativeCorpusStatusPath();
-  if (existsSync(targetPath)) {
-    try {
-      const parsed = JSON.parse(readFileSync(targetPath, "utf8")) as {
-        readonly pendingTierACount?: number;
-        readonly wiredTierACount?: number;
-        readonly calibrationVerified?: boolean;
-      };
-      const pending = typeof parsed.pendingTierACount === "number" ? parsed.pendingTierACount : 131;
-      const wired = typeof parsed.wiredTierACount === "number" ? parsed.wiredTierACount : 0;
-      const calOk = parsed.calibrationVerified === true;
-      const allowed = pending === 0 && calOk;
-      return {
-        slatePrepAllowed: allowed,
-        status: allowed ? "READY_FOR_WEEK10_PREP" : "WEEK10_HELD_FOR_CORPUS_COMPLETION",
-        reason: allowed
-          ? "All Tier-A books extracted, wired, and calibration-verified."
-          : `Week 10 slate generation held per corpus receipt (${pending} pending Tier-A, calibrationVerified=${calOk}).`,
-        pendingTierACount: pending,
-        wiredTierACount: wired,
-        calibrationVerified: calOk,
-      };
-    } catch {
-      // Fall through to fail-closed hold.
-    }
+  const diskReceipt = readCorpusReceiptFromDisk(targetPath);
+  if (diskReceipt) {
+    const allowed = diskReceipt.pending === 0 && diskReceipt.calOk;
+    const internalReady =
+      diskReceipt.snapshot.wiredBooks > 0 && diskReceipt.snapshot.oofNRows > 0;
+    return {
+      slatePrepAllowed: allowed,
+      publicBoardPublishAllowed: false,
+      internalWorkflowCorpusReady: internalReady,
+      activeCorpusSnapshot: diskReceipt.snapshot,
+      status: allowed ? "READY_FOR_WEEK10_PREP" : "WEEK10_HELD_FOR_CORPUS_COMPLETION",
+      reason: allowed
+        ? "All Tier-A books extracted, wired, and calibration-verified."
+        : `Week 10 slate generation held per corpus receipt (${diskReceipt.pending} pending Tier-A, calibrationVerified=${diskReceipt.calOk}).`,
+      pendingTierACount: diskReceipt.pending,
+      wiredTierACount: diskReceipt.wired,
+      calibrationVerified: diskReceipt.calOk,
+    };
   }
 
   return {
     slatePrepAllowed: false,
+    publicBoardPublishAllowed: false,
+    internalWorkflowCorpusReady: false,
+    activeCorpusSnapshot: EMPTY_CORPUS_SNAPSHOT,
     status: "WEEK10_HELD_FOR_CORPUS_COMPLETION",
     reason: "Corpus completion receipt missing or pending books > 0; Week 10 slate prep held (fail-closed).",
     pendingTierACount: -1,

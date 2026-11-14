@@ -177,15 +177,26 @@ def _compile_family_patterns() -> Dict[str, Tuple[re.Pattern[str], ...]]:
 
 
 SITUATIONAL_FAMILY_PATTERNS = _compile_family_patterns()
+_SITUATIONAL_FAMILY_MATCHERS: Dict[str, Tuple[Tuple[str, re.Pattern[str]], ...]] = {
+    fam: tuple(
+        (kw.strip().lower(), pat)
+        for kw, pat in zip(
+            (k for k in SITUATIONAL_FAMILY_KEYWORDS[fam] if k.strip()),
+            patterns,
+        )
+    )
+    for fam, patterns in SITUATIONAL_FAMILY_PATTERNS.items()
+}
 
 
 def classify_situational_family(text: str) -> str:
     """Assign primary situational/theoretical family based on domain vocabulary."""
     src = text or ""
+    src_lower = src.lower()
     best_family = "marketMicrostructure"
     best_score = 0
-    for fam, patterns in SITUATIONAL_FAMILY_PATTERNS.items():
-        score = sum(1 for pat in patterns if pat.search(src))
+    for fam, matchers in _SITUATIONAL_FAMILY_MATCHERS.items():
+        score = sum(1 for kw_l, pat in matchers if kw_l in src_lower and pat.search(src))
         if score > best_score:
             best_score = score
             best_family = fam

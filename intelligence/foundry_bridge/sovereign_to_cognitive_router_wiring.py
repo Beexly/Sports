@@ -147,16 +147,26 @@ FAMILY_KEYWORD_PATTERNS: Dict[str, Tuple[re.Pattern[str], ...]] = {
     )
     for fam, kws in FAMILY_KEYWORDS.items()
 }
+_FAMILY_KEYWORD_MATCHERS: Dict[str, Tuple[Tuple[str, re.Pattern[str]], ...]] = {
+    fam: tuple(
+        (kw.strip().lower(), pat)
+        for kw, pat in zip((k for k in FAMILY_KEYWORDS[fam] if k.strip()), patterns)
+    )
+    for fam, patterns in FAMILY_KEYWORD_PATTERNS.items()
+}
 
 
 def classify_text_to_family(text: str, domain: Optional[str] = None) -> str:
     """Deterministically route arbitrary technical text + domain into one of the 6 situational families."""
     src = text or ""
+    src_lower = src.lower()
     scores: Dict[str, int] = {fam: 0 for fam in SITUATIONAL_FAMILIES}
-    for fam, patterns in FAMILY_KEYWORD_PATTERNS.items():
-        for pat in patterns:
-            if pat.search(src):
-                scores[fam] += 1
+    for fam, matchers in _FAMILY_KEYWORD_MATCHERS.items():
+        score = 0
+        for kw_l, pat in matchers:
+            if kw_l in src_lower and pat.search(src):
+                score += 1
+        scores[fam] = score
     best_fam, best_score = max(scores.items(), key=lambda kv: (kv[1], kv[0]))
     if best_score > 0:
         return best_fam

@@ -104,68 +104,127 @@ export interface FoundryCorpusPriorEvaluation {
   readonly allFiniteNonNan: boolean;
 }
 
+export interface EmpiricalBayesFamilyPrior {
+  readonly sovereign_primitives: number;
+  readonly shard_b_docs: number;
+  readonly drive_equations: number;
+  readonly drive_situational_rules: number;
+  readonly combined_evidence_count: number;
+  readonly shrinkage_factor: number;
+  readonly raw_log_odds_prior: number;
+  readonly bounded_eb_log_odds_prior: number;
+  readonly all_finite_non_nan: boolean;
+}
+
+export interface CalibratedCorpusWeightsReceipt {
+  readonly schema: string;
+  readonly generated_at_utc?: string;
+  readonly slate_hold_status?: string;
+  readonly calibrationVerified: boolean;
+  readonly all_invariants_satisfied?: boolean;
+  readonly chronological_oof_baseline: {
+    readonly n_rows: number;
+    readonly brier_raw: number;
+    readonly brier_oof: number;
+    readonly ece_oof: number;
+    readonly mean_corpus_shrinkage_factor: number;
+    readonly oof_hard_pass_preserved: boolean;
+  };
+  readonly empirical_bayes_six_family_priors: Readonly<
+    Record<FoundrySituationalFamily, EmpiricalBayesFamilyPrior>
+  >;
+}
+
+export interface MotifSweepGovernanceSummary {
+  readonly schema: string;
+  readonly igForYouCount: number;
+  readonly xForYouCount: number;
+  readonly xAnalyticsCount: number;
+  readonly totalRecords: number;
+  readonly excludedKillOrWithdrawnCount: number;
+  readonly learnOnlyOrContextOnlyCount: number;
+  readonly watchOrSkippedQuarantinedCount: number;
+  readonly adoptCount: number;
+  readonly testOrOtherVerdictCount: number;
+  readonly untaggedCount: number;
+  readonly allFeedsLoaded: boolean;
+  readonly cached: boolean;
+}
+
 const FALLBACK_MANIFEST: FoundrySovereignCorpusManifest = {
   schema: "gse.sovereign_to_cognitive_router_wiring.v1.fallback",
   counts: {
-    sovereign_books_loaded: 91,
-    sovereign_primitives_routed: 730,
-    sovereign_reasoning_traces_routed: 159,
-    gcp_shard_b_docs_routed: 2940,
-    rules_rlvr_lessons_routed: 117,
-    active_mask_bits_set: 267,
+    sovereign_books_loaded: 1064,
+    sovereign_primitives_routed: 14667,
+    sovereign_reasoning_traces_routed: 3405,
+    gcp_shard_b_docs_routed: 8143,
+    rules_rlvr_lessons_routed: 200,
+    week10_entity_truth_rows: 518,
+    total_routed_intelligence_units: 26415,
+    active_mask_bits_set: 276,
   },
   context_mask_uint32_words_9: [0, 0, 0, 0, 0, 0, 0, 0, 0],
   six_situational_families: {
     pressure: {
-      sovereign_primitives_routed: 30,
-      gcp_shard_b_docs_routed: 35,
-      combined_evidence_count: 65,
-      active_router_bits_count: 37,
-      bounded_james_stein_log_odds_weight: 0.048659,
+      sovereign_primitives_routed: 560,
+      gcp_shard_b_docs_routed: 292,
+      combined_evidence_count: 852,
+      active_router_bits_count: 46,
+      bounded_james_stein_log_odds_weight: 0.15787,
       all_finite_non_nan: true,
     },
     weather: {
-      sovereign_primitives_routed: 136,
-      gcp_shard_b_docs_routed: 1033,
-      combined_evidence_count: 1169,
+      sovereign_primitives_routed: 803,
+      gcp_shard_b_docs_routed: 1886,
+      combined_evidence_count: 2689,
       active_router_bits_count: 46,
-      bounded_james_stein_log_odds_weight: 0.172211,
+      bounded_james_stein_log_odds_weight: 0.209992,
       all_finite_non_nan: true,
     },
     restFatigue: {
-      sovereign_primitives_routed: 98,
-      gcp_shard_b_docs_routed: 710,
-      combined_evidence_count: 808,
+      sovereign_primitives_routed: 1564,
+      gcp_shard_b_docs_routed: 3674,
+      combined_evidence_count: 5238,
       active_router_bits_count: 46,
-      bounded_james_stein_log_odds_weight: 0.155468,
+      bounded_james_stein_log_odds_weight: 0.240181,
       all_finite_non_nan: true,
     },
     coveragePersonnel: {
-      sovereign_primitives_routed: 85,
-      gcp_shard_b_docs_routed: 587,
-      combined_evidence_count: 672,
+      sovereign_primitives_routed: 1013,
+      gcp_shard_b_docs_routed: 628,
+      combined_evidence_count: 1641,
       active_router_bits_count: 46,
-      bounded_james_stein_log_odds_weight: 0.147122,
+      bounded_james_stein_log_odds_weight: 0.187597,
       all_finite_non_nan: true,
     },
     qbSkillScript: {
-      sovereign_primitives_routed: 194,
-      gcp_shard_b_docs_routed: 189,
-      combined_evidence_count: 383,
+      sovereign_primitives_routed: 9231,
+      gcp_shard_b_docs_routed: 660,
+      combined_evidence_count: 9891,
       active_router_bits_count: 46,
-      bounded_james_stein_log_odds_weight: 0.120461,
+      bounded_james_stein_log_odds_weight: 0.26891,
       all_finite_non_nan: true,
     },
     marketMicrostructure: {
-      sovereign_primitives_routed: 187,
-      gcp_shard_b_docs_routed: 386,
-      combined_evidence_count: 573,
+      sovereign_primitives_routed: 1496,
+      gcp_shard_b_docs_routed: 1003,
+      combined_evidence_count: 2499,
       active_router_bits_count: 46,
-      bounded_james_stein_log_odds_weight: 0.139815,
+      bounded_james_stein_log_odds_weight: 0.20667,
       all_finite_non_nan: true,
     },
   },
 };
+
+let _cachedShardBSummary: ShardBCatalogSummary | null = null;
+let _cachedCalReceipt: CalibratedCorpusWeightsReceipt | null = null;
+let _cachedMotifSweepSummary: MotifSweepGovernanceSummary | null = null;
+
+export function clearCorpusBridgeCaches(): void {
+  _cachedShardBSummary = null;
+  _cachedCalReceipt = null;
+  _cachedMotifSweepSummary = null;
+}
 
 function resolveRepoCandidatePaths(relPath: string): string[] {
   const candidates = [
@@ -182,17 +241,33 @@ function resolveRepoCandidatePaths(relPath: string): string[] {
   return candidates;
 }
 
-function readJsonIfExists<T>(relPath: string): T | null {
+function readCandidateFile<T>(relPath: string, parseFn: (raw: string) => T): T | null {
   for (const fullPath of resolveRepoCandidatePaths(relPath)) {
     if (existsSync(fullPath)) {
       try {
-        return JSON.parse(readFileSync(fullPath, "utf8")) as T;
+        return parseFn(readFileSync(fullPath, "utf8"));
       } catch {
         // Continue to next candidate
       }
     }
   }
   return null;
+}
+
+function readJsonIfExists<T>(relPath: string): T | null {
+  return readCandidateFile(relPath, (raw) => JSON.parse(raw) as T);
+}
+
+function readJsonlLinesIfExists(relPath: string): Record<string, unknown>[] | null {
+  return readCandidateFile(relPath, (raw) => {
+    const out: Record<string, unknown>[] = [];
+    for (const line of raw.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      out.push(JSON.parse(trimmed) as Record<string, unknown>);
+    }
+    return out;
+  });
 }
 
 export function loadFoundrySovereignCorpusManifest(
@@ -208,13 +283,16 @@ export function loadFoundrySovereignCorpusManifest(
 }
 
 export function loadShardBCatalogSummary(): ShardBCatalogSummary | null {
+  if (_cachedShardBSummary) {
+    return _cachedShardBSummary;
+  }
   const disk = readJsonIfExists<ShardBCatalogSummary & { entries?: unknown }>(
     "docs/engine/research/2026-11-13/corpus_compilation/shard_b_operators_and_vetoes_catalog.json",
   );
   if (!disk) {
     return null;
   }
-  return {
+  _cachedShardBSummary = {
     schema: disk.schema,
     total_markdown_files: disk.total_markdown_files,
     files_with_xml_sections: disk.files_with_xml_sections,
@@ -222,6 +300,96 @@ export function loadShardBCatalogSummary(): ShardBCatalogSummary | null {
     family_counts: disk.family_counts ?? {},
     section_counts: disk.section_counts ?? {},
   };
+  return _cachedShardBSummary;
+}
+
+export function loadCalibratedCorpusWeightsReceipt(): CalibratedCorpusWeightsReceipt | null {
+  if (_cachedCalReceipt) {
+    return _cachedCalReceipt;
+  }
+  const disk = readJsonIfExists<CalibratedCorpusWeightsReceipt>(
+    "docs/engine/research/2026-11-13/corpus_compilation/07_corpus_wired_calibration_and_hold_gate_receipt.json",
+  );
+  if (!disk || !disk.empirical_bayes_six_family_priors) {
+    return null;
+  }
+  _cachedCalReceipt = disk;
+  return _cachedCalReceipt;
+}
+
+const KILL_WITHDRAWN_RE = /\b(?:KILL|WITHDRAWN)\b/i;
+const LEARN_CONTEXT_RE = /\b(?:LEARN-ONLY|CONTEXT-ONLY)\b/i;
+const WATCH_SKIPPED_RE = /\b(?:WATCH|SKIPPED)\b/i;
+const STRICT_ADOPT_RE = /^\s*ADOPT(?:\s*[:(\[]|\s*$)/i;
+
+export function loadMotifSweepSummary(): MotifSweepGovernanceSummary | null {
+  if (_cachedMotifSweepSummary) {
+    return _cachedMotifSweepSummary;
+  }
+  const igRows = readJsonlLinesIfExists(
+    "docs/data-sources/research/2026-11-14/sweep-ingestion/ig-for-you-feed.jsonl",
+  );
+  const xForYouRows = readJsonlLinesIfExists(
+    "docs/data-sources/research/2026-11-14/sweep-ingestion/x-for-you-feed.jsonl",
+  );
+  const xAnalyticsRows = readJsonlLinesIfExists(
+    "docs/data-sources/research/2026-11-14/sweep-ingestion/x-analytics-feed.jsonl",
+  );
+  if (!igRows && !xForYouRows && !xAnalyticsRows) {
+    return null;
+  }
+
+  let excludedKillOrWithdrawnCount = 0;
+  let learnOnlyOrContextOnlyCount = 0;
+  let watchOrSkippedQuarantinedCount = 0;
+  let adoptCount = 0;
+  let testOrOtherVerdictCount = 0;
+  let untaggedCount = 0;
+
+  for (const rows of [igRows ?? [], xForYouRows ?? [], xAnalyticsRows ?? []]) {
+    for (const row of rows) {
+      const verdict = typeof row.verdict === "string" ? row.verdict.trim() : "";
+      if (!verdict) {
+        untaggedCount += 1;
+        continue;
+      }
+      if (KILL_WITHDRAWN_RE.test(verdict)) {
+        excludedKillOrWithdrawnCount += 1;
+      } else if (LEARN_CONTEXT_RE.test(verdict)) {
+        learnOnlyOrContextOnlyCount += 1;
+      } else if (WATCH_SKIPPED_RE.test(verdict)) {
+        watchOrSkippedQuarantinedCount += 1;
+      } else if (STRICT_ADOPT_RE.test(verdict)) {
+        adoptCount += 1;
+      } else {
+        testOrOtherVerdictCount += 1;
+      }
+    }
+  }
+
+  const igForYouCount = igRows?.length ?? 0;
+  const xForYouCount = xForYouRows?.length ?? 0;
+  const xAnalyticsCount = xAnalyticsRows?.length ?? 0;
+  const allFeedsLoaded = Boolean(igRows && xForYouRows && xAnalyticsRows);
+  const summary: MotifSweepGovernanceSummary = {
+    schema: "motif.sweep_feed.v1",
+    igForYouCount,
+    xForYouCount,
+    xAnalyticsCount,
+    totalRecords: igForYouCount + xForYouCount + xAnalyticsCount,
+    excludedKillOrWithdrawnCount,
+    learnOnlyOrContextOnlyCount,
+    watchOrSkippedQuarantinedCount,
+    adoptCount,
+    testOrOtherVerdictCount,
+    untaggedCount,
+    allFeedsLoaded,
+    cached: allFeedsLoaded,
+  };
+  if (allFeedsLoaded) {
+    _cachedMotifSweepSummary = summary;
+  }
+  return summary;
 }
 
 export function clampDeltaLogOdds(value: number): number {

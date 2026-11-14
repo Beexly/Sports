@@ -3,7 +3,7 @@ import {
   loadThousandEquationMatrix,
   selectCandidatePremisesByContextMask,
 } from "../thousand-equation-registry.js";
-import { buildContextMask } from "../mcp-cognitive-router.js";
+import { buildContextMask, MAX_ABS_DELTA_LOG_ODDS, routeInMemoryFourStage } from "../mcp-cognitive-router.js";
 
 describe("Thousand-Equation In-Memory Matrix Registry", () => {
   it("loads 1,562 grounded equations with valid integrity counts and zero EQ-EXP placeholders", () => {
@@ -82,5 +82,65 @@ describe("Thousand-Equation In-Memory Matrix Registry", () => {
     for (const cand of candidates) {
       expect(["CITABLE_VERIFIED", "COMPUTED", "RESEARCH_HYPOTHESIS"]).toContain(cand.verificationTier);
     }
+  });
+
+  it("wires >= 6,000 equations across EQ-SOV, EQ-SHARDB, and strict ADOPT EQ-SWEEP with <50ms 4-stage routing and stratified bit retrieval", () => {
+    const matrix = loadThousandEquationMatrix();
+    expect(matrix.total_equations).toBeGreaterThanOrEqual(6000);
+
+    const sovEqs = matrix.equations.filter((e) => e.id.startsWith("EQ-SOV-"));
+    const shardBEqs = matrix.equations.filter((e) => e.id.startsWith("EQ-SHARDB-"));
+    const sweepEqs = matrix.equations.filter((e) => e.id.startsWith("EQ-SWEEP-"));
+    expect(sovEqs.length).toBeGreaterThan(0);
+    expect(shardBEqs.length).toBeGreaterThan(0);
+    expect(sweepEqs.length).toBeGreaterThan(0);
+
+    const killOrWithdrawn = sweepEqs.filter((e) =>
+      /\b(KILL|WITHDRAWN)\b/i.test(String(e.sweepVerdict ?? "")),
+    );
+    expect(killOrWithdrawn).toHaveLength(0);
+
+    const strictAdoptRe = /^\s*ADOPT(?:\s*[:(\[]|\s*$)/i;
+    const loadBearingSweep = sweepEqs.filter((e) => e.load_bearing);
+    expect(loadBearingSweep).toHaveLength(36);
+    for (const eq of loadBearingSweep) {
+      expect(eq.verificationStatus).toBe("CITABLE_VERIFIED");
+      expect(strictAdoptRe.test(String(eq.sweepVerdict ?? ""))).toBe(true);
+    }
+
+    const nonAdoptSweep = sweepEqs.filter((e) => !strictAdoptRe.test(String(e.sweepVerdict ?? "")));
+    expect(nonAdoptSweep.length).toBeGreaterThan(400);
+    for (const eq of nonAdoptSweep) {
+      expect(eq.verificationStatus).toBe("INFERENCE");
+      expect(eq.load_bearing).toBe(false);
+      expect(eq.rawLogOddsDelta).toBe(0);
+    }
+
+    // Verify no EQ-SWEEP-* parenthetical "(adopt ...)" note is mispromoted
+    const parenAdopt = sweepEqs.find((e) => e.id === "EQ-SWEEP-X-263f2e1f-3192");
+    if (parenAdopt) {
+      expect(parenAdopt.verificationStatus).toBe("INFERENCE");
+      expect(parenAdopt.load_bearing).toBe(false);
+      expect(parenAdopt.rawLogOddsDelta).toBe(0);
+    }
+
+    // Verify stratified topK=250 retrieval lets core, EQ-SOV, EQ-SHARDB, and exact ADOPT EQ-SWEEP reach Stage C
+    const allMask = new Uint32Array(9).fill(0xffffffff);
+    const stratified = selectCandidatePremisesByContextMask(allMask, { topK: 250 });
+    expect(stratified.length).toBe(250);
+    expect(stratified.some((p) => p.id.startsWith("EQ-SOV-"))).toBe(true);
+    expect(stratified.some((p) => p.id.startsWith("EQ-SHARDB-"))).toBe(true);
+    expect(stratified.some((p) => p.id.startsWith("EQ-SWEEP-"))).toBe(true);
+
+    const t0 = performance.now();
+    const routed = routeInMemoryFourStage([
+      { family: 12, displacement: 0.14, n: 120 },
+      { family: 58, displacement: -0.09, n: 120 },
+      { family: 196, displacement: 0.11, n: 120 },
+    ]);
+    const elapsedMs = performance.now() - t0;
+    expect(elapsedMs).toBeLessThan(50);
+    expect(Math.abs(routed.clampedTotalLogOddsDelta)).toBeLessThanOrEqual(MAX_ABS_DELTA_LOG_ODDS);
+    expect(Number.isFinite(routed.clampedTotalLogOddsDelta)).toBe(true);
   });
 });

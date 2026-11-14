@@ -551,6 +551,7 @@ export {
   betaCalibration,
   equalMassEce,
   selectCalibrator,
+  applyCorpusRegularizedBookPathCalibration,
 } from "./calibration-map.js";
 
 // R&D ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â temperature scaling (one-parameter overconfidence softener). Not live.
@@ -577,6 +578,8 @@ export type {
   BetaModel,
   CalibratorScore,
   CalibratorSelection,
+  CorpusRegularizedBookCalibrationInput,
+  CorpusRegularizedBookCalibrationReceipt,
 } from "./calibration-map.js";
 
 // R&D ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â linear Thompson sampling contextual bandit (2026-07-02 ZK/ML dump,
@@ -5916,6 +5919,8 @@ export {
   evaluateSplitFieldCoverageOverlay,
   FOUNDRY_CORPUS_BASELINE_SNAPSHOT,
   CORPUS_SITUATIONAL_FAMILIES,
+  CORPUS_SNAPSHOT_METADATA,
+  CORPUS_REGULARIZED_SIX_FAMILY_CORRELATION_MATRIX,
   MAX_ABS_CORPUS_LOG_ODDS,
   MAX_CORPUS_FAMILY_PROB_MODULATION,
   NFL_2026_PLAYING_RULES_OPERATORS,

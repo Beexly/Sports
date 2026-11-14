@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  applyCorpusRegularizedBookPathCalibration,
   plattScaling,
   betaCalibration,
   equalMassEce,
@@ -253,5 +254,44 @@ describe("selectCalibrator (cross-validated, out-of-sample, noise-calibrated bar
 
   it("returns null below the CV floor", () => {
     expect(selectCalibrator([{ p: 0.5, y: 1 }, { p: 0.5, y: 0 }], {})).toBeNull();
+  });
+
+  it("regularizes inverted high-band book-path probabilities strictly monotonically while leaving signal path untouched and NaNs safe", () => {
+    const exactSignalProb = 0.841234567;
+    const sig = applyCorpusRegularizedBookPathCalibration({
+      rawProb: exactSignalProb,
+      generationPath: "signal",
+    });
+    expect(sig.calibratedProb).toBe(exactSignalProb);
+    expect(sig.livePublishedProb).toBe(exactSignalProb);
+    expect(sig.calibrationApplied).toBe(false);
+    expect(sig.liveCalibrationFlagEnabled).toBe(false);
+
+    const grid = [0.12, 0.29, 0.30, 0.31, 0.50, 0.69, 0.70, 0.71, 0.88, 0.94];
+    const bookGrid = grid.map((p) =>
+      applyCorpusRegularizedBookPathCalibration({
+        rawProb: p,
+        generationPath: "book",
+      }),
+    );
+    for (let i = 1; i < bookGrid.length; i += 1) {
+      expect(bookGrid[i]!.calibratedProb).toBeGreaterThan(bookGrid[i - 1]!.calibratedProb);
+    }
+
+    const bookHigh = bookGrid[8]!;
+    expect(bookHigh.calibrationApplied).toBe(true);
+    expect(bookHigh.calibratedProb).toBeLessThan(0.88);
+    expect(bookHigh.liveCalibrationFlagEnabled).toBe(false);
+    expect(bookHigh.livePublishedProb).toBe(0.88);
+
+    const nanGuarded = applyCorpusRegularizedBookPathCalibration({
+      rawProb: Number.NaN,
+      generationPath: "book",
+      sampleCount: Number.NaN,
+      shrinkStrength: Number.NaN,
+    });
+    expect(Number.isFinite(nanGuarded.calibratedProb)).toBe(true);
+    expect(Number.isFinite(nanGuarded.shrinkageFactor)).toBe(true);
+    expect(nanGuarded.calibratedProb).toBe(0.5);
   });
 });

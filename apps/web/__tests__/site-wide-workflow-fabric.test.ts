@@ -37,6 +37,8 @@ describe("site-wide-workflow-fabric", () => {
     });
     expect(summary.corpusGate.slatePrepAllowed).toBe(false);
     expect(summary.corpusGate.status).toBe("WEEK10_HELD_FOR_CORPUS_COMPLETION");
+    expect(summary.corpusGate.internalWorkflowCorpusReady).toBe(true);
+    expect(summary.corpusGate.publicBoardPublishAllowed).toBe(false);
     expect(summary.workflowsHeldByCorpusGate).toBe(1);
     const picksWf = summary.workflowReceipts.find((w) => w.workflowId === "picks-intelligence");
     expect(picksWf?.heldByCorpusGate).toBe(true);
@@ -95,5 +97,14 @@ describe("site-wide-workflow-fabric", () => {
     expect(summary.totalCostUsd).toBe(0);
     expect(mockDispatch).toHaveBeenCalledTimes(2);
     expect(summary.workflowReceipts.every((w) => w.contractRuling.decision === "ALLOW")).toBe(true);
+  });
+
+  it("loads Wave 15 snapshot metadata cleanly via default checkCorpusCompletionBeforeSlatePrep while keeping public board fail-closed", () => {
+    const diskGate = checkCorpusCompletionBeforeSlatePrep();
+    expect(diskGate.slatePrepAllowed).toBe(false);
+    expect(diskGate.publicBoardPublishAllowed).toBe(false);
+    expect(diskGate.internalWorkflowCorpusReady).toBe(true);
+    expect(diskGate.activeCorpusSnapshot.wiredBooks).toBeGreaterThanOrEqual(1064);
+    expect(diskGate.activeCorpusSnapshot.oofNRows).toBeGreaterThanOrEqual(4823);
   });
 });
