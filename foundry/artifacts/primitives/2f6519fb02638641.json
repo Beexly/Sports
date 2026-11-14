@@ -1,0 +1,471 @@
+{
+ "book_id": "2f6519fb02638641",
+ "title": "The Dwight Effect: A New Ensemble of Interior Defense Analytics for the NBA",
+ "author": "Kirk Goldsberry (Harvard University), Eric Weiss (Sports Aptitude, LLC)",
+ "year": 2013,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2013 The Dwight Effect A New Ensemble of Interior Defense Analytics for the NBA.pdf",
+ "source_note": "MIT Sloan Sports Analytics Conference 2013 Research Paper Competition, 11 pages, full read via pymupdf. Identity confirmed (Goldsberry/Harvard kgoldsberry@fas.harvard.edu, Weiss/Sports Aptitude). CATALOG DOMAIN MISMATCH: queue primary_domain='football' but content is NBA basketball; extracted under true domain math/basketball-analytics. The paper is conceptual/empirical (spatial splits, proximity metrics) with printed numerical results rather than display equations; definitions reconstructed as labeled LaTeX from clean prose. Data: SportVU optical tracking, 75,000+ shots (76,000 superset), 2011-12 and 2012-13 seasons, 52 interior defenders facing >=500 attempts. Key baselines: outside-7ft FG% ~39%; near-rim compound outcome >70%; league close FG% with defender 49.7% (Hibbert/Sanders 38%, Scola 63%); close-range attempt share 57.2% (Howard 48.2%, Ibaka 74%); proximal FG% 45.6% (Sanders 34.9%, Varejao 54.2%); only 15 arenas tracked as of Jan 2013. No sportsbook lines used as model inputs.",
+ "domain": "math",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "dualistic_sport",
+   "name": "Basketball is dualistic: offense and defense equally decide the score",
+   "verbatim_quote": "Basketball is a dualistic sport: all players compete on both offense and defense, and the core strategies of basketball revolve around scoring points on offense and preventing points on defense.",
+   "page": 1,
+   "latex": "\\text{final score}=\\text{points scored}-\\text{points allowed};\\quad \\text{both facets equally causal}",
+   "symbol_and_unit_ledger": {
+    "points scored": "offensive output [score]",
+    "points allowed": "defensive output [score]"
+   },
+   "assumptions": [
+    "Every player competes on both offense and defense",
+    "The final score depends equally on scoring and preventing points"
+   ],
+   "breakdown_regime": "Despite equal causality, statistics over-represent offense; the dualism is a structural fact the metrics fail to honor.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE two-sided causality IS this dualism: the engine treats producing value and preventing opponent value as equally causal to the outcome, so a valuation that only measures one side is structurally incomplete. GSI: symmetric two-sided contribution to a net outcome.",
+    "source_operator": "dualistic_sport",
+    "telemetry": "offensive vs defensive contribution; two-sided outcome decomposition"
+   }
+  },
+  {
+   "primitive_id": "defense_undermeasured",
+   "name": "Conventional stats over-emphasize offense",
+   "verbatim_quote": "conventional basketball statistics emphasize offensive performance much more than defensive performance.",
+   "page": 1,
+   "latex": "\\text{metric coverage}_{\\text{offense}}\\gg \\text{metric coverage}_{\\text{defense}}",
+   "symbol_and_unit_ledger": {
+    "metric coverage": "fraction of performance captured by stats [dimensionless]"
+   },
+   "assumptions": [
+    "Offensive events are discrete and individually attributable, so they are easy to count",
+    "Defensive effectiveness is distributed and contextual, so it is under-counted"
+   ],
+   "breakdown_regime": "The asymmetry is a measurement artifact, not a statement that offense matters more; the engine must not infer importance from metric availability.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE measurement-availability bias IS this asymmetry: the engine recognizes that what is easy to measure (offense/discrete events) gets over-weighted versus what is hard to measure (defense/context), and corrects for the availability bias rather than equating measurability with importance. GSI: observability bias in metric design.",
+    "source_operator": "defense_undermeasured",
+    "telemetry": "offense vs defense metric coverage; availability-bias correction"
+   }
+  },
+  {
+   "primitive_id": "defense_not_discrete",
+   "name": "Defense is not attributable to one discrete action",
+   "verbatim_quote": "Basketball's most common statistics are related to events that are most obviously attributable to one individual action at one moment; defensive prowess in basketball fails to meet this basic criterion.",
+   "page": 1,
+   "latex": "\\text{defense}=\\text{cohesive assembly of structured actions}\\ne\\text{single discrete event}",
+   "symbol_and_unit_ledger": {
+    "discrete event": "individually attributable action (steal/block/rebound) [count]"
+   },
+   "assumptions": [
+    "Common stats tally steals, blocks, defensive rebounds as discrete events",
+    "Effective defense is a continuous spatial process, not a tally of disparate events"
+   ],
+   "breakdown_regime": "Event-tallying misses the nature and effectiveness of defense; a defender can be elite without accumulating discrete events (deterrence).",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE process-vs-event measurement IS this distinction: the engine measures defensive/preventive value as a continuous spatial process rather than a tally of discrete events, because the most valuable prevention leaves no event to count. GSI: continuous-process value versus discrete-event counting.",
+    "source_operator": "defense_not_discrete",
+    "telemetry": "discrete-event tally vs continuous-process value; event-less prevention"
+   }
+  },
+  {
+   "primitive_id": "rim_efficiency",
+   "name": "Only near-rim shots convert above 50%",
+   "verbatim_quote": "NBA shooters only make about 39% of their field goals from everywhere outside of 7 feet.",
+   "page": 2,
+   "latex": "\\mathrm{FG\\%}(d>7\\text{ ft})\\approx0.39;\\quad \\mathrm{FG\\%}(d\\approx0)>0.50",
+   "symbol_and_unit_ledger": {
+    "d": "shot distance from rim [feet]",
+    "FG%": "field goal percentage [probability]"
+   },
+   "assumptions": [
+    "Shooting efficiency is a steep function of distance",
+    "Only shots very close to the rim go in more than half the time"
+   ],
+   "breakdown_regime": "The distance-efficiency curve is the spatial foundation of shot quality; the three-point boom does not change that near-rim shots remain the best shots.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE location-dependent success probability IS this distance-efficiency curve: the engine models success probability as a function of field position/distance, so a attempt's value is location-dependent, the football analogue of shot quality by yard-line. GSI: spatially varying success rate.",
+    "source_operator": "rim_efficiency",
+    "telemetry": "FG% vs distance curve; near-rim >50% vs outside-7ft ~39%"
+   }
+  },
+  {
+   "primitive_id": "near_rim_value",
+   "name": "Near-rim shots compound value via offensive rebounding",
+   "verbatim_quote": "Over 70% of shots near the rim either result in points, a shooting foul or an offensive rebound.",
+   "page": 2,
+   "latex": "\\Pr(\\text{points}\\cup\\text{foul}\\cup\\text{OREB}\\mid d\\approx0)>0.70",
+   "symbol_and_unit_ledger": {
+    "OREB": "offensive rebound [event]",
+    "d": "shot distance [feet]"
+   },
+   "assumptions": [
+    "Near-rim misses are more likely to be rebounded by the shooting team",
+    "So near-rim attempts have value beyond their make probability"
+   ],
+   "breakdown_regime": "The compounding (points + foul + offensive rebound) makes near-rim real estate the most valuable and most defended; raw FG% understates near-rim attempt value.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE compound attempt value IS this near-rim compounding: the engine values an attempt not just by its immediate success probability but by its secondary outcomes (second-chance opportunities), so high-leverage locations carry compound value. GSI: expected value including downstream recovery events.",
+    "source_operator": "near_rim_value",
+    "telemetry": "near-rim compound outcome rate >70%; second-chance value"
+   }
+  },
+  {
+   "primitive_id": "dwight_effect_def",
+   "name": "The Dwight Effect: deterrence reduces opponent shooting efficiency",
+   "verbatim_quote": "We define \"The Dwight Effect\" as the ability of an interior defender to reduce the efficiency of an opponent's shooting behavior.",
+   "page": 3,
+   "latex": "\\text{Dwight Effect}_p=\\Delta\\,\\mathrm{FG\\%}_{\\text{opponent}}\\ \\text{and}\\ \\Delta\\,\\text{shot frequency}\\ \\text{in }p\\text{'s presence}",
+   "symbol_and_unit_ledger": {
+    "Dwight Effect": "defender-induced reduction in opponent efficiency/frequency [probability/count]"
+   },
+   "assumptions": [
+    "A dominant interior defender changes opponent behavior, not just outcomes",
+    "The effect is measured as the change in opponent shooting in the defender's presence"
+   ],
+   "breakdown_regime": "The effect is causal deterrence, not event counting; it requires comparing opponent behavior with and without the defender, which is confounded by lineup and opponent quality.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE deterrence value IS the Dwight Effect: the engine measures a factor's preventive value as the change it induces in opponent behavior (reduced opponent efficiency and volume), the value of threats that never materialize, not just realized events. GSI: deterrence as behavioral change in an adversary.",
+    "source_operator": "dwight_effect_def",
+    "telemetry": "opponent FG% and frequency delta in presence; deterrence vs realized events"
+   }
+  },
+  {
+   "primitive_id": "blocks_ambiguous",
+   "name": "Blocks have an ambiguous relationship with defensive quality",
+   "verbatim_quote": "Shot blocks are relatively infrequent events that have an ambiguous relationship with defensive effectiveness.",
+   "page": 3,
+   "latex": "\\text{blocks}\\not\\Rightarrow \\text{defensive quality};\\quad \\text{block requires shooter to believe path clear}",
+   "symbol_and_unit_ledger": {
+    "blocks": "shot-block events [count]"
+   },
+   "assumptions": [
+    "A block only occurs if the shooter believed the shot would not be blocked",
+    "So a high block count can mean the defender is often out of position, not dominant"
+   ],
+   "breakdown_regime": "Blocks are a biased proxy: the best deterrents prevent shots entirely and thus accumulate fewer blocks; ranking by blocks misranks deterrence.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE biased-proxy warning IS this blocks ambiguity: the engine treats a visible event count (blocks, or any realized metric) as a biased proxy for true preventive quality, because the best prevention leaves no event, so it does not rank by the proxy alone. GSI: survivorship/selection bias in event-based proxies.",
+    "source_operator": "blocks_ambiguous",
+    "telemetry": "block count vs deterrence; proxy bias direction"
+   }
+  },
+  {
+   "primitive_id": "presence_deterrence",
+   "name": "Dominant presence changes opponent spatial behavior",
+   "verbatim_quote": "The presence of a truly dominant interior force can augment the spatial behavior of the offense in the same way that a dominant cornerback changes the behavior of a quarterback.",
+   "page": 3,
+   "latex": "\\text{opponent shot distribution}=f(\\text{defender presence})",
+   "symbol_and_unit_ledger": {
+    "shot distribution": "spatial frequency of opponent attempts [probability over zones]"
+   },
+   "assumptions": [
+    "A dominant defender alters where and whether the offense shoots",
+    "The effect is on behavior (spatial choices), preceding any discrete outcome"
+   ],
+   "breakdown_regime": "Presence deterrence is invisible in event stats; it must be inferred from shifts in opponent spatial behavior, the 'invisible blocks'.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE behavioral deterrence IS this presence effect: the engine credits a factor for shifting the opponent's choice distribution (where/whether they attack), the invisible prevention that event stats miss, analogous to a shutdown corner reducing targets. GSI: adversary choice-distribution shift as value.",
+    "source_operator": "presence_deterrence",
+    "telemetry": "opponent spatial-distribution shift; invisible-block count proxy"
+   }
+  },
+  {
+   "primitive_id": "cornerback_deterrence",
+   "name": "Best cornerbacks lead no stats because they deter throws",
+   "verbatim_quote": "In the NFL, the best cornerbacks never lead the league in any conventional stats because quarterbacks are too afraid to even throw in their direction; they don't even get chances to defend passes.",
+   "page": 2,
+   "latex": "\\text{targets against elite CB}\\to0\\Rightarrow \\text{conventional stats}\\to0\\ \\text{despite elite value}",
+   "symbol_and_unit_ledger": {
+    "targets": "pass attempts toward the cornerback [count]"
+   },
+   "assumptions": [
+    "The best defenders are avoided, so they accumulate no counting stats",
+    "This is a cross-sport instance of deterrence being invisible to event metrics"
+   ],
+   "breakdown_regime": "The NFL cornerback case is the canonical deterrence example: zero events can mean maximal value, the exact inverse of the naive event-count interpretation.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE zero-event elite value IS the cornerback case: the engine recognizes that a factor producing zero observable events can be maximally valuable because opponents avoid it, so absence of events is not absence of value, a direct football deterrence invariant. GSI: avoidance-driven zero-observation value.",
+    "source_operator": "cornerback_deterrence",
+    "telemetry": "targets-against vs coverage quality; zero-event value flag"
+   }
+  },
+  {
+   "primitive_id": "spatial_splits",
+   "name": "Spatial splits: location-conditioned frequency and efficiency",
+   "verbatim_quote": "Since NBA scoring efficiency is clearly dependent on spatial factors, we contend spatial splits offer a mechanism to detect, understand, and communicate key aspects of NBA scoring efficiency.",
+   "page": 3,
+   "latex": "\\text{spatial split}=(\\text{value}_{\\text{close}},\\text{value}_{\\text{mid}},\\text{value}_{\\text{3pt}})",
+   "symbol_and_unit_ledger": {
+    "close/mid/3pt": "court zones [spatial partition]",
+    "value": "frequency or efficiency per zone [probability]"
+   },
+   "assumptions": [
+    "Scoring efficiency depends on court location",
+    "A three-number zone split summarizes and explains scoring behavior, inspired by baseball's triple-slash"
+   ],
+   "breakdown_regime": "Spatial splits are explanatory (they say why a performance is good/bad) where a single aggregate rating is not; the zone partition is a modeling choice.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE spatial decomposition IS the spatial split: the engine decomposes performance by field-position zone into a frequency and an efficiency triple, so a rating becomes explanatory (which zones drive it) rather than a black-box aggregate. GSI: location-conditioned performance decomposition.",
+    "source_operator": "spatial_splits",
+    "telemetry": "zone frequency triple; zone efficiency triple; explanatory decomposition"
+   }
+  },
+  {
+   "primitive_id": "two_split_types",
+   "name": "Frequency splits and efficiency splits are distinct",
+   "verbatim_quote": "We introduce two kinds of spatial splits: frequency splits and efficiency splits.",
+   "page": 4,
+   "latex": "\\text{frequency}=(f_c,f_m,f_3),\\ \\sum f=100;\\quad \\text{efficiency}=(\\mathrm{FG\\%}_c,\\mathrm{FG\\%}_m,\\mathrm{FG\\%}_3)",
+   "symbol_and_unit_ledger": {
+    "f_c,f_m,f_3": "shot share per zone [percent]",
+    "FG%_z": "field goal percentage per zone [probability]"
+   },
+   "assumptions": [
+    "Frequency splits describe shot distribution (where shots come from)",
+    "Efficiency splits describe shooting quality per zone (how well they go in)"
+   ],
+   "breakdown_regime": "Conflating frequency with efficiency hides the deterrence mechanism: a defender can lower close-range frequency without changing close-range efficiency, or vice versa.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE volume-quality separation IS the two split types: the engine separates where attempts come from (volume/frequency) from how successful they are (quality/efficiency) per zone, because a preventive factor can act on either axis independently. GSI: orthogonal volume and quality decomposition.",
+    "source_operator": "two_split_types",
+    "telemetry": "frequency triple vs efficiency triple; independent axis movement"
+   }
+  },
+  {
+   "primitive_id": "frequency_sum",
+   "name": "Frequency splits sum to 100 (a conserved distribution)",
+   "verbatim_quote": "The three numbers in the frequency splits should sum to 100 (barring any rounding errors).",
+   "page": 4,
+   "latex": "f_{\\text{close}}+f_{\\text{mid}}+f_{\\text{3pt}}=100\\%",
+   "symbol_and_unit_ledger": {
+    "f_z": "shot frequency in zone z [percent]"
+   },
+   "assumptions": [
+    "Shot frequencies form a probability distribution over zones",
+    "The sum-to-100 constraint makes shifts between zones a zero-sum reallocation"
+   ],
+   "breakdown_regime": "Because frequencies sum to 100, reducing close-range frequency necessarily raises mid/3pt frequency; deterrence is a reallocation, not a deletion, of attempts.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE conserved-distribution reallocation IS this sum constraint: the engine treats attempt distribution as conserved, so preventing one type of attempt reallocates it to another (usually lower-value) type, making deterrence a measurable shift rather than a disappearance. GSI: conserved-mass reallocation under intervention.",
+    "source_operator": "frequency_sum",
+    "telemetry": "frequency sum check; close-to-mid reallocation magnitude"
+   }
+  },
+  {
+   "primitive_id": "defense_two_ways",
+   "name": "Effective interior defense acts on efficiency AND frequency",
+   "verbatim_quote": "within the context of spatial splits, effective interior defense should manifest in two ways.",
+   "page": 4,
+   "latex": "\\text{good defense}\\Rightarrow \\downarrow\\mathrm{FG\\%}_{\\text{close}}\\ \\land\\ \\downarrow f_{\\text{close}}\\ (\\uparrow f_{\\text{mid}},f_{\\text{3pt}})",
+   "symbol_and_unit_ledger": {
+    "FG%_close": "close-range efficiency [probability]",
+    "f_close": "close-range frequency [percent]"
+   },
+   "assumptions": [
+    "The obvious effect is reduced close-range efficiency",
+    "The less apparent but more important effect is reduced close-range frequency (shot deterrence)"
+   ],
+   "breakdown_regime": "Both channels reduce easy shots, points, and offensive rebounds; measuring only efficiency misses the deterrence channel that is the paper's core contribution.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE dual-channel prevention IS this two-way defense: the engine measures preventive value on both the quality channel (lower opponent success) and the volume channel (fewer high-value opponent attempts), because the volume channel is the larger and less visible effect. GSI: dual-channel intervention impact.",
+    "source_operator": "defense_two_ways",
+    "telemetry": "close-range efficiency delta; close-range frequency delta; dual-channel score"
+   }
+  },
+  {
+   "primitive_id": "deterrence_best",
+   "name": "The best defense prevents shots from happening",
+   "verbatim_quote": "the most effective way to defend close range shots is to prevent them from even happening.",
+   "page": 5,
+   "latex": "\\max\\ \\text{defensive value}=\\text{prevented attempts},\\ \\text{not blocked attempts}",
+   "symbol_and_unit_ledger": {
+    "prevented attempts": "shots deterred before release [count]",
+    "blocked attempts": "shots blocked after release [count]"
+   },
+   "assumptions": [
+    "Deterrence (preventing the attempt) dominates contesting (blocking the attempt)",
+    "Howard leads in 'invisible blocks' though not in actual blocks"
+   ],
+   "breakdown_regime": "Prevented attempts are counterfactual and must be estimated from frequency shifts, not counted; this is the hardest but most valuable defensive signal.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE prevention-over-contest IS this principle: the engine values preventing a high-value opponent attempt above contesting it, because the prevented attempt never generates value or second chances, the deterrence-over-event hierarchy. GSI: prevention valued above mitigation.",
+    "source_operator": "deterrence_best",
+    "telemetry": "invisible-block estimate; deterrence vs contest ranking"
+   }
+  },
+  {
+   "primitive_id": "basket_proximity_efficiency",
+   "name": "Basket-proximity condition: defender within 5 ft of rim",
+   "verbatim_quote": "Overall, NBA shooters make 49.7% of their field goal attempts when qualifying interior defender is within 5 feet of the basket; however, this number drops to 38% when either Hibbert or Sanders are within 5 feet.",
+   "page": 4,
+   "latex": "\\mathrm{FG\\%}_{\\text{close}}(\\text{defender within 5 ft of rim}):\\ \\text{league }49.7\\%,\\ \\text{Hibbert/Sanders }38\\%,\\ \\text{Scola }63\\%",
+   "symbol_and_unit_ledger": {
+    "FG%_close": "opponent close-range FG% [probability]",
+    "5 ft": "basket-proximity threshold [feet]"
+   },
+   "assumptions": [
+    "Basket proximity is defined as the defender within 5 feet of the basket",
+    "Opponent close-range efficiency varies widely by which defender is present"
+   ],
+   "breakdown_regime": "The 5-foot threshold is a modeling choice; the comparison is confounded by which offenses and lineups each defender faces, so it is suggestive not definitive.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE presence-conditioned opponent efficiency IS this basket-proximity metric: the engine measures opponent success rate conditioned on a defensive factor's presence near the high-value zone, isolating the factor's contest effect from the league baseline. GSI: presence-conditioned adversary success rate.",
+    "source_operator": "basket_proximity_efficiency",
+    "telemetry": "opponent close FG% by defender presence; league baseline 49.7%"
+   }
+  },
+  {
+   "primitive_id": "howard_deterrence_numbers",
+   "name": "Howard deterrence: close-range frequency 57.2% to 48.2%",
+   "verbatim_quote": "Overall, when a qualifying defender is within 5 feet of the basket, the NBA shoots 57.2% of its attempts close to the basket; however, when Dwight Howard was the interior defender this number dropped to 48.2%",
+   "page": 5,
+   "latex": "f_{\\text{close}}:\\ \\text{league }57.2\\%\\to\\text{Howard }48.2\\%;\\quad \\text{Ibaka }74\\%\\ (\\text{last})",
+   "symbol_and_unit_ledger": {
+    "f_close": "share of opponent attempts that are close-range [percent]"
+   },
+   "assumptions": [
+    "Howard reduces opponent close-range attempt share by ~9 percentage points",
+    "Ibaka is last at 74%, meaning he is near every close shot (many potential blocks)"
+   ],
+   "breakdown_regime": "The frequency drop is the quantitative Dwight Effect; Ibaka's high close-range share explains his block lead as opportunity, not superiority.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE quantified deterrence IS this frequency drop: the engine quantifies a factor's deterrence as the percentage-point reduction in opponent high-value attempt share, and reads a high attempt-share as opportunity inflation rather than skill, the Ibaka block-count lesson. GSI: quantified adversary volume suppression.",
+    "source_operator": "howard_deterrence_numbers",
+    "telemetry": "close-range share delta (57.2 to 48.2); opportunity-inflation flag"
+   }
+  },
+  {
+   "primitive_id": "sample_bias",
+   "name": "SportVU sample bias: only 15 arenas tracked",
+   "verbatim_quote": "as of January 2013, only 15 NBA arenas are equipped with SportVu systems.",
+   "page": 6,
+   "latex": "|\\text{tracked arenas}|=15\\ \\text{of}\\ 30\\Rightarrow \\text{non-random sample}",
+   "symbol_and_unit_ledger": {
+    "tracked arenas": "arenas with SportVU optical tracking [count]"
+   },
+   "assumptions": [
+    "Player-tracking data exists only in a subset of arenas",
+    "The sample is biased toward tracked arenas and likely introduces error"
+   ],
+   "breakdown_regime": "The non-random arena sample limits generalizability; the engine must treat tracking-derived metrics as sample-biased until coverage is complete.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE coverage-bias gate IS this sample limitation: the engine flags metrics derived from partial sensor coverage as sample-biased and down-weights or caveats them rather than treating them as league-wide truth. GSI: partial-coverage sampling bias.",
+    "source_operator": "sample_bias",
+    "telemetry": "arena coverage fraction; sample-bias caveat"
+   }
+  },
+  {
+   "primitive_id": "coordinate_abstraction",
+   "name": "Tracking reduces players to x,y pairs, losing body information",
+   "verbatim_quote": "When we reduce Serge Ibaka to a simple x,y pair, we lose key information.",
+   "page": 6,
+   "latex": "\\text{player}\\to(x,y)\\ \\text{abstraction loses 3D body, arms, jump}",
+   "symbol_and_unit_ledger": {
+    "x,y": "player court coordinates [length]"
+   },
+   "assumptions": [
+    "Optical tracking models players as discrete locations on a plane",
+    "A player is a 3-dimensional body with reach and verticality that the x,y abstraction omits"
+   ],
+   "breakdown_regime": "The geometric abstraction introduces uncertainty and error (a defender's reach contests shots his x,y position suggests he cannot); the engine must account for the abstraction gap.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE abstraction-gap caution IS this coordinate reduction: the engine recognizes that reducing an agent to a position/state vector discards capability dimensions (reach, verticality, speed), so proximity-based metrics carry an abstraction error that must be bounded. GSI: state-abstraction information loss.",
+    "source_operator": "coordinate_abstraction",
+    "telemetry": "x,y abstraction error; reach/verticality omission"
+   }
+  },
+  {
+   "primitive_id": "sanders_conclusion",
+   "name": "Conclusion: Larry Sanders best interior defender",
+   "verbatim_quote": "due to his outstanding performance in both case studies, we conclude by suggesting Larry Sanders is the best interior defender in the NBA.",
+   "page": 6,
+   "latex": "\\text{Sanders}=\\arg\\min\\ \\text{opponent FG% in both proximity studies}",
+   "symbol_and_unit_ledger": {
+    "argmin": "defender minimizing opponent efficiency [rank]"
+   },
+   "assumptions": [
+    "Sanders leads both the basket-proximity and shot-proximity efficiency measures",
+    "The conclusion is a suggestion based on two studies, not a definitive ranking"
+   ],
+   "breakdown_regime": "The authors explicitly note neither study clearly identifies best/worst; the conclusion is provisional and the ranking is study-dependent.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE multi-study convergent ranking IS this conclusion: the engine ranks a factor by convergence across independent measurement conditions (both proximity studies) rather than a single metric, while marking the ranking provisional pending more evidence. GSI: convergent-evidence ranking with provisional status.",
+    "source_operator": "sanders_conclusion",
+    "telemetry": "Sanders rank across both studies; provisional-ranking flag"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "goldsberry2013_dwight_effect",
+   "think": "This inline cycle extracts Kirk Goldsberry and Eric Weiss's 2013 MIT Sloan Research Paper Competition entry, The Dwight Effect: A New Ensemble of Interior Defense Analytics for the NBA, an eleven-page spatial-analytics treatment of rim protection that adds a deterrence-and-location layer to the Foundry's growing attribution stack. A provenance note is required on two counts: the corpus catalog tags this paper's primary domain as football, but its content is unambiguously NBA basketball, so it is extracted under its true domain of basketball analytics and the catalog mismatch is recorded; and the paper's value is conceptual and empirical rather than equation-heavy, so the primitives carry spatial-split and proximity definitions reconstructed as labeled LaTeX from the clean prose and the printed numerical results. Nineteen primitives are extracted, each with a clean verbatim quote verified as an exact substring, a page anchor, a symbol-and-unit ledger, assumptions, a breakdown regime, and a Layer-2 mapping with telemetry. No sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from baseball's triple-slash line and the long-standing failure of event-based defensive metrics across sports into this optical-tracking application. The load-bearing observation is that basketball is dualistic, the final score depends equally on scoring and preventing points, yet conventional statistics over-represent offense because offensive events are discrete and individually attributable while defense is a continuous spatial process that fails the discrete-event criterion. The genealogy is precise that this is not a basketball-only problem: baseball's errors and fielding percentage poorly correlate with true defensive value, and the NFL's best cornerbacks never lead conventional stats because quarterbacks refuse to throw their way. The paper's named contribution, the Dwight Effect, is defined as the ability of an interior defender to reduce the efficiency of an opponent's shooting behavior, and its deeper claim is that the most effective defense prevents shots from happening at all, producing invisible blocks that no event tally captures. This is the deterrence principle, and it descends directly from the cornerback analogy into a spatial measurement framework built on SportVU tracking of over seventy-five thousand shots.\n\nThe recursive theory of mind models the defender as an agent who changes the offense's decision process before any outcome occurs. A dominant interior force augments the spatial behavior of the offense the way a dominant cornerback changes a quarterback, so the shooter who would have attacked the rim instead settles for a mid-range jump shot, the least productive shot in the league. The analyst must therefore reason counterfactually: the value of the defender is not the blocks he records but the attempts he prevents, which must be inferred from the shift in opponent shot distribution. The spatial splits make this reasoning measurable by separating frequency, where shots come from, from efficiency, how well they go in, across three zones whose frequencies sum to one hundred, so deterrence appears as a conserved reallocation from close range to the perimeter. The analyst reads Howard's drop in opponent close-range frequency from 57.2 to 48.2 percent as the quantitative Dwight Effect, and reads Ibaka's league-leading block count as opportunity inflation, because Ibaka is near 74 percent of close shots and thus has more potential blocks, not necessarily more defensive value. This is a theory of mind about prevention as behavioral change, and it inverts the naive interpretation of event counts.\n\nThe cross-layer veto adjudication is where this book earns its place beside the accounting, regression, and network layers. The first veto is measurement-availability bias: offense is over-weighted because it is easy to count, so the engine must not equate measurability with importance and must explicitly value the hard-to-measure preventive side. The second veto is the biased-proxy warning: a visible event count like blocks is a biased proxy for true quality because the best prevention leaves no event, so the engine does not rank by the proxy alone, the cornerback zero-event elite-value case. The third veto is the dual-channel prevention requirement: defensive value acts on both opponent efficiency and opponent attempt frequency, and measuring only efficiency misses the larger and less visible deterrence channel. The fourth veto is the conserved-distribution discipline: because zone frequencies sum to one hundred, deterrence is a reallocation to lower-value attempts, not a deletion, so it is measurable as a shift. The fifth veto is the data-quality gate: the SportVU sample covers only fifteen arenas and reduces players to x,y pairs that discard reach and verticality, so tracking-derived metrics carry sample bias and abstraction error that the engine must bound rather than trust. The location-dependent efficiency curve links to the engine's field-position shot-quality model, the presence-conditioned opponent efficiency links to the Macdonald regression layer, and the convergent multi-study ranking links to the Foundry's anchor-to-outcome requirement.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The basket-proximity condition defines a defender as protecting the rim when within five feet of the basket, and the shot-proximity condition defines contesting when within one, three, or five feet of the shot, so the two case studies measure rim protection and shot contesting as distinct skills with distinct metrics. The league baselines anchor every comparison: 49.7 percent close-range efficiency with a defender present, 57.2 percent close-range attempt share, and 45.6 percent proximal field goal percentage, against which Hibbert and Sanders drop efficiency to 38 percent and Howard drops frequency to 48.2 percent. The near-rim compound value, that over 70 percent of near-rim shots yield points, a foul, or an offensive rebound, explains why this small area is the most defended real estate and why raw field goal percentage understates near-rim attempt value. The authors are explicit that neither study definitively identifies the best and worst defenders and that their provisional conclusion, Larry Sanders, rests on convergence across both studies rather than a single metric. These invariants ground the engine's distinct rim-protection and contest metrics, baseline-anchored comparisons, compound attempt valuation, and provisional convergent ranking, completing a sovereign deterrence-and-location layer that sits above the regression attribution layer and beside the network significance layer, all grounded in clean verbatim prose with honestly labeled definitions.",
+   "retrocausal_genealogy": "The genealogy runs from baseball's triple-slash line and the cross-sport failure of event-based defensive metrics into this SportVU optical-tracking application. The load-bearing observation is basketball's dualism, equal causality of scoring and preventing, yet stats over-represent offense because offensive events are discrete and attributable while defense is a continuous spatial process. The pattern is cross-sport: baseball errors/fielding percentage poorly track value, and elite NFL cornerbacks lead no stats because quarterbacks avoid them. The named Dwight Effect is the ability to reduce opponent shooting efficiency, and the deeper claim is that the best defense prevents shots entirely, producing invisible blocks. The spatial measurement framework descends from the cornerback deterrence analogy into tracking of 75,000-plus shots.",
+   "theory_of_mind": "The defender changes the offense's decision process before any outcome. A dominant interior force augments offensive spatial behavior like a cornerback changes a quarterback, so the shooter settles for a mid-range jumper instead of attacking the rim. The analyst reasons counterfactually: value is prevented attempts, inferred from the shift in opponent shot distribution, not recorded blocks. Spatial splits separate frequency from efficiency across three zones summing to 100, so deterrence is a conserved reallocation to the perimeter. Howard's close-range frequency drop 57.2 to 48.2 percent is the quantitative Dwight Effect; Ibaka's block lead is opportunity inflation (near 74 percent of close shots). This is prevention as behavioral change, inverting naive event-count interpretation.",
+   "cross_layer_veto": "Five vetoes adjudicate against the accounting, regression, and network layers. Measurement-availability bias: do not equate easiness-to-count with importance, value the preventive side explicitly. Biased-proxy warning: visible event counts (blocks) are biased proxies because the best prevention leaves no event, the cornerback zero-event elite case. Dual-channel prevention: value acts on opponent efficiency AND attempt frequency, and efficiency-only misses the larger deterrence channel. Conserved-distribution discipline: zone frequencies sum to 100, so deterrence is a measurable reallocation to lower-value attempts. Data-quality gate: SportVU covers only 15 arenas and reduces players to x,y pairs discarding reach/verticality, so bound sample bias and abstraction error. Location efficiency links to field-position shot quality, presence-conditioned efficiency to Macdonald regression, convergent ranking to anchor-to-outcome."
+  }
+ ],
+ "universal_lens": "Goldsberry & Weiss 2013 contributes the deterrence-and-location layer to the Foundry stack: the Dwight Effect (a defender reduces opponent shooting efficiency AND attempt frequency), spatial splits (frequency and efficiency triples across close/mid/three zones whose frequencies sum to 100), presence-conditioned opponent efficiency under basket-proximity and shot-proximity definitions, and the principle that the best defense prevents attempts entirely (invisible blocks). Its load-bearing invariants are measurement-availability bias, the biased-proxy warning (event counts understate deterrence), dual-channel prevention, conserved-distribution reallocation, location-dependent success probability, and the sample-bias/abstraction-error data-quality gate.",
+ "gsi_mapping": "For GSI these primitives are the general deterrence and spatial-value layer: value an agent by the behavioral change it induces in an adversary (reduced adversary success and volume), not just realized events; recognize that zero observable events can mean maximal value because adversaries avoid the agent; decompose performance by location into conserved frequency and efficiency components; measure presence-conditioned adversary success against a baseline; value prevention above mitigation; and bound sample-coverage bias and state-abstraction error in sensor-derived metrics. The dual-channel and conserved-reallocation disciplines make deterrence measurable rather than invisible.",
+ "gse_mapping": "For GSE this is the deterrence and field-position layer: the Dwight Effect IS preventive factor value measured as the change induced in opponent behavior, the cornerback case IS zero-event elite value (a shutdown factor avoids generating events), spatial splits IS the engine's zone-decomposed shot-quality-by-field-position model, the frequency-sum constraint IS conserved attempt reallocation, dual-channel prevention IS measuring both opponent efficiency and volume suppression, presence-conditioned efficiency links to the Macdonald regression layer, the near-rim compound value IS compound attempt valuation including second chances, and the 15-arena/x,y limitations ARE the sample-bias and abstraction-error gates. The convergent Sanders ranking links to anchor-to-outcome. Definitions are labeled and no sportsbook line is a model input."
+}
