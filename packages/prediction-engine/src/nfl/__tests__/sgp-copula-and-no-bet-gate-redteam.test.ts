@@ -22,10 +22,9 @@ describe("Vector 4 Red-Team Regression: SGP Copula Fréchet-Hoeffding & Parlay C
         {
           publishAllowed: true,
           decision: "KILLED",
-          wilsonLowerBound: 0.58,
-          netEdge: 0.06,
-          confidenceScore: "76/100",
-          reason: "Adverse line movement",
+          game_id: "nfl-2026-w10-buf-kc",
+          market_type: "SPREAD",
+          selection: "BUF -2.5",
         },
       ],
       0.62,
