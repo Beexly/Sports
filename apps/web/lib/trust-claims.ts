@@ -606,6 +606,18 @@ const LOCK_PROPER_NOUN_SAFE_CONTEXT =
 const LOCK_SURNAME_TABLE_DATA =
   /\);\s*Lock\s+\d+(?:\.\d+)?\s*\(|\b[A-Z][a-z]+\/Lock\/[A-Z][a-z]+\b|\b[A-Z][a-z]+\s+\d+,\s*Lock\s+\d+\s+vs\b/g;
 
+// SURNAME DATA IN TWO MORE TABLE SHAPES, added 2026-11-14 (docs-public-copy-scan
+// red on the Week-9 corpus lane digests in AGENTS.md): (1) a leaderboard
+// parenthetical -- "highest passer rating 2026, min. 200 attempts (Lock 127.3)";
+// (2) an all-lowercase kebab slug in a lane report -- "CSV
+// hawkblogger-lock-darnold-turnover-halves-2026.csv" -- where `lock` is a
+// filename fragment, not a claim. LIKE THE PAIR ABOVE, THE FIX BELONGS IN THIS
+// SHARED SCANNER: AGENTS.md is an agent-instruction file, so hand-editing it in
+// an unattended session is not an option. Both patterns are case-shaped, so the
+// slang forms ("a lock", "my lock 0.5u", "bills/lock/chiefs") still hit.
+const LOCK_SURNAME_PARENTHETICAL_AND_SLUG =
+  /\(\s*Lock\s+\d+(?:\.\d+)?|(?<=[a-z0-9])-lock(?=[-.])/g;
+
 /** Dated @handle social-digest lines (verbatim third-party data in memory docs). */
 export function isVerbatimSocialDigestLine(line: string): boolean {
   return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
@@ -656,6 +668,7 @@ export function scanForBannedPhrases(
       if (claim.id === "banned.lock") {
         subject = subject.replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ");
         subject = subject.replace(LOCK_SURNAME_TABLE_DATA, " ");
+        subject = subject.replace(LOCK_SURNAME_PARENTHETICAL_AND_SLUG, " ");
       }
       if (pattern.test(subject)) {
         hits.push({
