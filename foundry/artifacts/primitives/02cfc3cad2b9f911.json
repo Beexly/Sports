@@ -1,0 +1,515 @@
+{
+  "book_id": "02cfc3cad2b9f911",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_RECONSTRUCTED_LATEX",
+  "source_note": "Pablo Galaz-Cares, 'Optimizing Football Squad Planning: Balancing Competitive Success and Financial Sustainability', Hudl StatsBomb Research Competition 2024 (27 pages). Full paper: five-module multi-season squad-planning framework — (1) player characteristics from StatsBomb Premier League 2022/23+2023/24 events + TransferMarkt market values, (2) OBV For/Against 0-100 score (position-weighted percentile vs same-position, 10 events, 11 positions), (3) ML projection of score and log market value via age/age^2/prior-value regressions (8 models, LASSO best), (4) Projected Player Profile, (5) Integer Programming maximizing squad quality under budget/youth/position/age/score-increase constraints; Crystal Palace €100M case (5s, 0.1% gap) + budget sensitivity (7820->7751). Extracted faithfully (not a derivative summary). Formulas 1-7 and the IP objective/constraints are shifted-font (doubled-glyph math Unicode) and reconstructed as labeled LaTeX from prose and the Appendix A weight table. Domain football (soccer) matches catalog. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE; market values are TransferMarkt estimates, not betting odds.",
+  "primitives": [
+    {
+      "primitive_id": "sporting_director_goal",
+      "name": "Sporting Director assembles strongest squad to maximize competitiveness",
+      "verbatim_quote": "the Sporting Director’s role is to assemble the strongest squad, maximizing competitiveness and increasing the chances of winning championships through the proper selection of football players",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The Sporting Director's role is to assemble the strongest squad via proper player selection to maximize competitiveness and championship chances; a squad is the group of players registered via federative rights, each with age, nationality, position, height, contract length, salary, and estimated quality/market value that fluctuate over time."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Squad assembly for competitiveness is the same roster-construction objective GSE optimizes.",
+        "source_operator": "sporting_director_goal",
+        "telemetry": "Sporting Director -> strongest squad; federative rights; quality/value evolve"
+      }
+    },
+    {
+      "primitive_id": "subjective_decisions_gap",
+      "name": "Football squad decisions are subjective, lacking integrated structure",
+      "verbatim_quote": "In football, these decisions are often made based on subjective evaluations, with no clear structure that integrates qualitative and quantitative analyses",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Squad decisions (which positions to improve, renew expiring contracts, release/loan players, accept buy offers, promote youth) are often made subjectively with no structure integrating qualitative and quantitative analysis, complicated by legal/financial restrictions like foreign-player limits and budget constraints."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The subjective-decision gap is the same structured-reasoning need GSE fills for roster moves.",
+        "source_operator": "subjective_decisions_gap",
+        "telemetry": "subjective decisions; foreign-player/budget constraints; renew/release/loan/promote"
+      }
+    },
+    {
+      "primitive_id": "multi_season_balanced_strategy",
+      "name": "Multi-season planning balances sporting and financial goals",
+      "verbatim_quote": "maximizing performance over multiple seasons, while balancing both sporting and financial goals",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The methodology is a multi-season squad planning strategy maximizing performance over multiple seasons while balancing sporting goals (win championships, qualify for Copa Libertadores/Champions League, avoid relegation) and business goals (long-term financial sustainability, avoid distress/bankruptcy, comply with financial fair play and FIFA/domestic regulations)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The multi-season sporting/financial balance is the same multi-objective horizon GSE plans over.",
+        "source_operator": "multi_season_balanced_strategy",
+        "telemetry": "multi-season; sporting (titles/qualification/relegation) + financial (FFP/sustainability)"
+      }
+    },
+    {
+      "primitive_id": "financial_sustainability_objective",
+      "name": "Long-term financial sustainability is the business objective",
+      "verbatim_quote": "the primary objective is long-term financial sustainability, ensuring responsible spending and investments",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "On the business side the primary objective is long-term financial sustainability, ensuring responsible spending and investment, avoiding financial distress or bankruptcy, and complying with financial fair play regulations and legal requirements from FIFA and domestic leagues."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Financial sustainability is the same budget-solvency constraint GSE enforces on roster construction.",
+        "source_operator": "financial_sustainability_objective",
+        "telemetry": "financial sustainability; avoid bankruptcy; FFP/FIFA compliance"
+      }
+    },
+    {
+      "primitive_id": "workforce_planning_definition",
+      "name": "Workforce planning: analyze current, determine future, identify gap",
+      "verbatim_quote": "Workforce planning is defined as the process of analyzing the current workforce, determining future needs, and identifying the gap between the present and the future",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Workforce planning analyzes the current workforce, determines future needs, and identifies the gap, ensuring the right people with the right skills at the right time; a four-step process covers supply analysis (current/future composition, turnover via Attrition Rate Percentage), demand analysis, gap analysis, and solution analysis defining the Workforce Shape."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The supply/demand/gap/solution workflow is the same roster-gap analysis GSE performs.",
+        "source_operator": "workforce_planning_definition",
+        "telemetry": "workforce planning: supply/demand/gap/solution; Workforce Shape; attrition rate"
+      }
+    },
+    {
+      "primitive_id": "hierarchical_categorical_skills",
+      "name": "Hierarchical vs categorical skills map to player quality vs position",
+      "verbatim_quote": "Hierarchical skills suggest that increased skills correlate with greater work efficiency, such as age, experience, and expertise level, while categorical skills focus on what one can or cannot do",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Managerial workforce planning classifies skills as hierarchical (increased skill correlates with efficiency: age, experience, expertise) or categorical (what one can/cannot do: licenses, qualifications); the hierarchy analogizes player quality (higher quality, higher labour cost) and the category analogizes field position; skill evaluation covers labour costs, efficiency, quality, tasks, flexibility."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The hierarchical/categorical skill split is the same quality-vs-position decomposition GSE uses.",
+        "source_operator": "hierarchical_categorical_skills",
+        "telemetry": "hierarchical skill ~ player quality/cost; categorical ~ field position"
+      }
+    },
+    {
+      "primitive_id": "mixed_integer_heterogeneity",
+      "name": "Skill heterogeneity addressed via mixed-integer/integer/heuristic methods",
+      "verbatim_quote": "incorporating skills into workforce planning adds complexity due to heterogeneity, often addressed using mixed-integer problems, integer problems, and heuristic methods",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Incorporating skills adds complexity from heterogeneity, addressed with mixed-integer problems, integer problems, and heuristic methods; adaptive skill-pool decisions (hire/dismiss temporary or permanent workers) trade flexibility against cost (firing compensation, learning time); the mixed-integer approach suits player selection and squad management."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mixed-integer treatment of heterogeneity is the same combinatorial roster optimization GSE solves.",
+        "source_operator": "mixed_integer_heterogeneity",
+        "telemetry": "mixed-integer/integer/heuristic; flexibility-cost tradeoff"
+      }
+    },
+    {
+      "primitive_id": "linkage_to_strategic_financial",
+      "name": "Workforce plans must link to strategic and financial plans",
+      "verbatim_quote": "effective workforce planning must include a \"Linkage to Other Plans,\" ensuring that workforce plans are integrated with strategic and financial plans",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A National Academy of Public Administration panel stresses that effective workforce planning must include a 'Linkage to Other Plans', integrating workforce plans with strategic and financial plans so they are relevant to strategic intent and financially viable given limited resources, especially critical in sports organizations where budget constraints dominate."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The strategic/financial linkage is the same alignment constraint GSE imposes on roster plans.",
+        "source_operator": "linkage_to_strategic_financial",
+        "telemetry": "NAPA: Linkage to Other Plans; strategic + financial viability"
+      }
+    },
+    {
+      "primitive_id": "age_diversity_no_effect",
+      "name": "Age diversity shows no significant performance relationship",
+      "verbatim_quote": "the results indicated no significant relationship between age diversity and performance, suggesting that other factors may play a more critical role in determining success",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Research on workforce diversity and organizational performance (Tworek et al., 2016/17 football clubs, league points/standings) found no significant relationship between age diversity and performance, suggesting other factors matter more for success in sports organizations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The null age-diversity finding is the same evidence-based veto GSE applies to roster heuristics.",
+        "source_operator": "age_diversity_no_effect",
+        "telemetry": "age diversity ~ performance: no significant link (2016/17 clubs)"
+      }
+    },
+    {
+      "primitive_id": "ip_affiliation_horizon",
+      "name": "IP model decides each player's affiliation over a finite horizon",
+      "verbatim_quote": "For each player in the selected universe, the model determines the type of affiliation they should have with the club for all subsequent seasons within a predetermined finite horizon",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "An Integer Programming model determines, for each player in the selected universe, the type of affiliation (in the club or no affiliation) for all subsequent seasons within a predetermined finite horizon, requiring each player represented by basic characteristics plus time-projected attributes (performance score, market value) forming the 'player profile over time'."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The finite-horizon affiliation decision is the same multi-season contract/roster state GSE optimizes.",
+        "source_operator": "ip_affiliation_horizon",
+        "telemetry": "IP; per-player affiliation (In/Out) over finite horizon; player profile over time"
+      }
+    },
+    {
+      "primitive_id": "statsbomb_premier_league_data",
+      "name": "Data: StatsBomb Premier League 2022/23 + 2023/24 + TransferMarkt",
+      "verbatim_quote": "The data to be used are from the last two seasons of the Premier League (2022/2023 and 2023/2024) and include event data provided by StatsBomb",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Module 1 gathers basic data (name, DOB, nationality, position), performance statistics from the last two Premier League seasons (2022/2023, 2023/2024) via StatsBomb event data, and financial attributes (market values) web-scraped from TransferMarkt."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The StatsBomb+TransferMarkt substrate is the same event+financial data GSE fuses for valuation.",
+        "source_operator": "statsbomb_premier_league_data",
+        "telemetry": "StatsBomb PL 2022/23+2023/24 events; TransferMarkt market values"
+      }
+    },
+    {
+      "primitive_id": "obv_score_0_100",
+      "name": "OBV-based score 0-100: creating and preventing goal chances",
+      "verbatim_quote": "The score ranges from 0 to 100 and provides insight into a player’s contribution both in generating",
+      "page": 7,
+      "latex": "\\mathrm{Score}_{p,t}=w^{For}_{f}\\cdot OBV^{For}_{p,t}+w^{Against}_{f}\\cdot OBV^{Against}_{p,t}",
+      "symbol_and_unit_ledger": {
+        "Score": "0-100 player score",
+        "OBV For/Against": "on-ball value percentile",
+        "w_f": "position weights"
+      },
+      "assumptions": [
+        "Module 2 estimates a 0-100 score as a position-weighted linear combination of StatsBomb On-Ball Value For (creating goal-scoring opportunities) and Against (preventing them), where OBV values are the player's percentile rank relative to same-position league players per season (Formula 1 shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "Formula 1 shifted-font reconstructed",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The OBV For/Against score is the same two-sided possession-value rating GSE computes per player.",
+        "source_operator": "obv_score_0_100",
+        "telemetry": "Score 0-100 = w_f^For*OBV^For + w_f^Against*OBV^Against; percentile rank"
+      }
+    },
+    {
+      "primitive_id": "obv_percentile_same_position",
+      "name": "OBV is percentile rank vs same-position league players",
+      "verbatim_quote": "the OBV values represent the percentile rank of the player relative to other players in the league playing in the same position",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "OBV For and Against are percentile ranks relative to same-position league players, themselves linear combinations of each player's relative contribution per event weighted differently by position and event; shots/dribbles are valued higher for offensive positions, blocks/recoveries for defensive positions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Same-position percentile normalization is the same role-relative grading GSE applies.",
+        "source_operator": "obv_percentile_same_position",
+        "telemetry": "OBV = percentile vs same-position; event weights vary by position"
+      }
+    },
+    {
+      "primitive_id": "position_weighted_for_against",
+      "name": "Position weights tilt score toward creating or preventing chances",
+      "verbatim_quote": "The considered weights were proposed and discussed between Sporting Director and the club’s staff",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The For/Against weights vary by field position: Appendix A gives GK 0.1/0.9, center backs 0.2/0.8, full backs 0.3/0.7, defensive midfield 0.4/0.6, center midfield 0.5/0.5, offensive midfield 0.7/0.3, wings 0.8/0.2, center forward 0.9/0.1, reflecting each position's offensive versus defensive emphasis; weights were proposed and discussed with the Sporting Director and club staff."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The position-weighted For/Against tilt is the same role-conditioned value weighting GSE uses.",
+        "source_operator": "position_weighted_for_against",
+        "telemetry": "GK 0.1/0.9 ... CF 0.9/0.1 For/Against; staff-elicited weights"
+      }
+    },
+    {
+      "primitive_id": "obv_relative_action_contribution",
+      "name": "OBV per event = player avg contribution minus league same-position avg",
+      "verbatim_quote": "the average contribution per action for each player minus 2) the average contribution per action of players in the league who play in the same position",
+      "page": 8,
+      "latex": "OBV_{p,t,e}=\\overline{OBV}^{player}_{p,t,e}-\\overline{OBV}^{league}_{t,e}",
+      "symbol_and_unit_ledger": {
+        "OBV_p,t,e": "per-event relative contribution",
+        "10 events": "Shot/Block/Pass/Clearance/Carry/Interception/Dribble/Duel/Foul/GK Save"
+      },
+      "assumptions": [
+        "The per-action percentile is the player's average contribution per action minus the average contribution per action of same-position league players (Formulas 4-5), aggregated over 10 events (Shot, Block, Pass, Clearance, Carry, Interception, Dribble, Duel, Foul Committed, Goalkeeper Save) with position/event-specific weights (Formulas 2-3 shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "Formulas 2-5 shifted-font reconstructed",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The player-minus-league action delta is the same above-average contribution kernel GSE uses.",
+        "source_operator": "obv_relative_action_contribution",
+        "telemetry": "OBV_p,t,e = player avg - league same-position avg; 10 events"
+      }
+    },
+    {
+      "primitive_id": "position_mode_minutes",
+      "name": "Position assigned by mode of minutes played",
+      "verbatim_quote": "Player position is determined by the mode of minutes played, meaning that each player is assigned to a single position for this analysis",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Each player is assigned a single position, the mode of minutes played (the position with the most minutes that season), across 11 considered positions: GK, LCB, RCB, LB, RB, DM, CM, OM, LW, RW, CF."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mode-of-minutes position assignment is the same primary-role labeling GSE uses.",
+        "source_operator": "position_mode_minutes",
+        "telemetry": "position = mode of minutes; 11 positions"
+      }
+    },
+    {
+      "primitive_id": "ml_project_score_and_value",
+      "name": "ML projects performance score and market value into future seasons",
+      "verbatim_quote": "This module utilizes machine learning models to project two player characteristics for future seasons, thus creating a Projected Player Profile",
+      "page": 9,
+      "latex": "\\mathrm{score}_{p,t+1}\\sim \\mathrm{score}_{p,t}+age_p+age_p^2+position;\\ \\log(mv)_{p,t+1}\\sim\\log(mv)_{p,t}+age_p+age_p^2+position",
+      "symbol_and_unit_ledger": {
+        "score/mv": "projected performance score / market value",
+        "age,age^2": "age curve"
+      },
+      "assumptions": [
+        "Module 3 projects performance score and market value into future seasons to create a Projected Player Profile, using regression specifications on prior score (or log market value), age, age-squared, and position (Formulas 6-7 shifted-font, reconstructed), capturing the age curve."
+      ],
+      "breakdown_regime": "Formulas 6-7 shifted-font reconstructed",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The age-curve projection is the same future-value forecasting GSE applies to roster planning.",
+        "source_operator": "ml_project_score_and_value",
+        "telemetry": "score_{t+1} ~ score_t + age + age^2 + position; log(mv) analogous"
+      }
+    },
+    {
+      "primitive_id": "eight_models_rmse_mae_shap",
+      "name": "8 models compared by RMSE/MAE with SHAP importance",
+      "verbatim_quote": "To measure the performance of the models and make them comparable, we are going to check two measure errors: RMSE (root mean squared error) and MAE (mean absolute error)",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Eight models (Linear Regression, Random Forest, Ridge, xGBoost, LASSO, Support Vector Regression, Decision Tree, Artificial Neural Networks) are calibrated on 80% of data and evaluated on the remaining 20% by RMSE and MAE, with SHAP values assessing each variable's importance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The multi-model RMSE/MAE bake-off with SHAP is the same model-selection audit GSE runs.",
+        "source_operator": "eight_models_rmse_mae_shap",
+        "telemetry": "8 models; 80/20 split; RMSE+MAE; SHAP importance"
+      }
+    },
+    {
+      "primitive_id": "ip_maximize_quality_constraints",
+      "name": "IP maximizes squad quality under budget/regulation/structure constraints",
+      "verbatim_quote": "This model aims to maximize squad quality subject to budget constraints for player acquisitions and salaries, tournament regulations such as the maximum number of foreign players or a minimum number of young players",
+      "page": 11,
+      "latex": "\\max\\sum_{p,t}x_{p,t}\\,q_{p,t}",
+      "symbol_and_unit_ledger": {
+        "x_p,t": "In squad indicator",
+        "q_p,t": "player quality",
+        "CAPhire": "hire budget",
+        "k_f": "per-position count",
+        "numyouth": "min youth"
+      },
+      "assumptions": [
+        "Module 5 is an Integer Programming problem maximizing total squad quality (sum of x_p,t * q_p,t) subject to hire-budget (sum hire-aux * market value <= CAPhire), minimum-youth (sum x*h >= numyouth), per-position counts (<= k_f), max squad size, max hire age, and a season-over-season score-increase constraint, with decision variables x (In), y (Out), and hire-aux (Hired) (objective and constraints shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "IP objective/constraints shifted-font reconstructed",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The constrained quality-maximization IP is the same roster-optimization core GSE solves.",
+        "source_operator": "ip_maximize_quality_constraints",
+        "telemetry": "max sum x*q; budget/youth/position/age/score-increase constraints"
+      }
+    },
+    {
+      "primitive_id": "one_status_per_season",
+      "name": "Each player in exactly one status (In/Out) per season",
+      "verbatim_quote": "Each player must be in one status in each season",
+      "page": 12,
+      "latex": "x_{p,t}+y_{p,t}=1;\\ y_{p,t}-y_{p,t-1}\\le hire\\text{-}aux_{p,t-1}",
+      "symbol_and_unit_ledger": {
+        "x+y=1": "In/Out exclusivity",
+        "hire dummy": "links Out->In transition to hiring"
+      },
+      "assumptions": [
+        "Variable-relation constraints require each player in exactly one status per season (x_p,t + y_p,t = 1) and a hire dummy linking the Out-to-In transition (y_p,t - y_p,t-1 <= hire-aux_p,t-1), so a player joining the squad is counted as hired and charged to the budget (equations shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "variable-relation eqs shifted-font reconstructed",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The exclusive-status and hire-transition logic is the same roster-state accounting GSE enforces.",
+        "source_operator": "one_status_per_season",
+        "telemetry": "x+y=1; hire dummy y_t - y_{t-1} <= hire-aux_{t-1}"
+      }
+    },
+    {
+      "primitive_id": "lasso_best_score_prediction",
+      "name": "LASSO best for score prediction (RMSE 13.2 / MAE 10.6)",
+      "verbatim_quote": "LASSO Regression, with an RMSE of 13.2 and an MAE of 10.6, demonstrates the best performance in predicting the players’ performance score",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "LASSO Regression best predicts performance score (RMSE 13.2, MAE 10.6 on the 0-100 scale, about 13 points average deviation, moderate accuracy); the small RMSE-MAE gap indicates consistent predictions with few extreme outliers; Ridge and Linear are close, while complex models (Decision Tree 16.0, xGBoost 15.8) perform worse, so LASSO balances simplicity and accuracy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "LASSO's simplicity beating complex models is the same parsimony preference GSE applies.",
+        "source_operator": "lasso_best_score_prediction",
+        "telemetry": "score: LASSO RMSE 13.2/MAE 10.6 best; Decision Tree 16.0/xGBoost 15.8 worse"
+      }
+    },
+    {
+      "primitive_id": "lasso_best_market_value",
+      "name": "LASSO best for log market value (RMSE 0.41 / MAE 0.31)",
+      "verbatim_quote": "For the log-transformed market value, LASSO Regression also performs best, with an RMSE of 0.41 and an MAE of 0.31",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "For log-transformed market value LASSO also performs best (RMSE 0.41, MAE 0.31), with close error metrics indicating high-quality predictions and minimal extreme outliers; SVR and Ridge perform well while Random Forest and ANN produce higher errors; in the log-log transformation the errors back-transform to small market-value deviations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The log-value LASSO result is the same market-value forecasting GSE uses for transfer timing.",
+        "source_operator": "lasso_best_market_value",
+        "telemetry": "log(mv): LASSO RMSE 0.41/MAE 0.31 best; RF/ANN worse"
+      }
+    },
+    {
+      "primitive_id": "shap_age_dominates_position",
+      "name": "SHAP: age and prior value dominate; position near zero",
+      "verbatim_quote": "positional features display minimal impact, clustering around zero",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "SHAP analysis shows age, age-squared, and prior score are the most influential features for score prediction, and age-squared and prior log market value for value prediction, with high values contributing positively; positional features cluster around zero, indicating age-related factors and season information matter more than positional attributes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The age-dominant SHAP profile is the same age-curve emphasis GSE's projections carry.",
+        "source_operator": "shap_age_dominates_position",
+        "telemetry": "SHAP: age/age^2/prior value dominate; position ~ 0"
+      }
+    },
+    {
+      "primitive_id": "crystal_palace_fast_optimal",
+      "name": "Crystal Palace instance solves in 5 seconds, 0.1% optimality gap",
+      "verbatim_quote": "the problem is solvable in just 5 seconds with an optimality gap of 0.1%",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The Crystal Palace instance (hire budget €100M, min 3 U21 players, 2 players per position except 3 goalkeepers, max age 35, min contract length 2) solves in 5 seconds with a 0.1% optimality gap, indicating the model can scale to more constraints and a larger player pool for scouting across more leagues; generated squads are better organized and balanced across positions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The fast near-optimal solve is the same tractable roster-optimization evidence GSE needs.",
+        "source_operator": "crystal_palace_fast_optimal",
+        "telemetry": "Crystal Palace €100M/3 U21/2 per pos/3 GK/age 35; 5s, 0.1% gap"
+      }
+    },
+    {
+      "primitive_id": "budget_sensitivity_tradeoff",
+      "name": "Budget sensitivity: 100M->7820 down to 10M->7751 total score",
+      "verbatim_quote": "With a budget of €100 million, the total overall score reaches 7820, the highest among all scenarios",
+      "page": 20,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Sensitivity analysis adjusting only the hire budget shows total overall score 7820 at €100M, 7810 at €50M, 7792 at €20M, and 7751 at €10M; performance stays relatively stable under moderate cuts but significant reductions, especially at €10M, noticeably impact performance over time, underscoring the balance between budget management and performance objectives."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The budget-performance frontier is the same financial-flexibility tradeoff GSE quantifies for roster planning.",
+        "source_operator": "budget_sensitivity_tradeoff",
+        "telemetry": "budget 100/50/20/10M -> score 7820/7810/7792/7751; stable then drops"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "squadplanning2024_trace",
+      "think": "The retrocausal genealogy of this paper is the adaptation of operations-research workforce planning to the peculiar dynamics of professional football. Pablo Galaz-Cares, writing for the Hudl StatsBomb 2024 Research Competition, observes that the Sporting Director's role is to assemble the strongest squad to maximize competitiveness, yet football's contract decisions, which positions to improve, whether to renew expiring contracts, whom to release or loan, whether to accept a buy offer, whom to promote from the academy, are typically made subjectively with no structure integrating qualitative and quantitative analysis, and are further complicated by foreign-player limits and budget constraints. The paper imports the workforce-planning canon, the four-step supply-demand-gap-solution process, the hierarchical versus categorical skill distinction, and the National Academy of Public Administration's insistence that workforce plans link to strategic and financial plans, and maps hierarchical skill onto player quality and categorical skill onto field position. The objective is a multi-season squad planning strategy that maximizes performance over several seasons while balancing sporting goals, winning championships, qualifying for the Champions League or Copa Libertadores, avoiding relegation, against business goals of long-term financial sustainability, avoiding bankruptcy, and complying with financial fair play and FIFA regulations. The enabling data are StatsBomb event data for the last two Premier League seasons, 2022/2023 and 2023/2024, plus market values web-scraped from TransferMarkt. The methodology is five interconnected modules: player characteristics, score estimation, machine-learning projection, the projected player profile, and the integer-programming optimizer. The recursive theory of mind begins with the On-Ball Value score. Module 2 builds a zero-to-one-hundred score as a position-weighted linear combination of OBV For, creating goal-scoring opportunities, and OBV Against, preventing them, where each OBV is the player's percentile rank against same-position league players, computed per event as the player's average contribution minus the league same-position average over ten events, with position weights running from goalkeeper 0.1/0.9 to center forward 0.9/0.1. Position is assigned by the mode of minutes played across eleven roles. Module 3 then projects score and log market value into future seasons via regressions on prior value, age, age-squared, and position, capturing the age curve. Cross-layer veto adjudication is the model selection and the optimization formulation. Eight models, linear, ridge, LASSO, decision tree, random forest, xGBoost, support vector regression, and neural networks, are calibrated on eighty percent of the data and tested on the rest by RMSE and MAE with SHAP importance. LASSO wins both tasks, score RMSE 13.2 and MAE 10.6, log market value RMSE 0.41 and MAE 0.31, while more complex models like decision tree and xGBoost perform worse, and SHAP shows age and prior value dominate while positional features cluster near zero. Module 5 is an integer program maximizing total squad quality subject to a hire budget, a minimum youth count, per-position counts, a maximum squad size and hire age, and a season-over-season score-increase constraint, with exclusive In/Out status per player and a hire dummy charging arrivals to the budget. The implementation invariants map directly onto GSE. The OBV For/Against score is GSE's two-sided possession-value rating; the player-minus-league action delta is GSE's above-average contribution kernel; the age-curve projection is GSE's future-value forecast; and the constrained quality-maximization integer program is GSE's roster-optimization core, with the budget-performance frontier as its financial-flexibility tradeoff. The outputs are squad configurations and transaction timing from public event and market data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The results, sensitivity, and limitations close the account. The Crystal Palace instance, a hundred-million-euro hire budget, three minimum under-21 players, two per position except three goalkeepers, maximum age thirty-five, solves in five seconds with a 0.1 percent optimality gap, and the score-increase constraint is met with the largest gain and most spending in the first season because the existing squad was not built with the methodology; player replacements are sometimes delayed a season while structural issues are fixed first. The budget sensitivity gives total scores of 7820, 7810, 7792, and 7751 at budgets of 100, 50, 20, and 10 million euros, stable under moderate cuts but dropping noticeably at the lowest budget. The honest limitations are that the OBV weights are staff-elicited rather than learned, the projection errors are moderate at about thirteen score points, and the model assumes each player contributes additively to squad quality. The invariant for GSE is to carry the OBV valuation, the age-curve projection, and the constrained multi-season integer program while recording the elicited-weight subjectivity and the additive-quality assumption before any quantitative reuse. A structurally important detail is how the season-over-season score-increase constraint shapes the temporal pattern of investment: because the objective rewards total quality across the horizon while the constraint forces monotone improvement, the optimizer concentrates spending in the first season, where the gap between the inherited squad and the optimal squad is largest, then targets specific reinforcements later. The hire dummy is what makes this accounting honest, charging a player to the budget only in the season they transition from Out to In, so a renewal or a retained player is never double-counted as a new acquisition. This is precisely the multi-year capital-allocation logic GSE needs when it plans roster moves across several seasons rather than greedily optimizing a single week, and it is why the integer-programming formulation, not a heuristic, is the right tool for the problem.",
+      "retrocausal_genealogy": "Workforce-planning OR adapted to football: 4-step supply/demand/gap/solution, Workforce Shape, attrition rate; hierarchical skill~player quality/cost, categorical~position; NAPA 'Linkage to Other Plans' (strategic+financial). Galaz-Cares, Hudl StatsBomb 2024 Research Competition. Sporting Director decisions (improve position/renew/release/loan/accept offer/promote youth) subjective, no integrated qual+quant structure; foreign-player/budget constraints. Multi-season strategy: sporting (titles/UCL-Libertadores qualification/avoid relegation) + business (financial sustainability/avoid bankruptcy/FFP/FIFA). Data: StatsBomb PL 2022/23+2023/24 events + TransferMarkt scraped market values. 5 modules. Prior: Boon-Sierksma team formation IP, Ahmed cricket multi-objective, age-diversity null (Tworek 2016/17).",
+      "theory_of_mind": "Module 2 OBV score 0-100 = w_f^For*OBV^For + w_f^Against*OBV^Against (F1); OBV=percentile vs same-position; per-event OBV_p,t,e=player avg - league same-position avg (F4-5) over 10 events (Shot/Block/Pass/Clearance/Carry/Interception/Dribble/Duel/Foul/GK Save), position/event weights (F2-3); weights GK 0.1/0.9...CF 0.9/0.1 (staff-elicited); position=mode of minutes, 11 roles. Module 3 projects score_{t+1}~score_t+age+age^2+position (F6), log(mv) analogous (F7); 8 models 80/20 RMSE+MAE+SHAP. Module 4 PPP (general + per-season age/youth<21/score/mv). Equations shifted-font reconstructed.",
+      "cross_layer_veto": "LASSO best: score RMSE 13.2/MAE 10.6 (~13pt moderate), log(mv) 0.41/0.31; Decision Tree 16.0/xGBoost 15.8 worse; SHAP age/age^2/prior value dominate, position~0. Module 5 IP max sum x_p,t*q_p,t; constraints hire budget sum hire-aux*m<=CAPhire, min youth sum x*h>=numyouth, per-position <=k_f, max squad, max age, score-increase sum x_t*q_t<=sum x_{t+1}*q_{t+1}; x+y=1, hire dummy y_t-y_{t-1}<=hire-aux_{t-1}. Crystal Palace €100M/3 U21/2 per pos/3 GK/age 35/contract 2: 5s solve, 0.1% gap; score-increase met, biggest gain+spend first season; replacements delayed for structure. Budget sensitivity 100/50/20/10M -> 7820/7810/7792/7751, stable then drops at 10M. Limits: staff-elicited OBV weights, ~13pt projection error, additive-quality assumption. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "Multi-season football squad planning is a five-module pipeline that converts StatsBomb event data into a position-weighted On-Ball Value score, projects score and market value over an age curve with LASSO regression, and feeds an integer program that maximizes total squad quality subject to hire-budget, youth, position, age, and season-over-season score-increase constraints, exposing a budget-performance frontier via sensitivity analysis.",
+  "gsi_mapping": "GSI treats Score_p,t=w_f^For*OBV^For+w_f^Against*OBV^Against (F1, 0-100), OBV=percentile vs same-position, OBV_p,t,e=player avg - league avg (F4-5) over 10 events, weights GK 0.1/0.9...CF 0.9/0.1 (Appendix A, staff-elicited), position=mode of minutes (11 roles); projections score_{t+1}~score_t+age+age^2+position (F6) and log(mv) (F7); 8 models 80/20 RMSE+MAE+SHAP, LASSO best score 13.2/10.6 and log(mv) 0.41/0.31, complex models worse, age dominates position~0; IP max sum x*q with hire-budget/min-youth/per-position/max-age/score-increase constraints, x+y=1, hire dummy; Crystal Palace €100M/3 U21/2 per pos/3 GK/age 35 solves 5s/0.1% gap; budget 100/50/20/10M->7820/7810/7792/7751; data StatsBomb PL 2022/23+2023/24 + TransferMarkt.",
+  "gse_mapping": "GSE lifts the OBV For/Against two-sided valuation, the player-minus-league above-average contribution kernel, the age-curve LASSO projection, and the constrained multi-season integer-programming roster optimizer (with exclusive In/Out status, hire-transition budget accounting, and the score-increase constraint) plus the budget-performance sensitivity frontier as its squad-construction layer; records the staff-elicited weight subjectivity, moderate ~13-point projection error, and additive-quality assumption as vetoes; all outputs are squads and transaction timing from public event/market data, never sportsbook lines."
+}
