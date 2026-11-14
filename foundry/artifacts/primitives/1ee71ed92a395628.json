@@ -1,0 +1,628 @@
+{
+  "book_id": "1ee71ed92a395628",
+  "shard": "1",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_PROSE_GARBLED_MATH_RECONSTRUCTED",
+  "source_note": "Horton (Sportlogiq), 2020, 'Learning Feature Representations from Football Tracking', NFL Big Data Bowl (acknowledges Luke Bornn). American football (NFL). Prose extracts cleanly; tensor-dimension and function-type symbols render as garbled placeholders (R?x@) and are reconstructed as labeled LaTeX from the unambiguous prose, flagged in assumptions. Model outputs are statistical event probabilities/expectations from tracking data; the in-game betting line-closing mention is a downstream use-case, not a model input. Zero sportsbook lines, spreads, totals, or implied odds as inputs.",
+  "primitives": [
+    {
+      "primitive_id": "raw_tracking_framework",
+      "name": "Learn representations directly from raw tracking",
+      "verbatim_quote": "we present a flexible neural network framework that accepts as input the raw trajectory data produced by the player tracking systems deployed in many professional sports and learns an internal representation of the individual and coordinated movement of all involved players.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A neural framework ingests raw player trajectories and learns individual plus coordinated movement, with no hand-engineered features."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A learned play representation from raw tracking is the same end-to-end feature discovery GSE wants instead of bespoke situational features.",
+        "source_operator": "raw_tracking_framework",
+        "telemetry": "raw trajectories -> learned representation"
+      }
+    },
+    {
+      "primitive_id": "three_no_requirements",
+      "name": "No feature engineering, variable duration, no ordering",
+      "verbatim_quote": "The framework eliminates the necessity to manually engineer features, deals with trajectories of variable time duration, and does not require an ordering of players in the input.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Three requirements removed: manual features, fixed duration, and a fixed player order."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Removing preprocessing constraints is the same flexibility GSE needs to ingest heterogeneous tracking feeds.",
+        "source_operator": "three_no_requirements",
+        "telemetry": "no features / variable T / unordered players"
+      }
+    },
+    {
+      "primitive_id": "nn_input_mismatch",
+      "name": "Tracking data violates NN input assumptions",
+      "verbatim_quote": "The methods place some constraints on the structure of the input they accept, typically requiring that each input is a predefined shape, and that the values within the inputs are consistently ordered.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Standard NNs need fixed shape and consistent ordering; tracking data satisfies neither."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mismatch between raw sport data and model input contracts is the same integration problem GSE faces across data sources.",
+        "source_operator": "nn_input_mismatch",
+        "telemetry": "NN needs fixed shape + order; tracking has neither"
+      }
+    },
+    {
+      "primitive_id": "variable_duration_problem",
+      "name": "Variable-duration problem",
+      "verbatim_quote": "Tracking data is fundamentally temporal, and the interval between events is also variable, resulting in variability in the temporal dimension of inputs, henceforth referred to as the variable duration problem.",
+      "page": 1,
+      "latex": "T^{(i)}\\ \\text{varies per play }i",
+      "symbol_and_unit_ledger": {
+        "T(i)": "number of frames in play i (count)"
+      },
+      "assumptions": [
+        "Plays have different lengths and event timings, so the temporal input dimension is not fixed."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Variable-length sequences are the same temporal-heterogeneity problem GSE handles with pooling or recurrent encoders.",
+        "source_operator": "variable_duration_problem",
+        "telemetry": "T varies play to play"
+      }
+    },
+    {
+      "primitive_id": "player_ordering_problem",
+      "name": "Player-ordering problem",
+      "verbatim_quote": "There is thus no intrinsic ordering of players in a given interval of play that persists from interval to interval, or game to game. This is the player-ordering problem.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Personnel changes mean no stable player slot persists across plays; even player count can vary."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Unordered, variable-cardinality agents are the same set-input problem GSE faces when rosters and personnel shift.",
+        "source_operator": "player_ordering_problem",
+        "telemetry": "no persistent player order"
+      }
+    },
+    {
+      "primitive_id": "no_canonical_arch",
+      "name": "No canonical raw-tracking architecture existed",
+      "verbatim_quote": "The variable duration and player ordering problems are intrinsic to tracking data, and they are inconsistent with the input structure requirements of many standard machine learning models, and to date, there is no canonical neural network architecture that accepts raw tracking data as input.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Before this work there was no standard NN accepting raw tracking; preprocessing was the workaround."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Filling an architectural gap is the same contribution pattern GSE values: a reusable encoder for a data modality.",
+        "source_operator": "no_canonical_arch",
+        "telemetry": "gap: no raw-tracking NN"
+      }
+    },
+    {
+      "primitive_id": "handcrafted_cost",
+      "name": "Handcrafted features are costly and lossy",
+      "verbatim_quote": "It is time-consuming to design, implement and process the structured feature representation; and the feature representation will necessarily omit some of the information available in the raw tracking.",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Manual features cost engineering effort and discard information present in the raw signal."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feature engineering both costs labor and loses signal; GSE prefers learned representations that retain the raw information.",
+        "source_operator": "handcrafted_cost",
+        "telemetry": "handcrafted = slow + lossy"
+      }
+    },
+    {
+      "primitive_id": "conv_pool_deepsets",
+      "name": "Solution: conv+adaptive pooling and Deep Sets",
+      "verbatim_quote": "the player ordering problem is addressed by using the Deep Sets network architecture",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Convolutions plus adaptive pooling solve variable duration; Deep Sets solves player ordering by treating players as an unordered set."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Deep Sets plus adaptive pooling is the same symmetry-aware encoding GSE can adopt for multi-agent tracking.",
+        "source_operator": "conv_pool_deepsets",
+        "telemetry": "duration: conv+pool; order: Deep Sets"
+      }
+    },
+    {
+      "primitive_id": "skill_isolation",
+      "name": "Isolate player skill from situational context",
+      "verbatim_quote": "the ability to accurately predict the probability of success of a pass allows the skill of the quarterback and catcher in executing the pass to be isolated from the situational context in which the pass was made, such as the play run and the defensive formation.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Predicting pass-success probability lets QB/receiver skill be separated from play call and defensive formation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A context-aware outcome model is the same skill-vs-context decomposition GSE uses to grade players independent of situation.",
+        "source_operator": "skill_isolation",
+        "telemetry": "pass prob -> skill | context"
+      }
+    },
+    {
+      "primitive_id": "bdb_data",
+      "name": "NFL Big Data Bowl 2019 data",
+      "verbatim_quote": "The dataset contained full tracking data for all the games played in the first six weeks of the 2017 NFL season.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Evaluation uses the NFL 2019 Big Data Bowl dataset: weeks 1-6 of the 2017 season."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A public competition dataset is the same reproducible benchmark GSE uses to validate tracking models.",
+        "source_operator": "bdb_data",
+        "telemetry": "NFL BDB 2019, 2017 weeks 1-6"
+      }
+    },
+    {
+      "primitive_id": "three_tensors",
+      "name": "Three input tensors per play",
+      "verbatim_quote": "Each input example contains three component tensors: player tracking data, player metadata, and gamestate metadata; and models a single play",
+      "page": 3,
+      "latex": "\\text{trajectory}\\in\\mathbb R^{M_{\\text{track}}\\times S\\times T},\\ \\text{player}\\in\\mathbb R^{M_{\\text{player}}\\times S},\\ \\text{play}\\in\\mathbb R^{M_{\\text{play}}}",
+      "symbol_and_unit_ledger": {
+        "S": "number of players (count)",
+        "T": "frames (count)",
+        "M_track,M_player,M_play": "feature-vector lengths"
+      },
+      "assumptions": [
+        "One example models a single play; trajectory, player attributes, and play context are separate tensors."
+      ],
+      "breakdown_regime": "tensor dimension symbols garbled in PDF; reconstructed from prose",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Separating trajectory, identity, and context tensors is the same multi-modal input structure GSE uses for a snap.",
+        "source_operator": "three_tensors",
+        "telemetry": "trajectory + player + play tensors"
+      }
+    },
+    {
+      "primitive_id": "uniform_frames",
+      "name": "Uniform 10 Hz frame sampling",
+      "verbatim_quote": "Frames are captured at uniform intervals, e.g. every tenth of a second, for every player participating in the play.",
+      "page": 3,
+      "latex": "\\Delta t=0.1\\ \\text{s}",
+      "symbol_and_unit_ledger": {
+        "Delta t": "frame interval (s)"
+      },
+      "assumptions": [
+        "Each frame holds x,y plus optional orientation, speed, direction; sampled uniformly for all players."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A fixed sampling grid is the same temporal discretization GSE assumes when aligning multi-player tracks.",
+        "source_operator": "uniform_frames",
+        "telemetry": "10 Hz frames, x/y + speed/dir"
+      }
+    },
+    {
+      "primitive_id": "down_structure",
+      "name": "Football's discrete down structure",
+      "verbatim_quote": "football has a convenient property in that the game is segmented into downs, i.e. short sequences of play that all have a discrete start point—the snap—and where the players are consistently spatially arranged—the line of scrimmage.",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Downs give a discrete snap start and a consistent line-of-scrimmage arrangement; plays unfold mostly linearly."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The snap-to-whistle down is the same natural segmentation unit GSE uses to bound a play representation.",
+        "source_operator": "down_structure",
+        "telemetry": "down = snap -> linear unfold"
+      }
+    },
+    {
+      "primitive_id": "permutation_invariant",
+      "name": "Permutation-invariant layer (scalar play output)",
+      "verbatim_quote": "a network layer is invariant if it instantiates a function that accepts a set of features for each player as input and returns a scalar response that is the same regardless of the order of the players in the input.",
+      "page": 6,
+      "latex": "f_{\\text{inv}}(X P)\\equiv f_{\\text{inv}}(X)",
+      "symbol_and_unit_ledger": {
+        "X": "player-feature matrix in R^{M x S}",
+        "P": "any S x S permutation matrix",
+        "f_inv": "set-to-scalar map"
+      },
+      "assumptions": [
+        "Pass-completion probability is invariant: reordering players does not change the scalar estimate."
+      ],
+      "breakdown_regime": "requires a symmetric aggregation (sum/mean/max) over the set dimension",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Permutation invariance is the same symmetry GSE needs so a play's value does not depend on roster slot order.",
+        "source_operator": "permutation_invariant",
+        "telemetry": "f_inv(XP)=f_inv(X)"
+      }
+    },
+    {
+      "primitive_id": "permutation_equivariant",
+      "name": "Permutation-equivariant layer (per-player output)",
+      "verbatim_quote": "a network layer is equivariant if it accepts a set of feature vectors for each player, and outputs a set of response values, one for each input, that are the same regardless of the order of the input.",
+      "page": 6,
+      "latex": "f_{\\text{eq}}(X P)\\equiv P\\, f_{\\text{eq}}(X)",
+      "symbol_and_unit_ledger": {
+        "f_eq": "set-to-set map",
+        "P": "permutation matrix"
+      },
+      "assumptions": [
+        "Tackler probability is equivariant: each defender gets a probability that permutes with the input order."
+      ],
+      "breakdown_regime": "output must reorder consistently with input permutation",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equivariance is the same per-agent symmetry GSE needs to assign each player a role-consistent prediction.",
+        "source_operator": "permutation_equivariant",
+        "telemetry": "f_eq(XP)=P f_eq(X)"
+      }
+    },
+    {
+      "primitive_id": "metadata_conditioning",
+      "name": "Condition on player and play metadata",
+      "verbatim_quote": "We thus wish to condition the learned representations of player movements with details of the players, and further we want to condition the aggregate behavior of all players during the play with details of the play state.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Player attributes (height, position) and play state (down, yards-to-go) condition the movement representation via concatenation or bilinear transforms."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Conditioning movement on identity and context is the same context-injection GSE uses to make a representation situation-aware.",
+        "source_operator": "metadata_conditioning",
+        "telemetry": "condition on player + play metadata"
+      }
+    },
+    {
+      "primitive_id": "trajectory_layers",
+      "name": "Trajectory layers: conv + adaptive pooling to fixed T",
+      "verbatim_quote": "This consists of several interleaved convolutional, pooling and nonlinear layers, followed by an adaptive pooling layer.",
+      "page": 7,
+      "latex": "f_{\\text{traj}}:\\mathbb R^{M_{\\text{track}}\\times S\\times T^{(i)}}\\to\\mathbb R^{M_{\\text{track}}\\times S\\times T}",
+      "symbol_and_unit_ledger": {
+        "T(i)": "variable input duration",
+        "T": "fixed output duration"
+      },
+      "assumptions": [
+        "1 x k kernels slide along each of the 22 trajectories detecting location, direction, speed, acceleration; adaptive pooling fixes the duration."
+      ],
+      "breakdown_regime": "adaptive pooling chooses the most germane features; fine temporal detail may be lost",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Convolution plus adaptive pooling to a fixed length is the same variable-to-fixed encoder GSE uses for play sequences.",
+        "source_operator": "trajectory_layers",
+        "telemetry": "f_traj: variable T -> fixed T"
+      }
+    },
+    {
+      "primitive_id": "player_interaction_layers",
+      "name": "Player-interaction layers detect routes and interactions",
+      "verbatim_quote": "These layers are intended to detect highlevel actions such as route run, and interactions between subsets of players, such as collisions, coverage and evasive actions.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Equivariant layers, conditioned bilinearly on player metadata, detect routes, coverage, collisions, and evasion."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Learning pairwise interactions from trajectories is the same relational reasoning GSE uses to name coverage and route concepts.",
+        "source_operator": "player_interaction_layers",
+        "telemetry": "equivariant layers -> routes/coverage"
+      }
+    },
+    {
+      "primitive_id": "scene_interaction_layers",
+      "name": "Scene layers aggregate to a play vector",
+      "verbatim_quote": "The scene interaction layers are intended to aggregate the set of representation vectors for each player into a single representation vector that describes the play in aggregate.",
+      "page": 8,
+      "latex": "f_{\\text{scene}}:\\mathbb R^{M_{\\text{player}}\\times S}\\times\\mathbb R^{M_{\\text{scene}}}\\to\\mathbb R^{M_{\\text{scene}}}",
+      "symbol_and_unit_ledger": {
+        "f_scene": "permutation-invariant set-to-vector map"
+      },
+      "assumptions": [
+        "A permutation-invariant linear+nonlinear transform aggregates players, then bilinear conditioning on play metadata."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Aggregating per-player vectors into one play embedding is the same scene-level summary GSE feeds to its situational engine.",
+        "source_operator": "scene_interaction_layers",
+        "telemetry": "f_scene: players -> play vector"
+      }
+    },
+    {
+      "primitive_id": "pass_model_heads",
+      "name": "Pass model: completion, air-yards, location at throw",
+      "verbatim_quote": "The pass model makes predictions about the pass reception on passing plays, evaluated at the time that the pass was thrown.",
+      "page": 8,
+      "latex": "\\hat p_{\\text{catch}},\\ \\widehat{\\text{air yards}},\\ (\\hat x,\\hat y)_{\\text{reception}}",
+      "symbol_and_unit_ledger": {
+        "p_catch": "completion probability in [0,1]",
+        "air yards": "expected yards at catch (yards)"
+      },
+      "assumptions": [
+        "Input is 2 s pre-snap to the throw; multi-task heads predict completion, air-yards, and reception location."
+      ],
+      "breakdown_regime": "prediction uses only information up to the throw (no lookahead)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A multi-task pass-outcome head at throw time is the same event-prediction GSE can build on its play representation.",
+        "source_operator": "pass_model_heads",
+        "telemetry": "at throw: p_catch, air-yards, location"
+      }
+    },
+    {
+      "primitive_id": "tackle_epd",
+      "name": "Tackle model at established play direction (EPD)",
+      "verbatim_quote": "The tackle model makes predictions about the tackle and is evaluated at the established play direction (EPD) time, which is moment that the receiver catches the pass on passing plays, or the moment that the ball-carrier cuts up-field on rushing plays.",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "EPD = catch on passes or up-field cut on runs; predicts likely tackler, yards-until-tackle, and tackle location."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Predicting the tackle at play-direction establishment is the same downstream-event forecasting GSE uses for yards-after-catch.",
+        "source_operator": "tackle_epd",
+        "telemetry": "at EPD: tackler dist, yards, location"
+      }
+    },
+    {
+      "primitive_id": "tackle_opportunity_criterion",
+      "name": "Tackle opportunity = first unblocked defender within 2 yd",
+      "verbatim_quote": "The identity of the player, and the location of this tackle opportunity are determined using a simple criterion of the first point that a defender was within 2 yards of the ball-carrier and was not blocked.",
+      "page": 9,
+      "latex": "\\text{tackle opportunity}=\\min_t\\{d_{\\text{def}}(t)\\le 2\\ \\text{yd},\\ \\text{unblocked}\\}",
+      "symbol_and_unit_ledger": {
+        "d_def": "defender-to-ball-carrier distance (yards)"
+      },
+      "assumptions": [
+        "The label is the first tackle opportunity, not the actual tackle point; a 2-yard unblocked proximity rule defines it."
+      ],
+      "breakdown_regime": "the 2-yard threshold is a labeling convention, not a physical law",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An explicit proximity-and-unblocked labeling rule is the same event-definition discipline GSE needs for tackle/YAC labels.",
+        "source_operator": "tackle_opportunity_criterion",
+        "telemetry": "first unblocked defender <= 2 yd"
+      }
+    },
+    {
+      "primitive_id": "eval_split",
+      "name": "6,963 pass / 11,558 total plays, 4:1 split",
+      "verbatim_quote": "The dataset contained 6,963 eligible passing plays and 11,558 eligible passing and running plays.",
+      "page": 9,
+      "latex": "N_{\\text{pass}}=6{,}963,\\ N_{\\text{total}}=11{,}558,\\ \\text{train:eval}=4:1",
+      "symbol_and_unit_ledger": {
+        "N": "play counts",
+        "4:1": "train/evaluation ratio"
+      },
+      "assumptions": [
+        "Random 4:1 partition; the authors note the sample is small and more data would help."
+      ],
+      "breakdown_regime": "small sample limits generalization; more data expected to improve",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A documented train/eval split and sample-size caveat is the same honest evaluation protocol GSE follows.",
+        "source_operator": "eval_split",
+        "telemetry": "6,963 pass / 11,558 total, 4:1"
+      }
+    },
+    {
+      "primitive_id": "loss_functions",
+      "name": "BCE for classification, MSE for regression",
+      "verbatim_quote": "The loss function for the classification tasks (pass completion and likely tackler) was binary cross-entropy, and for the remaining regression tasks mean-squared error was used.",
+      "page": 9,
+      "latex": "\\mathcal L_{\\text{cls}}=\\text{BCE},\\quad \\mathcal L_{\\text{reg}}=\\text{MSE}",
+      "symbol_and_unit_ledger": {
+        "BCE": "binary cross-entropy (nats)",
+        "MSE": "mean squared error (units^2)"
+      },
+      "assumptions": [
+        "PyTorch implementation; hyperparameters chosen on the evaluation set by accuracy (cls) or MSE (reg)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Matching loss to task type is the same multi-task training discipline GSE uses for mixed classification/regression heads.",
+        "source_operator": "loss_functions",
+        "telemetry": "BCE cls + MSE reg, PyTorch"
+      }
+    },
+    {
+      "primitive_id": "pass_accuracy_result",
+      "name": "Pass completion 73.1% beats handcrafted benchmarks",
+      "verbatim_quote": "The pass completion classification task obtained an accuracy score of 73.1% on the evaluation dataset and outperformed two models that used the hand-crafted features as input: a logistic regression model and a dense multi-layer perceptron (MLP) model.",
+      "page": 9,
+      "latex": "\\text{Acc}: \\text{traj }0.731>\\text{MLP }0.722>\\text{logistic }0.694",
+      "symbol_and_unit_ledger": {
+        "accuracy": "fraction correct (dimensionless)"
+      },
+      "assumptions": [
+        "Trajectory learning beats logistic regression (0.694) and feature-based MLP (0.722)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Beating handcrafted-feature baselines is the empirical veto that justifies learned representations; GSE uses the same benchmark gate.",
+        "source_operator": "pass_accuracy_result",
+        "telemetry": "73.1% vs 72.2% MLP vs 69.4% logistic"
+      }
+    },
+    {
+      "primitive_id": "airyards_correlation",
+      "name": "Air-yards prediction Pearson 0.977",
+      "verbatim_quote": "The predicted air-yards are highly correlated with the actual air-yards, with a Pearson correlation of 0.977.",
+      "page": 10,
+      "latex": "r_{\\text{air yards}}=0.977",
+      "symbol_and_unit_ledger": {
+        "r": "Pearson correlation (dimensionless)"
+      },
+      "assumptions": [
+        "Air-yards regression is highly accurate and beats the feature-based MLP regressor."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A near-unity correlation on a continuous target is the same regression-quality bar GSE applies to yards predictions.",
+        "source_operator": "airyards_correlation",
+        "telemetry": "air-yards r = 0.977"
+      }
+    },
+    {
+      "primitive_id": "spatial_error_mode",
+      "name": "Spatial error mode: worse at end-zone and sidelines",
+      "verbatim_quote": "the model tends to successfully predict passes in the center of the field. The model is less successful for passes near the end-zone and the edges of the field.",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Reception-location correlations are 0.94 (x) and 0.89 (y); accuracy and confidence drop toward the end-zone and sidelines."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A spatially-varying reliability map is the same confidence-calibration GSE must apply before trusting a prediction in a region.",
+        "source_operator": "spatial_error_mode",
+        "telemetry": "center good, end-zone/sideline worse"
+      }
+    },
+    {
+      "primitive_id": "tackler_accuracy_result",
+      "name": "Likely-tackler 48.1% beats benchmarks",
+      "verbatim_quote": "On the evaluation dataset, the trajectory learning model correctly chose the first tackler 48% of the time",
+      "page": 11,
+      "latex": "\\text{Acc}: \\text{traj }0.481>\\text{Set Play }0.461>\\text{logic }0.417",
+      "symbol_and_unit_ledger": {
+        "accuracy": "top-1 tackler fraction (dimensionless)"
+      },
+      "assumptions": [
+        "11-way tackler classification beats a rule-based logic model (0.417) and a handcrafted equivariant net (0.461)."
+      ],
+      "breakdown_regime": "11-class problem; 48% is well above the ~9% chance baseline",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A hard multi-class prediction beating baselines is the same evidence GSE uses to accept a learned defender-assignment model.",
+        "source_operator": "tackler_accuracy_result",
+        "telemetry": "tackler 48.1% vs 46.1% vs 41.7%"
+      }
+    },
+    {
+      "primitive_id": "tackle_error_modes",
+      "name": "Tackle error modes: misclassified tackler, sideline routes",
+      "verbatim_quote": "the model will often fail to predict situations where the ball-carrier has a route to the side-line but predicts an earlier tackle further in-field.",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Yards-until-tackle correlation 0.780 with two outlier groups from misclassified tacklers; better near sidelines where fewer candidates."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cataloguing failure modes bounds a model's reliability; GSE must record where its tackle/YAC predictions break before using them.",
+        "source_operator": "tackle_error_modes",
+        "telemetry": "misclassified tackler -> wrong location"
+      }
+    },
+    {
+      "primitive_id": "conclusion_no_preprocess",
+      "name": "Conclusion: no preprocessing, learned coordinated movement",
+      "verbatim_quote": "The framework eliminates the need for typical preprocessing tasks such as feature engineering and trajectory ordering and is able to accept player trajectories of variable duration.",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Six prediction tasks demonstrate the framework; model design reduces to specifying task-specific heads."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A reusable representation that reduces modeling to task heads is the same platform leverage GSE seeks from its play encoder.",
+        "source_operator": "conclusion_no_preprocess",
+        "telemetry": "no preprocess; design = task heads"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "tracking_repr2020_trace",
+      "think": "The retrocausal genealogy of this paper is a structural mismatch between a data windfall and the models meant to consume it. Player tracking systems produce rich trajectories and event logs, but standard neural networks demand fixed-shape, consistently-ordered inputs, and tracking data violates both. The author names two intrinsic problems: the variable-duration problem, because plays and event intervals differ in length, and the player-ordering problem, because personnel changes mean no player slot persists across plays and even the player count can vary. Prior work patched these with fixed time samples, convolutions, adaptive pooling, or recurrent nets for duration, and bag-of-words, role-based ordering, ball-proximity anchors, or random permutation for ordering. The lineage runs through Burke's DeepQB, Mehrasa's trajectory representations, Le's ghosting, Yurko's continuous valuation, Deshpande and Evans' hypothetical completion, and Chu's Bezier route clustering. The contribution is a single framework that removes the preprocessing step entirely. The architecture is a three-tensor, four-stage network. Each play is a trajectory tensor of shape M_track by S by T, a player-metadata tensor M_player by S, and a play-context vector M_play. Trajectory layers interleave convolution, pooling, and nonlinearities, then adaptive pooling collapses the variable duration to a fixed T, with 1-by-k kernels sliding along each of the 22 trajectories to detect location, direction, speed, and acceleration. Player-interaction layers condition bilinearly on player metadata and pass through permutation-equivariant layers that detect routes, coverage, collisions, and evasion. Scene-interaction layers aggregate the per-player vectors with a permutation-invariant transform, condition on play metadata, and emit a single play embedding. Task-specific heads stack on top. The recursive theory of mind is the permutation symmetry, which is a formal statement about reasoning over agents without a fixed identity schema. A layer is permutation invariant if f_inv(X P) equals f_inv(X), producing a scalar play outcome like pass-completion probability that does not care which slot a player occupies. A layer is permutation equivariant if f_eq(X P) equals P f_eq(X), producing a per-player response like each defender's tackle probability that reorders consistently with the input. Deep Sets implements this, so the model learns the same representation of a play regardless of the order of the player trajectories. This is reasoning about coordinated multi-agent movement while respecting that the roster is a set, not a sequence, which is exactly the symmetry a football play has. Cross-layer veto adjudication is empirical, against handcrafted-feature benchmarks. Pass completion reaches 73.1%, beating a feature-based logistic regression at 69.4% and an MLP at 72.2%. Air-yards prediction correlates 0.977 with actual, and reception location correlates 0.94 in x and 0.89 in y, but the model is visibly better in the center of the field and worse, with lower confidence, near the end-zone and sidelines. The harder tackle task chooses the correct first tackler 48.1% of the time against a logic model's 41.7% and a handcrafted equivariant net's 46.1%, well above the roughly 9% chance baseline for eleven defenders. Yards-until-tackle correlates 0.780, with two outlier groups traced to misclassified tacklers, and a failure mode where a sideline route is predicted as an earlier in-field tackle. The framework wins the benchmarks, but the error modes bound where its predictions can be trusted. The implementation invariants are what GSE should lift. Accept raw tracking without hand-engineered features; encode variable duration with convolution plus adaptive pooling; respect the set structure of players with invariant and equivariant layers; condition on player and play metadata; and reduce modeling to specifying task heads. The labels are explicit, the tackle opportunity is the first unblocked defender within two yards, and predictions use only information up to the decision moment, so there is no lookahead. The outputs are statistical event probabilities and expectations, completion probability, air-yards, tackle location; the paper mentions in-game line-closing as a downstream use-case, but the model itself consumes tracking data only and contains zero sportsbook lines, spreads, totals, or implied odds as inputs. The parameter ledger and the limitations close the account. 6,963 eligible passing plays and 11,558 passing-plus-running plays, a 4:1 train-eval split, a two-second pre-snap input window, 22 players at roughly 10 Hz, and a two-yard unblocked tackle criterion are the fixed choices. The authors concede the sample is small and more data would help, that the tackle task is inherently harder than the pass task, and that spatial reliability varies across the field. The invariant for GSE is to carry the symmetry-aware raw-tracking encoder, the explicit event labels, and the benchmark-plus-error-mode evaluation, while remembering that a learned representation is only as trustworthy as the regions and situations where its failures have been mapped. The framework's portability is itself a contribution: the same set-learning design accepts NFL Next Gen Stats, ChyronHego soccer tracking, and Sportlogiq multi-camera hockey tracking, because the trajectory-plus-metadata tensor contract is sport-agnostic. The six prediction tasks, pass completion, air-yards, reception location, likely tackler, yards-until-tackle, and tackle location, are all multi-task heads sharing one representation, which is why the author says model design reduces to specifying the task-specific layers. This positions the work beside Yurko's continuous within-play valuation and Deshpande and Evans' expected hypothetical completion probability, but differs by learning the features rather than hand-crafting them. For GSE the durable lesson is that a single symmetry-aware encoder can serve many downstream football questions, and that the honest path to trusting it is benchmarking against handcrafted baselines and mapping exactly where, spatially and situationally, it fails.",
+      "retrocausal_genealogy": "The paper originates in a mismatch: tracking systems emit rich trajectories and event logs, but standard neural nets require fixed-shape, ordered inputs. Two intrinsic problems are named, variable duration (plays and event intervals differ in length) and player ordering (no persistent player slot, even variable player count). Prior workarounds, fixed samples, convolutions, RNNs, bag-of-words, role ordering, ball anchors, random permutation, each patch one symptom at the cost of lost information. The lineage runs through DeepQB, Mehrasa, Le's ghosting, Yurko, Deshpande-Evans, and Chu's routes. The contribution is a single framework that removes preprocessing by addressing both problems directly with convolutions plus adaptive pooling and Deep Sets.",
+      "theory_of_mind": "The model reasons over players as a set, not a sequence, via permutation symmetry. An invariant layer satisfies f_inv(XP)=f_inv(X), giving a scalar play outcome independent of player slot order; an equivariant layer satisfies f_eq(XP)=P f_eq(X), giving per-player responses that reorder with the input. Deep Sets learns the same play representation regardless of trajectory order, which is the correct symmetry for coordinated multi-agent movement where the roster is unordered and personnel changes between plays. Conditioning on player and play metadata lets this set reasoning remain aware of identity and situation.",
+      "cross_layer_veto": "The framework is vetoed against handcrafted-feature benchmarks and wins: pass completion 73.1% vs logistic 69.4% and MLP 72.2%; air-yards Pearson 0.977; reception location 0.94/0.89 but worse at end-zone and sidelines with lower confidence. The harder tackle task hits 48.1% top-1 tackler vs logic 41.7% and Set Play 46.1%, above the ~9% chance baseline; yards-until-tackle 0.780 with outliers from misclassified tacklers and a sideline-route failure mode. These error modes bound reliability, so the win is accepted only with a spatial and situational confidence map, not as universal truth."
+    }
+  ],
+  "universal_lens": "Raw multi-agent tracking is encoded by a symmetry-aware network, convolution plus adaptive pooling for variable duration and Deep Sets permutation invariance/equivariance for unordered players, conditioned on identity and context, yielding a reusable play representation that reduces modeling to task-specific heads and is validated against handcrafted-feature benchmarks with mapped error modes.",
+  "gsi_mapping": "GSI treats a play as three tensors (trajectory M_track x S x T, player M_player x S, play M_play) encoded by trajectory layers to fixed T, equivariant player-interaction layers, and an invariant scene aggregation; permutation symmetry f_inv(XP)=f_inv(X) and f_eq(XP)=P f_eq(X) makes the representation roster-order independent.",
+  "gse_mapping": "GSE lifts the raw-tracking encoder, the explicit no-lookahead event labels (tackle opportunity = first unblocked defender within 2 yd), and the benchmark-plus-error-mode evaluation; pass-completion, air-yards, and tackle predictions are statistical event outputs that can feed the situational engine, with zero sportsbook lines as inputs."
+}
