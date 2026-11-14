@@ -594,3 +594,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 04:15:49 | COMPLETE | 04b253956fe4be89 | primitives=27 think_words=858
 - 2026-11-14 04:16:43 | CLAIMED | 37a36b9efcb06f33 | worker=hermes-inline shard03 file=2022 - Predicting the Quarterback-MVP in the NFL - Brill et al.pdf
 - 2026-11-14 04:21:04 | COMPLETE | 37a36b9efcb06f33 | primitives=22 think_words=878
+- 2026-11-14 04:22:56 | CLAIMED | 35b2d257cfda1e60 | worker=hermes-inline shard03 file=2023 - Effect of Increased Three-point Shot Attempts on Probability of Winning in High School Basketball - Kostacos.pdf
+- 2026-11-14 04:27:55 | COMPLETE | 35b2d257cfda1e60 | primitives=20 think_words=850

@@ -1,0 +1,414 @@
+{
+  "book_id": "35b2d257cfda1e60",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_BASKETBALL_CLEAN_OCR_PRINTED_EQ",
+  "source_note": "Kostacos, 'Effect of Increased Three-point Shot Attempts on Probability of Winning in High School Basketball', Wharton Sports Analytics Student Research Journal, Spring 2023 (Germantown Academy, PA), 7 pages. Complete student research paper: one men's HS team, one season (23 games), testing whether the NBA more-three-point strategy transfers to HS. NULL result (more 3PT attempts/share does not correlate with wins; H0 accepted); mechanism = HS 3PT% ~30% vs NBA ~36%. Two standard metrics printed cleanly (eFG%=(FGM+0.5*3PM)/FGA; ORtg=100*PP/(FGA+0.44*FTA+TO), Fromal 2012) captured verbatim as LaTeX. Extracted faithfully (not a derivative summary). Domain math (basketball analytics) matches catalog; high-school basketball, not football. The shot-value-weighted efficiency metrics, efficiency-vs-volume-vs-winning separation, and strategy-transfer-failure (population skill effect-modifier) are sport-agnostic and isomorphic to GSE's strategy-evaluation and context-dependence layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "nba_3pt_effective",
+      "name": "NBA analytics: more three-point shots shown effective (points + wins)",
+      "verbatim_quote": "NBA basketball has used data science to determine that a strategy of taking more three-point shots has been shown to be effective",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "NBA basketball has used data science to establish that taking more three-point shots is effective for points and victories (Schuhmann), the professional-level finding this study tests at the high school level where it had not been studied."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The NBA three-point revolution is the same proven-at-one-level strategy GSE checks for transferability before applying elsewhere.",
+        "source_operator": "nba_3pt_effective",
+        "telemetry": "NBA: more 3PT -> more points/wins (Schuhmann); established pro strategy"
+      }
+    },
+    {
+      "primitive_id": "hs_level_gap",
+      "name": "No similar three-point study at the high school level",
+      "verbatim_quote": "similar studies have not been done at the high school level",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The gap motivating the study: while NBA and college teams have researched how shot location and type affect scoring (Duke off-ball gravity work), similar studies had not been done at the high school level, where players are less skilled and shoot lower percentages."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The unstudied-level gap is the same external-validity question GSE asks before transferring a pro strategy downward.",
+        "source_operator": "hs_level_gap",
+        "telemetry": "NBA/college studied; HS not; lower skill -> lower FG%"
+      }
+    },
+    {
+      "primitive_id": "hypothesis_more_3pt",
+      "name": "Hypothesis: more 3PT attempts -> higher offensive rating and wins",
+      "verbatim_quote": "The hypothesis was that increasing the number of three-point shot attempts would lead to a higher offensive rating and wins",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The research hypothesis is that increasing three-point shot attempts (or their share) raises offensive rating and win probability, due to the greater point value of a three; the null hypothesis is that increasing the three-point share leaves win probability unchanged."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The volume-to-outcome hypothesis is the same strategy-causal claim GSE tests against a null.",
+        "source_operator": "hypothesis_more_3pt",
+        "telemetry": "H1: more 3PT -> higher ORtg + wins; H0: 3PT share -> win prob unchanged"
+      }
+    },
+    {
+      "primitive_id": "null_result_abstract",
+      "name": "Result: more attempts / higher 3PT share did NOT correlate with victories",
+      "verbatim_quote": "The data suggested that a strategy of more three-point shooting was not beneficial in men's high school basketball",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Higher shooting percentages correlated with better offensive rating and higher effective field goal percentage, but more shot attempts and a higher percentage of three-point attempts did not correlate with victories; the data suggested more three-point shooting was not beneficial in men's high school basketball."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The null volume-to-win result is the same no-edge finding GSE records honestly when a strategy fails to transfer.",
+        "source_operator": "null_result_abstract",
+        "telemetry": "FG% ~ ORtg/eFG%; attempts & 3PT share NOT ~ wins; more 3PT not beneficial HS"
+      }
+    },
+    {
+      "primitive_id": "hs_lower_skill",
+      "name": "HS players less skilled than NBA -> lower shooting percentages",
+      "verbatim_quote": "High school basketball players are not as skilled as those in the NBA and so have lower shooting percentages",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Three-point shots are worth more but are further from the basket and harder to make; high school players are not as skilled as NBA players and so have lower shooting percentages, which is the mechanism by which the NBA three-point advantage fails to transfer."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The skill-base mechanism is the same effect-modifier GSE identifies when a strategy's edge depends on population skill.",
+        "source_operator": "hs_lower_skill",
+        "telemetry": "3PT worth more but harder; HS lower skill -> lower FG% -> edge vanishes"
+      }
+    },
+    {
+      "primitive_id": "research_hypothesis",
+      "name": "Research hypothesis: higher 3PT share -> higher win probability",
+      "verbatim_quote": "if the percentage of three-point shots increases, then the team will have a higher probability of winning a game",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The research hypothesis states that if the percentage of three-point shots increases, the team will have a higher probability of winning, hypothesized due to the greater point value earned with a three-point shot."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The directional hypothesis is the same testable strategy claim GSE formalizes before evaluation.",
+        "source_operator": "research_hypothesis",
+        "telemetry": "H1: 3PT% up -> win prob up (greater point value)"
+      }
+    },
+    {
+      "primitive_id": "null_hypothesis",
+      "name": "Null hypothesis: higher 3PT share -> win probability unchanged",
+      "verbatim_quote": "if the percentage of three-point shots increases, then the probability of winning the game will not change",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The null hypothesis states that if the percentage of three-point shots increases, the probability of winning the game will not change; this null was accepted by the study's results."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The explicit null is the same no-effect baseline GSE tests strategy claims against.",
+        "source_operator": "null_hypothesis",
+        "telemetry": "H0: 3PT% up -> win prob unchanged; ACCEPTED"
+      }
+    },
+    {
+      "primitive_id": "efg_formula",
+      "name": "Effective FG% = (FGM + 0.5*3PM) / FGA (weights threes 1.5x)",
+      "verbatim_quote": "eFG % = (FGM + 0.5 * 3PM) / FGA",
+      "page": 3,
+      "latex": "eFG\\% = \\frac{FGM + 0.5 \\cdot 3PM}{FGA}",
+      "symbol_and_unit_ledger": {
+        "FGM": "total field goals made [count]",
+        "3PM": "three-point field goals made [count]",
+        "FGA": "total field goals attempted [count]",
+        "eFG%": "effective field goal percentage [dimensionless, 0-1]"
+      },
+      "assumptions": [
+        "Effective field goal percentage eFG% = (FGM + 0.5*3PM)/FGA (Fromal), which weights three-point makes by 1.5 to account for their extra point value relative to two-point makes; printed cleanly in the source.",
+        "Standard basketball metric (Fromal 2012, Bleacher Report); printed verbatim."
+      ],
+      "breakdown_regime": "assumes 3PM subset of FGM; weights three by 1.5x; ignores free throws and shot quality/distance",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "eFG% is the same shot-value-weighted efficiency metric GSE uses to compare two- and three-point output.",
+        "source_operator": "efg_formula",
+        "telemetry": "eFG% = (FGM + 0.5*3PM)/FGA; 3PM weighted 1.5x; Fromal"
+      }
+    },
+    {
+      "primitive_id": "offensive_rating_formula",
+      "name": "Offensive rating = 100*PP / (FGA + 0.44*FTA + TO) (points per possession)",
+      "verbatim_quote": "Use the data to calculate for the offensive rating per game with the formula",
+      "page": 3,
+      "latex": "ORtg = \\frac{100 \\cdot PP}{FGA + 0.44 \\cdot FTA + TO}",
+      "symbol_and_unit_ledger": {
+        "PP": "points scored [points]",
+        "FGA": "field goals attempted [count]",
+        "FTA": "free throws attempted [count]",
+        "TO": "turnovers [count]",
+        "ORtg": "offensive rating [points per 100 possessions]"
+      },
+      "assumptions": [
+        "Offensive rating per game = 100*PP/(FGA + 0.44*FTA + TO) (Fromal), estimating points per 100 possessions where the denominator approximates possessions from field-goal attempts, 0.44 times free-throw attempts, and turnovers; printed cleanly in the source.",
+        "Standard basketball metric (Fromal 2012); the 0.44 FTA coefficient is the conventional possession estimate; printed verbatim."
+      ],
+      "breakdown_regime": "0.44*FTA is an approximation of possession-ending free throws; denominator is estimated not true possessions",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Offensive rating as points-per-possession is the same pace-normalized efficiency GSE uses for offensive output.",
+        "source_operator": "offensive_rating_formula",
+        "telemetry": "ORtg = 100*PP/(FGA + 0.44*FTA + TO); points per ~100 possessions; Fromal"
+      }
+    },
+    {
+      "primitive_id": "fg_pct_ortg_correlation",
+      "name": "Higher FG% -> higher offensive rating (twos and threes)",
+      "verbatim_quote": "As the field goal percentage increases, the offensive rating also increases for twos and threes",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "As field goal percentage increases, offensive rating also increases for both two- and three-point shots; efficiency (making shots) drives offensive rating, whereas shot volume does not."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Efficiency-drives-output is the same make-rate-over-volume finding GSE applies to offensive evaluation.",
+        "source_operator": "fg_pct_ortg_correlation",
+        "telemetry": "FG% up -> ORtg up (twos & threes); efficiency not volume drives ORtg"
+      }
+    },
+    {
+      "primitive_id": "r2_fg_ortg",
+      "name": "FG% vs ORtg: R2 = 0.5647 (twos), 0.5091 (threes); wins uncorrelated",
+      "verbatim_quote": "the R2 value is 0.5647 for twos and 0.5091 for threes",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The R-squared for field goal percentage versus offensive rating is 0.5647 for twos and 0.5091 for threes (moderate explanatory power), but games won (red dots) do not correlate with field goal percentage — efficiency explains offensive rating, not winning directly."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The moderate R2 with win-decoupling is the same proxy-vs-outcome gap GSE flags: efficiency predicts rating, not victory.",
+        "source_operator": "r2_fg_ortg",
+        "telemetry": "R2 FG%->ORtg: .5647 twos/.5091 threes; wins NOT ~ FG%"
+      }
+    },
+    {
+      "primitive_id": "attempts_no_ortg_gain",
+      "name": "More shot attempts do NOT increase offensive rating",
+      "verbatim_quote": "As the two-point and 3-point attempts increase, the offensive rating does not increase for both",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "As two-point and three-point attempts increase, offensive rating does not increase for either; the two-point slope is positive with R2 0.0199 and the three-point slope negative with R2 0.0001, both essentially zero explanatory power, and wins do not correlate with attempts."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Volume-without-efficiency-gain is the same empty-volume veto GSE applies to shot-count strategies.",
+        "source_operator": "attempts_no_ortg_gain",
+        "telemetry": "attempts up != ORtg up; 2PT slope + R2 .0199, 3PT slope - R2 .0001; wins uncorrelated"
+      }
+    },
+    {
+      "primitive_id": "attempt_slope_r2",
+      "name": "Attempt-vs-ORtg slopes: 2PT +0.0199 R2, 3PT -0.0001 R2 (near zero)",
+      "verbatim_quote": "The slope line for two-pointers is positive with an R2 value of 0.0199",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The slope line for two-point attempts versus offensive rating is positive with R2 0.0199, while the three-point slope is negative with R2 0.0001; both R-squared values are near zero, indicating shot volume has essentially no linear relationship with offensive rating."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The near-zero volume R2 is the same no-signal evidence GSE uses to reject a volume-based strategy.",
+        "source_operator": "attempt_slope_r2",
+        "telemetry": "2PT attempts R2 .0199 (+slope); 3PT attempts R2 .0001 (-slope); ~zero"
+      }
+    },
+    {
+      "primitive_id": "null_hypothesis_accepted",
+      "name": "Null accepted: more 3PT share does not change win probability",
+      "verbatim_quote": "The null hypothesis of this study that if the percentage of three-point attempts increases, then the probability of winning the game will not change was accepted",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The null hypothesis — that increasing the percentage of three-point attempts leaves win probability unchanged — was accepted; increasing three-point shots does not correlate with wins, and the negative three-point slope shows shooting more two-point shots has a better effect on effective field goal percentage."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The accepted null is the same PASS-on-strategy outcome GSE records when the evidence does not support the claim.",
+        "source_operator": "null_hypothesis_accepted",
+        "telemetry": "H0 accepted: 3PT share up -> win prob unchanged; 2PT better for eFG%"
+      }
+    },
+    {
+      "primitive_id": "hs_30_vs_nba_36",
+      "name": "HS three-point FG% ~30% vs NBA ~36%: the transfer-failure mechanism",
+      "verbatim_quote": "high school three-point shots had a low percentage (30%) compared to the NBA which averages at 36%",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "High school three-point shots had a low percentage (30%) compared to the NBA average of 36%; this six-point efficiency gap is why the NBA three-point volume advantage does not transfer to high school, where the lower make rate erodes the extra point value."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 30-vs-36 percent gap is the same population effect-modifier GSE quantifies when a strategy's edge is skill-dependent.",
+        "source_operator": "hs_30_vs_nba_36",
+        "telemetry": "HS 3PT% ~30% vs NBA ~36%; 6pt gap erodes 3PT extra value -> no transfer"
+      }
+    },
+    {
+      "primitive_id": "blowout_3pt_matters",
+      "name": "In blowouts (>=20 pts), 3PT% much higher in wins, lower in losses",
+      "verbatim_quote": "In games that the studied team won or lost by at least twenty points, the three-point field goal percentage affected the outcome",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In games won or lost by at least twenty points, the three-point field goal percentage was much higher than the opponent in wins and much lower in losses, suggesting three-point shooting percentage does affect points produced and outcome at the extremes even though volume does not correlate with winning overall."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The blowout-only signal is the same conditional/extreme-regime effect GSE notes when an average null hides tail behavior.",
+        "source_operator": "blowout_3pt_matters",
+        "telemetry": "blowouts >=20pts: 3PT% higher in wins / lower in losses; tail effect despite avg null"
+      }
+    },
+    {
+      "primitive_id": "conclusion_more_2pt",
+      "name": "Conclusion: more two-point shots (higher %) may be more beneficial at HS",
+      "verbatim_quote": "taking more two-point shots, which tend to be of higher percentage, may be more beneficial for the high school basketball team",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The strategy of taking more three-point shots does not appear successful in high school basketball; instead, taking more two-point shots, which tend to be higher percentage, may be more beneficial, so coaches can focus practice on a two-point strategy or on higher-quality three-point attempts to raise the three-point percentage."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The level-appropriate strategy recommendation is the same context-matched prescription GSE makes instead of importing a pro strategy.",
+        "source_operator": "conclusion_more_2pt",
+        "telemetry": "HS: more 2PT (higher %) or higher-quality 3PT; not more 3PT volume"
+      }
+    },
+    {
+      "primitive_id": "limitation_23_points",
+      "name": "Limitation: one year, one team, only 23 data points per graph",
+      "verbatim_quote": "Only one year and one team was reviewed, so there were only 23 data points for each graph",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The study reviewed only one year and one team, giving only 23 data points per graph, a small sample that limits statistical power and generalizability; the author notes additional studies over multiple years or multiple teams, and women versus men's teams, could provide more insight."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The tiny-sample caveat is the same low-power honesty GSE attaches to single-team null results.",
+        "source_operator": "limitation_23_points",
+        "telemetry": "1 year/1 team/23 data points; low power; future multi-year/multi-team/sex comparison"
+      }
+    },
+    {
+      "primitive_id": "strategy_transfer_failure",
+      "name": "NBA findings differ from HS due to low HS three-point FG%",
+      "verbatim_quote": "The results of this study, which are different from the NBA findings, are likely due to the overall low field goal percentage for three-point shots in high school basketball",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The results differ from NBA findings (where increasing three-point attempts leads to more wins) likely because of the overall low three-point field goal percentage in high school basketball; the study's results are novel relative to prior NBA studies, demonstrating that a strategy's effectiveness is contingent on the population's shooting skill."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The strategy-transfer failure is literally GSE's context-dependence veto: an edge proven in one population need not exist in another with different base rates.",
+        "source_operator": "strategy_transfer_failure",
+        "telemetry": "NBA more 3PT -> wins; HS does NOT (low 3PT%); strategy effectiveness population-contingent"
+      }
+    },
+    {
+      "primitive_id": "future_work_multiyear",
+      "name": "Future work: multiple years/teams, women vs men comparison",
+      "verbatim_quote": "Studying a team over multiple years or comparing multiple teams in a single year could provide more insight",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Future work could study a team over multiple years or compare multiple teams in a single year for more insight, and could compare women's versus men's high school teams, addressing the single-team single-season limitation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The proposed replication design is the same generalization program GSE recommends before trusting a single-sample finding.",
+        "source_operator": "future_work_multiyear",
+        "telemetry": "future: multi-year/multi-team; women vs men; address 23-point limitation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "hs3pt2023_trace",
+      "think": "The retrocausal genealogy of this paper is the question of whether a strategy proven at the professional level transfers to a less skilled population. Samantha Kostacos, writing in the Wharton Sports Analytics Student Research Journal in spring 2023 while at Germantown Academy, notes that NBA basketball has used data science to establish that taking more three-point shots is effective for points and victories, and that Duke and other programs have studied shot location and off-ball gravity, but that similar studies had not been done at the high school level. Because three-point shots are worth more but are harder to make, and high school players are less skilled than NBA players and shoot lower percentages, the author hypothesizes that increasing three-point attempts would raise offensive rating and wins, with the null hypothesis that increasing the three-point share leaves win probability unchanged. The recursive theory of mind is the data collection and the metric construction. The author recorded one men's high school team's single season, 23 games, capturing two- and three-point attempts and makes, field goal percentages, and win-loss outcomes, then computed two standard basketball metrics printed cleanly in the source: effective field goal percentage, eFG% equals field goals made plus half of three-point makes divided by field goals attempted, which weights threes by one and a half for their extra point value, and offensive rating, 100 times points scored divided by field goals attempted plus 0.44 times free throws attempted plus turnovers, an estimate of points per 100 possessions. A series of regression graphs compared field goal percentage, shot attempts, and attempt share against offensive rating and effective field goal percentage, with wins marked as red dots. The use of R-squared as the comparison criterion is itself a methodological choice worth noting: the author judges whether more two-point or three-point attempts correlate with victory by comparing the explanatory power of the regressions, and the near-zero R-squared values for attempt volume, 0.0199 and 0.0001, are read as evidence of no meaningful linear relationship rather than as a weak but real signal. The distinction between effective field goal percentage and ordinary field goal percentage matters because the former credits the extra point value of the three, so a team can shoot a lower raw percentage from three yet still produce efficient offense if the make rate is high enough; at the high school make rate of roughly 30 percent, that condition is not met. Cross-layer veto adjudication is the separation of efficiency from volume and from winning. Higher field goal percentage correlated with higher offensive rating, with R-squared 0.5647 for twos and 0.5091 for threes, but wins did not correlate with field goal percentage. More shot attempts did not increase offensive rating: the two-point slope was positive with R-squared 0.0199 and the three-point slope negative with R-squared 0.0001, both essentially zero. The null hypothesis was accepted: increasing the three-point share did not change win probability, and the negative three-point slope indicated that more two-point shooting better supported effective field goal percentage. The implementation invariants map directly onto GSE. Effective field goal percentage is GSE's shot-value-weighted efficiency metric; offensive rating is GSE's pace-normalized output; the efficiency-versus-volume separation is GSE's make-rate-over-volume principle; and the central finding that the NBA three-point advantage fails to transfer to high school is GSE's context-dependence veto. The mechanism is quantified: high school three-point shooting was about 30 percent versus the NBA average of 36 percent, a six-point gap that erodes the extra point value of the three. The underlying expected-value arithmetic makes this concrete: a three-point attempt at 30 percent yields 0.9 points per shot, while a two-point attempt at an illustrative 45 to 50 percent make rate would yield roughly 0.9 to 1.0 points per shot, so the three's nominal extra point is cancelled by its lower make rate, and only when the three-point percentage climbs toward the NBA range does the volume strategy become advantageous. The outputs are shooting efficiencies and win correlations from box-score data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The caveats close the account with a tail effect and a small-sample honesty. Although volume did not correlate with winning on average, in games won or lost by at least twenty points the three-point percentage was much higher than the opponent in wins and much lower in losses, suggesting three-point efficiency does affect outcomes at the extremes even when the average relationship is null. The study reviewed only one year and one team, giving just 23 data points per graph, so statistical power and generalizability are limited, and the author proposes multi-year, multi-team, and women-versus-men comparisons as future work. The invariant for GSE is to carry the efficiency metrics and the efficiency-volume-winning separation while recording the strategy-transfer failure, the population skill effect-modifier, the blowout tail effect, and the tiny-sample low-power limitation before any quantitative reuse in GSE, treating a strategy that works in the NBA but not in high school as a lesson in context-dependence rather than a universal rule, and a PASS on a bad transfer as a badge of honor rather than a missed opportunity to import a professional trend.",
+      "retrocausal_genealogy": "Does the NBA more-3PT strategy transfer to HS? Kostacos, Wharton Sports Analytics Student Research Journal, Spring 2023 (Germantown Academy PA). NBA: more 3PT -> points/wins (Schuhmann); Duke shot-location/off-ball gravity; HS unstudied. 3PT worth more but harder; HS lower skill -> lower FG%. H1: more 3PT attempts/share -> higher ORtg + win prob; H0: 3PT share -> win prob unchanged. One men's HS team, one season, 23 games; 2PT/3PT attempts/makes/FG% + win-loss. Metrics (Fromal, printed clean): eFG%=(FGM+0.5*3PM)/FGA; ORtg=100*PP/(FGA+0.44*FTA+TO). Regression graphs vs ORtg/eFG%, wins=red dots.",
+      "theory_of_mind": "eFG% weights 3PM 1.5x (extra point value); ORtg = points per ~100 possessions (0.44*FTA possession estimate). FG% up -> ORtg up (R2 .5647 twos/.5091 threes) but wins NOT ~ FG%. Attempts up != ORtg up (2PT slope + R2 .0199; 3PT slope - R2 .0001, ~zero); wins NOT ~ attempts. Attempt% vs eFG%: 2PT +slope, 3PT -slope. H0 ACCEPTED: 3PT share up -> win prob unchanged; more 2PT better for eFG%. Blowouts >=20pts: 3PT% higher in wins/lower in losses (tail effect). Two printed formulas captured verbatim as LaTeX.",
+      "cross_layer_veto": "Strategy-transfer failure: NBA more-3PT->wins does NOT hold HS, mechanism = HS 3PT% ~30% vs NBA ~36% (6pt gap erodes extra value). Efficiency (FG%) drives ORtg, volume does not, winning decoupled from both on average. Tail: 3PT% matters in blowouts. Limitation: 1 year/1 team/23 data points (low power); future multi-year/multi-team/women-vs-men. Conclusion: HS more 2PT (higher %) or higher-quality 3PT, not more 3PT volume. Novel vs NBA studies; population-contingent effectiveness. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "In one men's high school basketball season (23 games), higher shooting percentages correlate with better offensive rating and effective field goal percentage, but more shot attempts and a higher three-point attempt share do not correlate with winning — the null hypothesis is accepted, and the NBA three-point-volume advantage fails to transfer because high school three-point shooting (~30%) is far below the NBA average (~36%), illustrating that a strategy's edge is contingent on the population's skill base.",
+  "gsi_mapping": "GSI treats eFG%=(FGM+0.5*3PM)/FGA (3PM weighted 1.5x) and ORtg=100*PP/(FGA+0.44*FTA+TO) (Fromal, printed clean); 1 men's HS team/23 games; H1 more 3PT->ORtg+wins, H0 3PT share->win prob unchanged (ACCEPTED); FG%->ORtg R2 .5647 twos/.5091 threes, wins uncorrelated; attempts->ORtg 2PT +R2 .0199/3PT -R2 .0001 (~zero); HS 3PT% ~30% vs NBA ~36% (transfer-failure mechanism); blowouts >=20pts 3PT% higher in wins/lower in losses (tail); conclusion more 2PT or higher-quality 3PT; limitation 23 data points; future multi-year/multi-team/women-vs-men.",
+  "gse_mapping": "GSE lifts the shot-value-weighted efficiency metrics (eFG%, offensive rating), the efficiency-drives-output-but-volume-does-not principle, and the efficiency-volume-winning separation as its offensive-evaluation layer; records the strategy-transfer-failure veto (NBA edge does not transfer to lower-skill HS population), the 30-vs-36-percent skill effect-modifier, the blowout tail effect, and the 23-data-point low-power limitation as honest limits; all outputs are shooting efficiencies and win correlations from box scores, never sportsbook lines, and a strategy that works in the NBA but not high school is a lesson in context-dependence, with a PASS on a bad transfer a badge of honor."
+}
