@@ -1,0 +1,873 @@
+{
+  "book_id": "414eabfc4f1c326a",
+  "source_status": "COMPLETE",
+  "source_note": "Simon J.D. Prince, Understanding Deep Learning (MIT Press, December 2023). File read: the author's manuscript PDF distributed via udlbook.com (front matter dated February 8, 2026); text layer complete, extracted text 1749655 bytes over 26580 lines, unicode math glyphs preserved. PDF sha256 f8237d393163900fa8e43210e680a3f987b45ccac7750b372e156fae3df0bf32, size 22344992 bytes. Extraction covers all 21 chapters and the mathematics and probability appendices: the supervised framework, activations and universal approximation, depth efficiency, likelihood-derived losses, optimization, backpropagation and initialization, bias-variance and double descent, regularization as priors, Bayesian marginalization, convolutional and residual structure, self-attention, graph networks, GANs, normalizing flows, the ELBO, diffusion, and discounted returns. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "supervised_learning_framework",
+      "name": "A supervised model is a parameterized function y = f[x, phi]; learning means choosing the parameters, and every later method in the book is a way of choosing them.",
+      "domain": "supervised learning",
+      "verbatim_quote": "A supervised learning model is a function y = f[x, ϕ] that relates inputs x to outputs y. The particular relationship is determined by parameters ϕ.",
+      "page": "Ch 2, Sec 2.3; txt ~L1311",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Paired input-output examples exist and are drawn from a fixed underlying relationship.",
+        "The function family is fixed in advance; only the parameters are learned.",
+        "Inputs and outputs are represented numerically."
+      ],
+      "breakdown_regime": "Breaks when the deployment distribution differs from the training distribution, when the target relationship itself drifts over time, or when no paired supervision exists at all.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The GSE reasoning engine treats every projection as an explicit parameterized function of a declared input state: player availability, matchup structure, situation, and venue enter as named inputs, and the fitted parameters are versioned artifacts. Any projection that cannot name its inputs and its parameter set is not a model output; it is an opinion, and it is labeled as such.",
+        "source_operator": "supervised_learning_framework",
+        "telemetry": "Log the input feature vector hash, parameter version, and training window for every emitted projection."
+      }
+    },
+    {
+      "primitive_id": "relu_activation",
+      "name": "The rectified linear unit passes positive pre-activations unchanged and clamps negative ones to zero, making each hidden unit a hinge that switches linear behavior on and off.",
+      "domain": "neural network architecture",
+      "verbatim_quote": "This returns the input when it is positive and zero otherwise (figure 3.1).",
+      "page": "Ch 3, Sec 3.1; txt ~L1441",
+      "latex": "a(z) = \\begin{cases} 0 & \\text{for } z < 0 \\\\ z & \\text{for } z \\geq 0 \\end{cases}",
+      "symbol_and_unit_ledger": {
+        "z": "pre-activation, weighted sum of inputs plus bias (dimensionless score in the network's internal units)",
+        "a(z)": "activation output, same units as z; zero for all negative z"
+      },
+      "assumptions": [
+        "The activation is applied elementwise to each hidden unit.",
+        "The derivative is 1 for positive inputs and 0 for negative inputs, so gradient flow is all-or-nothing per unit."
+      ],
+      "breakdown_regime": "Breaks in the dying ReLU regime: a unit whose bias pushes its pre-activation negative for every training example receives zero gradient forever and never recovers. Also breaks smoothness assumptions at z = 0, where the derivative is undefined and a convention must be chosen.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Thresholded evidence in the reasoning engine behaves the same way: a signal family contributes nothing until its activation condition is met, then contributes in proportion to its strength. The engine keeps an explicit register of which evidence channels are currently inactive for a given game state, because an inactive channel is information, not an absence of information.",
+        "source_operator": "relu_activation",
+        "telemetry": "Count of inactive evidence channels per projection, and the pre-activation margin of each channel relative to its threshold."
+      }
+    },
+    {
+      "primitive_id": "universal_approximation_theorem",
+      "name": "A shallow network with enough hidden units can approximate any continuous function to any specified precision, so representational capacity alone never justifies depth or complexity.",
+      "domain": "approximation theory",
+      "verbatim_quote": "The universal approximation theorem proves that for any continuous function, there exists a shallow network that can approximate this function to any specified precision.",
+      "page": "Ch 3, Sec 3.2; txt ~L1607",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The target function is continuous on the domain of interest.",
+        "The number of hidden units is unbounded; the theorem is an existence result, not an efficiency result.",
+        "The activation function is non-polynomial (satisfies the theorem's conditions)."
+      ],
+      "breakdown_regime": "Breaks as practical guidance: the required width can be astronomically large, the theorem says nothing about whether gradient methods can find the approximating parameters, and it says nothing about generalization from finite data.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Existence is not performance. In the reasoning engine, the fact that a sufficiently rich signal set could in principle reconstruct any outcome pattern never licenses adding signals; each candidate signal must separately prove it can be estimated from the data actually available and that it improves held-out projections. Capacity claims are audited against estimation cost.",
+        "source_operator": "universal_approximation_theorem",
+        "telemetry": "For each signal family: parameter count, effective sample size, and held-out error with and without the family."
+      }
+    },
+    {
+      "primitive_id": "depth_efficiency_linear_regions",
+      "name": "Depth is exponentially more parameter-efficient than width for some function families: functions exist that deep networks realize compactly but no bounded shallow network can realize at all.",
+      "domain": "approximation theory",
+      "verbatim_quote": "Several results show that there are functions that can be realized by deep networks but not by any shallow network whose capacity is bounded above exponentially.",
+      "page": "Ch 4, Notes (depth efficiency); txt ~L2672",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The comparison holds parameter count or unit count fixed across depths.",
+        "The result concerns specific constructed function families (for example, highly oscillatory or compositional functions), not arbitrary targets."
+      ],
+      "breakdown_regime": "Breaks when the target function lacks compositional structure: for simple, smooth, low-order relationships a shallow model matches a deep one, and depth then buys only optimization difficulty and overfitting risk.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Layered reasoning mirrors depth efficiency. The engine composes simple verified stages (availability, then matchup, then situation, then venue) rather than fitting one flat mapping from raw inputs to a projection, because interaction structure in games is compositional: the effect of a missing lineman depends on the scheme it feeds, which depends on the opponent. Flat models need exponentially more data to express the same interactions.",
+        "source_operator": "depth_efficiency_linear_regions",
+        "telemetry": "Held-out error of the layered pipeline versus a flat model of matched parameter count, per projection family."
+      }
+    },
+    {
+      "primitive_id": "maximum_likelihood_criterion",
+      "name": "Training is maximum likelihood: choose the parameters that maximize the product of the probabilities the model assigns to the observed outputs given the inputs.",
+      "domain": "training criteria (probabilistic)",
+      "verbatim_quote": "The combined probability term is the likelihood of the parameters, and hence equation 5.1 is known as the maximum likelihood criterion.",
+      "page": "Ch 5, Sec 5.1.2; txt ~L2884",
+      "latex": "\\hat{\\phi} = \\arg\\max_{\\phi} \\prod_{i=1}^{I} \\mathrm{Pr}(y_i \\mid f[x_i, \\phi])",
+      "symbol_and_unit_ledger": {
+        "phi (ϕ)": "parameter vector of the model (mixed internal units)",
+        "x_i": "input vector for training example i",
+        "y_i": "observed output for example i (units of the prediction target)",
+        "Pr(y_i | f[x_i, phi])": "model-assigned probability or density of the observed output (dimensionless, or per-unit density for continuous outputs)",
+        "I": "number of training examples (count)",
+        "phi-hat": "maximum likelihood parameter estimate"
+      },
+      "assumptions": [
+        "Training examples are independent, so the joint probability factorizes into a product.",
+        "The model family includes a probabilistic output model, not just a point prediction.",
+        "The data-generating distribution is fixed across the training set."
+      ],
+      "breakdown_regime": "Breaks under dependence between examples (the product overstates the evidence), under distribution shift, and when the model family is misspecified so the likelihood rewards the wrong structure; with unlimited capacity it also overfits, memorizing noise as if it were signal.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every GSE projection family is fitted by an explicit likelihood over observed outcomes, and the likelihood is the contract: a projection method that cannot state the probability it assigned to what actually happened cannot be scored, calibrated, or compared. Post-game grading is always likelihood-first: the engine asks what probability the projection gave the realized outcome before it asks whether the point estimate was close.",
+        "source_operator": "maximum_likelihood_criterion",
+        "telemetry": "Per-projection log-likelihood of realized outcomes, aggregated by family, opponent class, and week."
+      }
+    },
+    {
+      "primitive_id": "negative_log_likelihood_loss",
+      "name": "Minimizing the negative log-likelihood is the same optimization as maximizing likelihood, and it converts the probabilistic criterion into the additive loss that gradient methods consume.",
+      "domain": "training criteria (probabilistic)",
+      "verbatim_quote": "To convert the maximum log-likelihood criterion to a minimization problem, we multiply by minus one, which gives us the negative log-likelihood criterion:",
+      "page": "Ch 5, Sec 5.1.4; txt ~L2958",
+      "latex": "L[\\phi] = -\\sum_{i=1}^{I} \\log \\mathrm{Pr}(y_i \\mid f[x_i, \\phi])",
+      "symbol_and_unit_ledger": {
+        "L[phi]": "loss, total surprise of the training data under the model (nats, dimensionless log-probability)",
+        "log Pr(y_i | f[x_i, phi])": "log-probability assigned to example i (nats)",
+        "I": "number of training examples (count)"
+      },
+      "assumptions": [
+        "Examples are independent, so log-probabilities add.",
+        "Model probabilities are strictly positive on observed outcomes, otherwise the loss is infinite."
+      ],
+      "breakdown_regime": "Breaks numerically when predicted probabilities underflow to zero (the log diverges), and conceptually when examples are correlated, because the sum then double-counts shared evidence.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's canonical training and grading objective is summed negative log-likelihood of realized outcomes under the projected distributions. Point-estimate accuracy is a diagnostic, never the objective: two projections with the same mean are ranked by the probability mass they placed on what occurred.",
+        "source_operator": "negative_log_likelihood_loss",
+        "telemetry": "Rolling summed NLL per projection family with a fixed evaluation window; alert when a family's NLL degrades beyond its own historical band."
+      }
+    },
+    {
+      "primitive_id": "least_squares_from_gaussian_ml",
+      "name": "Least squares is not an ad hoc choice: it is exactly maximum likelihood when outputs are independent draws from a normal distribution whose mean the model predicts and whose variance is constant.",
+      "domain": "training criteria (probabilistic)",
+      "verbatim_quote": "The least squares criterion follows from the assumption that the model predicts the mean of a normal distribution over the outputs and that we maximize the probability.",
+      "page": "Ch 5, figure 5.4 caption; txt ~L3145",
+      "latex": "L[\\phi] = \\sum_{i=1}^{I} \\left( y_i - f[x_i, \\phi] \\right)^2",
+      "symbol_and_unit_ledger": {
+        "y_i": "observed continuous output (units of the target, for example points)",
+        "f[x_i, phi]": "predicted mean of the output distribution (same units as y_i)",
+        "L[phi]": "loss in squared target units"
+      },
+      "assumptions": [
+        "Errors are independent across examples.",
+        "Errors are normally distributed with a single shared variance (homoscedastic).",
+        "The model predicts the conditional mean."
+      ],
+      "breakdown_regime": "Breaks when errors are heavy-tailed (a few huge misses dominate the squared loss), when variance varies with the input, and when the target is discrete or bounded, where a normal model assigns probability to impossible values.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Squared-error fitting inside the engine is only used where its Gaussian reading is defensible, and the assumption is written next to the fit. Where game outcomes are heavy-tailed (blowout tails, garbage-time scoring), the engine switches to losses whose probabilistic reading matches the tail behavior instead of letting squared error silently impose a normal world.",
+        "source_operator": "least_squares_from_gaussian_ml",
+        "telemetry": "Residual kurtosis and tail exceedance rates for every squared-error fit; automatic flag when realized tails exceed the Gaussian prediction."
+      }
+    },
+    {
+      "primitive_id": "heteroscedastic_regression",
+      "name": "A model can predict its own input-dependent uncertainty by emitting both a mean and a variance; uncertainty that varies with the input is heteroscedastic, and the likelihood automatically down-weights noisy regions.",
+      "domain": "training criteria (probabilistic)",
+      "verbatim_quote": "When the uncertainty of the model varies as a function of the input data, we refer to this as heteroscedastic (as opposed to homoscedastic, where the uncertainty is constant).",
+      "page": "Ch 5, Sec 5.3.4; txt ~L3176",
+      "latex": "\\mu = f_1[x, \\phi], \\qquad \\sigma^2 = f_2[x, \\phi]^2",
+      "symbol_and_unit_ledger": {
+        "mu": "predicted conditional mean (units of the target)",
+        "sigma^2": "predicted conditional variance (squared target units), parameterized as a squared network output so it stays non-negative",
+        "f_1, f_2": "two output heads of the network sharing parameters phi",
+        "x": "input vector"
+      },
+      "assumptions": [
+        "The conditional distribution is normal with input-dependent mean and variance.",
+        "Mean and variance heads are trained jointly by the same likelihood.",
+        "Squaring the second head enforces a positive variance."
+      ],
+      "breakdown_regime": "Breaks when the true conditional distribution is skewed or multimodal, since a single normal cannot represent it, and the variance head can also collapse or explode early in training when the mean is still poor, destabilizing the likelihood.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Games are not equally predictable, and the engine says so numerically: every projection carries an input-dependent spread driven by the state itself (backup quarterback, weather, pace uncertainty, injury ambiguity). A projection with a wide state-driven spread is a weaker claim than the same mean with a narrow spread, and downstream reasoning consumes the pair, never the mean alone.",
+        "source_operator": "heteroscedastic_regression",
+        "telemetry": "Calibration of predicted spreads: realized absolute error stratified by predicted sigma band must increase monotonically across bands."
+      }
+    },
+    {
+      "primitive_id": "binary_cross_entropy_loss",
+      "name": "For binary outcomes, maximum likelihood under a Bernoulli output model gives the cross-entropy loss, which rewards large predicted probability on realized positives and small probability on realized negatives.",
+      "domain": "training criteria (probabilistic)",
+      "verbatim_quote": "The loss function favors model parameters that produce large values of λ at positions xi that are associated with positive examples yi = 1 and small values of λ at positions associated with negative examples yi = 0.",
+      "page": "Ch 5, figure 5.8 caption; txt ~L3303",
+      "latex": "L[\\phi] = -\\sum_{i=1}^{I} \\left[ y_i \\log \\lambda_i + (1 - y_i) \\log (1 - \\lambda_i) \\right], \\qquad \\lambda_i = \\mathrm{sig}\\left(f[x_i, \\phi]\\right)",
+      "symbol_and_unit_ledger": {
+        "y_i": "binary label in {0, 1} (dimensionless)",
+        "lambda_i": "predicted probability of the positive class (dimensionless, in [0, 1])",
+        "sig": "logistic sigmoid, maps a real-valued score to (0, 1)",
+        "L[phi]": "loss in nats"
+      },
+      "assumptions": [
+        "Outcomes are Bernoulli given the input.",
+        "Examples are independent.",
+        "The network output is passed through a sigmoid so it is a valid probability."
+      ],
+      "breakdown_regime": "Breaks under extreme class imbalance without correction, when labels are noisy (the loss punishes confident correct predictions against wrong labels without bound), and when predicted probabilities saturate so gradients vanish.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Win probability and other binary projection heads in the engine are trained and graded with cross-entropy on realized outcomes, which keeps probabilities honest: a 70 percent claim that lands half the time is penalized by the loss itself, not by an after-the-fact review. Probability outputs are never rounded into certainties before grading.",
+        "source_operator": "binary_cross_entropy_loss",
+        "telemetry": "Cross-entropy and reliability curves (predicted probability versus realized frequency) per binary head, per season phase."
+      }
+    },
+    {
+      "primitive_id": "softmax_multiclass_cross_entropy",
+      "name": "The softmax converts arbitrary scores into a probability vector over K mutually exclusive classes, and pairing it with cross-entropy is maximum likelihood for categorical outcomes.",
+      "domain": "training criteria (probabilistic)",
+      "verbatim_quote": "This takes an arbitrary vector of length K and returns a vector of the same length but where the elements are now in the range [0, 1] and sum to one.",
+      "page": "Ch 5, Sec 5.5; txt ~L3358",
+      "latex": "\\mathrm{softmax}_k(\\mathbf{z}) = \\frac{\\exp(z_k)}{\\sum_{j=1}^{K} \\exp(z_j)}",
+      "symbol_and_unit_ledger": {
+        "z": "vector of K class scores or logits (dimensionless)",
+        "z_k": "score for class k (dimensionless)",
+        "K": "number of mutually exclusive classes (count)",
+        "softmax_k(z)": "predicted probability of class k (dimensionless, in [0, 1]; all K outputs sum to 1)"
+      },
+      "assumptions": [
+        "Classes are mutually exclusive and exhaustive, so probabilities must sum to one.",
+        "Scores are real-valued and unbounded before the softmax.",
+        "Training labels are single-class (one-hot) or a target distribution."
+      ],
+      "breakdown_regime": "Breaks when outcomes are not mutually exclusive (multi-label problems forced through a softmax distort each other), when logits grow large and the exponentials overflow numerically, and when the true class set is open but the softmax forces all mass onto known classes.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Where the engine distributes probability over mutually exclusive outcome classes (for example, margin bands or game script classes), it uses a normalized categorical head and grades the whole distribution, so probability mass cannot leak or double-count across classes. Class sets are reviewed whenever a new outcome type appears, because a closed softmax silently absorbs novel outcomes into known classes.",
+        "source_operator": "softmax_multiclass_cross_entropy",
+        "telemetry": "Full-distribution log loss per categorical head, plus a mass audit confirming outputs sum to one within tolerance."
+      }
+    },
+    {
+      "primitive_id": "gradient_descent",
+      "name": "Gradient descent fits parameters iteratively: compute the loss gradient at the current parameters to find the uphill direction, then step a small distance alpha in the opposite, downhill direction.",
+      "domain": "optimization",
+      "verbatim_quote": "The first step computes the gradient of the loss function at the current position. This determines the uphill direction of the loss function. The second step moves a small distance α downhill (hence the negative sign).",
+      "page": "Ch 6, Sec 6.1; txt ~L3886",
+      "latex": "\\phi \\leftarrow \\phi - \\alpha \\frac{\\partial}{\\partial \\phi} L[\\phi]",
+      "symbol_and_unit_ledger": {
+        "phi (ϕ)": "parameter vector (mixed internal units)",
+        "L[phi]": "loss at the current parameters (units of the chosen criterion)",
+        "dL/dphi": "gradient vector, same shape as phi (loss units per parameter unit)",
+        "alpha (α)": "learning rate, step size scaling the gradient step (parameter units per gradient unit)"
+      },
+      "assumptions": [
+        "The loss is differentiable almost everywhere in the parameters.",
+        "The full training set is used for each gradient (batch gradient descent).",
+        "The learning rate is small enough that the local linear approximation holds."
+      ],
+      "breakdown_regime": "Breaks when the learning rate is too large (steps overshoot and the loss diverges), too small (progress stalls), or when the loss surface has narrow curved valleys where the steepest direction is nearly orthogonal to the direction of progress.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine recalibration follows the same contract: parameter updates are computed from an explicit loss over recent graded outcomes, applied at a controlled step size, and logged as deltas. Hand-tuned parameter changes without a gradient story (what loss, what data, what step) are rejected, because an unlogged manual change cannot be distinguished from drift.",
+        "source_operator": "gradient_descent",
+        "telemetry": "Parameter delta log per recalibration: loss before and after, step size, data window, and resulting held-out NLL change."
+      }
+    },
+    {
+      "primitive_id": "stochastic_gradient_descent",
+      "name": "SGD replaces the full-batch gradient with a gradient computed on a random minibatch; the injected noise means steps are downhill only on average, and that noise helps escape poor local minima and sharp basins.",
+      "domain": "optimization",
+      "verbatim_quote": "At each iteration, we use a different random subset of the data (a batch) to compute the gradient. This adds noise to the process and helps prevent the algorithm from getting trapped in a sub-optimal region of parameter space.",
+      "page": "Ch 6, Sec 6.6 (chapter summary); txt ~L4444",
+      "latex": "\\phi \\leftarrow \\phi - \\alpha \\frac{\\partial}{\\partial \\phi} \\sum_{i \\in \\mathcal{B}} \\ell_i",
+      "symbol_and_unit_ledger": {
+        "phi (ϕ)": "parameter vector",
+        "B": "minibatch, a random subset of training example indices (count = batch size)",
+        "ell_i": "loss contribution of example i (criterion units)",
+        "alpha (α)": "learning rate (step size)"
+      },
+      "assumptions": [
+        "Batches are drawn randomly so the minibatch gradient is an unbiased estimate of the full gradient.",
+        "Examples are shuffled so batch composition is not systematically ordered.",
+        "The learning rate schedule compensates for gradient noise late in training."
+      ],
+      "breakdown_regime": "Breaks when batches are too small (gradient noise swamps the signal and training wanders), when data ordering leaks structure into batches, and at convergence, where constant step sizes bounce around the minimum instead of settling.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Weekly engine updates are minibatch updates by construction: each week of graded games is a noisy sample of the true signal, and the engine's update rule is designed for that noise rather than pretending a week is the full dataset. A single week's results move parameters by a bounded step; they never rewrite the model.",
+        "source_operator": "stochastic_gradient_descent",
+        "telemetry": "Update magnitude per week versus the week-over-week outcome variance; alarm when realized parameter movement exceeds the noise-consistent bound."
+      }
+    },
+    {
+      "primitive_id": "momentum",
+      "name": "Momentum updates parameters with a weighted combination of the current batch gradient and the previous step direction, smoothing the trajectory through noisy or ravine-shaped loss surfaces.",
+      "domain": "optimization",
+      "verbatim_quote": "A common modification to stochastic gradient descent is to add a momentum term. We update the parameters with a weighted combination of the gradient computed from the current batch and the direction moved in the previous step:",
+      "page": "Ch 6, Sec 6.3; txt ~L4213",
+      "latex": "\\mathbf{m} \\leftarrow \\beta \\mathbf{m} + \\frac{\\partial}{\\partial \\phi} \\sum_{i \\in \\mathcal{B}} \\ell_i, \\qquad \\phi \\leftarrow \\phi - \\alpha \\mathbf{m}",
+      "symbol_and_unit_ledger": {
+        "m": "momentum vector, running direction of travel in parameter space (gradient units)",
+        "beta (β)": "momentum coefficient in [0, 1), weight on the previous direction (dimensionless)",
+        "alpha (α)": "learning rate (step size)",
+        "B": "current minibatch index set"
+      },
+      "assumptions": [
+        "Gradient noise is roughly independent between steps, so averaging directions cancels noise.",
+        "The loss surface is locally smooth enough that past direction remains informative."
+      ],
+      "breakdown_regime": "Breaks when beta is too high: the trajectory overshoots minima and oscillates, and stale direction keeps pushing after the surface has turned, for example right after a learning-rate change or a data regime change.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine beliefs carry momentum by design: a signal family's weight updates blend the new evidence gradient with its established direction, so one loud week cannot reverse a season of graded evidence, and one quiet week cannot erase it. The momentum coefficient is a declared constant per family, tuned on held-out seasons, not adjusted by feel.",
+        "source_operator": "momentum",
+        "telemetry": "Effective half-life of each family's weight under the current momentum settings, recomputed whenever coefficients change."
+      }
+    },
+    {
+      "primitive_id": "adam_optimizer",
+      "name": "Adam keeps momentum-style running averages of both the gradient and the squared gradient, bias-corrects them, and scales each parameter's step by its own recent gradient magnitude.",
+      "domain": "optimization",
+      "verbatim_quote": "Adaptive moment estimation, or Adam, takes this idea and adds momentum to both the estimate of the gradient and the squared gradient:",
+      "page": "Ch 6, Sec 6.4; txt ~L4331",
+      "latex": "\\phi \\leftarrow \\phi - \\alpha \\, \\frac{\\mathbf{m} \\oslash (1 - \\beta_1^t)}{\\sqrt{\\mathbf{v} \\oslash (1 - \\beta_2^t)} + \\epsilon}",
+      "symbol_and_unit_ledger": {
+        "m": "exponentially weighted average of past gradients (first moment estimate)",
+        "v": "exponentially weighted average of past squared gradients (second moment estimate)",
+        "beta_1, beta_2": "decay rates for the two averages, in [0, 1) (dimensionless)",
+        "t": "iteration count (count)",
+        "epsilon (ε)": "small constant preventing division by zero (gradient units)",
+        "oslash (⊘)": "elementwise division; all operations on m and v are per-parameter",
+        "alpha (α)": "base learning rate (step size)"
+      },
+      "assumptions": [
+        "Gradient magnitudes differ across parameters, so per-parameter scaling helps.",
+        "The bias correction terms (1 minus beta to the power t) account for the averages being initialized at zero.",
+        "Recent gradients are representative; the exponential windows match the surface's rate of change."
+      ],
+      "breakdown_regime": "Breaks when the second-moment estimate is corrupted by rare huge gradients (steps collapse for long stretches afterward), and in some convex problems Adam fails to converge to the optimum even with infinite data, a known counterexample regime.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Parameters in the engine live on wildly different scales (a pace coefficient versus an injury-effect coefficient), so recalibration normalizes each parameter's update by its own recent update history rather than applying one global step. Bias correction matters operationally: early-season updates, when history is short, are automatically distrusted until the running averages warm up.",
+        "source_operator": "adam_optimizer",
+        "telemetry": "Per-parameter effective step sizes during recalibration; flag any parameter whose adaptive scale moves by more than an order of magnitude in one cycle."
+      }
+    },
+    {
+      "primitive_id": "backpropagation",
+      "name": "Backpropagation computes all parameter gradients in one backward pass by reusing, at each layer, the derivative term computed in the previous backward step; it is the chain rule with memoization.",
+      "domain": "gradient computation",
+      "verbatim_quote": "Note that in each case, the term in brackets was computed in the previous step.",
+      "page": "Ch 7, Sec 7.4; txt ~L5132",
+      "latex": "\\frac{\\partial \\ell_i}{\\partial \\Omega_k} = \\frac{\\partial \\ell_i}{\\partial \\mathbf{f}_k} \\, \\mathbf{h}_k^{\\top}",
+      "symbol_and_unit_ledger": {
+        "ell_i": "loss for training example i (criterion units)",
+        "Omega_k (Ω_k)": "weight matrix of layer k (internal weight units)",
+        "f_k": "pre-activation vector at layer k",
+        "h_k": "activation vector entering layer k (internal feature units)",
+        "d ell_i / d f_k": "adjoint vector, sensitivity of the loss to layer k pre-activations, computed once and reused"
+      },
+      "assumptions": [
+        "The model is a composition of differentiable operations arranged as a directed acyclic graph.",
+        "Intermediate activations from the forward pass are stored for reuse in the backward pass."
+      ],
+      "breakdown_regime": "Breaks at non-differentiable operations (a subgradient or estimator must be substituted), when stored activations exceed memory for very deep or wide models, and when the computation graph is dynamic in ways that defeat static reuse.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Error attribution in the engine is backpropagation-shaped: when a projection misses, the miss is decomposed backward through the reasoning stages (which stage's intermediate estimate first diverged from what the later evidence supported), reusing the same intermediate quantities rather than re-deriving blame from the final score. A miss is assigned to the earliest stage whose output was already wrong given its inputs.",
+        "source_operator": "backpropagation",
+        "telemetry": "Per-stage attribution ledger for graded misses: stage, its input state, its output, and the counterfactual output that would have repaired the final projection."
+      }
+    },
+    {
+      "primitive_id": "vanishing_exploding_gradients",
+      "name": "If weights are initialized badly, gradient magnitudes shrink or grow uncontrollably through the backward pass: vanishing gradients freeze early layers, exploding gradients destabilize everything.",
+      "domain": "gradient computation",
+      "verbatim_quote": "These cases are known as the vanishing gradient problem and the exploding gradient problem, respectively. In the former case, updates to the model become vanishingly small. In the latter case, they become unstable.",
+      "page": "Ch 7, Sec 7.5; txt ~L5341",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each layer's Jacobian has spectral scale near one, so products across layers neither collapse nor blow up.",
+        "Activation derivatives are bounded (for ReLU, either 0 or 1), so the weight matrices dominate the gradient scaling."
+      ],
+      "breakdown_regime": "This is the failure regime itself: deep stacks of too-small weights send early-layer gradients to zero (learning stops where it matters most), and too-large weights produce gradient explosions and numerical overflow. Saturating activations like the sigmoid, whose derivative is at most 0.25, multiply the shrinkage at every layer.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Long reasoning chains have the same pathology. In the engine, an uncertainty or correction that must travel through many reasoning stages is monitored for attenuation: if a strong late signal (a confirmed inactive starter) barely moves the final projection, the chain is vanishing; if a minor early rumor whipsaws the projection, the chain is exploding. Both are chain-health faults, not evidence faults.",
+        "source_operator": "vanishing_exploding_gradients",
+        "telemetry": "Stage-to-stage sensitivity audit: change in final projection per unit change at each reasoning stage, tracked for attenuation or amplification drift."
+      }
+    },
+    {
+      "primitive_id": "he_initialization",
+      "name": "He initialization sets the initial weight variance to 2 divided by the layer's input dimension, which keeps activation and gradient variances stable through ReLU layers at the start of training.",
+      "domain": "gradient computation",
+      "verbatim_quote": "where Dh is the dimension of the original layer to which the weights were applied. This is known as He initialization.",
+      "page": "Ch 7, Sec 7.5.1; txt ~L5481",
+      "latex": "\\sigma^2_{\\Omega} = \\frac{2}{D_h}",
+      "symbol_and_unit_ledger": {
+        "sigma^2_Omega (σ²_Ω)": "variance of the initial weight distribution (squared weight units)",
+        "D_h": "number of inputs feeding the layer, the fan-in (count)",
+        "2": "factor compensating for ReLU zeroing roughly half of the activations (dimensionless)"
+      },
+      "assumptions": [
+        "Weights are drawn independently from a zero-mean distribution.",
+        "The activation is ReLU, so about half the pre-activations are clamped to zero on average.",
+        "Inputs to the layer are roughly independent with unit-scale variance."
+      ],
+      "breakdown_regime": "Breaks for non-ReLU activations (the factor 2 is ReLU-specific; sigmoid and tanh layers need the Xavier scaling instead), and when inputs are strongly correlated, so the effective fan-in is smaller than the nominal dimension.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cold-start calibration of new engine components follows the same principle: initial weights for a new signal family are scaled by the family's effective input count so its initial influence is neither silent nor dominant before any evidence arrives. A new family enters at unit-scale influence by construction, then earns more.",
+        "source_operator": "he_initialization",
+        "telemetry": "Initial influence share of each newly added signal family measured on a fixed validation set before its first live update."
+      }
+    },
+    {
+      "primitive_id": "bias_variance_noise_decomposition",
+      "name": "Expected test error decomposes into irreducible noise, squared bias (systematic deviation of the average model), and variance (sensitivity of the fitted model to the particular training sample).",
+      "domain": "generalization",
+      "verbatim_quote": "The variance is uncertainty in the fitted model due to the particular training dataset we sample. The bias is the systematic deviation of the model from the mean of the function we are modeling. The noise is the inherent uncertainty in the true mapping from input to output.",
+      "page": "Ch 8, Sec 8.2; txt ~L6169",
+      "latex": "\\mathbb{E}\\left[ \\left( y - f[x, \\hat{\\phi}] \\right)^2 \\right] = \\mathrm{noise}^2 + \\mathrm{bias}^2 + \\mathrm{variance}",
+      "symbol_and_unit_ledger": {
+        "y": "observed output (target units)",
+        "f[x, phi-hat]": "prediction of the model fitted on one sampled training set (target units)",
+        "E[...]": "expectation over training-set draws and output noise",
+        "noise^2": "irreducible variance of the true input-output mapping (squared target units)",
+        "bias^2": "squared gap between the average fitted model and the true mean function (squared target units)",
+        "variance": "expected squared deviation of individual fitted models from their average (squared target units)"
+      },
+      "assumptions": [
+        "The loss is squared error, which is what makes the decomposition additive.",
+        "The expectation is over re-drawn training sets of the same size from the same distribution.",
+        "A true mean function exists for the bias to be measured against."
+      ],
+      "breakdown_regime": "Breaks as a complete story for non-squared losses (the clean three-way split is squared-error-specific) and in the modern overparameterized regime, where variance need not grow with capacity the way the classical picture predicts.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every engine error review classifies the miss before fixing anything: noise (the game was genuinely unpredictable from the available state), bias (the model systematically leans one way in this situation class), or variance (the model's answer swings with which weeks happened to be in the fitting window). The three classes have different fixes, and applying a variance fix to a bias problem is logged as a process error.",
+        "source_operator": "bias_variance_noise_decomposition",
+        "telemetry": "Decomposition estimates per projection family: refit on bootstrap windows to split realized error into the three components each quarter."
+      }
+    },
+    {
+      "primitive_id": "double_descent",
+      "name": "Past the interpolation threshold, test loss falls again as capacity grows: an overparameterized model that fits training data exactly can generalize better than the best underparameterized model, contradicting the classical U-shaped risk curve.",
+      "domain": "generalization",
+      "verbatim_quote": "However, then it does something unexpected; it starts to decrease again. Indeed, if we add enough capacity, the test loss reduces to below the minimal level that we achieved in the first part of the curve. This phenomenon is known as double descent.",
+      "page": "Ch 8, Sec 8.4; txt ~L6331",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Capacity is increased past the point where the model can interpolate (fit exactly) the training data.",
+        "The optimizer's implicit bias selects a well-behaved interpolating solution among the many that fit.",
+        "Training and test data come from the same distribution."
+      ],
+      "breakdown_regime": "The middle of the curve is the danger zone: near the interpolation threshold, test loss spikes and small data changes cause large swings. The second descent is also not a license for unlimited capacity; label noise gets interpolated too, and compute and estimation costs keep rising.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's signal corpus sits on the far side of this curve by design: it ingests far more candidate signals than a classical pipeline would keep, because with the right implicit and explicit regularization, a rich representation plus disciplined selection beats a hand-pruned feature set. The veto applies at emission, not at ingestion; capacity is welcomed, promotion is earned.",
+        "source_operator": "double_descent",
+        "telemetry": "Generalization gap tracked as a function of active signal count; the engine must show it operates past the threshold, not in the spike zone."
+      }
+    },
+    {
+      "primitive_id": "regularization_as_map_prior",
+      "name": "Adding a regularization term to the loss is exactly maximum a posteriori estimation: the regularizer is a prior over parameters, and the fit balances prior belief against the data likelihood.",
+      "domain": "regularization",
+      "verbatim_quote": "The regularization term can be considered as a prior P r(ϕ) that represents knowledge about the parameters before we observe the data and we now have the maximum a posteriori or MAP criterion:",
+      "page": "Ch 9, Sec 9.1.1; txt ~L6835",
+      "latex": "\\hat{\\phi} = \\arg\\max_{\\phi} \\left[ \\mathrm{Pr}(\\phi) \\prod_{i=1}^{I} \\mathrm{Pr}(y_i \\mid x_i, \\phi) \\right]",
+      "symbol_and_unit_ledger": {
+        "Pr(phi)": "prior density over parameters, encoding belief before data (per parameter-unit density)",
+        "Pr(y_i | x_i, phi)": "likelihood of observed output i (dimensionless probability or density)",
+        "phi-hat": "MAP parameter estimate",
+        "I": "number of training examples (count)"
+      },
+      "assumptions": [
+        "A prior over parameters can be stated, at least implicitly, through the choice of penalty.",
+        "The posterior is summarized by its mode (the MAP point) rather than integrated over."
+      ],
+      "breakdown_regime": "Breaks when the prior is wrong and strong: with little data the MAP estimate is the prior wearing a costume. The mode also discards posterior uncertainty, so MAP inherits overconfidence exactly where data are scarcest.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every shrinkage choice in the engine is written as the prior it actually is. When a young player's projection is pulled toward a positional baseline, the baseline distribution and its strength are declared, so reviewers can argue with the prior explicitly instead of hunting for a hidden fudge factor. Undeclared priors are treated as defects.",
+        "source_operator": "regularization_as_map_prior",
+        "telemetry": "Prior registry: every regularized family lists its prior form, strength, and the data volume at which the likelihood would overwhelm it."
+      }
+    },
+    {
+      "primitive_id": "l2_weight_decay",
+      "name": "The L2 penalty adds lambda times the sum of squared parameters to the loss, shrinking weights toward zero and corresponding to a Gaussian prior on the parameters.",
+      "domain": "regularization",
+      "verbatim_quote": "The most commonly used regularization term is the L2 norm, which penalizes the sum of the squares of the parameter values:",
+      "page": "Ch 9, Sec 9.1.2; txt ~L6859",
+      "latex": "L'[\\phi] = L[\\phi] + \\lambda \\sum_j \\phi_j^2",
+      "symbol_and_unit_ledger": {
+        "L[phi]": "unregularized loss (criterion units)",
+        "L'[phi]": "regularized loss (criterion units)",
+        "lambda (λ)": "regularization strength (dimensionless trade-off weight)",
+        "phi_j": "the j-th scalar parameter (parameter units); the penalty is in squared parameter units scaled by lambda"
+      },
+      "assumptions": [
+        "All parameters are penalized on a comparable scale, so features should be normalized first.",
+        "Zero is a sensible default value for every parameter (the Gaussian prior is centered at zero)."
+      ],
+      "breakdown_regime": "Breaks when parameters have genuinely different natural scales (one lambda then over-shrinks some and under-shrinks others) and when zero is the wrong center, for example for parameters whose plausible range is far from zero.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Baseline shrinkage in the engine is L2-shaped: effect sizes for players, units, and situations are pulled toward zero (no effect) in proportion to how little graded evidence supports them, with the shrinkage strength set per family on held-out data. A claimed effect must out-pull its own penalty before it is allowed to move a projection.",
+        "source_operator": "l2_weight_decay",
+        "telemetry": "Shrinkage audit: distribution of fitted effect sizes before and after penalty, per family, each recalibration cycle."
+      }
+    },
+    {
+      "primitive_id": "implicit_regularization_sgd",
+      "name": "SGD regularizes implicitly: its expected step equals gradient descent on a modified loss that includes the variance of per-batch gradients, so SGD prefers flat regions where all batches agree on the slope.",
+      "domain": "regularization",
+      "verbatim_quote": "Equation 9.9 reveals an extra regularization term, which corresponds to the variance of the gradients of the batch losses Lb . In other words, SGD implicitly favors places where the gradients are stable (where all the batches agree on the slope).",
+      "page": "Ch 9, Sec 9.2.2; txt ~L7012",
+      "latex": "\\hat{L}[\\phi] \\approx \\mathbb{E}_b\\left[L_b[\\phi]\\right] + \\frac{\\alpha}{4} \\, \\mathrm{Var}_b\\left[\\frac{\\partial L_b}{\\partial \\phi}\\right]",
+      "symbol_and_unit_ledger": {
+        "L_b[phi]": "loss computed on batch b (criterion units)",
+        "E_b[...]": "expectation over random batch draws",
+        "Var_b[dL_b/dphi]": "variance across batches of the batch gradient (squared gradient units); the implicit penalty term",
+        "alpha (α)": "learning rate; the implicit penalty grows with step size",
+        "L-hat[phi]": "the effective loss SGD actually descends (criterion units), approximation to second order"
+      },
+      "assumptions": [
+        "Batches are drawn uniformly at random.",
+        "The learning rate is small enough for the second-order expansion to be meaningful.",
+        "The analysis is local: it describes the drift of SGD near a point, not global behavior."
+      ],
+      "breakdown_regime": "Breaks when batch gradients are heavy-tailed or batches are constructed non-randomly (curriculum ordering changes the implicit penalty), and the approximation degrades at large learning rates where higher-order terms dominate.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine inherits this preference deliberately: parameter regions where different weeks of graded games disagree violently about the update direction are treated as unstable and penalized, even if their average fit looks good. Stability across data subsets is a first-class selection criterion, on the same level as average accuracy.",
+        "source_operator": "implicit_regularization_sgd",
+        "telemetry": "Batch-agreement statistic per parameter block: variance of per-week update directions, reported alongside mean fit in every model review."
+      }
+    },
+    {
+      "primitive_id": "early_stopping",
+      "name": "Stopping training before convergence is a regularizer: the model first captures the coarse structure of the underlying function and only later starts fitting noise, so halting early keeps the coarse fit and discards the noise fit.",
+      "domain": "regularization",
+      "verbatim_quote": "Early stopping refers to stopping the training procedure before it has fully converged. This can reduce overfitting if the model has already captured the coarse shape of the underlying function but has not yet had time to overfit to the noise (figure 9.6).",
+      "page": "Ch 9, Sec 9.3.1; txt ~L7076",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A held-out validation set exists to decide when to stop.",
+        "The learning trajectory is ordered: general structure is learned before idiosyncratic detail.",
+        "Training loss keeps decreasing past the point where test loss turns up."
+      ],
+      "breakdown_regime": "Breaks when the validation set is small (the stopping point is itself noisy and gets overfit by repeated peeking) and when the learning-rate schedule interacts with stopping, since a decayed schedule can mimic or mask the turning point.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In-season engine tuning uses early stopping discipline: candidate recalibrations are trained against past weeks and halted at the validation minimum over a time-ordered holdout, never at the best in-sample fit. The stopping point is recorded as part of the model artifact, because a model without its stopping record cannot be reproduced or audited.",
+        "source_operator": "early_stopping",
+        "telemetry": "For every promoted recalibration: validation curve, stopping step, and the gap between stopping-point loss and final-step loss."
+      }
+    },
+    {
+      "primitive_id": "ensembling",
+      "name": "Averaging the predictions of several separately trained models reduces the generalization gap, because the models' idiosyncratic errors partially cancel while their shared structure survives.",
+      "domain": "regularization",
+      "verbatim_quote": "Another approach to reducing the generalization gap between training and test data is to build several models and average their predictions.",
+      "page": "Ch 9, Sec 9.3.2; txt ~L7093",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The member models are diverse enough that their errors are not perfectly correlated (different data subsets, initializations, or architectures).",
+        "Members are individually competent; averaging does not rescue systematically wrong models.",
+        "Predictions are averaged in output space (or probability space for classifiers)."
+      ],
+      "breakdown_regime": "Breaks when member errors are highly correlated, which happens when all members share the same data bias or the same structural blind spot; the ensemble then amplifies confidence in a shared error instead of canceling anything.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's headline projections are ensemble outputs across diverse model families (form-based, matchup-based, market-free situational models), and the ensemble spread is published internally as an uncertainty measure. Agreement among diverse families raises confidence; agreement among near-identical models does not, and the diversity of the membership is audited before spread is interpreted as confidence.",
+        "source_operator": "ensembling",
+        "telemetry": "Pairwise error correlation matrix of ensemble members each cycle; effective ensemble size after correlation adjustment."
+      }
+    },
+    {
+      "primitive_id": "dropout",
+      "name": "Dropout randomly clamps a subset of hidden units to zero at each training iteration, preventing units from co-adapting and acting as training over an exponential family of thinned subnetworks.",
+      "domain": "regularization",
+      "verbatim_quote": "Dropout clamps a random subset (typically 50%) of hidden units to zero at each iteration of SGD (figure 9.8).",
+      "page": "Ch 9, Sec 9.3.3; txt ~L7156",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The dropout mask is redrawn independently at every iteration.",
+        "At test time the full network is used with activations scaled to match the training-time expectation.",
+        "Hidden units are sufficiently redundant that random removal is survivable."
+      ],
+      "breakdown_regime": "Breaks when the network is small or the task needs precise coordinated features (random removal destroys information the model cannot route around), and it interacts badly with batch normalization unless the two are carefully ordered and calibrated.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Robustness testing in the engine uses dropout's logic: signal families are randomly ablated during validation to measure which projections collapse when a family is removed. A projection that dies when one family is dropped is fragile by construction and is flagged before it can influence any decision, the same way co-adapted units are exposed by dropout.",
+        "source_operator": "dropout",
+        "telemetry": "Ablation profile per projection family: held-out NLL degradation under random single-family and paired-family removal."
+      }
+    },
+    {
+      "primitive_id": "bayesian_posterior_predictive",
+      "name": "Full Bayesian prediction integrates the model's output over the posterior distribution of parameters, which is an infinite weighted ensemble where each parameter setting is weighted by its prior probability times its agreement with the data.",
+      "domain": "probabilistic inference",
+      "verbatim_quote": "This is effectively an infinite weighted ensemble, where the weight depends on (i) the prior probability of the parameters and (ii) their agreement with the data.",
+      "page": "Ch 9, Sec 9.3.5; txt ~L7288",
+      "latex": "\\mathrm{Pr}(y \\mid x, \\{x_i, y_i\\}_{i=1}^{I}) = \\int \\mathrm{Pr}(y \\mid x, \\phi) \\, \\mathrm{Pr}(\\phi \\mid \\{x_i, y_i\\}_{i=1}^{I}) \\, d\\phi",
+      "symbol_and_unit_ledger": {
+        "Pr(y | x, data)": "posterior predictive probability of output y for input x (dimensionless)",
+        "Pr(y | x, phi)": "model output distribution at parameter setting phi",
+        "Pr(phi | data)": "posterior density over parameters after seeing the training data",
+        "d phi": "integration over the full parameter space; in practice approximated by sampling or variational methods"
+      },
+      "assumptions": [
+        "A prior over parameters and a likelihood are both specified.",
+        "The posterior can be approximated well enough for the integral to be meaningful.",
+        "Predictions are wanted as distributions, not points."
+      ],
+      "breakdown_regime": "Breaks computationally: the integral is intractable for real networks and every approximation (sampling, Laplace, variational) distorts it differently. It also inherits prior sensitivity: with sparse data the predictive distribution is mostly the prior talking.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Thin-data projections in the engine are reported as predictive distributions, not points: a rookie with three graded games gets a wide honest distribution whose width is the posterior width, and the width shrinks only as graded evidence accumulates. Any consumer of the projection sees the width first, because the width is the difference between knowledge and hope.",
+        "source_operator": "bayesian_posterior_predictive",
+        "telemetry": "Posterior width (central 80 percent interval) attached to every projection, with a coverage audit: realized outcomes must fall inside stated intervals at the stated rates."
+      }
+    },
+    {
+      "primitive_id": "convolutional_weight_sharing",
+      "name": "A convolutional layer applies the same weights and bias at every spatial position, so parameter count does not grow with input size and the layer responds to the same pattern wherever it appears.",
+      "domain": "computer vision architectures",
+      "verbatim_quote": "In convolutional layers, each hidden unit is computed by taking a weighted sum of the nearby inputs, adding a bias, and applying an activation function. The weights and the bias are the same at every spatial position, so there are far fewer parameters than in a fully connected network, and the number of parameters doesn't increase with the input image size.",
+      "page": "Ch 10, Sec 10.6 (chapter summary); txt ~L8564",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The input has spatial structure where local neighborhoods are meaningful.",
+        "The same local pattern is worth detecting at every position (translation equivariance is desirable).",
+        "Local receptive fields suffice at each layer; global structure is built by stacking layers."
+      ],
+      "breakdown_regime": "Breaks when absolute position carries the information (the shared weights cannot use it without extra positional inputs) and when the relevant structure is long-range at the input level, forcing very deep stacks or large kernels to connect distant positions.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine shares structure across equivalent contexts the same way: a concept like pressure rate against a given protection scheme is estimated once and applied wherever that matchup geometry appears, rather than re-estimated separately for every team pairing. Sharing is what makes the data sufficient; per-pair free parameters would starve every estimate.",
+        "source_operator": "convolutional_weight_sharing",
+        "telemetry": "Sample-size ledger for shared versus per-context parameters: no per-context parameter ships unless its own graded sample clears the declared minimum."
+      }
+    },
+    {
+      "primitive_id": "residual_connections",
+      "name": "A residual connection adds a layer's input back to its output, so each layer learns a correction to the identity and gradients have a direct path backward through the network.",
+      "domain": "neural network architecture",
+      "verbatim_quote": "Residual or skip connections are branches in the computational path, whereby the input to each network layer f[•] is added back to the output (figure 11.4a).",
+      "page": "Ch 11, Sec 11.2; txt ~L9031",
+      "latex": "\\mathbf{h}_k = \\mathbf{h}_{k-1} + f_k[\\mathbf{h}_{k-1}, \\phi_k]",
+      "symbol_and_unit_ledger": {
+        "h_k": "activation vector after layer k (internal feature units)",
+        "h_{k-1}": "activation vector entering layer k (same dimension and units as h_k)",
+        "f_k[h_{k-1}, phi_k]": "the residual branch, a network layer producing a correction of the same dimension",
+        "phi_k": "parameters of layer k"
+      },
+      "assumptions": [
+        "The residual branch output has the same dimension as its input so the addition is defined.",
+        "Learning a correction to the identity is easier than learning the full mapping when the optimal mapping is near-identity."
+      ],
+      "breakdown_regime": "Breaks when dimensions change between stages (a projection shortcut is needed, adding parameters and failure modes) and when the needed transformation is far from identity everywhere, so the shortcut contributes mostly noise pathways.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine projections are residual by construction: a strong baseline projection (last-cycle estimate from stable structure) is the identity path, and each reasoning stage contributes an additive correction with its own magnitude logged. Reviewers can read exactly how much each stage moved the number, and a stage whose corrections are systematically huge is treated as a broken baseline, not a brilliant stage.",
+        "source_operator": "residual_connections",
+        "telemetry": "Correction magnitude per stage per projection; distribution audit to catch stages whose mean absolute correction grows across cycles."
+      }
+    },
+    {
+      "primitive_id": "dot_product_self_attention",
+      "name": "Self-attention routes information between positions: each output is a weighted sum of all inputs' value vectors, where the non-negative weights sum to one and measure how much attention that output pays to each input.",
+      "domain": "sequence modeling",
+      "verbatim_quote": "The scalar weight a[xm , xn ] is the attention that the nth output pays to input xm . The N weights a[•, xn ] are non-negative and sum to one. Hence, self-attention can be thought of as routing the values in different proportions to create each output (figure 12.1).",
+      "page": "Ch 12, Sec 12.2; txt ~L9946",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Every position can attend to every other position; the routing weights are computed from query-key compatibility and normalized with a softmax.",
+        "Values, queries, and keys are learned linear projections of the inputs.",
+        "Without positional information the operation is permutation equivariant, so order must be injected separately when it matters."
+      ],
+      "breakdown_regime": "Breaks computationally at long sequence lengths (the attention matrix grows quadratically in the number of positions) and interpretively when attention weights are read as explanations: a large weight does not by itself prove the routed information caused the output.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matchup reasoning in the engine is attention-shaped: for each player or unit being projected, the engine computes explicit weights over the opposing units and game-state factors that actually bear on him, normalized so the weights are a budget of influence. The weight vector is stored with the projection, so a reviewer can see what the projection listened to and in what proportion.",
+        "source_operator": "dot_product_self_attention",
+        "telemetry": "Attention budget artifact per projection: the normalized influence weights over opposing units and factors, archived for post-game audit of what was over- and under-weighted."
+      }
+    },
+    {
+      "primitive_id": "graph_neural_networks",
+      "name": "Graph neural networks update each node's embedding by aggregating information from its neighbors, so relational structure (who is connected to whom) becomes part of the representation itself.",
+      "domain": "graph learning",
+      "verbatim_quote": "Spatial-based convolutional networks are a family of graph neural networks that aggregate information from the neighbors of a node and then use this to update the node embeddings.",
+      "page": "Ch 13, Sec 13.10 (chapter summary); txt ~L12303",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The data has a graph structure with meaningful edges, given in advance or constructed.",
+        "Node updates are permutation equivariant: relabeling nodes relabels outputs identically.",
+        "Neighboring nodes carry information about each other (homophily or known interaction effects)."
+      ],
+      "breakdown_regime": "Breaks with over-smoothing: after many message-passing rounds all node embeddings converge toward each other and identity is lost. It also breaks when the given graph is wrong or incomplete, because the model can only aggregate along edges it is given.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A football team is a graph before it is a list: linemen protect a quarterback, coverage defenders inherit the pass rush's timing, and a receiver's value depends on the route tree around him. The engine represents units as nodes with interaction edges and updates each projection from its neighbors, so an injury propagates through the graph instead of being patched onto a single player's line.",
+        "source_operator": "graph_neural_networks",
+        "telemetry": "Graph audit: edge list version per projection, and neighbor-effect estimates compared against realized outcomes when a node is removed (injury games as natural experiments)."
+      }
+    },
+    {
+      "primitive_id": "gan_minimax_game",
+      "name": "A GAN trains a generator and a discriminator against each other: the discriminator minimizes its classification loss on real versus generated samples while the generator maximizes it, and the solution concept is a Nash equilibrium of the two-player game.",
+      "domain": "generative modeling",
+      "verbatim_quote": "Technically, the solution is a Nash equilibrium - the optimization algorithm searches for a position that is simultaneously a minimum of one function and a maximum of the other.",
+      "page": "Ch 15, Sec 15.1.2; txt ~L13145",
+      "latex": "L_D[\\phi] = -\\sum_{i \\in \\mathcal{R}} \\log \\mathrm{D}[x_i, \\phi] - \\sum_{i \\in \\mathcal{G}} \\log \\left( 1 - \\mathrm{D}\\left[ \\mathrm{G}[z_i, \\theta], \\phi \\right] \\right)",
+      "symbol_and_unit_ledger": {
+        "D[x, phi]": "discriminator output, probability that sample x is real (dimensionless, in [0, 1])",
+        "G[z, theta]": "generator output, a synthetic sample built from latent noise z",
+        "R, G (sets)": "index sets of real training samples and generated samples (counts)",
+        "L_D[phi]": "discriminator loss in nats; the generator's objective is the opposing term of the same game",
+        "theta (θ)": "generator parameters, trained to maximize the discriminator's loss"
+      },
+      "assumptions": [
+        "Generated samples come from pushing simple latent noise through the generator network.",
+        "The discriminator is a binary classifier trained on a mix of real and generated samples.",
+        "Both networks are updated alternately so each faces a moving opponent."
+      ],
+      "breakdown_regime": "Breaks in the classic failure mode of mode collapse, where the generator finds a few outputs that fool the discriminator and produces only those; training also oscillates instead of converging when the two players' update balance is off, since the equilibrium is a saddle, not a minimum.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine red-teams its own projections adversarially: a discriminator-style critic model is trained to distinguish the engine's projected game scripts from realized game scripts, and the projection model is revised where the critic succeeds. Where the critic can reliably tell projection from reality, the projection family has a learnable defect, located by the critic's own features.",
+        "source_operator": "gan_minimax_game",
+        "telemetry": "Critic accuracy per projection family: sustained accuracy materially above chance on held-out games triggers a defect review with the critic's top discriminating features attached."
+      }
+    },
+    {
+      "primitive_id": "normalizing_flow_change_of_variables",
+      "name": "A normalizing flow transforms a simple base density through an invertible network; the change-of-variables formula corrects the density by the inverse absolute Jacobian determinant, giving exact likelihoods and exact sampling in one model.",
+      "domain": "density estimation",
+      "verbatim_quote": "Normalizing flows transform a base distribution (usually a normal distribution) to create a new density. They have the advantage that they can both evaluate the likelihood of samples exactly and generate new samples.",
+      "page": "Ch 16, Sec 16.6 (chapter summary); txt ~L15065",
+      "latex": "\\mathrm{Pr}(\\mathbf{x}) = \\mathrm{Pr}(\\mathbf{z}) \\left| \\det \\frac{\\partial f[\\mathbf{z}, \\phi]}{\\partial \\mathbf{z}} \\right|^{-1}, \\qquad \\mathbf{x} = f[\\mathbf{z}, \\phi]",
+      "symbol_and_unit_ledger": {
+        "x": "data-space variable (units of the modeled quantity)",
+        "z": "base-space variable, drawn from a simple density such as a standard normal",
+        "f[z, phi]": "invertible transformation (the flow) with parameters phi",
+        "det(df/dz)": "Jacobian determinant, the local volume change of the transformation (dimensionless ratio); its absolute inverse corrects the density",
+        "Pr(x), Pr(z)": "densities in data space and base space (per-unit densities)"
+      },
+      "assumptions": [
+        "The transformation is invertible and differentiable, with a tractable Jacobian determinant.",
+        "Base and data spaces have the same dimension.",
+        "The base density is simple enough to evaluate and sample exactly."
+      ],
+      "breakdown_regime": "Breaks when the target density has different topology from the base (disconnected modes or different support), because a continuous invertible map cannot tear or glue space; it also breaks when Jacobian computation becomes the bottleneck in high dimensions.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's outcome distributions are built by transforming simple base distributions through learned, auditable mappings (game-state dependent shifts, stretches, and tail warps), with the volume correction tracked so the resulting distribution always integrates to one. A warped distribution that does not normalize is rejected automatically, which makes a whole class of hand-drawn distribution errors impossible.",
+        "source_operator": "normalizing_flow_change_of_variables",
+        "telemetry": "Normalization audit on every emitted distribution plus a warp ledger: each transformation stage and its determinant contribution, per projection."
+      }
+    },
+    {
+      "primitive_id": "elbo_variational_lower_bound",
+      "name": "The evidence lower bound replaces an intractable log-likelihood with a tractable lower bound: expected reconstruction log-probability minus the KL divergence between the approximate posterior and the prior, and maximizing the bound tightens the approximation.",
+      "domain": "probabilistic inference",
+      "verbatim_quote": "To make progress, we define a lower bound on the log-likelihood. This is a function that is always less than or equal to the log-likelihood for a given value of ϕ and will also depend on some other parameters θ.",
+      "page": "Ch 17, Sec 17.3.1; txt ~L15560",
+      "latex": "\\log \\mathrm{Pr}(\\mathbf{x} \\mid \\phi) \\geq \\mathbb{E}_{q(\\mathbf{z} \\mid \\theta)} \\left[ \\log \\mathrm{Pr}(\\mathbf{x} \\mid \\mathbf{z}, \\phi) \\right] - \\mathrm{KL} \\left[ q(\\mathbf{z} \\mid \\theta) \\, \\| \\, \\mathrm{Pr}(\\mathbf{z}) \\right]",
+      "symbol_and_unit_ledger": {
+        "log Pr(x | phi)": "log-likelihood of the data under the generative model (nats)",
+        "q(z | theta)": "variational approximation to the posterior over latent variables z, with its own parameters theta",
+        "E_q[log Pr(x | z, phi)]": "expected reconstruction term, how well latent draws explain the data (nats)",
+        "KL[q || Pr(z)]": "Kullback-Leibler divergence from the approximate posterior to the prior (nats, non-negative); the price of deviating from the prior",
+        "the gap": "the bound's slack equals KL[q(z|theta) || Pr(z|x,phi)], the distance to the true posterior"
+      },
+      "assumptions": [
+        "The true posterior over latents is intractable, so a tractable family q is chosen.",
+        "The prior over latents is specified and simple.",
+        "Expectations under q can be estimated by sampling."
+      ],
+      "breakdown_regime": "Breaks by looseness: if the variational family cannot express the true posterior, the bound stays slack and maximizing it can prefer worse generative parameters that are easier to bound. Mean-field choices also systematically underestimate posterior variance.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Whenever the engine cannot compute an exact quantity (a full posterior over game states, an exact integral over scenarios), it works with a certified bound and reports the slack as part of the answer. Decisions are made on the bound plus its known gap direction, never on an approximation presented as exact.",
+        "source_operator": "elbo_variational_lower_bound",
+        "telemetry": "Bound ledger: for each approximated quantity, the bound value, the estimated slack, and the direction (over- or under-estimate) recorded beside the headline number."
+      }
+    },
+    {
+      "primitive_id": "diffusion_models",
+      "name": "A diffusion model defines a forward process that gradually blends data into noise on a fixed schedule and learns the reverse process, a chain of probabilistic steps that walks noise back into samples from the data distribution.",
+      "domain": "generative modeling",
+      "verbatim_quote": "The first term attenuates the data plus any noise added so far, and the second adds more noise.",
+      "page": "Ch 18, Sec 18.2; txt ~L16500",
+      "latex": "\\mathbf{z}_t = \\sqrt{1 - \\beta_t} \\, \\mathbf{z}_{t-1} + \\sqrt{\\beta_t} \\, \\boldsymbol{\\epsilon}_t, \\qquad \\boldsymbol{\\epsilon}_t \\sim \\mathcal{N}(\\mathbf{0}, \\mathbf{I})",
+      "symbol_and_unit_ledger": {
+        "z_t": "the noised variable at step t (units of the data at t = 0, approaching pure noise as t grows)",
+        "beta_t (β_t)": "noise schedule at step t, fraction of new noise blended in (dimensionless, in [0, 1])",
+        "epsilon_t (ϵ_t)": "fresh standard normal noise at step t (dimensionless)",
+        "sqrt(1 - beta_t)": "attenuation factor shrinking the existing signal so total variance stays controlled"
+      },
+      "assumptions": [
+        "The forward process is fixed in advance (not learned), a Markov chain of Gaussian steps.",
+        "Steps are small enough that each reverse step is also approximately Gaussian and learnable.",
+        "The noise schedule reaches near-pure noise by the final step."
+      ],
+      "breakdown_regime": "Breaks when the schedule is mis-set: too fast destroys structure before the reverse model can learn fine detail, too slow wastes steps; sampling is also expensive because generation requires running the full reverse chain, and errors compound along it.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scenario generation in the engine borrows the diffusion stance: start from an unstructured outcome distribution and refine it in small conditional steps as game-state information is applied, rather than jumping to a final distribution in one move. Each refinement step is small, inspectable, and reversible in the audit trail, so a bad final distribution can be traced to the step where structure was wrongly imposed.",
+        "source_operator": "diffusion_models",
+        "telemetry": "Step ledger for scenario construction: distribution distance moved per refinement step, with a cap that flags any single step moving the distribution suspiciously far."
+      }
+    },
+    {
+      "primitive_id": "discounted_return_markov_reward_process",
+      "name": "In reinforcement learning the return is the discounted sum of future rewards along a trajectory; a discount factor below one makes near-term rewards count more and keeps infinite-horizon returns finite.",
+      "domain": "reinforcement learning",
+      "verbatim_quote": "The return is the sum of the cumulative discounted future rewards; it measures the future benefit of being on this trajectory. A discount factor of less than one makes rewards that are closer in time more valuable than rewards that are further away.",
+      "page": "Ch 19, Sec 19.1.2; txt ~L17776",
+      "latex": "G_t = \\sum_{k=0}^{\\infty} \\gamma^k r_{t+k+1}",
+      "symbol_and_unit_ledger": {
+        "G_t": "return from time t (units of reward)",
+        "r_{t+k+1}": "reward received k+1 steps after t (reward units per step)",
+        "gamma (γ)": "discount factor in [0, 1) for infinite horizons (dimensionless)",
+        "k": "steps into the future (count)"
+      },
+      "assumptions": [
+        "The environment is a Markov reward process: the state summarizes everything relevant about the future.",
+        "Rewards are bounded, so the discounted sum converges when gamma is below one.",
+        "A single scalar reward captures the objective."
+      ],
+      "breakdown_regime": "Breaks when the Markov property fails (hidden state makes the same visible state carry different futures), when gamma approaches one on long horizons (returns explode in variance and the objective stops distinguishing policies), and when the scalar reward is a proxy that the policy learns to game instead of satisfying.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In-game and in-season decisions in the engine are valued by discounted return, not by immediate payoff: a conservative choice that preserves future optionality and an aggressive choice that spends it are compared on the same discounted scale, with the discount factor declared per decision class. Post-hoc grading uses realized returns along the actual trajectory, so decisions are judged by the futures they bought, not by the next play alone.",
+        "source_operator": "discounted_return_markov_reward_process",
+        "telemetry": "Decision ledger: declared gamma, projected return distribution, and realized return for every graded in-game recommendation class."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "414eabfc4f1c326a-t1",
+      "think": "This book has one argument, and every chapter is that argument applied at a larger scale. A prediction problem is a probability model: a parameterized function maps inputs to a distribution over outputs, training is the disciplined choice of those parameters by likelihood, and everything else, depth, attention, flows, diffusion, is a decision about what shape the function and the distribution should have. Prince states the contract in chapter 2, y = f[x, phi], and the rest of the book never breaks it. Even the generative chapters obey it; a GAN, a flow, and a diffusion model are still parameterized families, fitted by criteria that descend from likelihood or from a game built around likelihood-like losses. The first lesson for a reasoning engine is therefore constitutional: any component that produces a number must be able to state its function, its parameters, and the criterion by which those parameters were chosen. A component that cannot state all three is not a model, and its output is commentary. The second movement of the book is that losses are not chosen from a menu, they are derived. Least squares is Gaussian maximum likelihood with constant variance; cross-entropy is Bernoulli or categorical maximum likelihood; heteroscedastic regression is what appears when the variance is allowed to depend on the input. This matters because a derived loss carries its assumptions on its face. When an engine fits with squared error it has implicitly asserted normal, constant-variance errors, and that assertion can be checked against realized residuals. When it trains a probability head with cross-entropy it has asserted calibrated Bernoulli structure, and reliability curves become a theorem check rather than an impression. Prince's treatment turns every objective into a falsifiable claim about the noise, and an engine that adopts this stance can audit itself continuously: pick the loss, read off the implied noise model, test the noise model against what actually happened. The third movement concerns fitting. Gradient descent, stochastic gradient descent, momentum, and Adam are usually taught as engineering detail, but Prince presents them as part of the model itself: the noise in SGD is an implicit regularizer that prefers flat regions where batches agree, the scale of initialization decides whether gradients survive the backward pass, and backpropagation is the accounting system that makes deep composition trainable at all. For a reasoning engine the translation is direct. Recalibration is an optimizer with a declared step size, a declared data window, and a logged trajectory. Instability is diagnosed the way the book diagnoses it, by watching gradient scale and batch agreement, not by staring at final accuracy. A reasoning pipeline whose stages pass corrections to one another is a deep network in slow motion, and it inherits the same diseases: corrections vanish as they travel, corrections explode, early stages freeze while later stages thrash. The book supplies both the diagnostic vocabulary and the cures: normalize the scale at entry, keep a residual path so the baseline always flows through untouched, and let each stage add a bounded correction instead of replacing the signal. The fourth movement is generalization, and it is where the book is most valuable to an engine that must perform on games it has never seen. The bias, variance, and noise decomposition forces an error taxonomy before any repair is attempted, because the three components have different causes and opposite cures. Regularization is exposed as prior belief through the MAP equivalence, which means every shrinkage decision can be debated as a stated belief instead of hidden as a trick. Double descent warns that capacity judgments inherited from classical theory mislead at modern scale: the answer to overfitting is not automatically fewer signals, and the dangerous region is the interpolation threshold, not the far side of it. Ensembling, dropout, early stopping, and the Bayesian predictive integral all attack the same quantity from different sides; they reduce the variance of the fitted artifact or average over its plausible versions. An engine built on this book therefore reports distributions and spreads as first-class outputs, treats ensemble disagreement as data rather than embarrassment, and never lets a point estimate travel without its uncertainty attached. The final movement is structural. Convolutions say: share parameters wherever the same local pattern recurs, or the data will never suffice. Residual connections say: model corrections to a strong baseline, not replacements for it. Attention says: make the routing of influence explicit and normalized, so what a prediction listened to becomes part of the prediction and can be audited afterward. Graph networks say: when the domain is relational, aggregate over the relation, because units do not perform in isolation. The generative chapters close the loop. Flows keep distributions honest by tracking volume change; the ELBO teaches working with certified bounds when exact inference is impossible, and reporting the slack instead of hiding it; diffusion builds complex distributions through many small inspectable refinements; GANs institutionalize adversarial self-criticism; and the reinforcement learning chapters value decisions by discounted return along whole trajectories rather than by the next observable outcome. Read as one text, the book is a complete operating system for a prediction engine: declare the model, derive the loss, fit with an auditable optimizer, taxonomize the error before repairing it, regularize only with declared priors, ensemble and marginalize for honesty, shape the function after the domain's own structure, and grade everything by the probability it assigned to what actually happened. That grading loop is what converts the book from a textbook into infrastructure: a component scored by likelihood every cycle either improves in the open, inside the log, or is retired in the open, and there is no third state in which it quietly persists on reputation.",
+      "retrocausal_genealogy": "The primitives descend from a century of statistics being absorbed into computing. Maximum likelihood is Fisher's program from the 1920s, and least squares is Gauss before him; the book's contribution is showing they are the same idea at different noise assumptions. Stochastic gradient descent descends from Robbins and Monro's stochastic approximation (1951). Backpropagation runs from Linnainmaa's automatic differentiation (1970) through Werbos to the 1986 Rumelhart, Hinton, and Williams paper that made it famous. The modern layer is dated inside the book's own notes: residual networks and He initialization (He et al., 2015), GANs (Goodfellow et al., 2014), normalizing flows (Rezende and Mohamed, 2015), variational autoencoders (Kingma and Welling, 2013), diffusion (Sohl-Dickstein et al., 2015; Ho et al., 2020), double descent (Belkin et al., 2019). The genealogy matters because each primitive carries the scar tissue of the failure that produced it: initialization theory exists because deep networks silently failed to train, and double descent exists because the classical curve failed to describe what practitioners were already seeing.",
+      "theory_of_mind": "Prince writes for a reader who is mathematically literate but has absorbed practitioner folklore: that losses are picked from a menu by habit, that more capacity is simply better or simply dangerous, that the optimizer is plumbing, that a trained network's confidence means something by default. The book's model of its reader is respectful but corrective. Each chapter first states the folk version cleanly, then derives the real version, then names the regime where the folk version breaks. He also models the practitioner as someone who will over-read his own tools, which is why the attention chapter defines weights as routing proportions and the Bayesian chapter insists the predictive distribution, not the fitted point, is the product. The intended reader finishes the book unable to say 'the model says so' without being able to say which function, which criterion, and which assumptions produced the number. That is exactly the standard the engine's internal reviews apply to any component asking to influence a projection.",
+      "cross_layer_veto": "The book's layers veto each other in instructive places, and the engine inherits the vetoes as checks. Universal approximation says capacity is never the binding constraint; the generalization chapters veto the naive reading, because estimation error and the interpolation threshold punish capacity added without regularization discipline. The MAP chapter legitimizes point estimation with priors; the Bayesian section vetoes its sufficiency, because the mode discards exactly the uncertainty the heteroscedastic and ensembling chapters insist on carrying. The optimizer chapters present SGD as a fitting procedure; the implicit regularization result vetoes that innocence, since the optimizer changes which solutions are reachable and therefore belongs in the model specification. The flow chapters promise exact likelihoods; the ELBO chapter vetoes exactness as a general expectation and replaces it with bounds plus reported slack. Finally the GAN chapter vetoes the book's own likelihood-first constitution: a model with no tractable likelihood at all still learns, so likelihood is the engine's default criterion and grading standard, not a metaphysical requirement, and likelihood-free components are admitted only with an adversarial critic standing in for the missing likelihood."
+    }
+  ],
+  "universal_lens": "The portable core of this book, stripped of neural vocabulary, is a discipline for any quantitative prediction under uncertainty. Declare the mapping from state to outcome as an explicit parameterized family. Derive the scoring rule from a stated noise model so the assumptions are falsifiable. Fit by an iterative procedure whose step size, data window, and trajectory are logged. Decompose every error into noise, systematic bias, and sampling variance before attempting a repair, because the three have opposite cures. Wherever shrinkage is applied, write down the prior it encodes. Carry distributions, not points, and let the width of the distribution be set by the evidence. Share parameters across contexts that are structurally the same, route influence through explicit normalized weights, and value decisions by their discounted consequences along trajectories. Any forecasting practice, in any domain, that cannot pass these tests is operating on folklore.",
+  "gsi_mapping": "For the broader systems and intelligence work, the primitives serve as general reasoning infrastructure. Attention budgets become the template for evidence routing in research: every synthesis states what it listened to and in what proportion. The ELBO pattern, certified bounds with reported slack, governs any quantity that cannot be computed exactly, from literature effect sizes to cost projections. The bias, variance, and noise triage is the standard first response when any internal forecast process fails, before anyone is allowed to rebuild it. Adversarial critics, modeled on the GAN game, review internal models by trying to distinguish their outputs from reality. Discounted return frames long-horizon decisions about infrastructure and research programs, replacing next-milestone thinking. Double descent and implicit regularization jointly warn that pruning a rich internal knowledge base down to a tidy core can move the system into the worst region of the curve, so breadth is kept and promotion, not ingestion, is where discipline is applied.",
+  "gse_mapping": "Inside the GSE reasoning engine, this book is the training and honesty layer. All projection families are fitted and graded by likelihood of realized outcomes, with summed negative log-likelihood as the canonical score and probability heads graded by cross-entropy and reliability curves. Every projection ships with a heteroscedastic spread driven by the game state itself, and Bayesian predictive widths govern thin-data cases such as early-season teams and small-sample players. The pipeline architecture is residual: a stable baseline flows through, and each reasoning stage adds a logged, bounded correction. Injury and availability effects propagate through a graph representation of units rather than being patched onto individuals. Recalibration uses momentum and per-parameter adaptive steps on weekly minibatches, with batch-agreement statistics flagging unstable parameter regions. A critic model audits projected game scripts against realized ones. Shrinkage is L2-shaped with a public prior registry, ensemble diversity is measured before spread is read as confidence, and the standing veto list, no undeclared priors, no point estimates without widths, no capacity cuts without a double-descent check, is enforced at review."
+}

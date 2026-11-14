@@ -1,0 +1,868 @@
+{
+ "book_id": "5f7985d2d2051dd2",
+ "source_status": "COMPLETE",
+ "source_note": "Tong Xiao and Jingbo Zhu, Foundations of Large Language Models. The local file is arXiv:2501.09223v4 [cs.CL], 8 Oct 2026, title page dated October 9, 2026, copyright 2021-2026 Tong Xiao and Jingbo Zhu, NLP Lab, Northeastern University and NiuTrans Research, licensed CC BY-NC 4.0; the book is a selection of chapters from the NiuTrans NLPBook resource (https://github.com/NiuTrans/NLPBook). Cataloging correction: the file name says 2025, and the arXiv identifier dates the original submission to January 2025, but the local manuscript is the October 2026 v4 revision. PDF size 2,260,055 bytes; scan digest sha256(str(size) + full file bytes) = 5f7985d2d2051dd2c540ee9512685b4c6e52905466f5fb05cc1c81e0b3f732b6; book_id is the first 16 hex characters of that digest. Extracted text (1,065,346 bytes, 16,638 lines) is clean prose; mathematical glyphs are partially garbled by extraction, so all quoted passages were chosen from clean prose and verified as contiguous substrings of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "causal_lm_mle_objective",
+   "name": "Causal language modeling loss is summed next-token cross-entropy, mathematically equivalent to maximum likelihood estimation",
+   "verbatim_quote": "However, in causal language modeling, only the left context is used for token prediction, and the model does not have access to tokens in the right context.",
+   "page": "Chapter 1, Section 1.2.2.1 (printed p. 9); objective at Eqs. (1.5)-(1.7), Section 1.2.1",
+   "latex": "\\hat{\\theta} = \\arg\\max_{\\theta} \\sum_{x \\in D} \\sum_{i=0}^{|x|-2} \\log \\Pr_{\\theta}(x_{i+1} \\mid x_0, \\ldots, x_i)",
+   "symbol_and_unit_ledger": {
+    "theta": "model parameters",
+    "D": "pre-training dataset of token sequences",
+    "x_i": "token at position i",
+    "Pr_theta": "model conditional probability of the next token given all preceding tokens"
+   },
+   "assumptions": [
+    "Sequences are generated left to right, so each token may condition only on its left context",
+    "Training data is treated as samples from the distribution the model should match"
+   ],
+   "breakdown_regime": "Breaks when the task needs right context (understanding tasks), which is why encoder objectives exist; pure causal training also inherits exposure bias at generation time because the model trains on gold prefixes but generates from its own outputs.",
+   "domain": "pre-training objectives",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's sequence scorer factorizes any ordered event sequence (a drive, a play sequence, a game script) into next-step conditional probabilities, and its training signal is exactly the summed conditional log-probability of Eq. (1.7). Calibration work therefore starts from per-step log scores that compose into a sequence score, not from a single end label.",
+    "source_operator": "causal_lm_mle_objective",
+    "telemetry": "Per-step conditional log-probabilities logged for every scored sequence in engine traces"
+   }
+  },
+  {
+   "primitive_id": "masked_language_modeling",
+   "name": "Masked language modeling: mask a subset of input tokens and train the model to reconstruct them from bidirectional context",
+   "verbatim_quote": "The idea of masked language modeling is to create prediction challenges by masking out some of the tokens in the input sequence and training a model to predict the masked tokens.",
+   "page": "Chapter 1, Section 1.2.2.1 (printed p. 9-10), Eqs. (1.9)-(1.10)",
+   "latex": "(\\hat{W}, \\hat{\\theta}) = \\arg\\min_{W, \\theta} \\sum_{x \\in D} \\sum_{i \\in A(x)} \\mathrm{CrossEntropy}(p^{W, \\theta}_i, p^{gold}_i)",
+   "symbol_and_unit_ledger": {
+    "A(x)": "set of masked positions in sequence x",
+    "p^{W,theta}_i": "model predicted distribution at masked position i",
+    "p^{gold}_i": "one-hot distribution of the true token at position i",
+    "W": "output (Softmax) layer parameters",
+    "theta": "encoder parameters"
+   },
+   "assumptions": [
+    "A position-wise alignment exists between the corrupted input and the original sequence",
+    "Only masked positions contribute loss; unmasked tokens need no prediction"
+   ],
+   "breakdown_regime": "The [MASK] token appears in training but never at test time, creating a train/inference discrepancy; masked tokens are predicted independently of each other, so dependencies among them are ignored.",
+   "domain": "pre-training objectives",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Masked reconstruction maps to masked-variable imputation over game state: hide a subset of situational variables (an injury status, a usage rate, a weather field) and reconstruct them from the surrounding context on both sides. The reconstruction error is a bidirectional consistency check on the engine's feature state before any projection is trusted.",
+    "source_operator": "masked_language_modeling",
+    "telemetry": "Masked-field reconstruction errors per variable family in the situational feature store"
+   }
+  },
+  {
+   "primitive_id": "permuted_language_modeling",
+   "name": "Permuted language modeling: factorize the sequence probability under a permuted prediction order so tokens can be predicted from both-sided context while staying autoregressive",
+   "verbatim_quote": "However, unlike causal modeling where predictions follow the natural sequence of the text (like left-to-right or right-to-left), permuted language modeling allows for predictions in any order.",
+   "page": "Chapter 1, Section 1.2.2.2 (printed p. 10-11), Eqs. (1.12)-(1.14)",
+   "latex": "\\Pr(x) = \\Pr(x_0) \\cdot \\Pr(x_4 \\mid e_0) \\cdot \\Pr(x_2 \\mid e_0, e_4) \\cdot \\Pr(x_1 \\mid e_0, e_4, e_2) \\cdot \\Pr(x_3 \\mid e_0, e_4, e_2, e_1)",
+   "symbol_and_unit_ledger": {
+    "x_0..x_4": "tokens of the example five-token sequence",
+    "e_i": "embedding of token x_i (token plus positional embedding)",
+    "prediction order": "the example order x_0, x_4, x_2, x_1, x_3; the text order itself is unchanged"
+   },
+   "assumptions": [
+    "Positional embeddings preserve the original token order even when the prediction order changes",
+    "Self-attention masks implement the permutation, so no input reordering is needed"
+   ],
+   "breakdown_regime": "Requires careful attention masking (a two-stream mechanism in XLNet) so a token's own content does not leak into its prediction; gains over MLM shrink when downstream use is generative rather than discriminative.",
+   "domain": "pre-training objectives",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Order-permuted factorization gives the engine an order-sensitivity audit: evaluate the same game state under several orderings of evidence arrival. If the conclusion flips when the order changes, the trace flags order sensitivity as a defect instead of trusting the single canonical read.",
+    "source_operator": "permuted_language_modeling",
+    "telemetry": "Conclusion stability across permuted evidence orderings, logged per evaluated game state"
+   }
+  },
+  {
+   "primitive_id": "rmsnorm",
+   "name": "RMSNorm: rescale-only layer normalization using the root mean square, with no re-centering",
+   "verbatim_quote": "A variant of layer normalization, called root mean square (RMS) layer normalization, only rescales the input vector but does not re-center it [Zhang and Sennrich, 2019].",
+   "page": "Chapter 2, Section 2.2.2.1 (printed p. 58), Eq. (2.24)",
+   "latex": "\\mathrm{RMSNorm}(h) = \\alpha \\odot \\frac{h}{\\sigma_{rms} + \\epsilon}, \\quad \\sigma_{rms} = \\sqrt{\\frac{1}{d} \\sum_{k=1}^{d} h_k^2}",
+   "symbol_and_unit_ledger": {
+    "h": "d-dimensional hidden vector",
+    "sigma_rms": "root mean square of the entries of h",
+    "alpha": "learned gain vector",
+    "epsilon": "small constant for numerical stability"
+   },
+   "assumptions": [
+    "The mean of the activations carries no information worth removing, so only scale is normalized",
+    "A single scalar per vector (its RMS) is a sufficient scale statistic"
+   ],
+   "breakdown_regime": "If a representation's information lives in its mean shift rather than its scale, RMSNorm cannot correct it; it also offers no protection against a single outlier coordinate inflating the RMS and shrinking all other coordinates.",
+   "domain": "transformer architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Scale-only normalization maps to cross-feed signal normalization in the engine: signal families arrive in incompatible units, and dividing each family vector by its RMS removes unit scale while preserving the level and sign of the signal, which re-centering would destroy.",
+    "source_operator": "rmsnorm",
+    "telemetry": "Per-family RMS values of incoming signal vectors, tracked over time for drift"
+   }
+  },
+  {
+   "primitive_id": "swiglu_gated_ffn",
+   "name": "SwiGLU: gated linear unit feed-forward activation, Swish gate multiplied by a parallel linear projection",
+   "verbatim_quote": "Both the PaLM and Llama model series rely on the SwiGLU function for their FFN layers.",
+   "page": "Chapter 2, Section 2.2.2.2 (printed p. 59-60), Eqs. (2.28)-(2.30)",
+   "latex": "\\sigma_{swiglu}(h) = \\sigma_{swish}(h W_1 + b_1) \\odot (h W_2 + b_2)",
+   "symbol_and_unit_ledger": {
+    "h": "input hidden vector",
+    "W_1, W_2": "two parallel projection matrices into the expanded hidden dimension",
+    "b_1, b_2": "bias vectors",
+    "sigma_swish": "Swish activation, h * Sigmoid(c h)",
+    "odot": "element-wise product (the gate)"
+   },
+   "assumptions": [
+    "A multiplicative gate improves on a single projection plus pointwise activation at equal parameter budget",
+    "The expanded hidden dimension is much larger than the model dimension"
+   ],
+   "breakdown_regime": "Costs an extra projection matrix per layer compared with a plain FFN; the gate can saturate and mute useful features early in training if initialization is poor.",
+   "domain": "transformer architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The gated unit maps to multiplicative feature gating in the reasoning layer: each candidate signal is multiplied by a data-dependent gate before entering the mixture, so off-context or weak signals are attenuated multiplicatively instead of being averaged in at fixed weight.",
+    "source_operator": "swiglu_gated_ffn",
+    "telemetry": "Gate activation distributions per signal family across evaluated game states"
+   }
+  },
+  {
+   "primitive_id": "scaling_laws_chinchilla",
+   "name": "Scaling laws: test loss is a power law in model size and dataset size plus an irreducible error; the Chinchilla fit gives concrete exponents and coefficients",
+   "verbatim_quote": "The significance of scaling laws lies in providing directional guidance for LLM research: if we are still in the region of the power-law curve, using more resources to train larger models is a very promising direction.",
+   "page": "Chapter 2, Section 2.2.3 (printed p. 65-66), Eqs. (2.36)-(2.39)",
+   "latex": "L(N, D) = \\frac{406.4}{N^{0.34}} + \\frac{410.7}{D^{0.28}} + 1.69",
+   "symbol_and_unit_ledger": {
+    "L(N, D)": "test loss per token",
+    "N": "number of model parameters",
+    "D": "training dataset size in tokens",
+    "406.4, 410.7": "fitted coefficients",
+    "0.34, 0.28": "fitted power-law exponents for parameters and data",
+    "1.69": "irreducible error term"
+   },
+   "assumptions": [
+    "Loss is monotone decreasing in both N and D over the fitted regime, with no inflection points",
+    "The fitted coefficients transfer across model families trained on similar data"
+   ],
+   "breakdown_regime": "The monotone power-law form cannot represent double descent or other non-monotone curves; a lower test loss does not always mean better downstream task performance, and exponents refit when the data distribution changes.",
+   "domain": "scaling and capacity planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The fitted power law with an error floor is the engine's capacity-planning kernel: expected error as a function of corpus size and model size can be extrapolated before spending compute, and the irreducible term prices how much of the remaining error no amount of data will remove.",
+    "source_operator": "scaling_laws_chinchilla",
+    "telemetry": "Measured engine error versus corpus size and model size, refit against the power-law form each training cycle"
+   }
+  },
+  {
+   "primitive_id": "sparse_and_linear_attention",
+   "name": "Efficient long-sequence attention: sparse attention computes only an index set G of entries; linear attention replaces the KV cache with fixed-size recurrent summary states",
+   "verbatim_quote": "A benefit of this model is that we do not need to explicitly store all past keys and values. Instead only the latest representations µi and νi are used. So the computational cost of each step is a constant, and the model can be easily extended to deal with long sequences.",
+   "page": "Chapter 2, Section 2.3.2 (printed p. 70-71), Eqs. (2.48)-(2.51)",
+   "latex": "\\mu_i = \\mu_{i-1} + k_i'^{\\top} v_i, \\quad \\nu_i = \\nu_{i-1} + k_i'",
+   "symbol_and_unit_ledger": {
+    "mu_i, nu_i": "recurrent summary states up to position i (attention numerator and normalizer)",
+    "k'_i": "feature-mapped key vector at position i, k'_i = phi(k_i)",
+    "v_i": "value vector at position i",
+    "G": "index set of active (non-zero) attention entries in the sparse variant"
+   },
+   "assumptions": [
+    "A fixed-size summary state can retain the information future steps actually need",
+    "In the sparse variant, a predefined pattern (such as a local window plus global tokens) covers the interactions that matter"
+   ],
+   "breakdown_regime": "The recurrent summary is lossy: exact retrieval of a specific distant token is impossible once it is folded into the state, and sparse patterns fail when the decisive interaction falls outside the chosen index set.",
+   "domain": "efficient attention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The fixed-size recurrent state is the memory contract for live updating in the engine: a bounded game-state summary is updated play by play instead of re-reading the full history, and the sparse index set is the explicit list of which past events the current read is allowed to consult.",
+    "source_operator": "sparse_and_linear_attention",
+    "telemetry": "State size, update cost per event, and retrieval-failure rate on long histories in engine soak tests"
+   }
+  },
+  {
+   "primitive_id": "knn_lm_interpolation",
+   "name": "k-NN language modeling: linearly interpolate the parametric next-token distribution with a retrieval distribution built from nearest hidden states in a datastore",
+   "verbatim_quote": "The intuition is that similar hidden states within a Transformer network are highly predictive of similar next tokens across different contexts.",
+   "page": "Chapter 2, Section 2.3.4 (printed p. 77-78), Eqs. (2.67)-(2.68)",
+   "latex": "\\Pr(\\cdot \\mid h_i) = \\lambda \\cdot \\Pr_{knn}(\\cdot \\mid h_i) + (1 - \\lambda) \\cdot \\Pr_{lm}(\\cdot \\mid h_i)",
+   "symbol_and_unit_ledger": {
+    "h_i": "current hidden state used as the retrieval query",
+    "Pr_knn": "distribution from aggregating softmax-normalized similarities of the k nearest stored states",
+    "Pr_lm": "the model's parametric output distribution",
+    "lambda": "interpolation weight in [0, 1]"
+   },
+   "assumptions": [
+    "Similar hidden states genuinely predict similar continuations across different contexts",
+    "The datastore, built by running the training corpus through the model, covers the situations met at inference"
+   ],
+   "breakdown_regime": "Retrieval cost and datastore size grow with the corpus; a stale or off-domain datastore injects confident but wrong neighbors, and lambda tuned on one domain misweights the mixture on another.",
+   "domain": "retrieval-augmented modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The interpolation is the engine's case-based adjustment kernel: the parametric projection is blended with the empirical outcome distribution of the most similar historical situations under one mixing coefficient, so the retrieval influence is explicit, tunable, and logged rather than hidden inside the model.",
+    "source_operator": "knn_lm_interpolation",
+    "telemetry": "Retrieved neighbor sets, their distances, and the fitted lambda per situation family"
+   }
+  },
+  {
+   "primitive_id": "mqa_gqa_kv_cache_sharing",
+   "name": "Multi-query and grouped-query attention: share keys and values across heads (MQA) or across head groups (GQA), shrinking the KV cache from O(L * tau * d_h * m) to O(L * n_g * d_h * m)",
+   "verbatim_quote": "The size of the KV cache of GQA is O(L · ng · dh · m). One benefit of GQA is that we can trade off between computational efficiency and model expressiveness by adjusting ng .",
+   "page": "Chapter 2, Section 2.3.5.1 (printed p. 80-82), Eqs. (2.72)-(2.73)",
+   "latex": "\\mathrm{head}_j = \\mathrm{Att}_{qkv}(q_i^{[j]}, K_{\\leq i}^{[g(j)]}, V_{\\leq i}^{[g(j)]})",
+   "symbol_and_unit_ledger": {
+    "head_j": "output of the j-th attention head",
+    "q_i^{[j]}": "query of head j at position i",
+    "g(j)": "group id of head j",
+    "K, V with superscript [g(j)]": "the key and value sets shared by group g(j)",
+    "n_g": "number of groups; n_g = tau recovers standard multi-head attention, n_g = 1 recovers MQA",
+    "L": "number of layers",
+    "d_h": "head dimension",
+    "m": "sequence length"
+   },
+   "assumptions": [
+    "Distinct queries per head preserve most of the model's expressiveness even when keys and values are shared",
+    "KV cache memory, not compute, is the binding constraint at inference"
+   ],
+   "breakdown_regime": "Aggressive sharing (n_g = 1) can cost quality on tasks needing head-specific key structure; the trade-off knob must be set per model scale and cannot be changed after training without conversion or retraining.",
+   "domain": "efficient attention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shared key-value structure maps to shared context encoding in the engine: many reasoning heads (matchup, health, situation, market) query one shared situational context representation instead of each re-encoding the game state, which is what makes running all signal families over every game affordable.",
+    "source_operator": "mqa_gqa_kv_cache_sharing",
+    "telemetry": "Memory per concurrent game read and quality delta versus the number of context-sharing groups"
+   }
+  },
+  {
+   "primitive_id": "rope_relative_rotation",
+   "name": "Rotary positional embedding (RoPE): rotate query and key vectors by position-dependent angles so their inner product depends only on the relative offset between positions",
+   "verbatim_quote": "Rotary positional embeddings, instead, model positional context by applying geometrically meaningful rotations to token embeddings in the complex domain.",
+   "page": "Chapter 2, Section 2.3.5.3 (printed p. 87-88), Eqs. (2.85)-(2.94)",
+   "latex": "\\mathrm{Ro}(x, t\\theta) \\, \\mathrm{Ro}(y, s\\theta)^{\\top} = x R_{(t-s)\\theta} \\, y^{\\top}",
+   "symbol_and_unit_ledger": {
+    "Ro(x, t theta)": "token embedding x rotated by the angle for position t",
+    "R_{(t-s) theta}": "rotation by the relative offset t - s",
+    "theta": "per-dimension-pair rotation frequencies, typically theta_k = 10000^(-2(k-1)/d)",
+    "x, y": "query-side and key-side vectors"
+   },
+   "assumptions": [
+    "Position should enter attention through relative offsets rather than absolute indices",
+    "Fixed geometric frequency scales suffice; no learned positional parameters are needed"
+   ],
+   "breakdown_regime": "Extrapolation beyond the trained length degrades because unseen rotation phases appear; the standard fix is interpolation (rescaling positions or the base), which trades local resolution for range.",
+   "domain": "positional encoding",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Relative-offset attention maps to recency-aware reasoning in the engine: what matters between two events is their distance (plays apart, days of rest apart, weeks since an injury), not their absolute index in a database, and RoPE shows how to inject exactly that distance into every comparison.",
+    "source_operator": "rope_relative_rotation",
+    "telemetry": "Attention behavior as a function of event distance, measured on held-out long game histories"
+   }
+  },
+  {
+   "primitive_id": "rag_augmented_input",
+   "name": "Retrieval-augmented generation: retrieve the k most relevant document chunks for the input and condition generation on the augmented input built from them",
+   "verbatim_quote": "RAG systems first retrieve relevant document snippets from a large collection of documents or a database based on the current input. These retrieved pieces of information are then added to the context provided to the LLM.",
+   "page": "Chapter 2, Section 2.3.4 (printed p. 78) and Chapter 5, Section 5.3.1; Eq. (2.69)",
+   "latex": "x' = g(c_1, \\ldots, c_k, x)",
+   "symbol_and_unit_ledger": {
+    "x": "original input (the query or context)",
+    "c_1..c_k": "the k most relevant retrieved document chunks",
+    "g": "prompting template that combines retrieved chunks with the input",
+    "x'": "augmented input actually fed to the model"
+   },
+   "assumptions": [
+    "The retriever ranks genuinely relevant chunks into the top k",
+    "The model's parametric knowledge is incomplete or stale for the query, so external text helps"
+   ],
+   "breakdown_regime": "Retrieval errors are silently inherited by the generator; long retrieved contexts trigger the lost-in-the-middle failure, and the approach cannot fix a model that ignores or contradicts the supplied evidence.",
+   "domain": "retrieval-augmented modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "RAG is the engine's evidence-assembly step: before a game is scored, the most relevant historical cases, matchup documents, and situational records are retrieved and placed in the working context, so every conclusion is conditioned on cited evidence that can be inspected afterwards.",
+    "source_operator": "rag_augmented_input",
+    "telemetry": "Retrieval hit quality and downstream conclusion changes when retrieved evidence is ablated"
+   }
+  },
+  {
+   "primitive_id": "in_context_learning",
+   "name": "In-context learning: adapt to a new task purely from demonstrations placed in the prompt, with no parameter updates",
+   "verbatim_quote": "Though LLMs can be trained or tuned to perform new tasks, in-context learning provides a very efficient way to adapt these models without any training or tuning effort.",
+   "page": "Chapter 3, Section 3.1 (printed p. 96-97)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The capability is latent from pre-training and only needs demonstrations to be activated",
+    "Demonstrations in the context specify the task format and label space"
+   ],
+   "breakdown_regime": "Performance is sensitive to demonstration choice, order, and format; context length caps how many demonstrations fit, and the adaptation is shallow compared with fine-tuning on the same data.",
+   "domain": "prompting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In-context learning maps to few-shot calibration of the engine's reader: a small set of graded historical examples placed in the reasoning context steers the read of a new game, which is how new situational patterns are taught between training cycles without touching weights.",
+    "source_operator": "in_context_learning",
+    "telemetry": "Accuracy delta versus number and selection of in-context examples, per task family"
+   }
+  },
+  {
+   "primitive_id": "self_consistency_prompting",
+   "name": "Self-consistency: sample multiple chain-of-thought reasoning paths and return the answer most consistent across them, not the single highest-probability output",
+   "verbatim_quote": "Here we consider the self-consistency method, which outputs not necessarily the highest-probability prediction, but rather the one that is most consistent with the other predictions [Wang et al., 2022a; 2023b].",
+   "page": "Chapter 3, Section 3.2 (text lines 7251-7255); formalized again at Eq. (6.6)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Different correct reasoning paths converge on the same answer, while errors are diverse",
+    "Sampling temperature is high enough to produce genuinely different paths"
+   ],
+   "breakdown_regime": "Costs one full generation per sampled path; majority voting fails when the model's errors are systematic rather than diverse, because the wrong answer then wins the vote.",
+   "domain": "prompting and ensembling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Self-consistency is the engine's consensus kernel: several independent reasoning traces are generated for the same game, the modal conclusion is taken as the read, and the disagreement rate across traces is reported as an uncertainty signal in its own right.",
+    "source_operator": "self_consistency_prompting",
+    "telemetry": "Trace disagreement rates per game and the accuracy of modal versus single-trace conclusions"
+   }
+  },
+  {
+   "primitive_id": "soft_prompts",
+   "name": "Soft prompts: implicit, adaptable prompting patterns represented as trainable vectors in the model's continuous hidden space, instead of natural-language text",
+   "verbatim_quote": "In contrast, we can think of soft prompts as implicit, adaptable prompting patterns represented in the continuous hidden space of LLMs.",
+   "page": "Chapter 3, Section 3.3 (printed p. 141-142)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A task can be specified by a short learned vector sequence prepended to the input or to layer activations",
+    "The base model stays frozen while only the prompt vectors are trained"
+   ],
+   "breakdown_regime": "Soft prompts are not human-readable, so they cannot be audited like text instructions; they are also model-specific and do not transfer across checkpoints or tokenizers.",
+   "domain": "prompting and parameter-efficient tuning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Soft prompts map to persistent trainable situational lenses in the engine: a small optimized context vector per signal family that conditions every read in that family's style, replacing hand-written instruction text that drifts whenever someone edits the wording.",
+    "source_operator": "soft_prompts",
+    "telemetry": "Lens vector norms and conclusion deltas when a lens is swapped or removed"
+   }
+  },
+  {
+   "primitive_id": "context_distillation",
+   "name": "Context distillation: train a student to behave as if it had the full instruction context, by fitting it to a teacher that sees the full context while the student sees only a simplified one",
+   "verbatim_quote": "An alternative way to adapt LLMs for simplified instructions is through knowledge distillation.",
+   "page": "Chapter 3, Section 3.3 (printed p. 144-145), Eqs. (3.14)-(3.17)",
+   "latex": "\\mathrm{Loss} = -\\log \\Pr^{s}_{\\theta}(\\hat{y} \\mid c', z)",
+   "symbol_and_unit_ledger": {
+    "Pr^s_theta": "student model distribution",
+    "y-hat": "teacher's output, y-hat = arg max_y log Pr^t(y | c, z)",
+    "c": "full instruction given to the teacher",
+    "c'": "simplified instruction given to the student",
+    "z": "user input"
+   },
+   "assumptions": [
+    "The teacher's behavior under the full context is the target worth internalizing",
+    "Teacher-generated outputs are a sufficient training signal, avoiding a sum over all output sequences"
+   ],
+   "breakdown_regime": "The student inherits the teacher's errors and cannot exceed the teacher on the distilled behavior; distribution-level variants (KL between full output distributions) are more faithful but costlier.",
+   "domain": "distillation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Context distillation maps to compiling standing instructions into the engine's fast behavior: a scout's long written heuristics are distilled until the simplified operating context reproduces the same reads, so the long document no longer has to ride in every prompt.",
+    "source_operator": "context_distillation",
+    "telemetry": "Read agreement between the full-context teacher configuration and the distilled configuration on a fixed game set"
+   }
+  },
+  {
+   "primitive_id": "sft_output_only_loss",
+   "name": "Supervised fine-tuning with output-only loss: concatenate input and output into one sequence, run the forward pass as usual, and set the loss on the input tokens to zero",
+   "verbatim_quote": "During the backward pass, we compute the loss only for the output part and simply set the loss for the input part to 0.",
+   "page": "Chapter 4, Section 4.1 (printed p. 157-158), Eqs. (4.1)-(4.4) and Fig. 4.2",
+   "latex": "\\log \\Pr_{\\theta}(y \\mid x) = \\sum_{i=1}^{n} \\log \\Pr_{\\theta}(y_i \\mid x, y_{<i})",
+   "symbol_and_unit_ledger": {
+    "x": "input token sequence (instruction and context)",
+    "y": "output token sequence of n tokens",
+    "y_{<i}": "output tokens before position i",
+    "Pr_theta": "the fine-tuned model's conditional probability"
+   },
+   "assumptions": [
+    "Input and output can be processed by one standard autoregressive forward pass",
+    "Only the output tokens define the behavior being taught, so only they should carry loss"
+   ],
+   "breakdown_regime": "If inputs are highly informative about style or format, masking them entirely wastes a learning signal; the method also teaches imitation of the demonstration distribution, including its errors.",
+   "domain": "alignment: supervised fine-tuning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Loss masking is the engine's trace-training discipline: when the reader trains on graded reasoning traces, loss falls only on the reasoning and conclusion tokens and never on the problem statement, so model capacity is spent producing judgment rather than restating inputs.",
+    "source_operator": "sft_output_only_loss",
+    "telemetry": "Fraction of training tokens carrying loss, and trace quality before and after masking is applied"
+   }
+  },
+  {
+   "primitive_id": "superficial_alignment_hypothesis",
+   "name": "Superficial alignment hypothesis: a model's knowledge and core abilities are learned in pre-training; fine-tuning and alignment mostly teach it how to surface them, so small fine-tuning efforts suffice",
+   "verbatim_quote": "This is closely related to what is known as the superficial alignment hypothesis, which suggests that learning primarily occurs during pre-training, and the subsequent fine-tuning or alignment phase does not significantly contribute to the underlying knowledge base of an LLM [Zhou et al., 2023a].",
+   "page": "Chapter 4, Section 4.2.3 (printed p. 166-167)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pre-training on broad data already installs the capabilities alignment is meant to elicit",
+    "Alignment data quality matters more than quantity once the base capability exists"
+   ],
+   "breakdown_regime": "The hypothesis is contested for genuinely new skills: behaviors absent from pre-training cannot be surfaced by light tuning, and heavy alignment can in fact add or remove capabilities, so underinvesting in post-training fails on novel task families.",
+   "domain": "alignment theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The hypothesis is a budgeting rule for the engine: capability is bought mainly in corpus pre-training, and alignment passes are cheap surface calibration. Compute allocation should therefore favor corpus depth and coverage, with alignment treated as a thin, carefully measured layer on top.",
+    "source_operator": "superficial_alignment_hypothesis",
+    "telemetry": "Capability gained per unit compute in pre-training versus in each alignment pass, on fixed evaluation suites"
+   }
+  },
+  {
+   "primitive_id": "weak_to_strong_pgr",
+   "name": "Weak-to-strong generalization measured by PGR: a strong model fine-tuned on a weak model's labels recovers a measurable fraction of the gap to its ground-truth ceiling",
+   "verbatim_quote": "A PGR of 1 indicates that the weak-to-strong fine-tuning can completely close the performance gap, whereas a PGR of 0 indicates no improvement.",
+   "page": "Chapter 4, Section 4.2.5 (text lines 9290-9298), Eq. (4.11)",
+   "latex": "\\mathrm{PGR} = \\max\\left(0, \\frac{P_{weak \\to strong} - P_{weak}}{P_{ceiling} - P_{weak}}\\right)",
+   "symbol_and_unit_ledger": {
+    "PGR": "performance gap recovered",
+    "P_weak": "test performance of the weak supervisor model",
+    "P_{weak to strong}": "test performance of the strong model fine-tuned with the weak model",
+    "P_ceiling": "test performance of the strong model fine-tuned on ground-truth data"
+   },
+   "assumptions": [
+    "A ground-truth-trained ceiling exists to define the recoverable gap",
+    "The strong model's latent capability exceeds what the weak labels express"
+   ],
+   "breakdown_regime": "PGR is undefined when ceiling equals weak performance, and high PGR on classification benchmarks (around 0.8 on 22 tasks in Burns et al.) does not guarantee the same recovery on open-ended generation.",
+   "domain": "alignment: supervision",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "PGR is the engine's supervisor-quality accounting: whenever a weaker grader (a checklist, a smaller model, a partial stat feed) supervises a stronger reasoner, PGR measures what fraction of the achievable improvement that weak supervision actually recovers, so supervision upgrades can be prioritized by measured shortfall.",
+    "source_operator": "weak_to_strong_pgr",
+    "telemetry": "PGR per supervision source, recomputed whenever a grader or label pipeline changes"
+   }
+  },
+  {
+   "primitive_id": "policy_gradient_advantage_a2c",
+   "name": "Policy gradient with advantage: the gradient of expected return is the average over trajectories of the log-policy gradient weighted by the advantage, the basis of advantage actor-critic methods",
+   "verbatim_quote": "This objective forms the basis of advantage actor-critic (A2C) methods in reinforcement learning [Mnih et al., 2016]. In this method, the actor aims at learning a policy.",
+   "page": "Chapter 4, Section 4.3.1 (printed p. 176-179), Eqs. (4.20)-(4.31)",
+   "latex": "\\frac{\\partial J(\\theta)}{\\partial \\theta} = \\frac{1}{|\\mathcal{T}|} \\sum_{\\tau \\in \\mathcal{T}} \\frac{\\partial}{\\partial \\theta} \\left[ \\sum_{t=1}^{T} \\log \\pi_{\\theta}(a_t \\mid s_t) \\, A(s_t, a_t) \\right]",
+   "symbol_and_unit_ledger": {
+    "J(theta)": "expected return (performance) of the policy",
+    "pi_theta(a_t | s_t)": "policy probability of action a_t in state s_t",
+    "A(s_t, a_t)": "advantage: actual return from t minus the value baseline V(s_t), equal to the TD error r_t + gamma V(s_{t+1}) - V(s_t)",
+    "T (calligraphic)": "set of sampled trajectories",
+    "T": "trajectory length"
+   },
+   "assumptions": [
+    "Rewards may be sparse, arriving only at the end of a sequence",
+    "A state-value baseline can be subtracted without biasing the gradient, and it reduces gradient variance"
+   ],
+   "breakdown_regime": "Raw policy gradient variance is high when reward scales vary; the advantage estimate is only as good as the critic, and a biased critic quietly steers the policy toward the critic's blind spots.",
+   "domain": "reinforcement learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The advantage is the engine's credit-assignment kernel for trace grading: each step of a reasoning trace is reinforced in proportion to how much it beat the expected value of its state, rather than crediting or blaming the whole trace for a final outcome it only partly caused.",
+    "source_operator": "policy_gradient_advantage_a2c",
+    "telemetry": "Per-step advantage distributions and critic prediction error on graded reasoning traces"
+   }
+  },
+  {
+   "primitive_id": "reward_model_bradley_terry",
+   "name": "Reward model training: a scalar scorer over input-output pairs, trained on pairwise human preferences with the Bradley-Terry sigmoid of the score difference",
+   "verbatim_quote": "In RLHF, a reward model is a neural network that maps a pair of input and output token sequences to a scalar reward score.",
+   "page": "Chapter 4, Section 4.3.2 (printed p. 179-182), Eqs. (4.33)-(4.38)",
+   "latex": "L_r(\\phi) = -\\frac{1}{|D_r|} \\sum_{(x, y_a, y_b) \\in D_r} \\log \\Pr_{\\phi}(y_a \\succ y_b \\mid x), \\quad \\Pr(y_a \\succ y_b \\mid x) = \\mathrm{Sigmoid}(r(x, y_a) - r(x, y_b))",
+   "symbol_and_unit_ledger": {
+    "r(x, y)": "scalar reward the model assigns to output y given input x, computed as h_last W_r from the last-position representation",
+    "phi": "reward model parameters",
+    "D_r": "human preference dataset of triples (x, preferred y_a, dispreferred y_b)",
+    "y_a succ y_b": "the event that y_a is preferred over y_b"
+   },
+   "assumptions": [
+    "Pairwise comparisons are a reliable and cheap form of human feedback",
+    "A single scalar per complete output suffices, so reward arrives only at the final position (sparse reward)"
+   ],
+   "breakdown_regime": "The model is trained on pairwise ranking but applied as an absolute scorer, an extrapolation that can miscalibrate; scores are also underdetermined up to shifts the pairwise loss cannot see, which regularization terms are added to control.",
+   "domain": "alignment: reward modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Bradley-Terry scorer is the engine's comparison layer: pairwise judgments between two candidate game reads train a scalar quality scorer through the sigmoid of the score difference, giving every later selection and training step a single comparable number.",
+    "source_operator": "reward_model_bradley_terry",
+    "telemetry": "Pairwise judgment volume, scorer agreement with held-out judgments, and score distributions per read family"
+   }
+  },
+  {
+   "primitive_id": "ppo_clipped_surrogate_kl",
+   "name": "PPO for RLHF: maximize a clipped importance-ratio surrogate objective weighted by advantages, minus a KL-style penalty that keeps the policy near the reference model",
+   "verbatim_quote": "This training method is called proximal policy optimization (PPO), which is one of the most popular reinforcement learning methods used in LLMs and many other fields [Schulman et al., 2017].",
+   "page": "Chapter 4, Section 4.3.3 (printed p. 183-186), Eqs. (4.45)-(4.56)",
+   "latex": "U_{ppo\\text{-}clip}(\\tau; \\theta) = U_{clip}(\\tau; \\theta) - \\beta \\cdot \\mathrm{Penalty}, \\quad \\mathrm{Penalty} = \\sum_{t=1}^{T} \\log \\pi_{\\theta}(a_t \\mid s_t) - \\sum_{t=1}^{T} \\log \\pi_{\\theta_{ref}}(a_t \\mid s_t)",
+   "symbol_and_unit_ledger": {
+    "U_clip": "clipped surrogate objective: per-step ratio pi_theta / pi_ref bounded to [1 - epsilon, 1 + epsilon], multiplied by the advantage",
+    "beta": "weight of the KL-style penalty",
+    "pi_theta_ref": "reference policy (the frozen starting model)",
+    "tau": "a sampled state-action trajectory"
+   },
+   "assumptions": [
+    "Four models are maintained: reward model, value model, frozen reference model, and the target policy",
+    "Updates must stay inside a trust region around the reference policy to remain stable"
+   ],
+   "breakdown_regime": "PPO is computationally heavy and unstable to tune: it needs on-policy sampling plus three auxiliary models, and an mis-set beta either freezes the policy or lets it drift into reward hacking.",
+   "domain": "alignment: reinforcement learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "PPO's clipped, penalty-regularized update is the engine's safe-improvement kernel: when the reasoning policy is updated from graded outcomes, each step is clipped and charged for drifting from the reference reader, so one hot streak of results cannot destabilize the whole reading policy.",
+    "source_operator": "ppo_clipped_surrogate_kl",
+    "telemetry": "Ratio distributions, penalty magnitude, and policy drift metrics logged per training update"
+   }
+  },
+  {
+   "primitive_id": "dpo_direct_preference_optimization",
+   "name": "Direct preference optimization: reparameterize the reward as beta times the log ratio of policy to reference, so the Bradley-Terry preference loss trains the policy directly with no reward model and no sampling",
+   "verbatim_quote": "This method directly optimizes the policy based on user preferences, rather than training a separate reward model.",
+   "page": "Chapter 4, Section 4.4.2 (printed p. 193-196), Eqs. (4.73)-(4.82)",
+   "latex": "L_{dpo}(\\theta) = -\\mathbb{E}_{(x, y_a, y_b) \\sim D_r} \\log \\Pr_{\\theta}(y_a \\succ y_b \\mid x), \\quad \\Pr_{\\theta}(y_a \\succ y_b \\mid x) = \\mathrm{Sigmoid}\\left( \\beta \\log \\frac{\\pi_{\\theta}(y_a \\mid x)}{\\pi_{\\theta_{ref}}(y_a \\mid x)} - \\beta \\log \\frac{\\pi_{\\theta}(y_b \\mid x)}{\\pi_{\\theta_{ref}}(y_b \\mid x)} \\right)",
+   "symbol_and_unit_ledger": {
+    "theta": "policy parameters (the loss depends on the policy, not on reward parameters)",
+    "pi_theta_ref": "frozen reference policy",
+    "beta": "strength of the implicit KL penalty",
+    "D_r": "fixed preference dataset",
+    "Z(x)": "partition function of the optimal policy; it cancels in the reward difference and never needs computing"
+   },
+   "assumptions": [
+    "The reward model and reference model are treated as fixed given x and y during the derivation",
+    "Training is offline: the preference data is pre-collected and no exploration occurs"
+   ],
+   "breakdown_regime": "Because it is offline, DPO cannot discover behaviors absent from the preference data and can overfit the fixed pairs; online methods like PPO keep exploring and can surpass it when a good reward model exists.",
+   "domain": "alignment: preference optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "DPO is the engine's low-infrastructure preference kernel: graded pairs of reasoning traces (better read versus worse read of the same game) train the reader directly, with the reference ratio acting as the regularizer, so preference alignment runs without maintaining a separate reward model service.",
+    "source_operator": "dpo_direct_preference_optimization",
+    "telemetry": "Preference pair volume, implicit reward margins, and held-out pair accuracy per training run"
+   }
+  },
+  {
+   "primitive_id": "reward_overoptimization_ensemble",
+   "name": "Reward overoptimization (Goodhart): a policy over-aligned to an imperfect proxy reward degrades on the true objective; combining multiple reward models reduces the mismatch",
+   "verbatim_quote": "We can also explain this through Goodhart’s law, which states: when a measure becomes a target, it ceases to be a good measure [Goodhart, 1984].",
+   "page": "Chapter 4, Section 4.4.1.4 (printed p. 192-193), Eq. (4.72)",
+   "latex": "r_{combine} = \\sum_{k=1}^{K} w_k \\cdot r_k(x, y)",
+   "symbol_and_unit_ledger": {
+    "r_k(x, y)": "reward from the k-th reward model in the ensemble",
+    "w_k": "weight of the k-th reward model",
+    "K": "number of reward models combined",
+    "r_combine": "combined reward used to supervise policy training"
+   },
+   "assumptions": [
+    "Each reward model is an imperfect proxy of a too-complex true environment",
+    "Diverse proxies (different data subsets, different alignment aspects, or different base LLMs) fail in different places"
+   ],
+   "breakdown_regime": "No fully satisfactory solution exists; ensembles reduce but do not eliminate hacking, and a weighted sum can still be gamed along the direction where all members share a blind spot.",
+   "domain": "alignment: reward modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The ensemble defense maps directly to the engine's grading design: a read is scored by several diverse scorers (different aspects, different model families), and sharp disagreement among scorers is treated as an overoptimization warning instead of being averaged away silently.",
+    "source_operator": "reward_overoptimization_ensemble",
+    "telemetry": "Inter-scorer disagreement rates and true-objective audits on samples the policy scored highest"
+   }
+  },
+  {
+   "primitive_id": "best_of_n_inference_alignment",
+   "name": "Best-of-N sampling: generate N candidate outputs and let the reward model select the best, achieving alignment at inference time without any fine-tuning",
+   "verbatim_quote": "One simple way to achieve inference-time alignment is to use the reward model to select the best one from N alternative outputs generated by the LLM, a method known as Best-of-N sampling (BoN sampling).",
+   "page": "Chapter 4, Section 4.4.5 (printed p. 200-201), Eqs. (4.85)-(4.86)",
+   "latex": "\\hat{y}_{best} = \\arg\\max_{\\hat{y} \\in \\{\\hat{y}_1, \\ldots, \\hat{y}_N\\}} r(x, \\hat{y})",
+   "symbol_and_unit_ledger": {
+    "y-hat_1..y-hat_N": "the N candidate outputs generated for input x",
+    "r(x, y-hat)": "reward model score of a candidate",
+    "y-hat_best": "the selected output"
+   },
+   "assumptions": [
+    "The candidate list is diverse enough to contain a genuinely better output",
+    "The reward model ranks candidates more reliably than the generator produces them"
+   ],
+   "breakdown_regime": "Selection quality is capped by the reward model: as N grows, BoN increasingly selects outputs that exploit scorer errors (the same overoptimization pressure as training), and near-duplicate candidates waste the budget.",
+   "domain": "alignment: inference-time methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Best-of-N is the engine's selection kernel at decision time: N candidate reads of a game are generated, a verifier scores them, and the best is published, converting extra inference compute directly into selection quality with no retraining in the loop.",
+    "source_operator": "best_of_n_inference_alignment",
+    "telemetry": "Score spread across the N candidates and the realized quality of selected versus median candidates"
+   }
+  },
+  {
+   "primitive_id": "prefill_decode_kv_cache",
+   "name": "Prefill-decode framework: prefilling processes the whole input at once to build the KV cache (compute-bound); decoding then generates one token at a time against that cache (memory-bound)",
+   "verbatim_quote": "The prefilling phase initializes the KV cache for the input sequence x.",
+   "page": "Chapter 5, Section 5.1.2 (printed p. 207-211), Eqs. (5.8)-(5.13) and Table 5.1",
+   "latex": "\\mathrm{cache} = \\mathrm{Dec}_{kv}(x), \\quad \\mathrm{cache} = \\{\\mathrm{cache}_1, \\ldots, \\mathrm{cache}_L\\}",
+   "symbol_and_unit_ledger": {
+    "Dec_kv": "the decoder run in its cache-producing mode over the input",
+    "cache_l": "key-value pairs stored for layer l",
+    "x": "input token sequence",
+    "L": "number of Transformer layers"
+   },
+   "assumptions": [
+    "Keys and values, once computed, are reused at every later step, so caching them is strictly better than recomputation",
+    "The input is fully known before generation starts, so it can be processed in parallel"
+   ],
+   "breakdown_regime": "Cache memory grows linearly with sequence length and batch size, eventually dominating the serving budget; the phase split also means neither phase alone predicts end-to-end latency.",
+   "domain": "inference systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The two-phase split is the engine's serving architecture: ingest and encode the full situational packet for a game once (the expensive, parallel prefill), then generate the reasoning trace step by step against that cached context (the memory-bound decode), and budget the two phases separately.",
+    "source_operator": "prefill_decode_kv_cache",
+    "telemetry": "Prefill time, decode time per token, and cache memory per game read in serving logs"
+   }
+  },
+  {
+   "primitive_id": "decoding_search_and_sampling",
+   "name": "Decoding algorithms: greedy and beam search prune the exponential output space deterministically; top-k and top-p sampling truncate and renormalize the distribution, with temperature controlling its sharpness",
+   "verbatim_quote": "Instead of retaining only the single most probable sequence at each step, beam search maintains a fixed number of the best candidate sequences, known as the “beam width” K.",
+   "page": "Chapter 5, Section 5.1.3 (printed p. 211-217), Eqs. (5.17)-(5.29)",
+   "latex": "\\Pr(y_i \\mid x, y_{<i}) = \\frac{\\exp(u_{y_i} / \\beta)}{\\sum_{y_j \\in V^i} \\exp(u_{y_j} / \\beta)}",
+   "symbol_and_unit_ledger": {
+    "u_{y_i}": "logit of token y_i",
+    "beta": "temperature parameter; high beta flattens the distribution, beta near zero approaches greedy search",
+    "V^i": "candidate pool at step i (top-k tokens, or the smallest set whose cumulative probability reaches p)",
+    "Pr": "renormalized sampling distribution over the pool"
+   },
+   "assumptions": [
+    "Exhaustive search over all output sequences is infeasible, so the space must be pruned or sampled",
+    "A small beam (K = 2 to 5) captures most of the achievable search quality"
+   ],
+   "breakdown_regime": "Deterministic search gives the same output every time and tends toward generic, repetitive text; sampling pools set too wide admit long-tail tokens that produce degenerate output, and too narrow collapse back to greedy behavior.",
+   "domain": "inference: decoding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The decoding controls are the engine's trace-generation dials: beam width sets how many partial reads survive each step, and temperature plus nucleus truncation set how diverse the sampled reasoning paths are before the consensus and verification layers judge them.",
+    "source_operator": "decoding_search_and_sampling",
+    "telemetry": "Output diversity and quality as functions of beam width, k, p, and temperature on a fixed evaluation set"
+   }
+  },
+  {
+   "primitive_id": "speculative_decoding",
+   "name": "Speculative decoding: a small draft model proposes up to tau tokens autoregressively; the full model verifies them in one parallel pass, accepting the longest prefix that passes the acceptance rule",
+   "verbatim_quote": "Speculative decoding stems from the concept of speculative execution, where a system makes educated guesses about future actions and performs them in advance.",
+   "page": "Chapter 5, Section 5.1.3.5 (printed p. 218-221), Eqs. (5.31)-(5.33)",
+   "latex": "n_a = \\min \\left\\{ t - 1 \\mid 1 \\leq t \\leq \\tau, \\, r_t > \\frac{p(\\hat{y}_{i+t})}{q(\\hat{y}_{i+t})} \\right\\}",
+   "symbol_and_unit_ledger": {
+    "n_a": "number of accepted speculated tokens",
+    "tau": "number of tokens the draft model proposes per step",
+    "p": "verification model probability of a proposed token",
+    "q": "draft model probability of the same token",
+    "r_t": "uniform random draw from U(0, 1) used in the rejection rule"
+   },
+   "assumptions": [
+    "The draft model is much cheaper per token than the verification model",
+    "Verification of all proposed tokens can be done in a single parallel forward pass"
+   ],
+   "breakdown_regime": "A draft model that is too small or off-distribution yields few accepted tokens and the overhead dominates; the draft must also match the target's tokenizer and distribution family for the acceptance rule to preserve the target distribution.",
+   "domain": "inference systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Draft-and-verify is the engine's fast path for routine reads: a small model drafts the standard parts of a trace and the full reasoner verifies them in parallel, so expensive capacity is spent only at the first point of disagreement.",
+    "source_operator": "speculative_decoding",
+    "telemetry": "Acceptance length per step and end-to-end speedup versus plain decoding in serving benchmarks"
+   }
+  },
+  {
+   "primitive_id": "continuous_batching_paged_attention",
+   "name": "Serving at scale: continuous (iteration-level) batching admits and retires requests between decoding steps, and PagedAttention stores the KV cache in fixed-size non-contiguous blocks to end memory fragmentation",
+   "verbatim_quote": "The idea behind PagedAttention is to divide the KV cache into smaller memory pages. In this way, we do not need to store the KV cache of the full sequence in contiguous memory.",
+   "page": "Chapter 5, Sections 5.2.2.2-5.2.2.3 (printed p. 226-231)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Requests arrive and finish at unpredictable times and have widely varying lengths",
+    "The operating-system paging analogy transfers: fixed-size blocks can be allocated wherever free memory exists"
+   ],
+   "breakdown_regime": "Continuous batch reorganization costs memory movement and bookkeeping on every adjustment, and paged storage adds block-table lookup overhead; prioritizing prefills raises throughput but increases the latency of reads already in flight.",
+   "domain": "inference systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Iteration-level scheduling with paged memory is how the engine serves a full slate at once: new game reads join the batch the moment capacity frees, finished reads leave immediately, and cached context lives in blocks, so no single long read blocks the rest of the slate.",
+    "source_operator": "continuous_batching_paged_attention",
+    "telemetry": "Batch occupancy, block fragmentation, and per-request latency distributions under slate-sized load"
+   }
+  },
+  {
+   "primitive_id": "inference_time_scaling",
+   "name": "Inference-time scaling: performance can be bought at inference time, without parameter updates, by scaling context, search, output ensembling, and the generation and verification of thinking paths",
+   "verbatim_quote": "These methods scale inference in different ways, such as ensembling multiple model outputs, increasing context length, adopting more aggressive decoding algorithms, and using external tools to extend model capabilities.",
+   "page": "Chapter 5, Section 5.3 (printed p. 234-235)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The frozen model's latent capability exceeds what a single greedy pass extracts",
+    "Additional inference compute can be allocated per query, in proportion to problem difficulty"
+   ],
+   "breakdown_regime": "Returns diminish: wider search and more samples plateau once the model's knowledge ceiling is reached, and every increment is paid in latency and serving cost on every query, forever.",
+   "domain": "inference and reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Inference-time scaling is the engine's compute dial: routine reads get one pass, while the hardest games get longer traces, more sampled paths, and verification, with the spend decided per game at decision time rather than baked into the model.",
+    "source_operator": "inference_time_scaling",
+    "telemetry": "Quality gained per unit of added inference compute, by difficulty tier of the problem"
+   }
+  },
+  {
+   "primitive_id": "system2_reasoning_allocation",
+   "name": "Reasoning as System 2 activation: an LLM reasons when it externalizes latent deliberation into an explicit sequence of thinking steps, dynamically allocating more inference compute to harder problems",
+   "verbatim_quote": "In a sense, reasoning in LLMs is a mechanism to dynamically allocate more inference compute to harder problems.",
+   "page": "Chapter 6, Section 6.1.1 (printed p. 247-248)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Next-token pre-training internalizes latent reasoning ability that direct answering does not express",
+    "Intermediate steps written as text can be checked, backtracked, and built on"
+   ],
+   "breakdown_regime": "The generated chain is not guaranteed to reflect the model's actual internal computation: models produce plausible but unfaithful rationales, and a flawed early step compounds through everything written after it.",
+   "domain": "reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's core operating doctrine stated in the book's own terms: a single fast pass for easy reads, and explicit step-by-step traces with verification for hard ones, with the thinking budget allocated per problem instead of uniformly.",
+    "source_operator": "system2_reasoning_allocation",
+    "telemetry": "Trace length and verification spend versus problem difficulty and realized accuracy"
+   }
+  },
+  {
+   "primitive_id": "prm_step_verification",
+   "name": "Process reward models: score every reasoning step conditioned on the problem and all previous steps, and aggregate by the minimum step score (the weakest link) or the mean",
+   "verbatim_quote": "To address this, we can use PRMs to evaluate the correctness of each individual step in the reasoning path.",
+   "page": "Chapter 6, Section 6.3.4.1 (printed p. 257-259), Eqs. (6.9)-(6.12)",
+   "latex": "v(x, y) = \\min_{1 \\leq t \\leq n_p} v_{prm}(\\bar{y}_t \\mid x, \\bar{y}_{<t})",
+   "symbol_and_unit_ledger": {
+    "v_prm": "process reward model: predicted correctness score of a step",
+    "y-bar_t": "the t-th reasoning step",
+    "y-bar_{<t}": "all steps before t",
+    "n_p": "number of steps in the path",
+    "v(x, y)": "verification score of the whole reasoning path"
+   },
+   "assumptions": [
+    "Step-level supervision exists, from human annotation or from Monte Carlo rollouts that estimate a step's value by the fraction of completions reaching the known answer",
+    "A path is only as sound as its weakest step, justifying the min aggregation"
+   ],
+   "breakdown_regime": "Step labels are far more expensive than outcome labels; min aggregation is brittle to one harsh score, and a PRM trained on one task family may not transfer its notion of a correct step to another.",
+   "domain": "reasoning: verification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The PRM is the engine's trace auditor: every step of a game read is scored in context, the trace grade is capped by its weakest step, and rollout-based step values let the auditor be trained from final outcomes when step labels do not exist.",
+    "source_operator": "prm_step_verification",
+    "telemetry": "Step score distributions, weakest-step locations, and auditor agreement with human step labels"
+   }
+  },
+  {
+   "primitive_id": "generative_verifier_anchor_score",
+   "name": "Generative verification: prompt an LLM to critique a reasoning step in natural language, and extract a numeric score from the probability that its critique begins with the anchor token Correct",
+   "verbatim_quote": "To extract a continuous score from a generative verifier, a common method is to measure the probability of the model outputting an indicator token (such as “Correct” or “Incorrect”) as the very first word of its critique.",
+   "page": "Chapter 6, Section 6.3.4.2 (printed p. 259-260), Eqs. (6.13)-(6.14)",
+   "latex": "v(z, \\bar{y}_{\\leq t}, c) = \\Pr(y_{anchor} = \\text{``Correct''} \\mid z, \\bar{y}_{\\leq t}, c)",
+   "symbol_and_unit_ledger": {
+    "z": "the query being solved",
+    "y-bar_{<=t}": "reasoning history up to and including step t",
+    "c": "verification instruction concatenated with the query and history",
+    "y_anchor": "the indicator token extracted from the start of the generated critique",
+    "v": "numeric verification score in [0, 1]"
+   },
+   "assumptions": [
+    "A strong LLM can judge steps without any architecture change or verifier training",
+    "The first-token probability is a usable proxy for the verifier's overall judgment"
+   ],
+   "breakdown_regime": "The verifier is itself a neural model and can hallucinate judgments; the anchor probability compresses a rich critique into one number and can be miscalibrated when the model hedges in text but not in its first token.",
+   "domain": "reasoning: verification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The anchor-token trick is how the engine turns free-text critique into a ranking signal: a judge model writes what is wrong with a step, and the probability mass on its opening verdict token becomes the step's score for search and pruning decisions.",
+    "source_operator": "generative_verifier_anchor_score",
+    "telemetry": "Anchor probability calibration against human step judgments, per task family"
+   }
+  },
+  {
+   "primitive_id": "on_policy_distillation_reasoning",
+   "name": "On-policy distillation: the student generates its own reasoning paths and is trained to match the teacher's token-level distributions at the states it actually visits, eliminating exposure bias",
+   "verbatim_quote": "The core idea of OPD is that the student model learns from its own generated trajectories, rather than from trajectories sampled from the teacher model.",
+   "page": "Chapter 6, Section 6.4.3 (printed p. 267-268), Eqs. (6.28)-(6.29)",
+   "latex": "L_{token}(\\theta) = \\mathbb{E}_{y \\sim \\Pr^{s}_{\\theta}(\\cdot \\mid x)} \\left[ \\sum_{i=1}^{n} D_{KL} \\left( \\Pr^{s}_{\\theta}(\\cdot \\mid x, y_{<i}) \\, \\| \\, \\Pr^{t}(\\cdot \\mid x, y_{<i}) \\right) \\right]",
+   "symbol_and_unit_ledger": {
+    "Pr^s_theta": "student model distribution",
+    "Pr^t": "teacher model distribution",
+    "y": "a reasoning path sampled from the student itself",
+    "D_KL": "Kullback-Leibler divergence between student and teacher next-token distributions",
+    "n": "number of tokens in the sampled path"
+   },
+   "assumptions": [
+    "The teacher can evaluate any state the student reaches, including states no teacher trajectory visits",
+    "A full distribution per token is a richer training signal than a scalar reward"
+   ],
+   "breakdown_regime": "Requires running the large teacher alongside the student during training, so it is much more expensive than off-policy distillation from a static dataset; a weak teacher also caps what the distributions can teach.",
+   "domain": "reasoning: training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "On-policy distillation is how the engine's production reader learns from the research reasoner: the production model reasons in its own style, reaches its own failure states, and the teacher grades the distribution at exactly those states, teaching recovery instead of only imitation of perfect traces.",
+    "source_operator": "on_policy_distillation_reasoning",
+    "telemetry": "Token-level KL on student-visited states and post-distillation recovery rate after induced errors"
+   }
+  },
+  {
+   "primitive_id": "reward_shaping_telescoping",
+   "name": "Process-supervision reward shaping: define each step's reward as the marginal change in the verifier's score, r_t = v_t - v_{t-1}, so step rewards telescope to the final score and credit assignment becomes dense",
+   "verbatim_quote": "To apply continuous verification scores, the most common technique is reward shaping.",
+   "page": "Chapter 6, Section 6.4.2.2 (printed p. 264-265), Eqs. (6.20)-(6.23)",
+   "latex": "r_t = v_t - v_{t-1}, \\quad R(x, y) = \\sum_{t=1}^{n_p} r_t = v_{n_p} - v_0",
+   "symbol_and_unit_ledger": {
+    "v_t": "verification score of the partial path after step t (for example the estimated probability of reaching the correct final answer)",
+    "r_t": "shaped immediate reward of step t",
+    "R(x, y)": "sequence-level reward of the full path",
+    "v_0": "score of the empty path, generally assumed to be 0"
+   },
+   "assumptions": [
+    "The verifier score behaves like a value function over partial paths, so its differences are meaningful step contributions",
+    "By causality, a step should be judged by the future return from that step onward"
+   ],
+   "breakdown_regime": "If the verifier's intermediate scores are noisy or non-monotone in true progress, the differences reward score manipulation rather than real progress; the telescoping identity also means intermediate scores cancel, so only endpoints constrain the total.",
+   "domain": "reasoning: training",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Marginal-difference shaping is the engine's dense feedback for long traces: a step earns exactly the improvement it made in the verifier's estimated success probability, which turns one sparse end-of-game grade into a per-step training signal across the whole read.",
+    "source_operator": "reward_shaping_telescoping",
+    "telemetry": "Per-step verifier score deltas and their correlation with human judgments of step quality"
+   }
+  },
+  {
+   "primitive_id": "grokking_memorization_to_reasoning",
+   "name": "Grokking: long after a model has memorized its training set and overfit, continued training can produce a sudden jump to perfect generalization as the network reorganizes into a general algorithm",
+   "verbatim_quote": "This experiment tells us that reasoning does not appear out of nowhere. It often emerges as a high-level generalization state when memorization hits a bottleneck, or after extensive training, where the network organizes its parameters to find the most universal explanation.",
+   "page": "Chapter 6, Section 6.6.2.1 (printed p. 276-277)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The training task has a compact general algorithm (modular arithmetic, in the cited experiments) that memorization can eventually give way to",
+    "Training continues far past the point of zero training error"
+   ],
+   "breakdown_regime": "Demonstrated mainly on small algorithmic tasks; there is no reliable schedule for when, or whether, grokking appears, and most production training stops long before the transition would occur.",
+   "domain": "reasoning and generalization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Grokking is the engine's standing warning and hope in one result: a model can look like a pure memorizer for a long time and then reorganize into a general rule, so held-out performance must be watched across the whole training run and a flat test curve is not proof that no algorithm is forming.",
+    "source_operator": "grokking_memorization_to_reasoning",
+    "telemetry": "Held-out accuracy tracked far past training-set saturation in every long training run"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "5f7985d2d2051dd2-t1",
+   "think": "This book is a complete vertical slice of how a large language model works, written by two researchers whose own work sits inside the research program the book describes. Its six chapters move in the order a system is actually built. First, self-supervised pre-training tasks define what the model learns before it ever sees an instruction: causal language modeling for decoders, masked language modeling and permuted language modeling for encoders, and denoising objectives for encoder-decoder models. Second, the generative model chapter assembles the machine itself: the chain rule factorization, the decoder-only Transformer with causal attention, the normalization and activation choices that modern models converged on, the systems machinery for training at scale, and the long-sequence machinery (sparse and linear attention, memory models, retrieval, KV cache sharing, and positional schemes from ALiBi to RoPE) that decides what contexts are affordable. Third, prompting treats the frozen model as a programmable device: in-context learning, chain of thought, decomposition methods such as least-to-most, ensembling and self-consistency, retrieval and tool use, and the soft-prompt and distillation methods that move prompt content into parameters. Fourth, alignment covers supervised fine-tuning with masked loss, the superficial alignment hypothesis, weak-to-strong generalization, and the full reinforcement learning stack from reward models through PPO to DPO. Fifth, inference splits the work into a compute-bound prefill and a memory-bound decode, catalogs the decoding algorithms, and then treats serving as a scheduling and memory problem before arriving at inference-time scaling. Sixth, reasoning reframes the whole stack: reasoning is inference compute allocated dynamically, verified step by step, and trained back into the model through process supervision, reward shaping, and on-policy distillation.\n\nWhat holds the book together is a single quantity viewed from many sides: the conditional probability of the next token given everything before it. Pre-training maximizes it. Prompting conditions it. Alignment reshapes it toward human preference. Inference searches over it under time and memory constraints. Reasoning spends more of it, in longer and more numerous sequences, and then verifies the result. Because the same object appears at every layer, techniques transfer: the advantage function from reinforcement learning becomes the credit assignment mechanism for reasoning traces; the reward model built for alignment becomes the verifier for inference-time search; the interpolation formula for k-NN language modeling becomes the template for blending parametric judgment with retrieved cases.\n\nFor a reasoning engine, the book's deepest lesson is that generation, search, verification, and training are not four separate systems but one loop with four operating points. Best-of-N sampling is training-free alignment. Process supervision is alignment applied at step granularity. On-policy distillation is what happens when the verifier is replaced by a teacher's full distribution. An engine that treats these as interchangeable parts can move capability between them as budgets change: spend compute at inference when training is frozen, distill it into weights when inference gets expensive, and use step-level scores to decide which of the two a given weakness actually needs.\n\nTwo design threads deserve emphasis because they are easy to miss. The first is position. The progression from learned absolute embeddings through bucketed relative biases and ALiBi's fixed linear penalty to RoPE's rotations steadily removes learned parameters in favor of structure: what survives is the principle that attention should depend on relative offset, and that a fixed geometric scheme generalizes to unseen lengths better than a learned table does. The second is memory. The KV cache begins as an implementation detail, becomes the binding constraint that motivates MQA and GQA, is then paged like virtual memory by the serving layer, and is finally replaced altogether by recurrent summary states in linear attention and by external datastores in retrieval models. Memory, not arithmetic, is the scarce resource at every scale the book examines, and most of its engineering is memory engineering.\n\nThe alignment chapters carry a parallel lesson about supervision economics. Pairwise preferences are cheap and reliable, which is why the Bradley-Terry reward model is the workhorse; absolute scores are noisy, which is why pointwise methods struggle; step labels are the most informative and the most expensive, which is why process supervision is powerful and rare. DPO matters because it collapses the pipeline: the same preference pairs train the policy directly once the reward is reparameterized as a log ratio, and the partition function that looked like an obstacle cancels exactly. Weak-to-strong generalization matters for the opposite reason: it measures how much supervision value survives when the supervisor is weaker than the system being trained, which is the normal condition for any engine that grades its own traces.\n\nThe book is equally clear about where each mechanism breaks. Scaling laws are monotone fits that cannot see double descent and do not guarantee downstream quality. Reward models are proxies, and Goodhart's law plus the overoptimization results say a policy will find their blind spots; ensembles blunt this without eliminating it. Sparse rewards work in RLHF only because accumulated return densifies the signal. Process supervision depends on step labels that are expensive, or on rollout estimates that inherit the policy's own biases. Inference-time scaling plateaus at the model's knowledge ceiling. And the closing discussion of memorization versus reasoning, with grokking as the bridge case, warns that fluent step-by-step text is not evidence of an internal algorithm: the same machinery that reasons can also recite. The extraction therefore records each primitive with its breakdown regime attached, because in this book the failure mode is part of the mechanism. That discipline is also why the mappings attached to these primitives are stated as mechanisms with telemetry rather than as slogans: each one names the observable that would show, in running data, whether the mechanism is doing its work or quietly failing in exactly the regime the book predicts. Nothing in the extraction grades the book's claims beyond what its own text supports; where the manuscript reports other groups' measurements, the primitives record them as reported results rather than as re-derived facts, and the provenance corrections are recorded in the source note where a checker can find them.",
+   "retrocausal_genealogy": "The lineage runs from statistical machine translation and speech recognition, where beam search over chain-rule factorizations was the original inference problem, through Bradley and Terry's 1952 paired-comparison model and Williams's 1992 policy gradient, to the 2017-2019 consolidation of the Transformer, BERT, GPT, and XLNet. Kaplan's 2020 scaling laws and the 2022 Chinchilla correction set the capacity agenda; InstructGPT's RLHF pipeline the same year set the alignment agenda; DPO in 2023 collapsed that pipeline; and the 2024-2025 reasoning models (o1, DeepSeek-R1) moved the frontier to inference-time compute, which is where this October 2026 revision of the book ends.",
+   "theory_of_mind": "Xiao and Zhu write for a reader who builds systems, and they model the entire field as one conditional distribution manipulated at different points in a lifecycle: trained, conditioned, aligned, searched, verified, and distilled. Their pedagogical bet is that the mechanism, stated once at equation level with a worked example, transfers across all of those stages, so they define each idea formally, show the smallest example that exhibits it, and then state its limits. They also assume the reader's binding constraints are practical: memory, latency, annotation cost, and supervision quality recur as the real reasons one method displaces another.",
+   "cross_layer_veto": "Several results in this book veto moves that other layers would otherwise make. The irreducible error term in the scaling laws vetoes the claim that more data always fixes a weakness. Goodhart's law and the overoptimization measurements veto trusting any single reward or verifier score at the point of emission. The process reward model's weakest-link aggregation vetoes publishing a reasoning trace that contains one failed step, however strong the rest is. The KL penalty in PPO and DPO vetoes large, fast policy movement away from a reference. And the closing faithfulness discussion vetoes treating chain-of-thought text itself as proof of sound internal reasoning."
+  }
+ ],
+ "universal_lens": "Read as a general template, the book describes any system that must act under uncertainty with expensive evaluation: factor the problem into conditional steps, learn a scorer from comparisons rather than absolute grades, search at decision time with a budget matched to difficulty, verify at the granularity of individual steps rather than final outcomes only, feed the verification back as dense marginal credit, and distill whatever is learned back into the fast path. The same loop describes a tutoring system, a code review pipeline, or a forecasting desk; only the tokens change.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book as its methods curriculum for teaching machine reasoning about sports: chain-rule factorization and masked reconstruction for situational state, scaling-law fits for planning data acquisition, Bradley-Terry scorers trained on pairwise expert judgments, process supervision with weakest-link trace grading, and weak-to-strong PGR as the accounting standard whenever a checklist or a smaller model supervises a stronger reasoner. Each concept arrives with its breakdown regime, which is exactly how the Institute teaches any method: mechanism, assumptions, and failure mode as one unit.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the operating system of the book: shared-context encoding so every signal family reads the same game state, retrieval blended with parametric projection under one logged mixing coefficient, consensus over multiple sampled reasoning traces with disagreement reported as uncertainty, step-level verification capping any trace at its weakest step, preference training of the reader from graded trace pairs, and an explicit inference-compute dial that spends longer traces and verification on the hardest games. The breakdown regimes recorded with each primitive become the engine's monitoring checks."
+}
