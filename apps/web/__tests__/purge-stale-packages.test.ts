@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { WEEK8_GAME_DAY_CATALOG_METADATA } from "@/lib/packages/catalog";
 
 const mocks = vi.hoisted(() => ({
   promotionUpdateMany: vi.fn(),
@@ -55,7 +56,7 @@ describe("POST /api/storefront/purge-stale-packages", () => {
     expect(mocks.cockpitTaskUpdateMany).not.toHaveBeenCalled();
   });
 
-  it("authorized requests archive stale WEEK_08 promotions/tasks and return 200 with active_slate_target: WEEK_09_LIVE", async () => {
+  it("authorized requests archive prior-week promotions/tasks and return the catalogue's active slate token", async () => {
     mocks.promotionUpdateMany.mockResolvedValueOnce({ count: 3 });
     mocks.cockpitTaskUpdateMany.mockResolvedValueOnce({ count: 5 });
 
@@ -71,38 +72,41 @@ describe("POST /api/storefront/purge-stale-packages", () => {
     expect(res.status).toBe(200);
     const body = (await res.json()) as Record<string, unknown>;
 
+    // The active slate is derived from the catalogue, never typed into the
+    // route: a hardcoded week token rots on the next slate.
+    const activeWeek = Number(
+      /Week\s+(\d+)/i.exec(WEEK8_GAME_DAY_CATALOG_METADATA.slateWindowLabel)![1]
+    );
+    const activeToken = `WEEK_${String(activeWeek).padStart(2, "0")}_LIVE`;
+
     expect(body.status).toBe("SUCCESS");
     expect(body.remediations).toEqual({
       stale_packages_deactivated: 3,
       cockpit_records_archived: 5,
-      active_slate_target: "WEEK_09_LIVE",
+      active_slate_target: activeToken,
     });
 
-    expect(mocks.promotionUpdateMany).toHaveBeenCalledWith({
-      where: {
-        OR: [
-          { slug: { contains: "week-8" } },
-          { slug: { contains: "WEEK_08" } },
-          { headline: { contains: "Week 8" } },
-        ],
-      },
-      data: {
-        status: "ARCHIVED",
-        offerSummary:
-          "Archived historical Week 8 package — shifted cleanly to upcoming active Week 9 slate.",
-      },
-    });
+    // Prior weeks only. Archiving the active week's own promotions would empty
+    // the storefront the purge exists to keep current.
+    const promotionWhere = (mocks.promotionUpdateMany.mock.calls[0]![0] as {
+      where: { OR: Array<Record<string, { contains: string }>> };
+    }).where;
+    const tokens = promotionWhere.OR.flatMap((clause) =>
+      Object.values(clause).map((value) => value.contains)
+    );
+    expect(tokens.length).toBeGreaterThan(0);
+    for (const token of tokens) {
+      expect(Number(/(\d+)/.exec(token)![1])).toBeLessThan(activeWeek);
+    }
+    expect(tokens).toContain(`Week ${activeWeek - 1}`);
 
-    expect(mocks.cockpitTaskUpdateMany).toHaveBeenCalledWith({
-      where: {
-        title: { contains: "Week 8" },
-      },
-      data: {
-        status: "ARCHIVED",
-        decisionNotes:
-          "Purged automatically via storefront recovery layer execution script (WEEK_09_LIVE).",
-      },
-    });
+    const taskWhere = (mocks.cockpitTaskUpdateMany.mock.calls[0]![0] as {
+      where: { OR: Array<{ title: { contains: string } }> };
+    }).where;
+    expect(taskWhere.OR.map((clause) => clause.title.contains)).toEqual([
+      `Week ${activeWeek - 2}`,
+      `Week ${activeWeek - 1}`,
+    ]);
   });
 
   it("handles internal db errors gracefully with status 500", async () => {

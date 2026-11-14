@@ -45,7 +45,12 @@ describe("ingestDepthCharts", () => {
 
     expect(res.status).toBe("ok");
     expect(res.rowsWritten).toBe(2);
-    expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { season: 2024 } });
+    // The delete is scoped to the week buckets THIS run writes. A season-wide
+    // delete erased labelled weeks another ingest had backfilled, which turned
+    // the picks route's week-over-week continuity back into null.
+    const deleteArg = mocks.deleteMany.mock.calls[0]![0] as { where: Record<string, unknown> };
+    expect(deleteArg.where["season"]).toBe(2024);
+    expect(deleteArg.where["week"]).toEqual({ in: [3] });
     // Devin Review (PR #734): delete + insert must be one atomic transaction,
     // not two independent statements, so a createMany failure after deleteMany
     // succeeds cannot erase the season's rows with nothing to replace them.

@@ -22,9 +22,10 @@ describe("F-28: front door CTAs and board door copy", () => {
   it("primary CTA links to /packages", () => {
     // The header's "ALL PACKS" control is the persistent primary CTA across
     // every stage of the field walk.
-    expect(world).toMatch(/className="header-menu" href="\/packages"/);
-    // The first plate's "View packs" action walks the camera to the storefront
-    // stage instead of navigating away.
+    // The storefront stage owns the persistent path to the packs surface: the
+    // catalogue link navigates and "View packs" walks the camera there.
+    expect(world).toMatch(/<Link href="\/packages"/);
+    expect(world).toContain("Full Pack Catalog");
     expect(world).toContain("View packs");
   });
 

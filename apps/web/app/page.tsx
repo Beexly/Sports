@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { RedlineWorld } from "@/components/redline/redline-world";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { Footer } from "@/components/ui/footer";
 import { orderPacksForStorefront, upcomingOnly } from "@/components/packages/storefront-order";
 import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
@@ -33,6 +34,9 @@ export default function HomePage(): JSX.Element {
   const writeups = upcomingOnly(getActiveUpcomingWriteups());
   return (
     <>
+      {/* FE-17: the cursor overlay is scoped to the home hero. app/layout.tsx
+          documents this mount and must not carry the component itself. */}
+      <GalaxyCursor />
       <RedlineWorld packs={packs} writeups={writeups} />
       <section
         id="responsible-close"

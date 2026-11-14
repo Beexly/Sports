@@ -55,7 +55,9 @@ describe("banned FIELD phrases stay off customer chrome", () => {
     // The front door's eyebrow moved into the field's first plate during the
     // RedlineWorld rebuild. It must still name the product (an NFL desk), not
     // an abstract category.
-    expect(world).toMatch(/REDZONE · WEEK 8 NFL DESK/);
+    // The slate week rolls; the invariant is that the front door names an NFL
+    // desk, not which week it happens to be showing.
+    expect(world).toMatch(/REDZONE · WEEK \d+ NFL DESK/);
     expect(world).not.toMatch(/sports decision intelligence/i);
   });
 });

@@ -44,7 +44,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
       <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
         {/* Header */}
         <div className="border-b border-slate-800 pb-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-emerald-400">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.22em] text-emerald-400">
             Public Settlement Ledger &amp; Honest Grading
           </div>
           <h1 className="mt-4 font-display text-4xl uppercase sm:text-6xl text-white">
