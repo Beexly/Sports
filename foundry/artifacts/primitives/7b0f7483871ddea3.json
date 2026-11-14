@@ -1,0 +1,173 @@
+{
+  "book_id": "7b0f7483871ddea3",
+  "source_status": "COMPLETE",
+  "title": "1664-expectation-propagation-dynamic-probit",
+  "file_name": "1664-expectation-propagation-dynamic-probit.md",
+  "sha256": "7b0f7483871ddea35578b830cdc6b586cf3ca95800674499d41faec1c9f85ff8",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Expectation propagation (EP) approximates dynamic probit smoothing distributions via Gaussian site updates, leveraging moment-matching and Kalman-style passes for state dynamics. Expectation propagation (EP) approximates posterior distributions in dynamic probit models via moment matching, offering speed at cost of convergence guarantees.",
+  "gsi_mapping": "EP enables Bayesian inference over latent states in dynamic binary models, supporting conformal predictive distributions for probabilistic forecasting in GSI's uncertainty quantification framework. GSI employs EP for Bayesian inference on binary event probabilities, leveraging conformal prediction for calibrated uncertainty quantification in real-time sports analytics.",
+  "gse_mapping": "EP supports GSE's state-transition reasoning by providing fast, approximate smoothing distributions that enable real-time situational awareness under stochastic binary outcomes. GSE integrates EP as a fast approximate inference engine within its state-space framework, enabling rapid policy updates and situational reasoning during live game dynamics.",
+  "primitives": [
+    {
+      "primitive_id": "ep_smoothing_approximation",
+      "name": "EP Smoothing Approximation",
+      "verbatim_quote": "EP approximates the SUN smoothing distribution by a Gaussian, iteratively refining site approximations: each likelihood factor's contribution is matched by moment-matching (mean and covariance) against the tilted distribution.",
+      "page": 1,
+      "latex": "\\mathbf{q}(\\theta) = \\mathcal{N}(\\mathbf{m}, \\mathbf{V})",
+      "symbol_and_unit_ledger": "{'\\\\theta': 'latent state vector, dimensionless', '\\\\mathbf{m}': 'mean vector of Gaussian approximation, same units as \\\\theta', '\\\\mathbf{V}': 'covariance matrix of Gaussian approximation, squared units of \\\\theta'}",
+      "assumptions": "Posterior is unimodal and well-approximated by a Gaussian; EP fixed-point convergence not guaranteed.",
+      "breakdown_regime": "When posterior becomes multimodal or heavy-tailed, Gaussian approximation fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "EP's moment-matching procedure mirrors GSI's variational inference isomorphism, where site approximations correspond to belief updates in Bayesian networks.",
+        "source_operator": "ep_smoothing_approximation",
+        "telemetry": "KL divergence between true SUN and EP Gaussian approximation."
+      }
+    },
+    {
+      "primitive_id": "site_update_mechanism",
+      "name": "Site Update Mechanism",
+      "verbatim_quote": "- Site updates: for each t, cavity q_{\\t}(θ_t) ∝ q(θ_t)/q̃_t(θ_t); tilted p̂ ∝ q_{\\t} · p(y_t|θ_t); moment-match E_{p̂}[θ_t], Cov_{p̂}[θ_t] to update site q̃_t.",
+      "page": 1,
+      "latex": "\\mathbf{q}_{\\setminus t}(\\theta_t) \\propto \\frac{\\mathbf{q}(\\theta_t)}{\\tilde{q}_t(\\theta_t)}, \\quad \\hat{p} \\propto \\mathbf{q}_{\\setminus t} \\cdot p(y_t|\\theta_t)",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{q}_{\\\\setminus t}(\\\\theta_t)': 'cavity distribution, dimensionless', '\\\\tilde{q}_t(\\\\theta_t)': 'current site approximation, dimensionless', '\\\\hat{p}': 'tilted distribution, dimensionless', 'E_{\\\\hat{p}}[\\\\theta_t]': 'expected value of \\\\theta_t under \\\\hat{p}, same units as \\\\theta_t', 'Cov_{\\\\hat{p}}[\\\\theta_t]': 'covariance of \\\\theta_t under \\\\hat{p}, squared units of \\\\theta_t'}",
+      "assumptions": "Closed-form tilted moments exist via truncated normal formulas; iterative refinement converges.",
+      "breakdown_regime": "When truncated normal moments cannot be computed analytically, numerical integration required.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The site update kernel in EP corresponds to GSE's belief propagation kernel, where local evidence is combined with global beliefs through moment-matching.",
+        "source_operator": "site_update_mechanism",
+        "telemetry": "Change in site approximation across iterations (residual norm)."
+      }
+    },
+    {
+      "primitive_id": "kalman_smoother_integration",
+      "name": "Kalman Smoother Integration",
+      "verbatim_quote": "- State dynamics handled by Kalman-smoother-style forward-backward passes within each EP sweep.",
+      "page": 1,
+      "latex": "\\text{Forward pass: } \\mathbf{F}_t = \\mathbb{E}[\\theta_t | \\theta_{t-1}] \\quad \\text{Backward pass: } \\mathbf{B}_t = \\mathbb{E}[\\theta_t | \\theta_{t+1}]",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{F}_t': 'forward filtered estimate, same units as \\\\theta_t', '\\\\mathbf{B}_t': 'backward smoothed estimate, same units as \\\\theta_t'}",
+      "assumptions": "Linear-Gaussian state dynamics; Kalman filter provides sufficient statistics for smoothing.",
+      "breakdown_regime": "Nonlinear or non-Gaussian dynamics invalidate standard Kalman smoother.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Integration of Kalman smoother into EP allows GSE to handle temporal dependencies in latent states efficiently.",
+        "source_operator": "kalman_smoother_integration",
+        "telemetry": "Smoothing error relative to exact MCMC or PFM-VB estimates."
+      }
+    },
+    {
+      "primitive_id": "probabilistic_model_setup",
+      "name": "Probabilistic Model Setup",
+      "verbatim_quote": "Method/model Same dynamic probit setup as 1661: y_t ∈ {0,1}, P(y_t=1)=Φ(x_t'θ_t), θ_t = θ_{t-1}+η_t.",
+      "page": 1,
+      "latex": "y_t \\sim \\text{Bernoulli}(\\Phi(x_t'\\theta_t)), \\quad \\theta_t = \\theta_{t-1} + \\eta_t",
+      "symbol_and_unit_ledger": "{'y_t': 'binary outcome, dimensionless', 'x_t': 'regression vector, dimensionless', '\\\\theta_t': 'latent state, dimensionless', '\\\\eta_t': 'state noise, same units as \\\\theta_t'}",
+      "assumptions": "Probit link function; Gaussian noise in state evolution.",
+      "breakdown_regime": "When observation or state models deviate from Bernoulli/probit structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This setup mirrors GSI’s binary outcome modeling, enabling direct application of EP to GSE's dynamic inference tasks.",
+        "source_operator": "probabilistic_model_setup",
+        "telemetry": "Accuracy of predicted probabilities vs empirical frequencies."
+      }
+    },
+    {
+      "primitive_id": "fast_approximation_kernel",
+      "name": "Fast Approximation Kernel",
+      "verbatim_quote": "pproximations are ~100× faster than exact; EP costs ~60% more than PFM-VB for a small accuracy gain.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Model assumes static latent variables and fixed hyperparameters; convergence not guaranteed without damping.",
+      "breakdown_regime": "When model complexity exceeds computational limits or when convergence fails under standard EP updates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "EP's moment-matching approach mirrors GSE’s need for efficient posterior approximations in dynamic environments, aligning with GSI's requirement for scalable probabilistic reasoning.",
+        "source_operator": "fast_approximation_kernel",
+        "telemetry": "Runtime performance and log-likelihood difference relative to exact MCMC."
+      }
+    },
+    {
+      "primitive_id": "accuracy_tradeoff_function",
+      "name": "Accuracy Tradeoff Function",
+      "verbatim_quote": "- Practical takeaway: EP ≈ PFM-VB in accuracy, both far better than MF-VB.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes comparable model structures and sufficient data for stable estimation across methods.",
+      "breakdown_regime": "In low-data regimes or high-noise settings where variance dominates bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The derived kernel captures the tradeoff between computational efficiency and predictive fidelity, informing GSE's backend selection strategy.",
+        "source_operator": "accuracy_tradeoff_function",
+        "telemetry": "Log accuracy metrics versus reference MCMC and runtime comparisons."
+      }
+    },
+    {
+      "primitive_id": "convergence_guarantee_limitation",
+      "name": "Convergence Guarantee Limitation",
+      "verbatim_quote": "- EP has no convergence guarantee; damping/double-loop needed in hard cases — not stress-tested here.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes deterministic update rules and absence of pathological local optima in variational landscape.",
+      "breakdown_regime": "Under complex dependencies or non-Gaussian posteriors lacking strong convexity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This limitation defines a boundary condition for GSE's robustness checks, necessitating fallback mechanisms in uncertain scenarios.",
+        "source_operator": "convergence_guarantee_limitation",
+        "telemetry": "Number of iterations until stabilization and failure rate under varying model configurations."
+      }
+    },
+    {
+      "primitive_id": "implementation_specification",
+      "name": "Implementation Specification",
+      "verbatim_quote": "Implementation specification - Implement `gse.statespace.EPProbit` alongside `PFMVBProbit` (1661): shared dynamic-probit interface, Kalman-smoother inner loop, EP site updates with damping; same hyperparameter M-step for W.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes shared interface compatibility and consistent parameterization across backends.",
+      "breakdown_regime": "Upon integration into existing GSE infrastructure requiring minimal modification.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables direct comparison between EP and PFM-VB implementations within GSE's unified state-space architecture.",
+        "source_operator": "implementation_specification",
+        "telemetry": "Interface compliance, execution time per step, and memory footprint consistency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7b0f7483871ddea3_t0",
+      "think": "The chapter introduces expectation propagation (EP) as a method for approximating the smoothing distribution in a dynamic probit model. The core idea is to iteratively refine Gaussian approximations to the true posterior using moment-matching against tilted distributions derived from individual likelihood factors. This approach leverages the structure of the probit model—where observations are binary and governed by a latent linear dynamical system—to perform efficient inference. The key innovation lies in combining EP with Kalman-smoother-style passes to handle the temporal dependencies in the latent states. The method assumes a unimodal posterior and that the Gaussian approximation is adequate, which may break down in complex or multimodal settings. The evaluation uses CAC40 data, demonstrating EP's ability to match performance with other methods like PFM-VB and exact MCMC, though at the cost of theoretical convergence guarantees. From a GSI perspective, this represents a viable backend for probabilistic forecasting in binary time series. For GSE, it offers a computationally efficient way to reason about evolving states under uncertain binary outcomes, particularly useful in real-time strategic decision-making scenarios. Window 1 Synthesis: Rooted in 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 2/2 pages of 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3): [ep_smoothing_approximation p.1]: EP approximates the SUN smoothing distribution by a Gaussian, iteratively refining site approximations: each likelihood factor's contribution is matched by moment-matching (mean and covariance) against the tilted distribution. (EP's moment-matching procedure mirrors GSI's variational inference isomorphism, where site approximations correspond to belief updates in Bayesian networks.) [site_update_mechanism p.1]: - Site updates: for each t, cavity q_{\\t}(θ_t) ∝ q(θ_t)/q̃_t(θ_t); tilted p̂ ∝ q_{\\t} · p(y_t|θ_t); moment-match E_{p̂}[θ_t], Cov_{p̂}[θ_t] to update site q̃_t. (The site update kernel in EP corresponds to GSE's belief propagation kernel, where local evidence is combined with global beliefs through moment-matching.) [kalman_smoother_integration p.1]: - State dynamics handled by Kalman-smoother-style forward-backward passes within each EP sweep. (Integration of Kalman smoother into EP allows GSE to handle temporal dependencies in latent states efficiently.) [probabilistic_model_setup p.1]: Method/model Same dynamic probit setup as 1661: y_t ∈ {0,1}, P(y_t=1)=Φ(x_t'θ_t), θ_t = θ_{t-1}+η_t. (This setup mirrors GSI’s binary outcome modeling, enabling direct application of EP to GSE's dynamic inference tasks.) [fast_approximation_kernel p.2]: pproximations are ~100× faster than exact; EP costs ~60% more than PFM-VB for a small accuracy gain. (EP's moment-matching approach mirrors GSE’s need for efficient posterior approximations in dynamic environments, aligning with GSI's requirement for scalable probabilistic reasoning.) [accuracy_tradeoff_function p.2]: - Practical takeaway: EP ≈ PFM-VB in accuracy, both far better than MF-VB. (The derived kernel captures the tradeoff between computational efficiency and predictive fidelity, informing GSE's backend selection strategy.) [convergence_guarantee_limitation p.2]: - EP has no convergence guarantee; damping/double-loop needed in hard cases — not stress-tested here. (This limitation defines a boundary condition for GSE's robustness checks, necessitating fallback mechanisms in uncertain scenarios.) [implementation_specification p.2]: Implementation specification - Implement `gse.statespace.EPProbit` alongside `PFMVBProbit` (1661): shared dynamic-probit interface, Kalman-smoother inner loop, EP site updates with damping; same hyperparameter M-step for W. (Enables direct comparison between EP and PFM-VB implementations within GSE's unified state-space architecture.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3): [ep_smoothing_approximation p.1]: EP approximates the SUN smoothing distribution by a Gaussian, iteratively refining site approximations: each likelihood factor's contribution is matched by moment-matching (mean and covariance) against the tilted distribution. (EP's moment-matching procedure mirrors GSI's variational inference isomorphism, where site approximations correspond to belief updates in Bayesian networks.) [site_update_mechanism p.1]: - Site updates: for each t, cavity q_{\\t}(θ_t) ∝ q(θ_t)/q̃_t(θ_t); tilted p̂ ∝ q_{\\t} · p(y_t|θ_t); moment-match E_{p̂}[θ_t], Cov_{p̂}[θ_t] to update site q̃_t. (The site update kernel in EP corresponds to GSE's belief propagation kernel, where local evidence is combined with global beliefs through moment-matching.) [kalman_smoother_integration p.1]: - State dynamics handled by Kalman-smoother-style forward-backward passes within each EP sweep. (Integration of Kalman smoother into EP allows GSE to handle temporal dependencies in latent states efficiently.) [probabilistic_model_setup p.1]: Method/model Same dynamic probit setup as 1661: y_t ∈ {0,1}, P(y_t=1)=Φ(x_t'θ_t), θ_t = θ_{t-1}+η_t. (This setup mirrors GSI’s binary outcome modeling, enabling direct application of EP to GSE's dynamic inference tasks.) [fast_approximation_kernel p.2]: pproximations are ~100× faster than exact; EP costs ~60% more than PFM-VB for a small accuracy gain. (EP's moment-matching approach mirrors GSE’s need for efficient posterior approximations in dynamic environments, aligning with GSI's requirement for scalable probabilistic reasoning.) [accuracy_tradeoff_function p.2]: - Practical takeaway: EP ≈ PFM-VB in accuracy, both far better than MF-VB. (The derived kernel captures the tradeoff between computational efficiency and predictive fidelity, informing GSE's backend selection strategy.) [convergence_guarantee_limitation p.2]: - EP has no convergence guarantee; damping/double-loop needed in hard cases — not stress-tested here. (This limitation defines a boundary condition for GSE's robustness checks, necessitating fallback mechanisms in uncertain scenarios.) [implementation_specification p.2]: Implementation specification - Implement `gse.statespace.EPProbit` alongside `PFMVBProbit` (1661): shared dynamic-probit interface, Kalman-smoother inner loop, EP site updates with damping; same hyperparameter M-step for W. (Enables direct comparison between EP and PFM-VB implementations within GSE's unified state-space architecture.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in the broader EP literature initiated by Minka et al., this work extends earlier efforts in approximate inference for dynamic models, building upon 1661's PFM-VB framework and aligning with recent advances in scalable Bayesian inference. Retrocausal Genealogy (Window 1): Rooted in 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The authors consider competing inference strategies (MCMC, VB) and position EP as a middle ground—fast enough for practical use but theoretically grounded enough to warrant empirical validation. They acknowledge limitations in convergence theory and single-series evaluation, suggesting a need for comparative testing in GSE's operational context. Theory of Mind (Window 1): Rooted in 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that EP's site approximations do not overly correlate with prior beliefs, preventing overfitting. Leakage is mitigated by verifying that the Gaussian approximation remains valid across the support of the true posterior, especially in regions of high curvature. Cross-Layer Veto (Window 1): Rooted in 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7b0f7483871ddea3_t1",
+      "think": "Chapter window 2 presents a comparative analysis of expectation propagation (EP) against other variational inference techniques—specifically PFM-VB and MF-VB—in the context of dynamic probit models. The core contribution lies in demonstrating that while EP offers substantial speedups (~100×) over exact inference, it incurs only marginal accuracy improvements over PFM-VB. This finding is critical for GSI and GSE because it establishes a performance frontier where computational efficiency becomes paramount without sacrificing much predictive fidelity. The lack of convergence guarantees and absence of public code underscore the practical challenges in deploying EP reliably. However, the paper's alignment with prior work (1661) and its focus on in-play binary event modeling make it directly relevant to GSE’s state-space stack, particularly in integrating fast Gaussian approximations via moment matching rather than ELBO optimization. The implementation specification provides a clear blueprint for integrating EP into GSE’s existing framework, ensuring compatibility with Kalman smoothing and shared interfaces. These insights inform both the theoretical grounding of GSI’s Bayesian reasoning and the operational constraints of GSE’s real-time decision-making systems. Window 2 Synthesis: Rooted in 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon foundational work in variational inference and dynamic probit modeling, this chapter extends earlier research by evaluating EP’s empirical behavior in financial and sports contexts, establishing a bridge between theory and application in real-time systems. Retrocausal Genealogy (Window 2): Rooted in 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents in this domain include the stochastic nature of sports outcomes and the computational constraints of real-time processing. Coaches and analysts must balance model accuracy with responsiveness, while GSE must ensure reliable inference under uncertainty and limited data. Theory of Mind (Window 2): Rooted in 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions prevent redundant modeling between EP and PFM-VB due to their overlapping strengths. Leakage is mitigated through fixed hyperparameters and controlled experimental design, ensuring that generalizability concerns do not compromise system stability. Cross-Layer Veto (Window 2): Rooted in 1664-expectation-propagation-dynamic-probit (7b0f7483871ddea3, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

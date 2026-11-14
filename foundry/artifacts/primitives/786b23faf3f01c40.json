@@ -1,0 +1,306 @@
+{
+  "book_id": "786b23faf3f01c40",
+  "source_status": "COMPLETE",
+  "title": "openalex_W2064142958",
+  "file_name": "openalex_W2064142958.pdf",
+  "sha256": "786b23faf3f01c40f0c94dd88ab4222cda3398604f4ba2a7ddaa718ead0a3444",
+  "primary_domain": "other",
+  "pages_total": 19,
+  "pages_read": 19,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 19,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal hysteresis and multi-view fusion enable robust ball trajectory estimation through probabilistic state transitions and geometric constraints. Universal Lens: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian belief updates with temporal thresholds refine ball classification; conformal prediction ensures uncertainty quantification across tracking states. GSI Mapping: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "Situation-aware state transitions model player and ball dynamics via multi-camera sensor fusion and trajectory continuity constraints. GSE Mapping: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "786b23faf3f01c40_w0_g1",
+      "name": "openalex_W2064142958 Ch.1 Grounded Operator",
+      "verbatim_quote": "1 Multi-camera Video Surveillance for Real-time Analysis and Reconstruction of Soccer Games Jinchang Ren1,2, Ming Xu3, James Orwell4, Graeme A Jones4 1 School of Informatics, University of Bradford, U.K.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 786b23faf3f01c40_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "786b23faf3f01c40_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "786b23faf3f01c40_w0_g2",
+      "name": "openalex_W2064142958 Ch.1 Grounded Operator",
+      "verbatim_quote": "2 School of Computers, Northwestern Polytechnic University, China 3 Xi'an Jiaotong Liverpool University, Suzhou, China.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 786b23faf3f01c40_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "786b23faf3f01c40_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "786b23faf3f01c40_w0_g3",
+      "name": "openalex_W2064142958 Ch.1 Grounded Operator",
+      "verbatim_quote": "j.ren@bradford.ac.uk ming.xu@xjtlu.edu.cn {j.orwell,g.jones}@kingston.ac.uk Abstract Soccer analysis and reconstruction is one of the most interesting challenges for wide-area video surveillance applications.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 786b23faf3f01c40_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "786b23faf3f01c40_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "w1_kalman_filter",
+      "name": "Kalman Filter State Estimation",
+      "verbatim_quote": "2.2 Foreground detection Image subtraction of an adaptive background from incoming frames is utilized for moving object detection in the field of view (FOV) of each individual camera.",
+      "page": 5,
+      "latex": "x_{k+1} = A x_k + w_k, \\quad z_k = H x_k + v_k",
+      "symbol_and_unit_ledger": "{'x_k': 'State vector (meters)', 'A': 'State transition matrix (dimensionless)', 'w_k': 'Process noise (meters)', 'z_k': 'Measurement vector (meters)', 'H': 'Observation matrix (dimensionless)', 'v_k': 'Measurement noise (meters)'}",
+      "assumptions": "Gaussian process and measurement noise, linear dynamics, known noise statistics.",
+      "breakdown_regime": "Non-linearities, heavy-tailed distributions, sudden changes in dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian filtering for tracking objects in noisy video streams, enabling real-time prediction of player trajectories.",
+        "source_operator": "w1_kalman_filter",
+        "telemetry": "Root mean square error (RMSE) of predicted versus actual player positions."
+      }
+    },
+    {
+      "primitive_id": "w1_foreground_subtraction",
+      "name": "Adaptive Background Modeling",
+      "verbatim_quote": "5 feature servers are put on a rack, and an IP/Ethernet network is used to connect their output to a multi-view tracker to provide output of game states (see Figure 1).",
+      "page": 5,
+      "latex": "I(x,t) - B(x,t) > T",
+      "symbol_and_unit_ledger": "{'I(x,t)': 'Current pixel intensity (counts)', 'B(x,t)': 'Background pixel intensity (counts)', 'T': 'Threshold value (counts)'}",
+      "assumptions": "Stationary background over short intervals, slow-moving objects, sparse foreground.",
+      "breakdown_regime": "Dynamic backgrounds, extreme lighting changes, occlusions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction for anomaly detection in high-dimensional sensor data, useful for identifying unusual plays or rule violations.",
+        "source_operator": "w1_foreground_subtraction",
+        "telemetry": "False positive rate of detected static objects as foreground."
+      }
+    },
+    {
+      "primitive_id": "w1_multi_view_tracker",
+      "name": "Multi-View Request-Response Synchronization",
+      "verbatim_quote": "The multi-view Tracker is responsible for synchronization of single-view Feature Servers (first stage) in a request-response mechanism.",
+      "page": 5,
+      "latex": "t_{request} = t_{response}",
+      "symbol_and_unit_ledger": "{'t_{request}': 'Time of broadcast request (seconds)', 't_{response}': 'Time of response from Feature Server (seconds)'}",
+      "assumptions": "Deterministic network latency, perfect clock synchronization across servers.",
+      "breakdown_regime": "Variable network delay, clock skew, server overload.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Distributed ledger consensus algorithms (e.g., Paxos) for coordinating parallel processing units in real-time.",
+        "source_operator": "w1_multi_view_tracker",
+        "telemetry": "Jitter in synchronization timestamps across multiple views."
+      }
+    },
+    {
+      "primitive_id": "w1_gaussian_mixture_model",
+      "name": "Gaussian Mixture Background Estimation",
+      "verbatim_quote": "During a short bootstrap stage, a per-pixel Gaussian mixture model [20] is used to estimate an initial background, in which each background candidate corresponds to a Gaussian distribution and will be favoured if supported by incoming data.",
+      "page": 5,
+      "latex": "B(x) = \\sum_{i=1}^{K} w_i N(I | \\mu_i, \\Sigma_i)",
+      "symbol_and_unit_ledger": "{'B(x)': 'Background intensity at pixel x (counts)', 'w_i': 'Weight of the i-th Gaussian component (dimensionless)', 'N(I | \\\\mu_i, \\\\Sigma_i)': 'Gaussian probability density function with mean \\\\(\\\\mu_i\\\\) and covariance \\\\(\\\\Sigma_i\\\\)', 'K': 'Number of Gaussians per pixel (dimensionless)'}",
+      "assumptions": "Pixel intensities follow a mixture of Gaussians, stationary environment during adaptation.",
+      "breakdown_regime": "Non-stationary environments, multimodal background distributions, insufficient training data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian model averaging for robust parameter estimation under uncertainty, applicable to sports analytics for handling noisy sensor readings.",
+        "source_operator": "w1_gaussian_mixture_model",
+        "telemetry": "Log-likelihood of observed frames under the background model."
+      }
+    },
+    {
+      "primitive_id": "temporal_hysteresis_tracking",
+      "name": "Temporal Hysteresis Tracking",
+      "verbatim_quote": "Furthermore, tracking-back also contains temporal hysteresis-based thresholding [24] of the ball likelihood along the trajectory.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'l': 'likelihood value, dimensionless', 'h1, h2, h3': 'threshold values, dimensionless', 't': 'time index, unitless'}",
+      "assumptions": "Ball likelihood varies continuously over time; classification depends on neighborhood consistency.",
+      "breakdown_regime": "When likelihood crosses thresholds h1 or h3, classification becomes deterministic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables robust classification by reducing false positives through temporal consistency checks.",
+        "source_operator": "temporal_hysteresis_tracking",
+        "telemetry": "Trajectory continuity and false alarm rate reduction."
+      }
+    },
+    {
+      "primitive_id": "multi_view_player_tracking",
+      "name": "Multi-View Player Tracking",
+      "verbatim_quote": "Multi-view processing 4.1 Multi-view tracking of players For tracking of players in the world coordinate, we assume that they touch the ground plane.",
+      "page": 11,
+      "latex": "\\mathbf{x}_k = \\begin{bmatrix} x_k \\\\ y_k \\\\ \\dot{x}_k \\\\ \\dot{y}_k \\end{bmatrix}, \\quad \\mathbf{z}_k = \\begin{bmatrix} x_k \\\\ y_k \\end{bmatrix}",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{x}_k': 'state vector at time k, m/s', '\\\\mathbf{z}_k': 'measurement vector at time k, m', '\\\\mathbf{R}': 'measurement covariance matrix, m²', '\\\\beta_{ij}': 'association indicator, binary'}",
+      "assumptions": "Players lie on ground plane; measurements are noisy but consistent with motion model.",
+      "breakdown_regime": "When no valid measurement exists, prior state estimate is propagated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to Kalman filter framework for fused multi-view tracking.",
+        "source_operator": "multi_view_player_tracking",
+        "telemetry": "Ground-plane accuracy improvement over single-view estimates."
+      }
+    },
+    {
+      "primitive_id": "ball_trajectory_modeling",
+      "name": "Ball Trajectory Modeling",
+      "verbatim_quote": "Each player has multiple measurements, each projected from an individual imageplane to the ground-plane, which include the ground plane positions T w w j y x ] , [  z , position covariance matrices j R and category measurements jc ( ] 7,1[  j ).",
+      "page": 11,
+      "latex": "B = \\arg\\min_{X} \\sum_{i=1}^{N} d(X, L_i)",
+      "symbol_and_unit_ledger": "{'B': '3D ball position, m', 'L_i': '3D line from camera i to ground plane, m', 'd': 'distance function, m'}",
+      "assumptions": "Ball follows predictable motion; camera projections are accurate.",
+      "breakdown_regime": "When N=2, uses midpoint of common perpendicular; otherwise, least squares solution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Reconstructs 3D ball path from 2D projections using geometric constraints.",
+        "source_operator": "ball_trajectory_modeling",
+        "telemetry": "Accuracy of reconstructed 3D trajectory against ground truth."
+      }
+    },
+    {
+      "primitive_id": "tracking_back_mechanism",
+      "name": "Tracking Back Mechanism",
+      "verbatim_quote": "If we find it is still merged at frame # ) ( n n   , where 0 n n   , then trackingback is employed to reclassify the state between frame #n and frame # ) ( n n   as possessed.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n': 'frame number, unitless', '\\\\Delta n': 'time lag, frames', 'jP': 'player identifier, unitless'}",
+      "assumptions": "Object identity persists across frames; merging indicates ambiguity.",
+      "breakdown_regime": "Used when tracking ambiguity arises due to occlusion or overlapping trajectories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Applies retroactive correction to resolve tracking inconsistencies.",
+        "source_operator": "tracking_back_mechanism",
+        "telemetry": "Reduction in trajectory fragmentation and misclassification."
+      }
+    },
+    {
+      "primitive_id": "w3_maximum_discrepancy",
+      "name": "Ground plane calibration consistency",
+      "verbatim_quote": "The maximum discrepancy between the ground planes of each calibrated camera is of the same order of magnitude, which puts this result in context.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Calibrated camera geometry, planar ground assumption, identical order-of-magnitude calibration errors across views.",
+      "breakdown_regime": "Singularity occurs when calibration errors exceed the order-of-magnitude threshold, leading to inconsistent 3D reconstruction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian network fusion aligns with GSI probabilistic multi-camera calibration, where consistency metrics inform posterior belief updates.",
+        "source_operator": "w3_maximum_discrepancy",
+        "telemetry": "Cross-camera residual variance of ground-plane intersections serves as empirical verification."
+      }
+    },
+    {
+      "primitive_id": "w3_tracking_accuracy",
+      "name": "Ball tracking error quantification",
+      "verbatim_quote": "0 1 2 3 4 5 6 accuracy (metres) Figure 5: Tracking accuracy of the ball compared with manual ground truth.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'accuracy': 'metre (m)', 'Figure_5': 'dimensionless figure identifier'}",
+      "assumptions": "Manual ground truth as oracle, stationary ball dynamics, additive Gaussian noise model.",
+      "breakdown_regime": "Error spikes occur during high-speed motion or severe occlusion, violating the Gaussian assumption.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction intervals map to GSI uncertainty quantification, where tracking error distributions inform betting margins.",
+        "source_operator": "w3_tracking_accuracy",
+        "telemetry": "Mean absolute error (MAE) between automated and manual trajectories provides observable validation."
+      }
+    },
+    {
+      "primitive_id": "w3_multi_view_fusion",
+      "name": "Covariance-weighted multi-camera fusion",
+      "verbatim_quote": "By weighting the inverse of measurement covariance, the fused measurement and thereafter the estimate for each player are automatically biased to the most accurate measurement from the closest camera.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'covariance': 'dimensionless measure of uncertainty', 'ellipse_size': 'proportional to square root of variance'}",
+      "assumptions": "Gaussian observation noise, known covariance matrices, linear measurement models, independent camera views.",
+      "breakdown_regime": "Fusion fails when covariances are misspecified or dependencies exist between camera errors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kalman filter consensus in GSE state estimation mirrors this weighted averaging, with fusion rules governing player trajectory continuity.",
+        "source_operator": "w3_multi_view_fusion",
+        "telemetry": "Reduced fused covariance compared to individual camera covariances verifies improvement."
+      }
+    },
+    {
+      "primitive_id": "w3_target_number_statistics",
+      "name": "Target count distribution analysis",
+      "verbatim_quote": "Two sequences of 5000 frames are used for this evaluation and the mean and standard deviation  of target number are found as (26.63, 1.55) and (26.12, 1.56), respectively.",
+      "page": 16,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'mean': 'unitless target count', 'standard_deviation': 'unitless target count', 'sequence_length': 'dimensionless frame count'}",
+      "assumptions": "Independent and identically distributed target arrivals, constant player density, Poisson-like background noise.",
+      "breakdown_regime": "Distribution skewness indicates over-counting due to missed deletions or under-counting from prolonged track persistence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI statistical process control charts monitor these moments for drift detection in tracking pipelines.",
+        "source_operator": "w3_target_number_statistics",
+        "telemetry": "Histogram of target counts per frame tracks seasonal variations in player activity."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "786b23faf3f01c40_t0",
+      "think": "Window 1 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "786b23faf3f01c40_t1",
+      "think": "The chapter describes a distributed computer vision pipeline for real-time sports tracking. Core primitives include Kalman filters for trajectory prediction, adaptive background subtraction for detecting moving players, and a multi-view tracker for synchronizing data across multiple camera angles. These components work together to construct accurate, temporally consistent state estimates of the game, essential for applications like automated officiating and performance analysis. Window 2 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The foundational ideas stem from early motion capture systems and robotics navigation, evolving into modern computer vision frameworks such as OpenCV and ROS. Key contributions from MIT's AI Lab on probabilistic robotics influenced the adoption of Bayesian filters for tracking. Retrocausal Genealogy (Window 2): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing teams model each other's strategies through observed player movements. Coaches use the generated state data to adjust formations, while referees rely on accurate tracking to make calls. The system must anticipate these agent behaviors by providing reliable, low-latency updates. Theory of Mind (Window 2): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity requires independent camera views to avoid redundant information. Leakage vetoes occur when background models incorrectly classify uniforms as part of the scene, necessitating robust outlier rejection mechanisms. Cross-Layer Veto (Window 2): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "786b23faf3f01c40_t2",
+      "think": "Chapter 3 introduces core methodologies for tracking ball and player movements in multi-view environments. It begins with temporal hysteresis-based classification of ball candidates, leveraging likelihood thresholds to stabilize decisions over time. This approach mitigates transient errors during occlusions or visual ambiguities. The paper then details how multi-view tracking integrates heterogeneous sensor inputs—specifically, ground-plane projections from multiple cameras—to enhance positional accuracy. Using a Kalman-like update mechanism, it fuses these measurements into coherent player trajectories while maintaining uncertainty bounds. For ball trajectory reconstruction, the method models the ball's 3D path as a geometric median of multiple 3D lines derived from 2D projections. This allows for robust estimation even under partial visibility. Finally, the tracking-back mechanism resolves ambiguities by revisiting earlier frames and reclassifying merged tracks based on temporal consistency. These primitives collectively support high-fidelity spatiotemporal modeling essential for intelligent sports analytics. Window 3 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in classical tracking theory and extended Kalman filtering, this work builds upon early computer vision techniques for object tracking and integrates modern probabilistic inference frameworks for robustness. Retrocausal Genealogy (Window 3): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agent behaviors such as player evasion or strategic positioning, assuming rational decision-making within game constraints. Ball movement reflects physical laws and tactical intent. Theory of Mind (Window 3): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by enforcing cross-validation between temporal and spatial coherence. Ensures no single view dominates interpretation, avoiding bias from camera-specific distortions. Cross-Layer Veto (Window 3): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "786b23faf3f01c40_t3",
+      "think": "This chapter window demonstrates the core mathematical framework for multi-camera soccer tracking: calibration consistency ensures geometric coherence, while covariance-weighted fusion optimizes 3D position estimates. The statistical analysis of target numbers validates robustness under dynamic player configurations. These primitives form a unified sovereign module for extracting structured spatiotemporal data from broadcast feeds, enabling downstream applications in both GSI and GSE. Window 4 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The foundational work traces back to early computer vision studies on stereo correspondence and Kalman filtering, evolving through contributions from robotics (e.g., simultaneous localization and mapping) into modern multi-target tracking paradigms. Retrocausal Genealogy (Window 4): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opponents' movements are modeled as partially observed Markov processes with strategic intent, while teammates' positions provide contextual priors for action prediction. Coaches' tactical formations impose higher-order constraints on player distributions. Theory of Mind (Window 4): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions require decorrelated camera viewpoints to avoid rank deficiency in the fusion matrix. Leakage is prevented by ensuring that ground truth annotations do not contain information about future states, maintaining temporal causality. Cross-Layer Veto (Window 4): Rooted in openalex_W2064142958 (786b23faf3f01c40, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

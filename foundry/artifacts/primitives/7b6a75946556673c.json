@@ -1,0 +1,323 @@
+{
+  "book_id": "7b6a75946556673c",
+  "source_status": "COMPLETE",
+  "title": "Doug Houston Lead Engine v3 - Clean",
+  "file_name": "Doug Houston Lead Engine v3 - Clean.pdf",
+  "sha256": "7b6a75946556673c718209cc3b6f2e7a039997fa14dafee481a97e5dfc2448a1",
+  "primary_domain": "other",
+  "pages_total": 13,
+  "pages_read": 13,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 13,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sales lead engine as a stochastic process with state transitions driven by contact generation, warm account prioritization, and structured follow-up protocols. Lead tracking as a stochastic process with warm account prioritization and sequential next-step optimization.",
+  "gsi_mapping": "Bayesian belief updates on lead quality using contact logs, warm account status, and next-step verifications as evidence for quote readiness. Bayesian belief updating on call outcomes using GSI's conformal predictive inference framework for lead qualification.",
+  "gse_mapping": "Situationally aware state machine transitioning between 'contact generation', 'warm account engagement', and 'next-step logging' based on temporal and outcome-driven triggers. Situationally-aware state transitions in sales engagement via GSE's dynamic decision tree with warm account biasing.",
+  "primitives": [
+    {
+      "primitive_id": "w0_lead_generation_machine",
+      "name": "Lead Generation Machine",
+      "verbatim_quote": "WORK WARM ACCOUNTS TD Oilfield Parts, Tricon Precast, General Technologies, Wagner, GeorgiaPacific.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{contacts}}': 'dimensionless, number of new contacts per week', 'N_{\\\\text{warm}}': 'dimensionless, number of warm accounts', 'T_{\\\\text{baseline}}': 'time unit, weekly baseline target'}",
+      "assumptions": "Each contact contributes probabilistically to conversion; warm accounts have higher likelihood of conversion than cold leads.",
+      "breakdown_regime": "When N_{\\text{contacts}} < 25 or N_{\\text{warm}} < 5, performance degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The lead generation process mirrors a Markov chain where states are defined by contact type and account status, with transition probabilities derived from historical conversion data.",
+        "source_operator": "w0_lead_generation_machine",
+        "telemetry": "Weekly contact count, warm account engagement rate"
+      }
+    },
+    {
+      "primitive_id": "w1_4_question_framework",
+      "name": "Four Question Framework",
+      "verbatim_quote": "EVERY WEEK 25 new contacts 5 meetings is the company baseline 8 meetings is the stretch goal Weekly report completed THE 4 QUESTIONS What would Craftco need to quote this work?",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q_{\\\\text{quote}}': 'dimensionless, quote readiness indicator', 'Q_{\\\\text{purchasing}}': 'dimensionless, purchasing decision-maker identifier', 'Q_{\\\\text{engineering}}': 'dimensionless, engineering decision-maker identifier', 'Q_{\\\\text{setup}}': 'dimensionless, vendor setup requirement flag', 'Q_{\\\\text{timeline}}': 'time unit, next project timeline'}",
+      "assumptions": "All four questions must be answered to proceed with quote preparation; missing answers imply incomplete lead qualification.",
+      "breakdown_regime": "If any Q_i is undefined, the framework fails to advance the lead.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The framework acts as a kernel for extracting actionable intelligence from leads, enabling downstream quote generation and scheduling.",
+        "source_operator": "w1_4_question_framework",
+        "telemetry": "Completion rate of the 4-question set per lead"
+      }
+    },
+    {
+      "primitive_id": "w2_next_step_logging",
+      "name": "Next Step Logging Protocol",
+      "verbatim_quote": "After each call, fill Last Touch, Result, and Next Step.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{touch}}': 'time unit, last interaction timestamp', 'R_{\\\\text{result}}': 'dimensionless, outcome classification', 'S_{\\\\text{step}}': 'dimensionless, next action identifier'}",
+      "assumptions": "Logging ensures continuity of lead tracking; incomplete entries reduce predictive accuracy of future actions.",
+      "breakdown_regime": "Failure to log any field results in loss of temporal context and reduced lead velocity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The protocol mirrors a state transition system where each call modifies the lead's internal state vector, enabling dynamic scheduling and prioritization.",
+        "source_operator": "w2_next_step_logging",
+        "telemetry": "Average time between last touch and next step execution"
+      }
+    },
+    {
+      "primitive_id": "w3_warm_account_priority",
+      "name": "Warm Account Prioritization",
+      "verbatim_quote": "YOUR 5 WARM ACCOUNTS — DO THESE FIRST Account One move that advances it Who to ask for Last Touch Next Step Status Notes TD Oilfield Parts Ask for drawings/specs for one part Craftco can review.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W_{\\\\text{account}}': 'dimensionless, warm account priority index', 'A_{\\\\text{advance}}': 'dimensionless, progress indicator for account', 'T_{\\\\text{ask}}': 'dimensionless, role-specific contact target'}",
+      "assumptions": "Warm accounts are more likely to convert within shorter timeframes; prioritizing them increases overall efficiency.",
+      "breakdown_regime": "If W_{\\text{account}} < 5, the prioritization strategy becomes ineffective.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Warm account prioritization serves as a kernel for optimizing resource allocation, focusing effort on high-probability conversion paths.",
+        "source_operator": "w3_warm_account_priority",
+        "telemetry": "Conversion rate of warm accounts vs. cold leads"
+      }
+    },
+    {
+      "primitive_id": "warm_account_priority",
+      "name": "Warm Account Prioritization Kernel",
+      "verbatim_quote": "LEAD TRACKER — Doug's call list Use this tab during the day.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W_i': 'Warm account index (dimensionless)', 'M_i': 'Move advancing account (dimensionless)', 'T_i': 'Last touch timestamp (seconds since epoch)', 'R_i': 'Result of last interaction (binary)'}",
+      "assumptions": "Warm accounts yield higher conversion probability than cold leads; sequential call log improves accuracy.",
+      "breakdown_regime": "When R_i < 0.5, re-prioritize W_i based on T_i decay.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition function maps W_i to M_i via temporal decay of T_i; GSI updates P(R_i|W_i) using Bayesian updating.",
+        "source_operator": "warm_account_priority",
+        "telemetry": "Conversion rate of warm accounts over time."
+      }
+    },
+    {
+      "primitive_id": "sequential_call_log",
+      "name": "Sequential Call Log Regulator",
+      "verbatim_quote": "AFTER EVERY CALL, FILL LAST TOUCH + RESULT + NEXT STEP.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_t': 'Call event at time t (dimensionless)', 'L_t': 'Last touch timestamp (seconds since epoch)', 'R_t': 'Result of call (binary)', 'N_t': 'Next step action (categorical)'}",
+      "assumptions": "Each call contributes to a cumulative knowledge state; temporal order matters for inference.",
+      "breakdown_regime": "When N_t is undefined, revert to default action policy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE trajectory of C_t is isomorphic to GSI's sequential Bayesian update of P(R_t|C_t).",
+        "source_operator": "sequential_call_log",
+        "telemetry": "Cumulative log of call results and next steps."
+      }
+    },
+    {
+      "primitive_id": "next_step_optimization",
+      "name": "Next Step Optimization Operator",
+      "verbatim_quote": "Engineering / Purchasing Warm Tricon Precast Ask to quote a form, embed run, or repair job.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_t': 'Step sequence at time t (dimensionless)', 'O_t': 'Optimal next step (categorical)', 'E_t': 'Expected outcome of O_t (probability)'}",
+      "assumptions": "Next step selection maximizes expected utility E_t; feedback loop ensures convergence.",
+      "breakdown_regime": "When E_t < threshold, reset S_t to initial state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition uses O_t to compute S_t; GSI evaluates E_t via Monte Carlo simulation.",
+        "source_operator": "next_step_optimization",
+        "telemetry": "Probability of successful next step execution."
+      }
+    },
+    {
+      "primitive_id": "sales_script_framework",
+      "name": "Sales Script Framework",
+      "verbatim_quote": "Plant Manager / Purchasing Warm General Technologies Find the buyer and engineer.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_s': 'Script line (dimensionless)', 'Q_s': 'Question posed (categorical)', 'U_s': 'User response (binary)'}",
+      "assumptions": "One-line script increases engagement; question-driven dialogue improves conversion.",
+      "breakdown_regime": "When U_s < 0.5, switch to alternative L_s.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE dialogic state evolves through L_s and Q_s; GSI models U_s as conditional probability P(U_s|L_s,Q_s).",
+        "source_operator": "sales_script_framework",
+        "telemetry": "Engagement rate per script line."
+      }
+    },
+    {
+      "primitive_id": "quote_readiness_kernel",
+      "name": "Quote Readiness Kernel",
+      "verbatim_quote": "WHAT TO SAY — scripts and simple pitch THE 4 QUESTIONS 1 What would Craftco need to see to quote your work?",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Quote readiness index (dimensionless)', 'D': 'Drawings/specs availability (boolean)', 'S': 'Sample part provided (boolean)'}",
+      "assumptions": "R = f(D, S) where D and S are binary indicators of technical documentation completeness.",
+      "breakdown_regime": "R → 0 when ¬D ∧ ¬S",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps contact stage to quote probability via conditional likelihood P(quote|docs) in GSI; transitions to quote-ready state in GSE.",
+        "source_operator": "quote_readiness_kernel",
+        "telemetry": "Percentage of accounts with complete specs or samples"
+      }
+    },
+    {
+      "primitive_id": "vendor_approval_isomorphism",
+      "name": "Vendor Approval Isomorphism",
+      "verbatim_quote": "We do custom fabrication, machining, and welding I am trying to find the right person for planned FOLLOW-UP Good talking with you.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'Vendor approval status (boolean)', 'A': 'Account engagement level (0–1)'}",
+      "assumptions": "V = g(A) where A represents normalized engagement intensity.",
+      "breakdown_regime": "V → 0 when A < threshold",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphs vendor onboarding process to GSI's approval confidence model; GSE tracks vendor setup completion rate.",
+        "source_operator": "vendor_approval_isomorphism",
+        "telemetry": "Number of approved vendors per week"
+      }
+    },
+    {
+      "primitive_id": "weekly_pipeline_velocity",
+      "name": "Weekly Pipeline Velocity",
+      "verbatim_quote": "WEEKLY SCORECARD — fill this every Friday Type the numbers in the yellow boxes.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Pipeline velocity (contacts/week)', 'C': 'New contacts (count)', 'F': 'Follow-ups (count)', 'M': 'Meetings (count)'}",
+      "assumptions": "P = αC + βF + γM where α, β, γ are weights reflecting conversion rates.",
+      "breakdown_regime": "P → 0 when C, F, M all below baseline",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies weekly progress through sales funnel; GSI computes P as a time-series stochastic process; GSE uses P to predict next-step actions.",
+        "source_operator": "weekly_pipeline_velocity",
+        "telemetry": "Average weekly contact-to-quote conversion rate"
+      }
+    },
+    {
+      "primitive_id": "quote_timing_state",
+      "name": "Quote Timing State",
+      "verbatim_quote": "Support needed this week Quote timing: Freight or pricing clarity: Management help: Sales material: Pipeline forecast — only use real opportunities",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Quote timing state (boolean)', 'F': 'Freight clarity (boolean)', 'P': 'Pricing clarity (boolean)'}",
+      "assumptions": "T = h(F, P) where F and P are binary indicators of logistical and financial transparency.",
+      "breakdown_regime": "T → 0 when ¬F ∧ ¬P",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes temporal readiness for quote submission; GSI evaluates T as a probabilistic delay factor; GSE schedules quote dispatch based on T.",
+        "source_operator": "quote_timing_state",
+        "telemetry": "Percentage of quotes submitted within 48h of request"
+      }
+    },
+    {
+      "primitive_id": "activity_commitment_operator",
+      "name": "Activity Commitment Operator",
+      "verbatim_quote": "Activity I can commit to calls, follow-ups, meetings, reports, and next steps.",
+      "page": 10,
+      "latex": "A(t) = \\sum_{i=1}^{N} \\delta(t - t_i) \\cdot \\mathbb{I}_{\\text{tracked}}(t_i)",
+      "symbol_and_unit_ledger": "A(t): Activity rate (events/day), t: Time (days), N: Total events (dimensionless), \\mathbb{I}: Indicator function (dimensionless)",
+      "assumptions": "All scheduled interactions are executed deterministically and logged without omission.",
+      "breakdown_regime": "Singularity occurs if tracking compliance drops below 95%, rendering A(t) an unreliable proxy for actual effort.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE possession-event logging; every call/meeting is a discrete state transition requiring immediate data persistence.",
+        "source_operator": "activity_commitment_operator",
+        "telemetry": "Weekly count of logged CRM entries versus planned baseline."
+      }
+    },
+    {
+      "primitive_id": "rfq_definition_kernel",
+      "name": "RFQ Definition Kernel",
+      "verbatim_quote": "On RFQs and sales output, I need the expectations clearly defined so we are measuring the same thing.",
+      "page": 11,
+      "latex": "\\nabla \\cdot \\vec{D}_{rfq} = 0 \\implies P(\\text{Qualified}) = \\Theta(V_{spec} - V_{min})",
+      "symbol_and_unit_ledger": "\\vec{D}_{rfq}: Definition divergence vector (dimensionless), P: Probability (dimensionless), \\Theta: Heaviside step function, V: Specification completeness score (dimensionless)",
+      "assumptions": "A binary, mathematically rigorous threshold exists for what constitutes a 'qualified' RFQ.",
+      "breakdown_regime": "System fails if subjective interpretation replaces the Heaviside threshold, causing metric inflation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to GSI pre-snap formation classification; ambiguous inputs must be resolved into discrete categorical states before inference.",
+        "source_operator": "rfq_definition_kernel",
+        "telemetry": "Variance between internal and external RFQ qualification counts."
+      }
+    },
+    {
+      "primitive_id": "empirical_logging_projection",
+      "name": "Empirical Logging Projection",
+      "verbatim_quote": "Do not include Opinions, guesses, private customer drawings, pricing files, or confidential material.",
+      "page": 12,
+      "latex": "\\Pi_{\\text{fact}}(\\Psi) = \\Psi - \\langle \\Psi | \\phi_{\\text{opinion}} \\rangle \\phi_{\\text{opinion}}",
+      "symbol_and_unit_ledger": "\\Pi_{\\text{fact}}: Projection operator (dimensionless), \\Psi: Raw interaction state vector, \\phi_{\\text{opinion}}: Subjective noise basis vector",
+      "assumptions": "Subjective opinions and objective facts occupy orthogonal subspaces within the communication manifold.",
+      "breakdown_regime": "Projection fails if cognitive bias causes opinion vectors to leak into the factual recording subspace.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSE telemetry filtering; raw sensor noise (opinions) is stripped to isolate pure kinematic events (facts).",
+        "source_operator": "empirical_logging_projection",
+        "telemetry": "Ratio of qualitative adjectives to quantitative nouns in weekly reports."
+      }
+    },
+    {
+      "primitive_id": "stochastic_scripting_engine",
+      "name": "Stochastic Scripting Engine",
+      "verbatim_quote": "AUDIO SCRIPTS — paste into ElevenLabs Use a calm older male voice.",
+      "page": 13,
+      "latex": "S_{out} = \\mathcal{E}(\\text{Prompt}) \\rightarrow \\arg\\max_{v} P(v | \\text{calm}, \\text{older}, \\text{male})",
+      "symbol_and_unit_ledger": "S_{out}: Synthesized audio stream (Hz), \\mathcal{E}: Embedding function, v: Voice parameter vector (dimensionless)",
+      "assumptions": "Acoustic parameters deterministically map to psychological receptivity states in the listener.",
+      "breakdown_regime": "Breakdown occurs if synthetic cadence introduces perceptual latency or uncanny valley friction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Analogous to GSI automated broadcast generation; converting structured tactical data into natural language consumption.",
+        "source_operator": "stochastic_scripting_engine",
+        "telemetry": "User engagement duration with synthesized audio modules."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7b6a75946556673c_t0",
+      "think": "Chapter window 1 establishes a foundational sales engine for lead acquisition and management. The document outlines a structured approach to generating new leads through daily contact creation, followed by prioritized engagement with warm accounts. The core mechanism relies on a four-question framework to extract essential information for quoting, ensuring alignment with Craftco’s capabilities. Each interaction is logged via a standardized protocol to maintain visibility into lead progression. This creates a feedback loop where historical data informs future actions, enabling adaptive planning. The emphasis on local presence and Wyoming-based capacity underscores operational reliability. The model assumes that structured engagement increases conversion probability, while failure to adhere to the process reduces predictability. The interplay between contact volume, account prioritization, and systematic follow-up forms a robust pipeline for sustainable growth. Window 1 Synthesis: Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in traditional sales funnel models, this framework incorporates modern CRM principles and behavioral economics to optimize lead lifecycle management. Retrocausal Genealogy (Window 1): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The agent operates under the assumption that sales success hinges on consistent execution of a repeatable process. Opposing forces include procrastination, lack of follow-through, and misalignment between customer needs and Craftco's offerings. The system models these as noise in the signal, mitigated through structured protocols. Theory of Mind (Window 1): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct roles (purchasing, engineering) to be addressed separately. Leakage is prevented by mandating explicit next steps after every call, avoiding ambiguous or redundant interactions. Cross-Layer Veto (Window 1): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7b6a75946556673c_t1",
+      "think": "Chapter window 2 (pages 4–6) introduces a structured lead management protocol centered on warm account prioritization and sequential call logging. The core idea is to optimize sales cycles by focusing on pre-qualified leads while maintaining a rigorous record of interactions. This approach aligns with Bayesian inference principles where prior beliefs about account value are updated with each interaction. The 'warm account' concept implies a probabilistic model of lead quality, where past behavior predicts future outcomes. The sequential nature of call logs enables temporal modeling of sales progression, allowing for dynamic adjustments in strategy. The script framework ensures consistent communication, which is essential for building trust and extracting actionable intelligence from prospects. The mathematical lens here is that of stochastic processes with memory, where each call modifies the posterior distribution over account likelihood to convert. The GSE interprets this as a state-space problem with discrete actions (calls), while GSI applies Bayesian updating to refine belief states. The interplay between these layers creates a feedback loop that enhances both predictive accuracy and operational efficiency. Window 2 Synthesis: Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in CRM methodologies of the 1990s, this framework evolved from early sales forecasting models that emphasized lead scoring and sequential follow-up. It draws from behavioral economics and information theory to formalize the concept of 'warm' leads as those with higher entropy reduction potential. Retrocausal Genealogy (Window 2): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include competitors who may offer lower prices or faster delivery, and prospects who might be indifferent or resistant to change. Coaches or internal stakeholders could resist adopting new protocols due to inertia or lack of perceived benefit. The framework assumes rational actors but models uncertainty through probabilistic inference. Theory of Mind (Window 2): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity exists when multiple warm accounts are treated identically without considering unique contextual factors. Leakage occurs if the script fails to adapt to specific industry jargon or customer preferences. Veto conditions ensure that all primitives maintain independence in their application to prevent overfitting or misalignment between GSE and GSI layers. Cross-Layer Veto (Window 2): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7b6a75946556673c_t2",
+      "think": "Chapter window 3 (pages 7–9) presents a structured sales execution protocol centered on four core questions and weekly scorecards. The framework establishes a hierarchical progression from initial contact to quote readiness, with each step governed by specific operational conditions. The 'What would Craftco need to see' question introduces the concept of technical documentation readiness, which maps to a kernel in GSI that computes quote probability conditioned on available drawings or samples. The vendor approval query reflects a binary state in GSE that must be resolved before proceeding to quote generation. Weekly scorecards provide empirical telemetry for pipeline velocity, enabling both GSI to model conversion dynamics and GSE to schedule follow-up actions. The quote timing state encapsulates logistical and pricing clarity, forming a temporal constraint in the quote lifecycle. These primitives collectively define a dynamic system where sales outcomes are modeled as probabilistic transitions through defined states, with feedback loops from performance metrics guiding adaptive behavior. Window 3 Synthesis: Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in traditional sales funnel theory, extended by modern CRM analytics and probabilistic forecasting frameworks such as those developed in Bayesian sales modeling literature. Retrocausal Genealogy (Window 3): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include potential clients who may defer decisions or resist vendor setup, and internal stakeholders who may lack alignment on pricing or freight logistics. Coaches and managers must balance aggressive outreach with realistic pipeline expectations. Theory of Mind (Window 3): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that quote readiness does not become conflated with vendor approval; leakage vetos prevent misinterpretation of pipeline velocity as a direct proxy for deal closure probability. Cross-Layer Veto (Window 3): Rooted in Doug Houston Lead Engine v3 - Clean (7b6a75946556673c, 13/13 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7b6a75946556673c_t4",
+      "think": "The chapter window delineates a rigorous transition from unstructured sales anxiety to a quantized, observable state machine. Mathematically, the protagonist's environment is initially characterized by high-dimensional uncertainty—undefined RFQs, vague sales targets, and missing support vectors. The sovereign primitives act as a series of linear operators designed to project this chaotic high-dimensional space onto a lower-dimensional, controllable subspace. First, the 'Activity Commitment Operator' establishes a fixed-frequency sampling rate (calls, meetings per week), effectively discretizing time and enforcing a minimum information flow. Second, the 'RFQ Definition Kernel' addresses the boundary conditions of the system; without a rigorously defined step function for what constitutes a qualified lead, the entire pipeline suffers from metric inflation and epistemic leakage. Third, the 'Empirical Logging Projection' serves as a noise-canceling filter. By explicitly forbidding opinions and confidential speculation, the system ensures that the recorded state history remains purely kinematic—what happened, who was contacted, what was requested. This creates a clean dataset for subsequent Bayesian updates. Finally, the 'Stochastic Scripting Engine' represents the output layer, translating these rigid internal structures into consumable, low-friction acoustic signals. Together, these primitives form a closed-loop control system where input (prospecting) is strictly regulated, processing (logging) is strictly filtered, and output (reporting/scripting) is standardized. The underlying doctrine is that success is not a stochastic lottery but the inevitable accumulation of correctly executed micro-transitions within a well-defined state graph.",
+      "retrocausal_genealogy": "This framework inherits directly from early 20th-century scientific management (Taylorism), which sought to decompose labor into atomic, measurable units. However, it diverges by integrating modern information theory—specifically Shannon’s emphasis on signal-to-noise ratios in the logging phase. It also echoes the development of military after-action reviews, where subjective narrative is aggressively purged in favor of timestamped, verifiable events to ensure accurate retroactive analysis and future predictive modeling.",
+      "theory_of_mind": "The opposing agent here is the corporate stakeholder (Craftco/Brandan), whose mental model operates on aggregated, lagging indicators (monthly revenue, total RFQs). The protagonist models this agent as requiring constant, low-entropy reassurance. By committing to leading indicators (weekly activity logs) and demanding precise definitions for lagging indicators, the protagonist attempts to align their local optimization function with the stakeholder's global utility function. The strategy assumes the stakeholder values transparency and accountability over raw, unverified optimism.",
+      "cross_layer_veto": "A critical veto condition exists if the definition of 'qualified RFQ' becomes collinear with 'total RFQs'. If the threshold for qualification is lowered simply to meet volume targets, the RFQ Definition Kernel collapses, and the system reverts to noise. Furthermore, if the Empirical Logging Projection begins to inadvertently capture strategic intuition disguised as fact, the orthogonality between signal and noise is breached. The system must continuously audit its own metrics to ensure that increased activity volume does not mask a declining probability of conversion per unit effort."
+    }
+  ]
+}

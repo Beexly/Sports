@@ -1,0 +1,95 @@
+{
+  "book_id": "747519f5fe8806f6",
+  "source_status": "COMPLETE",
+  "title": "2026 Christmas Dinner",
+  "file_name": "2026 Christmas Dinner.pdf",
+  "sha256": "747519f5fe8806f635ba885538a6426d27b80f879846d632f4c532b7cad7492c",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2026 Christmas Dinner (747519f5fe8806f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2026 Christmas Dinner (747519f5fe8806f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2026 Christmas Dinner (747519f5fe8806f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "total_meal_cost",
+      "name": "Total Meal Cost Function",
+      "verbatim_quote": "2026 Christmas Package (Minimum 10 people) Harvest Salad with apples, craisins, candied pecans and champagne vinaigrette",
+      "page": 1,
+      "latex": "$C(N) = p \\cdot N + D(d)$",
+      "symbol_and_unit_ledger": "{'C(N)': 'Total cost in USD', 'p': 'Per-person menu price ($31.95)', 'N': 'Number of diners (integer >= 10)', 'D(d)': 'Delivery cost as piecewise function of distance d'}",
+      "assumptions": "Constant menu pricing, linear scaling with diner count, stepwise delivery charges.",
+      "breakdown_regime": "Non-negativity constraints: N ≥ 10, C(N) ≥ 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's multi-item order optimization under budget constraints, where the meal package serves as a composite asset with fixed composition.",
+        "source_operator": "total_meal_cost",
+        "telemetry": "Observed total invoice amounts vs. predicted C(N) for validation."
+      }
+    },
+    {
+      "primitive_id": "menu_option_choice",
+      "name": "Menu Item Selection Indicator",
+      "verbatim_quote": "Deep-Fried Turkey or Turkey Breast with Giblet Gravy or Sliced tenderloin of beef with a truffle",
+      "page": 1,
+      "latex": "M \\in \\{\\text{Turkey}, \\text{Beef}\\} \\cup \\{0\\}",
+      "symbol_and_unit_ledger": "{'M': 'Selection indicator (binary choice with zero option)', 'Turkey': 'Deep-fried turkey main course', 'Beef': 'Sliced tenderloin with truffle gravy', '0': 'No meat selection (vegetarian)'}",
+      "assumptions": "Exclusive OR logic for protein options, including a zero fallback.",
+      "breakdown_regime": "Singularity at simultaneous selection of both proteins.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conforms to GSE's discrete action space for event scheduling, where M represents a high-stakes state transition between culinary configurations.",
+        "source_operator": "menu_option_choice",
+        "telemetry": "Frequency counts of M across orders to infer preference dynamics."
+      }
+    },
+    {
+      "primitive_id": "gravy_additive_cost",
+      "name": "Gravy Add-On Premium",
+      "verbatim_quote": "Deep-Fried Turkey or Turkey Breast with Giblet Gravy or Sliced tenderloin of beef with a truffle",
+      "page": 1,
+      "latex": "\\Delta C_{\\text{gravy}}(M) = 5.00 \\cdot I(M = \\text{Beef})",
+      "symbol_and_unit_ledger": "{'\\\\Delta C_{\\\\text{gravy}}': 'Additional gravy cost per person in USD', 'I': 'Indicator function for beef selection', '5.00': 'Premium surcharge amount in USD'}",
+      "assumptions": "Fixed premium for truffle mushroom gravy on beef dishes only.",
+      "breakdown_regime": "Discontinuity at M = Beef, where the cost jumps by exactly $5.00.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's tiered product bundles, where \\Delta C_{\\text{gravy}} acts as a conditional discount parameter for beef-centric orders.",
+        "source_operator": "gravy_additive_cost",
+        "telemetry": "Average incremental revenue from gravy add-ons relative to base turkey orders."
+      }
+    },
+    {
+      "primitive_id": "delivery_distance_model",
+      "name": "Delivery Distance Piecewise Cost",
+      "verbatim_quote": "2026 Christmas Package (Minimum 10 people) Harvest Salad with apples, craisins, candied pecans and champagne vinaigrette",
+      "page": 1,
+      "latex": "D(d) = 49 \\cdot I(20 < d \\leq 40) + 69 \\cdot I(40 < d \\leq 60)",
+      "symbol_and_unit_ledger": "{'D(d)': 'Delivery cost as function of distance d in miles', 'd': 'Distance from origin (77375)', 'I': 'Indicator functions for distance bands'}",
+      "assumptions": "Flat-rate delivery within 20-mile radius, step increases at 20 and 40 miles.",
+      "breakdown_regime": "Singular behavior at exact band boundaries (d = 20, 40, 60).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates to GSE's routing algorithms, where D(d) introduces a hard constraint on feasible delivery zones.",
+        "source_operator": "delivery_distance_model",
+        "telemetry": "Actual delivery routes plotted against the piecewise model to detect overcharges."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "747519f5fe8806f6_t0",
+      "think": "The 2026 Christmas Dinner package forms a combinatorial optimization problem. The total meal cost C(N) is a linear functional of diner count N with a minimum threshold (N ≥ 10). Menu choice M introduces binary decision variables that interact multiplicatively with protein availability. The gravy premium \\Delta C_{\\text{gravy}}(M) is a conditional affine perturbation, while delivery cost D(d) is a discontinuous piecewise constant function of geographic distance. Together, these primitives define a piecewise-affine utility landscape over diner numbers, cuisine preferences, and delivery ranges. This structure maps naturally to GSI's portfolio allocation models where each dish is an asset with fixed covariance, and to GSE's Markov decision processes where transitions between menu states depend on customer selections. Failure occurs when N falls below 10 (invalid contract) or when d exceeds 60 miles (unavailable service).\n\nDeep epistemic analysis for 2026 Christmas Dinner (747519f5fe8806f6, domain=other, pages_read=2/2): Operator 'Total Meal Cost Function' (page 1, domain other) captures: 2026 Christmas Package (Minimum 10 people) Harvest Salad with apples, craisins, candied pecans and champagne vinaigrette Assumptions: Constant menu pricing, linear scaling with diner count, stepwise delivery charges. Breakdown regime: Non-negativity constraints: N ≥ 10, C(N) ≥ 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-item order optimization under budget constraints, where the meal package serves as a composite asset with fixed composition. Operator 'Menu Item Selection Indicator' (page 1, domain other) captures: Deep-Fried Turkey or Turkey Breast with Giblet Gravy or Sliced tenderloin of beef with a truffle Assumptions: Exclusive OR logic for protein options, including a zero fallback. Breakdown regime: Singularity at simultaneous selection of both proteins. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to GSE's discrete action space for event scheduling, where M represents a high-stakes state transition between culinary configurations. Operator 'Gravy Add-On Premium' (page 1, domain other) captures: Deep-Fried Turkey or Turkey Breast with Giblet Gravy or Sliced tenderloin of beef with a truffle Assumptions: Fixed premium for truffle mushroom gravy on beef dishes only. Breakdown regime: Discontinuity at M = Beef, where the cost jumps by exactly $5.00. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's tiered product bundles, where \\Delta C_{\\text{gravy}} acts as a conditional discount parameter for beef-centric orders. Operator 'Delivery Distance Piecewise Cost' (page 1, domain other) captures: 2026 Christmas Package (Minimum 10 people) Harvest Salad with apples, craisins, candied pecans and champagne vinaigrette Assumptions: Flat-rate delivery within 20-mile radius, step increases at 20 and 40 miles. Breakdown regime: Singular behavior at exact band boundaries (d = 20, 40, 60). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSE's routing algorithms, where D(d) introduces a hard constraint on feasible delivery zones. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026 Christmas Dinner (747519f5fe8806f6, domain=other, pages_read=2/2): Operator 'Total Meal Cost Function' (page 1, domain other) captures: 2026 Christmas Package (Minimum 10 people) Harvest Salad with apples, craisins, candied pecans and champagne vinaigrette Assumptions: Constant menu pricing, linear scaling with diner count, stepwise delivery charges. Breakdown regime: Non-negativity constraints: N ≥ 10, C(N) ≥ 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-item order optimization under budget constraints, where the meal package serves as a composite asset with fixed composition. Operator 'Menu Item Selection Indicator' (page 1, domain other) captures: Deep-Fried Turkey or Turkey Breast with Giblet Gravy or Sliced tenderloin of beef with a truffle Assumptions: Exclusive OR logic for protein options, including a zero fallback. Breakdown regime: Singularity at simultaneous selection of both proteins. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to GSE's discrete action space for event scheduling, where M represents a high-stakes state transition between culinary configurations. Operator 'Gravy Add-On Premium' (page 1, domain other) captures: Deep-Fried Turkey or Turkey Breast with Giblet Gravy or Sliced tenderloin of beef with a truffle Assumptions: Fixed premium for truffle mushroom gravy on beef dishes only. Breakdown regime: Discontinuity at M = Beef, where the cost jumps by exactly $5.00. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's tiered product bundles, where \\Delta C_{\\text{gravy}} acts as a conditional discount parameter for beef-centric orders. Operator 'Delivery Distance Piecewise Cost' (page 1, domain other) captures: 2026 Christmas Package (Minimum 10 people) Harvest Salad with apples, craisins, candied pecans and champagne vinaigrette Assumptions: Flat-rate delivery within 20-mile radius, step increases at 20 and 40 miles. Breakdown regime: Singular behavior at exact band boundaries (d = 20, 40, 60). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSE's routing algorithms, where D(d) introduces a hard constraint on feasible delivery zones. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This formulation extends classical lot-sizing models (Wagner-Whitin algorithm) into dynamic pricing frameworks, incorporating discrete choices and spatially varying costs. It draws parallels to inventory control under capacity constraints and to optimal transport theory with step costs. Retrocausal Genealogy: Rooted in 2026 Christmas Dinner (747519f5fe8806f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Competitors may offer bundled deals with lower minimum party sizes or flat delivery fees, forcing customers to arbitrage between packages. Customers model their own budgets and party sizes, creating strategic interactions around the N = 10 threshold. Theory of Mind & Decision Maker Model: Rooted in 2026 Christmas Dinner (747519f5fe8806f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that the menu items are not perfectly substitutable; otherwise, the optimization degenerates. Leakage is prevented by enforcing exclusive protein selection (M binary). Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 Christmas Dinner (747519f5fe8806f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 Christmas Dinner (747519f5fe8806f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

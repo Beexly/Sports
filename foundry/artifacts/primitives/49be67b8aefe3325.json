@@ -1,0 +1,306 @@
+{
+  "book_id": "49be67b8aefe3325",
+  "source_status": "COMPLETE",
+  "title": "2172-neural-symbolic-regression-complex-network-dynamics",
+  "file_name": "2172-neural-symbolic-regression-complex-network-dynamics.md",
+  "sha256": "49be67b8aefe33251f5e92baf875a5b534dbe7ee50ee1ff4e5263e6a6e40fe63",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 4,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Neural-symbolic regression unifies node dynamics F and edge dynamics G through shared universality assumptions, enabling robust inference across complex network structures. PI-NDSR decomposes team dynamics into intrinsic F and interaction G components, enabling network-based modeling of NFL team evolution through graph ODEs and symbolic regression.",
+  "gsi_mapping": "Bayesian inference maps observed node trajectories to symbolic models F and G using probabilistic constraints, conformal prediction ensures coverage reliability. GSI employs Bayesian inference to calibrate F̂ and Ĝ estimates against observed outcomes, using conformal prediction for uncertainty quantification in team strength forecasts.",
+  "gse_mapping": "Situational reasoning infers state transitions via symbolic dynamics F and G, leveraging coordination metrics to guide policy decisions in evolving network topologies. GSE utilizes state-transition graphs to model weekly team strength evolution, incorporating network dynamics via adjacency matrices that encode game matchups and temporal dependencies.",
+  "primitives": [
+    {
+      "primitive_id": "w0_adapt",
+      "name": "ADAPT",
+      "verbatim_quote": "**Verdict:** ADAPT — discovers symbolic equations for network dynamics by splitting them into node dynamics F and edge dynamics G, denoising multi-trajectory observations with a physics-aligned graph neural ODE, and evolving F/G with a *coordinated* genetic search that prevents one from overfitting while the other underfits.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Noisy, sparse multi-trajectory observations; fixed functional form libraries are insufficient; numerical time derivatives are unreliable.",
+      "breakdown_regime": "High noise, limited data samples, complex interdependent node-edge interactions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ADAPT maps to NFL team-state dynamics where nodes = teams, edges = matchup interactions, and symbolic regression yields predictive equations for win probability, point differential, and playoff seeding. It enables discovery of hidden strategic patterns from historical game logs.",
+        "source_operator": "w0_adapt",
+        "telemetry": "Mean absolute error (MAE) on denoised latent dynamics; symbolic expression complexity (number of terms); cross-validation predictive accuracy on held-out matchups."
+      }
+    },
+    {
+      "primitive_id": "w1_pind",
+      "name": "PIND",
+      "verbatim_quote": "**PIND** (Physically Inspired Neural Dynamics): encode-process-decode with graph neural ODE; latent derivative ḣ_v = φn(h_v,t) + Σ_{u∈N_v} φe(h_v,h_u,t) (Eq.",
+      "page": 1,
+      "latex": "\\dot{h}_v = \\phi_n(h_v,t) + \\sum_{u\\in N_v} \\phi_e(h_v,h_u,t) (Eq. 2)",
+      "symbol_and_unit_ledger": "{'h_v': 'Node latent state vector, dimension d, dimensionless', 't': 'Time, seconds (s)', 'N_v': 'Set of neighboring nodes connected to node v', '\\\\phi_n': 'Node dynamics neural network, output same dimension as h_v', '\\\\phi_e': 'Edge dynamics neural network, output same dimension as h_v'}",
+      "assumptions": "Graph structure is known; node and edge dynamics are locally Lipschitz continuous; neural networks approximate the true underlying functions arbitrarily well.",
+      "breakdown_regime": "When graph topology changes abruptly (e.g., player injuries, rule modifications), PIND requires retraining on updated connectivity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSE, PIND serves as a differentiable state-transition kernel for continuous-time team evolution. In GSI, it provides posterior distributions for latent team abilities conditional on observed game outcomes.",
+        "source_operator": "w1_pind",
+        "telemetry": "Reconstruction loss on historical trajectory sequences; KL divergence between learned latent distributions and prior; gradient norm stability during training."
+      }
+    },
+    {
+      "primitive_id": "w2_coordinated_genetic_search",
+      "name": "Coordinated Genetic Search",
+      "verbatim_quote": "# [2172] Neural Symbolic Regression of Complex Network Dynamics (arXiv:2410.11185) **Citation:** Haiquan Qiu, Shuzhi Liu, Quanming Yao (2024).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Symbolic expressions are represented as tree structures; fitness function measures agreement between evolved equations and denoised data; crossover and mutation operators preserve syntactic validity.",
+      "breakdown_regime": "When the search space becomes exponentially large due to high-dimensional latent spaces or intricate interaction terms, computational cost spikes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coordinated Genetic Search maps to NFL roster optimization, where symbolic expressions represent player efficiency metrics. The algorithm simultaneously evolves offensive and defensive strategies to maximize overall team performance while avoiding over-specialization.",
+        "source_operator": "w2_coordinated_genetic_search",
+        "telemetry": "Average symbolic expression length; Pareto front diversity of discovered solutions; rate of convergence to optimal symbolic forms."
+      }
+    },
+    {
+      "primitive_id": "w3_denoised_interpolated_trajectories",
+      "name": "Denoised Interpolated Trajectories",
+      "verbatim_quote": "Trained on raw noisy observations → outputs denoised/interpolated trajectories X̂(t) plus neural references F̂, Ĝ (Eq.",
+      "page": 1,
+      "latex": "\\hat{X}(t) = \\text{ODESolver}(\\phi_n, \\phi_e, X_0, t), \\quad \\hat{F}=\\phi_n, \\quad \\hat{G}=\\phi_e",
+      "symbol_and_unit_ledger": "{'\\\\hat{X}(t)': 'Denoised trajectory at time t, same units as original observation data', 'X_0': 'Initial condition, same units as data', 'ODESolver': 'Numerical ordinary differential equation solver (e.g., Runge-Kutta)', '\\\\phi_n, \\\\phi_e': 'Neural network approximations to node and edge dynamics, respectively'}",
+      "assumptions": "Observations follow a deterministic dynamical system corrupted by additive Gaussian noise; the noise variance is constant across time and nodes.",
+      "breakdown_regime": "Outliers or heavy-tailed noise violate the Gaussian assumption, degrading trajectory reconstruction quality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "For GSI, denoised trajectories become posterior predictive distributions of team ratings over time. For GSE, they serve as clean training signals for reinforcement learning agents to learn optimal playbooks.",
+        "source_operator": "w3_denoised_interpolated_trajectories",
+        "telemetry": "Root mean squared error (RMSE) on holdout test sets; visual inspection of smoothness and consistency with ground truth dynamics; computational runtime per trajectory sample."
+      }
+    },
+    {
+      "primitive_id": "coordination_metric",
+      "name": "Coordination Metric",
+      "verbatim_quote": "- **Ablations (Table 4):** removing interpolation drops recovery 1.0 → 0.81/0.86; removing coordination drops it to 0.31/0.47 — coordination is the bigger contributor.",
+      "page": 2,
+      "latex": "d(F) = \\sum\\|F - \\hat{F}\\|^2, \\quad d(G) = \\sum\\|G - \\hat{G}\\|^2",
+      "symbol_and_unit_ledger": "{'F': 'node dynamics function, dimensionless', 'G': 'edge dynamics function, dimensionless', '\\\\hat{F}': 'estimated node dynamics, dimensionless', '\\\\hat{G}': 'estimated edge dynamics, dimensionless'}",
+      "assumptions": "Node and edge dynamics are estimated via least-squares minimization; universality of G across edges.",
+      "breakdown_regime": "Failure occurs when estimation error exceeds threshold or data sparsity prevents convergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic model fitting by minimizing divergence between true and inferred symbolic expressions.",
+        "source_operator": "coordination_metric",
+        "telemetry": "Recovery probability and MSE of simulated trajectories."
+      }
+    },
+    {
+      "primitive_id": "pind_supervision",
+      "name": "PIND Supervision",
+      "verbatim_quote": "PIND supervision: raw trajectories; GP supervision: interpolated trajectories + neural references.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Raw trajectory data is sufficient for PIND; interpolated trajectories enhance GP learning.",
+      "breakdown_regime": "Performance degrades with high noise or irregular sampling intervals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to derive symbolic models from noisy time-series using kernel-based interpolation.",
+        "source_operator": "pind_supervision",
+        "telemetry": "Accuracy of recovered symbolic expressions under varying SNR and Δt."
+      }
+    },
+    {
+      "primitive_id": "recovery_probability",
+      "name": "Recovery Probability",
+      "verbatim_quote": "Numerical results / baselines - **Recovery probability: PI-NDSR = 1.00 in all 8 settings** (Table 3).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{rec}}': 'probability of correct skeleton recovery, dimensionless'}",
+      "assumptions": "Synthetic testbeds provide ground truth for validation; recovery defined as correct skeleton identification.",
+      "breakdown_regime": "Degrades when signal-to-noise ratio falls below critical threshold or Δt increases beyond tolerance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's confidence calibration for model selection based on empirical validation.",
+        "source_operator": "recovery_probability",
+        "telemetry": "Correct skeleton identification rate across synthetic datasets."
+      }
+    },
+    {
+      "primitive_id": "mse_error",
+      "name": "Mean Squared Error",
+      "verbatim_quote": "- **MSE (×10-2, correct skeletons only):** PI-NDSR lowest everywhere, e.g.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'MSE': 'mean squared error, normalized units'}",
+      "assumptions": "Error computed only for correctly identified skeletons; normalized scaling applies.",
+      "breakdown_regime": "Increases with increasing noise or poor model fit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to quantify fidelity of simulated trajectories against real-world data.",
+        "source_operator": "mse_error",
+        "telemetry": "Normalized MSE of simulated trajectories for valid skeletons."
+      }
+    },
+    {
+      "primitive_id": "intrinsic_team_dynamics_f",
+      "name": "Intrinsic Team Dynamics",
+      "verbatim_quote": "PI-NDSR's decomposition maps exactly: **F = intrinsic team dynamics** (form/momentum decay, rest recovery, injury drag — how a team's latent strength evolves by itself) and **G = matchup interaction dynamics** (how opponent strength modulates your effective output — the symbolic form of \"styles make fights\").",
+      "page": 3,
+      "latex": "F = \\frac{d}{dt}x_v(t) = f_{\\text{form}}, f_{\\text{momentum}}, f_{\\text{rest}}, f_{\\text{injury}}",
+      "symbol_and_unit_ledger": "{'x_v(t)': 'latent team strength (dimensionless)', 't': 'time (weeks)', 'f_{\\\\text{form}}': 'form influence (dimensionless)', 'f_{\\\\text{momentum}}': 'momentum decay rate (week⁻¹)', 'f_{\\\\text{rest}}': 'recovery rate (week⁻¹)', 'f_{\\\\text{injury}}': 'injury impact (dimensionless)'}",
+      "assumptions": "Team strength evolves deterministically based on internal factors; external influences are modeled separately.",
+      "breakdown_regime": "When injury drag dominates, F approaches zero; when momentum is high, F increases linearly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "F represents the autonomous evolution of team strength without opponent influence, used in GSE's state transition function.",
+        "source_operator": "intrinsic_team_dynamics_f",
+        "telemetry": "Correlation between denoised F̂ and raw weekly strength metrics."
+      }
+    },
+    {
+      "primitive_id": "matchup_interaction_dynamics_g",
+      "name": "Matchup Interaction Dynamics",
+      "verbatim_quote": "s weeks are regular, so this limitation doesn't bite GSE.",
+      "page": 3,
+      "latex": "G = g_{\\text{opp}} \\cdot (s_{\\text{opp}} - s) \\cdot \\text{home}",
+      "symbol_and_unit_ledger": "{'g_{\\\\text{opp}}': 'opponent modulation factor (dimensionless)', 's_{\\\\text{opp}}': 'opponent strength (dimensionless)', 's': 'team strength (dimensionless)', 'home': 'home advantage indicator (0 or 1)'}",
+      "assumptions": "Interaction effects scale with opponent strength differential and home field advantage.",
+      "breakdown_regime": "When s ≈ s_{\\text{opp}}, G approaches zero; when s >> s_{\\text{opp}}, G becomes negative.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "G captures how matchup context modifies effective team performance, integrated into GSE's dynamic edge weights.",
+        "source_operator": "matchup_interaction_dynamics_g",
+        "telemetry": "Accuracy of predicted outcome differences relative to baseline strength models."
+      }
+    },
+    {
+      "primitive_id": "network_ode_denoiser_pind",
+      "name": "Graph Neural ODE Denoiser",
+      "verbatim_quote": "Train PIND-style denoiser: encoder MLP + graph-ODE with φn (intrinsic) and φe (matchup) MLPs on 2015–2024 weekly data → denoised team-strength trajectories + neural references F̂, Ĝ.",
+      "page": 3,
+      "latex": "\\frac{dx_v}{dt} = \\phi_n(x_v, \\mathcal{N}(x)) + \\phi_e(e_{uv})",
+      "symbol_and_unit_ledger": "{'x_v': 'node state vector (team strength)', 't': 'time (weeks)', '\\\\mathcal{N}(x)': 'neighborhood aggregation (network context)', '\\\\phi_n': 'intrinsic dynamics MLP', '\\\\phi_e': 'edge interaction MLP'}",
+      "assumptions": "Trajectories can be reconstructed from noisy inputs using learned intrinsic and interaction functions.",
+      "breakdown_regime": "Denoising fails if correlation between raw and denoised trajectories drops below 0.9.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "PIND's denoising process mirrors GSE’s trajectory smoothing but with explicit network structure.",
+        "source_operator": "network_ode_denoiser_pind",
+        "telemetry": "Mean absolute error between denoised and actual team strength series."
+      }
+    },
+    {
+      "primitive_id": "coordinated_gp_evolution",
+      "name": "Coordinated Genetic Programming Evolution",
+      "verbatim_quote": "Coordinated GP (gplearn, two populations): evolve F-population or G-population per the distance-to-reference rule (Eq.",
+      "page": 3,
+      "latex": "\\min_{\\theta_F} \\mathbb{E}[||F - \\hat{F}||^2], \\quad \\min_{\\theta_G} \\mathbb{E}[||G - \\hat{G}||^2]",
+      "symbol_and_unit_ledger": "{'\\\\theta_F': 'intrinsic model parameters', '\\\\theta_G': 'interaction model parameters', '\\\\hat{F}, \\\\hat{G}': 'neural approximations of F and G'}",
+      "assumptions": "Separate evolution of F and G populations improves generalization compared to joint optimization.",
+      "breakdown_regime": "If either population diverges beyond acceptable thresholds, coordination fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GP evolution aligns with GSE’s symbolic regression framework, optimizing for interpretability and accuracy.",
+        "source_operator": "coordinated_gp_evolution",
+        "telemetry": "Distance from evolved equations to reference F̂ and Ĝ values."
+      }
+    },
+    {
+      "primitive_id": "49be67b8aefe3325_w3_g1",
+      "name": "2172-neural-symbolic-regression-complex-ne Ch.4 Grounded Operator",
+      "verbatim_quote": "4 jointly with season-specific initial node states. Then test *transfer*: freeze the discovered symbolic F/G from",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be67b8aefe3325_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be67b8aefe3325_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49be67b8aefe3325_w3_g2",
+      "name": "2172-neural-symbolic-regression-complex-ne Ch.4 Grounded Operator",
+      "verbatim_quote": "evaluate 2024–2025 without refitting constants — if the equations transfer with < 5% MAE degradation, GSE",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be67b8aefe3325_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be67b8aefe3325_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "49be67b8aefe3325_w3_g3",
+      "name": "2172-neural-symbolic-regression-complex-ne Ch.4 Grounded Operator",
+      "verbatim_quote": "genuinely universal laws of team dynamics rather than season-specific fits, which is the strongest possible validation",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 49be67b8aefe3325_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "49be67b8aefe3325_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "49be67b8aefe3325_t0",
+      "think": "ADAPT integrates three pillars: physics-aware neural ODEs for robust denoising, symbolic regression for interpretable laws, and coordinated co-evolution to avoid overfitting/underfitting traps. This framework directly addresses NFL's complex, multi-agent network dynamics where each team's state depends on opponent matchups. By separating node (team ability) and edge (interaction strength) dynamics, ADAPT can uncover hidden strategic equilibria and predict emergent phenomena like momentum shifts or playoff bubbles. The methodological novelty lies in its dual-timescale approach: neural nets operate continuously while symbolic expressions evolve discretely, creating a seamless bridge between continuous-time control theory and discrete algebraic discovery. Window 1 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing coaches may exploit predictable symbolic patterns if they recognize the underlying equations governing team performance. Conversely, ADAPT can model an opponent's decision-making process as a dynamic game, predicting their strategy adjustments in real-time. Theory of Mind (Window 1): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "To prevent anti-collinearity, ensure that latent node representations are orthogonal to edge features. Leakage occurs when edge dynamics leak information about past node states; use causal masking in the neural ODE architecture to enforce temporal precedence. Cross-Layer Veto (Window 1): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "49be67b8aefe3325_t1",
+      "think": "This chapter introduces PI-NDSR, a neural-symbolic regression framework that jointly learns node dynamics F and edge dynamics G from noisy temporal network data. The method leverages a universal assumption that G is shared across edges, which enables generalization across different graph structures. It employs two supervision modes—PIND using raw trajectories and GP using interpolated data—to improve robustness. Validation uses synthetic benchmarks with 8 configurations (4 dynamics × 2 graphs), evaluating both recovery probability and mean squared error of simulated trajectories. Results show superior performance over baselines like TP-SINDy and SINDy, especially in handling noise and irregular sampling intervals. Ablation studies confirm that coordination between F and G significantly improves recovery rates compared to interpolation alone. The H1N1 application demonstrates physical consistency in derived equations, contrasting with non-physical outputs from competing methods. This work establishes a principled approach to uncovering dynamical laws from complex systems. Window 2 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in symbolic regression techniques such as SINDy and its extensions, building upon prior work in neural ODEs and graph signal processing to address limitations in dynamic system discovery. Retrocausal Genealogy (Window 2): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include traditional symbolic learners (e.g., SINDy) that struggle with parametric edge dynamics and lack robustness to noise, versus PI-NDSR which integrates neural approximation with symbolic inference for enhanced accuracy and adaptability. Theory of Mind (Window 2): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced through distinct roles of F and G in governing node and edge evolution respectively. Leakage is mitigated by ensuring that each component's fitness is evaluated independently, avoiding conflating errors in one domain with another. Cross-Layer Veto (Window 2): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "49be67b8aefe3325_t2",
+      "think": "Chapter 3 introduces PI-NDSR, a methodological framework combining neural-symbolic regression with complex network dynamics to model NFL team behavior. It proposes decomposing team strength evolution into intrinsic (F) and interaction (G) components, addressing limitations in current GSE implementations where teams are treated independently rather than as part of a network. The approach leverages graph ODEs and denoising techniques to extract clean temporal signals from noisy weekly data. This enables more accurate forecasting by separating deterministic internal dynamics from stochastic external interactions. Coordinated genetic programming ensures both components are optimized simultaneously without overfitting. The framework also suggests future extensions such as time-varying edges and cross-seasonal transfer learning, which could enhance adaptability to changing conditions. Window 3 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon prior work in symbolic regression and graph neural networks, this chapter extends earlier efforts in modeling team dynamics by introducing a principled decomposition and leveraging modern ML architectures for temporal signal processing. Retrocausal Genealogy (Window 3): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Modeling opposing agents requires understanding how each team's intrinsic state interacts with others' strengths, capturing strategic depth through dynamic network representations and symbolic rules derived from empirical data. Theory of Mind (Window 3): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity checks ensure F and G do not redundantly encode similar information. Leakage vetoes prevent spurious correlations between denoised trajectories and raw data, ensuring that the model adds value beyond simple smoothing. Cross-Layer Veto (Window 3): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "49be67b8aefe3325_t3",
+      "think": "Window 4 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 2172-neural-symbolic-regression-complex-network-dynamics (49be67b8aefe3325, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

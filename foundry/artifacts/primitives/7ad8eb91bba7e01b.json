@@ -1,0 +1,173 @@
+{
+  "book_id": "7ad8eb91bba7e01b",
+  "source_status": "COMPLETE",
+  "title": "BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests",
+  "file_name": "BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests.md",
+  "sha256": "7ad8eb91bba7e01bd03214e4ee483e7918054e3d9bed380dc882e366ceb3cf31",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Roster truth as a structured data manifold with canonical fact embeddings, where player attributes form a fiber bundle over temporal evidence layers. Roster fact verification as a Bayesian belief update over source evidence, constrained by rollback invariants and conflict resolution.",
+  "gsi_mapping": "Bayesian belief updates on roster facts using conformal predictive distributions over canonical fact likelihoods, conditioned on source freshness and reconciliation confidence. GSI models roster facts as conformal predictive distributions over source evidence; each fact's posterior is updated via likelihood ratios, conditioned on freshness and conflict signals.",
+  "gse_mapping": "Situational reasoning engine maps player state transitions through truth layer validations, applying state-action reward functions to resolve conflict resolution paths in real-time. GSE encodes state transitions of roster facts using temporal logic kernels; each transition is gated by rollback eligibility and evidence freshness constraints.",
+  "primitives": [
+    {
+      "primitive_id": "roster_truth_fiber_bundle",
+      "name": "Roster Truth Fiber Bundle",
+      "verbatim_quote": "# BUILD-NRT-057: Najee Harris and Rico Dowdle dynamic smoke tests ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-071 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'fiber bundle over roster facts', 'B': 'base space of time-indexed evidence layers', 'π': 'projection map from F to B'}",
+      "assumptions": "Player attributes are embedded in a topological fiber structure with temporal coherence.",
+      "breakdown_regime": "When evidence layers become inconsistent or stale beyond threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI belief states correspond to fiber sections; GSE state transitions align with fiber evolution under validation constraints.",
+        "source_operator": "roster_truth_fiber_bundle",
+        "telemetry": "Evidence consistency score across time slices"
+      }
+    },
+    {
+      "primitive_id": "canonical_fact_validation",
+      "name": "Canonical Fact Validation",
+      "verbatim_quote": "## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'validation function over canonical facts', 'C': 'set of canonical facts', 'T': 'temporal evidence set'}",
+      "assumptions": "Each fact can be validated independently within a temporal context.",
+      "breakdown_regime": "Upon detection of stale or conflicting canonical facts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses V to compute posterior probabilities of fact validity; GSE applies V to trigger corrective action sequences.",
+        "source_operator": "canonical_fact_validation",
+        "telemetry": "Number of resolved conflicts per validation cycle"
+      }
+    },
+    {
+      "primitive_id": "reconciliation_conflict_resolution",
+      "name": "Reconciliation Conflict Resolution",
+      "verbatim_quote": "## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'reconciliation operator', 'O': 'official data source', 'F': 'fallback data source', 'C': 'conflict indicator function'}",
+      "assumptions": "Official sources have precedence unless contradicted by newer evidence.",
+      "breakdown_regime": "When multiple data sources yield contradictory facts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes conflict weights via R; GSE executes resolution protocols based on C outputs.",
+        "source_operator": "reconciliation_conflict_resolution",
+        "telemetry": "Conflict resolution latency and accuracy rate"
+      }
+    },
+    {
+      "primitive_id": "evidence_snapshot_storage",
+      "name": "Evidence Snapshot Storage",
+      "verbatim_quote": "Store raw source snapshots with timestamp, URL, hash, parsed record count, parser version, and evidence IDs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'snapshot structure', 't': 'timestamp', 'u': 'URL reference', 'h': 'hash digest', 'n': 'parsed record count', 'v': 'parser version', 'I': 'evidence ID'}",
+      "assumptions": "Snapshots are immutable and uniquely identified by metadata.",
+      "breakdown_regime": "Upon ingestion of new data streams or reprocessing events.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI stores S as probabilistic evidence nodes; GSE treats S as deterministic state checkpoints.",
+        "source_operator": "evidence_snapshot_storage",
+        "telemetry": "Snapshot integrity check success rate"
+      }
+    },
+    {
+      "primitive_id": "source_evidence_design",
+      "name": "Source Evidence Design",
+      "verbatim_quote": "- Every roster fact touched by the build has source evidence design.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'roster fact (dimensionless)', 'E': 'source evidence (dimensionless)', 'D': 'design constraint (dimensionless)'}",
+      "assumptions": "Each F is associated with E such that D(F,E) = true.",
+      "breakdown_regime": "When D(F,E) fails, F is marked stale or invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's Bayesian updating of F given E mirrors GSE's state transition kernel for F under E.",
+        "source_operator": "source_evidence_design",
+        "telemetry": "Evidence coverage ratio and stale fact count"
+      }
+    },
+    {
+      "primitive_id": "smoke_test_regression",
+      "name": "Smoke Test Regression",
+      "verbatim_quote": "Regression: Najee Harris and Rico Dowdle smoke tests compare rendered facts against current source evidence fixtures, not hardcoded replacement teams.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'rendered fact (dimensionless)', 'S': 'source fixture (dimensionless)', 'T': 'test threshold (dimensionless)'}",
+      "assumptions": "R(S) ≈ S when T(R,S) < ε.",
+      "breakdown_regime": "When T(R,S) ≥ ε, regression detected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's test kernel evaluates R against S using a fixed tolerance; GSI's kernel computes likelihood of S given R.",
+        "source_operator": "smoke_test_regression",
+        "telemetry": "Test pass/fail rate and fixture mismatch count"
+      }
+    },
+    {
+      "primitive_id": "rollback_invariant",
+      "name": "Rollback Invariant",
+      "verbatim_quote": "## Rollback Plan Remove new disabled script/types/docs, delete generated fixtures, and leave existing production data untouched.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'invariant (dimensionless)', 'P': 'production data (dimensionless)', 'N': 'new artifact (dimensionless)'}",
+      "assumptions": "I(N,P) = true implies N ⊆ P.",
+      "breakdown_regime": "When I(N,P) fails, rollback initiated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's rollback invariant ensures N does not mutate P; GSI's invariant ensures no stale facts propagate into P.",
+        "source_operator": "rollback_invariant",
+        "telemetry": "Artifact deletion count and data integrity score"
+      }
+    },
+    {
+      "primitive_id": "trust_conflict_resolution",
+      "name": "Trust Conflict Resolution",
+      "verbatim_quote": "Primary trust risk is making a stale or conflicted fact look confirmed.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'conflict signal (dimensionless)', 'T': 'trust level (dimensionless)', 'S': 'stale signal (dimensionless)'}",
+      "assumptions": "T(C,S) < 0.5 implies fact is stale or conflicted.",
+      "breakdown_regime": "When T(C,S) ≤ 0.5, fact rendering blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's conflict kernel evaluates C and S to block rendering; GSI's trust kernel computes confidence of fact validity.",
+        "source_operator": "trust_conflict_resolution",
+        "telemetry": "Conflict detection rate and stale fact rendering delay"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7ad8eb91bba7e01b_t0",
+      "think": "The foundational logic of BUILD-NRT-057 centers on the necessity of maintaining a coherent, truth-layered roster system within the NFL domain. This requires a dual approach: ensuring that each player's attributes—team, number, status, role—are consistently represented across all data interfaces, while also enabling robust reconciliation and validation mechanisms. The core insight is that roster truth is not merely a static database entry but a dynamic, evolving fiber bundle of canonical facts. Each fact must be validated against temporal evidence, reconciled with competing sources, and stored with sufficient provenance to allow retroactive auditing. The system must support both internal decision-making (e.g., GSE state transitions) and external trust (e.g., GSI probabilistic inference). The challenge lies in scaling this truth maintenance without introducing redundancy or inconsistency. The solution involves leveraging existing generic freshness and data quality cards (BUILD-071) while extending them with specific roster-level rules. This extension ensures that the system remains modular yet unified, allowing for future expansion into other domains such as coaching staff or injury tracking. The use of canonical facts as the basis for validation implies a formalized logical framework where each assertion is either confirmed or rejected based on evidence weight and temporal precedence. The integration of source snapshots with metadata enables full auditability, which is essential for maintaining trust in automated systems.\n\nFull-book synthesis across 2/2 pages of BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b): [roster_truth_fiber_bundle p.1]: # BUILD-NRT-057: Najee Harris and Rico Dowdle dynamic smoke tests ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-071 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules. (GSI belief states correspond to fiber sections; GSE state transitions align with fiber evolution under validation constraints.) [canonical_fact_validation p.1]: ## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented. (GSI uses V to compute posterior probabilities of fact validity; GSE applies V to trigger corrective action sequences.) [reconciliation_conflict_resolution p.1]: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. (GSI computes conflict weights via R; GSE executes resolution protocols based on C outputs.) [evidence_snapshot_storage p.1]: Store raw source snapshots with timestamp, URL, hash, parsed record count, parser version, and evidence IDs. (GSI stores S as probabilistic evidence nodes; GSE treats S as deterministic state checkpoints.) [source_evidence_design p.2]: - Every roster fact touched by the build has source evidence design. (GSI's Bayesian updating of F given E mirrors GSE's state transition kernel for F under E.) [smoke_test_regression p.2]: Regression: Najee Harris and Rico Dowdle smoke tests compare rendered facts against current source evidence fixtures, not hardcoded replacement teams. (GSE's test kernel evaluates R against S using a fixed tolerance; GSI's kernel computes likelihood of S given R.) [rollback_invariant p.2]: ## Rollback Plan Remove new disabled script/types/docs, delete generated fixtures, and leave existing production data untouched. (GSE's rollback invariant ensures N does not mutate P; GSI's invariant ensures no stale facts propagate into P.) [trust_conflict_resolution p.2]: Primary trust risk is making a stale or conflicted fact look confirmed. (GSE's conflict kernel evaluates C and S to block rendering; GSI's trust kernel computes confidence of fact validity.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 2/2 pages of BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b): [roster_truth_fiber_bundle p.1]: # BUILD-NRT-057: Najee Harris and Rico Dowdle dynamic smoke tests ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-071 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules. (GSI belief states correspond to fiber sections; GSE state transitions align with fiber evolution under validation constraints.) [canonical_fact_validation p.1]: ## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented. (GSI uses V to compute posterior probabilities of fact validity; GSE applies V to trigger corrective action sequences.) [reconciliation_conflict_resolution p.1]: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. (GSI computes conflict weights via R; GSE executes resolution protocols based on C outputs.) [evidence_snapshot_storage p.1]: Store raw source snapshots with timestamp, URL, hash, parsed record count, parser version, and evidence IDs. (GSI stores S as probabilistic evidence nodes; GSE treats S as deterministic state checkpoints.) [source_evidence_design p.2]: - Every roster fact touched by the build has source evidence design. (GSI's Bayesian updating of F given E mirrors GSE's state transition kernel for F under E.) [smoke_test_regression p.2]: Regression: Najee Harris and Rico Dowdle smoke tests compare rendered facts against current source evidence fixtures, not hardcoded replacement teams. (GSE's test kernel evaluates R against S using a fixed tolerance; GSI's kernel computes likelihood of S given R.) [rollback_invariant p.2]: ## Rollback Plan Remove new disabled script/types/docs, delete generated fixtures, and leave existing production data untouched. (GSE's rollback invariant ensures N does not mutate P; GSI's invariant ensures no stale facts propagate into P.) [trust_conflict_resolution p.2]: Primary trust risk is making a stale or conflicted fact look confirmed. (GSE's conflict kernel evaluates C and S to block rendering; GSI's trust kernel computes confidence of fact validity.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in prior work on data freshness and player surface integrity (BUILD-071), this primitive extends the concept of truth maintenance to include explicit roster-level validation and reconciliation protocols. Retrocausal Genealogy (Window 1): Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include data sources with varying degrees of reliability, internal systems prone to stale data, and external stakeholders requiring consistent information. Coaches and analysts rely on accurate roster data for strategic planning, while customers depend on it for content relevance and trust. Theory of Mind (Window 1): Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that GSI and GSE operate on orthogonal aspects of the same data: GSI focuses on probabilistic inference, while GSE handles deterministic state transitions. Leakage is prevented by strictly separating truth layer operations from action execution. Cross-Layer Veto (Window 1): Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7ad8eb91bba7e01b_t1",
+      "think": "This chapter window formalizes a dynamic smoke testing protocol for roster facts, anchored in source evidence design and rollback invariants. The core idea is to model each roster fact as a probabilistic assertion over its source evidence, where truth is determined by consistency with current fixtures rather than static replacements. The regression test acts as a fidelity check, ensuring rendered facts align with live evidence. A rollback invariant ensures no production artifacts are mutated, preserving system stability. Trust resolution introduces a conflict-aware mechanism to prevent stale or conflicting facts from appearing valid. These primitives form a layered epistemic structure: GSI handles probabilistic verification, GSE governs operational state transitions, and both are bound by shared invariants and rollback semantics. This architecture supports robustness against adversarial inputs while maintaining traceability and auditability. Window 2 Synthesis: Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in prior work on Bayesian fact-checking and rollback-safe deployment models, this framework extends earlier protocols by integrating real-time evidence validation and conflict-aware rendering. Retrocausal Genealogy (Window 2): Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The agent assumes a hostile environment where facts may be stale or conflicting. It models opposing forces as evidence inconsistencies and conflict signals, requiring dual-layer validation to ensure truthfulness. Theory of Mind (Window 2): Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring GSI's probabilistic updates do not overlap with GSE's deterministic state transitions. Leakage is prevented by isolating rollback paths from evidence computation. Cross-Layer Veto (Window 2): Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in BUILD-NRT-057-najee-harris-and-rico-dowdle-dynamic-smoke-tests (7ad8eb91bba7e01b, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}
