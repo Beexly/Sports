@@ -574,3 +574,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 02:55:00 | COMPLETE | 2ec2fac5565ea22e | primitives=29 think_words=852
 - 2026-11-14 02:56:18 | CLAIMED | 0cfba67fa65f80c7 | worker=hermes-inline shard03 file=2023 - Learning Contextual Event Embeddings to Predict Player Performance in the MLB - Heaton et al.pdf
 - 2026-11-14 03:00:00 | COMPLETE | 0cfba67fa65f80c7 | primitives=28 think_words=858
+- 2026-11-14 03:00:54 | CLAIMED | 2c9d78295a2595e6 | worker=hermes-inline shard03 file=2024 - Noisy Judgments A probability surface-based analysis of umpiring variability - Unknown Authors.pdf
+- 2026-11-14 03:06:01 | COMPLETE | 2c9d78295a2595e6 | primitives=27 think_words=875
