@@ -492,3 +492,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 21:58:59 | COMPLETE | 2f6519fb02638641 | primitives=19 think_words=1000
 - 2026-11-13 22:02:31 | CLAIMED | 04f950c125db1a46 | worker=hermes-inline file=2013 To Crash or Not To Crash A quantitative look at the relationship between offensive rebounding and transition defense in the NBA.pdf
 - 2026-11-13 22:06:06 | COMPLETE | 04f950c125db1a46 | primitives=19 think_words=949
+- 2026-11-13 22:09:41 | CLAIMED | 4b1d7c9ef440e2b1 | worker=hermes-inline file=2014 Pointwise Predicting Points and Valuing Decisions.pdf
+- 2026-11-13 22:18:07 | COMPLETE | 4b1d7c9ef440e2b1 | primitives=22 think_words=982
