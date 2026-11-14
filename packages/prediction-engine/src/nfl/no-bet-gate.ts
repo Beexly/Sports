@@ -103,7 +103,7 @@ if (!Number.isFinite(jointSimProb) || !Number.isFinite(bookParlayImpliedProb) ||
   if (structuralContradiction(legs) && !(edge >= JOINT_EDGE && lower > bookParlayImpliedProb)) {
     return { publishAllowed: false, decision: "PASS", reason: "SGP_STRUCTURAL_CONTRADICTION", wilsonLower90: lower };
   }
-  if (!(edge >= JOINT_EDGE && lower > bookParlayImpliedProb) { return { publishAllowed: false, decision: "PASS", reason: "INSUFFICIENT_JOINT_WILSON_EDGE", wilsonLower90: lower }; }
+  if (!(edge >= JOINT_EDGE && lower > bookParlayImpliedProb)) { return { publishAllowed: false, decision: "PASS", reason: "INSUFFICIENT_JOINT_WILSON_EDGE", wilsonLower90: lower }; }
   return { publishAllowed: true, decision: "SPEAK", reason: "PARLAY_CONJUNCTION_PASS", wilsonLower90: lower };
 }
 
