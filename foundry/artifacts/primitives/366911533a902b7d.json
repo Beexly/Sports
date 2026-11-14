@@ -1,0 +1,829 @@
+{
+  "book_id": "366911533a902b7d",
+  "source_status": "COMPLETE",
+  "source_note": "Yoav Goldberg, A Primer on Neural Network Models for Natural Language Processing. The local file is the author's manuscript draft as of October 5, 2015 (the draft states this date and points to the author's page for the up-to-date version); the work was published in final form in 2017 as Neural Network Methods for Natural Language Processing, Synthesis Lectures on Human Language Technologies, Morgan & Claypool. Catalog corrections: the tasking named the file Goldberg-2017-NeuralNetworkMethodsForNLP-Primer.pdf; the actual local file is Goldberg-2017-NeuralNetworkMethodsForNLP-PrimerDraft.pdf in books-d-models, and its content is the 2015 draft, not the final 2017 text. Local PDF: 718508 bytes; sha256 over (str(size) encoded + full file bytes) = 366911533a902b7d659a6237ad1ca74dbb7dfcc8ab5ce21e45ab2014a3100132; book_id is the first 16 hex characters of that digest. Text quality: clean born-digital extraction (227381 chars, 3490 lines); prose is reliable, while displayed equations are partially garbled in the extraction, so every verbatim quote below was chosen from clean prose passages and proven contiguous in the extracted text, and each LaTeX field transcribes the equation as printed in the work. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "dense_embeddings_generalization",
+      "name": "Dense feature embeddings generalize by sharing statistical strength between similar features",
+      "verbatim_quote": "The main benefit of the dense representations is in generalization power: if we believe some features may provide similar clues, it is worthwhile to provide a representation that is able to capture these similarities.",
+      "page": "Section 3, printed p. 6",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Feature similarity relevant to the task exists and can be captured geometrically",
+        "Embedding vectors are trained or pre-trained so that similar features end up close"
+      ],
+      "breakdown_regime": "Fails when features are truly independent or when similarity in the embedding space reflects a different notion than the task needs; the book notes one-hot remains reasonable for small, uncorrelated feature sets.",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine entities (players, teams, situations) are embedded as dense vectors so evidence about a frequent entity transfers to rare but similar entities, instead of each entity being an isolated dimension.",
+        "source_operator": "dense_embeddings_generalization",
+        "telemetry": "Per-entity event counts and co-occurrence statistics from game logs used to judge which entities should share strength"
+      }
+    },
+    {
+      "primitive_id": "cbow_fixed_size_encoding",
+      "name": "Continuous bag of words: a variable number of features is encoded as the sum or average of their embedding vectors",
+      "verbatim_quote": "The CBOW is very similar to the traditional bag-of-words representation in which we discard order information, and works by either summing or averaging the embedding vectors of the corresponding features",
+      "page": "Section 3, printed p. 7",
+      "latex": "\\mathrm{CBOW}(f_1, \\ldots, f_k) = \\frac{1}{k} \\sum_{i=1}^{k} v(f_i)",
+      "symbol_and_unit_ledger": {
+        "f_i": "the i-th core feature in the input set",
+        "v(f_i)": "embedding vector of feature f_i, dimension d",
+        "k": "number of features in the input, unbounded"
+      },
+      "assumptions": [
+        "Order of the features carries no task-relevant information",
+        "All feature embeddings share the same dimensionality"
+      ],
+      "breakdown_regime": "Discards order completely, so it cannot distinguish inputs that differ only in arrangement; the book's weighted variant (weights such as TF-IDF, normalized by the weight sum) only reweights the same orderless pool.",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A set-valued input of any size (for example all players on the floor in a possession) is pooled into one fixed width vector by averaging member embeddings, giving downstream layers a stable input shape.",
+        "source_operator": "cbow_fixed_size_encoding",
+        "telemetry": "Variable length entity sets per event from play-by-play logs"
+      }
+    },
+    {
+      "primitive_id": "core_features_no_manual_combinations",
+      "name": "Only core features are specified; the network's non-linearity is expected to discover the useful feature combinations",
+      "verbatim_quote": "One of the promises of the non-linear neural network models is that one needs to define only the core features.",
+      "page": "Section 3, printed p. 8",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The network has enough capacity and training data to find the interactions",
+        "Core features are chosen to contain the raw signals from which interactions are built"
+      ],
+      "breakdown_regime": "The promise is empirical, not guaranteed; the book contrasts kernel methods, which also automate combinations but whose classification cost scales linearly with training set size, making them too slow for large data. The book likewise treats numeric inputs such as distances as binned embedding lookups rather than raw scalars.",
+      "domain": "feature engineering",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feature design for the engine stops at atomic, well defined signals; interaction discovery is delegated to the learned model rather than hand enumerated conjunction lists.",
+        "source_operator": "core_features_no_manual_combinations",
+        "telemetry": "Atomic per-event feature inventory from tracking and play-by-play feeds"
+      }
+    },
+    {
+      "primitive_id": "mlp1_architecture",
+      "name": "One-layer MLP: an affine map, an element-wise non-linearity, and a second affine map",
+      "verbatim_quote": "Here W1 and b1 are a matrix and a bias term for the first linear transformation of the input, g is a non-linear function that is applied element-wise (also called a non-linearity or an activation function), and W2 and b2 are the matrix and bias term for a second linear transform.",
+      "page": "Section 4, printed p. 12",
+      "latex": "NN_{MLP1}(x) = g(xW_1 + b_1)W_2 + b_2",
+      "symbol_and_unit_ledger": {
+        "x": "input row vector, dimension d_in",
+        "W_1, b_1": "first layer weight matrix (d_in by d_1) and bias vector (d_1)",
+        "g": "element-wise non-linear activation function",
+        "W_2, b_2": "second layer weight matrix (d_1 by d_2) and bias vector (d_2)"
+      },
+      "assumptions": [
+        "Without the non-linearity g the network can only represent linear transformations of the input, as the book states explicitly",
+        "Vectors are row vectors by the book's convention"
+      ],
+      "breakdown_regime": "A fixed architecture with modest hidden sizes may underfit sharp interactions; deeper variants (MLP2 and beyond) add layers but inherit non-convex training difficulty.",
+      "domain": "network architecture",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's default scoring head is an MLP over concatenated embeddings: one hidden non-linear layer is the reference implementation against which deeper heads must prove themselves.",
+        "source_operator": "mlp1_architecture",
+        "telemetry": "Fixed width feature vectors assembled per prediction instance"
+      }
+    },
+    {
+      "primitive_id": "universal_approximation_mlp1",
+      "name": "MLP1 is a universal approximator, but the theorem guarantees existence, not learnability",
+      "verbatim_quote": "it was shown by (Hornik, Stinchcombe, & White, 1989; Cybenko, 1989) that MLP1 is a universal approximator – it can approximate with any desired non-zero amount of error a family of functions",
+      "page": "Section 4.1, printed p. 13",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At least one hidden layer with a squashing activation and a linear output layer",
+        "The target is a continuous function on a closed bounded set, or a map between finite dimensional discrete spaces"
+      ],
+      "breakdown_regime": "The result does not state how large the hidden layer must be, nor that backpropagation with stochastic gradient descent on finite data will find the approximating parameters; the book says this explicitly.",
+      "domain": "learning theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Capacity arguments in engine design may cite universal approximation only as an existence floor; promotion of an architecture still requires measured out-of-sample performance.",
+        "source_operator": "universal_approximation_mlp1",
+        "telemetry": "Held-out error measurements per architecture candidate"
+      }
+    },
+    {
+      "primitive_id": "relu_activation",
+      "name": "ReLU clips negative values at zero and avoids the saturation that stalls sigmoid and tanh units",
+      "verbatim_quote": "The ReLU unit clips each value x < 0 at 0. Despite its simplicity, it performs well for many tasks, especially when combined with the dropout regularization technique (see Section 6.4).",
+      "page": "Section 4.2, printed p. 14",
+      "latex": "\\mathrm{ReLU}(x) = \\max(0, x)",
+      "symbol_and_unit_ledger": {
+        "x": "scalar pre-activation value, real number"
+      },
+      "assumptions": [
+        "Element-wise application to each unit",
+        "The book's rule of thumb: ReLU works better than tanh, and tanh better than sigmoid"
+      ],
+      "breakdown_regime": "ReLU layers cannot saturate but can die: if all inputs to a unit stay negative its gradient is zero for every example; the book advises monitoring for dead units and lowering the learning rate.",
+      "domain": "network architecture",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Default hidden activation for engine networks, with dead unit monitoring as a standard training diagnostic.",
+        "source_operator": "relu_activation",
+        "telemetry": "Per-layer activation histograms logged during training runs"
+      }
+    },
+    {
+      "primitive_id": "softmax_output_distribution",
+      "name": "Softmax converts an output score vector into a discrete probability distribution over classes",
+      "verbatim_quote": "The result is a vector of non-negative real numbers that sum to one, making it a discrete probability distribution over k possible outcomes.",
+      "page": "Section 4.3, printed p. 15",
+      "latex": "\\mathrm{softmax}(x_i) = \\frac{e^{x_i}}{\\sum_{j=1}^{k} e^{x_j}}",
+      "symbol_and_unit_ledger": {
+        "x_i": "score assigned to class i, real number",
+        "k": "number of output classes"
+      },
+      "assumptions": [
+        "Used together with a probabilistic objective such as cross-entropy",
+        "The book notes the output layer's columns can themselves be read as embeddings of the output classes, so class similarity is learned; and that softmax over a network with no hidden layer is exactly multinomial logistic regression"
+      ],
+      "breakdown_regime": "Softmax probabilities are only as calibrated as the training objective and data make them; the transformation alone does not guarantee calibrated confidence.",
+      "domain": "output layer",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Multi-outcome engine predictions (for example mutually exclusive game script classes) are emitted as softmax distributions so downstream reasoning can weigh alternatives probabilistically.",
+        "source_operator": "softmax_output_distribution",
+        "telemetry": "Class frequency counts and outcome tallies from historical game logs"
+      }
+    },
+    {
+      "primitive_id": "embedding_matrix_lookup",
+      "name": "An embedding layer is a matrix whose rows are feature vectors, selected by a one-hot multiplication",
+      "verbatim_quote": "Consider a vocabulary of |V | words, each embedded as a d dimensional vector. The collection of vectors can then be thought of as a |V | × d embedding matrix E in which each row corresponds to an embedded feature.",
+      "page": "Section 4.4, printed p. 16",
+      "latex": "v(f_i) = f_i E",
+      "symbol_and_unit_ledger": {
+        "f_i": "one-hot row vector over the vocabulary, dimension |V|",
+        "E": "embedding matrix, |V| rows by d columns",
+        "v(f_i)": "the selected embedding row, dimension d"
+      },
+      "assumptions": [
+        "Efficient implementations use a hash based lookup rather than an actual one-hot multiplication, as the book notes"
+      ],
+      "breakdown_regime": "A feature never observed in training keeps an untrained row; coverage of the vocabulary by the training data bounds the quality of the table.",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every categorical engine input (player, team, venue, situation type) is stored as a row in a versioned embedding table and retrieved by lookup at inference time.",
+        "source_operator": "embedding_matrix_lookup",
+        "telemetry": "Vocabulary coverage reports: fraction of inference-time categories present in the trained table"
+      }
+    },
+    {
+      "primitive_id": "sparse_input_embedding_equivalence",
+      "name": "A sparse one-hot input layer is already an embedding lookup: it selects and sums rows of the weight matrix",
+      "verbatim_quote": "This layer selects rows of W corresponding to the input features in x and sums them, then adding a bias term.",
+      "page": "Section 4.4, printed p. 16",
+      "latex": "xW + b = \\left( \\sum_{i=1}^{k} f_i \\right) W",
+      "symbol_and_unit_ledger": {
+        "x": "sparse count vector over the feature set V",
+        "f_i": "one-hot vector of the i-th active feature",
+        "W": "first layer weight matrix, |V| rows by d columns, acting as an embedding matrix",
+        "b": "bias vector, dimension d"
+      },
+      "assumptions": [
+        "The comparison ignores the non-linear activation, as the book's derivation does"
+      ],
+      "breakdown_regime": "The equivalence is approximate in one respect the book names: a plain sparse layer forces a separate vector per feature, while an embedding layer lets related features (for example the same word in different positions) share one vector.",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Legacy sparse feature pipelines in the engine can be migrated to embedding tables without changing the model's first layer mathematics, which de-risks the migration.",
+        "source_operator": "sparse_input_embedding_equivalence",
+        "telemetry": "Side by side output comparisons between the sparse pipeline and the embedding pipeline on identical inputs"
+      }
+    },
+    {
+      "primitive_id": "hinge_loss_margin",
+      "name": "Hinge loss: zero loss only when the correct class beats the runner-up by a margin of at least 1",
+      "verbatim_quote": "In other words, the binary hinge loss attempts to achieve a correct classification, with a margin of at least 1.",
+      "page": "Section 4.5, printed p. 18",
+      "latex": "L_{hinge}^{(binary)}(\\hat{y}, y) = \\max(0, 1 - y \\cdot \\hat{y}); \\quad L_{hinge}^{(multiclass)}(\\hat{y}, y) = \\max(0, 1 - (\\hat{y}_t - \\hat{y}_k))",
+      "symbol_and_unit_ledger": {
+        "y": "true label, +1 or -1 in the binary case; one-hot vector in the multiclass case",
+        "\\hat{y}": "network output score (binary) or score vector (multiclass)",
+        "t": "index of the correct class",
+        "k": "index of the highest scoring incorrect class"
+      },
+      "assumptions": [
+        "Paired with a linear output layer, not a softmax",
+        "A hard decision rule is wanted rather than class membership probabilities, as the book states"
+      ],
+      "breakdown_regime": "Gives no probability estimates; once the margin is satisfied the loss is exactly zero, so it stops improving already correct confident predictions.",
+      "domain": "training objective",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Margin based heads are used where the engine needs a decision with a safety gap between the chosen class and the best alternative, rather than a probability.",
+        "source_operator": "hinge_loss_margin",
+        "telemetry": "Score margins between top class and runner-up logged per prediction"
+      }
+    },
+    {
+      "primitive_id": "cross_entropy_loss",
+      "name": "Categorical cross-entropy: negative log probability assigned to the true class",
+      "verbatim_quote": "For hard classification problems in which each training example has a single correct class assignment, y is a one-hot vector representing the true class.",
+      "page": "Section 4.5, printed p. 18",
+      "latex": "L_{cross\\text{-}entropy}(\\hat{y}, y) = -\\sum_i y_i \\log(\\hat{y}_i); \\quad \\text{hard case: } -\\log(\\hat{y}_t)",
+      "symbol_and_unit_ledger": {
+        "y_i": "true distribution mass on class i (0 or 1 in the hard case)",
+        "\\hat{y}_i": "predicted probability of class i after softmax",
+        "t": "index of the correct class"
+      },
+      "assumptions": [
+        "Network outputs are transformed by softmax so they form a conditional distribution",
+        "The book notes the loss then also decreases mass on all incorrect classes as the correct class gains"
+      ],
+      "breakdown_regime": "Optimizes likelihood, not calibration directly; heavy class imbalance or label noise can dominate the sum.",
+      "domain": "training objective",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Default objective for the engine's probabilistic heads, because it trains the full distribution over outcomes rather than only the top choice.",
+        "source_operator": "cross_entropy_loss",
+        "telemetry": "Per-class outcome counts and predicted probability logs for calibration review"
+      }
+    },
+    {
+      "primitive_id": "ranking_loss_pairs",
+      "name": "Margin ranking loss trains a network to score a correct item above a corrupted one by at least 1",
+      "verbatim_quote": "The objective is to score (rank) correct inputs over incorrect ones with a margin of at least 1.",
+      "page": "Section 4.5, printed p. 19",
+      "latex": "L_{ranking}^{(margin)}(x, x') = \\max(0, 1 - (NN(x) - NN(x')))",
+      "symbol_and_unit_ledger": {
+        "x": "a correct (observed) input",
+        "x'": "an incorrect input generated by corrupting x",
+        "NN(x)": "scalar score the network assigns to input x"
+      },
+      "assumptions": [
+        "Only positive examples are required; negatives are manufactured by corruption",
+        "The book's log variant replaces the hinge with log(1 + exp(-(NN(x) - NN(x'))))"
+      ],
+      "breakdown_regime": "Quality depends entirely on the corruption process: too easy negatives teach nothing, and corruptions that accidentally produce valid items inject label noise.",
+      "domain": "training objective",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine components that learn from observed events only (for example plausible versus corrupted play sequences) are trained with pairwise ranking against synthetic corruptions.",
+        "source_operator": "ranking_loss_pairs",
+        "telemetry": "Corruption type frequencies and the score gap distribution between real and corrupted items"
+      }
+    },
+    {
+      "primitive_id": "distributional_hypothesis_embeddings",
+      "name": "Unsupervised embeddings rest on the distributional hypothesis: words are similar if they appear in similar contexts",
+      "verbatim_quote": "While word similarity is hard to define and is usually very task-dependent, the current approaches derive from the distributional hypothesis (Harris, 1954), stating that words are similar if they appear in similar contexts.",
+      "page": "Section 5.3, printed p. 21",
+      "latex": "P(w|c)",
+      "symbol_and_unit_ledger": {
+        "P(w|c)": "conditional probability of word w given context c, the target modeled by language-modeling style objectives",
+        "w": "focus word",
+        "c": "context, defined by the method designer"
+      },
+      "assumptions": [
+        "Embeddings are initialized at random values and then trained on the auxiliary task",
+        "Context can be a word window, a sentence or document, a syntactic neighborhood from a parse, aligned foreign words, or sub-word units; the book stresses the choice of auxiliary problem shapes the vectors more than the learning algorithm",
+        "Character and sub-word composition is the book's answer to unknown words, since the character vocabulary is far smaller than the word vocabulary"
+      ],
+      "breakdown_regime": "Window contexts make antonyms such as hot and cold similar, because they share contexts; the book notes multilingual contexts as a corrective. Similarity learned is similarity for the auxiliary task, which may mismatch the target task.",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine embeddings for entities are trained from co-occurrence contexts in event streams; the context definition (same possession, same game, same lineup) is treated as the primary design decision because it decides what similar will mean.",
+        "source_operator": "distributional_hypothesis_embeddings",
+        "telemetry": "Co-occurrence counts of entities within defined context windows in event logs"
+      }
+    },
+    {
+      "primitive_id": "skipgram_objective",
+      "name": "Skip-gram: one auxiliary task per focus-context word pair, 2k tasks per window",
+      "verbatim_quote": "The 2k tasks approach, popularized by (Mikolov et al., 2013) is referred to as a skip-gram model.",
+      "page": "Section 5.5.1, printed p. 22",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A sliding window of 2k+1 items supplies one focus item and k context items on each side",
+        "Positional contexts, which tag each context item with its relative offset, are the book's refinement when order matters and tend to yield more syntactic similarity"
+      ],
+      "breakdown_regime": "Treating all context positions equally discards distance and direction information unless positional contexts are used.",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pairwise auxiliary tasks between an entity and each neighbor in its context window give the engine a robust, efficient embedding trainer for large event corpora.",
+        "source_operator": "skipgram_objective",
+        "telemetry": "Focus-context pair counts sampled from event windows"
+      }
+    },
+    {
+      "primitive_id": "window_size_similarity_tradeoff",
+      "name": "Embedding window size trades topical similarity (large windows) against functional and syntactic similarity (small windows)",
+      "verbatim_quote": "Larger windows tend to produce more topical similarities",
+      "page": "Section 5.5.1, printed p. 22",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The effect is reported for word embeddings from text windows",
+        "The book's examples: large windows group dog with bark and leash; small windows group Poodle with Pitbull and Rottweiler"
+      ],
+      "breakdown_regime": "It is an empirical tendency, not a law; preprocessing choices such as lemmatization, subsampling frequent items, and dynamic window sizes also move the result, as the book lists.",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Context window width in engine embedding training is tuned as a semantic dial: wide windows for topical grouping of game situations, narrow windows for functional grouping of interchangeable entities.",
+        "source_operator": "window_size_similarity_tradeoff",
+        "telemetry": "Nearest neighbor lists of trained embeddings inspected at several window widths"
+      }
+    },
+    {
+      "primitive_id": "xavier_initialization",
+      "name": "Xavier initialization samples weights uniformly with scale set by fan-in plus fan-out",
+      "verbatim_quote": "An effective scheme due to Glorot and Bengio (2010), called xavier initialization after Glorot’s first name, suggests initializing a weight matrix W ∈ Rdin ×dout as:",
+      "page": "Section 6.3, printed p. 33",
+      "latex": "W \\sim U\\left[-\\sqrt{\\frac{6}{d_{in} + d_{out}}}, +\\sqrt{\\frac{6}{d_{in} + d_{out}}}\\right]",
+      "symbol_and_unit_ledger": {
+        "W": "weight matrix of a layer, d_in rows by d_out columns",
+        "U[a, b]": "uniform distribution on the interval [a, b]",
+        "d_in, d_out": "input and output dimensionalities of the layer"
+      },
+      "assumptions": [
+        "The book also reports the He et al (2015) variant for ReLU networks: zero-mean Gaussian with standard deviation sqrt(2/d_in)",
+        "Embedding vectors are commonly initialized uniformly in [-1/(2d), 1/(2d)] in the word2vec implementation, per Section 5.1"
+      ],
+      "breakdown_regime": "Initialization scale interacts with activation choice and depth; a scheme that works for tanh layers can underperform for deep ReLU stacks, which is why the He variant exists.",
+      "domain": "optimization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "All engine weight matrices are initialized by the fan-in/fan-out rule (or its ReLU variant) instead of ad hoc scales, and the choice is recorded per model.",
+        "source_operator": "xavier_initialization",
+        "telemetry": "Initial activation variance per layer logged at training start"
+      }
+    },
+    {
+      "primitive_id": "sgd_minibatch_training",
+      "name": "Minibatch SGD averages gradient estimates over m examples before each parameter update",
+      "verbatim_quote": "Higher values provide better estimates of the corpus-wide gradients, while smaller values allow more updates and in turn faster convergence.",
+      "page": "Section 6.1, printed p. 26",
+      "latex": "\\theta \\leftarrow \\theta + \\eta_k \\hat{g}",
+      "symbol_and_unit_ledger": {
+        "\\theta": "the full parameter set of the network",
+        "\\hat{g}": "gradient estimate of the loss with respect to theta, averaged over the minibatch (sign convention as printed in the book's Algorithms 1 and 2)",
+        "\\eta_k": "learning rate at step k"
+      },
+      "assumptions": [
+        "Training examples are shuffled before each pass, as the book advises",
+        "With a small enough learning rate, SGD converges to a global optimum for convex functions; for neural networks the objective is non-convex and no such guarantee holds, per the book"
+      ],
+      "breakdown_regime": "Single example updates are noisy estimates of the corpus loss; very large minibatches reduce update frequency and can slow convergence in wall clock terms.",
+      "domain": "optimization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine training runs use minibatch SGD variants with batch size treated as an explicit accuracy versus update frequency trade, not a default.",
+        "source_operator": "sgd_minibatch_training",
+        "telemetry": "Loss curves and gradient estimate variance logged per batch size setting"
+      }
+    },
+    {
+      "primitive_id": "backpropagation_reverse_mode",
+      "name": "Backpropagation is reverse-mode automatic differentiation: chain rule with cached intermediate results",
+      "verbatim_quote": "while caching intermediary results. More generally, the backpropagation algorithm is a special case of the reverse-mode automatic differentiation algorithm",
+      "page": "Section 6.1, printed p. 27",
+      "latex": "d(i) \\leftarrow \\sum_{j \\in \\pi(i)} d(j) \\cdot \\frac{\\partial f_j}{\\partial i}",
+      "symbol_and_unit_ledger": {
+        "d(i)": "derivative of the scalar loss node value with respect to node i's output",
+        "\\pi(i)": "set of child nodes that consume node i's output",
+        "f_j": "function computed by node j",
+        "\\partial f_j / \\partial i": "partial derivative of node j's function with respect to its argument i, evaluated at the forward pass values"
+      },
+      "assumptions": [
+        "A forward pass has already computed and cached every node's value",
+        "Each node type defines both its forward function and its partial derivatives"
+      ],
+      "breakdown_regime": "Hand deriving gradients is, in the book's words, cumbersome and error prone; the algorithm itself is exact, so gradient errors in practice are implementation errors.",
+      "domain": "optimization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine models are never hand differentiated; every custom component must expose forward and derivative rules to the automatic differentiation machinery.",
+        "source_operator": "backpropagation_reverse_mode",
+        "telemetry": "Gradient check results (analytic versus numerical) recorded for new node types"
+      }
+    },
+    {
+      "primitive_id": "computation_graph_abstraction",
+      "name": "A computation graph is a DAG of operations and bound variables supporting forward evaluation and backward gradient passes",
+      "verbatim_quote": "A computation graph is a representation of an arbitrary mathematical computation as a graph. It is a directed acyclic graph (DAG) in which nodes correspond to mathematical operations or (bound) variables and edges correspond to the flow of intermediary values between the nodes.",
+      "page": "Section 6.2, printed p. 28",
+      "latex": "v(i) \\leftarrow f_i(v(a_1), \\ldots, v(a_m))",
+      "symbol_and_unit_ledger": {
+        "v(i)": "output value of node i",
+        "f_i": "function computed by node i",
+        "a_1..a_m": "the argument (parent) nodes of node i, already evaluated in topological order"
+      },
+      "assumptions": [
+        "The graph is connected and acyclic, so a topological order exists",
+        "A fresh graph can be built per training example, which is what allows variable structure models such as recurrent and recursive networks"
+      ],
+      "breakdown_regime": "Compiling frameworks (the book's example is Theano) run large fixed graphs efficiently but charge a compilation cost and a cumbersome interface; dynamic graph frameworks trade raw speed for flexibility with variable structures.",
+      "domain": "infrastructure",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine represents every model, including per-game variable structure models, as an explicit computation graph so any composite can be evaluated and trained end to end.",
+        "source_operator": "computation_graph_abstraction",
+        "telemetry": "Graph node counts and forward/backward runtimes per model instance"
+      }
+    },
+    {
+      "primitive_id": "vanishing_exploding_gradients",
+      "name": "Gradients vanish or explode as they propagate through deep or recurrent computation graphs; norm clipping is the standard guard against explosion",
+      "verbatim_quote": "In deep networks, it is common for the error gradients to either vanish (become exceedingly close to 0) or explode (become exceedingly high) as they propagate back through the computation graph.",
+      "page": "Section 6.3, printed p. 33",
+      "latex": "\\hat{g} \\leftarrow \\frac{\\mathrm{threshold}}{\\|\\hat{g}\\|} \\hat{g} \\quad \\text{if } \\|\\hat{g}\\| > \\mathrm{threshold}",
+      "symbol_and_unit_ledger": {
+        "\\hat{g}": "gradient vector of all parameters",
+        "\\|\\hat{g}\\|": "L2 norm of the full gradient vector",
+        "threshold": "preset maximum allowed gradient norm"
+      },
+      "assumptions": [
+        "The problem worsens with depth and is especially severe in recurrent and recursive networks, per the book"
+      ],
+      "breakdown_regime": "Clipping fixes explosion only. Vanishing remains an open problem in the book's account, answered partially by shallower networks, staged training, or gated architectures such as LSTM and GRU.",
+      "domain": "optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gradient norm clipping with a recorded threshold is mandatory in engine training, and gradient norm traces are a first class diagnostic for sequence models.",
+        "source_operator": "vanishing_exploding_gradients",
+        "telemetry": "Per-step gradient norms logged during training; alerts on norm spikes or collapse toward zero"
+      }
+    },
+    {
+      "primitive_id": "dropout_regularization",
+      "name": "Dropout prevents reliance on specific weights by randomly zeroing half the units of a layer for each training example",
+      "verbatim_quote": "The dropout method is designed to prevent the network from learning to rely on specific weights.",
+      "page": "Section 6.4, printed p. 34",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Roughly half of the neurons in the treated layer are dropped per training example, per the book's description",
+        "The book pairs dropout with L2 regularization as the other standard guard: an additive (lambda/2)||theta||^2 penalty term on the objective, and cites work connecting the two methods"
+      ],
+      "breakdown_regime": "Dropout is a training time procedure; the book also reports the interpretation of a dropout MLP as Bayesian model averaging, which is an interpretation, not a guarantee of calibrated uncertainty.",
+      "domain": "regularization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine networks with many parameters relative to data use dropout on hidden layers as the default overfitting guard, with the drop rate recorded per model.",
+        "source_operator": "dropout_regularization",
+        "telemetry": "Train versus validation loss gap tracked per run to confirm the regularizer is doing work"
+      }
+    },
+    {
+      "primitive_id": "multitask_learning",
+      "name": "Multi-task learning shares most parameters across related tasks and sums their losses into one training signal",
+      "verbatim_quote": "most of the parameters of the network are shared between the different tasks. Useful information learned from one task can then help to disambiguate other tasks.",
+      "page": "Section 7, printed p. 37",
+      "latex": "L_{total} = \\sum_t L_t",
+      "symbol_and_unit_ledger": {
+        "L_t": "loss of task t computed at its own output head",
+        "L_total": "summed loss from which gradients are computed, as the book prescribes"
+      },
+      "assumptions": [
+        "The tasks genuinely share an underlying representation, as with the book's example of chunking, named entity recognition and language modeling",
+        "Cascading is the companion technique in the same section: hidden layers of a component network, not its predictions, become inputs to the next network, and components can be pre-trained separately before joint tuning"
+      ],
+      "breakdown_regime": "Sharing hurts when tasks conflict; the book's remedy of separate corpora per task with shuffled mixed training still assumes a shared representation exists.",
+      "domain": "training methodology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Related engine prediction tasks share a trunk network with separate heads and a summed loss, so scarce supervision for one task is supplemented by the others.",
+        "source_operator": "multitask_learning",
+        "telemetry": "Per-task losses logged separately even though training uses the summed loss"
+      }
+    },
+    {
+      "primitive_id": "greedy_structured_error_propagation",
+      "name": "Greedy structured prediction decomposes a structure into local decisions and suffers error propagation from early mistakes",
+      "verbatim_quote": "The greedy approaches suffer from error propagation, where mistakes in early decisions carry over and influence later decisions.",
+      "page": "Section 8.1, printed p. 38",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A local classifier, linear or neural, makes each decision independently at test time",
+        "The book lists mitigations: easy-first ordering and training regimes that expose the model to its own likely mistakes (dynamic oracle style training)"
+      ],
+      "breakdown_regime": "Higher local accuracy only offsets the problem; it does not remove it, because later decisions are conditioned on possibly wrong earlier ones.",
+      "domain": "structured prediction",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any engine component that builds a structured output step by step must report end-to-end structure accuracy, not only per-step accuracy, because the two diverge under error propagation.",
+        "source_operator": "greedy_structured_error_propagation",
+        "telemetry": "Per-step accuracy versus full structure accuracy measured on held-out sequences"
+      }
+    },
+    {
+      "primitive_id": "search_based_structured_prediction",
+      "name": "Search-based structured prediction: argmax over valid structures of a score that decomposes as a sum of neural part scores",
+      "verbatim_quote": "Each part is scored separately, and the structure score is the sum of the component parts scores:",
+      "page": "Section 8.2, printed p. 39",
+      "latex": "\\mathrm{predict}(x) = \\arg\\max_{y \\in Y(x)} \\mathrm{score}(x, y); \\quad \\mathrm{score}(x, y) = \\sum_{p \\in y} NN(c(p))",
+      "symbol_and_unit_ledger": {
+        "x": "input structure (for example a sentence)",
+        "y": "candidate output structure over x",
+        "Y(x)": "set of all valid structures over x",
+        "p": "a part of the structure y",
+        "c(p)": "function mapping part p to a fixed width input vector",
+        "NN(c(p))": "neural network score of part p"
+      },
+      "assumptions": [
+        "The decomposition into parts must admit an efficient inference algorithm for the argmax",
+        "Training uses a margin (hinge) variant of the generalized perceptron loss: max(0, m + score(x, y') - score(x, y)) over wrong structures y'"
+      ],
+      "breakdown_regime": "Replacing the linear part scorer with a network destroys convexity and multiplies cost: the network and its gradients are evaluated once per part, as the book warns.",
+      "domain": "structured prediction",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine structured outputs are scored as sums of learned part scores with exact or beam search over valid structures, keeping global coherence instead of independent local calls.",
+        "source_operator": "search_based_structured_prediction",
+        "telemetry": "Part counts per structure and search time per instance logged"
+      }
+    },
+    {
+      "primitive_id": "crf_probabilistic_structured",
+      "name": "CRF objective: part scores become clique potentials defining a conditional distribution over structures, trained by log likelihood",
+      "verbatim_quote": "In a probabilistic framework (“CRF”), we treat each of the parts scores as a clique potential (see (Smith, 2011)) and define the score of each structure y to be",
+      "page": "Section 8.2, printed p. 40",
+      "latex": "P(y|x) = \\frac{\\prod_{p \\in y} e^{NN(c(p))}}{\\sum_{y' \\in Y(x)} \\prod_{p \\in y'} e^{NN(c(p))}}",
+      "symbol_and_unit_ledger": {
+        "P(y|x)": "conditional probability of structure y given input x",
+        "NN(c(p))": "neural score of part p, exponentiated into a potential",
+        "denominator": "partition function summing over all valid structures y' in Y(x)"
+      },
+      "assumptions": [
+        "The loss for one example is the negative log of P(y|x) for the gold structure",
+        "A polynomial time dynamic programming algorithm for the partition function exists for the structure family, or an approximation is accepted"
+      ],
+      "breakdown_regime": "When no efficient partition function algorithm exists, the book prescribes approximations such as summing only over structures surviving in a beam; exactness is lost.",
+      "domain": "structured prediction",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Where the engine needs probabilities over whole structures rather than a single best structure, part scores are normalized CRF style when the structure family admits dynamic programming.",
+        "source_operator": "crf_probabilistic_structured",
+        "telemetry": "Partition function computation time and beam survival counts per structure family"
+      }
+    },
+    {
+      "primitive_id": "reranking_kbest",
+      "name": "Reranking: a base model proposes a k-best list and a richer neural model rescores whole candidates",
+      "verbatim_quote": "list of the k-best scoring structures. A more complex model is then trained to score the candidates in the k-best list such that the best structure with respect to the gold one is scored highest.",
+      "page": "Section 8.2, printed p. 41",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The gold or near gold structure appears in the base model's k-best list often enough to learn from",
+        "The rescorer may condition on arbitrary aspects of the whole candidate structure, since search is now over k items"
+      ],
+      "breakdown_regime": "If the base model never proposes the right structure, no rescorer can recover it; recall of the k-best list caps the whole pipeline.",
+      "domain": "structured prediction",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Expensive global features are applied only to a shortlist of candidate structures produced by a cheaper engine model, which keeps global reasoning affordable.",
+        "source_operator": "reranking_kbest",
+        "telemetry": "Oracle accuracy of the k-best list (whether the gold structure is present) measured per task"
+      }
+    },
+    {
+      "primitive_id": "cnn_convolution_pooling",
+      "name": "Convolution plus pooling: a learned filter over each k-item window, pooled by max into a fixed size structure representation",
+      "verbatim_quote": "A convolutional neural network is designed to identify indicative local predictors in a large structure, and combine them to produce a fixed size vector representation of the structure, capturing these local aspects that are most informative for the prediction task at hand.",
+      "page": "Section 9, printed p. 42",
+      "latex": "p_i = g(w_i W + b); \\quad c_j = \\max_{1 < i \\leq m} p_i[j]; \\quad w_i = [v(x_i); v(x_{i+1}); \\ldots; v(x_{i+k-1})]",
+      "symbol_and_unit_ledger": {
+        "w_i": "concatenated embeddings of the i-th window of k items, dimension k times d_emb",
+        "W, b": "filter parameters, mapping a window to d_conv channels",
+        "p_i": "filtered representation of window i",
+        "c_j": "pooled value of channel j, the max over all windows (average and k-max pooling are the book's named variants)",
+        "m": "number of windows, n-k+1 for narrow convolution"
+      },
+      "assumptions": [
+        "The informative clues are local and roughly position invariant",
+        "Parallel filters of several window widths (the book's example: widths 2 to 5) can be pooled and concatenated"
+      ],
+      "breakdown_regime": "Pooling keeps only the strongest signal per channel and sacrifices most global order and structure information; the book contrasts this with recurrent models on exactly this point.",
+      "domain": "network architecture",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Local pattern detectors over event sequences (for example short play sequences) are implemented as convolutional filters whose pooled channels feed the engine's fixed width game state representation.",
+        "source_operator": "cnn_convolution_pooling",
+        "telemetry": "Per-channel max activations and their window positions logged for interpretation"
+      }
+    },
+    {
+      "primitive_id": "rnn_abstraction",
+      "name": "RNN abstraction: a shared transition function folds an input sequence into state vectors that condition on the entire history",
+      "verbatim_quote": "The RNN model provides a framework for conditioning on the entire history x1 , . . . , xi without resorting to the Markov assumption which is traditionally used for modeling sequences.",
+      "page": "Section 10.1, printed p. 46",
+      "latex": "s_i = R(s_{i-1}, x_i); \\quad y_i = O(s_i)",
+      "symbol_and_unit_ledger": {
+        "s_i": "state vector after consuming inputs x_1 through x_i",
+        "x_i": "input vector at position i",
+        "R": "transition function, shared across all positions",
+        "O": "output function mapping a state to an output vector y_i"
+      },
+      "assumptions": [
+        "The same parameters are used at every position, as the book emphasizes",
+        "The book's related constructions include stack encodings: a stack is fed item by item into an RNN, with a persistent (immutable) stack data structure making pop operations tractable"
+      ],
+      "breakdown_regime": "Unless R is designed against it, later inputs influence the final state more than earlier ones, as the book's footnote warns.",
+      "domain": "sequence modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Play by play and possession sequences are folded into state vectors by a shared transition function, so the engine's representation of a game moment conditions on the full preceding sequence.",
+        "source_operator": "rnn_abstraction",
+        "telemetry": "Sequence lengths and per-position state norms logged during encoding"
+      }
+    },
+    {
+      "primitive_id": "bptt_training",
+      "name": "RNNs are trained by unrolling the computation graph over the sequence and backpropagating through time",
+      "verbatim_quote": "To train an RNN network, then, all we need to do is to create the unrolled computation graph for a given input sequence, add a loss node to the unrolled graph, and then use the backward (backpropagation) algorithm to compute the gradients with respect to that loss.",
+      "page": "Section 10.2, printed p. 48",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Supervision can attach at the final output (acceptor or encoder use), at every position (transducer use, with local losses summed over positions), or through a decoder, per the book's taxonomy"
+      ],
+      "breakdown_regime": "Final state only supervision is hard to train on long sequences because the signal must travel the whole unrolled graph; truncated unrolling (a fixed number of steps) is the book's named workaround for the simple RNN.",
+      "domain": "sequence modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Sequence models in the engine are trained by explicit unrolling with the loss placement (final, per step, or decoder) chosen per task and recorded.",
+        "source_operator": "bptt_training",
+        "telemetry": "Unrolled graph sizes and per-position loss contributions logged"
+      }
+    },
+    {
+      "primitive_id": "encoder_decoder_rnn",
+      "name": "Encoder-decoder: one RNN compresses the input sequence into a vector that conditions a second RNN generating the output",
+      "verbatim_quote": "The RNN is used to encode the sequence into a vector representation yn , and this vector representation is then used as auxiliary input to another RNN that is used as a decoder.",
+      "page": "Section 10.2, printed p. 50",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Supervision applies to the decoder, but gradients propagate all the way back into the encoder, per the book",
+        "The book reports the practical trick from Sutskever et al: feeding the source sequence in reverse eased learning the alignment between source and target beginnings"
+      ],
+      "breakdown_regime": "A single fixed vector is a bottleneck for long inputs; everything the decoder can use must survive compression into that one state.",
+      "domain": "sequence modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sequence to sequence engine tasks (for example a played sequence in, a structured summary out) use an encoder state as the contract between the reading and generating components.",
+        "source_operator": "encoder_decoder_rnn",
+        "telemetry": "Encoder state norms and decoder loss by output position logged"
+      }
+    },
+    {
+      "primitive_id": "bidirectional_rnn",
+      "name": "Bidirectional RNN: forward and backward passes give each position a representation of both its past and its future",
+      "verbatim_quote": "Much like the RNN relaxes the Markov assumption and allows looking arbitrarily back into the past, the BI-RNN relaxes the fixed window size assumption, allowing to look arbitrarily far at both the past and the future.",
+      "page": "Section 10.4, printed p. 52",
+      "latex": "y_i = [y_i^f; y_i^b] = [O^f(s_i^f); O^b(s_i^b)]",
+      "symbol_and_unit_ledger": {
+        "s_i^f": "forward state at position i, summarizing inputs x_1..x_i",
+        "s_i^b": "backward state at position i, summarizing inputs x_n..x_i",
+        "y_i": "concatenated output used for prediction at position i"
+      },
+      "assumptions": [
+        "The full sequence is available at inference time, since the backward pass needs the future",
+        "The two directions use separate parameters and are trained jointly through the shared output loss"
+      ],
+      "breakdown_regime": "Unusable for strictly online prediction where future inputs do not yet exist; the book's use case is offline sequence tagging.",
+      "domain": "sequence modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Offline labeling of completed game sequences uses bidirectional encoding so each event is interpreted with both its preceding and following context.",
+        "source_operator": "bidirectional_rnn",
+        "telemetry": "Forward and backward state norms per position logged"
+      }
+    },
+    {
+      "primitive_id": "simple_rnn_elman",
+      "name": "Simple RNN (Elman network): state is a non-linear function of the current input and the previous state; output equals state",
+      "verbatim_quote": "That is, the state at position i is a linear combination of the input at position i and the previous state, passed through a non-linear activation (commonly tanh or ReLU).",
+      "page": "Section 11.1, printed p. 56",
+      "latex": "s_i = g(x_i W^x + s_{i-1} W^s + b); \\quad y_i = s_i",
+      "symbol_and_unit_ledger": {
+        "x_i": "input vector at position i, dimension d_x",
+        "W^x": "input weight matrix, d_x by d_s",
+        "W^s": "recurrent weight matrix, d_s by d_s",
+        "b": "bias vector, dimension d_s",
+        "g": "non-linear activation, commonly tanh or ReLU"
+      },
+      "assumptions": [
+        "The book records two repairs for its memory problem: slow/fast state splitting (Mikolov et al) and the Le et al identity initialization, ReLU activation with W^s initialized to the identity matrix and biases to zero, so an untrained network copies its previous state forward"
+      ],
+      "breakdown_regime": "The repeated matrix multiplication and non-linearity make the state change sharply at each step, so information and gradients do not survive long spans; this is the vanishing gradient failure the gated architectures were built to fix.",
+      "domain": "sequence modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The simple RNN is the engine's baseline sequence encoder; any gated replacement must beat it on held-out sequence tasks before adoption.",
+        "source_operator": "simple_rnn_elman",
+        "telemetry": "State change magnitude per step logged to detect memory collapse"
+      }
+    },
+    {
+      "primitive_id": "lstm_gated_memory",
+      "name": "LSTM: a gated memory cell whose additive update path preserves gradients across long time spans",
+      "verbatim_quote": "The main idea behind the LSTM is to introduce as part of the state representation also “memory cells” (a vector) that can preserve gradients across time.",
+      "page": "Section 11.2, printed p. 56",
+      "latex": "c_j = c_{j-1} \\odot f + g \\odot i; \\quad h_j = \\tanh(c_j) \\odot o; \\quad i = \\sigma(x_j W^{xi} + h_{j-1} W^{hi}); \\quad f = \\sigma(x_j W^{xf} + h_{j-1} W^{hf}); \\quad o = \\sigma(x_j W^{xo} + h_{j-1} W^{ho}); \\quad g = \\tanh(x_j W^{xg} + h_{j-1} W^{hg})",
+      "symbol_and_unit_ledger": {
+        "c_j": "memory cell vector at step j",
+        "h_j": "output (visible state) vector at step j, also the RNN output y_j",
+        "i, f, o": "input, forget and output gate vectors with entries in [0, 1]",
+        "g": "candidate update vector",
+        "\\odot": "component-wise product, as the book defines",
+        "W^{x\\cdot}, W^{h\\cdot}": "input and recurrent weight matrices for each gate"
+      },
+      "assumptions": [
+        "The book's practical rules: initialize the forget gate bias close to one (Jozefowicz et al), and apply dropout only to non-recurrent connections (Zaremba et al)",
+        "Many variants exist (peepholes, gate tying); the equations here are the book's reference form"
+      ],
+      "breakdown_regime": "The architecture is complex and computationally expensive relative to the simple RNN, and the book notes analysis of its behavior is correspondingly harder.",
+      "domain": "sequence modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Long horizon engine sequence tasks default to LSTM encoders because the gated additive memory path is the book's demonstrated mechanism for carrying information across long spans.",
+        "source_operator": "lstm_gated_memory",
+        "telemetry": "Gate activation means (input, forget, output) logged per layer to verify gates are being used"
+      }
+    },
+    {
+      "primitive_id": "gru_gated_unit",
+      "name": "GRU: a two-gate interpolation between the previous state and a proposed update, with no separate memory cell",
+      "verbatim_quote": "Like the LSTM, the GRU is also based on a gating mechanism, but with substantially fewer gates and without a separate memory component.",
+      "page": "Section 11.3, printed p. 58",
+      "latex": "s_j = (1 - z) \\odot s_{j-1} + z \\odot h; \\quad z = \\sigma(x_j W^{xz} + h_{j-1} W^{hz}); \\quad r = \\sigma(x_j W^{xr} + h_{j-1} W^{hr}); \\quad h = \\tanh(x_j W^{xh} + (h_{j-1} \\odot r) W^{hg})",
+      "symbol_and_unit_ledger": {
+        "s_j": "state vector at step j, also the output y_j",
+        "z": "update gate vector controlling the interpolation",
+        "r": "reset gate vector controlling access to the previous state when forming the proposal",
+        "h": "proposed update vector (the symbol the book uses for the candidate in its GRU equations)",
+        "W^{hg}": "recurrent matrix for the candidate, written W^{hg} in the book's GRU equations"
+      },
+      "assumptions": [
+        "Reported by the book (Chung et al) to perform comparably to the LSTM on several non-text datasets"
+      ],
+      "breakdown_regime": "The book states the jury between GRU and LSTM is still out; with no separate memory cell, very long retention depends entirely on the update gate staying near zero.",
+      "domain": "sequence modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GRU is the engine's lighter gated alternative where compute budget matters, benchmarked against LSTM per task rather than chosen by fashion.",
+        "source_operator": "gru_gated_unit",
+        "telemetry": "Update gate mean activation logged; near constant gates flag a degenerate encoder"
+      }
+    },
+    {
+      "primitive_id": "recursive_neural_network",
+      "name": "Recursive neural networks compose child vectors into parent vectors, encoding each subtree as one vector",
+      "verbatim_quote": "the representation of a node p with children c1 and c2 is a function of the representation of the nodes: vec(p) = f (vec(c1 ), vec(c2 ))",
+      "page": "Section 12, printed p. 60",
+      "latex": "s^A_{i:j} = R(A, B, C, s^B_{i:k}, s^C_{k+1:j}) = g([s^B_{i:k}; s^C_{k+1:j}] W^{BC})",
+      "symbol_and_unit_ledger": {
+        "s^A_{i:j}": "inside state vector of the node labeled A spanning items i..j",
+        "s^B_{i:k}, s^C_{k+1:j}": "inside vectors of the two children",
+        "W^{BC}": "composition matrix untied by the child label pair (B, C), the Socher et al variant the book presents",
+        "g": "optional non-linear activation"
+      },
+      "assumptions": [
+        "A tree structure over the input is given (for example a parse tree), represented as production rules over spans",
+        "Label free composition uses a single shared W for all combinations; label embeddings are the book's middle option"
+      ],
+      "breakdown_regime": "The simple composition function inherits the vanishing gradient problem; the book points to tree-shaped LSTMs as the gated repair, and calls the space of composition functions largely unexplored.",
+      "domain": "structure modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Hierarchical engine structures (plays within drives within games) are encoded bottom up by composing child representations, so each level's vector summarizes its whole subtree.",
+        "source_operator": "recursive_neural_network",
+        "telemetry": "Per-node state norms by tree depth logged to detect depth-wise signal loss"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "366911533a902b7d-t1",
+      "think": "The primer is a unified tour of the neural network toolkit as it stood in 2015, written for language researchers who knew linear models well and needed the new machinery explained in one notation. Its spine is a single claim: replace sparse one-hot features with dense trainable vectors, replace the linear classifier with a non-linear network, and let gradient descent on a computation graph do the rest. Everything else in the book is an elaboration of that spine for harder input shapes and harder output shapes. The first movement is representation. A core feature, a word, a tag, a distance bin, stops being a dimension and becomes a vector in a low dimensional space, stored as a row of an embedding matrix and selected by a lookup. Similar features earn similar vectors, so evidence about a frequent item transfers to a rare one, and the model generalizes where a one-hot model would stay silent. Because the first layer of a network fed with one-hot vectors is already an embedding lookup followed by a sum, the dense and sparse views are the same machine seen from two sides, and the real design choice is which features share vectors and which combinations the network must discover on its own. Fixed size inputs are assembled by concatenation when the feature count is fixed and by summation or averaging, the continuous bag of words, when it is not. The second movement is the classifier itself. A perceptron is one affine map. Adding a hidden layer with an element-wise non-linearity gives the one layer MLP, which is a universal approximator in the existence sense, though the theorem says nothing about the size of the hidden layer or the learnability of the weights. The non-linearity is the load-bearing piece: stack affine maps without it and the composition collapses to a single affine map. Goldberg catalogs the standard activations, notes the empirical ordering that rectified linear units beat tanh and tanh beats sigmoid, and treats the output layer as another embedding space, with softmax turning scores into a distribution and plain softmax over a linear model recovering multinomial logistic regression. Training objectives are presented as a small menu with distinct semantics: hinge losses buy a margin and a hard decision, cross-entropy buys a calibrated distribution over classes, and ranking losses buy an ordering between a correct item and a corrupted one when no labels exist. The third movement is where the vectors come from. Random initialization suffices when supervised data is plentiful, but the leverage of the field comes from pre-training on auxiliary tasks manufactured from raw text. The distributional hypothesis, words that appear in similar contexts are similar, turns a corpus into unlimited supervision: predict a word from its context, predict contexts from a word, or score true word-context pairs above corrupted ones. Goldberg stresses that the choice of context is the real design decision, more than the training algorithm. Window size trades topical against functional similarity, positional contexts inject word order, syntactic contexts from a dependency parse group words by grammatical role, multilingual contexts from aligned text pull synonyms together and push antonyms apart, and character or sub-word composition answers the unknown word problem. A whole section of practical lore, initialization scales, gradient clipping, learning rate schedules, dropout, follows from one fact: the objective is non-convex and the gradients are computed by a mechanical procedure, reverse mode automatic differentiation over a computation graph, so the craft moves to conditioning the optimization. The fourth movement generalizes the output. Structured prediction keeps the classical decomposition, a structure scored as the sum of its parts, an argmax over valid structures, a perceptron or hinge loss against the best wrong structure, a CRF when a normalized distribution is wanted, but swaps the linear part scorer for a neural one and pays for it with non-convexity and slower training. Reranking sidesteps decoder integration entirely. Cascading and multi-task learning exploit the same graph machinery: hidden layers of one network become inputs to another, and several losses summed into one node share most parameters across tasks. The fifth movement generalizes the input shape. Convolution with pooling finds indicative local patterns wherever they occur and compresses a sequence into a fixed vector at the price of global order. Recurrent networks keep order by folding a state vector along the sequence, sharing parameters across positions, and training by backpropagation through time on the unrolled graph; the same abstraction yields acceptors, encoders, transducers and encoder-decoder pairs, bidirectional variants that read the future as well as the past, and stack encodings built on persistent data structures. The simple recurrent update cannot carry gradients across long spans, so gated variants, the LSTM with its separately gated memory cell and the GRU with two gates and no separate memory, exist to protect the gradient path. Recursive networks then lift the whole apparatus from chains to trees by composing child vectors into parent vectors. The book closes by warning that none of these names are standardized, and that a model is only specified when its equations are. For a reasoning engine the transferable core is not any single architecture. It is the discipline of the whole stack: dense representations that share statistical strength, explicit scoring functions whose losses match the decision being made, manufactured auxiliary supervision when labels are scarce, and a computation graph that makes every composite model trainable end to end while keeping each part inspectable. That discipline, more than any single architecture, is what a reasoning engine should import from this primer.",
+      "retrocausal_genealogy": "The lineage runs from the perceptron and the linear model tradition of NLP, through Bengio et al (2003), who introduced dense word vectors inside a neural language model, and Collobert and Weston (2008, 2011), who carried embeddings into general NLP tasks together with multi-task learning. Mikolov et al (2013) supplied the efficient window based objectives, word2vec and skip-gram, standing on Harris (1954) and the distributional hypothesis. The recurrent line descends from Elman (1990), through Hochreiter and Schmidhuber (1997) and the LSTM, to Cho et al (2014) and the GRU and encoder-decoder framework. The tree line runs from Pollack (1990) and Goller and Kuchler (1996) to Socher and colleagues. Underneath everything sits backpropagation, Rumelhart, Hinton and Williams (1986), reframed here as reverse mode automatic differentiation.",
+      "theory_of_mind": "Goldberg writes for a practitioner he assumes is competent and slightly skeptical: fluent in linear models, feature engineering and structured prediction, and in need of notation and judgment rather than hype. He explicitly discards the brain metaphor as distracting, repeats that many design choices, from non-linearity selection to embedding dimensionality, are empirical questions with no theory behind them, and keeps flagging the gap between what theorems promise and what training delivers. His model of the domain is that language problems are representation problems first: get the vectors and the context definitions right, and standard machinery does the rest. He also writes as a standards setter, closing with the demand that models be specified in equations, not figures.",
+      "cross_layer_veto": "Several results in the primer act as vetoes on other layers of a system. The collapse of stacked affine maps vetoes any deep architecture that omits non-linearity, whatever its depth. The universal approximation discussion vetoes capacity claims made without training evidence, because existence of parameters is not learnability. The context definition results veto the reuse of embeddings across purposes, since window size and context type decide what similarity means. The error propagation analysis vetoes naive greedy pipelines for structured outputs. The partition function discussion vetoes exact CRF normalization on structure families with no dynamic program. And the vanishing gradient analysis vetoes plain recurrent or recursive composition for long range structure, forcing gated or shallower designs."
+    }
+  ],
+  "universal_lens": "The primer generalizes into a template for any domain whose inputs are discrete symbols and whose outputs are structured objects. First, embed every symbol into a dense space so similarity becomes geometry. Second, define similarity deliberately by choosing the contexts from which embeddings are learned, because that choice decides what the geometry means. Third, pick a scoring architecture matched to the input shape, pooling for position free local evidence, recurrence for order, recursion for hierarchy. Fourth, choose a loss whose semantics match the decision, margin, probability or ranking. Fifth, manufacture auxiliary supervision from raw unlabeled data when labels are scarce. The template separates what is domain specific, the symbols and contexts, from what is machinery, and the machinery is reusable everywhere.",
+  "gsi_mapping": "The Galaxy Sports Institute takes the primer as a methods curriculum and a specification standard. Its teaching value is the unified notation: embeddings, losses, computation graphs, structured prediction and sequence models presented as one stack with explicit tradeoffs, which is how research staff should learn to read new architectures. Its context definition taxonomy, window, positional, syntactic, multilingual, sub-word, becomes a checklist for evaluating any proposed representation method: what context defines similarity here, and is that the similarity the task needs. Its closing warning, that model names are not standardized and only equations specify a model, becomes an institute writing rule for internal research notes and literature summaries.",
+  "gse_mapping": "The Galaxy Sports Edge reasoning engine takes concrete machinery from the primer. Dense embeddings represent players, teams and situations so that sparse evidence is shared across similar entities. Part-factored neural scoring with search over valid structures replaces independent local calls wherever the output is a structured object, and CRF normalization is available where whole structure probabilities are needed and tractable. Ranking losses against corrupted sequences let components train from observed events alone. Recurrent and bidirectional encoders turn play sequences into state representations that condition on full history, with LSTM or GRU gating for long spans, gradient clipping and fan-in based initialization as standard training hygiene, and multi-task heads sharing one trunk across related prediction tasks."
+}

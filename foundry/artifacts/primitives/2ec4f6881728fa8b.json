@@ -1,0 +1,775 @@
+{
+ "book_id": "2ec4f6881728fa8b",
+ "source_status": "COMPLETE",
+ "source_note": "Thomas M. Moerland, Joost Broekens, Aske Plaat and Catholijn M. Jonker, 'Model-based Reinforcement Learning: A Survey', arXiv:2006.16712v4 [cs.LG], 31 Mar 2022 (journal version in Foundations and Trends in Machine Learning, 2023). Local file is the arXiv v4 PDF, catalogued as MoerlandEtAl-2023-ModelBasedReinforcementLearning-SurveyMonograph.pdf, 2060497 bytes, scan digest sha256 over str(size) + file bytes = 2ec4f6881728fa8b2f4a7fd31a63a6e974dec9f8adae55206678241a8565938c, book_id is its first 16 hex chars. The assignment described the work as 2022, matching the arXiv v4 date; the filename year 2023 is the journal publication year. Extracted text is clean and complete across all 11 sections (236770 characters, 3517 lines); a few words are split by extraction artifacts (for example 'precur sors', 'Al phaGo', 'modelbased'), and every verbatim quote was chosen from a passage free of those artifacts and proven contiguous in the text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "mdp_formalism",
+   "name": "An MDP is the tuple {S, A, T, R, p(s0), gamma}: transition function, reward function, initial state distribution, discount",
+   "verbatim_quote": "The environment consists of a transition function T : S × A → p(S) and a reward function R : S × A × S → R.",
+   "page": "Sec. 2 (Background), p. 3",
+   "latex": "\\{S,\\ A,\\ T,\\ R,\\ p(s_0),\\ \\gamma\\}",
+   "symbol_and_unit_ledger": {
+    "S": "state space (set of environment states)",
+    "A": "action space (set of agent actions)",
+    "T": "transition function T : S x A -> p(S), a probability distribution over next states",
+    "R": "reward function R : S x A x S -> real scalar reward",
+    "p(s_0)": "initial state distribution",
+    "gamma": "discount factor in [0, 1], dimensionless"
+   },
+   "assumptions": [
+    "The environment is Markov: the next state and reward depend only on the current state and action",
+    "States are fully observed in the basic formalism (partial observability is treated separately in Sec. 4.4)"
+   ],
+   "breakdown_regime": "Breaks when the observed state omits decision relevant information (partial observability), when T or R drift over time (non-stationarity), or when the true process has long range memory that the state does not capture.",
+   "domain": "sequential decision making",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's game state representation should be specified the same way: an explicit state (score, clock, down, distance, field position, personnel, fatigue proxies), an action set for each decision maker, a transition model over game states, and a scalar objective. Forcing every analysis into this tuple exposes which component is missing or hand waved.",
+    "source_operator": "mdp_formalism",
+    "telemetry": "Play by play state sequences, action choices by coaches and players, and resulting state transitions logged per game."
+   }
+  },
+  {
+   "primitive_id": "discounted_return",
+   "name": "The return of a trace is the discounted sum of rewards along it, J_t = sum_k gamma^k r_{t+k}",
+   "verbatim_quote": "The cumulative return of a trace through the environment is denoted by",
+   "page": "Sec. 2 (Background), pp. 3-4, Eq. for J_t",
+   "latex": "J_t = \\sum_{k=0}^{K} \\gamma^k r_{t+k}",
+   "symbol_and_unit_ledger": {
+    "J_t": "cumulative discounted return of a trace starting at time t (reward units)",
+    "gamma": "discount factor in [0, 1], dimensionless",
+    "r_{t+k}": "scalar reward received k steps after t (reward units)",
+    "K": "trace length in timesteps; K = infinity gives the infinite horizon return"
+   },
+   "assumptions": [
+    "A single scalar reward per timestep fully captures the objective",
+    "The discount rate is fixed across the horizon"
+   ],
+   "breakdown_regime": "With gamma near 1 and long horizons the return variance grows and credit assignment degrades; with gamma too small the objective becomes myopic and long range structure is invisible.",
+   "domain": "sequential decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Season and game objectives in the engine should be written as discounted accumulations with an explicit horizon, so that short term and long term value are never conflated in one number. The discount choice is a modelling decision that must be stated, not a default.",
+    "source_operator": "discounted_return",
+    "telemetry": "Sequences of per play value changes (for example expected points added) with timestamps, over drives, games and seasons."
+   }
+  },
+  {
+   "primitive_id": "action_value_function",
+   "name": "Q^pi(s, a) is the expected cumulative return of taking action a in state s and then following policy pi",
+   "verbatim_quote": "Define the action-value function Qπ (s, a) as the expectation of the cumulative return given a certain policy π:",
+   "page": "Sec. 2 (Background), p. 4, Eq. (1)",
+   "latex": "Q^{\\pi}(s, a) = \\mathbb{E}_{\\pi, T}\\left[ \\sum_{k=0}^{K} \\gamma^k r_{t+k} \\,\\middle|\\, s_t = s,\\ a_t = a \\right]",
+   "symbol_and_unit_ledger": {
+    "Q^pi(s, a)": "action value: expected discounted return after action a in state s under policy pi (reward units)",
+    "pi": "policy pi : S -> p(A), distribution over actions per state",
+    "T": "true transition function of the environment",
+    "gamma": "discount factor in [0, 1], dimensionless",
+    "r_{t+k}": "reward k steps ahead (reward units)"
+   },
+   "assumptions": [
+    "The expectation is taken over trajectories generated by pi in the true dynamics T",
+    "The policy is held fixed while its value is evaluated (policy evaluation, not improvement)"
+   ],
+   "breakdown_regime": "Function approximation of Q introduces local errors that pure evaluation cannot detect; the estimate is only as good as the state coverage of the data that trained it.",
+   "domain": "sequential decision making",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's situation values (the worth of a play call, a matchup choice, a lineup) are action values in this sense: expected downstream value conditional on a decision, under an assumed continuation policy. Keeping the conditioning policy explicit prevents comparing values that silently assume different futures.",
+    "source_operator": "action_value_function",
+    "telemetry": "Logged decisions with their game contexts and the realized downstream outcomes of the possessions or games that followed."
+   }
+  },
+  {
+   "primitive_id": "bellman_equation",
+   "name": "The action value satisfies the recursive Bellman equation: immediate reward plus discounted value of the successor state",
+   "verbatim_quote": "This equation can be written in a recursive form, better known as the Bellman equation:",
+   "page": "Sec. 2 (Background), p. 4, Eq. (2)",
+   "latex": "Q^{\\pi}(s, a) = \\mathbb{E}_{s' \\sim T(\\cdot|s, a)}\\left[ R(s, a, s') + \\gamma \\, \\mathbb{E}_{a' \\sim \\pi(\\cdot|s')} Q^{\\pi}(s', a') \\right]",
+   "symbol_and_unit_ledger": {
+    "Q^pi(s, a)": "action value at the current state action pair (reward units)",
+    "s'": "successor state sampled from T(.|s, a)",
+    "R(s, a, s')": "immediate reward of the transition (reward units)",
+    "gamma": "discount factor in [0, 1], dimensionless",
+    "a'": "next action sampled from pi(.|s')",
+    "Q^pi(s', a')": "action value at the successor state (reward units)"
+   },
+   "assumptions": [
+    "Markov property: the successor value summarizes everything relevant about the future",
+    "The same pi generates the continuation actions inside the recursion"
+   ],
+   "breakdown_regime": "Bootstrapping on approximated values propagates approximation error through the recursion; with function approximation, divergence is possible and stability must be engineered, not assumed.",
+   "domain": "sequential decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Recursive value decomposition is the engine's basic consistency test: the value assigned to a game situation must equal the immediate value gained plus the discounted value of the situation it creates. Violations of this recursion in the engine's ratings flag internal inconsistency that no amount of additional data fixes.",
+    "source_operator": "bellman_equation",
+    "telemetry": "Per play value deltas paired with the values the engine assigned to the states before and after each play."
+   }
+  },
+  {
+   "primitive_id": "optimal_policy_argmax",
+   "name": "The optimization target is a policy maximizing expected return; at least one optimal policy exists",
+   "verbatim_quote": "Our goal is to find a policy π that maximizes our expected return Qπ (s, a):",
+   "page": "Sec. 2 (Background), p. 4, Eq. (3)",
+   "latex": "\\pi^* = \\arg\\max_{\\pi} Q^{\\pi}(s, a) = \\arg\\max_{\\pi} \\mathbb{E}_{\\pi, T}\\left[ \\sum_{k=0}^{K} \\gamma^k r_{t+k} \\,\\middle|\\, s_t = s,\\ a_t = a \\right]",
+   "symbol_and_unit_ledger": {
+    "pi*": "an optimal policy, at least one exists and it is at least as good as every other policy",
+    "Q^pi(s, a)": "expected discounted return of policy pi (reward units)",
+    "E_{pi, T}": "expectation over trajectories from policy pi in dynamics T",
+    "gamma": "discount factor in [0, 1], dimensionless"
+   },
+   "assumptions": [
+    "The return objective is the sole criterion; constraints such as safety must be folded into the reward or handled outside this maximization",
+    "An optimal policy exists for the MDP as formalized"
+   ],
+   "breakdown_regime": "Maximizing a misspecified return yields optimal behaviour for the wrong problem; the formalism offers no protection against reward misspecification.",
+   "domain": "sequential decision making",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine recommendation should be traceable to an explicit objective being maximized. If the objective cannot be written down, the recommendation is an opinion, not an optimization result, and should be labelled as such.",
+    "source_operator": "optimal_policy_argmax",
+    "telemetry": "The engine's stated objective per output (win probability, expected points, season value) logged alongside each recommendation."
+   }
+  },
+  {
+   "primitive_id": "model_reversible_access",
+   "name": "A model is reversible access to the MDP dynamics: query any state action pair, in any order, repeatedly",
+   "verbatim_quote": "A model is a form of reversible access to the MDP dynamics (known or learned).",
+   "page": "Sec. 3, p. 4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reversibility is the defining property: the agent can reset to a state and try alternatives, unlike the real environment",
+    "The model may be given (known) or estimated from data (learned)"
+   ],
+   "breakdown_regime": "A learned model is only reversible access to an approximation; querying it far from the data that built it returns confident fiction, which is why uncertainty handling (Sec. 4.3) is mandatory.",
+   "domain": "planning and model learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's simulators are models in exactly this sense: they let analysts re-run a matchup from the same state with different decisions. The primitive forces the follow up question every simulation must answer: how far from observed reality is this query, and what is the model's error there.",
+    "source_operator": "model_reversible_access",
+    "telemetry": "Simulation query logs: which states and decisions were simulated, and how much real data supports each region of the state space."
+   }
+  },
+  {
+   "primitive_id": "model_based_rl_definition",
+   "name": "Model-based RL is any MDP approach that uses a model, known or learned, and uses learning to approximate a global value or policy function",
+   "verbatim_quote": "We define model-based RL as: 'any MDP approach that i) uses a model (known or learned) and ii) uses learning to approximate a global value or policy function'.",
+   "page": "Sec. 1, p. 2 (restated in Sec. 11, p. 47)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Planning alone stores only a local solution and is not RL under this definition",
+    "Model-free RL stores a global solution but has no model; model-based RL is the conjunction of both"
+   ],
+   "breakdown_regime": "The definition is deliberately permissive: it classifies AlphaZero and dynamic programming with function approximation as model-based RL, which some taxonomies dispute.",
+   "domain": "planning and model learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's own architecture contract: a simulation model plus a learned global evaluation function, neither one alone. Audits of the engine should check both halves exist and are connected, because a simulator without distilled global functions, or ratings without a model beneath them, each fail the definition.",
+    "source_operator": "model_based_rl_definition",
+    "telemetry": "Engine component inventory: which simulators exist, which global functions are learned, and the logged flows between them."
+   }
+  },
+  {
+   "primitive_id": "three_categories_integration",
+   "name": "Three categories of planning-learning integration: model-based RL with a learned model, model-based RL with a known model, and planning over a learned model",
+   "verbatim_quote": "We distinguish three categories of planning-learning integration: 'model-based RL with a learned model', 'model-based RL with a known model', and 'planning over a learned model' (Table 2).",
+   "page": "Sec. 11, p. 47 (categories defined in Sec. 3, Table 2)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Learning can occur at two locations: learning the model, and learning the global solution; the three categories are the combinations that involve a model",
+    "Approaches with a learned model must account for model uncertainty; approaches with a known model can ignore it and emphasize asymptotic performance"
+   ],
+   "breakdown_regime": "The categories blur in implicit model-based RL (Sec. 6), where model and planner are optimized jointly and the learned or known distinction applies to components, not whole algorithms.",
+   "domain": "planning and model learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine subsystem can be classified into one of the three categories, and the classification determines its obligations: learned model components owe uncertainty estimates, known model components owe asymptotic accuracy, and planning only components owe a distillation path or an explicit reason they act directly.",
+    "source_operator": "three_categories_integration",
+    "telemetry": "Component registry with each subsystem's category, its model provenance, and whether a global function is learned from its output."
+   }
+  },
+  {
+   "primitive_id": "tabular_mle_model",
+   "name": "The tabular maximum likelihood model estimates each transition probability by normalizing observed transition counts",
+   "verbatim_quote": "a tabular maximum likelihood model (Sutton, 1991) estimates the probability of each possible transition as",
+   "page": "Sec. 4.1, p. 7, Eq. (4)",
+   "latex": "\\hat{T}(s'|s, a) = \\frac{n(s, a, s')}{\\sum_{s'} n(s, a, s')}",
+   "symbol_and_unit_ledger": {
+    "T-hat(s'|s, a)": "estimated probability of transitioning to s' after action a in state s (dimensionless, in [0, 1])",
+    "n(s, a, s')": "count of observed transitions from (s, a) to s' (dimensionless count)",
+    "sum over s' of n(s, a, s')": "total observed visits to state action pair (s, a) (dimensionless count)"
+   },
+   "assumptions": [
+    "Every state action pair keeps its own table entry; no generalization between states",
+    "Unobserved transitions get probability zero under pure maximum likelihood"
+   ],
+   "breakdown_regime": "Does not scale: table size grows exponentially in state dimensionality (the curse of dimensionality), and sparse counts give high variance estimates.",
+   "domain": "dynamics model learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Count based transition tables are the engine's ground truth baseline for frequent situations: before any fitted model is trusted for a situation class, its predictions should be compared against the raw normalized counts for that class.",
+    "source_operator": "tabular_mle_model",
+    "telemetry": "Play by play transition counts grouped by situation class (down, distance, field position, score state)."
+   }
+  },
+  {
+   "primitive_id": "local_vs_global_models",
+   "name": "A local model approximates dynamics only around the current region and is discarded after planning; a global model covers the whole state space",
+   "verbatim_quote": "Local: The other approach is to only locally approximate the dynamics, and each time discard the local model after planning over it.",
+   "page": "Sec. 4.1, p. 8",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Local models are fitted to a restricted data set near the current state, so a restricted function class such as a linear model can suffice",
+    "Global models keep learning from all collected data but risk instability from global function approximation"
+   ],
+   "breakdown_regime": "Local models must be re-estimated continually and cannot accumulate knowledge; global models can destabilize when one update degrades distant regions.",
+   "domain": "dynamics model learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine needs both granularities: global season level models for stable ratings, and local per matchup models fitted to the specific opponents and conditions of one game, discarded after use. Confusing the two produces either stale local fits or unstable global ones.",
+    "source_operator": "local_vs_global_models",
+    "telemetry": "Model registry entries tagged local or global, with the data window each was fitted on and its disposal or retention rule."
+   }
+  },
+  {
+   "primitive_id": "mse_conditional_mean",
+   "name": "A deterministic model trained on mean squared error over stochastic dynamics learns the conditional mean of the next state distribution, which can be a state that never occurs",
+   "verbatim_quote": "then the network will actually learn to predict the conditional mean of the next state distribution (Moerland et al., 2017b)",
+   "page": "Sec. 4.2, p. 9",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The transition distribution is multimodal or otherwise non-Gaussian, so its mean is not representative",
+    "The loss is plain mean squared error on a deterministic function approximator"
+   ],
+   "breakdown_regime": "In unimodal near deterministic dynamics the conditional mean is an adequate summary and the failure does not bite; the failure is specific to genuinely stochastic, multimodal transitions.",
+   "domain": "dynamics model learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any engine model trained to predict a single point estimate of a stochastic outcome inherits this defect: the average game script is not a real game script. The engine should predict distributions, or sample from generative models, wherever downstream reasoning depends on the shape of outcomes rather than only their mean.",
+    "source_operator": "mse_conditional_mean",
+    "telemetry": "Outcome distributions per prediction target, checked for multimodality, compared against the point predictions the engine currently emits."
+   }
+  },
+  {
+   "primitive_id": "epistemic_vs_aleatoric_uncertainty",
+   "name": "Epistemic uncertainty comes from limited data and shrinks with more data; aleatoric uncertainty is the environment's stochasticity and can never be reduced",
+   "verbatim_quote": "Uncertainty due to limited data (also known as epistemic uncertainty) clearly differs from the previously discussed stochasticity (also known as aleatoric uncertainty) (Der Kiureghian and Ditlevsen, 2009), in the sense that epistemic uncertainty can be reduced by observing more data, while stochasticity can never be reduced.",
+   "page": "Sec. 4.3, p. 10",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The two uncertainty types must be estimated and reported separately; a single confidence number conflates them",
+    "Planning reliability depends on knowing where predictions are untrustworthy, which is the epistemic part"
+   ],
+   "breakdown_regime": "In practice the decomposition is approximate: misspecified models convert aleatoric noise into apparent epistemic signal and vice versa, so the split must be validated empirically.",
+   "domain": "dynamics model learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine confidence statement should decompose the same way: variance from the inherent randomness of sport, which no data removes, versus ignorance from thin data on a matchup or situation, which more film and more samples do remove. The two demand opposite responses, robustness for the first and targeted data collection for the second.",
+    "source_operator": "epistemic_vs_aleatoric_uncertainty",
+    "telemetry": "Per prediction uncertainty decomposition: sample sizes behind each estimate, posterior or ensemble spread, and observed outcome variance."
+   }
+  },
+  {
+   "primitive_id": "partial_observability",
+   "name": "Partial observability: the current observation does not determine the ground truth state; it can be mitigated by incorporating previous observations, unlike stochasticity",
+   "verbatim_quote": "Partial observability occurs in an MDP when the current observation does not provide all information about the ground truth state of the MDP.",
+   "page": "Sec. 4.4, p. 10",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The hidden part of the state is at least partly recoverable from observation history",
+    "Stochasticity is noise in the true state transition and cannot be mitigated; partial observability is missing information and partly can"
+   ],
+   "breakdown_regime": "If the hidden state components are never reflected in any observation, no history method recovers them and the problem is a genuine POMDP requiring belief state reasoning.",
+   "domain": "dynamics model learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Game state as recorded is always a partial observation: intentions, injuries, play design and fatigue are hidden. The engine should treat its state as an observation, maintain history features deliberately, and mark which hidden factors each prediction is blind to.",
+    "source_operator": "partial_observability",
+    "telemetry": "Feature inventory per model: which state components are observed, which are inferred from history, and which are acknowledged unobserved."
+   }
+  },
+  {
+   "primitive_id": "belief_state_models",
+   "name": "Belief state models factor the dynamics into an observation model p(o|s) and a latent transition model, the state space model structure behind POMDP planning",
+   "verbatim_quote": "This structure is similar to the sequence modeling approach of state-space models (Bishop, 2006), such as hidden Markov models (HMM).",
+   "page": "Sec. 4.4, p. 11",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The latent state is Markov and the observation depends only on the latent state",
+    "Parameters can be estimated with expectation maximization or, with neural components, by gradient methods"
+   ],
+   "breakdown_regime": "Exact belief updating is intractable in large state spaces; approximate inference quality then bounds everything downstream, including any POMDP planner.",
+   "domain": "dynamics model learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Where the engine tracks hidden quantities such as true team strength or player health, a belief state formulation, a distribution over the hidden quantity updated by each observation, is the principled replacement for a single point rating that pretends the quantity is known.",
+    "source_operator": "belief_state_models",
+    "telemetry": "Observation streams (games, practices, reports) and the posterior spread the engine maintains over each latent strength or health variable."
+   }
+  },
+  {
+   "primitive_id": "nonstationarity_partial_models",
+   "name": "For non-stationary dynamics, partial models keep an ensemble of stationary models and switch between them when a regime change is detected, for example from prediction errors",
+   "verbatim_quote": "Partial models are an ensemble of stationary models, where the agent tries to detect a regime switch to subsequently switch between models as well.",
+   "page": "Sec. 4.5, p. 12",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The dynamics are piecewise stationary: regimes persist long enough to be worth modelling separately",
+    "Regime switches are detectable, for example through spikes in transition or reward prediction error"
+   ],
+   "breakdown_regime": "If change is continuous rather than regime based, discrete switching lags the truth; strongly decaying old data is the alternative but a high effective learning rate can destabilize training.",
+   "domain": "dynamics model learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Teams are non-stationary systems: scheme changes, injuries and trades switch regimes mid season. The engine should maintain regime tagged models with explicit switch detection on prediction error, instead of one model that averages across regimes and fits none of them.",
+    "source_operator": "nonstationarity_partial_models",
+    "telemetry": "Rolling prediction error per team and model, regime labels per game window, and detected switch points with their causes where known."
+   }
+  },
+  {
+   "primitive_id": "multistep_compounding_error",
+   "name": "One step models rolled out for planning accumulate error and diverge from true dynamics, because they were never optimized for long range prediction",
+   "verbatim_quote": "However, since our learned model was never optimized to make long-range predictions, accumulating errors may actually cause our multi-step predictions to diverge from the true dynamics.",
+   "page": "Sec. 4.6, p. 13",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Planning consumes multi step predictions even though training optimized one step accuracy",
+    "Two remedies exist: multi step training losses that unroll the model during training, or separate dynamics functions for each prediction depth"
+   ],
+   "breakdown_regime": "One step prediction error is therefore a poor proxy for planning usefulness; a model can win the one step metric and lose as a planning model.",
+   "domain": "dynamics model learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This vetoes a common engine shortcut: chaining a good next play model into full game simulations without multi step validation. Simulation quality must be measured at the horizon it is used, drive level and game level, not only at the single step level.",
+    "source_operator": "multistep_compounding_error",
+    "telemetry": "Multi step rollout error curves: predicted versus actual state distributions at increasing horizons for drives and games."
+   }
+  },
+  {
+   "primitive_id": "latent_dynamics_factorization",
+   "name": "Latent dynamics models factor into an encoder, a latent transition function, and a decoder, an auto-encoder with added latent dynamics",
+   "verbatim_quote": "This structure, visualized in Figure 2, arrow 4, reminds of an auto-encoder (with added latent dynamics), as frequently used for representation learning in the deep learning community.",
+   "page": "Sec. 4.7, p. 13",
+   "latex": "z_t = f^{enc}_{\\phi}(s_t), \\quad z_{t+1} = f^{trans}_{\\phi}(z_t, a_t), \\quad s_{t+1} = f^{dec}_{\\phi}(z_{t+1})",
+   "symbol_and_unit_ledger": {
+    "z_t": "latent representation of the observation at time t",
+    "f^enc_phi": "encoding function mapping observation s_t to latent state z_t",
+    "f^trans_phi": "latent dynamics function advancing z_t under action a_t",
+    "f^dec_phi": "decoder function mapping latent state back to a next state prediction",
+    "phi": "shared neural network parameters",
+    "s_t, a_t": "observation and action at time t"
+   },
+   "assumptions": [
+    "Planning at the latent level requires predicted latent states to live in the same embedding space as encoded real states, enforced by an added consistency loss or by probabilistic state space inference",
+    "The decoder exists so latent predictions can be compared with real observations"
+   ],
+   "breakdown_regime": "If the latent space discards value relevant information, latent planning is fast and wrong; representation losses (auxiliary, contrastive, inverse dynamics) exist precisely to fight this.",
+   "domain": "dynamics model learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's embeddings of teams, players and situations should be built as this factorization: an encoder from raw game data to a compact state, transition structure inside the embedding, and a decoder back to observable predictions, with a consistency loss so simulated embedding trajectories stay on the manifold of real ones.",
+    "source_operator": "latent_dynamics_factorization",
+    "telemetry": "Embedding drift measurements: distance between encoded real states and model predicted latent states over multi step rollouts."
+   }
+  },
+  {
+   "primitive_id": "options_framework",
+   "name": "Options are temporally extended high-level actions, each with an initiation set, a sub-policy, and a state dependent termination probability; goal-conditioned value functions are the main competing framework",
+   "verbatim_quote": "There are a variety of frameworks to define abstract actions. One popular choice is the options framework (Sutton et al., 1999). Options are a discrete set of high-level actions.",
+   "page": "Sec. 4.8, p. 15",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Temporal abstraction can reduce both sample complexity and computational complexity of solving the MDP",
+    "The hard subproblem is discovering useful subroutines: bottleneck states, state space coverage, information theoretic compression, reward relevancy, or priors"
+   ],
+   "breakdown_regime": "End to end learned options can degenerate: one option solves the whole task, or every option terminates after one step. Bottleneck discovery methods do not scale well to high dimensional problems.",
+   "domain": "temporal abstraction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Drives, possessions and scripted sequences are the engine's options: reusable multi step behaviours with entry conditions and termination rules. Treating them as first class actions shortens the effective planning horizon for game reasoning the same way options shorten search in an MDP.",
+    "source_operator": "options_framework",
+    "telemetry": "Catalogue of recurring multi play sequences with their initiation contexts, internal policy patterns, and termination outcomes."
+   }
+  },
+  {
+   "primitive_id": "bottleneck_subgoals",
+   "name": "Bottleneck states, which connect densely interconnected subgraphs of the MDP graph, are natural subgoal candidates for subroutines",
+   "verbatim_quote": "A bottleneck is a state that connects two densely interconnected subgraphs in the MDP graph (Menache et al., 2002).",
+   "page": "Sec. 4.8, p. 16",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The MDP's transition graph has community structure with sparse connections between regions",
+    "Reaching another region requires passing the bottleneck, which is what makes it a crucial subgoal"
+   ],
+   "breakdown_regime": "Graph based bottleneck detection received much attention in small problems but does not scale well to high dimensional state spaces.",
+   "domain": "temporal abstraction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "In game terms, bottleneck states are the hinge situations a drive or game must pass through to change character: midfield crossings, red zone entries, two minute transitions. The engine should identify hinge situations from transition graph structure and spend disproportionate analysis on them, because leverage concentrates there.",
+    "source_operator": "bottleneck_subgoals",
+    "telemetry": "Situation transition graphs per team and league, with betweenness style measures over situation nodes."
+   }
+  },
+  {
+   "primitive_id": "planning_budget_accounting",
+   "name": "Planning budget is measured in model calls and trades off against real data collection: Dyna runs about 100 one-step planning iterations per real step, AlphaGo Zero one iteration of about 1600 traces of depth about 200, roughly 320,000 model calls",
+   "verbatim_quote": "In between every real environment step, Dyna samples up to a 100 one-step transitions. This means we have 100 planning iterations, each of budget 1.",
+   "page": "Sec. 5.2, p. 20",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Budget decomposes into how many planning iterations start and how much effort each iteration receives",
+    "The squeezing extreme plans until convergence on current data; the mixing approach plans continuously in the background without exhausting the model"
+   ],
+   "breakdown_regime": "Most methods fix the trade off as a hyperparameter, while humans adapt it; adaptive budget rules based on value uncertainty exist but the learned model case is an open problem, since early models are near random and heavy planning on them is wasted.",
+   "domain": "planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Analysis compute in the engine should be budgeted and reported in the same units every time: number of simulations run per real game observed. A fixed simulation budget per game, blind to matchup uncertainty, repeats the fixed hyperparameter mistake the survey identifies.",
+    "source_operator": "planning_budget_accounting",
+    "telemetry": "Compute logs per analysis: simulations run, real games in the training window, and the ratio between them per output."
+   }
+  },
+  {
+   "primitive_id": "differential_planning_value_gradients",
+   "name": "If the learned transition and reward models are differentiable and the policy is differentiable, planning can directly differentiate the cumulative reward objective with respect to policy parameters (value gradients)",
+   "verbatim_quote": "If the transition and reward models are differentiable, and we specify a differentiable policy, then we can directly take the gradient of the cumulative reward objective with respect to the policy parameters.",
+   "page": "Sec. 5.3, pp. 20-21",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The real environment need not be differentiable; it is the learned model of it that supplies the gradients",
+    "Underlying dynamics and rewards must be relatively smooth for gradients to be informative"
+   ],
+   "breakdown_regime": "Poorly suited to discrete problems and sparse rewards, where gradients vanish or mislead; discrete tree search planning is the alternative there.",
+   "domain": "planning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where the engine's matchup models are differentiable, candidate adjustments (scheme tweaks, usage shifts) can be optimized by gradient through the model rather than by grid search over scenarios. The primitive marks the boundary: smooth continuous adjustments get gradients, discrete choices get search.",
+    "source_operator": "differential_planning_value_gradients",
+    "telemetry": "Gradient norms and improvement per gradient step on the engine's differentiable models, versus search based baselines on the same tasks."
+   }
+  },
+  {
+   "primitive_id": "prioritized_sweeping_backward_planning",
+   "name": "Backward planning over a reverse model spreads value changes to precursor states: prioritized sweeping updates first the state action pairs whose values changed most",
+   "verbatim_quote": "A reverse model may help spread information more quickly over the state space.",
+   "page": "Sec. 5.3, p. 21",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A reverse model, from a state to its possible precursor state action pairs, is available or learnable; tabular models are trivial to invert",
+    "Value changes are tracked so precursors of large changes can be prioritized"
+   ],
+   "breakdown_regime": "With function approximation, prioritized sweeping can be unstable; the benefit demonstrated in tabular settings does not automatically transfer.",
+   "domain": "planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Post game learning in the engine should propagate backwards, not only forwards: when a result revises the value of a late game situation, the situations that lead into it are the next most likely to be misvalued, and review effort should be allocated in that order.",
+    "source_operator": "prioritized_sweeping_backward_planning",
+    "telemetry": "Value revision logs per situation, and the precursor situations whose estimates change after each result is incorporated."
+   }
+  },
+  {
+   "primitive_id": "data_close_planning",
+   "name": "Data-close planning constrains planning iterations to stay near regions where real data was observed, so the learned model is never trusted far outside its evidence",
+   "verbatim_quote": "The first approach is to ensure that the planning iterations stay close to regions where we have actually observed data.",
+   "page": "Sec. 5.3, p. 23",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Model error grows with distance from observed data, so constraining the plan is a substitute for explicit uncertainty modelling",
+    "Dyna implements a weak form by starting planning at previously visited states and sampling one step transitions"
+   ],
+   "breakdown_regime": "Staying data close forfeits the main advantage of a model, reaching genuinely new states; the alternative is explicit uncertainty propagation, which prices the risk instead of forbidding it.",
+   "domain": "planning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine simulations should carry a distance to evidence measure: how many real plays support the region of situation space being simulated. Outputs whose simulations stay data close can be stated plainly; outputs that extrapolate should be flagged with the extrapolation distance attached.",
+    "source_operator": "data_close_planning",
+    "telemetry": "Per simulation region support counts: real plays observed near each simulated state, summarized as a minimum support figure per output."
+   }
+  },
+  {
+   "primitive_id": "uncertainty_propagation_particles",
+   "name": "Sample based uncertainty propagation tracks the predicted distribution by propagating a set of particles through the model, as in PETS and Deep PILCO",
+   "verbatim_quote": "This propagation approach, also known as particle methods, tracks the distributions of uncertainty by propagating a set of particles forward.",
+   "page": "Sec. 5.3, p. 23",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Analytic propagation needs closed form distribution updates, feasible for Gaussian process models but usually impossible for neural network dynamics",
+    "Refitting propagated particles to a distribution at each step can regularize but also distorts the uncertainty shape"
+   ],
+   "breakdown_regime": "Particle sets collapse or spread unrealistically over long horizons if the model is biased; propagation faithfully amplifies whatever the one step model believes.",
+   "domain": "planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's game simulations should propagate distributions, not single trajectories: a particle set of game scripts per matchup, with the spread at each quarter carried forward, is what makes late game confidence statements honest.",
+    "source_operator": "uncertainty_propagation_particles",
+    "telemetry": "Particle counts, spread of simulated states by quarter or period, and calibration of the propagated spread against realized outcomes."
+   }
+  },
+  {
+   "primitive_id": "bootstrapping_value_prior",
+   "name": "Planning uses the learned value function as a prior by bootstrapping: plug in the current value prediction at the search frontier instead of searching deeper",
+   "verbatim_quote": "The most common way to incorporate value information is through bootstrapping (Sutton and Barto, 2018), where we plug in the current prediction of a state or state-action value to prevent having to search deeper (reducing the depth of the search).",
+   "page": "Sec. 5.4, p. 24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The learned value function is informative at the frontier states where search stops",
+    "Value information can also initialize action values at the root of the search, a form of bootstrapping at depth zero"
+   ],
+   "breakdown_regime": "Bootstrapping imports the value function's errors into the plan; if the function is systematically wrong in a region, shallow search will ratify the error instead of correcting it.",
+   "domain": "planning and learning integration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Deep engine analysis should terminate its game script search on the engine's own ratings at the frontier, and those ratings must be the same objects the fast outputs publish, so slow reasoning and fast judgment share one value source and audit each other.",
+    "source_operator": "bootstrapping_value_prior",
+    "telemetry": "Frontier value usage logs: at which states deep analysis stopped and which published rating supplied the terminal value."
+   }
+  },
+  {
+   "primitive_id": "policy_prior_mcts",
+   "name": "A learned policy can steer planning as a prior: AlphaGo Zero multiplies the action probability into the upper confidence bound term of MCTS, giving extra exploration pressure to actions the policy already favours",
+   "verbatim_quote": "AlphaGo Zero (Silver et al., 2017a) uses the probability of an action as a prior multiplication term on the upper confidence bound term in MCTS planning.",
+   "page": "Sec. 5.4, p. 24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The policy prior and the search are trained in a closed loop: planning output becomes policy training targets (for AlphaGo Zero, normalized root visit counts, trained with cross entropy)",
+    "It is not yet clear which of the several ways to inject policy knowledge into planning works best in general"
+   ],
+   "breakdown_regime": "A strong but wrong prior can starve the search of the very lines that would correct it; the prior must multiply exploration pressure, not replace it.",
+   "domain": "planning and learning integration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's fast tendencies, which plays and matchups its ratings already favour, should bias where deep analysis searches first, without closing off unfavoured lines. Search allocation logs should be able to show the prior's influence explicitly.",
+    "source_operator": "policy_prior_mcts",
+    "telemetry": "Search visit distributions per decision point, compared against the prior distribution that seeded them."
+   }
+  },
+  {
+   "primitive_id": "mpc_receding_horizon",
+   "name": "Model predictive control acts directly from planning output: take the greedy action of a k-step lookahead, execute it, observe the true next state, and repeat",
+   "verbatim_quote": "In MPC, we find the greedy action of a k-step lookahead search, execute the greedy action, observe the true next state, and repeat the same procedure from there.",
+   "page": "Sec. 5.4, p. 26",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only the first action of each plan is executed; replanning from the realized state absorbs model error at every step",
+    "MPC is robust to changing constraints on states and actions and is the standard pattern in robotics and control"
+   ],
+   "breakdown_regime": "Replanning only one executed action at a time can reintroduce jittering behaviour in exploration settings, and MPC discards the global solution unless it is combined with value or policy learning.",
+   "domain": "planning and learning integration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In game reasoning, receding horizon is the honest frame for any sequential recommendation: recommend the next decision from the current state, then replan when the real next state is known, instead of publishing a full script as if the model were the game.",
+    "source_operator": "mpc_receding_horizon",
+    "telemetry": "Recommendation logs showing plan, executed or realized first step, and the replanned continuation after each real observation."
+   }
+  },
+  {
+   "primitive_id": "value_equivalent_models",
+   "name": "Value equivalent models are trained to predict future value or action rather than future state, so the model keeps only the dynamics that value prediction needs (MuZero, Value Prediction Networks, Predictron)",
+   "verbatim_quote": "Value equivalent models are unrolled inside the computation graph to predict a future value (or action), instead of a future state.",
+   "page": "Sec. 6.1, p. 31",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Full state prediction wastes capacity on value irrelevant detail; in some domains the value relevant dynamics are much simpler than the full dynamics",
+    "Grimm et al. (2020) give the theoretical study of the value equivalence principle the survey cites"
+   ],
+   "breakdown_regime": "Because all supervision comes through a scalar value or reward signal, value equivalent models may miss environment structure needed for transfer to new objectives.",
+   "domain": "implicit model-based RL",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Not every engine model needs to predict everything about a game. For a specific decision, a model that predicts only the value consequences of the choices, and is trained on exactly that, can be smaller, faster and more accurate than the full simulator. The full simulator stays necessary for questions the value equivalent model was never asked.",
+    "source_operator": "value_equivalent_models",
+    "telemetry": "Per model target audit: what each model is trained to predict, and which decisions consume full state predictions versus value only predictions."
+   }
+  },
+  {
+   "primitive_id": "algorithmic_function_approximation",
+   "name": "Learning to plan: the planning operations themselves can be parameterized and optimized end to end, an algorithmic function approximator whose internal cycles improve prediction quality",
+   "verbatim_quote": "This idea is known as algorithmic function approximation (Guez et al., 2019), where our learned approximator makes multiple internal cycles (like a recurrent neural network) to improve the quality of its prediction.",
+   "page": "Sec. 6.2, p. 33",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Planning structure such as selection, backup and recommendation can be specified as neural components and trained against correct action or value targets (MCTSNet, I2A, IBP)",
+    "Unlike ordinary recurrence over inputs, the internal cycles here refine the same prediction"
+   ],
+   "breakdown_regime": "Learned planners risk exploiting task specific characteristics and failing to generalize; full implicit models like TreeQN and DRC are computationally demanding and their optimization can be unstable.",
+   "domain": "implicit model-based RL",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's analysis procedure itself is a candidate for this treatment: the sequence of checks a deep analysis runs can be treated as a learnable algorithm whose steps are scored by final accuracy, rather than a fixed checklist designed once by hand.",
+    "source_operator": "algorithmic_function_approximation",
+    "telemetry": "Accuracy of the analysis pipeline as a function of internal iteration count, and which steps the learned procedure keeps or drops."
+   }
+  },
+  {
+   "primitive_id": "dyna_data_efficiency",
+   "name": "Mixing model based updates with model free updates buys data efficiency: Dyna reached 20 to 40 times improved data efficiency in a gridworld, and deep variants report roughly 2 to 5 times",
+   "verbatim_quote": "The original idea dates back to the Dyna architecture of Sutton (1990), who reached improved data efficiency of up to 20-40x in a gridworld problem.",
+   "page": "Sec. 7.1, p. 35",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Model based updates run in the background across reachable states while real experience continues",
+    "Model free updates remain in the mix because they generally reach better asymptotic performance than learned model methods alone"
+   ],
+   "breakdown_regime": "The gains shrink in high dimensional settings and depend on stable uncertainty estimation and heavy hyperparameter tuning, which is why strong data efficiency results remain relatively rare.",
+   "domain": "benefits of model-based RL",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's scarcest resource is real games. Simulated reps should be mixed into training at a measured ratio, with the efficiency gain, improvement per real game at fixed simulation budget, reported as a headline metric rather than assumed.",
+    "source_operator": "dyna_data_efficiency",
+    "telemetry": "Learning curves per model version: performance against number of real games consumed, with and without simulated updates mixed in."
+   }
+  },
+  {
+   "primitive_id": "pilco_gp_data_efficiency",
+   "name": "PILCO shows the squeezing extreme: Gaussian process dynamics with analytic uncertainty propagation solved a real world cartpole in less than 20 seconds of experience",
+   "verbatim_quote": "A breakthrough approach was PILCO (Deisenroth and Rasmussen, 2011), which used Gaussian Processes to account for model uncertainty, and solved a real world Cartpole problem in less than 20 seconds of experience.",
+   "page": "Sec. 7.1, p. 35",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The squeezing approach plans from the current state until near convergence on the available data before acting again",
+    "It relies on correct Bayesian uncertainty estimates, here from the Gaussian process model"
+   ],
+   "breakdown_regime": "Squeezing is theoretically near optimal in real world sample complexity but computationally expensive and hard to scale beyond low dimensional problems; PETS and MBPO trade the GP for bootstrap ensembles to reach higher dimensional control.",
+   "domain": "benefits of model-based RL",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For the engine's most data starved questions, a new opponent tendency or a rare situation, the PILCO pattern applies: a model with honest uncertainty, squeezed hard before any conclusion is published, can extract a defensible answer from very few real observations where a data hungry method must stay silent.",
+    "source_operator": "pilco_gp_data_efficiency",
+    "telemetry": "Sample counts behind the engine's lowest data conclusions, and the uncertainty method used for each."
+   }
+  },
+  {
+   "primitive_id": "intrinsic_reward_total",
+   "name": "Knowledge based intrinsic motivation adds an intrinsic reward to the extrinsic reward with a weighting hyperparameter, r = r^e + eta * r^i",
+   "verbatim_quote": "these methods use a total reward that combines the intrinsic and extrinsic part",
+   "page": "Sec. 7.2, p. 39, Eq. (5)",
+   "latex": "r_t(s, a, s') = r^e(s, a, s') + \\eta \\cdot r^i(s, a, s')",
+   "symbol_and_unit_ledger": {
+    "r_t(s, a, s')": "total reward used for learning on the transition (reward units)",
+    "r^e(s, a, s')": "extrinsic reward from the environment (reward units)",
+    "r^i(s, a, s')": "intrinsic reward computed from state based properties such as novelty or model error (reward units)",
+    "eta": "hyperparameter controlling the relative strength of intrinsic motivation (dimensionless)"
+   },
+   "assumptions": [
+    "The intrinsic signal is usually propagated merged with the extrinsic signal (task conflated backups)",
+    "Separate value functions for intrinsic and extrinsic reward are the task separated alternative, at extra compute and memory cost"
+   ],
+   "breakdown_regime": "When an intrinsic bonus wears off, its effect baked into the global value function takes time to fade, which can distort the true task solution; this is the detachment and conflation risk of the additive form.",
+   "domain": "exploration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's research agenda can use the same additive structure: an explicit curiosity term, weighted by a declared eta, added to the value of investigating a matchup or situation, so exploration of the unknown is a visible budget line rather than analyst whim.",
+    "source_operator": "intrinsic_reward_total",
+    "telemetry": "Per investigation logs: extrinsic importance, intrinsic novelty score, the eta applied, and which investigations the combined score selected."
+   }
+  },
+  {
+   "primitive_id": "beb_novelty_bonus",
+   "name": "The Bayesian Exploration Bonus sets the intrinsic reward proportional to 1 / (1 + n(s, a)): novelty decays with visitation count",
+   "verbatim_quote": "For example, the Bayesian Exploration Bonus (BEB) (Kolter and Ng, 2009) uses",
+   "page": "Sec. 7.2, p. 39, Eq. (6)",
+   "latex": "r^i(s, a, s') \\propto \\frac{1}{1 + n(s, a)}",
+   "symbol_and_unit_ledger": {
+    "r^i(s, a, s')": "intrinsic reward for the transition (reward units)",
+    "n(s, a)": "number of previous visits to state action pair (s, a) (dimensionless count)"
+   },
+   "assumptions": [
+    "Visitation count is a usable proxy for novelty in tabular or near tabular settings",
+    "High dimensional problems replace counts with pseudo counts from density models, which mimic the same decay"
+   ],
+   "breakdown_regime": "Count based novelty is blind to whether visits were informative; a frequently visited but still poorly modelled transition gets no bonus, which is why model prediction error and information gain variants exist.",
+   "domain": "exploration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Situation coverage in the engine can be scored with the same decay: the marginal value of analysing one more instance of a situation falls as its logged count rises, which gives a principled queue ordering for film and data review across thousands of situations.",
+    "source_operator": "beb_novelty_bonus",
+    "telemetry": "Coverage counts per situation class in the engine's database, and the review queue order they induce."
+   }
+  },
+  {
+   "primitive_id": "local_planning_smooths_errors",
+   "name": "Local planning can raise asymptotic performance by smoothing the local errors of a global function approximation, looking ahead to states with more clearly discriminable values; planning and learning are dual process partners, fast global function and slow local search",
+   "verbatim_quote": "the local representation may help to locally smooth out the errors in the function approximation",
+   "page": "Sec. 7.3, p. 40",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The global approximation generalizes but makes local errors; the local plan uses an exact or tabular representation near the current state",
+    "Empirically, optimal performance sits at an intermediate planning budget per real step, not at exhaustive search and not at zero planning"
+   ],
+   "breakdown_regime": "The explanation is still partly hypothesis: evidence cited is initial (Silver et al. 2008 transient and permanent memory; Moerland et al. 2020b; Wang et al. 2019), and model free instability under function approximation is the confound.",
+   "domain": "benefits of model-based RL",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's core quality loop stated plainly: published ratings are the fast global function, per game deep analysis is the slow local search, and the search exists partly to correct the ratings where they are locally wrong. If deep analysis never changes a rating, one of the two halves is not working.",
+    "source_operator": "local_planning_smooths_errors",
+    "telemetry": "Correction rate: how often deep per game analysis revises the global rating for the involved teams, and the accuracy change on revised versus unrevised cases."
+   }
+  },
+  {
+   "primitive_id": "regret_definition",
+   "name": "Regret at time T is the expected total reward gap between the optimal policy and the learning algorithm's changing policy; model-based methods carry the field's best PAC and regret guarantees, and one step greedy planning can match UCRL2 and EULER regret at lower complexity",
+   "verbatim_quote": "The regret measures the average total loss of reward of the learned policy compared to the optimal policy.",
+   "page": "Sec. 8, p. 44, Eq. (8)",
+   "latex": "\\mathrm{Regret}(T) = \\mathbb{E}_{\\pi^*}\\left[ \\sum_{t=1}^{T} r_t \\right] - \\mathbb{E}_{\\pi}\\left[ \\sum_{t=1}^{T} r_t \\right]",
+   "symbol_and_unit_ledger": {
+    "Regret(T)": "total expected reward lost to learning rather than acting optimally over T steps (reward units)",
+    "pi*": "the optimal policy",
+    "pi": "the learning algorithm's policy, which changes over time",
+    "r_t": "reward at timestep t (reward units)",
+    "T": "total number of timesteps"
+   },
+   "assumptions": [
+    "The known minimax lower bound on regret is Omega(sqrt(H |S| |A| T)); UCRL2, UCBVI and EULER approach it, with EULER matching it under extra assumptions on the optimal value function's variance",
+    "All the bounded algorithms use optimism in the face of uncertainty, or the Bayesian posterior sampling alternative"
+   ],
+   "breakdown_regime": "The bounds assume full planning and tabular structure; they price learning in samples, not in computation, and say nothing directly about function approximation regimes where practice actually lives.",
+   "domain": "theory of model-based RL",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Regret is the right scoreboard for the engine's own learning over a season: cumulative value lost by following the engine's current ratings instead of the best ratings it could have had, measured after the fact. Tracking it separates the cost of ignorance from the noise of outcomes.",
+    "source_operator": "regret_definition",
+    "telemetry": "Per week cumulative gap between the engine's published projections and the hindsight best projections on the same games, accumulated over the season."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "2ec4f6881728fa8b-t1",
+   "think": "This survey is a taxonomy before it is a toolbox. Moerland, Broekens, Plaat and Jonker take two mature fields that attack the same object, the Markov Decision Process, from opposite assumptions about access, and they build a single coordinate system in which every hybrid algorithm can be located. Planning assumes reversible access to the dynamics: the agent can query any state action pair, in any order, as often as compute allows, but it stores only a local solution around the current state. Model free reinforcement learning assumes irreversible access: the agent must live with the next state the world returns, so it compensates by storing a global solution, a value or policy function defined over the whole state space. Model based reinforcement learning is the deliberate combination of the two: a model, known or learned, plus a learned global solution. That single distinction organizes everything else in the paper, and it is the first thing a reasoning engine should absorb, because it turns an algorithm zoo into a set of explicit design choices. The second thing to absorb is that learning can enter at two, and ultimately three, locations. It can learn the dynamics model from real transitions, it can learn the global value or policy function, and in the implicit methods of Section 6 it can learn the planning operations themselves. The survey's Figure 1, with its seven arrows, is effectively a wiring diagram for any system that wants to combine simulation with experience: plan over the model, let value and policy priors steer the planner, distill planning output back into the global function, act from the planner or from the function, and keep training both the model and the function on real data. Every named algorithm, Dyna, AlphaGo Zero, Embed2Control, PILCO, PETS, is just a choice of which arrows are switched on. Section 4 is a catalogue of everything that can be wrong with a learned model, and it reads like a failure mode checklist for any learned simulator. A deterministic network trained with squared error on stochastic dynamics silently learns the conditional mean, which can be a state that never occurs. Uncertainty from limited data is different in kind from stochasticity: epistemic uncertainty shrinks with data, aleatoric noise does not, and confusing them corrupts both exploration and planning depth decisions. Partial observability means the current observation is not the state, so history must be carried by windows, belief states, recurrence or external memory. Non stationarity means yesterday's model can become a liability, and the defence is regime detection with partial models. One step models compounded over long horizons diverge, because they were never trained for the multi step regime in which planning uses them. Representations decide what the model can even express, which is why the section spends so long on latent factorizations, object structure, and loss design, and temporal abstraction decides the time scale at which decisions are taken at all. Section 5 then treats planning as a budgeted resource with four knobs: where planning starts, how much budget it gets relative to real data collection, how the search itself is shaped in type, direction, breadth and depth, and how its output re enters the learning and acting loop. The Dyna versus AlphaGo Zero contrast makes the budget concrete: one hundred one step iterations per real step against a single iteration of roughly three hundred twenty thousand model calls. Neither extreme is generally right, and the survey is honest that the adaptive trade off humans make is still mostly an open problem in the field. Section 6 is the conceptual turn. If the whole pipeline from model to action exists to produce good values and actions, then parts of it can be optimized end to end for exactly that output. Value equivalent models such as MuZero stop trying to reconstruct the next observation and learn only the dynamics that value prediction needs. Learning to plan goes further and parameterizes the search operations themselves, and combined methods such as TreeQN optimize model and planner jointly. The gain is performance without manual design; the cost is that the learned internals are fitted to one task distribution and may not transfer. Section 7 prices the benefits. Data efficiency is the headline: planning converts cheap model calls into a substitute for expensive real samples, with Dyna reporting twenty to forty fold gains in a gridworld and PILCO solving a real cartpole problem in under twenty seconds of experience. Exploration becomes two phase, deliberate inside the model and conservative in the world. Transfer works because a dynamics model survives a change of reward that destroys a value function, and successor representations occupy the middle ground. Safety and explainability follow because a plan is an inspectable object. Section 8 adds the theory: model based methods carry better PAC and regret guarantees than model free ones, at worse computational cost, and one step greedy planning can match the regret of far heavier schemes. For a reasoning engine the transferable lesson is architectural. Keep the world model, the global evaluation function and the local search as separate components with explicit interfaces. Track which kind of uncertainty attaches to every prediction. Treat search depth and breadth as a budget allocated by expected information gain, not as a fixed constant. Distill search results back into the global function so that tomorrow's fast judgment starts from today's slow reasoning. And evaluate the system on three separate axes, quality of the final decision, number of real world samples consumed, and compute spent, because optimizing any one axis in silence degrades the other two. Where the survey says the field is unfinished, in adaptive budgets, subroutine discovery, and uncertainty estimation at scale, is exactly where an engine builder should expect to do original work rather than copy a recipe. What an engine builder should not take from the survey is any single algorithm. The named systems are tied to their domains: tree search variants to discrete perfect information games, Gaussian process methods to low dimensional control, latent imagination to pixel benchmarks. What transfers is the discipline of asking, for every component, which access assumption it makes, which solution representation it maintains, which uncertainty it carries, and which budget it consumes. The survey also models an evaluation honesty worth copying: benefits are listed next to disbenefits, data efficiency next to instability, and asymptotic claims are separated for known and learned models instead of being merged into one headline number.",
+   "retrocausal_genealogy": "The lineage runs from Samuel's checkers programme, which already combined a learned evaluation with search, through Bellman's dynamic programming and the control field's system identification tradition of Astrom and Eykhoff. Korf's Learning Real Time A star and Sutton's Dyna architecture around 1990 named the modern combination, and Moore and Atkeson's prioritized sweeping added backward propagation soon after. Tolman's cognitive maps and Craik's mental models supply the older cognitive root: organisms that simulate before acting. The deep learning era then supplied function approximation strong enough for PILCO, AlphaGo Zero, Dreamer and MuZero, and the survey itself, a taxonomy paper, reflects a field mature enough to need a common language more than another algorithm.",
+   "theory_of_mind": "The authors write for two audiences at once, planners who think in local search and learners who think in global function approximation, and they assume the reader already commands basic MDP notation. Their model of the field is that confusion is mostly terminological: the same algorithm looks like planning or like learning depending on which distinction, access or representation, is applied. They believe progress comes from making design choices explicit and comparable, hence the taxonomies and comparison tables. They also treat human cognition as legitimate evidence about architecture, citing dual process theory and mental simulation, while keeping the engineering criteria, sample counts, compute and asymptotic performance, as the final arbiters.",
+   "cross_layer_veto": "Several vetoes run across the layers. Model uncertainty vetoes planning depth: the further a rollout travels from observed data, the less any downstream value estimate may be trusted, which is why data close planning and uncertainty propagation exist. Compounding error vetoes naive reuse of one step models for long horizons. The irreversibility of the real environment vetoes planner style exploration at the acting layer, forcing the two phase split between exploration inside the model and conservatism in the world. A purely local plan vetoes itself unless its results are distilled into the global function, because local solutions are discarded. Compute vetoes exhaustive breadth and depth jointly. Finally, the instability of learned models vetoes the asymptotic performance claims that known model methods may make, which is why mixing model free updates remains the safety net."
+  }
+ ],
+ "universal_lens": "Read outside reinforcement learning, the survey is a template for any system that must act in a world it can only partly observe and expensively sample. Build a reversible internal model of the irreversible process. Keep a fast global judgment for routine cases and a slow local search for hard ones. Let the search teach the judgment, let the judgment aim the search, and price every decision in three currencies at once: quality of outcome, number of real world trials consumed, and computation spent. Track two kinds of ignorance separately, the noise that will never go away and the ignorance that more data will remove, because they demand opposite responses: robustness for the first, exploration for the second.",
+ "gsi_mapping": "For the Galaxy Sports Institute the survey supplies a research method. Situations in sport can be organized exactly like the survey organizes algorithms: by what access the analyst has to the underlying process, by what representation the knowledge is stored in, and by where learning enters. Its model learning checklist, stochasticity, partial observability, non stationarity, compounding error over long horizons, state and temporal abstraction, becomes a checklist for studying any competitive system, from play sequencing to season long roster dynamics. The performance criteria discipline is equally transferable: report the quality of a conclusion, the amount of real evidence consumed to reach it, and the analysis effort spent, as three separate numbers rather than one blended claim.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine the survey is an architecture sketch. The learned dynamics model corresponds to matchup and game script simulation built from tracked data. The global value function corresponds to the fast ratings and projections the engine publishes. Local planning corresponds to the deep per game analysis that searches over plausible game scripts before a projection is finalized. The integration rules transfer directly: priors from the global ratings should steer the deep analysis, the deep analysis should be distilled back into the ratings, planning depth should shrink where the underlying data is thin, and uncertainty about a matchup should be carried as an explicit quantity that can veto confidence, never silently averaged away."
+}

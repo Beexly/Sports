@@ -1,0 +1,615 @@
+{
+ "book_id": "e864d79f6b8d25e8",
+ "source_status": "COMPLETE",
+ "source_note": "Principles of Forecasting: A Handbook for Researchers and Practitioners, edited by J. Scott Armstrong (The Wharton School, University of Pennsylvania), Kluwer Academic Publishers, print copyright 2001 (eBook copyright 2002), International Series in Operations Research and Management Science. Local file is the Kluwer eBook PDF (eBook ISBN 0-306-47630-4; print ISBN 0-7923-7930-6), 13,182,742 bytes, full sha256 e864d79f6b8d25e845dd4ea5d69b3108d72a3a8fde6b052840f5435fe78d572d. The tasking filename said Armstrong-2001; the actual file is ArmstrongEd-2001-PrinciplesOfForecasting.pdf in bucket books-must-have. The extracted text is a clean typeset text layer with occasional hyphenation at line breaks; displayed equations are rendered as images in the PDF and their glyphs do not survive text extraction, so formula-bearing primitives rely only on formulas the chapters also state in running text (Manski and Bemmaor intentions bounds, the attraction formulation, and the neuron computation stated in words), and every verbatim quote was verified as a contiguous substring of the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "principles_are_condition_action_rules",
+   "name": "Forecasting principles are condition-action statements graded by evidence",
+   "verbatim_quote": "These \"principles\" represent advice, guidelines, prescriptions, condition-action statements, and rules.",
+   "page": "Introduction, pp. 1-11 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "A principle is usable only with its conditions attached; the Standards chapter grades each principle by evidence type (experiments, surveys of experts, writings, common sense).",
+   "breakdown_regime": "Breaks down when a principle is applied as an unconditional law outside the situation it was derived for.",
+   "domain": "forecasting methodology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Store engine rules as condition-action pairs with evidence grades, never as free-floating tips; a rule fires only when its stated conditions hold.",
+    "source_operator": "principles_are_condition_action_rules",
+    "telemetry": "Quote verified contiguous in extracted text; principle count 139 confirmed in Standards chapter."
+   }
+  },
+  {
+   "primitive_id": "efficient_market_forecasts_are_optimal",
+   "name": "Forecasts from efficient markets are optimal; individual forecasters cannot beat them without inside information",
+   "verbatim_quote": "Cowles (1933) concluded that forecasters could not improve the accuracy of forecasts derived from the actions of a market.",
+   "page": "Introduction, pp. 1-11 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Applies to liquid markets that aggregate many participants' information; the Introduction's summary of forecasting approaches lists efficient-market forecasts as optimal.",
+   "breakdown_regime": "Breaks down for thin, manipulated, or information-poor markets, and for quantities that no market prices.",
+   "domain": "forecasting methodology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A market price is itself an aggregated forecast; any engine layer claiming to beat it must identify the private information or structural edge that justifies the claim.",
+    "source_operator": "efficient_market_forecasts_are_optimal",
+    "telemetry": "Quote verified contiguous in extracted text; Cowles 1933 study as reported by the editor."
+   }
+  },
+  {
+   "primitive_id": "role_playing_beats_unaided_expert_opinion",
+   "name": "Role playing predicts decisions of interacting parties far more accurately than unaided expert opinion",
+   "verbatim_quote": "Evidence from five actual situations showed that role playing was more accurate than expert opinions for predicting decision making when there were conflicts between groups and when large changes were involved. Role playing produced correct predictions for 56 percent of the situations versus about 16 percent for opinions.",
+   "page": "Role Playing chapter, pp. 15-30 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Situations involve interacting parties, usually in conflict, facing large changes; role players received situation descriptions only, never the actual outcomes.",
+   "breakdown_regime": "Less useful when the parties are not in conflict, when interaction does not drive the outcome, or when players can learn the real outcome in advance.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Simulated interaction between role occupants is structurally a Monte Carlo over counterparties' incentives; the fraction of sessions producing an outcome is its estimated probability.",
+    "source_operator": "role_playing_beats_unaided_expert_opinion",
+    "telemetry": "Quote verified contiguous in extracted text; effect sizes are the chapter abstract's own numbers."
+   }
+  },
+  {
+   "primitive_id": "role_instructions_before_situation_description",
+   "name": "Give role players their role descriptions before the situation description",
+   "verbatim_quote": "Describe their roles to subjects before they read the situation description.",
+   "page": "Role Playing chapter, pp. 15-30 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "From Babcock's (1967) two role-playing studies; players who read the situation first tended to select roles they sympathized with. Companion rule from the same principle list: instruct players to improvise but to remain within their roles.",
+   "breakdown_regime": "Breaks down if role descriptions are leading, or if the situation description itself leaks the outcome.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "In any simulation protocol, fix the agent's identity and incentives before exposing the scenario; order of information changes the distribution of simulated behavior.",
+    "source_operator": "role_instructions_before_situation_description",
+    "telemetry": "Quote verified contiguous in extracted text; principle statement from the chapter's principle list."
+   }
+  },
+  {
+   "primitive_id": "role_play_sessions_as_base_rate",
+   "name": "Run about ten role-playing sessions and read outcome frequency as probability",
+   "verbatim_quote": "To obtain reliable and valid forecasts, I think that one should run about ten sessions, five using one description and five using another.",
+   "page": "Role Playing chapter, pp. 15-30 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Sessions are coded by independent raters from transcripts; the chapter's worked example reads four strikes in five sessions as an 80 percent chance of a strike. Two different situation descriptions guard against description-specific artifacts.",
+   "breakdown_regime": "Small session counts give coarse probabilities, and players drawn from one population (often students) may not represent the real actors.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Treat each simulated session as one draw from the outcome distribution; report the empirical frequency with its sampling coarseness, not a point judgment.",
+    "source_operator": "role_play_sessions_as_base_rate",
+    "telemetry": "Quote verified contiguous in extracted text; session count is the chapter author's stated practice."
+   }
+  },
+  {
+   "primitive_id": "intentions_probability_scales",
+   "name": "Measure intentions with probability scales, not purchase-intention categories",
+   "verbatim_quote": "The results from these studies suggest that questions that ask respondents to assess the probability of purchase, such as #5 above, will be more accurate than other types of intentions measures.",
+   "page": "Intentions chapter, pp. 33-57 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The Juster (1966) eleven-point probability scale (0 to 99 in 100) is the reference instrument; respondents should be instructed to focus on their own individual characteristics when answering. Evidence is strongest for durables and frequently purchased packaged goods.",
+   "breakdown_regime": "Breaks down when respondents have no basis for a probability judgment, or when the behavior is socially sensitive and answers are strategic.",
+   "domain": "marketing science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any stated-preference signal entering an engine should be elicited as a probability and stored as one; category labels destroy the calibration information the scale preserves.",
+    "source_operator": "intentions_probability_scales",
+    "telemetry": "Quote verified contiguous in extracted text; Juster scale reproduced in the chapter."
+   }
+  },
+  {
+   "primitive_id": "intentions_adjust_with_past_participation",
+   "name": "Adjust intentions data using conversion rates conditional on past participation",
+   "verbatim_quote": "These results provide evidence that adjusting intentions using data about past participation in the behavior increases forecast accuracy.",
+   "page": "Intentions chapter, pp. 33-57 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Conversion rates differ sharply between prior participants and non-participants; the chapter reports an adjusted method beating the unadjusted method in 73 percent of quarters in the Morrison-based test, while an adjustment ignoring past participation made errors worse.",
+   "breakdown_regime": "Breaks down when past-participation conversion rates are unavailable or unstable, or when the population's participation mix shifts.",
+   "domain": "marketing science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Raw stated intentions are a biased estimator; condition the intention-to-behavior map on behavioral history before aggregating.",
+    "source_operator": "intentions_adjust_with_past_participation",
+    "telemetry": "Quote verified contiguous in extracted text; quarterly comparison reported in the chapter body."
+   }
+  },
+  {
+   "primitive_id": "intentions_segment_before_adjusting",
+   "name": "Segment respondents before adjusting intentions; segmentation cut error by over 25 percent",
+   "verbatim_quote": "Based on their analyses, segmenting the data using one of these two methods reduced the forecasting error by more than 25 percent.",
+   "page": "Intentions chapter, pp. 33-57 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The two methods are CART and discriminant analysis applied to demographic and past-purchase variables; segments then receive segment-specific intention adjustments.",
+   "breakdown_regime": "Breaks down with small samples where segments are noise, or when segmentation variables are unrelated to conversion.",
+   "domain": "marketing science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Heterogeneous conversion behavior must be modeled per segment; a single global adjustment factor averages away the signal that makes adjustment work.",
+    "source_operator": "intentions_segment_before_adjusting",
+    "telemetry": "Quote verified contiguous in extracted text; error reduction is the chapter's reported figure."
+   }
+  },
+  {
+   "primitive_id": "intentions_bounds_manski_bemmaor",
+   "name": "Bound behavior probability from intentions when conversion evidence is thin (Manski and Bemmaor bounds)",
+   "verbatim_quote": "weight*(% of intenders in sample) < Prob(behavior) < weight* (% of nonintenders in sample) + (% of intenders in sample)",
+   "page": "Intentions chapter, pp. 33-57 (printed page numbers)",
+   "latex": "w \\cdot I < P(\\mathrm{behavior}) < w \\cdot (1 - I) + I \\quad \\mathrm{(Manski)}; \\qquad \\bar{I}\\,(1 - d \\cdot N) < P(\\mathrm{behavior}) < \\bar{I}\\,(1 + d \\cdot N) \\quad \\mathrm{(Bemmaor)}",
+   "symbol_and_unit_ledger": "w = threshold weight placed on a stated intention (Manski assumes w = 1/2); I = proportion of intenders in the sample, so 1 - I = proportion of nonintenders; P(behavior) = probability the behavior occurs; I-bar = mean stated intention (Bemmaor); d = measure of intention dispersion (Bemmaor); N = expected proportion of nonintenders in the sample (Bemmaor). All quantities are unitless proportions.",
+   "assumptions": "Manski's bound assumes anyone stating an intention above the threshold behaves with probability weight and others with probability 1 minus weight; the chapter's example: 15 percent intenders bounds car purchase between 7.5 and 57.5 percent. Bemmaor's bound uses mean intention and its dispersion; the chapter's example bounds 0.012 to 0.106 against an actual rate of 0.103.",
+   "breakdown_regime": "Bounds are wide when intentions are diffuse; they discipline forecasts but do not replace conversion data when conversion data exist.",
+   "domain": "marketing science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When a signal's conversion rate is unmeasured, emit an interval from stated intentions rather than a point; the interval width is itself a report on evidence quality.",
+    "source_operator": "intentions_bounds_manski_bemmaor",
+    "telemetry": "Quote verified contiguous in extracted text; both formulas are stated in running text in the chapter (displayed equations elsewhere in the book do not survive extraction)."
+   }
+  },
+  {
+   "primitive_id": "mere_measurement_effect",
+   "name": "Measuring intentions changes the behavior being forecast",
+   "verbatim_quote": "These studies demonstrate that merely asking consumers questions about their purchase-intentions has a significant impact",
+   "page": "Intentions chapter, pp. 33-57 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Supported by controlled experiments (Morwitz, Johnson and Schmittlein 1993; Chandon, Morwitz and Reinartz 2000); the effect is stronger for familiar brands and frequently purchased categories. Related chapter warning: respondents who misrecall the time of their last purchase (backward telescoping) give biased intentions.",
+   "breakdown_regime": "Effect size varies with product type and question format; it does not license discarding intentions data, only correcting naive readings of it.",
+   "domain": "marketing science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Observation is an intervention: any engine that polls intentions, sentiment, or stated plans must model the polling effect as part of the measured quantity.",
+    "source_operator": "mere_measurement_effect",
+    "telemetry": "Quote verified contiguous in extracted text; experimental sources named in the chapter."
+   }
+  },
+  {
+   "primitive_id": "inconsistency_and_bias_components",
+   "name": "Judgmental forecast error decomposes into inconsistency and bias; attack both procedurally",
+   "verbatim_quote": "Forecasts can be suboptimal in two ways: inconsistency and bias.",
+   "page": "Harvey chapter (Improving judgmental forecasts), pp. 59-79 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Inconsistency is random error in applying one's own knowledge; bias is systematic deviation. The chapter's remedies are procedural: task structuring, mechanical aids, feedback, and making forecasters aware of biases.",
+   "breakdown_regime": "The decomposition does not itself remove either component; awareness of bias alone is repeatedly shown in the book to be insufficient without procedure changes.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Instrument any judgment pipeline to estimate its variance (inconsistency) separately from its mean error (bias); the fixes for the two are different and non-interchangeable.",
+    "source_operator": "inconsistency_and_bias_components",
+    "telemetry": "Quote verified contiguous in extracted text; opening claim of the chapter."
+   }
+  },
+  {
+   "primitive_id": "judgment_process_hygiene",
+   "name": "Structure judgment with checklists, graphical data study, forecast records, and adoption criteria",
+   "verbatim_quote": "Keep records of forecasts and use them appropriately to obtain feedback.",
+   "page": "Harvey chapter (Improving judgmental forecasts), pp. 59-79 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Companion principles from the same chapter, all read in the chapter's principle list: use checklists of categories of information relevant to the forecasting task; study data in graphical rather than tabular form when making judgmental forecasts; establish explicit and agreed criteria for adopting a forecast method.",
+   "breakdown_regime": "Checklists fail when they become rote; records fail when they are kept but never scored against outcomes.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Process hygiene is a precondition for learning: without checklists and time-stamped records, no downstream calibration layer has anything honest to train on.",
+    "source_operator": "judgment_process_hygiene",
+    "telemetry": "Quote verified contiguous in extracted text; companion principles verified in the same chapter's principle list."
+   }
+  },
+  {
+   "primitive_id": "reliability_is_systematic_variance_share",
+   "name": "Reliability of forecasts equals systematic variance over systematic plus unsystematic variance",
+   "verbatim_quote": "reliability is the ratio of systematic (true) variance in the forecasts to that variance plus unsystematic (error) variance",
+   "page": "Stewart chapter (Forecasting performance), pp. 81-105 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Reliability can be perfect (1.0) only if there is no unsystematic variance. The chapter's key consequence: reliability is necessary, but not sufficient, for validity (accuracy).",
+   "breakdown_regime": "A perfectly reliable forecaster can still be perfectly wrong if the systematic component is biased; reliability alone never certifies accuracy.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Report consistency and accuracy as separate diagnostics for every forecaster and model; a low-variance wrong model and a high-variance right model need opposite repairs.",
+    "source_operator": "reliability_is_systematic_variance_share",
+    "telemetry": "Quote verified contiguous in extracted text; definition sentence from the chapter body."
+   }
+  },
+  {
+   "primitive_id": "mechanical_processing_and_equal_weight_combining",
+   "name": "Process information mechanically and combine judges by equal-weighted averaging to raise reliability",
+   "verbatim_quote": "A common method for combining individual forecasts is to calculate an equal weighted average of the individual forecasts.",
+   "page": "Stewart chapter (Forecasting performance), pp. 81-105 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Mechanical processing virtually guarantees increased reliability, reaching an upper bound set by validity. The chapter cites Kelley (1925) and Stroop (1932): mathematical aggregation increases reliability and averages out unsystematic errors, though not systematic biases. Companion principle: require justification of forecasts.",
+   "breakdown_regime": "Averaging cannot remove a bias all judges share; mechanical rules built on invalid cues are reliably wrong.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Equal-weight averaging is variance reduction by aggregation, the same operator as ensemble averaging in statistical learning; it cancels idiosyncratic error and preserves shared bias.",
+    "source_operator": "mechanical_processing_and_equal_weight_combining",
+    "telemetry": "Quote verified contiguous in extracted text; historical citations are the chapter's own."
+   }
+  },
+  {
+   "primitive_id": "decomposition_method",
+   "name": "Decompose hard estimation tasks into components, estimate each, then recombine",
+   "verbatim_quote": "Decomposition is a method for dealing with such problems by breaking down (decomposing) the estimation task into a set of components that can be more readily estimated, and then combining the component estimates to produce a target estimate.",
+   "page": "MacGregor chapter (Decomposition), pp. 107-123 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Use decomposition only when the estimator can make component estimates more accurately or more confidently than the target estimate. The chapter distinguishes additive, multiplicative, and multiplicative-with-interaction forms and notes decomposition also exposes missing or double-counted components.",
+   "breakdown_regime": "The chapter's abstract warns that multiplicative decomposition is especially sensitive to correlated errors in component values; decomposition hurts when components are harder to estimate than the whole.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Factor the estimand before estimating: component-level errors are diagnosable, target-level errors are not; but track component error correlation before multiplying components together.",
+    "source_operator": "decomposition_method",
+    "telemetry": "Quote verified contiguous in extracted text; definition from the chapter abstract."
+   }
+  },
+  {
+   "primitive_id": "delphi_structure",
+   "name": "Delphi: anonymity, iteration, controlled feedback, statistical aggregation of expert judgments",
+   "verbatim_quote": "Four necessary features characterize a Delphi procedure, namely, anonymity, iteration, controlled feedback of the panelists' judgments, and statistical aggregation of group members' responses.",
+   "page": "Rowe and Wright chapter (Delphi technique), pp. 125-143 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Chapter specifications from its abstract and body: five to 20 experts with disparate domain knowledge; generally two or three rounds; weight all experts' estimates equally; feed back average estimates plus justifications; ask for frequencies rather than probabilities or odds. Reported record: Delphi groups beat traditional groups five to one with one tie, and statistical groups twelve to two with two ties.",
+   "breakdown_regime": "Delphi fails when the panel shares one information source (aggregation then adds nothing) or when feedback pressures convergence toward the median rather than toward accuracy.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Expert aggregation needs protocol, not meetings: anonymity kills status effects, iteration with feedback kills one-shot anchoring, and equal weights are the default aggregation.",
+    "source_operator": "delphi_structure",
+    "telemetry": "Quote verified contiguous in extracted text; design parameters from the chapter abstract."
+   }
+  },
+  {
+   "primitive_id": "conjoint_analysis_forecast_validity",
+   "name": "Conjoint analysis forecasts marketplace behavior accurately, and combining conjoint variants improves it further",
+   "verbatim_quote": "Conjoint analysis can provide accurate forecasts of marketplace behavior.",
+   "page": "Wittink and Bergestuen chapter (Conjoint analysis), pp. 147-167 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "First principle of the chapter, stated without qualification in its abstract and principle list. Companion findings read in the chapter: combining results from different conjoint methods provides better forecasts than a single method, and motivating respondents improves forecast accuracy.",
+   "breakdown_regime": "Accuracy claims rest on the surveyed marketplace studies; conjoint inherits the mere-measurement and hypothetical-bias risks of all stated-preference methods.",
+   "domain": "marketing science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Part-worth utilities estimated from stated choices are a demand model: forecast share by simulating choices over attribute bundles, and ensemble across elicitation formats.",
+    "source_operator": "conjoint_analysis_forecast_validity",
+    "telemetry": "Quote verified contiguous in extracted text; first principle of the chapter."
+   }
+  },
+  {
+   "primitive_id": "judgmental_bootstrapping",
+   "name": "Model the expert: regress the expert's forecasts on the cues used, then apply the model consistently",
+   "verbatim_quote": "a quantitative model by regressing the expert's forecasts against the information that he used.",
+   "page": "Armstrong chapter (Judgmental bootstrapping), pp. 171-191 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The bootstrapping model is not as comprehensive or flexible as the expert, but it applies the expert's rules consistently. Across eleven studies the bootstrapped model beat the expert in eight comparisons, lost one, and tied two. Requires substantive expertise, many prior forecasts, and recorded cues.",
+   "breakdown_regime": "Fails when the expert uses configural knowledge a linear model cannot express, or when the environment shifts so the expert's historical rules stale.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Bootstrapping is knowledge distillation: fit a consistent surrogate to an inconsistent teacher; the surrogate wins by removing the teacher's noise while keeping the teacher's signal.",
+    "source_operator": "judgmental_bootstrapping",
+    "telemetry": "Quote verified contiguous in extracted text; definition from the chapter abstract."
+   }
+  },
+  {
+   "primitive_id": "bayesian_pooling_shrinkage",
+   "name": "Pool analogous series: combine a local model with a group model using inverse-variance shrinkage weights",
+   "verbatim_quote": "The shrinkage weights are inversely proportional to the variance of parameter estimates they multiply, and they sum to one.",
+   "page": "Duncan, Grana and Vora / analogies chapter (Forecasting by analogies), pp. 195-213 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Bayesian pooling combines a local model estimated for the target series with a group model estimated from an equivalence group's pooled data; implementation steps begin with selecting the equivalence group and fitting a general model form to each series.",
+   "breakdown_regime": "Shrinkage hurts when the equivalence group is not truly analogous; the local estimate is then dragged toward an irrelevant group center.",
+   "domain": "time series analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Partial pooling is the default for sparse per-unit data: borrow strength across analogous units with weights set by relative estimation variance, never by intuition.",
+    "source_operator": "bayesian_pooling_shrinkage",
+    "telemetry": "Quote verified contiguous in extracted text; pooling definition verified in the same chapter."
+   }
+  },
+  {
+   "primitive_id": "croston_intermittent_demand",
+   "name": "For intermittent series, smooth the nonzero sizes and the intervals between them separately (Croston's method)",
+   "verbatim_quote": "Still another solution, known as Croston's Method, is to use exponential smoothing to estimate two series: one for the time between non-zero values and the other for the values.",
+   "page": "Armstrong chapter (Extrapolation), pp. 217-243 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Single-series exponential smoothing on intermittent data confounds size with timing; separating the two processes gives each its own smoothing constant. The same chapter advises using all relevant information and known causal forces alongside the extrapolation.",
+   "breakdown_regime": "Croston's method is biased in its original form under some demand processes; it addresses intermittency, not trend or seasonality.",
+   "domain": "time series analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Factor a sparse process into occurrence and magnitude subprocesses and forecast the product; never smooth a zero-inflated series as if it were continuous.",
+    "source_operator": "croston_intermittent_demand",
+    "telemetry": "Quote verified contiguous in extracted text; method description from the chapter body."
+   }
+  },
+  {
+   "primitive_id": "damped_seasonal_factors",
+   "name": "Damp seasonal factors toward 1.0 in proportion to uncertainty",
+   "verbatim_quote": "For multiplicative factors, this would involve drawing them in toward 1.0. For example, a damping factor of 0.5 would reduce a seasonal factor of 1.4 to 1.2 (reducing the seasonal impact from 40% to 20%).",
+   "page": "Armstrong chapter (Extrapolation), pp. 217-243 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Seasonal factors estimated from few cycles carry large sampling error; damping trades a small bias for a large variance reduction. The neutral point for a multiplicative factor is 1.0, not 0.",
+   "breakdown_regime": "Overdamping erases real seasonality when many clean cycles are available; damping strength should follow estimation uncertainty, not habit.",
+   "domain": "time series analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Shrink multiplicative effects toward their neutral value by a factor tied to estimation uncertainty; the worked numbers (1.4 to 1.2 at damping 0.5) define the operator exactly.",
+    "source_operator": "damped_seasonal_factors",
+    "telemetry": "Quote verified contiguous in extracted text; numerical example is the chapter's own."
+   }
+  },
+  {
+   "primitive_id": "conservative_damped_trend",
+   "name": "Be conservative under uncertainty: damp trends, and let the data say how much damping was needed",
+   "verbatim_quote": "Damping, required for 20% of the annual series and for 70% of the quarterly and monthly series, led to substantial improvements in accuracy.",
+   "page": "Armstrong chapter (Extrapolation), pp. 217-243 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Cross-series evidence from the extrapolation literature summarized in the chapter: shorter series and shorter forecast intervals needed damping more often. Companion conservatism rules from the same chapter: for cross-sectional data stay close to the base rate, and use safety factors for contrary series, whose errors ran 81 percent in the direction of the causal forces.",
+   "breakdown_regime": "Conservatism is costly when a series has a genuine persistent trend and long clean history; blanket damping then systematically underforecasts.",
+   "domain": "time series analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Trend is a leveraged bet on persistence; scale the bet by measured persistence across many series rather than by the drama of the most recent observations.",
+    "source_operator": "conservative_damped_trend",
+    "telemetry": "Quote verified contiguous in extracted text; percentages are the chapter's reported summary."
+   }
+  },
+  {
+   "primitive_id": "empirical_prediction_intervals",
+   "name": "Build prediction intervals empirically from out-of-sample errors, not from model assumptions",
+   "verbatim_quote": "However, when they used empirically estimated PIs, 95% of the actual values were within the 95% PIs.",
+   "page": "Armstrong chapter (Extrapolation), pp. 217-243 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Williams and Goodman as reported in the chapter: intervals from a calibration standard error captured only 81 percent of actuals; empirically estimated intervals captured 95 percent. Chatfield's uncertainty chapter gives the two construction routes: empirically based intervals from the observed distribution of residuals, and simulation or resampling of future paths; both chapters warn that theoretical intervals are too narrow because out-of-sample errors have larger variance than fit errors.",
+   "breakdown_regime": "Empirical intervals inherit the past error distribution; a regime change makes yesterday's residuals the wrong width today.",
+   "domain": "time series analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Uncertainty statements must be calibrated on errors the model actually made out of sample; in-sample fit statistics are not a width estimate.",
+    "source_operator": "empirical_prediction_intervals",
+    "telemetry": "Quote verified contiguous in extracted text; study attribution is the chapter's."
+   }
+  },
+  {
+   "primitive_id": "neural_networks_for_forecasting",
+   "name": "Neural networks beat traditional extrapolation at long horizons, not short ones; preprocessing decides their accuracy",
+   "verbatim_quote": "Neural networks are better than traditional extrapolative forecasting methods for long-term forecast horizons but are often no better than traditional forecasting methods for shorter forecast horizons.",
+   "page": "Remus and O'Connor chapter (Neural networks), pp. 245-255 (printed page numbers)",
+   "latex": "S = \\sum_{i} w_i x_i + \\theta, \\qquad Y = \\frac{1}{1 + e^{-S}}",
+   "symbol_and_unit_ledger": "x_i = input signal on incoming path i; w_i = weight (strength) of path i; theta = node bias, printed as the amount Q in the chapter's appendix; S = weighted sum at the node; Y = node output, the sigmoid (logistic) transformation of S. Signals, weights, and outputs are unitless in the chapter's formulation.",
+   "assumptions": "Chapter principles: clean the data, and scale and deseasonalize before estimating; for seasonal series (n = 49) networks on deseasonalized data scored MAPE 12.3 percent against 15.4 percent without deseasonalization (Nelson et al. 1999). The neuron formula is stated in words in the chapter's appendix: the neuron sums path weight times input signal over all paths, may be biased by an amount, and outputs a sigmoid transformation of the sum.",
+   "breakdown_regime": "Networks overfit short noisy series and their long-horizon advantage vanishes when the horizon advantage is really a preprocessing advantage; the chapter's evidence base is 1990s studies on modest data.",
+   "domain": "machine learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Model class advantage is horizon-conditional, and input hygiene (cleaning, scaling, deseasonalizing) is part of the model, not a preliminary chore.",
+    "source_operator": "neural_networks_for_forecasting",
+    "telemetry": "Quote verified contiguous in extracted text; neuron computation stated in words in the chapter appendix (displayed glyph form does not survive extraction)."
+   }
+  },
+  {
+   "primitive_id": "rule_based_forecasting",
+   "name": "Rule-Based Forecasting: encode expert rules over series features to weight extrapolations conditionally",
+   "verbatim_quote": "Rule-Based Forecasting (RBF) is an expert system that uses judgment to develop and apply rules for combining extrapolations.",
+   "page": "Armstrong, Adya and Collopy chapter (Rule-Based Forecasting), pp. 259-281 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Series are described by up to 28 conditions used to assign weights to extrapolations; level and trend get separate consideration. Under ideal conditions RBF errors were one-third less than equal-weights combining. The chapter also records the knowledge-acquisition bottleneck for all expert systems: performing a task is second nature to experts, who find it difficult to describe how they do it.",
+   "breakdown_regime": "RBF's edge depends on the validity of its feature rules and shrinks toward equal weights as conditions degrade; hand-built rule bases stale as the environment changes.",
+   "domain": "expert systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Conditional weighting of base forecasts by situation features is a gating network: features select the mixture, rules supply the gates, extrapolations supply the experts.",
+    "source_operator": "rule_based_forecasting",
+    "telemetry": "Quote verified contiguous in extracted text; definition from the chapter abstract."
+   }
+  },
+  {
+   "primitive_id": "econometric_theory_levels_general_to_specific",
+   "name": "Econometric forecasting: keep it simple, use all the data, let theory choose variables, estimate in levels, simplify general-to-specific",
+   "verbatim_quote": "Several principles are useful for econometric forecasters: keep the model simple, use all the data you can get, and use theory (not the data) as a guide to selecting causal variables.",
+   "page": "Allen and Fildes chapter (Econometric methods), pp. 303-361 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Companion results from the chapter abstract, all read there: evidence supports estimating the initial equation in levels, whether the variables are stationary or not; a general-to-specific strategy (start with many lags, then simplify) pays off; ordinary least squares is a perfectly adequate estimation method; without cointegration, error-correction models do worse than equations in levels.",
+   "breakdown_regime": "Theory-guided selection fails when the theory is wrong; levels estimation with nonstationary data risks spurious regression when cointegration is absent and unchecked.",
+   "domain": "econometrics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Variable selection is a prior specification act, not a search act: data mining the specification transfers noise into the model with the authority of fit.",
+    "source_operator": "econometric_theory_levels_general_to_specific",
+    "telemetry": "Quote verified contiguous in extracted text; companion results from the same abstract."
+   }
+  },
+  {
+   "primitive_id": "structured_judgmental_adjustment",
+   "name": "Adjust statistical forecasts only inside a structured, documented process",
+   "verbatim_quote": "Researchers have shown that judgment adjustments lead to greater improvements in accuracy when the process is structured, rather than ad hoc.",
+   "page": "Sanders and Ritzman chapter (Judgmental adjustment), pp. 405-415 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Chapter principles: adjust statistical forecasts in light of known changes in the environment, structure the adjustment process, and document all adjustments so they can be related to accuracy later. The companion integration chapter (Webby, O'Connor and Edmundson) reports the failure mode structure must prevent: people over-rely on the initial forecast and underweight causal information (Lim and O'Connor 1996), and can use only one or two pieces of causal information effectively.",
+   "breakdown_regime": "Structure cannot rescue adjustments made on information the statistical model already used; double counting is the standing failure mode.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Human override is a model input and must be logged, sized, and scored like one; an undocumented adjustment is an unauditable second forecast hiding inside the first.",
+    "source_operator": "structured_judgmental_adjustment",
+    "telemetry": "Quote verified contiguous in extracted text; principles from the chapter's principle list."
+   }
+  },
+  {
+   "primitive_id": "combining_forecasts_equal_weights",
+   "name": "Combine forecasts from different methods and sources; equal weights cut ex ante error about 12.5 percent on average",
+   "verbatim_quote": "averaged about 12.5% and ranged from 3 to 24%.",
+   "page": "Armstrong chapter (Combining forecasts), pp. 417-439 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Combine forecasts derived from methods that differ substantially and draw from different sources of information; use at least five forecasts where possible; a trimmed mean is desirable when combining five or more. Batchelor and Dua (1995) as reported: combining any two economists cut MSE 9.2 percent on average, combining ten cut it 16.4 percent.",
+   "breakdown_regime": "Combining near-duplicate forecasts adds little; estimated optimal weights overfit small validation samples, which is why equal weights are the robust default.",
+   "domain": "forecasting methodology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Combination is the book's most replicated operator: diversity of method and source is the input, equal weighting is the robust aggregator, and ex ante error reduction is the measured output.",
+    "source_operator": "combining_forecasts_equal_weights",
+    "telemetry": "Quote verified contiguous in extracted text; figures are the chapter's own summary."
+   }
+  },
+  {
+   "primitive_id": "error_measures_scale_free_robust",
+   "name": "Evaluate with scale-free, outlier-robust error measures, several at once, against prespecified criteria",
+   "verbatim_quote": "This suggests that the error measures should be trimmed, possibly even to the extent of using the median, which is the ultimate trimmed mean.",
+   "page": "Armstrong chapter (Evaluating methods), pp. 443-471 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Chapter principles: ensure error measures are not affected by scale; avoid high sensitivity to outliers; use multiple error measures; prespecify criteria. Companion principle from the same chapter: use direct replications to identify mistakes, because replications are much more useful as measures of reliability than tests of statistical significance.",
+   "breakdown_regime": "Trimming hides genuine tail risk if the tails are the quantity of interest; robust central measures must be paired with explicit tail reporting in such cases.",
+   "domain": "forecasting methodology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The evaluation ruler is part of the method: a scale-dependent or outlier-driven measure can manufacture rankings that no replication will sustain.",
+    "source_operator": "error_measures_scale_free_robust",
+    "telemetry": "Quote verified contiguous in extracted text; companion principles from the same chapter."
+   }
+  },
+  {
+   "primitive_id": "overconfidence_explanation_effect",
+   "name": "Explaining a prediction inflates confidence in it without improving it",
+   "verbatim_quote": "Constructing an explanatory framework to support one's prediction is often easy, and merely thinking about the explanation heightens one's confidence in the prediction",
+   "page": "Arkes chapter (Overconfidence), pp. 495-515 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Koehler (1991) as reported in the chapter: the explanation effect is one mechanism of overconfidence. The chapter's remedies are behavioral: consider alternatives, especially in new situations; make an explicit prediction, then obtain feedback; and note that additional information can inflate confidence faster than it heightens accuracy, if it heightens accuracy at all.",
+   "breakdown_regime": "Calibration varies by population (the chapter notes weather forecasters and bridge players calibrate well thanks to prompt outcome feedback); the effect is a tendency, not a universal constant.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Narrative coherence is not evidence: a fluent causal story raises the teller's confidence by construction, so confidence must be elicited before, or independently of, story construction.",
+    "source_operator": "overconfidence_explanation_effect",
+    "telemetry": "Quote verified contiguous in extracted text; citation is the chapter's."
+   }
+  },
+  {
+   "primitive_id": "hindsight_bias_and_forecast_records",
+   "name": "Hindsight bias corrupts evaluation; only detailed contemporaneous forecast records defeat it",
+   "verbatim_quote": "One is hindsight bias, the tendency to exaggerate in hindsight what one was able to predict in foresight",
+   "page": "Fischhoff chapter (Monitoring forecasts), pp. 543-553 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The chapter's summary line: forecasts are made with foresight but evaluated with hindsight. Its prescriptions: create a detailed record of what is being predicted, the conditions under which the prediction remains valid, the inputs used, and the considerations guiding interpretation; learning requires feedback that is prompt, unambiguous, and designed to reward accuracy.",
+   "breakdown_regime": "Records defeat hindsight only if they are complete and tamper-proof; selective record keeping reintroduces the bias through the archive.",
+   "domain": "judgment and decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A forecast log is a pre-registration device: it freezes the information set and the claim, making later learning a measurement instead of a memory contest.",
+    "source_operator": "hindsight_bias_and_forecast_records",
+    "telemetry": "Quote verified contiguous in extracted text; definition from the chapter body."
+   }
+  },
+  {
+   "primitive_id": "diffusion_model_selection",
+   "name": "No single diffusion model is best for all processes; simpler diffusion models tend to forecast better",
+   "verbatim_quote": "No single diffusion model is best for all processes.",
+   "page": "Meade and Islam chapter (Diffusion models), pp. 577-595 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "First of the chapter's four abstract principles; companions: unconditional forecasts based on a data-based estimate of a fixed saturation level form a difficult benchmark to beat, and short-term forecasts are good indicators of a diffusion model's appropriateness. The models share two properties: cumulative penetration always increases over time and approaches a saturation level as an asymptote.",
+   "breakdown_regime": "With very early data the saturation level is weakly identified and model choice dominates the forecast; the chapter also reports parameter correlations suggesting the models may be overparameterized for typical data sets.",
+   "domain": "marketing science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Growth-curve forecasting is model selection under weak identification: prefer the simpler curve, anchor the ceiling empirically, and let short-horizon fit arbitrate.",
+    "source_operator": "diffusion_model_selection",
+    "telemetry": "Quote verified contiguous in extracted text; first principle of the chapter abstract."
+   }
+  },
+  {
+   "primitive_id": "attraction_model_logical_consistency",
+   "name": "Attraction specification: market shares are normalized attractions, so shares sum to one within zero to one",
+   "verbatim_quote": "An advantage of the attraction specification is that it is logically consistent; the market share predictions for all brands sum to one and lie within the range zero to one.",
+   "page": "Brodie, Kluyver and Potter chapter (Market share), pp. 597-611 (printed page numbers)",
+   "latex": "MS_i = \\frac{A_i}{\\sum_j A_j}, \\qquad A_i = \\prod_k x_{ik}^{\\beta_k}",
+   "symbol_and_unit_ledger": "MS_i = predicted market share of brand i (unitless; shares across brands sum to one); A_i = attraction of brand i; x_ik = brand i's level on marketing instrument k; beta_k = effectiveness parameter for instrument k, estimated from data.",
+   "assumptions": "The chapter's three basic specifications are the linear, multiplicative, and attraction specifications, with attraction written in the US/(US + THEM) formulation of Bell, Keeney and Little (1975). Logical consistency is bought by normalizing; linear and multiplicative forms can predict shares outside the unit interval.",
+   "breakdown_regime": "Normalization enforces adding-up but cannot fix misspecified attractions; if the attraction function omits a driver, shares are consistently wrong rather than inconsistently wrong.",
+   "domain": "marketing science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any share forecast must live on the simplex: normalize positive attractions rather than predicting shares independently, so the accounting identity holds by construction.",
+    "source_operator": "attraction_model_logical_consistency",
+    "telemetry": "Quote verified contiguous in extracted text; formulation attribution is the chapter's."
+   }
+  },
+  {
+   "primitive_id": "trial_repeat_decomposition",
+   "name": "Decompose new-product sales into trial and repeat; keep the structure simple, estimate by maximum likelihood",
+   "verbatim_quote": "other features such as a complex structural model and a \"never triers\" component are often detrimental to the model's forecasting capabilities",
+   "page": "Fader and Hardie chapter (Forecasting trial sales), pp. 613-629 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "From the chapter abstract's modeling lessons: the pattern of trial is the most important feature, then the estimation method (maximum likelihood is best); decomposing the sales curve into trial and repeat components yields insight even when components cannot be estimated separately with the available data.",
+   "breakdown_regime": "Decomposition needs repeat-purchase data; at very early trial stages the repeat component is extrapolation dressed as structure.",
+   "domain": "marketing science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Separate first-adoption flow from retention flow before forecasting either; aggregate sales curves mix two processes with different drivers and different error behavior.",
+    "source_operator": "trial_repeat_decomposition",
+    "telemetry": "Quote verified contiguous in extracted text; lessons from the chapter abstract."
+   }
+  },
+  {
+   "primitive_id": "standards_139_principles_audit",
+   "name": "Audit any forecasting process against the 139 graded principles and the forecasting checklist",
+   "verbatim_quote": "One hundred and thirty-nine principles are used to summarize knowledge about forecasting.",
+   "page": "Armstrong chapter (Standards and practices), pp. 679-731 (printed page numbers)",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The principles fall in 16 categories and are summarized in a Forecasting Principles Checklist for auditing a process. The chapter's own governance principles include making sure forecasts are independent of politics and separating the forecasting process from the planning process.",
+   "breakdown_regime": "A checklist audit certifies process, not outcomes; a compliant process can still produce a bad forecast in a genuinely surprising environment.",
+   "domain": "forecasting methodology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A fixed, evidence-graded audit standard converts forecasting quality from a reputation claim into an inspectable property of the producing process.",
+    "source_operator": "standards_139_principles_audit",
+    "telemetry": "Quote verified contiguous in extracted text; count stated in the Standards chapter."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "trace-armstrong-2001-principles-01",
+   "think": "This book is the closest thing the forecasting field had, at the turn of the century, to a constitution. Armstrong assembled forty specialists, had each compress a literature into explicit principles, had more than one hundred twenty outside reviewers attack the drafts, and then graded every principle by the kind of evidence behind it, from laboratory experiments down to common sense. The result is not a model. It is a discipline: one hundred thirty nine condition-action statements that say what to do, when to do it, and, unusually often, how much it helped when someone measured it. Reading it as an engineer, I see four load-bearing structures. First, a theory of judgment error. Harvey decomposes bad forecasts into inconsistency and bias; Stewart shows inconsistency is measurable as one minus a reliability ratio and that mechanical processing removes it; Arkes and Fischhoff then explain why the forecaster cannot feel these errors from the inside, because explanations inflate confidence and hindsight rewrites memory. The cure the book prescribes is procedural, not motivational: checklists, written records, prompt unambiguous feedback, and justification requirements. Second, a theory of combination. From Stewart's equal weighted averages of judges, through the combining chapter's thirty empirical comparisons showing an average twelve and a half percent error reduction, to rule based forecasting's condition weighted extrapolations, the book repeats one finding in many dialects: aggregation of diverse, independently produced forecasts beats selection of a single best forecast, and simple equal weights are embarrassingly hard to beat. Third, a theory of humility in extrapolation. Trends must be damped, seasonal factors drawn toward one, intermittent series split into size and interval, contrary series adjusted toward the direction of their causal forces, and prediction intervals estimated empirically from out of sample errors because theoretical intervals are systematically too narrow. Fourth, a theory of evidence. Error measures must be scale free and outlier resistant, replications outrank significance tests, method selection should follow guidelines from prior research rather than popularity or convenience, and every model class, from econometric systems to diffusion curves, is denied universal dominion: no single diffusion model is best for all processes. What the book refuses to give is equally important. It will not tell you the one best method, because its central empirical claim is that method performance is conditional on the situation: data length, size of expected change, horizon, conflict among actors, and the measurability of causal forces. Where behavior is the target, it routes you to intentions data handled with probability scales, segmentation, conversion rate adjustments, and formal bounds when the conversion evidence is thin. Where actors interact, it routes you to role playing, which beat unaided expert opinion by forty percentage points in the studies reported. Where experts must be used, it wraps them in Delphi structure or replaces their inconsistency with a bootstrapping model of their own rules, which then beats them. For a reasoning engine, the operational translation is direct. Store principles as condition-action rules with their evidence grades attached. Default every ensemble to equal weights until a locked, out of sample comparison earns a deviation. Damp every trend and seasonal the situation leaves uncertain. Keep a written, time stamped record of every forecast and its inputs, because without it the learning loop is fiction. Score with robust, scale free errors and judge by replication across situations, not by a single dramatic success. And treat any single model's confidence as a hypothesis about conditions, not a property of the model. The book's limits are the limits of its era and its medium. It predates modern machine learning practice, large scale backtesting infrastructure, and online experimentation, and several of its chapters rest on expert opinion where I would now demand measurement. Its displayed equations are images in this PDF and do not survive text extraction, so the foundry record keeps only the formulas the chapters also state in words. But its meta lesson survives every one of those caveats: forecasting improves when judgment is structured, recorded, combined, and audited, and it degrades when any of those four verbs is skipped. The intentions chapters deserve a slow read because they show the book's method at its best. A naive pipeline takes stated intentions at face value; this book instead treats an intention as a noisy instrument whose reading must be calibrated. Probability scales preserve information that category labels destroy. Segmentation acknowledges that the intention to behavior map is not one function but a family of functions indexed by history and circumstance. And when even the calibrated map is unknown, the Manski and Bemmaor bounds replace the point estimate with an honest interval whose width reports the state of the evidence. That pattern, measure carefully, calibrate conditionally, and bound what remains unknown, recurs everywhere in the handbook, from Delphi panels to diffusion ceilings. The method selection chapter then turns the same skepticism on the handbook's own readers. Forecasters choose methods by convenience, by what competitors use, by structured judgment, by statistical criteria, by track records, or by guidelines from prior research, and the evidence assembled favors the last of these, the cheapest and least glamorous route. The standards chapter closes the loop by converting all one hundred thirty nine principles into an audit checklist, so that a forecasting process can be inspected item by item before anyone trusts its output. The handbook therefore ends where it began: not with a method, but with a standard for judging methods, including its own.",
+   "retrocausal_genealogy": "The principles are a sediment of a century of forecast failures and repairs. Cowles in 1933 showed stock forecasters could not beat the market they watched. Meehl in 1954 showed mechanical rules beat clinical judgment. The RAND Corporation built Delphi in the 1950s to discipline expert panels. Juster in 1966 gave intentions research its probability scale. The M-Competitions of 1982 onward gave extrapolation its empirical humility. Armstrong's own Long-Range Forecasting in 1985 and the Forecasting Principles project launched in 1996 fused these streams into the 139 graded principles this handbook prints, and the standards chapter exists because the editor knew the sediment needed an audit trail.",
+   "theory_of_mind": "Armstrong writes as an editor who believes three things about his readers. First, that forecasting knowledge exists but is scattered across marketing, psychology, statistics, and management science, so practitioners reinvent errors that another field already solved. Second, that practitioners trust intuition and popularity over evidence, so principles must be stated as condition-action rules with their evidence exposed, inviting audit rather than obedience. Third, that no method deserves unconditional loyalty, so the book grades its own advice, admits where only common sense supports a principle, and expects readers to test principles against their own records before adopting them.",
+   "cross_layer_veto": "Several principles veto entire layers of a forecasting stack. The efficient market result vetoes any layer that claims to beat a liquid market price without private information. The error measurement chapter vetoes model rankings produced by scale dependent or outlier sensitive errors, because the ranking can be an artifact of the ruler. Fischhoff's hindsight analysis vetoes learning from remembered forecasts, so any layer trained on unrecorded recollections is invalid until contemporaneous records exist. The mere measurement effect vetoes naive readings of intentions data, because the survey itself moves the behavior being forecast. And the econometric chapter vetoes data driven variable selection, requiring theory to nominate causal variables before estimation begins."
+  }
+ ],
+ "universal_lens": "Read universally, the book is a treatise on disciplined belief revision under uncertainty in any domain. Decompose hard estimates into estimable parts, combine independent judgments with simple weights, damp confident extrapolations toward their neutral values, bound what you cannot convert, record predictions before outcomes are known, and audit the process rather than the outcome. These moves transfer intact to engineering estimation, medical prognosis, intelligence analysis, and project planning, because none of them depends on the subject matter; all of them depend on how human judgment fails and how aggregation and procedure repair it.",
+ "gsi_mapping": "For a general sports intelligence layer, the book supplies the judgment infrastructure that sits above any single sport model. Role playing maps to structured scenario simulation between competing decision makers. Intentions methods map to any survey or stated preference signal, handled with probability scales, segmentation, conversion adjustments, and formal bounds. Delphi maps to expert panel aggregation with anonymity, iteration, and controlled feedback. Decomposition maps to breaking complex quantities into separately estimable parts. The standards chapter maps to an audit checklist that any forecasting process, in any sport, can be scored against before its outputs are trusted.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the direct imports are procedural. Equal weight combining becomes the default ensemble rule until locked out of sample evidence earns an exception. Damped trend and seasonal factors discipline every extrapolation the engine publishes. Empirical prediction intervals, built from realized out of sample errors, replace theoretical intervals wherever the engine states uncertainty. Written forecast records with inputs preserved become the substrate for calibration, answering the hindsight veto on learning from memory. Robust scale free error measures and replication across situations govern model comparison. Nothing in this extraction prices a market or names a side; it governs how the engine forms, combines, records, and audits its own projections."
+}
