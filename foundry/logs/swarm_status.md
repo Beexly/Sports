@@ -630,3 +630,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 06:47:50 | COMPLETE | 3a610f0512401167 | primitives=40 think_words=852
 - 2026-11-14 06:48:51 | CLAIMED | 3e6cfe96736c9592 | worker=hermes-inline shard03 file=Using_Twitter_to_predict_football_outcom.pdf
 - 2026-11-14 06:53:12 | COMPLETE | 3e6cfe96736c9592 | primitives=33 think_words=881
+- 2026-11-14 06:54:32 | CLAIMED | 3fc9cd5fa560cf8a | worker=hermes-inline shard03 file=Intellions-US7330839-DynamicPricing.pdf
+- 2026-11-14 06:58:05 | REFUSAL_ACCEPTED | 3fc9cd5fa560cf8a | INSUFFICIENT_OCR: Image-only scanned PDF: 13 pages, 0 extractable text characters via pymupdf (every page returns empty get_text). The file lives in G:/My Drive/gpu-ocr-input/ (the OCR queue), and no prior OCR extracti
