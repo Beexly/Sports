@@ -546,3 +546,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 01:19:11 | COMPLETE | 3c2117aeb4f3493c | primitives=31 think_words=935
 - 2026-11-14 01:20:00 | CLAIMED | 334c57dee9f89a2f | worker=hermes-inline shard03 file=[15590410 - Journal of Quantitative Analysis in Sports] An analytical approach for fantasy football draft and lineup management.pdf
 - 2026-11-14 01:25:19 | COMPLETE | 334c57dee9f89a2f | primitives=31 think_words=860
+- 2026-11-14 01:26:37 | CLAIMED | 3ce911dbf8cd5e8d | worker=hermes-inline shard03 file=nflWAR- A Reproducible Method for Offensive Player Evaluation in Football (Extended Edition) - Ron Yurko, Sam Ventura, Maksim Horowitz.pdf
+- 2026-11-14 01:37:42 | COMPLETE | 3ce911dbf8cd5e8d | primitives=32 think_words=855
