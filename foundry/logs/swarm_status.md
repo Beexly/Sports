@@ -550,3 +550,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 01:37:42 | COMPLETE | 3ce911dbf8cd5e8d | primitives=32 think_words=855
 - 2026-11-14 01:38:41 | CLAIMED | 3578988030a30ccf | worker=hermes-inline shard03 file=2012 Multi-Agent Team Behavior from Partial Team Tracings.pdf
 - 2026-11-14 01:43:06 | COMPLETE | 3578988030a30ccf | primitives=26 think_words=852
+- 2026-11-14 01:45:31 | CLAIMED | 160042f33805434e | worker=hermes-inline shard03 file=2023 - Contextualized Generative Ghosting Model as Benchmark for Evaluating Player Movement in Football - Unknown Authors.pdf
+- 2026-11-14 01:52:23 | COMPLETE | 160042f33805434e | primitives=10 think_words=854
