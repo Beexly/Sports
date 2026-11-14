@@ -21,6 +21,9 @@ import sys; from pathlib import Path
 from typing import Any, Optional
 _INTELLIGENCE_DIR = str(Path(__file__).resolve().parents[1])
 if _INTELLIGENCE_DIR not in sys.path: sys.path.insert(0, _INTELLIGENCE_DIR)
+import importlib; _REPO_ROOT = str(Path(__file__).resolve().parents[2])
+if _REPO_ROOT not in sys.path: sys.path.insert(0, _REPO_ROOT)
+_r = sys.modules.get("intelligence.reasoning") or sys.modules.get("reasoning") or importlib.import_module("intelligence.reasoning"); sys.modules.setdefault("intelligence.reasoning", _r); sys.modules.setdefault("reasoning", _r)
 import reasoning as R
 from reasoning.exceptions import ChecklistInvalid
 from reasoning.interfaces import AnalysisRequest as RAnalysisRequest, DataContext, GameRequest
