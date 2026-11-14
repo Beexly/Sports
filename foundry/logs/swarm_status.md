@@ -466,3 +466,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 18:44:10 | CLAIMED | 12019510754a8e57 | worker=hermes-inline file=Murphy-2023-ProbabilisticMachineLearningAdvancedTopics.pdf
 - 2026-11-13 18:58:06 | REJECTED | 12019510754a8e57 | primitive[0]: layer2 must cite source_operator primitive id; primitive[0]: layer2.telemetry empty (or LATENT_UNIDENTIFIABLE); primitive[1]: layer2 must cite source_operator primitive id; primitive[1]: layer2.telemetry empty (or LATENT_UNIDENTIFIABLE); primitive[2]: layer2 must cite source_operator primitive id; primitive[2]: layer2.telemetry empty (or LATENT_UNIDENTIFIABLE); primitive[3]: layer2 m
 - 2026-11-13 18:59:49 | COMPLETE | 12019510754a8e57 | primitives=19 think_words=916
+- 2026-11-13 19:05:14 | CLAIMED | 130cb31e98511398 | worker=hermes-inline file=Bishop-2006-PatternRecognitionAndMachineLearning.pdf
+- 2026-11-13 19:11:11 | COMPLETE | 130cb31e98511398 | primitives=19 think_words=914
