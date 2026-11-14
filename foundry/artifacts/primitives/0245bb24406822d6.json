@@ -1,0 +1,689 @@
+{
+  "book_id": "0245bb24406822d6",
+  "source_status": "COMPLETE",
+  "source_note": "Catalog title '2509.11362v2' and primary_domain 'other' are placeholders. True source: Loka Li, Wong Yu Kang, Minghao Fu, Guangyi Chen, Zhenhao Chen, Gongxu Luo, Yuewen Sun, Salman Khan, Peter Spirtes, Kun Zhang, 'PersonaX: Multimodal Datasets with LLM-Inferred Behavior Traits', arXiv:2509.11362v2 [cs.LG], published at ICLR 2026, 50 pages (10 main + appendix), clean born-digital text. Tier-B queue row but a full theory-rich research paper; extracted under true domain cs/psych (causal representation learning + athlete behavior profiling). AthlePersona (4181 male pro athletes, NBA/NFL/NHL/ATP/PGA/Premier League/Bundesliga) is directly GSE-relevant. Equations 1-3, Theorems 1-3, and the reconstruction/independence/sparsity losses transcribed as labeled LaTeX; the PDF renders math symbols as garbled Unicode glyphs, reconstructed in standard notation from the unambiguous prose and theorem statements. No sportsbook content. Verbatim quotes verified as exact normalized substrings.",
+  "primitives": [
+    {
+      "primitive_id": "behavior_traits_vs_personality",
+      "name": "Behavior traits are outward observable patterns, distinct from internal personality",
+      "verbatim_quote": "These traits differ from psychological personality, which concerns internal dispositions typically measured through self-reports or expert evaluation",
+      "page": "p1 Sec1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Behavior traits = outwardly observable conduct inferred from public language, facial expressions, biographical records.",
+        "Personality = internal dispositions measured by self-report/expert evaluation; behavior traits can be inferred ethically at scale without medicalizing."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The behavior-vs-personality distinction IS the GSI observability boundary kernel: an outwardly inferable behavioral summary is a legitimate sovereign observation, while an internal clinical disposition is not, exactly the Foundry's rule separating what can be measured from public telemetry versus what requires intrusive access.",
+        "source_operator": "behavior_traits_vs_personality",
+        "telemetry": "behavior traits observable/public; personality internal/self-report; non-medicalizing; ethical at scale."
+      }
+    },
+    {
+      "primitive_id": "big_five_framework",
+      "name": "Big Five (OCEAN) trait framework for consistent scoring",
+      "verbatim_quote": "For consistency, we follow the Big Five framework (Goldberg, 1993), providing trait scores across its five dimensions.",
+      "page": "p2 Sec1",
+      "latex": "\\mathrm{BigFive} = (\\mathrm{Openness}, \\mathrm{Conscientiousness}, \\mathrm{Extraversion}, \\mathrm{Agreeableness}, \\mathrm{Neuroticism})",
+      "symbol_and_unit_ledger": {
+        "Openness,Conscientiousness,Extraversion,Agreeableness,Neuroticism": "five trait dimension scores [ordinal, 3-level numeric]"
+      },
+      "assumptions": [
+        "Big Five (Goldberg 1993) used as the consistent scoring framework.",
+        "Scores are LLM-inferred behavioral summaries, not clinical personality diagnoses."
+      ],
+      "breakdown_regime": "The framework is a scoring convention, not a ground-truth measurement; LLM-inferred scores carry model bias and prompt sensitivity.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Big Five framework IS the GSE standardized-trait ontology kernel: a fixed five-dimensional scoring convention gives comparable, auditable trait vectors across a population, the Foundry's preference for a shared dimensioned schema over ad-hoc labels.",
+        "source_operator": "big_five_framework",
+        "telemetry": "OCEAN; Goldberg 1993; 3-level numeric; LLM-inferred not clinical."
+      }
+    },
+    {
+      "primitive_id": "athlepersona_dataset",
+      "name": "AthlePersona: 4181 male professional athletes across seven leagues",
+      "verbatim_quote": "Built from scratch, this dataset documents 4181 male professional athletes across seven major sports leagues worldwide, including the NBA, NFL, NHL, ATP, PGA, Premier League, and Bundesliga",
+      "page": "p3 Sec2",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Biographical info, physical attributes (height/weight), and facial images from official league sources.",
+        "Nationalities geocoded to latitude/longitude; MLB, La Liga, Serie A, Ligue 1 excluded pending written consent."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "AthlePersona IS the GSE athlete-profiling corpus kernel: a multi-league roster of professional athletes with biographical, physical, and facial telemetry is the Foundry's population-level player observation base, spanning the exact NFL/NBA/NHL domains GSE reasons about.",
+        "source_operator": "athlepersona_dataset",
+        "telemetry": "4181 male athletes; NBA/NFL/NHL/ATP/PGA/Premier League/Bundesliga; geocoded nationality; consent-gated leagues."
+      }
+    },
+    {
+      "primitive_id": "celebpersona_dataset",
+      "name": "CelebPersona: 9444 public figures linked CelebA to Wikidata",
+      "verbatim_quote": "We linked each celebrity's name to its corresponding WikiData entity, enabling retrieval of additional biographical details and physical characteristics.",
+      "page": "p3 Sec2",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Builds on CelebA (10176 celebrities); face identities linked to Wikidata entities.",
+        "9444 public figures retained; biographical details and physical characteristics retrieved."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CelebPersona's entity-linking IS a DERIVED KERNEL for GSE entity-resolution provenance: linking a face identity to a structured knowledge-graph entity to enrich biographical metadata is the Foundry's pattern of grounding an observation in a resolved, cited identity.",
+        "source_operator": "celebpersona_dataset",
+        "telemetry": "CelebA 10176 -> 9444; face identity -> Wikidata entity; biographical enrichment."
+      }
+    },
+    {
+      "primitive_id": "stable_attribute_selection",
+      "name": "Retain stable inherent appearance attributes, discard short-term variation",
+      "verbatim_quote": "that reflect more stable, inherent appearance properties, while discarding attributes subject to",
+      "page": "p3 Sec2",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "From 40 CelebA attributes, 10 stable inherent ones retained (Big Nose, High Cheekbones).",
+        "Short-term-variable attributes (Heavy Makeup) discarded to avoid transient noise."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Stable-attribute selection IS a DERIVED KERNEL for GSE feature-stability gate: a sovereign observation should rest on invariant properties rather than transient ones, so the Foundry filters features by temporal stability before they enter a causal model.",
+        "source_operator": "stable_attribute_selection",
+        "telemetry": "40 CelebA -> 10 stable; Big Nose/High Cheekbones kept; Heavy Makeup discarded."
+      }
+    },
+    {
+      "primitive_id": "three_llm_aggregation",
+      "name": "Three best LLMs generate traits; median voting aggregates",
+      "verbatim_quote": "to generate both textual descriptions and Big Five scores for building our datasets",
+      "page": "p4 Sec2.1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "ChatGPT-4o-Latest, Gemini-2.5-Pro, Llama-4-Maverick selected from ten evaluated.",
+        "Each produces a description and score; an aggregated Big Five score combines them."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Multi-LLM aggregation IS the GSE ensemble-observation kernel: combining several independent inferencers and aggregating robustly reduces single-model bias, the Foundry's pattern of fusing multiple sovereign estimators rather than trusting one.",
+        "source_operator": "three_llm_aggregation",
+        "telemetry": "ChatGPT-4o-Latest + Gemini-2.5-Pro + Llama-4-Maverick; description+score; Aggregated_BigFive_score."
+      }
+    },
+    {
+      "primitive_id": "median_voting_aggregation",
+      "name": "Median-based voting removes insufficient-info zeros and resists outliers",
+      "verbatim_quote": "we remove \"0\" scores (denoting insufficient information) and aggregate the remaining values using a median-based voting rule that minimizes sensitivity to outliers",
+      "page": "p5 Sec3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A score of 0 denotes insufficient information and is removed before aggregation.",
+        "Median-based voting minimizes outlier sensitivity; facial attributes aggregated by majority voting across images."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Median voting with zero-exclusion IS the GSE robust-aggregation kernel: dropping insufficient-information votes and using a median rather than a mean is the Foundry's discipline of outlier-resistant, provenance-aware fusion of multiple measurements.",
+        "source_operator": "median_voting_aggregation",
+        "telemetry": "remove 0 (insufficient info); median voting; majority voting for facial attributes."
+      }
+    },
+    {
+      "primitive_id": "prompt_scale_design",
+      "name": "3-level numeric scales minimize LLM scoring variability vs 5-level",
+      "verbatim_quote": "Results showed that 3-level scales with numeric outputs minimized variability, whereas 5-level scales increased inconsistency.",
+      "page": "p4 Sec2.1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Tested numeric vs textual outputs, 3-level vs 5-level scales, and ordering directions.",
+        "3-level numeric minimized variability; consistency measured by std across runs and Manhattan distance between prompts."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The scale-granularity finding IS a DERIVED KERNEL for GSE measurement-resolution gate: finer scoring scales can increase noise rather than information, so the Foundry chooses the coarsest scale that preserves signal, validated by repeated-run variability.",
+        "source_operator": "prompt_scale_design",
+        "telemetry": "3-level numeric best; 5-level increases inconsistency; std + Manhattan distance consistency."
+      }
+    },
+    {
+      "primitive_id": "llm_selection_metrics",
+      "name": "Eight-criteria LLM selection including privacy, consistency, factual accuracy",
+      "verbatim_quote": "Models were assessed on eight criteria, including generation time, missing and indecisive rates, privacy preservation, output formatting, factual accuracy, and context consistency.",
+      "page": "p4 Sec2.1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Metrics: generation time, missing rate, indecisive rate, privacy preservation, output formatting, context consistency, factual accuracy, overall score.",
+        "Ten LLMs evaluated; GPT-4.5-Preview excluded for high API cost; ChatGPT-4o and Gemini-2.5-Pro top overall."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The multi-criteria LLM selection IS a DERIVED KERNEL for GSE inferencer-certification gate: an inferencer is chosen on privacy, consistency, and factual accuracy together, not raw capability alone, the Foundry's multi-axis certification of any sovereign estimator.",
+        "source_operator": "llm_selection_metrics",
+        "telemetry": "GT/MR/IR/PP/OF/CC/FA/OS; 10 LLMs; GPT-4.5 excluded for cost; ChatGPT-4o/Gemini-2.5-Pro top."
+      }
+    },
+    {
+      "primitive_id": "privacy_embeddings",
+      "name": "Privacy via obfuscated embeddings, no raw images or text released",
+      "verbatim_quote": "no raw images or trait texts are released. Each facial image is replaced with a 1024-dimensional embedding, and each textual description with a 3584-dimensional embedding, both further obfuscated through an invertible transformation.",
+      "page": "p4 Sec2.2",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Facial image -> 1024-dim embedding; text description -> 3584-dim embedding; both obfuscated by invertible transformation.",
+        "Categorical variables converted to indices; consent-based, legally accessible sources only."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Embedding-only release IS the GSE privacy-preserving observation kernel: releasing transformed embeddings rather than raw personal data preserves analytical utility while protecting identity, the Foundry's pattern of sovereign telemetry that does not expose raw private signals.",
+        "source_operator": "privacy_embeddings",
+        "telemetry": "1024-dim image + 3584-dim text embeddings; invertible obfuscation; no raw release; indices for categoricals."
+      }
+    },
+    {
+      "primitive_id": "five_independence_tests",
+      "name": "Five independence tests (3 non-parametric + 2 discrete) at p<0.05",
+      "verbatim_quote": "we apply five different independence test methods: three non-parametric approaches (KCI (Zhang et al., 2012), RCIT (Strobl et al., 2019), HSIC (Gretton et al., 2005)) and two tests designed for discrete variables (Chi-square (Tallarida et al., 1987) and G-square (Tsamardinos et al., 2006))",
+      "page": "p5 Sec3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "KCI, RCIT, HSIC (non-parametric) plus Chi-square and G-square (discrete).",
+        "Dependency significant if p<0.05; heatmaps report x/y methods rejecting the null."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The multi-test independence battery IS the GSE dependence-certification kernel: requiring several independent tests to agree before declaring a dependency guards against a single test's assumptions, the Foundry's cross-check pattern for causal claims.",
+        "source_operator": "five_independence_tests",
+        "telemetry": "KCI/RCIT/HSIC + Chi-square/G-square; p<0.05; x/y rejection count heatmap."
+      }
+    },
+    {
+      "primitive_id": "athlete_org_vs_celebrity_appearance",
+      "name": "Athlete traits shaped by organizational affiliation; celebrity traits by appearance",
+      "verbatim_quote": "celebrity representations are more strongly shaped by appearance cues, whereas athlete representations are more heavily influenced by organizational affiliation",
+      "page": "p6 Sec3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "CelebPersona: gender/occupation depend on nearly all traits; facial features (pointy nose, arched eyebrows) associate with traits.",
+        "AthlePersona: stronger dependencies with birth year and league affiliation; moderate height/weight associations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The persona-type divergence IS the GSI context-conditioned trait kernel: athlete behavioral summaries are conditioned on organizational context (league, cohort) while celebrity summaries on appearance, the Foundry's situational-ontology insight that the same trait schema is driven by different causal parents in different domains.",
+        "source_operator": "athlete_org_vs_celebrity_appearance",
+        "telemetry": "celebrity: gender/occupation/face; athlete: birth year/league; moderate height/weight; geographic moderate both."
+      }
+    },
+    {
+      "primitive_id": "multimodal_multimeasurement",
+      "name": "Multi-modality (formats) versus multi-measurement (instantiations)",
+      "verbatim_quote": "Multi-modality (a.k.a., multi-view) refers to different types of data formats, such as facial images and textual descriptions. Multi-measurement usually denotes the different instantiations of the same modality",
+      "page": "p6 Sec4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Multi-modality = different data formats (images vs text).",
+        "Multi-measurement = different instantiations of one modality (photos at different locations, trait descriptions from different LLMs)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The modality/measurement distinction IS the GSE observation-multiplicity kernel: multiple independent measurements of one latent state provide the variability needed for identifiability, the Foundry's principle that repeated sovereign observations of the same quantity enable causal recovery.",
+        "source_operator": "multimodal_multimeasurement",
+        "telemetry": "multi-modality = formats; multi-measurement = instantiations (different LLMs/photos)."
+      }
+    },
+    {
+      "primitive_id": "latent_causal_model",
+      "name": "Latent causal relations with shared and modality-specific variables (Eq1)",
+      "verbatim_quote": "we allow the shared latent variable s generally governing the modality-specific latent variables",
+      "page": "p6 Eq1",
+      "latex": "z_{m,i} := g_{z_{m,i}}\\!\\left(\\mathrm{Pa}(z_{m,i}), s, \\epsilon_{m,i}\\right)",
+      "symbol_and_unit_ledger": {
+        "z_{m,i}": "i-th latent variable of modality m [latent]",
+        "Pa(z_{m,i})": "parents of z_{m,i}, possibly across modalities [latent set]",
+        "s": "shared latent variable across modalities [latent]",
+        "epsilon_{m,i}": "mutually independent exogenous noise [latent]",
+        "g_{z_{m,i}}": "differentiable latent causal function, Jacobian permutable to strictly triangular [function]"
+      },
+      "assumptions": [
+        "General causal relations allowed within and across modalities.",
+        "Exogenous variables mutually independent; Jacobian of g_z permutable to strictly triangular (acyclic)."
+      ],
+      "breakdown_regime": "The strictly-triangular Jacobian encodes acyclicity; a cyclic latent graph violates the assumption and breaks the identifiability proof.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The latent causal model IS the GSE structural-causal kernel: a shared confounder s governing modality-specific latents with independent exogenous noise is the Foundry's canonical structural causal model, the substrate on which all veto adjudication runs.",
+        "source_operator": "latent_causal_model",
+        "telemetry": "Eq1; z=g(Pa(z),s,eps); triangular Jacobian (acyclic); independent exogenous noise."
+      }
+    },
+    {
+      "primitive_id": "generating_function",
+      "name": "Modality generating function maps latents to observations (Eq2)",
+      "verbatim_quote": "the data generation process (see Fig. 4) can be formulated as",
+      "page": "p6 Eq2",
+      "latex": "x_m := g_{x_m}(z_m, \\eta_m)",
+      "symbol_and_unit_ledger": {
+        "x_m": "observation from modality m [R^{d_m}]",
+        "z_m": "modality-specific latent variables [latent]",
+        "eta_m": "modality-specific information independent of other components [latent]",
+        "g_{x_m}": "differentiable generating function [function]"
+      },
+      "assumptions": [
+        "Each modality's observation is generated from its latents plus independent modality-specific information.",
+        "M modalities, x = [x_1,...,x_M], x_m in R^{d_m}."
+      ],
+      "breakdown_regime": "Identifiability is only up to invertible transformations of the latents; the generating function is not uniquely recoverable without the theorem assumptions.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The generating function IS the GSE latent-to-observation kernel: a sovereign latent state emits measurable observations through a modality-specific channel, the Foundry's separation of the hidden causal state from its dimensioned telemetry.",
+        "source_operator": "generating_function",
+        "telemetry": "Eq2; x_m=g(z_m,eta_m); x_m in R^{d_m}; independent modality info eta_m."
+      }
+    },
+    {
+      "primitive_id": "identifiability_definition",
+      "name": "Identifiability: latents recovered up to an invertible map",
+      "verbatim_quote": "given the same x value, each latent component",
+      "page": "p6 Sec4.1",
+      "latex": "\\hat{z}_{m,i} = h_{m,i}(z_{m,i}),\\quad h_{m,i}\\ \\text{invertible}",
+      "symbol_and_unit_ledger": {
+        "z_hat_{m,i}": "estimated latent component [latent]",
+        "z_{m,i}": "true latent component [latent]",
+        "h_{m,i}": "invertible transformation relating estimate to truth [function]"
+      },
+      "assumptions": [
+        "Two specifications theta and theta_hat both fit the marginal p(x).",
+        "Identifiability means each estimated latent equals its true counterpart up to an invertible map."
+      ],
+      "breakdown_regime": "Without the theorem assumptions, latent representations are identifiable only up to arbitrary mixing, so causal interpretation is not justified.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The identifiability definition IS the GSE representation-certification kernel: a learned latent is sovereign only if it is provably tied to the true state up to a well-defined transformation, the Foundry's requirement that a representation carry an identifiability guarantee before causal claims are made.",
+        "source_operator": "identifiability_definition",
+        "telemetry": "z_hat=h(z); h invertible; both specs fit p(x); identifiability up to invertible map."
+      }
+    },
+    {
+      "primitive_id": "theorem1_subspace",
+      "name": "Theorem 1: subspace identifiability under four assumptions",
+      "verbatim_quote": "Assumption iii guarantees that different values of zm induce different conditional distributions",
+      "page": "p7 Thm1",
+      "latex": "[\\hat{z}_m, \\hat{s}] = h(z_m, s),\\quad h\\ \\text{invertible and differentiable}",
+      "symbol_and_unit_ledger": {
+        "z_hat_m": "estimated modality latent subspace [latent]",
+        "s_hat": "estimated shared latent [latent]",
+        "h": "invertible differentiable map [function]"
+      },
+      "assumptions": [
+        "i Well-Posed Probability: joint/marginal/conditional of (x_{m,B}, z_m) bounded and continuous.",
+        "ii Modality Variability: operators L_{x_{m,C}|z_m} and L_{x_{m,A}|x_{m,C}} injective; iii Measurement Changes: distinct z induce distinct conditionals (heteroskedastic noise, weaker than monotonicity); iv Differentiability via VAE."
+      ],
+      "breakdown_regime": "Requires three exchangeable measurements from one modality; with fewer measurements or non-injective operators the subspace is not identifiable.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Theorem 1 IS the GSE multi-measurement identifiability certificate: three independent measurements plus variability and differentiability make a latent subspace recoverable, the Foundry's formal condition under which a fused representation can be trusted as sovereign.",
+        "source_operator": "theorem1_subspace",
+        "telemetry": "Thm1; [z_hat_m,s_hat]=h(z_m,s); 4 assumptions; 3 exchangeable measurements; heteroskedastic weaker than monotonicity."
+      }
+    },
+    {
+      "primitive_id": "theorem2_shared",
+      "name": "Theorem 2: shared subspace isolated by entropy regularization",
+      "verbatim_quote": "the shared component s can be isolated by leveraging the preliminary result that each s is block-wise identifiable",
+      "page": "p7 Thm2",
+      "latex": "\\hat{s} = h_s(s),\\quad \\hat{g}^{-1}_{x_m}\\ \\text{minimizes}\\ \\sum_{k\\in[M]} H\\!\\left(\\hat{g}^{-1}_{x_k}(x_k)\\right)",
+      "symbol_and_unit_ledger": {
+        "s_hat": "estimated shared latent [latent]",
+        "h_s": "invertible function [function]",
+        "H": "entropy [nats or bits]",
+        "g_hat^{-1}_{x_k}": "shared latent encoder for modality k [function]"
+      },
+      "assumptions": [
+        "Assumptions hold for all modalities and the whole latent space.",
+        "Entropy Regularization: shared encoders minimize the sum of entropies across modalities."
+      ],
+      "breakdown_regime": "Shared-subspace isolation presupposes the whole latent space and each modality subspace are already identified; it fails if Theorem 1 conditions are unmet.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Theorem 2 IS the GSE shared-confounder isolation kernel: minimizing encoder entropy across modalities isolates the common cause from modality-specific factors, the Foundry's method for separating a shared sovereign driver from view-specific noise.",
+        "source_operator": "theorem2_shared",
+        "telemetry": "Thm2; s_hat=h_s(s); entropy regularization sum_k H(g_hat^-1(x_k)); block-wise identifiable."
+      }
+    },
+    {
+      "primitive_id": "theorem3_component",
+      "name": "Theorem 3: component-wise identifiability via variability and sparsity",
+      "verbatim_quote": "We assume that the estimated graph is at most as dense as the true graph",
+      "page": "p8 Thm3",
+      "latex": "\\hat{z}_{m,i} = h_i(z_{m,\\pi(j)}),\\quad \\|\\hat{G}\\|_0 \\le \\|G\\|_0",
+      "symbol_and_unit_ledger": {
+        "z_hat_{m,i}": "estimated latent component [latent]",
+        "pi": "permutation of component indices [permutation]",
+        "G_hat,G": "estimated and true adjacency matrices [binary d_z x d_z]",
+        "||.||_0": "elementwise L0 norm, number of nonzero entries [count]"
+      },
+      "assumptions": [
+        "i Sufficient Variability: 4n+|M_{z_m}| values of s give linearly independent w(m) vectors of cross-partial derivatives (Eq3).",
+        "ii Sparsity Regularization: estimated graph at most as dense as true graph, ||G_hat||_0 <= ||G||_0."
+      ],
+      "breakdown_regime": "Component-wise recovery needs sufficient variability in the shared variable and a sparsity constraint; an over-dense estimated graph violates the assumption.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Theorem 3 IS the GSE component-level causal certificate: sufficient variability plus a sparsity prior recovers individual latent components up to permutation, the Foundry's strongest identifiability tier where each sovereign factor is separately recoverable.",
+        "source_operator": "theorem3_component",
+        "telemetry": "Thm3; z_hat=h_i(z_{m,pi(j)}); ||G_hat||_0<=||G||_0; 4n+|M_zm| independent w(m); Eq3 cross-partials."
+      }
+    },
+    {
+      "primitive_id": "conditional_independence_cross_partial",
+      "name": "Conditional independence equals vanishing cross-partial derivatives",
+      "verbatim_quote": "leveraging the connection between conditional independence and vanishing cross-partial derivatives",
+      "page": "p8 Sec4.2",
+      "latex": "z_{m,i}\\perp z_{m,j}\\mid\\{s, z\\setminus\\{z_{m,i},z_{m,j}\\}\\}\\ \\Longrightarrow\\ \\frac{\\partial^2 \\log p(z_m)}{\\partial z_{m,i}\\,\\partial z_{m,j}} = 0",
+      "symbol_and_unit_ledger": {
+        "z_{m,i},z_{m,j}": "latent components [latent]",
+        "s": "shared latent [latent]",
+        "partial^2 log p / partial z_i partial z_j": "cross-partial derivative of log density [1/latent^2]"
+      },
+      "assumptions": [
+        "Lin (1997): conditional independence corresponds to vanishing cross-partial derivatives of the log density.",
+        "Motivates nonlinear ICA (Hyvarinen et al. 2019) with shared latents as confounders inducing variability."
+      ],
+      "breakdown_regime": "The equivalence holds under regularity of the density; non-differentiable or degenerate densities break the cross-partial test.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The cross-partial criterion IS the GSE conditional-independence test kernel: a vanishing mixed derivative of the log density certifies conditional independence, the Foundry's analytic route from a learned representation to a causal-graph edge decision.",
+        "source_operator": "conditional_independence_cross_partial",
+        "telemetry": "Lin 1997; z_i perp z_j | rest => d2 log p / dz_i dz_j = 0; nonlinear ICA Hyvarinen 2019."
+      }
+    },
+    {
+      "primitive_id": "recon_loss",
+      "name": "Reconstruction loss: per-measurement MSE",
+      "verbatim_quote": "This reconstruction is optimized via mean squared error",
+      "page": "p8 Sec4.3",
+      "latex": "\\mathcal{L}_{Recon} = \\sum_{m}\\sum_{k} \\|x_{m,k} - \\hat{x}_{m,k}\\|_2^2",
+      "symbol_and_unit_ledger": {
+        "x_{m,k}": "k-th measurement of modality m [R^{d_m}]",
+        "x_hat_{m,k}": "reconstructed measurement [R^{d_m}]",
+        "||.||_2^2": "squared Euclidean norm [squared units]"
+      },
+      "assumptions": [
+        "Decoders reconstruct each observation separately to maintain conditional independence across measurements.",
+        "MSE summed over modalities m and measurements k."
+      ],
+      "breakdown_regime": "MSE assumes Gaussian observation noise; heavy-tailed or structured noise can mislead the reconstruction objective.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The per-measurement reconstruction loss IS the GSE fidelity kernel: reconstructing each measurement independently preserves conditional independence while enforcing fidelity, the Foundry's pattern of a dimensioned reconstruction objective that respects the measurement structure.",
+        "source_operator": "recon_loss",
+        "telemetry": "L_Recon=sum_m sum_k ||x-x_hat||_2^2; separate decoders; conditional independence preserved."
+      }
+    },
+    {
+      "primitive_id": "independence_loss",
+      "name": "Independence loss: KL to isotropic Gaussian prior",
+      "verbatim_quote": "This is implemented by aligning their joint distribution",
+      "page": "p8 Sec4.3",
+      "latex": "\\mathcal{L}_{Ind} = \\mathrm{KL}\\!\\left(p(\\gamma)\\,\\|\\,\\mathcal{N}(0, I)\\right)",
+      "symbol_and_unit_ledger": {
+        "gamma": "joint latents and exogenous variables [latent vector]",
+        "p(gamma)": "estimated joint distribution [distribution]",
+        "N(0,I)": "isotropic Gaussian prior [distribution]",
+        "KL": "Kullback-Leibler divergence [nats]"
+      },
+      "assumptions": [
+        "Independence among latents and exogenous variables enforced by aligning their joint to an isotropic Gaussian.",
+        "KL divergence measures the alignment."
+      ],
+      "breakdown_regime": "An isotropic Gaussian prior imposes independence and unit scale; if true latents are dependent or non-Gaussian the prior is misspecified.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The KL-to-Gaussian independence loss IS the GSE independence-enforcement kernel: aligning the joint latent distribution to a factorized prior enforces the mutual-independence assumption the identifiability theorems require, the Foundry's regularizer that keeps a representation structurally valid.",
+        "source_operator": "independence_loss",
+        "telemetry": "L_Ind=KL(p(gamma)||N(0,I)); isotropic Gaussian; enforces latent/exogenous independence."
+      }
+    },
+    {
+      "primitive_id": "sparsity_loss",
+      "name": "Sparsity loss: L1 penalty on learnable causal adjacency",
+      "verbatim_quote": "A sparsity penalty encourages minimal yet sufficient causal graphs",
+      "page": "p8 Sec4.3",
+      "latex": "\\mathcal{L}_{Sp} = \\|\\hat{A}\\|_1",
+      "symbol_and_unit_ledger": {
+        "A_hat": "learnable adjacency matrix of the latent causal graph [real d_z x d_z]",
+        "||.||_1": "elementwise L1 norm [sum of absolute entries]"
+      },
+      "assumptions": [
+        "Causal relations captured by a learnable adjacency matrix implemented via normalizing flows.",
+        "L1 sparsity encourages minimal yet sufficient graphs."
+      ],
+      "breakdown_regime": "L1 promotes sparsity but can shrink true edges; the sparsity assumption ||G_hat||_0<=||G||_0 must hold for Theorem 3.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The L1 adjacency sparsity loss IS the GSE parsimony kernel: a minimal sufficient causal graph is preferred over a dense one, the Foundry's Occam regularizer that keeps the sovereign causal structure interpretable and identifiable.",
+        "source_operator": "sparsity_loss",
+        "telemetry": "L_Sp=||A_hat||_1; normalizing flows adjacency; minimal sufficient graph."
+      }
+    },
+    {
+      "primitive_id": "total_loss",
+      "name": "Combined objective: reconstruction + independence + sparsity",
+      "verbatim_quote": "The overall training loss combines all three components",
+      "page": "p8 Sec4.3",
+      "latex": "\\mathcal{L} = \\alpha_{Recon}\\mathcal{L}_{Recon} + \\alpha_{Ind}\\mathcal{L}_{Ind} + \\alpha_{Sp}\\mathcal{L}_{Sp}",
+      "symbol_and_unit_ledger": {
+        "alpha_Recon,alpha_Ind,alpha_Sp": "loss weighting coefficients [dimensionless]",
+        "L_Recon,L_Ind,L_Sp": "reconstruction, independence, sparsity losses [scalar]"
+      },
+      "assumptions": [
+        "Three components enforced simultaneously: reconstruction fidelity, independence, causal sparsity.",
+        "Weights alpha balance the three objectives."
+      ],
+      "breakdown_regime": "Imbalanced weights can sacrifice identifiability for reconstruction or vice versa; the trade-off must preserve the theorem assumptions.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The combined objective IS the GSE multi-constraint optimization kernel: fidelity, independence, and parsimony are jointly enforced so the recovered representation is both accurate and structurally sovereign, the Foundry's multi-objective compilation pattern.",
+        "source_operator": "total_loss",
+        "telemetry": "L=alpha_R L_Recon+alpha_I L_Ind+alpha_S L_Sp; simultaneous fidelity/independence/sparsity."
+      }
+    },
+    {
+      "primitive_id": "imagebind_gte_embeddings",
+      "name": "ImageBind 1024-dim image and gte-Qwen2 3584-dim text embeddings",
+      "verbatim_quote": "For images, we adopt ImageBind (Girdhar et al., 2023)",
+      "page": "p8 Sec4.3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "ImageBind for 1024-dim image embeddings; gte-Qwen2-7B-instruct for 3584-dim text embeddings.",
+        "Released dataset contains only transformed embeddings, not raw images or text."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The fixed embedding extractors IS a DERIVED KERNEL for GSE observation-encoding provenance: naming the exact encoder and dimensionality makes the observation channel reproducible and auditable, the Foundry's requirement that every telemetry transformation be cited and dimensioned.",
+        "source_operator": "imagebind_gte_embeddings",
+        "telemetry": "ImageBind 1024-dim image; gte-Qwen2-7B-instruct 3584-dim text; embeddings only."
+      }
+    },
+    {
+      "primitive_id": "synthetic_causal_chain",
+      "name": "Synthetic cross-modal causal chain validates identifiability (R2 0.96, MCC 0.92)",
+      "verbatim_quote": "our method achieves an R2 of 0.96 and an MCC of 0.92, clearly outperforming MMCRL which reaches R2 of 0.90 and MCC of 0.85",
+      "page": "p9 Sec4.4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Colored MNIST + Fashion MNIST: horizontal position -> transparency -> vertical placement -> grayscale intensity.",
+        "Beats BetaVAE, MCL, and MM-CRL; explicit cross-modal causal dependencies with multiple measurements."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The synthetic causal-chain validation IS the GSE ground-truth identifiability test: a designed cross-modal causal chain with known structure certifies that the method recovers true latents, the Foundry's discipline of validating a causal operator on synthetic ground truth before real data.",
+        "source_operator": "synthetic_causal_chain",
+        "telemetry": "R2 0.96 / MCC 0.92 vs MM-CRL 0.90/0.85; colored MNIST->fashion chain; beats BetaVAE/MCL."
+      }
+    },
+    {
+      "primitive_id": "athlepersona_causal_graph",
+      "name": "AthlePersona causal graph: mindset/culture shared factors drive trait and image latents",
+      "verbatim_quote": "mindset (S1) influences self-awareness (Z2,4). Moreover, cross-modal links reveal that confidence (Z2,1) affects facial expressions (Z1,4), and emotional stability (Z2,3) impacts grooming (Z1,2).",
+      "page": "p9 Sec4.5",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Two shared factors S1 (mindset), S2 (culture); five image latents Z1,1-5; five trait latents Z2,1-5.",
+        "S1<->S2 bidirectional; skin tone -> attractiveness -> facial expressions sequential pathway."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The athlete causal graph IS the GSI cross-modal trait-causation kernel: shared mindset/culture factors drive both behavioral traits and appearance latents, with confidence affecting facial expressions, the Foundry's isomorphism of a shared sovereign driver propagating across measurable modalities.",
+        "source_operator": "athlepersona_causal_graph",
+        "telemetry": "S1 mindset/S2 culture; confidence->facial expressions; emotional stability->grooming; skin tone->attractiveness->expressions."
+      }
+    },
+    {
+      "primitive_id": "latents_not_identical_bigfive",
+      "name": "Estimated latents correlate with but are not identical to Big Five traits",
+      "verbatim_quote": "the estimated latents may correlate with, but are not necessarily identical to, the well-defined Big Five traits",
+      "page": "p9 Sec4.5",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Learned latents are interpreted post-hoc guided by independence-test results.",
+        "Latents are not asserted to equal the Big Five dimensions; interpretation is assigned after discovery."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The latents-not-labels caveat IS a DERIVED KERNEL for GSE interpretation-honesty gate: a discovered latent is not automatically the named construct it correlates with, so the Foundry separates the recovered factor from its post-hoc label rather than conflating them.",
+        "source_operator": "latents_not_identical_bigfive",
+        "telemetry": "latents correlate but not identical to Big Five; post-hoc interpretation via independence tests."
+      }
+    },
+    {
+      "primitive_id": "cohort_scope_limitation",
+      "name": "Cohort-specific scope: male athletes and wealthy celebrities, not universal",
+      "verbatim_quote": "AthlePersona currently covers only male athletes, while CelebPersona only includes wealthy and high-visibility celebrities. These cohorts are not universally representative",
+      "page": "p9 Sec5",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "AthlePersona male-only; CelebPersona wealthy/high-visibility only.",
+        "Findings are population-specific; controlled populations enable cross-domain invariant-causal study."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The cohort-scope declaration IS a DERIVED KERNEL for GSE domain-of-validity gate: results are certified only for the sampled population, so the Foundry refuses to generalize a male-athlete or wealthy-celebrity finding to all humans without further evidence.",
+        "source_operator": "cohort_scope_limitation",
+        "telemetry": "male athletes only; wealthy high-visibility celebrities; population-specific not universal."
+      }
+    },
+    {
+      "primitive_id": "temporal_stability_limitation",
+      "name": "Traits inferred from static public data lack temporal stability",
+      "verbatim_quote": "our traits are inferred by LLMs from static public data without longitudinal tracking",
+      "page": "p9 Sec5",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Behavioral traits are subjective and dynamic.",
+        "LLM inference uses static public data with no longitudinal tracking, complicating validation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The temporal-stability limitation IS a DERIVED KERNEL for GSE staleness veto: a trait inferred from a static snapshot may not hold over time, so the Foundry flags single-timepoint behavioral estimates as temporally unvalidated rather than treating them as stable.",
+        "source_operator": "temporal_stability_limitation",
+        "telemetry": "static public data; no longitudinal tracking; traits subjective/dynamic; validation complicated."
+      }
+    },
+    {
+      "primitive_id": "ethical_usage_restriction",
+      "name": "Non-commercial use only; high-stakes applications prohibited",
+      "verbatim_quote": "a mandatory usage guideline limits the dataset to non-commercial use and prohibits applications in high-stakes contexts (e.g., insurance or lending)",
+      "page": "p5 Sec2.2",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Consent-based, legally accessible sources (official league sites, CelebA, Wikidata).",
+        "Mandatory guideline: non-commercial only; no high-stakes use such as insurance or lending."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The usage restriction IS a DERIVED KERNEL for GSE deployment-scope veto: a behavioral dataset is explicitly barred from high-stakes decisions, the Foundry's discipline of binding an operator to its licensed domain and refusing promotion into consequential decision-making it was not validated for.",
+        "source_operator": "ethical_usage_restriction",
+        "telemetry": "non-commercial only; no insurance/lending; consent-based sources; mandatory guideline."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0245bb24406822d6-t1",
+      "think": "PersonaX, from Loka Li, Wong Yu Kang, and colleagues at MBZUAI and Carnegie Mellon (arXiv 2509.11362v2, published at ICLR 2026), is a pair of multimodal datasets with LLM-inferred behavior traits plus a two-level causal analysis framework, and it is directly relevant to the Foundry because its AthlePersona component profiles 4181 male professional athletes across the NBA, NFL, NHL, ATP, PGA, Premier League, and Bundesliga. The paper's founding distinction is between behavior traits, outwardly observable patterns of conduct inferred from public language, facial expressions, and biographical records, and psychological personality, internal dispositions measured through self-reports or expert evaluation. The authors stress that behavior traits can be inferred ethically and at scale from non-intrusive signals, offering reproducible population-level insights without medicalizing individuals. Each record integrates three components: textual trait descriptions and Big Five scores inferred by three LLMs, facial images or embeddings, and structured biographical metadata. To protect privacy, only transformed embeddings are released, a 1024-dimensional image embedding and a 3584-dimensional text embedding, both obfuscated through an invertible transformation, with categorical variables converted to indices.\n\nThe dataset construction is a disciplined provenance pipeline. AthlePersona was built from scratch from official league sources, collecting biographical information, physical attributes like height and weight, and facial images, with nationalities geocoded into latitude and longitude for geographic analysis; MLB, La Liga, Serie A, and Ligue 1 were examined but excluded pending written consent. CelebPersona builds on CelebA, linking each celebrity's face identity to a Wikidata entity to retrieve biographical details, and from the original forty CelebA attributes the authors manually retained ten stable inherent appearance properties such as Big Nose and High Cheekbones while discarding short-term-variable attributes like Heavy Makeup. Ten state-of-the-art LLMs were systematically evaluated on eight criteria, generation time, missing rate, indecisive rate, privacy preservation, output formatting, context consistency, factual accuracy, and an overall score, with GPT-4.5-Preview excluded for high API cost. Controlled prompt trials showed that three-level numeric scales minimized variability while five-level scales increased inconsistency, and the three consistently best models, ChatGPT-4o-Latest, Gemini-2.5-Pro, and Llama-4-Maverick, were selected to generate descriptions and scores.\n\nThe structured analysis level aggregates trait scores by removing zero scores that denote insufficient information and applying a median-based voting rule that minimizes outlier sensitivity, with facial attributes aggregated by majority voting across images. Five independence tests, three non-parametric (KCI, RCIT, HSIC) and two discrete (Chi-square, G-square), declare a dependency significant at p below 0.05, and the heatmaps report how many of the five methods reject the null. The headline finding is a systematic divergence between persona types: celebrity representations are more strongly shaped by appearance cues, with gender and occupation depending on nearly all traits and facial features like pointy nose and arched eyebrows showing significant associations, whereas athlete representations are more heavily influenced by organizational affiliation, with stronger dependencies on birth year and league affiliation and more moderate associations with height and weight. Geographic variables show comparable moderate dependence in both datasets. This is a clean situational-ontology result: the same Big Five schema is driven by different causal parents in different social contexts.\n\nThe unstructured analysis level is a multi-modality multi-measurement causal representation learning method with a new identifiability theory. The causal model, Equations 1 and 2, generates modality-specific latents z from their parents, a shared latent s, and independent exogenous noise, then generates observations x from the latents plus independent modality-specific information, with the latent causal function's Jacobian permutable to a strictly triangular matrix encoding acyclicity. Theorem 1 establishes subspace identifiability under four assumptions, well-posed probability, injective modality-variability operators, measurement changes that induce distinct conditionals via heteroskedastic noise (a condition weaker than monotonicity), and differentiability enforceable through VAEs, requiring three exchangeable measurements from one modality. Theorem 2 isolates the shared subspace by entropy regularization, minimizing the sum of encoder entropies across modalities. Theorem 3 gives component-wise identifiability under sufficient variability, requiring 4n plus the Markov-network edge count of linearly independent cross-partial-derivative vectors, and a sparsity constraint that the estimated graph be at most as dense as the true graph. The analytic engine is the Lin (1997) connection between conditional independence and vanishing cross-partial derivatives of the log density, motivating nonlinear ICA with shared latents as confounders. Training combines a per-measurement MSE reconstruction loss, a KL divergence aligning the joint latent distribution to an isotropic Gaussian for independence, and an L1 sparsity penalty on a normalizing-flow adjacency matrix.\n\nThe experiments validate the framework on synthetic and real data. On a designed cross-modal causal chain, colored MNIST horizontal position affecting transparency which affects fashion-MNIST vertical placement and grayscale intensity, the method reaches R-squared 0.96 and MCC 0.92, beating MM-CRL at 0.90 and 0.85 and also BetaVAE and MCL. On AthlePersona the discovered causal graph has two shared factors, mindset and culture, five image latents, and five trait latents, with mindset influencing self-awareness, confidence affecting facial expressions, emotional stability impacting grooming, and a sequential skin-tone to attractiveness to facial-expressions pathway; crucially the authors note the estimated latents may correlate with but are not necessarily identical to the Big Five traits, a honest interpretation caveat. The declared limitations are the cohort-specific scope, male athletes and wealthy high-visibility celebrities, and the lack of temporal stability because traits are inferred from static public data without longitudinal tracking, and a mandatory usage guideline restricts the data to non-commercial use and prohibits high-stakes contexts like insurance or lending. For GSE this paper is a direct isomorphism of the sovereign stack: an athlete-profiling corpus, behavior-versus-personality observability separation, robust multi-LLM aggregation, a multi-test independence battery, and a causal representation learner with tiered identifiability guarantees, all with zero sportsbook content and equations transcribed exactly from the printed text.",
+      "retrocausal_genealogy": "The lineage runs from personality psychology through multimodal behavior datasets to nonlinear-ICA causal representation learning. The trait framework descends from Goldberg's Big Five (1993) and the self-report instruments 16PF (Cattell 1970), EPQ (Eysenck 1975), and MBTI (Myers 1998), which the authors contrast with outward behavior traits. The dataset branch runs through CelebA (Liu 2015), SALSA group interactions, YouTube-Vlogs, FI-V2, MuPTA, and MDPE, and the Facebook-Likes personality prediction of Kosinski (2013). The causal-representation branch unifies and extends Yao et al. (2023) and Sun et al. (2025) MM-CRL, grounded in nonlinear ICA (Hyvarinen 2019), the VAE-nonlinear-ICA unification (Khemakhem 2020), multimodal contrastive identifiability (Daunhawer 2023), and the conditional-independence-to-cross-partial-derivative connection (Lin 1997). The novel retrocausal step is a multi-modality multi-measurement identifiability theory: three exchangeable measurements per modality plus a shared confounder give subspace, shared-subspace, and component-wise identifiability tiers, with entropy regularization isolating the shared factor and an L0 sparsity constraint enabling component-wise recovery. The athlete dataset is the empirical substrate that makes this theory testable on a real population.",
+      "theory_of_mind": "The authors model several minds carefully. They model the research ethicist's mind, distinguishing behavior traits from clinical personality so the work does not medicalize individuals, restricting release to obfuscated embeddings, and imposing a mandatory non-commercial, no-high-stakes usage guideline that anticipates insurance or lending misuse. They model the LLM's mind, running controlled prompt trials to discover that three-level numeric scales minimize variability while five-level scales increase inconsistency, and selecting three models on eight criteria rather than raw capability, anticipating that a single model's scores are biased and prompt-sensitive. They model the reviewer's mind, validating identifiability on a synthetic causal chain with known ground truth before touching real data, and explicitly caveating that discovered latents correlate with but are not identical to the Big Five, anticipating the objection that a learned factor is being over-interpreted. And they model the generalizer's mind, declaring the male-athlete and wealthy-celebrity cohorts population-specific rather than universal and flagging the lack of longitudinal temporal stability, so a reader cannot silently promote the findings to all humans or all timepoints.",
+      "cross_layer_veto": "The Foundry adjudicates this paper across its layers. The observation layer passes because behavior traits are explicitly separated from internal personality, every embedding is dimensioned (1024 image, 3584 text), and the encoders are named (ImageBind, gte-Qwen2-7B). The aggregation layer certifies median voting with zero-exclusion as outlier-robust and the three-LLM ensemble as bias-reducing, and the prompt-scale finding vetoes over-fine five-level scoring. The dependence layer requires five independence tests to agree at p below 0.05 before a dependency is declared, a cross-check veto against single-test assumptions. The causal layer issues tiered identifiability certificates: Theorem 1 subspace, Theorem 2 shared via entropy regularization, Theorem 3 component-wise via sufficient variability and L0 sparsity, with the strictly-triangular Jacobian enforcing acyclicity and the Lin cross-partial criterion linking conditional independence to the log density. The interpretation layer issues an honesty veto: discovered latents are not asserted to equal the Big Five. The scope layer issues domain-of-validity vetoes for the male-athlete and wealthy-celebrity cohorts, a staleness veto for static-data traits without longitudinal tracking, and a deployment-scope veto barring high-stakes use. The athlete causal graph, mindset and culture driving confidence and emotional stability across modalities, is a direct GSI player-profiling isomorphism. Zero sportsbook lines, spreads, totals, or implied odds appear anywhere; this is pure causal-representation and athlete-profiling territory."
+    }
+  ],
+  "universal_lens": "PersonaX is a universal observation-to-causal-structure template: a population is observed through multiple modalities and multiple independent measurements, robustly aggregated into trait scores, tested for statistical dependence with a battery of independence tests, and then lifted into a latent causal model whose identifiability is certified tier by tier. The pattern generalizes to any sovereign system that must recover interpretable, provably-tied-to-truth causal factors from noisy multi-source telemetry, separating shared drivers from modality-specific noise while declaring the scope and temporal limits of its claims.",
+  "gsi_mapping": "For the Galaxy Sports Institute AthlePersona is a direct athlete-profiling kernel: 4181 professional athletes across the NFL, NBA, NHL, ATP, PGA, and major soccer leagues, with biographical, physical, and facial telemetry and LLM-inferred Big Five behavior traits. The behavior-versus-personality distinction gives GSI an ethical observability boundary, the organizational-affiliation finding shows athlete traits are conditioned on league and cohort rather than appearance, and the discovered causal graph (mindset and culture driving confidence, emotional stability, and self-awareness across modalities) is a cross-modal player-state model. The cohort-scope and temporal-stability limitations define exactly where GSI must defer to longitudinal, instrumented, inclusive data.",
+  "gse_mapping": "For Galaxy Sports Edge this paper supplies a complete causal-representation stack: the multi-modality multi-measurement causal model is the structural-causal kernel, the tiered identifiability theorems are the representation-certification gates, the Lin cross-partial criterion is the conditional-independence test, and the reconstruction-plus-independence-plus-sparsity objective is the multi-constraint optimization pattern. The median-voting zero-exclusion aggregation is the robust-fusion kernel, the five-test independence battery is the dependence-certification veto, the behavior-versus-personality split is the observability boundary, and the latents-not-Big-Five caveat is the interpretation-honesty gate. The cohort-scope, temporal-staleness, and no-high-stakes usage restrictions are the domain-of-validity, staleness, and deployment-scope vetoes GSE enforces. The athlete corpus is literal NFL/NBA/NHL profiling territory. Zero sportsbook content; pure causal-reasoning and player-profiling territory."
+}
