@@ -848,6 +848,42 @@ export function computePiecewiseSimpsonCrps(cdfFn: (x: number) => number, yObser
   return total;
 }
 
+export interface CrpsHardGateVerdict {
+  readonly passed: boolean;
+  readonly meanCrps: number;
+  readonly crpsThreshold: number;
+  readonly gamesEvaluated: number;
+  readonly minGamesRequired: number;
+}
+
+/**
+ * Evaluate the fail-closed CRPS hard gate against `HARD_GATE_CRPS_THRESHOLD`
+ * and `HARD_GATE_MIN_GAMES`.
+ */
+export function evaluateCrpsHardGate(
+  meanCrps: number,
+  gamesEvaluated: number,
+  crpsThreshold = HARD_GATE_CRPS_THRESHOLD,
+  minGamesRequired = HARD_GATE_MIN_GAMES,
+): CrpsHardGateVerdict {
+  const effectiveThreshold = Math.min(crpsThreshold, HARD_GATE_CRPS_THRESHOLD);
+  const effectiveMinGames = Math.max(minGamesRequired, HARD_GATE_MIN_GAMES);
+  const passed =
+    Number.isFinite(meanCrps) &&
+    meanCrps <= effectiveThreshold &&
+    meanCrps <= HARD_GATE_CRPS_THRESHOLD &&
+    Number.isFinite(gamesEvaluated) &&
+    gamesEvaluated >= effectiveMinGames &&
+    gamesEvaluated >= HARD_GATE_MIN_GAMES;
+  return {
+    passed,
+    meanCrps,
+    crpsThreshold: effectiveThreshold,
+    gamesEvaluated,
+    minGamesRequired: effectiveMinGames,
+  };
+}
+
 // ============================================================================
 // SECTION 5: KICKOFF-TO-VICTORY-FORMATION MULTI-CADENCE NFL FUNCTIONS (C0-C6)
 // Source: Unified Quantitative NFL Projection Architecture (1gmnDbtS7qA-7ZvJqnoGGbC3tKO4zFgizEnD6REiFI8k)

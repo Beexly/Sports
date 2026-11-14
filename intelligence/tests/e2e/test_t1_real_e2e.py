@@ -59,7 +59,7 @@ for p in (ROOT, os.path.join(ROOT, "qb-behavior", "src")):
 from integration.api import analyze
 from integration.providers import ProviderRegistry
 from integration.stubs import fixture_league_avgs, fixture_registry
-from tests.helpers import card_request, funnel_legs
+from intelligence.tests.helpers import card_request, funnel_legs
 
 from coaching.provider import CoachingEngineProvider
 from coaching.ol_provider import NflverseOLProvider

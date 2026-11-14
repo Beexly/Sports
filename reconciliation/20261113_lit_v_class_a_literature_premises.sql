@@ -29,4 +29,5 @@ SELECT
   p.created_at
 FROM lit.premise p
 LEFT JOIN lit.premise_vector pv ON pv.premise_id = p.id
-WHERE p.status = 'ACTIVE';
+WHERE p.record_class = 'CITABLE_VERIFIED'
+  AND p.status = 'ACTIVE';

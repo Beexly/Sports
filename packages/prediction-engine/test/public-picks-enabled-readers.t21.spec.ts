@@ -92,7 +92,7 @@ const READERS = [
   },
   {
     file: "apps/web/lib/data-sources/free-settlement-runner.ts",
-    line: 990,
+    line: 1011,
     defaultWhenUnset: "off",
     expression: 'process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true"',
     gates: "the free settlement runner's view of the gate",

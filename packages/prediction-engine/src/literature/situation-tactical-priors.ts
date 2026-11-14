@@ -164,7 +164,8 @@ export function supportFromCount(count: number): number {
 
 /** shrink(support) = 0.65 + 0.35 * support, support in [0,1]. */
 export function shrinkFactor(support: number): number {
-  return SHRINK_FLOOR + (1 - SHRINK_FLOOR) * clamp01(support);
+  const raw = SHRINK_FLOOR + (1 - SHRINK_FLOOR) * clamp01(support);
+  return Math.min(1, Math.max(raw, SHRINK_FLOOR));
 }
 
 /** Structural bound: tanh keeps |result| < PRIOR_BOUND for any finite raw. */

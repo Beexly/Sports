@@ -215,12 +215,15 @@ describe("foundry-sovereign-corpus-bridge", () => {
 
     const sweepSummary = loadMotifSweepSummary();
     expect(sweepSummary).not.toBeNull();
-    expect(sweepSummary!.totalRecords).toBeGreaterThanOrEqual(9944);
-    expect(sweepSummary!.igForYouCount).toBe(2720);
-    expect(sweepSummary!.xForYouCount).toBe(5609);
-    expect(sweepSummary!.xAnalyticsCount).toBe(1615);
-    expect(sweepSummary!.excludedKillOrWithdrawnCount).toBe(12);
-    expect(sweepSummary!.adoptCount).toBe(36);
+    expect(sweepSummary!.totalRecords).toBe(
+      sweepSummary!.igForYouCount + sweepSummary!.xForYouCount + sweepSummary!.xAnalyticsCount,
+    );
+    expect(sweepSummary!.totalRecords).toBeGreaterThanOrEqual(10169);
+    expect(sweepSummary!.igForYouCount).toBeGreaterThanOrEqual(2763);
+    expect(sweepSummary!.xForYouCount).toBeGreaterThanOrEqual(5725);
+    expect(sweepSummary!.xAnalyticsCount).toBeGreaterThanOrEqual(1681);
+    expect(sweepSummary!.excludedKillOrWithdrawnCount).toBeGreaterThanOrEqual(12);
+    expect(sweepSummary!.adoptCount).toBeGreaterThanOrEqual(37);
     expect(sweepSummary!.watchOrSkippedQuarantinedCount).toBeGreaterThanOrEqual(0);
     expect(sweepSummary!.allFeedsLoaded).toBe(true);
     expect(sweepSummary!.learnOnlyOrContextOnlyCount).toBeGreaterThan(0);

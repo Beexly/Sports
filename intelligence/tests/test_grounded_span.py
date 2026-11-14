@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from research.grounded_span import ground_span
+from intelligence.research.grounded_span import ground_span
 
 CORPUS = (
     Path(__file__).resolve().parents[2]

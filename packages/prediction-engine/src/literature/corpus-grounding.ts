@@ -567,7 +567,8 @@ export function applyCorpusGroundingToFamilyDeltas<K extends string>(
     const support = best.get(key);
     const d = deltas[key];
     if (support === undefined || d === undefined) continue;
-    const m = Number((UNSUPPORTED_FAMILY_FLOOR + (1 - UNSUPPORTED_FAMILY_FLOOR) * Math.max(0, Math.min(1, support))).toFixed(6));
+    const rawM = UNSUPPORTED_FAMILY_FLOOR + (1 - UNSUPPORTED_FAMILY_FLOOR) * Math.max(0, Math.min(1, support));
+    const m = Number(Math.min(1, Math.max(rawM, UNSUPPORTED_FAMILY_FLOOR)).toFixed(6));
     const scaled = Array.isArray(d) ? (d as readonly number[]).map((v) => v * m) : (d as number) * m;
     const sum = (x: number | readonly number[]) => (Array.isArray(x) ? (x as readonly number[]).reduce((a, b) => a + b, 0) : (x as number));
     out[key] = scaled;

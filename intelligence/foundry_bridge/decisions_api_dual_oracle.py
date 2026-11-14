@@ -19,11 +19,15 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import http.client
 import json
 import math
 import mimetypes
+import os
+import re
 import sys
 import time
+import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple, Union
@@ -32,8 +36,180 @@ HERMES_JEV_PATH = Path(r"C:\Users\Garrett\hermes-jev-skills")
 if HERMES_JEV_PATH.exists() and str(HERMES_JEV_PATH) not in sys.path:
     sys.path.insert(0, str(HERMES_JEV_PATH))
 
-from jevkit import client as jev_client  # noqa: E402
-from jevkit import keystore as jev_keystore  # noqa: E402
+
+class _FallbackJevClient:
+    """Stdlib validator/transport fallback when `jevkit` is absent (e.g. Linux CI)."""
+
+    OPENROUTER_ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
+    MAX_STATE_CHARS = 60_000
+    MAX_RESPONSE_BYTES = 1_000_000
+    USER_AGENT = "hermes-jev-skills/0.1"
+    _RETRYABLE = {"rate_limited", "overloaded", "network", "http_500", "http_502", "http_503", "http_504"}
+    _PROB_TOL = 0.01 + 1e-12
+    _SCORE_TOL = 0.02 + 1e-12
+    _ARGMAX_TOL = 1e-9
+
+    class JevError(RuntimeError):
+        def __init__(self, code: str, detail: str = "") -> None:
+            super().__init__(f"{code}: {detail}" if detail else code)
+            self.code = code
+            self.invariant: Optional[str] = None
+
+    @staticmethod
+    def choice(instructions: str, criteria: Mapping[str, str]) -> Dict[str, Any]:
+        if len(criteria) < 2:
+            raise ValueError("a choice needs at least two options")
+        return {"type": "choice", "instructions": instructions, "criteria": dict(criteria)}
+
+    @staticmethod
+    def score(instructions: str, levels: Sequence[str]) -> Dict[str, Any]:
+        if len(levels) < 2:
+            raise ValueError("a score needs at least two levels")
+        return {"type": "score", "instructions": instructions, "criteria": list(levels)}
+
+    @staticmethod
+    def noul(instructions: str) -> Dict[str, Any]:
+        return {"type": "noul", "instructions": instructions}
+
+    @classmethod
+    def check_questions(cls, questions: Mapping[str, Any]) -> Dict[str, Dict[str, Any]]:
+        if not isinstance(questions, Mapping) or not questions:
+            raise ValueError("questions must be a non-empty mapping")
+        out: Dict[str, Dict[str, Any]] = {}
+        for raw_name, q in questions.items():
+            name = str(raw_name)
+            if not isinstance(q, Mapping):
+                raise ValueError(f'question "{name}" must be an object')
+            kind = q.get("type")
+            if kind not in ("choice", "score", "noul"):
+                raise ValueError(f'question "{name}" has invalid type {kind!r}')
+            text = q.get("instructions")
+            if not isinstance(text, str) or not text.strip():
+                raise ValueError(f'question "{name}" has no instructions')
+            if re.sub(r"[^a-z0-9]+", " ", text.lower()).strip() == re.sub(r"[^a-z0-9]+", " ", name.lower()).strip():
+                raise ValueError(f'question "{name}" repeats its own name')
+            criteria = q.get("criteria")
+            if kind == "noul":
+                if criteria is not None:
+                    raise ValueError(f'question "{name}" is a noul and takes no criteria')
+                out[name] = {"type": "noul", "instructions": text}
+            elif kind == "choice":
+                if not isinstance(criteria, Mapping) or len(criteria) < 2:
+                    raise ValueError(f'question "{name}": choice needs >=2 options')
+                out[name] = {"type": "choice", "instructions": text, "criteria": dict(criteria)}
+            else:
+                if not isinstance(criteria, (list, tuple)) or len(criteria) < 2:
+                    raise ValueError(f'question "{name}": score needs >=2 levels')
+                out[name] = {"type": "score", "instructions": text, "criteria": list(criteria)}
+        return out
+
+    @classmethod
+    def _unit(cls, value: Any, name: str) -> float:
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise cls.JevError("malformed", f"{name} is not numeric")
+        num = float(value)
+        if not math.isfinite(num) or not -1e-6 <= num <= 1 + 1e-6:
+            raise cls.JevError("malformed", f"{name} is outside 0..1")
+        return min(1.0, max(0.0, num))
+
+    @classmethod
+    def _check_answer(cls, name: str, question: Mapping[str, Any], answer: Any) -> Dict[str, Any]:
+        if not isinstance(answer, dict) or answer.get("type") != question["type"]:
+            raise cls.JevError("malformed", f"answer {name} has the wrong type")
+        kind = question["type"]
+        if kind == "noul":
+            return {"type": "noul", "noul": cls._unit(answer.get("noul"), f"{name}.noul")}
+        if kind == "choice":
+            options = list(question["criteria"])
+            picked = answer.get("choice")
+            raw_probs = answer.get("probabilities")
+            if not isinstance(picked, str) or picked not in set(options) or not isinstance(raw_probs, dict):
+                raise cls.JevError("malformed", f"answer {name} invalid choice reply")
+            if set(raw_probs) != set(options):
+                err = cls.JevError("invalid_response", f"answer {name} option mismatch")
+                err.invariant = "choice_probability_key_set"
+                raise err
+            probs = {k: cls._unit(raw_probs[k], f"{name}.p[{k}]") for k in options}
+            if abs(sum(probs.values()) - 1.0) > cls._PROB_TOL:
+                raise cls.JevError("invalid_response", f"answer {name} mass != 1")
+            if probs[picked] < max(probs.values()) - cls._ARGMAX_TOL:
+                raise cls.JevError("invalid_response", f"answer {name} choice not argmax")
+            return {
+                "type": "choice",
+                "choice": picked,
+                "probabilities": probs,
+                "confidence": cls._unit(answer.get("confidence"), f"{name}.confidence"),
+            }
+        levels = len(question["criteria"])
+        val = answer.get("score")
+        if isinstance(val, bool) or not isinstance(val, (int, float)) or not -0.5 <= float(val) <= levels - 0.5:
+            raise cls.JevError("malformed", f"answer {name} invalid score")
+        raw_probs = answer.get("probabilities")
+        spread: Dict[int, float] = {}
+        if isinstance(raw_probs, dict) and raw_probs:
+            spread = {int(k): cls._unit(v, f"{name}.p[{k}]") for k, v in raw_probs.items() if str(k).isdigit() and int(k) < levels}
+            if len(spread) != len(raw_probs) or abs(sum(spread.values()) - 1.0) > cls._PROB_TOL:
+                raise cls.JevError("invalid_response", f"answer {name} invalid score spread")
+            mean = sum(k * p for k, p in spread.items())
+            if abs(mean - float(val)) > cls._SCORE_TOL:
+                raise cls.JevError("invalid_response", f"answer {name} score != expectation")
+        legend = {int(k): str(v) for k, v in (answer.get("legend") or {}).items() if str(k).isdigit() and int(k) < levels and isinstance(v, str)} if isinstance(answer.get("legend"), dict) else {}
+        out: Dict[str, Any] = {
+            "type": "score",
+            "score": float(val),
+            "probabilities": spread,
+            "spread_reported": bool(spread),
+            "confidence": cls._unit(answer.get("confidence", 1.0), f"{name}.confidence"),
+        }
+        if legend:
+            out["legend"] = legend
+        return out
+
+    @classmethod
+    def post(cls, url: str, body: bytes, headers: Dict[str, str], timeout: float) -> bytes:
+        parsed = urllib.parse.urlsplit(url)
+        conn_cls = http.client.HTTPConnection if parsed.scheme == "http" else http.client.HTTPSConnection
+        conn = conn_cls(parsed.hostname or "", parsed.port, timeout=timeout)
+        path = (parsed.path or "/") + (f"?{parsed.query}" if parsed.query else "")
+        try:
+            conn.request("POST", path, body=body, headers=headers)
+            resp = conn.getresponse()
+            raw = resp.read(cls.MAX_RESPONSE_BYTES + 1)
+            if resp.status != 200:
+                raise cls.JevError(f"http_{resp.status}")
+            return raw
+        except cls.JevError:
+            raise
+        except (http.client.HTTPException, OSError) as exc:
+            raise cls.JevError("network") from exc
+        finally:
+            conn.close()
+
+
+class _FallbackJevKeystore:
+    @staticmethod
+    def _from_keychain(_name: str) -> Optional[str]:
+        return None
+
+    @staticmethod
+    def _from_file(_name: str) -> Optional[str]:
+        return None
+
+    @staticmethod
+    def _from_hermes_env(_name: str) -> Optional[str]:
+        return None
+
+    @staticmethod
+    def resolve(name: str) -> Optional[str]:
+        return os.environ.get("OPENROUTER_API_KEY") if name == "openrouter" else None
+
+
+try:
+    from jevkit import client as jev_client  # type: ignore[import-not-found]
+    from jevkit import keystore as jev_keystore  # type: ignore[import-not-found]
+except ImportError:  # pragma: no cover - exercised on Linux CI where hermes-jev-skills is absent
+    jev_client = _FallbackJevClient()  # type: ignore[assignment]
+    jev_keystore = _FallbackJevKeystore()  # type: ignore[assignment]
 
 OPENROUTER_DECISIONS_URL = jev_client.OPENROUTER_ENDPOINT
 JEV_LATEST_MODEL = "~typesafe/jev-latest"

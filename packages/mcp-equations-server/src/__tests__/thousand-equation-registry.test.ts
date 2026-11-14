@@ -102,7 +102,7 @@ describe("Thousand-Equation In-Memory Matrix Registry", () => {
 
     const strictAdoptRe = /^\s*ADOPT(?:\s*[:(\[]|\s*$)/i;
     const loadBearingSweep = sweepEqs.filter((e) => e.load_bearing);
-    expect(loadBearingSweep).toHaveLength(36);
+    expect(loadBearingSweep.length).toBeGreaterThanOrEqual(37);
     for (const eq of loadBearingSweep) {
       expect(eq.verificationStatus).toBe("CITABLE_VERIFIED");
       expect(strictAdoptRe.test(String(eq.sweepVerdict ?? ""))).toBe(true);

@@ -17,8 +17,6 @@ HERMES_JEV_PATH = Path(r"C:\Users\Garrett\hermes-jev-skills")
 if HERMES_JEV_PATH.exists() and str(HERMES_JEV_PATH) not in sys.path:
     sys.path.insert(0, str(HERMES_JEV_PATH))
 
-from jevkit import client as jev_client  # noqa: E402
-from jevkit import keystore as jev_keystore  # noqa: E402
 from intelligence.foundry_bridge.decisions_api_dual_oracle import (  # noqa: E402
     GEMINI_DECISION_1_MODEL,
     JEV_LATEST_MODEL,
@@ -26,6 +24,8 @@ from intelligence.foundry_bridge.decisions_api_dual_oracle import (  # noqa: E40
     ask_dual_oracle,
     encode_multimodal_attachment,
     jensen_shannon_divergence,
+    jev_client,
+    jev_keystore,
     validate_decisions_questions,
 )
 
@@ -174,8 +174,8 @@ def test_dual_oracle_consensus_and_epistemic_veto() -> None:
 
 
 def test_live_dual_oracle_with_ne_det_matchup_csv() -> None:
-    if os.environ.get("GSE_SKIP_LIVE_DECISIONS_API") == "1":
-        pytest.skip("Skipped live OpenRouter Decisions API check via GSE_SKIP_LIVE_DECISIONS_API=1")
+    if os.environ.get("GSE_RUN_LIVE_DECISIONS_API") != "1":
+        pytest.skip("Live OpenRouter Decisions API check is fail-closed unless GSE_RUN_LIVE_DECISIONS_API=1")
     old_env = os.environ.pop("OPENROUTER_API_KEY", None)
     try:
         has_key = bool(

@@ -121,21 +121,45 @@ DOMAIN_DEFAULT_FAMILY: Dict[str, str] = {
     "finance": "marketMicrostructure",
 }
 
-DEFAULT_PRIMITIVES_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\primitives")
-WORKTREE_PRIMITIVES_DIR = Path(r"C:\Users\Garrett\Sports_prepack_audit_wt\foundry\artifacts\primitives")
-DEFAULT_GCP_SYNC_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\gcp_sync")
-DEFAULT_RLVR_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\rlvr_vetoes")
-DEFAULT_CALL_GRAPH = Path(
-    r"C:\Users\Garrett\Sports\foundry\audits\friday_full_audit_2026-11-13\02_signal_call_graph.json"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+_MAIN_SPORTS_ROOT = Path(r"C:\Users\Garrett\Sports")
+_WT_ROOT = Path(r"C:\Users\Garrett\Sports_prepack_audit_wt")
+
+WORKTREE_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
+DEFAULT_PRIMITIVES_DIR = (
+    _MAIN_SPORTS_ROOT / "foundry" / "artifacts" / "primitives"
+    if (_MAIN_SPORTS_ROOT / "foundry" / "artifacts" / "primitives").exists()
+    else WORKTREE_PRIMITIVES_DIR
 )
-DEFAULT_LESSONS_PATH = Path(
-    r"C:\Users\Garrett\Sports_prepack_audit_wt\data\engine\lessons_learned_permanent_ledger.jsonl"
+DEFAULT_GCP_SYNC_DIR = (
+    _MAIN_SPORTS_ROOT / "foundry" / "artifacts" / "gcp_sync"
+    if (_MAIN_SPORTS_ROOT / "foundry" / "artifacts" / "gcp_sync").exists()
+    else REPO_ROOT / "foundry" / "artifacts" / "gcp_sync"
 )
-DEFAULT_DRIVE_MASTER_INDEX = Path(
-    r"C:\Users\Garrett\Sports_prepack_audit_wt\docs\engine\research\2026-11-13\corpus_compilation\drive_master_equations_and_situational_index.json"
+DEFAULT_RLVR_DIR = (
+    _MAIN_SPORTS_ROOT / "foundry" / "artifacts" / "rlvr_vetoes"
+    if (_MAIN_SPORTS_ROOT / "foundry" / "artifacts" / "rlvr_vetoes").exists()
+    else REPO_ROOT / "foundry" / "artifacts" / "rlvr_vetoes"
 )
-DEFAULT_AUDIT_OUT_DIR = Path(
-    r"C:\Users\Garrett\Sports_prepack_audit_wt\docs\engine\research\2026-11-13\friday_prepack_audit"
+DEFAULT_CALL_GRAPH = (
+    _MAIN_SPORTS_ROOT / "foundry" / "audits" / "friday_full_audit_2026-11-13" / "02_signal_call_graph.json"
+    if (_MAIN_SPORTS_ROOT / "foundry" / "audits" / "friday_full_audit_2026-11-13" / "02_signal_call_graph.json").exists()
+    else REPO_ROOT / "foundry" / "audits" / "friday_full_audit_2026-11-13" / "02_signal_call_graph.json"
+)
+DEFAULT_LESSONS_PATH = (
+    _WT_ROOT / "data" / "engine" / "lessons_learned_permanent_ledger.jsonl"
+    if (_WT_ROOT / "data" / "engine" / "lessons_learned_permanent_ledger.jsonl").exists()
+    else REPO_ROOT / "data" / "engine" / "lessons_learned_permanent_ledger.jsonl"
+)
+DEFAULT_DRIVE_MASTER_INDEX = (
+    _WT_ROOT / "docs" / "engine" / "research" / "2026-11-13" / "corpus_compilation" / "drive_master_equations_and_situational_index.json"
+    if (_WT_ROOT / "docs" / "engine" / "research" / "2026-11-13" / "corpus_compilation" / "drive_master_equations_and_situational_index.json").exists()
+    else REPO_ROOT / "docs" / "engine" / "research" / "2026-11-13" / "corpus_compilation" / "drive_master_equations_and_situational_index.json"
+)
+DEFAULT_AUDIT_OUT_DIR = (
+    _WT_ROOT / "docs" / "engine" / "research" / "2026-11-13" / "friday_prepack_audit"
+    if (_WT_ROOT / "docs" / "engine" / "research" / "2026-11-13" / "friday_prepack_audit").exists()
+    else REPO_ROOT / "docs" / "engine" / "research" / "2026-11-13" / "friday_prepack_audit"
 )
 
 
@@ -597,11 +621,16 @@ def run_wiring_and_export(
 
 
 def main() -> int:
+    default_staging = (
+        Path(r"C:\Users\Garrett\.gemini\antigravity-cli\brain\8ce5ebec-edd0-4868-8683-9c37c157cd6f\scratch\bq_staging")
+        if Path(r"C:\Users\Garrett\.gemini").exists()
+        else REPO_ROOT / "tmp_bq_staging"
+    )
     ap = argparse.ArgumentParser(description="Wire Foundry Sovereign Primitives + GCP Shard B -> Cognitive Router + BigQuery NDJSON.")
     ap.add_argument(
         "--bq-staging-dir",
         type=Path,
-        default=Path(r"C:\Users\Garrett\.gemini\antigravity-cli\brain\8ce5ebec-edd0-4868-8683-9c37c157cd6f\scratch\bq_staging"),
+        default=default_staging,
     )
     args = ap.parse_args()
     res = run_wiring_and_export(bq_staging_dir=args.bq_staging_dir)
