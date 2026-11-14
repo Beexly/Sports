@@ -1,0 +1,486 @@
+{
+  "book_id": "332e9b44e34c27f7",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_FOOTBALL_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Nathanson, 'Exploring the Evolution of the NFL Draft Pick Trade Market Over Time', Dartmouth Sports Analytics, Dartmouth College, December 22, 2023 (catalog year 2024), 13 pages. Builds on Massey-Thaler 2005 'The Loser's Curse' (Management Science 2013 59(7):1479-1495). 856 pure draft-pick trades 1983-2023 (Pro Sports Transactions); Weibull pick-value model (lambda/beta/discount d, V(1,y0)=1, equal-total-value, future picks at ultimate position, least squares); four rolling 10-year diagnostics (trades/team, discount, mean-sq-residual consensus, value-decay integral); 4 eras; rookie-wage-scale (2011 CBA) structural break; behavioral biases (impatience, moral hazard). Extracted faithfully (not a derivative summary). The Weibull display equation was an IMAGE that did not extract; the functional form V(n,y)=exp(-lambda(n^beta-1))*d^(y-y0) is reconstructed from the prose (Weibull, monotone decay, discount d, V(1,y0)=1) and the cited Massey-Thaler methodology, NOT transcribed verbatim, and flagged here and in assumptions. Domain football matches catalog. The Weibull draft-capital valuation, time-preference discount rate, fair-trade equilibrium, rolling market-consensus diagnostics, and structural-break regime shift are directly isomorphic to GSE's draft-capital and market-evolution layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE (draft pick trade market, not a betting market).",
+  "primitives": [
+    {
+      "primitive_id": "massey_thaler_foundation",
+      "name": "Builds on Massey-Thaler 2005 'Loser's Curse': 40-year draft pick trade market",
+      "verbatim_quote": "Building on the work of Cade Massey and Richard Thaler in 2005, this paper investigates changes and trends in the market for National Football League draft picks over the past 40 years",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper extends Massey and Thaler's 2005 'The Loser's Curse' (Management Science 2013, 59(7):1479-1495) by investigating changes and trends in the NFL draft pick trade market over 40 years (1983-2023), asking how the Jimmy Johnson chart's proliferation and the Massey-Thaler critique affected team behavior."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Extending a seminal market-efficiency study is the same longitudinal-replication GSE does to test whether an edge persists.",
+        "source_operator": "massey_thaler_foundation",
+        "telemetry": "Massey-Thaler 2005 Loser's Curse (Mgmt Sci 2013); 40yr 1983-2023 draft trade market"
+      }
+    },
+    {
+      "primitive_id": "johnson_chart_origin",
+      "name": "Jimmy Johnson trade chart: Mike McCoy, Cowboys 1990s, first NFL pick-value chart",
+      "verbatim_quote": "vice president Mike McCoy put together the National Football League's first draft pick trade value chart",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In 1989 Jimmy Johnson took over a depleted 3-13 Dallas Cowboys roster and sought to amass draft capital; at his request VP Mike McCoy built the NFL's first draft pick trade value chart, enabling a whirlwind of trades (42 players drafted 1991-1993) and three early-1990s Super Bowls (Aikman, Irvin, Smith)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The first standardized pick-value chart is the same shared valuation convention GSE studies as a market-coordination device.",
+        "source_operator": "johnson_chart_origin",
+        "telemetry": "Johnson 1989 Cowboys; McCoy chart; 42 picks 1991-93; 3 Super Bowls; league fixture"
+      }
+    },
+    {
+      "primitive_id": "chart_3000_arbitrary",
+      "name": "Chart assigns 1st overall = 3000 (arbitrary), decreasing per pick",
+      "verbatim_quote": "It assigned the first overall pick an arbitrary value of 3,000 and a decreasing value to each successive pick",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Johnson chart assigned the first overall pick an arbitrary value of 3000 and a decreasing value to each successive pick; the scale is arbitrary (only relative values matter for trade fairness), and the chart became a fixture of draft rooms league-wide."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The arbitrary-anchor decreasing-value scale is the same ordinal pick-valuation GSE uses for trade fairness.",
+        "source_operator": "chart_3000_arbitrary",
+        "telemetry": "1st overall = 3000 (arbitrary anchor); monotone decreasing per pick"
+      }
+    },
+    {
+      "primitive_id": "chart_gut_not_analytics",
+      "name": "Chart built from past trade behavior + gut instinct, not analytics",
+      "verbatim_quote": "past trade behavior and his own gut instinct—not using advanced analytics",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "McCoy created the chart based on past trade behavior and his own gut instinct, not advanced analytics; it was a codified observation of past trends rather than a radical new valuation formula, yet it led the Cowboys to resounding success and became the league standard."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An empirical-convention chart (not model-derived) is the same revealed-preference valuation GSE distinguishes from optimal value.",
+        "source_operator": "chart_gut_not_analytics",
+        "telemetry": "chart = past trades + gut, NOT analytics; codified convention, not optimal model"
+      }
+    },
+    {
+      "primitive_id": "loser_curse_overvalue",
+      "name": "Loser's Curse: teams significantly overvalue picking high in the draft",
+      "verbatim_quote": "significantly overestimated the value of picking high in the draft",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Massey and Thaler argued that NFL teams, even after the spread of Johnson's chart, significantly overestimated the value of picking high in the draft, and criticized the going discount rate as exorbitantly high; many alternative charts since claim to reflect true value more accurately, yet Belichick says everybody still uses about the same chart."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The overvaluation-of-early-picks bias is the same favorite-longshot-style overpricing GSE flags in draft capital.",
+        "source_operator": "loser_curse_overvalue",
+        "telemetry": "Loser's Curse: early picks overvalued; discount rate exorbitant; Belichick 'same chart'"
+      }
+    },
+    {
+      "primitive_id": "discount_rate_definition",
+      "name": "Discount rate = cost of exchanging a future pick for a present pick",
+      "verbatim_quote": "the going discount rate (the cost of exchanging a future pick for a present pick) as exorbitantly high",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The discount rate d is the cost of exchanging a future pick for a present pick (the premium on current-year over future-year picks); Massey-Thaler criticized it as exorbitantly high, and the paper tracks its evolution as a measure of league-wide impatience."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The present-vs-future pick discount is literally a time-preference rate GSE models for deferred capital.",
+        "source_operator": "discount_rate_definition",
+        "telemetry": "discount rate d = cost(future pick -> present pick); present-year premium; impatience"
+      }
+    },
+    {
+      "primitive_id": "dataset_856_trades",
+      "name": "856 pure draft-pick trades 1983-2023 (Pro Sports Transactions, filtered)",
+      "verbatim_quote": "I am left with a dataset of 856 trades",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The dataset compiles all draft-pick trades 1983-2023 from Pro Sports Transactions Archive, removing 2024/2025 picks (order unset, trades allowed only 2 years ahead), excluding veteran-player trades (~50% reduction), and excluding supplemental forfeits, 1984 USFL picks, coaching/free-agency compensation, past considerations, and unresolved reporting errors (<5% reduction), leaving 856 trades."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The careful trade-filtering pipeline is the same clean-sample construction GSE applies before valuation modeling.",
+        "source_operator": "dataset_856_trades",
+        "telemetry": "856 trades; Pro Sports Transactions 1983-2023; drop 2024/25, veterans (~50%), misc (<5%)"
+      }
+    },
+    {
+      "primitive_id": "weibull_value_model",
+      "name": "Pick value modeled as Weibull decay in position x discount in year",
+      "verbatim_quote": "Under the assumption that pick value decreases monotonically with draft position, I model pick value using a Weibull distribution",
+      "page": 4,
+      "latex": "V(n,y) = \\exp\\!\\big(-\\lambda\\,(n^{\\beta}-1)\\big)\\, d^{\\,(y-y_0)}",
+      "symbol_and_unit_ledger": {
+        "n": "overall draft position [count, 1..336]",
+        "y": "draft year [year]",
+        "y0": "current year [year]",
+        "lambda": "Weibull scale parameter [per pick^beta]",
+        "beta": "Weibull shape parameter [dimensionless]",
+        "d": "discount rate per year of deferral [dimensionless]",
+        "V(n,y)": "normalized market value of pick n in year y [V(1,y0)=1]"
+      },
+      "assumptions": [
+        "Pick value is modeled with a Weibull distribution decreasing monotonically with draft position, parameterized by lambda, beta, and discount rate d, with year relative to current year y0; the value of the first overall pick in the current year is normalized to 1; parameters optimized by least squares. The display equation was an image that did not extract, so the functional form V(n,y)=exp(-lambda(n^beta-1))*d^(y-y0) is reconstructed from the prose (Weibull, monotone decay, discount d, V(1,y0)=1) and the cited Massey-Thaler methodology, not transcribed verbatim.",
+        "Display equation did not extract (image); Weibull-decay-with-discount form reconstructed from prose + Massey-Thaler methodology and flagged in source_note."
+      ],
+      "breakdown_regime": "assumes monotone decay + equal-total-value trades + future picks at ultimate position; reconstructed form (display image not extracted)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Weibull value-decay curve is the same parametric pick-valuation kernel GSE uses for draft capital.",
+        "source_operator": "weibull_value_model",
+        "telemetry": "V(n,y)=exp(-lambda(n^beta-1))*d^(y-y0); Weibull decay; V(1,y0)=1; least squares"
+      }
+    },
+    {
+      "primitive_id": "first_pick_value_one",
+      "name": "Normalization: first overall pick in current year = 1",
+      "verbatim_quote": "the value of the first overall pick in the current year's draft is 1",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The value of the first overall pick in the current year's draft is normalized to 1, anchoring the Weibull value curve so all other picks are expressed as fractions of the top current-year pick."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The top-pick normalization is the same numeraire choice GSE uses to express relative capital value.",
+        "source_operator": "first_pick_value_one",
+        "telemetry": "V(1, y0) = 1 (numeraire); all picks fractional of top current-year pick"
+      }
+    },
+    {
+      "primitive_id": "equal_total_value_assumption",
+      "name": "Trade assumption: each side receives equal total pick value",
+      "verbatim_quote": "for each trade, assume each side receives a set of picks with equal total value",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For each trade the model assumes each side receives a set of picks with equal total value (market-clearing fairness), with the team acquiring the highest-ranked pick trading 'up' and the other trading 'down'; picks ranked first by year (current year first) then by position."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The equal-value market-clearing assumption is the same fair-trade equilibrium GSE uses to back out pick values.",
+        "source_operator": "equal_total_value_assumption",
+        "telemetry": "equal total value per side; trade-up gets highest pick; rank by year then position"
+      }
+    },
+    {
+      "primitive_id": "future_picks_ultimate_position",
+      "name": "Future picks valued at ultimate (projected) position within 2-year window",
+      "verbatim_quote": "future years' picks (for which the draft order is undetermined) are valued at their ultimate position",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Future years' picks, whose draft order is undetermined, are valued at their ultimate position; this is reasonable because teams can roughly project where a team will draft based on recent performance and outlook, especially within the two-year window the NFL allows for trading future picks."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The projected-position valuation is the same expected-slot assumption GSE makes for deferred draft capital.",
+        "source_operator": "future_picks_ultimate_position",
+        "telemetry": "future picks at ultimate projected position; 2-year trade window; projectable from performance"
+      }
+    },
+    {
+      "primitive_id": "four_rolling_variables",
+      "name": "Four rolling 10-yr variables: trade frequency, consensus, discount, value-decay",
+      "verbatim_quote": "variables to represent trade frequency, market consensus, discount rate, and the rate at which pick value decreases as pick number increases",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For each year 1992-2023 the model optimizes over the preceding ten-year window and generates four rolling variables: trades per team (market activity), the discount rate d, the mean of squared residuals (consensus proxy), and the integral of the best-fit curve from n=1 to 336 (value-decay steepness; steeper drop = less area); these inform the division into eras."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The rolling-window market diagnostics are the same regime-tracking indicators GSE uses to detect structural change.",
+        "source_operator": "four_rolling_variables",
+        "telemetry": "10yr rolling: trades/team, d, mean sq residuals (consensus), integral n=1..336 (decay)"
+      }
+    },
+    {
+      "primitive_id": "trades_per_team_increase",
+      "name": "Trade activity rose linearly: 4.21 (1983-92) -> 9.34 (2014-23) trades/team",
+      "verbatim_quote": "there is a consistent, linear increase from 4.21 trades per team from 1983-1992 to 9.34 from 2014-2023",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Trades per team increased consistently and linearly from 4.21 (1983-1992) to 9.34 (2014-2023), counting only pure draft-pick trades; 2023 set an all-time record with 41 draft-day trades, explained by either analytics-driven arbitrage confidence or increased consensus raising liquidity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The rising trade volume is the same liquidity/maturation signal GSE tracks in a market's evolution.",
+        "source_operator": "trades_per_team_increase",
+        "telemetry": "trades/team 4.21 (1983-92) -> 9.34 (2014-23); 2023 record 41 draft-day trades"
+      }
+    },
+    {
+      "primitive_id": "consensus_residuals_decrease",
+      "name": "Market consensus rose: trades deviate less from model over time",
+      "verbatim_quote": "the average amount by which trades deviate from market estimates has decreased in roughly linear fashion",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The mean of squared residuals, a proxy for consensus on pick valuation, decreased roughly linearly over time, indicating trades deviate less from market estimates and pointing to increased use of a relatively standardized valuation formula (perhaps Johnson's chart) across front offices."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The shrinking residual consensus is the same market-standardization signal GSE reads as declining dispersion.",
+        "source_operator": "consensus_residuals_decrease",
+        "telemetry": "mean sq residuals down linearly; trades closer to model; standardized valuation (Johnson chart)"
+      }
+    },
+    {
+      "primitive_id": "residual_14_to_6_picks",
+      "name": "Model deviation fell: 14.22 picks (1983-92) -> 5.97 picks (2014-23)",
+      "verbatim_quote": "The 2014-2023 model was only off by an average of 5.97 picks",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "From 1983-1992 the mean squared residual was 202.26, so the average trade's highest-ranked pick differed by sqrt(202.26)=14.22 picks from the model's expectation; the 2014-2023 model was off by only 5.97 picks on average, showing the model fits the data increasingly well over decades."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The falling pick-deviation is the same tightening valuation-dispersion metric GSE quantifies.",
+        "source_operator": "residual_14_to_6_picks",
+        "telemetry": "MSR 202.26 -> sqrt 14.22 picks (1983-92); 5.97 picks (2014-23); fit improves"
+      }
+    },
+    {
+      "primitive_id": "discount_179pct",
+      "name": "1983-92 discount rate 179%: forfeiting 179% of value to move up a year = overpay",
+      "verbatim_quote": "forfeiting 179% (the discount rate from 1983-1992) of a pick's value in order to move up a year is likely an overpay",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The discount rate from 1983-1992 was 179%, meaning forfeiting 179% of a pick's value to move up a year is likely an overpay; the overall downward trend makes sense as front offices become more analytically minded and impatience informs decisions less."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The 179% historical discount is the same quantified time-premium GSE flags as irrational overpay.",
+        "source_operator": "discount_179pct",
+        "telemetry": "discount 179% (1983-92); moving up a year forfeits 179% value = overpay; trend down"
+      }
+    },
+    {
+      "primitive_id": "impatience_root_cause",
+      "name": "Root cause of high discount rate = impatience (analytics reduces it)",
+      "verbatim_quote": "The root cause of this irrational behavior is impatience",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The root cause of the irrational high discount rate is impatience, and with front offices becoming increasingly analytically minded, impatience probably informs their decision making less and less, explaining the downward discount-rate trend."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Impatience-as-time-premium is the same behavioral bias GSE models in present-biased capital decisions.",
+        "source_operator": "impatience_root_cause",
+        "telemetry": "high discount root = impatience; analytics reduces impatience -> discount falls"
+      }
+    },
+    {
+      "primitive_id": "lose_year_gain_round",
+      "name": "Crude future-pick rule of thumb: 'lose a year, gain a round'",
+      "verbatim_quote": "teams have long employed a very crude rule of thumb when it comes to trading future draft picks",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Teams long employed a crude rule of thumb for trading future picks, 'lose a year, gain a round', but trading this year's seventh for next year's sixth differs greatly from swapping a late second for what becomes an early first; discount rate is also context-dependent (aging star QB with closing window -> higher discount; rebuilding team -> lower)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The crude round-for-year heuristic is the same rough time-value rule GSE refines with context.",
+        "source_operator": "lose_year_gain_round",
+        "telemetry": "rule 'lose a year, gain a round'; crude; context-dependent (QB window vs rebuild)"
+      }
+    },
+    {
+      "primitive_id": "moral_hazard_gm",
+      "name": "Moral hazard: GM on hot seat operates with inflated discount rate",
+      "verbatim_quote": "a moral hazard problem can occur: when a team's general manager (or another key decision-maker in the draft process) knows he is under pressure to succeed immediately or lose his job, he might operate with an inflated discount rate",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A moral hazard problem arises when a general manager or key draft decision-maker under pressure to succeed immediately or lose his job operates with an inflated discount rate; combined with the small sample of future-pick trades, this creates considerable year-to-year variability in the discount rate."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The hot-seat GM moral hazard is the same agency-bias GSE flags when decision-maker incentives distort valuation.",
+        "source_operator": "moral_hazard_gm",
+        "telemetry": "moral hazard: GM on hot seat -> inflated discount; small future-pick sample -> variability"
+      }
+    },
+    {
+      "primitive_id": "rookie_wage_scale_2011",
+      "name": "2011 CBA rookie wage scale: ended exorbitant rookie contracts, raised early-pick surplus",
+      "verbatim_quote": "2011 saw the ratification of a new collective bargaining agreement which established the rookie wage scale",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The 2011 collective bargaining agreement established the rookie wage scale, ending exorbitant contracts for high first-round picks; this decreased the risk of drafting early and increased the surplus value generated by high-performing first-round picks, steepening the value dropoff around 2010."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The rookie-wage-scale regime shift is the same contract-rule change GSE models as a structural break in capital value.",
+        "source_operator": "rookie_wage_scale_2011",
+        "telemetry": "2011 CBA rookie wage scale; ended exorbitant rookie deals; lower early risk + higher surplus -> steeper decay"
+      }
+    },
+    {
+      "primitive_id": "bradford_78m_contract",
+      "name": "Pre-scale excess example: Sam Bradford 6yr/$78M (2010)",
+      "verbatim_quote": "the exorbitant contracts offered to high first-round picks, such as quarterback Sam Bradford's 6 year, $78 million deal signed in 2010",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The rookie wage scale put an end to exorbitant contracts offered to high first-round picks, exemplified by quarterback Sam Bradford's 6-year, $78 million deal signed in 2010, the kind of pre-scale contract that made early picks risky and depressed their surplus value."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Bradford contract is the same pre-regime excess datum GSE cites to mark the structural break.",
+        "source_operator": "bradford_78m_contract",
+        "telemetry": "Sam Bradford 6yr/$78M (2010); pre-wage-scale excess; early-pick risk"
+      }
+    },
+    {
+      "primitive_id": "massey_thaler_no_immediate_impact",
+      "name": "Massey-Thaler 2005 publication had no immediate impact on value-curve steepness",
+      "verbatim_quote": "the publication of the Massey-Thaler paper in 2005 does not seem to have had an immediate impact on the steepness of the value curve",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Notably, the publication of the Massey-Thaler paper in 2005 does not seem to have had an immediate impact on the steepness of the value curve; the value-decay integral instead inflected around 2000 (Johnson chart adoption, flatter) and 2010 (rookie wage scale, steeper)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The null immediate-impact of the critique is the same evidence-that-scholarship-lags-practice finding GSE notes.",
+        "source_operator": "massey_thaler_no_immediate_impact",
+        "telemetry": "Massey-Thaler 2005 no immediate steepness impact; inflections ~2000 (chart) / ~2010 (wage scale)"
+      }
+    },
+    {
+      "primitive_id": "value_gap_crept_back",
+      "name": "Value gap crept back up in 2010s (plateauing), contrary to Massey-Thaler prediction",
+      "verbatim_quote": "The value gap actually crept back up in the 2010s, although it has begun to show signs of plateauing",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Massey and Thaler hypothesized the value curve would continue to flatten and the discount rate fall as teams moved beyond overconfidence and impatience, but the data show the value gap actually crept back up in the 2010s (now plateauing); they published before the rookie wage scale, which likely affected front-office calculations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The predicted-flattening-that-didn't-happen is the same falsified-forecast GSE records honestly.",
+        "source_operator": "value_gap_crept_back",
+        "telemetry": "Massey-Thaler predicted flatten + discount fall; value gap crept back 2010s (plateauing); wage-scale confound"
+      }
+    },
+    {
+      "primitive_id": "never_fully_optimal",
+      "name": "Draft decisions never fully optimal: hot-seat GMs, delusional owners, fan mobs",
+      "verbatim_quote": "For as long as NFL franchises are steered by general managers on the hot seat, owners with delusions of grandeur, and, above all, the irrational whims of mobs of fans, the decisions they make will never be fully optimal",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper concludes that teams have been slow to abandon the Johnson chart, perhaps due to psychological biases, its near-universal adoption facilitating quick trading, or the draft giving the least competent franchises the most and highest picks; for as long as franchises are steered by hot-seat GMs, owners with delusions of grandeur, and the irrational whims of fan mobs, decisions will never be fully optimal."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The irreducible behavioral-inefficiency conclusion is the same persistent-bias ceiling GSE assumes in human-run markets.",
+        "source_operator": "never_fully_optimal",
+        "telemetry": "slow to abandon Johnson chart (bias/liquidity/worst-teams-get-top-picks); GMs/owners/fans -> never fully optimal"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "drafttrade2023_trace",
+      "think": "The retrocausal genealogy of this paper is the longitudinal test of whether a famous market inefficiency persists after it has been publicized for decades. Ari Nathanson, writing for Dartmouth Sports Analytics in December 2023, builds on Cade Massey and Richard Thaler's 2005 paper The Loser's Curse, later published in Management Science in 2013, which argued that NFL teams significantly overvalue picking high in the draft and pay an exorbitant discount rate to exchange future picks for present ones. The intervening history includes the Jimmy Johnson trade value chart, built by Cowboys vice president Mike McCoy in the early 1990s from past trade behavior and gut instinct rather than analytics, assigning the first overall pick an arbitrary 3000 points and becoming a league-wide fixture that helped Dallas win three Super Bowls. Nathanson asks how the chart's proliferation and the Massey-Thaler critique actually changed the market over 40 years. The recursive theory of mind is the data construction and the valuation model. The author compiles all draft-pick trades from 1983 to 2023 from the Pro Sports Transactions Archive, removes 2024 and 2025 picks whose order is unset, excludes veteran-player trades which cuts the sample roughly in half, and removes supplemental forfeits, USFL picks, compensation trades, and reporting errors, leaving 856 pure pick trades. Pick value is modeled with a Weibull distribution that decreases monotonically with draft position, parameterized by lambda, beta, and a discount rate d, normalized so the first overall pick in the current year equals one, with the assumption that each side of a trade receives equal total value and that future picks are valued at their ultimate projected position. The parameters are fit by least squares, and the display equation is an image that did not extract, so the functional form is reconstructed from the prose and the cited Massey-Thaler methodology and flagged as such. Cross-layer veto adjudication is the four rolling diagnostics computed over ten-year windows from 1992 to 2023: trades per team for market activity, the discount rate, the mean of squared residuals as a consensus proxy, and the integral of the best-fit value curve from pick one to 336 as a measure of value-decay steepness. Three show clear linear trends: trades per team rose from 4.21 in 1983-1992 to 9.34 in 2014-2023, with 2023 setting a record 41 draft-day trades; the mean squared residual fell from 202.26, a deviation of 14.22 picks, to 5.97 picks, indicating growing consensus around a standardized valuation; and the discount rate fell from an irrational 179 percent, though less steadily. The fourth, the value-decay integral, is non-monotonic, with inflections around 2000 when teams adopted the Johnson chart and the curve flattened, and around 2010 when the 2011 collective bargaining agreement's rookie wage scale ended exorbitant contracts like Sam Bradford's six-year 78-million-dollar deal and steepened the curve by raising early-pick surplus value. The implementation invariants map directly onto GSE. The Weibull value-decay curve is GSE's parametric draft-capital valuation kernel; the discount rate is GSE's time-preference parameter for deferred capital; the equal-total-value trade assumption is GSE's fair-trade equilibrium for backing out values; the rolling residual consensus is GSE's market-standardization signal; and the rookie wage scale is GSE's structural-break regime shift. The outputs are pick values, discount rates, and market diagnostics from transaction data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The era snapshots in Table 1 make the fluctuation concrete: the tenth overall pick was worth 0.708 of the top pick in 1984-1994, fell to 0.599 in 1995-2004, rose to 0.715 in 2005-2014, and settled at 0.644 in 2015-2023, while the 33rd pick followed the same non-monotonic pattern, confirming that the early-pick premium oscillated rather than steadily eroding. The behavioral layer is central: the root cause of the high discount rate is impatience, a moral hazard arises when a general manager on the hot seat inflates his discount rate to win now, and the crude lose-a-year-gain-a-round heuristic is refined by context such as a closing quarterback window versus a rebuild. The caveats close the account with a falsified forecast and an irreducible-bias ceiling. Massey and Thaler predicted the value curve would keep flattening and the discount rate keep falling as teams overcame overconfidence and impatience, but the value gap actually crept back up in the 2010s before plateauing, and their 2005 publication had no immediate impact on the curve's steepness; they published before the rookie wage scale, which confounds their surplus-value analysis. The author concludes that teams remain slow to abandon the Johnson chart, whether from psychological bias, the liquidity its near-universal adoption provides, or the draft's structure giving the least competent franchises the most and highest picks, and that for as long as franchises are steered by hot-seat general managers, owners with delusions of grandeur, and the irrational whims of fan mobs, their decisions will never be fully optimal. The invariant for GSE is to carry the Weibull valuation and rolling-market diagnostics while recording the reconstructed-equation flag, the wage-scale structural break, the behavioral biases, and the falsified flattening forecast before any quantitative reuse, treating the persistence of a publicized inefficiency as evidence that market maturation is partial and behavioral, not a guaranteed convergence to optimality.",
+      "retrocausal_genealogy": "Longitudinal test of a publicized inefficiency. Nathanson, Dartmouth Sports Analytics, Dec 22 2023 (catalog 2024). Builds on Massey-Thaler 2005 'Loser's Curse' (Mgmt Sci 2013 59(7):1479-1495): early picks overvalued, discount rate exorbitant. Jimmy Johnson chart (McCoy, Cowboys 1990s, 1st=3000 arbitrary, gut not analytics, 3 Super Bowls, league fixture; Belichick 'same chart'). 40yr 1983-2023. Data: Pro Sports Transactions, drop 2024/25 (unset, 2yr window), veterans (~50%), misc (<5%) -> 856 pure pick trades. Weibull value model (lambda/beta/d), V(1,y0)=1, equal-total-value trades, future picks at ultimate position, least squares. Display eq image not extracted -> reconstructed + flagged.",
+      "theory_of_mind": "Four rolling 10yr variables (1992-2023): trades/team (activity), discount d, mean sq residuals (consensus), integral best-fit n=1..336 (decay steepness). Trades/team 4.21 (1983-92)->9.34 (2014-23), 2023 record 41. MSR 202.26 (sqrt 14.22 picks)->5.97 picks (consensus up, standardized Johnson chart). Discount 179% (1983-92) down (less steady); root=impatience; moral hazard hot-seat GM; 'lose a year gain a round' crude; context (QB window vs rebuild). Integral non-monotonic: inflect ~2000 (chart adopt, flatter) / ~2010 (2011 CBA rookie wage scale, steeper; ended Bradford 6yr/$78M 2010; raised early surplus). 4 eras 1983-94/1995-2004/2005-14/2015-23; Table 1 pick values (10th .708/.599/.715/.644; 33rd .350/.256/.361/.297).",
+      "cross_layer_veto": "Massey-Thaler 2005 NO immediate steepness impact; predicted flatten+discount fall FALSIFIED (value gap crept back 2010s, plateauing; published pre-wage-scale confound). Market matured (more trades/consensus/lower discount still high) but not optimal. Slow to abandon Johnson chart (bias/liquidity/worst-teams-get-top-picks). Hot-seat GMs/delusional owners/fan mobs -> never fully optimal. Weibull eq reconstructed (image not extracted) flagged. Discount decline attributed to reduced impatience as analytics spreads across front offices. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "Over 40 years (1983-2023) and 856 pure draft-pick trades, the NFL draft pick trade market matured — more trading (4.21 to 9.34 trades/team), greater valuation consensus (model deviation 14.22 to 5.97 picks), and a lower but still-high discount rate (from 179%) — yet a Weibull value-decay model shows the early-pick value gap did not monotonically flatten as Massey-Thaler predicted, inflecting with Johnson-chart adoption (~2000) and the 2011 rookie wage scale (~2010), evidencing partial, behaviorally-limited market maturation rather than convergence to optimality.",
+  "gsi_mapping": "GSI treats Weibull V(n,y)=exp(-lambda(n^beta-1))*d^(y-y0) (V(1,y0)=1, reconstructed from prose, display image not extracted); 856 trades 1983-2023 (drop 2024/25, veterans ~50%, misc <5%); equal-total-value trades, future picks at ultimate position, least squares; rolling 10yr trades/team 4.21->9.34 (2023 record 41), MSR 202.26 (14.22 picks)->5.97, discount 179% down, integral n=1..336 non-monotonic (inflect ~2000 chart/~2010 wage scale); 4 eras; Table 1 10th .708/.599/.715/.644, 33rd .350/.256/.361/.297; rookie wage scale 2011 CBA (Bradford 6yr/$78M 2010); impatience/moral-hazard hot-seat GM; Massey-Thaler 2005 no immediate impact, flattening forecast falsified (gap crept back 2010s).",
+  "gse_mapping": "GSE lifts the Weibull draft-capital value-decay kernel, the present-vs-future discount rate as time preference, the equal-total-value fair-trade equilibrium for backing out pick values, the rolling residual-consensus and trade-volume market-maturation diagnostics, and the rookie-wage-scale structural break as its draft-capital and market-evolution layer; records the reconstructed-equation flag (display image not extracted), the impatience and hot-seat-GM moral-hazard biases, the falsified Massey-Thaler flattening forecast, and the irreducible behavioral-inefficiency ceiling as honest limits; all outputs are pick values and market diagnostics from transaction data, never sportsbook lines, and a publicized inefficiency's persistence is evidence that market maturation is partial and behavioral, not guaranteed convergence to optimality."
+}

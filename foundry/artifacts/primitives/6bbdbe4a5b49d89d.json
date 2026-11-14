@@ -1,0 +1,495 @@
+{
+ "book_id": "6bbdbe4a5b49d89d",
+ "title": "OpenStax 2013 — Anatomy and Physiology",
+ "source_status": "READABLE",
+ "source_note": "OpenStax College, Anatomy and Physiology (2013, Rice University, CC-BY 3.0, cnx.org/content/col11496/1.6). 1355 PDF pages, text-extractable via pymupdf (incremental dump). Core read: ch10 Muscle Tissue (10.1-10.6, printed pp380-401: excitation-contraction coupling, sliding filament/cross-bridge, ATP systems, fatigue, motor units/length-tension/summation/tetanus/treppe, fiber types, exercise adaptation) and ch12.4 The Action Potential (printed pp493-496: resting potential, threshold, all-or-none, refractory, propagation). Printed-page provenance (PDF page = printed page + ~113). Not retracted; title matches content. Zero sportsbook odds. Quantitative invariants transcribed from the printed text layer; prose verbatim.",
+ "pages_total": 1355,
+ "pages_read": 30,
+ "primitives": [
+  {
+   "primitive_id": "resting_membrane_potential",
+   "name": "Resting membrane potential: a stored electrochemical battery",
+   "verbatim_quote": "The exact value measured for the resting membrane potential varies between cells, but -70 mV is most commonly used as this value.",
+   "page": 493,
+   "latex": "V_{rest}\\approx -70\\ \\mathrm{mV};\\quad [\\mathrm{Na}^+]_{out}\\approx 10\\,[\\mathrm{Na}^+]_{in},\\quad [\\mathrm{K}^+]_{in}>[\\mathrm{K}^+]_{out}",
+   "symbol_and_unit_ledger": {
+    "V_rest": "resting membrane potential [mV]",
+    "Na+/K+ gradients": "concentration ratios [dimensionless]",
+    "Na+/K+ pump": "3 Na+ out / 2 K+ in per ATP"
+   },
+   "assumptions": [
+    "Ion gradients maintained by leakage channels + Na+/K+ ATPase",
+    "Dynamic steady state, not equilibrium"
+   ],
+   "breakdown_regime": "If the pump fails (ATP depletion), the gradients run down and the potential collapses; the value is cell-type dependent.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine models a player's readiness as a stored electrochemical battery: a resting membrane potential (~-70 mV) maintained by ATP-driven ion pumping, the latent capacity that can be released on stimulus. A player's available explosive output is bounded by this maintained gradient, and fatigue (ATP depletion) runs it down. This is the physiological substrate of the engine's readiness/energy reserve state.",
+    "source_operator": "resting_membrane_potential",
+    "telemetry": "GSE telemetry: per-player readiness reserve vs ATP-dependent ion-gradient maintenance; verify the reserve depletes with sustained output."
+   }
+  },
+  {
+   "primitive_id": "threshold_all_or_none",
+   "name": "Threshold and the all-or-none action potential",
+   "verbatim_quote": "Any depolarization that does not change the membrane potential to -55 mV or higher will not reach threshold and thus will not result in an action potential.",
+   "page": 495,
+   "latex": "V_{threshold}\\approx -55\\ \\mathrm{mV};\\quad \\text{AP fires iff } V\\ge V_{threshold}",
+   "symbol_and_unit_ledger": {
+    "V_threshold": "threshold potential [mV]",
+    "AP": "action potential [all-or-none event]"
+   },
+   "assumptions": [
+    "Voltage-gated Na+ channels open at threshold",
+    "Sub-threshold depolarization produces no AP"
+   ],
+   "breakdown_regime": "Below threshold nothing fires; the threshold is a hard gate, not a graded response.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's discrete play-call is an all-or-none event gated by a threshold: a play either fires (the call is executed) or it does not, exactly like the action potential gated at -55 mV. There is no 'half-fired' play. This is the physiological isomorph of the engine's discrete decision gate — a binary execution threshold beneath a graded intent.",
+    "source_operator": "threshold_all_or_none",
+    "telemetry": "GSE telemetry: play-execution threshold gate; verify discrete all-or-none firing, no partial execution."
+   }
+  },
+  {
+   "primitive_id": "action_potential_swing",
+   "name": "The action potential: a 100 mV regenerative voltage swing",
+   "verbatim_quote": "The change in the membrane voltage from -70 mV at rest to +30 mV at the end of depolarization is a 100-mV change.",
+   "page": 494,
+   "latex": "\\Delta V = (+30)-(-70)=100\\ \\mathrm{mV}=0.1\\ \\mathrm{V};\\quad V_{peak}\\approx +30\\ \\mathrm{mV}",
+   "symbol_and_unit_ledger": {
+    "Delta V": "depolarization swing [mV]",
+    "V_peak": "peak potential [mV]",
+    "duration": "~2 ms"
+   },
+   "assumptions": [
+    "Na+ influx depolarizes to +30 mV; K+ efflux repolarizes",
+    "Regenerative voltage-gated channel cascade"
+   ],
+   "breakdown_regime": "The swing is stereotyped and fixed in amplitude; it does not scale with stimulus strength.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's snap is a fixed-amplitude regenerative event: once triggered, the play runs its full stereotyped course (the 100 mV swing from rest to peak), independent of how strongly it was cued. The magnitude of the engine's output is not in the size of one snap but in how many and how fast — the physiological basis for grading output by frequency, not amplitude.",
+    "source_operator": "action_potential_swing",
+    "telemetry": "GSE telemetry: per-snap fixed-amplitude execution; verify output is graded by frequency/recruitment, not snap amplitude."
+   }
+  },
+  {
+   "primitive_id": "frequency_coding",
+   "name": "Stimulus intensity is coded by frequency, not amplitude",
+   "verbatim_quote": "All action potentials peak at the same voltage (+30 mV), so one action potential is not bigger than another.",
+   "page": 495,
+   "latex": "\\text{intensity}\\propto f_{AP}\\ \\text{(frequency)},\\quad A_{AP}=\\text{const}",
+   "symbol_and_unit_ledger": {
+    "f_AP": "action-potential frequency [Hz]",
+    "A_AP": "AP amplitude [mV, constant]"
+   },
+   "assumptions": [
+    "Stronger stimuli initiate more APs more quickly",
+    "Individual APs are identical in size"
+   ],
+   "breakdown_regime": "Amplitude coding is impossible (all-or-none); intensity must be frequency/recruitment coded.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine grades effort by frequency and recruitment, not by a 'bigger' discrete play: a stronger drive fires more snaps more quickly and recruits more units, while each snap is identical. This is the physiological law that the engine's intensity modulation is a rate/count code, not an amplitude code — the same principle as the all-or-none neural signal.",
+    "source_operator": "frequency_coding",
+    "telemetry": "GSE telemetry: effort graded by snap frequency + recruitment count; verify amplitude is invariant."
+   }
+  },
+  {
+   "primitive_id": "refractory_period",
+   "name": "Refractory period: a mandatory recovery interval enforcing one-way propagation",
+   "verbatim_quote": "While an action potential is in progress, another one cannot be initiated. That effect is referred to as the refractory period.",
+   "page": 495,
+   "latex": "t_{refractory}=t_{absolute}+t_{relative};\\quad \\text{no new AP during }t_{absolute}",
+   "symbol_and_unit_ledger": {
+    "t_absolute": "absolute refractory period [ms, Na+ inactivation gate]",
+    "t_relative": "relative refractory period [ms, stronger stimulus needed]"
+   },
+   "assumptions": [
+    "Na+ channel inactivation gate blocks re-firing",
+    "Enforces unidirectional propagation down the axon"
+   ],
+   "breakdown_regime": "During the absolute phase no stimulus can re-fire; during the relative phase only a stronger one can.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's snap clock is a refractory period: once a play is in progress, another cannot be initiated until it completes, and the just-executed direction cannot immediately re-fire. This enforces the one-way, sequential snap-by-snap structure of the simulation — the physiological isomorph of the engine's mandatory inter-snap recovery and no-simultaneous-play constraint.",
+    "source_operator": "refractory_period",
+    "telemetry": "GSE telemetry: inter-snap refractory interval; verify no overlapping plays and one-way sequence."
+   }
+  },
+  {
+   "primitive_id": "excitation_contraction_coupling",
+   "name": "Excitation-contraction coupling: the electrical signal triggers mechanical force",
+   "verbatim_quote": "It is the arrival of Ca++ in the sarcoplasm that initiates contraction of the muscle fiber by its contractile units, or sarcomeres.",
+   "page": 386,
+   "latex": "\\text{AP}\\to\\text{T-tubule}\\to\\text{SR Ca}^{2+}\\text{ release}\\to\\text{troponin}\\to\\text{cross-bridge}",
+   "symbol_and_unit_ledger": {
+    "Ca2+": "calcium trigger [concentration]",
+    "SR": "sarcoplasmic reticulum [Ca2+ store]",
+    "troponin/tropomyosin": "regulatory shield proteins"
+   },
+   "assumptions": [
+    "Skeletal muscle contraction requires nervous-system signaling",
+    "Ca2+ unshields actin binding sites; ATP sustains cycling"
+   ],
+   "breakdown_regime": "Without Ca2+ release or ATP, no contraction; the coupling is the bridge from signal to force.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's play-call-to-force pipeline IS excitation-contraction coupling: the neural decision (the call) is the action potential, the calcium release is the trigger that unshields the execution machinery, and the cross-bridge cycling is the actual yardage-producing force. The engine must model this coupling latency (the latent period) between calling a play and producing output, and the Ca2+/ATP dependence that fatigue disrupts.",
+    "source_operator": "excitation_contraction_coupling",
+    "telemetry": "GSE telemetry: call-to-force coupling latency and Ca2+/ATP dependence; verify the latent period and fatigue disruption."
+   }
+  },
+  {
+   "primitive_id": "sliding_filament_crossbridge",
+   "name": "Sliding filament and the ATP-driven cross-bridge cycle",
+   "verbatim_quote": "When signaled by a motor neuron, a skeletal muscle fiber contracts as the thin filaments are pulled and then slide past the thick filaments within the fiber's sarcomeres.",
+   "page": 389,
+   "latex": "\\text{cross-bridge cycle: attach}\\to\\text{power stroke}\\to\\text{detach (ATP)}\\to\\text{re-cock (ATP hydrolysis)}",
+   "symbol_and_unit_ledger": {
+    "power stroke": "~10 nm per cycle [length]",
+    "ATP": "energy per cycle [molecule]",
+    "myosin heads": "~300 per thick filament"
+   },
+   "assumptions": [
+    "Myosin heads pull actin toward the M-line",
+    "Each cycle requires ATP; without ATP the head cannot detach (rigor)"
+   ],
+   "breakdown_regime": "ATP depletion locks cross-bridges (rigor mortis); contraction is an active, energy-consuming cycle.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's force production is a cross-bridge cycle: each unit of output is an ATP-consuming attach-pull-detach-recock cycle, and sustained output requires continuous ATP regeneration. The engine's fatigue model is the depletion of this cycle's fuel — when ATP runs down, the machinery locks and output ceases. This is the microscopic basis of the engine's energy-budgeted force production.",
+    "source_operator": "sliding_filament_crossbridge",
+    "telemetry": "GSE telemetry: per-cycle ATP cost and regeneration rate; verify output ceases on ATP depletion."
+   }
+  },
+  {
+   "primitive_id": "power_stroke_quantum",
+   "name": "The power stroke: a ~10 nm quantal step",
+   "verbatim_quote": "As actin is pulled, the filaments move approximately 10 nm toward the M-line.",
+   "page": 390,
+   "latex": "d_{stroke}\\approx 10\\ \\mathrm{nm};\\quad F_{total}\\propto N_{crossbridges}\\times d_{stroke}",
+   "symbol_and_unit_ledger": {
+    "d_stroke": "power-stroke displacement [nm]",
+    "N_crossbridges": "simultaneous cross-bridges [count]"
+   },
+   "assumptions": [
+    "Each myosin head pulls a short fixed distance then re-cocks",
+    "Many cross-bridges cycle asynchronously for smooth force"
+   ],
+   "breakdown_regime": "A single head's stroke is tiny; macroscopic force is the sum of vast numbers of quantal steps.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's macroscopic output is the sum of many quantal micro-events: each play's yardage is a small fixed step, and total force is the aggregate of vast numbers of asynchronous quantal contributions. This is the physiological basis for modeling player output as a population sum of discrete quantal events rather than a single continuous force — the law of large numbers over cross-bridges.",
+    "source_operator": "power_stroke_quantum",
+    "telemetry": "GSE telemetry: aggregate output as sum of quantal steps; verify population-sum force model."
+   }
+  },
+  {
+   "primitive_id": "length_tension_relationship",
+   "name": "Length-tension relationship: force peaks at optimal filament overlap",
+   "verbatim_quote": "The ideal length of a sarcomere to produce maximal tension occurs at 80 percent to 120 percent of its resting length",
+   "page": 396,
+   "latex": "F_{max}\\ \\text{at}\\ L\\in[0.8,1.2]\\,L_{rest};\\quad F\\to 0\\ \\text{as overlap}\\to 0",
+   "symbol_and_unit_ledger": {
+    "L_rest": "resting sarcomere length [~2 um]",
+    "L": "current length [um]",
+    "F": "tension [force]"
+   },
+   "assumptions": [
+    "Force depends on actin-myosin overlap",
+    "Optimal overlap at 80-120% resting length"
+   ],
+   "breakdown_regime": "Beyond 120% or below 80% resting length, overlap falls and tension drops; at zero overlap, zero force.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's force-output model has a length-tension breakdown regime: a player produces maximal force only in an optimal operating window (the 80-120% overlap analogue), and output collapses outside it. This is the physiological invariant that the engine must model a sweet-spot operating range for force production, with breakdown (injury/inefficiency) at the extremes — the body's own breakdown regime.",
+    "source_operator": "length_tension_relationship",
+    "telemetry": "GSE telemetry: force vs operating-length window; verify the 80-120% optimum and breakdown at extremes."
+   }
+  },
+  {
+   "primitive_id": "motor_unit_recruitment",
+   "name": "Motor-unit recruitment: graded force by enlisting larger units",
+   "verbatim_quote": "In some muscles, the largest motor units may generate a contractile force of 50 times more than the smallest motor units in the muscle.",
+   "page": 396,
+   "latex": "F_{total}=\\sum_{i} n_i\\,F_{unit,i};\\quad F_{unit,max}\\approx 50\\,F_{unit,min}",
+   "symbol_and_unit_ledger": {
+    "motor unit": "one motor neuron + its fibers [count]",
+    "n_i": "recruited units [count]",
+    "F_unit": "unit force [force]"
+   },
+   "assumptions": [
+    "Small low-threshold units fire first (fine control); large high-threshold units recruited for power",
+    "Recruitment increases force progressively"
+   ],
+   "breakdown_regime": "Maximal recruitment cannot be sustained (energy cost); units rotate to delay fatigue.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's effort grading IS motor-unit recruitment: low-threshold units fire first for fine control, and larger high-threshold units are enlisted as more force is needed, spanning a ~50x force range. The engine models player effort as a recruitment cascade, and the rotation of units (some rest while others work) is the physiological basis of the engine's fatigue-management and substitution logic.",
+    "source_operator": "motor_unit_recruitment",
+    "telemetry": "GSE telemetry: recruitment cascade and unit rotation; verify the ~50x force range and fatigue-delaying rotation."
+   }
+  },
+  {
+   "primitive_id": "wave_summation_tetanus",
+   "name": "Wave summation and tetanus: frequency raises force 3-4x",
+   "verbatim_quote": "The tension at this point is about three to four times greater than the tension of a single twitch, a state referred to as incomplete tetanus.",
+   "page": 398,
+   "latex": "F_{tetanus}\\approx(3\\text{–}4)\\,F_{twitch};\\quad \\text{complete tetanus: no relaxation phase}",
+   "symbol_and_unit_ledger": {
+    "F_twitch": "single-twitch tension [force]",
+    "F_tetanus": "tetanic tension [force]",
+    "stimulus frequency": "motor-neuron firing rate [Hz]"
+   },
+   "assumptions": [
+    "Successive stimuli sum Ca2+ while the muscle is still contracting",
+    "High frequency eliminates relaxation (complete tetanus)"
+   ],
+   "breakdown_regime": "Tetanus sustains until fatigue; it is the maximal-frequency force ceiling.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's sustained maximal output is tetanus: rapid successive drives sum their effect (more Ca2+, more recruited sarcomeres) until force reaches 3-4x a single twitch and relaxation disappears. The engine models a player's sustained peak effort as a tetanic state bounded by fatigue — the physiological ceiling on continuous output, distinct from a single explosive twitch.",
+    "source_operator": "wave_summation_tetanus",
+    "telemetry": "GSE telemetry: sustained-output tetanic ceiling (3-4x twitch) and fatigue bound; verify frequency-driven summation."
+   }
+  },
+  {
+   "primitive_id": "treppe_staircase",
+   "name": "Treppe: the staircase warm-up effect",
+   "verbatim_quote": "the initial contractions generate about one-half the force of later contractions.",
+   "page": 398,
+   "latex": "F_{initial}\\approx 0.5\\,F_{later};\\quad \\text{treppe: graded rise with adequate ATP}",
+   "symbol_and_unit_ledger": {
+    "F_initial": "first-contraction force [force]",
+    "F_later": "warmed-up force [force]"
+   },
+   "assumptions": [
+    "Dormant muscle ramps up force over successive contractions",
+    "Attributed to rising sarcoplasmic Ca2+; requires ATP"
+   ],
+   "breakdown_regime": "Treppe only occurs with adequate ATP and prior dormancy; it is a warm-up transient.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine models a player's warm-up ramp (treppe): the first snaps after dormancy produce about half the force of later ones, and output rises in a staircase as the player activates. This is the physiological basis for the engine's cold-start penalty and warm-up transient — a player is not at full output on the first snap, and the engine must ramp readiness rather than assume instant peak.",
+    "source_operator": "treppe_staircase",
+    "telemetry": "GSE telemetry: cold-start force ramp (~0.5x initial) and warm-up transient; verify the staircase rise."
+   }
+  },
+  {
+   "primitive_id": "atp_energy_systems",
+   "name": "Three ATP energy systems: phosphagen, glycolytic, aerobic",
+   "verbatim_quote": "Approximately 95 percent of the ATP required for resting or moderately active muscles is provided by aerobic respiration, which takes place in mitochondria.",
+   "page": 392,
+   "latex": "\\text{creatine phosphate}\\sim 15\\,\\mathrm{s};\\quad \\text{glycolysis}\\sim 1\\,\\mathrm{min};\\quad \\text{aerobic}\\approx 95\\%\\ \\text{rest}",
+   "symbol_and_unit_ledger": {
+    "creatine phosphate": "immediate reserve [~15 s]",
+    "glycolysis": "anaerobic [~1 min, 2 net ATP/glucose]",
+    "aerobic": "mitochondrial [~36 ATP/glucose, 95% rest]"
+   },
+   "assumptions": [
+    "Stored ATP lasts only a few seconds; must be regenerated",
+    "Three systems with different power/duration tradeoffs"
+   ],
+   "breakdown_regime": "Each system has a duration ceiling; sustained output requires the slower aerobic system and O2 supply.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's player energy model IS the three ATP systems: an immediate phosphagen reserve for the first explosive seconds (~15 s), a glycolytic system for short high-intensity bursts (~1 min), and the aerobic system for sustained output (95% of resting ATP). The engine models the power-duration tradeoff — explosive plays drain the fast reserves, and sustained drives depend on the slower aerobic system and oxygen delivery. This is the physiological substrate of the engine's fatigue and pacing model.",
+    "source_operator": "atp_energy_systems",
+    "telemetry": "GSE telemetry: per-system ATP power/duration and O2 dependence; verify the phosphagen-glycolytic-aerobic cascade."
+   }
+  },
+  {
+   "primitive_id": "glycolysis_aerobic_yield",
+   "name": "ATP yield: glycolysis 2 vs aerobic ~36 per glucose",
+   "verbatim_quote": "producing approximately 36 ATPs per molecule of glucose versus four from glycolysis.",
+   "page": 392,
+   "latex": "Y_{aerobic}\\approx 36\\ \\mathrm{ATP/glucose};\\quad Y_{glycolysis}=2\\ \\text{net}\\ (4\\ \\text{gross})",
+   "symbol_and_unit_ledger": {
+    "Y_aerobic": "aerobic yield [ATP/glucose]",
+    "Y_glycolysis": "glycolytic net yield [ATP/glucose]"
+   },
+   "assumptions": [
+    "Aerobic respiration is ~18x more efficient per glucose",
+    "Glycolysis is faster but inefficient and produces lactic acid"
+   ],
+   "breakdown_regime": "Aerobic requires steady O2; without O2, pyruvic acid converts to lactic acid (fatigue correlate).",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's efficiency model is the ATP-yield tradeoff: the aerobic path yields ~36 ATP/glucose versus glycolysis's 2 net, an ~18x efficiency gap, but the aerobic path is slower and O2-dependent. The engine models the efficiency-vs-speed tradeoff in player output — sustainable efficient effort versus fast inefficient bursts that accumulate fatigue-producing byproducts. This is the bioenergetic basis of the engine's pacing and efficiency reasoning.",
+    "source_operator": "glycolysis_aerobic_yield",
+    "telemetry": "GSE telemetry: efficiency-vs-speed ATP-yield tradeoff and O2 dependence; verify the ~18x yield gap."
+   }
+  },
+  {
+   "primitive_id": "muscle_fatigue",
+   "name": "Muscle fatigue: multi-factor failure of the contraction machinery",
+   "verbatim_quote": "Muscle fatigue occurs when a muscle can no longer contract in response to signals from the nervous system.",
+   "page": 393,
+   "latex": "\\text{fatigue}=f(\\text{ATP}\\downarrow,\\ \\text{pH}\\downarrow,\\ \\text{Na}^+/\\text{K}^+\\ \\text{imbalance},\\ \\text{Ca}^{2+}\\ \\text{dysregulation})",
+   "symbol_and_unit_ledger": {
+    "ATP": "energy reserve [depleted]",
+    "pH": "intracellular acidity [lactic acid]",
+    "Ca2+": "SR regulation [impaired]",
+    "oxygen debt": "post-exercise O2 to restore [volume]"
+   },
+   "assumptions": [
+    "Fatigue causes are not fully known; multiple correlated factors",
+    "ATP depletion, lactic acid/pH, ion imbalance, SR/sarcolemma damage"
+   ],
+   "breakdown_regime": "Fatigue is multi-factor and not fully understood; the engine must treat it as a compound, uncertain process.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's fatigue model is this multi-factor physiological failure: ATP depletion, lactic-acid pH drop, Na+/K+ imbalance disrupting Ca2+ flow, and SR/sarcolemma damage from sustained effort, plus an oxygen debt that elevates recovery cost after exertion. Critically, the exact causes are not fully known — so the engine must model fatigue as a compound, uncertain process with an oxygen-debt recovery tail, not a single deterministic counter. This is the honest physiological basis of the engine's fatigue and recovery modeling.",
+    "source_operator": "muscle_fatigue",
+    "telemetry": "GSE telemetry: multi-factor fatigue state + oxygen-debt recovery tail; verify fatigue is compound and uncertain, not a single counter."
+   }
+  },
+  {
+   "primitive_id": "fiber_types",
+   "name": "Fiber types: slow-oxidative, fast-oxidative, fast-glycolytic",
+   "verbatim_quote": "Fast fibers hydrolyze ATP approximately twice as quickly as slow fibers, resulting in much quicker cross-bridge cycling",
+   "page": 399,
+   "latex": "\\text{SO: aerobic, fatigue-resistant, low force};\\quad \\text{FG: anaerobic, powerful, fast-fatigue};\\quad v_{fast}\\approx 2\\,v_{slow}",
+   "symbol_and_unit_ledger": {
+    "SO": "slow oxidative [aerobic, many mitochondria/myoglobin]",
+    "FO": "fast oxidative [intermediate]",
+    "FG": "fast glycolytic [anaerobic, large diameter, glycogen]"
+   },
+   "assumptions": [
+    "Fiber type set by contraction speed + ATP pathway",
+    "Fast fibers hydrolyze ATP ~2x faster; most muscles mix all three"
+   ],
+   "breakdown_regime": "Fiber composition determines a muscle's power/endurance profile; it is largely fixed (genetic + training).",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's player-type model IS fiber-type composition: slow-oxidative (SO) fibers sustain posture/endurance with aerobic fatigue-resistance, fast-glycolytic (FG) fibers produce explosive power but fatigue quickly, and fast fibers cycle ~2x faster. The engine models a player's explosive-vs-sustained profile as their FG/SO composition — the physiological basis for distinguishing a power back from an endurance back, and for the engine's matchup reasoning about which player type fits a given play.",
+    "source_operator": "fiber_types",
+    "telemetry": "GSE telemetry: per-player FG/SO/FO composition and power-endurance profile; verify the ~2x fast/slow cycling."
+   }
+  },
+  {
+   "primitive_id": "isotonic_isometric",
+   "name": "Isotonic vs isometric contractions: moving a load vs holding",
+   "verbatim_quote": "An isometric contraction occurs as the muscle produces tension without changing the angle of a skeletal joint.",
+   "page": 394,
+   "latex": "\\text{isotonic: }F=\\text{const},\\ \\Delta L\\ne 0;\\quad \\text{isometric: }\\Delta L=0,\\ F\\ \\text{rises}",
+   "symbol_and_unit_ledger": {
+    "isotonic": "constant tension, length changes [concentric/eccentric]",
+    "isometric": "tension without length change [posture/stability]"
+   },
+   "assumptions": [
+    "Concentric shortens to move a load; eccentric lengthens under tension",
+    "Isometric holds posture when force cannot overcome the load"
+   ],
+   "breakdown_regime": "Isometric produces tension without movement; eccentric controls lowering and is injury-relevant.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine distinguishes output that moves the load (isotonic — a play that gains yards) from output that holds position (isometric — a lineman holding a block, posture/stability). The concentric/eccentric distinction maps to producing versus absorbing force, and the engine models the isometric hold (no yardage but essential stability) as a distinct, valuable output mode. This is the physiological basis for the engine's block/hold versus gain reasoning.",
+    "source_operator": "isotonic_isometric",
+    "telemetry": "GSE telemetry: isotonic gain vs isometric hold output modes; verify concentric/eccentric force distinction."
+   }
+  },
+  {
+   "primitive_id": "hypertrophy_atrophy_sarcopenia",
+   "name": "Hypertrophy, atrophy, and sarcopenia: structural adaptation",
+   "verbatim_quote": "structural proteins are added to muscle fibers in a process called hypertrophy, so cell diameter increases.",
+   "page": 400,
+   "latex": "\\text{hypertrophy: }\\uparrow\\text{myofibrils/sarcomeres}\\Rightarrow\\uparrow\\text{diameter};\\quad \\text{atrophy: reverse}",
+   "symbol_and_unit_ledger": {
+    "hypertrophy": "added structural proteins [mass gain]",
+    "atrophy": "lost structural proteins [mass loss]",
+    "sarcopenia": "age-related atrophy"
+   },
+   "assumptions": [
+    "Muscle cells change size, not number (no new cells formed)",
+    "Resistance exercise adds myofibrils; disuse/aging removes them"
+   ],
+   "breakdown_regime": "Fiber number is genetically fixed; adaptation is by size, not cell count.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's player-development and aging model IS hypertrophy/atrophy: training adds structural proteins (myofibrils/sarcomeres) increasing force capacity, disuse removes them, and aging causes sarcopenia. The engine models player growth and decline as structural adaptation within a fixed fiber count — the physiological basis for the engine's training-effect, detraining, and age-decline reasoning, distinct from any change in player 'count'.",
+    "source_operator": "hypertrophy_atrophy_sarcopenia",
+    "telemetry": "GSE telemetry: training hypertrophy / detraining atrophy / age sarcopenia within fixed fiber count; verify size-not-number adaptation."
+   }
+  },
+  {
+   "primitive_id": "endurance_resistance_adaptation",
+   "name": "Endurance vs resistance training: distinct cellular adaptations",
+   "verbatim_quote": "Endurance training modifies these slow fibers to make them even more efficient by producing more mitochondria to enable more aerobic metabolism and more ATP production.",
+   "page": 400,
+   "latex": "\\text{endurance: }\\uparrow\\text{mitochondria, myoglobin, capillaries};\\quad \\text{resistance: }\\uparrow\\text{myofibrils (FG)}",
+   "symbol_and_unit_ledger": {
+    "endurance adaptation": "mitochondria/myoglobin/angiogenesis [aerobic capacity]",
+    "resistance adaptation": "myofibril hypertrophy [force]"
+   },
+   "assumptions": [
+    "Endurance builds O2 supply/utilization without large mass gain",
+    "Resistance builds force via myofibrils, not the endurance adaptations"
+   ],
+   "breakdown_regime": "The two training modes produce largely non-overlapping adaptations; specificity matters.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's training-specificity model is this divergence: endurance work builds mitochondria, myoglobin, and capillary networks (aerobic capacity) without big mass gain, while resistance work builds myofibrils and FG force. The engine models that training adaptations are specific — a player trained for endurance gains sustained output, not explosive force, and vice versa. This is the physiological basis for the engine's conditioning-specificity and role-fit reasoning.",
+    "source_operator": "endurance_resistance_adaptation",
+    "telemetry": "GSE telemetry: training-mode-specific adaptation (aerobic vs force); verify non-overlapping endurance/resistance effects."
+   }
+  },
+  {
+   "primitive_id": "muscle_tone_rotation",
+   "name": "Muscle tone: cyclical unit rotation prevents complete fatigue",
+   "verbatim_quote": "muscles never fatigue completely, as some motor units can recover while others are active.",
+   "page": 399,
+   "latex": "\\text{tone: low-level cyclical recruitment};\\quad \\text{rotation}\\Rightarrow\\text{no complete fatigue}",
+   "symbol_and_unit_ledger": {
+    "muscle tone": "continuous low-level contraction [posture/stability]",
+    "rotation": "asynchronous motor-unit cycling"
+   },
+   "assumptions": [
+    "A few motor units active at a time, cyclically",
+    "Some units recover while others work, delaying fatigue"
+   ],
+   "breakdown_regime": "Loss of tone (hypotonia) or excess (hypertonia) signals CNS damage; tone is a stability baseline.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's fatigue-management is muscle-tone rotation: rather than driving all units to exhaustion, the engine cycles a subset active while others recover, so the player never fatigues completely and can sustain output. This is the physiological basis of the engine's substitution/rotation and pacing logic — sustained performance comes from asynchronous unit rotation, not from maximal simultaneous recruitment.",
+    "source_operator": "muscle_tone_rotation",
+    "telemetry": "GSE telemetry: asynchronous unit rotation sustaining output; verify no-complete-fatigue via rotation."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "6bbdbe4a5b49d89d-t1",
+   "think": "Retrocausal Genealogy. OpenStax Anatomy and Physiology is the layer that gives the Foundry its biological substrate, and its lineage runs backward from the GSE player-performance model to the cellular machinery of force. The root is the excitable membrane: a resting potential of about -70 mV maintained by ion gradients and the ATP-driven sodium-potassium pump, a stored electrochemical battery. From this root grows the action potential, a regenerative all-or-none event gated at a -55 mV threshold, swinging 100 mV to a +30 mV peak in about 2 milliseconds, followed by a refractory period that enforces one-way propagation. Because every action potential is identical in amplitude, stimulus intensity is coded by frequency and recruitment, not size. The signal reaches the muscle at the neuromuscular junction and becomes force through excitation-contraction coupling: the action potential travels the T-tubules, releases calcium from the sarcoplasmic reticulum, calcium unshields the actin binding sites, and myosin cross-bridges cycle in ~10 nm power strokes powered by ATP. The sliding filament model gives the length-tension relationship, with maximal force at 80-120 percent of resting sarcomere length. Force is graded by motor-unit recruitment (a ~50x range from smallest to largest unit), by wave summation and tetanus (3-4x a single twitch), and by the treppe warm-up staircase. The fuel is supplied by three ATP systems — creatine phosphate (~15 s), anaerobic glycolysis (~1 min, 2 net ATP/glucose), and aerobic respiration (~36 ATP/glucose, 95 percent of resting needs) — and fatigue is the multi-factor failure of this machinery (ATP depletion, pH drop, ion imbalance, calcium dysregulation, oxygen debt). Fiber types (slow-oxidative, fast-oxidative, fast-glycolytic) set the power-endurance profile, and training adapts structure specifically (endurance builds mitochondria and capillaries; resistance builds myofibrils). This genealogy is retrocausal because the GSE engine's design pulls these results into being: the player's readiness is the membrane battery, the play-call is the all-or-none action potential, the effort grade is frequency and recruitment, the snap clock is the refractory period, the force model is length-tension and cross-bridges, and the fatigue model is the ATP-system cascade and its multi-factor failure.\n\nRecursive Theory of Mind. The engine reasons about the player's body as a nested control system that itself reasons about demand. At the base, the nervous system grades output by recruiting motor units and firing action potentials at varying frequency, a recursive awareness that a single all-or-none signal cannot carry intensity, so intensity must be encoded in the population rate. One level up, the engine reasons about the player's own fatigue-management: the body rotates motor units so some recover while others work, never fatiguing completely, and the engine models this as the player's capacity to sustain effort through pacing rather than maximal simultaneous drive. The engine also reasons about the player's adaptation history: a body trained for endurance has built mitochondria and capillaries and reasons about sustained output differently from a resistance-trained body built for explosive force, so the engine must infer the player's fiber-type and training profile to predict which demands they can meet. The treppe warm-up adds recursive humility: the engine knows the player is not at full force on the first snap after dormancy, so it reasons about the cold-start ramp rather than assuming instant peak. The refractory period adds a final recursion: the engine knows a player cannot re-fire a just-executed action immediately, so it reasons about the mandatory recovery interval that sequences the snap-by-snap simulation.\n\nCross-Layer Veto Adjudication. The physiology layer supplies the vetoes that bind the stack to biological reality. First, the all-or-none veto: a play either fires or it does not, gated by a threshold, so the engine vetoes any 'partial execution' of a discrete call and grades intensity only by frequency and recruitment, never by a bigger snap. Second, the refractory veto: once a play is in progress another cannot initiate, so the engine vetoes overlapping simultaneous plays and enforces the one-way snap sequence. Third, the length-tension veto: force peaks only in the 80-120 percent overlap window and collapses outside it, so the engine vetoes force predictions outside the player's optimal operating range and flags the breakdown (injury/inefficiency) at the extremes. Fourth, the energy veto: stored ATP lasts only seconds and must be regenerated by the phosphagen-glycolytic-aerobic cascade, so the engine vetoes sustained output that ignores the ATP power-duration tradeoff and the oxygen debt. Fifth, the fatigue veto: fatigue is multi-factor and not fully understood (ATP, pH, ions, calcium, oxygen debt), so the engine vetoes a single deterministic fatigue counter and requires a compound, uncertain fatigue state with a recovery tail. Sixth, the specificity veto: endurance and resistance adaptations are largely non-overlapping, so the engine vetoes transferring one training mode's gains to the other demand. The adjudication order is fixed: respect the discrete threshold first, then the refractory sequence, then the operating window, then the energy budget, then the compound fatigue, then the training specificity. A candidate failing any veto is PASSed, and the whole player model is bound to the body's own invariants rather than to an abstract force counter.\n\nThe load-bearing isomorphism is that GSE player-performance modeling IS applied muscle and neural physiology. The player's readiness is the resting membrane battery; the play-call is the all-or-none action potential gated at threshold; effort is graded by frequency and motor-unit recruitment, not amplitude; the snap clock is the refractory period; the call-to-yardage pipeline is excitation-contraction coupling; force is the length-tension-bounded cross-bridge cycle; sustained peak output is tetanus bounded by fatigue; the cold-start penalty is treppe; the energy budget is the phosphagen-glycolytic-aerobic ATP cascade; fatigue is the multi-factor failure with an oxygen-debt tail; the player type is the FG/SO fiber composition; and development and decline are hypertrophy/atrophy/sarcopenia within a fixed fiber count. OpenStax unifies with the other layers: the all-or-none threshold and frequency coding are the biological form of the decision layer's discrete gate and the RL graded output; the length-tension breakdown is the body's own breakdown regime echoing the optimization layer's singularity handling; the ATP power-duration tradeoff is the energy-budget constraint behind the systems layer's goodput; and the compound uncertain fatigue is the physiological reason the engine's fatigue state must be probabilistic, linking to the Bayesian layer's posterior over a hidden state. OpenStax does not sit beside the stack; it is the biological substrate layer that grounds every player-performance quantity in a measurable cellular invariant, and it is what lets the Foundry treat force, fatigue, and readiness as physiology rather than as invented counters.",
+   "retrocausal_genealogy": "Retrocausal Genealogy. OpenStax Anatomy and Physiology is the layer that gives the Foundry its biological substrate, and its lineage runs backward from the GSE player-performance model to the cellular machinery of force. The root is the excitable membrane: a resting potential of about -70 mV maintained by ion gradients and the ATP-driven sodium-potassium pump, a stored electrochemical battery. From this root grows the action potential, a regenerative all-or-none event gated at a -55 mV threshold, swinging 100 mV to a +30 mV peak in about 2 milliseconds, followed by a refractory period that enforces one-way propagation. Because every action potential is identical in amplitude, stimulus intensity is coded by frequency and recruitment, not size. The signal reaches the muscle at the neuromuscular junction and becomes force through excitation-contraction coupling: the action potential travels the T-tubules, releases calcium from the sarcoplasmic reticulum, calcium unshields the actin binding sites, and myosin cross-bridges cycle in ~10 nm power strokes powered by ATP. The sliding filament model gives the length-tension relationship, with maximal force at 80-120 percent of resting sarcomere length. Force is graded by motor-unit recruitment (a ~50x range from smallest to largest unit), by wave summation and tetanus (3-4x a single twitch), and by the treppe warm-up staircase. The fuel is supplied by three ATP systems — creatine phosphate (~15 s), anaerobic glycolysis (~1 min, 2 net ATP/glucose), and aerobic respiration (~36 ATP/glucose, 95 percent of resting needs) — and fatigue is the multi-factor failure of this machinery (ATP depletion, pH drop, ion imbalance, calcium dysregulation, oxygen debt). Fiber types (slow-oxidative, fast-oxidative, fast-glycolytic) set the power-endurance profile, and training adapts structure specifically (endurance builds mitochondria and capillaries; resistance builds myofibrils). This genealogy is retrocausal because the GSE engine's design pulls these results into being: the player's readiness is the membrane battery, the play-call is the all-or-none action potential, the effort grade is frequency and recruitment, the snap clock is the refractory period, the force model is length-tension and cross-bridges, and the fatigue model is the ATP-system cascade and its multi-factor failure.",
+   "theory_of_mind": "Recursive Theory of Mind. The engine reasons about the player's body as a nested control system that itself reasons about demand. At the base, the nervous system grades output by recruiting motor units and firing action potentials at varying frequency, a recursive awareness that a single all-or-none signal cannot carry intensity, so intensity must be encoded in the population rate. One level up, the engine reasons about the player's own fatigue-management: the body rotates motor units so some recover while others work, never fatiguing completely, and the engine models this as the player's capacity to sustain effort through pacing rather than maximal simultaneous drive. The engine also reasons about the player's adaptation history: a body trained for endurance has built mitochondria and capillaries and reasons about sustained output differently from a resistance-trained body built for explosive force, so the engine must infer the player's fiber-type and training profile to predict which demands they can meet. The treppe warm-up adds recursive humility: the engine knows the player is not at full force on the first snap after dormancy, so it reasons about the cold-start ramp rather than assuming instant peak. The refractory period adds a final recursion: the engine knows a player cannot re-fire a just-executed action immediately, so it reasons about the mandatory recovery interval that sequences the snap-by-snap simulation.",
+   "cross_layer_veto": "Cross-Layer Veto Adjudication. The physiology layer supplies the vetoes that bind the stack to biological reality. First, the all-or-none veto: a play either fires or it does not, gated by a threshold, so the engine vetoes any 'partial execution' of a discrete call and grades intensity only by frequency and recruitment, never by a bigger snap. Second, the refractory veto: once a play is in progress another cannot initiate, so the engine vetoes overlapping simultaneous plays and enforces the one-way snap sequence. Third, the length-tension veto: force peaks only in the 80-120 percent overlap window and collapses outside it, so the engine vetoes force predictions outside the player's optimal operating range and flags the breakdown (injury/inefficiency) at the extremes. Fourth, the energy veto: stored ATP lasts only seconds and must be regenerated by the phosphagen-glycolytic-aerobic cascade, so the engine vetoes sustained output that ignores the ATP power-duration tradeoff and the oxygen debt. Fifth, the fatigue veto: fatigue is multi-factor and not fully understood (ATP, pH, ions, calcium, oxygen debt), so the engine vetoes a single deterministic fatigue counter and requires a compound, uncertain fatigue state with a recovery tail. Sixth, the specificity veto: endurance and resistance adaptations are largely non-overlapping, so the engine vetoes transferring one training mode's gains to the other demand. The adjudication order is fixed: respect the discrete threshold first, then the refractory sequence, then the operating window, then the energy budget, then the compound fatigue, then the training specificity. A candidate failing any veto is PASSed, and the whole player model is bound to the body's own invariants rather than to an abstract force counter."
+  }
+ ],
+ "universal_lens": "Any system that produces graded force from discrete excitable units is governed by the same physiology: a maintained resting potential (a stored battery), an all-or-none threshold-gated signal whose intensity is coded by frequency and recruitment rather than amplitude, a refractory interval enforcing sequential one-way firing, excitation-contraction coupling with a latent period, a length-tension operating window with breakdown at the extremes, quantal cross-bridge steps summed over a population, an ATP power-duration cascade (phosphagen/glycolytic/aerobic), multi-factor uncertain fatigue with an oxygen-debt recovery tail, fiber-type power-endurance composition, and training-specific structural adaptation within a fixed unit count.",
+ "gsi_mapping": "For GSI, this is the epistemology of grounding performance in measurable biological invariants: why force must be modeled as a population sum of quantal ATP-driven steps within a length-tension window, why intensity is a frequency/recruitment code not an amplitude, why fatigue must be a compound uncertain state with a recovery tail rather than a single counter, why readiness is a maintained electrochemical reserve, and why training adaptations are specific. It is the discipline that turns player performance from invented counters into cellular physiology with explicit breakdown regimes and honest uncertainty about fatigue's exact causes.",
+ "gse_mapping": "For GSE, this is the biological substrate of the player-performance model: readiness = resting membrane battery; play-call = all-or-none action potential at threshold; effort grade = frequency + motor-unit recruitment (~50x range); snap clock = refractory period (one-way, no overlap); call-to-yardage = excitation-contraction coupling (latent period); force = length-tension-bounded cross-bridge cycle (80-120% optimum, ~10 nm steps); sustained peak = tetanus (3-4x twitch) bounded by fatigue; cold-start = treppe (~0.5x); energy = phosphagen (~15s)/glycolytic (~1min, 2 ATP)/aerobic (~36 ATP, 95%) cascade; fatigue = multi-factor uncertain state + oxygen debt; player type = FG/SO fiber composition; development/decline = hypertrophy/atrophy/sarcopenia within fixed fiber count.",
+ "layer2_summary": "[ISOMORPHISM] GSE player-performance modeling IS applied muscle/neural physiology: readiness = resting membrane battery (-70 mV); play-call = all-or-none action potential (threshold -55 mV, +30 mV peak, 100 mV swing, ~2 ms); effort = frequency + motor-unit recruitment (~50x), not amplitude; snap clock = refractory period (one-way, no overlap); call-to-yardage = excitation-contraction coupling; force = length-tension-bounded cross-bridge cycle (80-120% optimum, ~10 nm steps); sustained peak = tetanus (3-4x twitch); cold-start = treppe (~0.5x); energy = phosphagen/glycolytic/aerobic ATP cascade; fatigue = multi-factor uncertain state + oxygen debt; player type = FG/SO fiber composition; development = hypertrophy/atrophy/sarcopenia."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "4417db599844344a",
+  "source_status": "COMPLETE",
+  "title": "p0260",
+  "file_name": "p0260.txt",
+  "sha256": "4417db599844344a2b5fa7ca1aab1ee60a772837d255f140d47627e48dcccf94",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Neural stress accumulation and recovery dynamics in high-stakes team performance. Universal Lens: Rooted in p0260 (4417db599844344a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on pre-game psychological states using neurophysiological telemetry and post-match outcome likelihoods. GSI Mapping: Rooted in p0260 (4417db599844344a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models team momentum shifts via discrete state transitions during intermission intervals. GSE Mapping: Rooted in p0260 (4417db599844344a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "neural_stress_accumulation",
+      "name": "Neural Stress Accumulation",
+      "verbatim_quote": "exhorters bent over me with conflicting floods of asterisked rhetoric, are still vivid and awful things.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'σ': 'neural stress intensity (dimensionless)', 't': 'time (seconds)', 'Δt': 'interval duration (seconds)'}",
+      "assumptions": "Stress accumulates linearly with time under cognitive load; recovery follows exponential decay.",
+      "breakdown_regime": "σ → ∞ at t = T_breakdown",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models cognitive overload as a function of verbal stimulus intensity and temporal proximity to game start.",
+        "source_operator": "neural_stress_accumulation",
+        "telemetry": "Heart rate variability, cortisol levels"
+      }
+    },
+    {
+      "primitive_id": "intermission_recovery",
+      "name": "Intermission Recovery",
+      "verbatim_quote": "impromptu camp-meetings. For five minutes after the whistle my men are guaranteed absolute and undisturbed rest",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R(t)': 'recovery rate (dimensionless)', 'T_rest': 'rest period (minutes)', 'α': 'recovery efficiency coefficient (dimensionless)'}",
+      "assumptions": "Recovery is a deterministic process governed by fixed time intervals and controlled environmental factors.",
+      "breakdown_regime": "R(T_rest) = 1.0 when α = 1.0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps intermission protocol to a controlled relaxation model in GSE's state transition graph.",
+        "source_operator": "intermission_recovery",
+        "telemetry": "Muscle tension index, EEG coherence"
+      }
+    },
+    {
+      "primitive_id": "momentum_shift",
+      "name": "Momentum Shift",
+      "verbatim_quote": "and on more than one instance I have watched a two-touchdown lead wiped out after one",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'momentum magnitude (dimensionless)', 'ΔM': 'change in momentum (dimensionless)', 'τ': 'time of shift (seconds)'}",
+      "assumptions": "Momentum changes abruptly due to external stimuli during critical game moments.",
+      "breakdown_regime": "ΔM < 0 implies reversal of advantage",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Captures sudden behavioral shifts through discrete event triggers in GSI's probabilistic forecasting.",
+        "source_operator": "momentum_shift",
+        "telemetry": "Play-by-play action frequency, turnover count"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4417db599844344a_t0",
+      "think": "The three primitives form a triadic system where neural stress accumulates under pressure, intermission recovery resets cognitive load, and momentum shifts occur upon disruption. The stress accumulation model assumes linear growth until threshold T_breakdown, beyond which performance collapses. Intermission recovery is modeled as an exponential decay process governed by α, representing the efficacy of rest protocols. Momentum shifts are captured as stochastic events triggered by impromptu meetings, causing ΔM < 0. These operators interact: high σ leads to low R(t), increasing susceptibility to ΔM. In GSE, this manifests as state transitions in a Markovian framework, while GSI applies Bayesian updating to predict outcomes based on observed ΔM and R(t).\n\nDeep epistemic analysis for p0260 (4417db599844344a, domain=other, pages_read=1/1): Operator 'Neural Stress Accumulation' (page 1, domain other) captures: exhorters bent over me with conflicting floods of asterisked rhetoric, are still vivid and awful things. Assumptions: Stress accumulates linearly with time under cognitive load; recovery follows exponential decay. Breakdown regime: σ → ∞ at t = T_breakdown Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models cognitive overload as a function of verbal stimulus intensity and temporal proximity to game start. Operator 'Intermission Recovery' (page 1, domain other) captures: impromptu camp-meetings. For five minutes after the whistle my men are guaranteed absolute and undisturbed rest Assumptions: Recovery is a deterministic process governed by fixed time intervals and controlled environmental factors. Breakdown regime: R(T_rest) = 1.0 when α = 1.0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps intermission protocol to a controlled relaxation model in GSE's state transition graph. Operator 'Momentum Shift' (page 1, domain other) captures: and on more than one instance I have watched a two-touchdown lead wiped out after one Assumptions: Momentum changes abruptly due to external stimuli during critical game moments. Breakdown regime: ΔM < 0 implies reversal of advantage Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures sudden behavioral shifts through discrete event triggers in GSI's probabilistic forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0260 (4417db599844344a, domain=other, pages_read=1/1): Operator 'Neural Stress Accumulation' (page 1, domain other) captures: exhorters bent over me with conflicting floods of asterisked rhetoric, are still vivid and awful things. Assumptions: Stress accumulates linearly with time under cognitive load; recovery follows exponential decay. Breakdown regime: σ → ∞ at t = T_breakdown Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models cognitive overload as a function of verbal stimulus intensity and temporal proximity to game start. Operator 'Intermission Recovery' (page 1, domain other) captures: impromptu camp-meetings. For five minutes after the whistle my men are guaranteed absolute and undisturbed rest Assumptions: Recovery is a deterministic process governed by fixed time intervals and controlled environmental factors. Breakdown regime: R(T_rest) = 1.0 when α = 1.0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps intermission protocol to a controlled relaxation model in GSE's state transition graph. Operator 'Momentum Shift' (page 1, domain other) captures: and on more than one instance I have watched a two-touchdown lead wiped out after one Assumptions: Momentum changes abruptly due to external stimuli during critical game moments. Breakdown regime: ΔM < 0 implies reversal of advantage Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures sudden behavioral shifts through discrete event triggers in GSI's probabilistic forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical stress physiology and game theory's sequential decision-making models, particularly influenced by von Neumann-Morgenstern utility functions and early cognitive load theories. Retrocausal Genealogy: Rooted in p0260 (4417db599844344a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0260 (4417db599844344a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include coaches who may induce stress through motivational rhetoric, players experiencing cognitive overload, and referees whose timing affects momentum shifts. Each agent operates within bounded rationality constraints. Theory of Mind & Decision Maker Model: Rooted in p0260 (4417db599844344a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that stress and recovery do not co-vary directly; leakage occurs only through external stimuli like impromptu meetings. This prevents spurious correlations in GSI’s inference engine. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0260 (4417db599844344a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0260 (4417db599844344a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

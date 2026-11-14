@@ -1,0 +1,583 @@
+{
+  "book_id": "2cd9c8ea04dcc2a4",
+  "shard": "2",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_LIGATURE_FOLD",
+  "source_note": "South (SMU) & Egros (2020), Journal of Sports Analytics 6:25-33, DOI 10.3233/JSA-190314, open access CC BY-NC. fi/fl ligatures folded for quote verification; a few words are PDF-merged and were avoided. Bayesian model spec printed cleanly and reproduced as labeled LaTeX; ridge/lasso/elastic-net penalties reconstructed from the prose L1/L2 descriptions. Outcome is the actual point differential and win-loss; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "forecast_goal",
+      "name": "Survey of modern methods to forecast game outcomes",
+      "verbatim_quote": "Using data from the 2011 to 2014 seasons, we implemented a variety of advanced modeling techniques to determine which best forecasts the outcome of games.",
+      "page": 25,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Eight methods (ridge, lasso, elastic net, neural net, random forest, KNN, gradient boosting, Bayesian) are trained on 2011-2014 and tested on 2015."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A held-out temporal bake-off of predictors is the same model-selection discipline GSE uses to choose its game-outcome engine.",
+        "source_operator": "forecast_goal",
+        "telemetry": "train 2011-14, test 2015, 8 methods"
+      }
+    },
+    {
+      "primitive_id": "top_performers",
+      "name": "Top performers exceed 70% accuracy; lasso best",
+      "verbatim_quote": "predicted the correct outcome over 70% of the time, and the lasso model proved most accurate at predicting win-loss outcomes in the 2015 test data set.",
+      "page": 25,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Lasso, Bayesian team-specific variance, gradient boosting, and random forests all exceed 70%; lasso is most accurate on win-loss."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Out-of-sample win-loss accuracy is the promotion criterion; GSE gates its outcome model on the same held-out hit rate.",
+        "source_operator": "top_performers",
+        "telemetry": ">70% accuracy, lasso best win-loss"
+      }
+    },
+    {
+      "primitive_id": "data_scale",
+      "name": "4,339 FBS games, 2011-2015",
+      "verbatim_quote": "The data used for this research consists of 4,339 games between Football Bowl Subdivision (FBS) teams between the 2011 and 2015 seasons",
+      "page": 26,
+      "latex": "N=4{,}339\\ \\text{FBS games}",
+      "symbol_and_unit_ledger": {
+        "N": "game count",
+        "FBS": "Football Bowl Subdivision only"
+      },
+      "assumptions": [
+        "Non-FBS opponents (FCS, Division II) are removed for incomplete data and non-representativeness."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A clean, single-level dataset avoids mixing distributions; GSE likewise filters to a coherent competition level before modeling.",
+        "source_operator": "data_scale",
+        "telemetry": "4,339 FBS games, non-FBS dropped"
+      }
+    },
+    {
+      "primitive_id": "no_lookahead_moving_avg",
+      "name": "No-lookahead season moving averages",
+      "verbatim_quote": "to predict the outcome for Alabama's sixth game of the 2012 season, we used averages of their statistics for all games available prior to this",
+      "page": 26,
+      "latex": "\\bar{x}_{t}=\\frac{1}{t-1}\\sum_{s<t} x_s",
+      "symbol_and_unit_ledger": {
+        "x_bar_t": "moving average of a stat before game t",
+        "x_s": "stat in prior game s"
+      },
+      "assumptions": [
+        "Each game's features use only statistics from games strictly before it; the window grows through the season."
+      ],
+      "breakdown_regime": "early-season games have few prior observations (high variance); lookahead would leak the outcome",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Strictly-prior moving averages are the same no-lookahead feature discipline GSE enforces so a prediction never sees its own result.",
+        "source_operator": "no_lookahead_moving_avg",
+        "telemetry": "features use only games s < t"
+      }
+    },
+    {
+      "primitive_id": "relative_difference_features",
+      "name": "Relative team-vs-opponent differences, not absolutes",
+      "verbatim_quote": "we hypothesized that outcomes could be related to relative differences between the teams rather than absolute performance.",
+      "page": 26,
+      "latex": "\\Delta_{\\text{off}}=\\bar{x}_{\\text{team off}}-\\bar{x}_{\\text{opp def}}",
+      "symbol_and_unit_ledger": {
+        "Delta": "difference of moving averages (stat units, e.g. yards, points)"
+      },
+      "assumptions": [
+        "Covariates pair team offense against opponent defense (and vice versa) for points, YPPA, YPRA, yards, turnovers, win%."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matchup-relative features encode the interaction, not raw strength; GSE situational features use the same offense-vs-defense differencing.",
+        "source_operator": "relative_difference_features",
+        "telemetry": "team offense - opponent defense"
+      }
+    },
+    {
+      "primitive_id": "recruiting_talent_lags",
+      "name": "Recruiting talent via 4-year composite lags",
+      "verbatim_quote": "Because college players have four years of eligibility, the four classes preceding the year of the games will capture the quality of talent playing in a specific game.",
+      "page": 26,
+      "latex": "\\text{talent}_t=f(\\text{CR}_{t-1},\\text{CR}_{t-2},\\text{CR}_{t-3},\\text{CR}_{t-4},\\overline{\\text{CR}}_{2,3,4})",
+      "symbol_and_unit_ledger": {
+        "CR": "247Sports composite recruiting ranking (score)",
+        "lags": "1-4 prior classes plus 2/3/4-year averages"
+      },
+      "assumptions": [
+        "Classes back to 2008 are included so 2011 seniors are represented; talent develops with a lag."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Roster talent is a lagged stock built from recruiting classes; GSE team-strength priors use the same multi-year talent accumulation.",
+        "source_operator": "recruiting_talent_lags",
+        "telemetry": "4 recruiting lags + 2/3/4-yr averages"
+      }
+    },
+    {
+      "primitive_id": "home_advantage_rate",
+      "name": "Home-field win rate 64.1%",
+      "verbatim_quote": "In college football, they discovered that 64.1% of all home teams won, ranking sixth among the nineteen sports studied.",
+      "page": 26,
+      "latex": "P(\\text{home win})\\approx 0.641",
+      "symbol_and_unit_ledger": {
+        "0.641": "empirical home win fraction (dimensionless)"
+      },
+      "assumptions": [
+        "Moskowitz-Wertheim across 19 sports; in 140 seasons home teams never won fewer than road teams."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A stable empirical home-edge base rate is a prior GSE can anchor its venue adjustment to.",
+        "source_operator": "home_advantage_rate",
+        "telemetry": "home win 64.1%, 6th of 19 sports"
+      }
+    },
+    {
+      "primitive_id": "field_status_variable",
+      "name": "Field status: +1 home, 0 neutral, -1 away",
+      "verbatim_quote": "a value of 1 was assigned for all home games, 0 for neutral, and -1 for away games.",
+      "page": 26,
+      "latex": "\\text{field}\\in\\{+1,0,-1\\}",
+      "symbol_and_unit_ledger": {
+        "field": "venue code: +1 home, 0 neutral, -1 away (dimensionless)"
+      },
+      "assumptions": [
+        "Equal weight to home and away; Fair-Oster estimate the edge at 4.1-4.7 points."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A signed venue code is the same context feature GSE uses to inject home advantage into a matchup model.",
+        "source_operator": "field_status_variable",
+        "telemetry": "field in {+1,0,-1}"
+      }
+    },
+    {
+      "primitive_id": "pointdiff_outcome",
+      "name": "Point difference as outcome (richer than binary)",
+      "verbatim_quote": "The outcome variable was chosen to be the difference in point total, as it retains more",
+      "page": 26,
+      "latex": "y=\\text{points}_{\\text{team}}-\\text{points}_{\\text{opponent}}",
+      "symbol_and_unit_ledger": {
+        "y": "point differential (points)"
+      },
+      "assumptions": [
+        "Modeling the margin retains more matchup information than a binary win/loss; a sign rule later converts to win-loss."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Predicting the margin and thresholding to a winner is the same regression-then-decide pattern GSE uses for game outcomes.",
+        "source_operator": "pointdiff_outcome",
+        "telemetry": "y = point differential"
+      }
+    },
+    {
+      "primitive_id": "ridge_l2",
+      "name": "Ridge: L2 penalty shrinks but keeps all",
+      "verbatim_quote": "a penalty term is added based on the L2 norm of the regression parameters, causing shrinkage.",
+      "page": 27,
+      "latex": "\\hat\\beta=\\arg\\min_\\beta \\|y-X\\beta\\|_2^2+\\lambda\\|\\beta\\|_2^2",
+      "symbol_and_unit_ledger": {
+        "lambda": "L2 penalty strength (dimensionless)",
+        "beta": "regression coefficients"
+      },
+      "assumptions": [
+        "Ridge reduces variance from correlated predictors at the cost of bias, hoping to lower overall MSE."
+      ],
+      "breakdown_regime": "lambda->0 recovers OLS; lambda->infty shrinks all to zero",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "L2 shrinkage is the same correlated-predictor variance control GSE applies to its dense feature sets.",
+        "source_operator": "ridge_l2",
+        "telemetry": "ridge: +lambda||beta||_2^2"
+      }
+    },
+    {
+      "primitive_id": "lasso_l1_selection",
+      "name": "Lasso: L1 penalty selects variables",
+      "verbatim_quote": "it penalizes the L1 norm of the regression parameters. This penalty has the added benefit of shrinking some of the regression parameters to zero, functioning as a variable selection technique.",
+      "page": 27,
+      "latex": "\\hat\\beta=\\arg\\min_\\beta \\|y-X\\beta\\|_2^2+\\lambda\\|\\beta\\|_1",
+      "symbol_and_unit_ledger": {
+        "lambda": "L1 penalty strength (dimensionless)"
+      },
+      "assumptions": [
+        "Lasso drives some coefficients exactly to zero, performing variable selection among many uncertain predictors."
+      ],
+      "breakdown_regime": "larger lambda -> fewer non-zero coefficients; correlated predictors selected arbitrarily",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "L1 sparsity is the same feature-selection kernel GSE uses to distill a large candidate set to its signal.",
+        "source_operator": "lasso_l1_selection",
+        "telemetry": "lasso: +lambda||beta||_1, some beta=0"
+      }
+    },
+    {
+      "primitive_id": "elastic_net",
+      "name": "Elastic net blends ridge and lasso",
+      "verbatim_quote": "the elastic net tends to select correlated variables together, keeping them either in or out of the model, while lasso regression tends to select one arbitrarily.",
+      "page": 27,
+      "latex": "\\hat\\beta=\\arg\\min_\\beta \\|y-X\\beta\\|_2^2+\\lambda\\big(\\alpha\\|\\beta\\|_1+(1-\\alpha)\\|\\beta\\|_2^2\\big)",
+      "symbol_and_unit_ledger": {
+        "alpha": "mix between lasso (1) and ridge (0) (dimensionless)"
+      },
+      "assumptions": [
+        "A second tuning parameter controls the ridge-lasso mix; correlated variables enter or leave together."
+      ],
+      "breakdown_regime": "alpha=1 -> lasso; alpha=0 -> ridge",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Grouping correlated features via elastic net is the same stability fix GSE wants when its predictors are collinear.",
+        "source_operator": "elastic_net",
+        "telemetry": "elastic net: alpha L1 + (1-alpha) L2"
+      }
+    },
+    {
+      "primitive_id": "cv_tuning",
+      "name": "Repeated 10-fold CV for tuning",
+      "verbatim_quote": "with all tuning and penalty parameters chosen via repeated 10-fold cross-validation within the caret package",
+      "page": 27,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "glmnet fits ridge/lasso/elastic net; caret selects tuning via repeated 10-fold CV."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cross-validated tuning is the same hyperparameter discipline GSE uses to avoid overfitting its outcome models.",
+        "source_operator": "cv_tuning",
+        "telemetry": "repeated 10-fold CV, glmnet+caret"
+      }
+    },
+    {
+      "primitive_id": "nn_collinearity_filter",
+      "name": "Neural net collinearity filter (r>0.75)",
+      "verbatim_quote": "pairs of highly correlated predictors were identified (in this case, with r > 0.75) and, amongst the pairs, the predictors with the largest mean absolute correlation with the remaining predictors was removed.",
+      "page": 27,
+      "latex": "\\text{drop } x_j \\text{ if } \\max|r_{jk}|>0.75",
+      "symbol_and_unit_ledger": {
+        "r": "pairwise correlation (dimensionless)",
+        "0.75": "correlation threshold"
+      },
+      "assumptions": [
+        "Highly correlated pairs are pruned by removing the member with the largest mean absolute correlation to the rest."
+      ],
+      "breakdown_regime": "threshold choice affects which features survive; collinearity harms NN computation",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A correlation-threshold prune is the same collinearity guard GSE applies before feeding dense features to a learner.",
+        "source_operator": "nn_collinearity_filter",
+        "telemetry": "prune pairs r>0.75"
+      }
+    },
+    {
+      "primitive_id": "random_forest_ensemble",
+      "name": "Random forest: bootstrap + random predictors",
+      "verbatim_quote": "random forests are generated from another nonparametric algorithm that relies on bootstrapping and random sampling of predictors to build a series of decision trees, and then uses the average of the individual predictions as the overall ensemble prediction.",
+      "page": 27,
+      "latex": "\\hat y=\\frac{1}{B}\\sum_{b=1}^{B} T_b(x)",
+      "symbol_and_unit_ledger": {
+        "B": "number of trees (count)",
+        "T_b": "tree b fit on a bootstrap sample with random predictors"
+      },
+      "assumptions": [
+        "Bagging plus random predictor sampling decorrelates trees; the ensemble averages their predictions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An averaged ensemble of decorrelated trees is the same variance-reduction kernel GSE uses for robust outcome prediction.",
+        "source_operator": "random_forest_ensemble",
+        "telemetry": "RF = mean of B bootstrap trees"
+      }
+    },
+    {
+      "primitive_id": "knn_mean",
+      "name": "KNN: mean of nearest neighbors' outcomes",
+      "verbatim_quote": "uses Euclidean distances to identify which observations are nearest in proximity, and then uses the mean of the outcome for the neighbors as its prediction",
+      "page": 27,
+      "latex": "\\hat y(x)=\\frac{1}{k}\\sum_{i\\in N_k(x)} y_i",
+      "symbol_and_unit_ledger": {
+        "k": "number of neighbors (count)",
+        "N_k(x)": "k nearest training points by Euclidean distance"
+      },
+      "assumptions": [
+        "Prediction is the local mean of the k closest games; k is the only tuning parameter."
+      ],
+      "breakdown_regime": "distance metric and k dominate; curse of dimensionality with many features",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Local-neighbor averaging is the same similarity-based prediction GSE can use for matchup analogs.",
+        "source_operator": "knn_mean",
+        "telemetry": "KNN = mean of k nearest outcomes"
+      }
+    },
+    {
+      "primitive_id": "gradient_boosting",
+      "name": "Gradient boosting: loss + regularization ensemble",
+      "verbatim_quote": "This technique optimizes an objective function that is a combination of a loss function and a regularization function",
+      "page": 27,
+      "latex": "\\min \\sum_i L(y_i,\\hat y_i)+\\sum_b \\Omega(T_b)",
+      "symbol_and_unit_ledger": {
+        "L": "loss function",
+        "Omega": "tree regularization",
+        "eta": "learning rate"
+      },
+      "assumptions": [
+        "XGBoost iteratively adds weak trees that become strong together; tuned via max depth, row/col sampling, rounds, min child weight, eta."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Boosted weak learners with explicit regularization is the same additive-model kernel GSE uses for tabular sport prediction.",
+        "source_operator": "gradient_boosting",
+        "telemetry": "XGBoost: loss + regularization, weak trees"
+      }
+    },
+    {
+      "primitive_id": "bayesian_team_precision",
+      "name": "Bayesian linear model with team-specific precision",
+      "verbatim_quote": "we use a linear model to predict the outcome, but in this case allowed for team-specific precisions",
+      "page": 28,
+      "latex": "y_{ij}\\sim\\mathcal N(\\mu_{ij},\\tau_i),\\ \\mu_{ij}=\\beta_0+\\sum_p\\beta_p X_{pij},\\ \\beta_p\\sim\\mathcal N(0.001,0.001),\\ \\tau_i\\sim\\mathrm{Gamma}(1,1)",
+      "symbol_and_unit_ledger": {
+        "y_ij": "point difference for team i, game j (points)",
+        "tau_i": "team-specific precision = 1/variance (1/points^2)",
+        "beta_p": "shared regression coefficients"
+      },
+      "assumptions": [
+        "Each team gets its own precision (consistency); coefficients are shared. Team-specific coefficients were tested but inferior."
+      ],
+      "breakdown_regime": "non-informative priors; precision parameterization is WinBUGS convention",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A hierarchical model with per-team variance is the same partial-pooling kernel GSE uses to let each team have its own consistency.",
+        "source_operator": "bayesian_team_precision",
+        "telemetry": "y~N(mu,tau_i), tau_i~Gamma(1,1)"
+      }
+    },
+    {
+      "primitive_id": "precision_convention",
+      "name": "Precision = inverse variance (WinBUGS)",
+      "verbatim_quote": "WinBUGS uses precision (the inverse of variance) in the specification of a normal distribution",
+      "page": 28,
+      "latex": "\\tau=1/\\sigma^2",
+      "symbol_and_unit_ledger": {
+        "tau": "precision (1/points^2)",
+        "sigma^2": "variance (points^2)"
+      },
+      "assumptions": [
+        "The normal is parameterized by precision, not standard deviation; conventional non-informative priors are used."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Precision parameterization is a modeling convention GSE must track when porting Bayesian specs across engines.",
+        "source_operator": "precision_convention",
+        "telemetry": "tau = 1/sigma^2"
+      }
+    },
+    {
+      "primitive_id": "random_team_assignment",
+      "name": "Random team/opponent labeling to avoid bias",
+      "verbatim_quote": "The most unbiased way to address this was via random chance, and this was the approach taken for each game",
+      "page": 28,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Which team is 'team' vs 'opponent' is assigned randomly per game so the field-status effect is estimable without labeling bias."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Randomizing the reference frame removes an arbitrary labeling bias; GSE must likewise neutralize home/away framing when estimating venue effects.",
+        "source_operator": "random_team_assignment",
+        "telemetry": "team/opponent assigned by chance"
+      }
+    },
+    {
+      "primitive_id": "cupcake_endogeneity",
+      "name": "Home/away endogenous to team quality (cupcakes)",
+      "verbatim_quote": "it is common for teams to pay lesser opponents to play road games at their venues, meaning the home/away status of a game is not necessarily independent of team quality",
+      "page": 28,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Paid 'cupcake' home games mean venue is confounded with strength; random assignment plus repetition probes the sensitivity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Venue is not exogenous: strong teams buy home games against weak opponents. GSE must treat home advantage as confounded, not a clean causal lever.",
+        "source_operator": "cupcake_endogeneity",
+        "telemetry": "home/away correlated with quality"
+      }
+    },
+    {
+      "primitive_id": "fifty_repetitions_anova",
+      "name": "50 random assignments, ANOVA on RMSE",
+      "verbatim_quote": "we repeated the random assignment process a total of 50 times.",
+      "page": 28,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Tuning from the first assignment is retained; models re-fit 50 times; validation RMSEs feed ANOVA with post-hoc comparisons."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Repeating a random framing and testing separation by ANOVA is the same robustness protocol GSE uses to compare predictors fairly.",
+        "source_operator": "fifty_repetitions_anova",
+        "telemetry": "50 reps, ANOVA + post-hoc on RMSE"
+      }
+    },
+    {
+      "primitive_id": "sign_decision_rule",
+      "name": "Sign rule converts margin to win/loss",
+      "verbatim_quote": "a positive value indicated a predicted victory for the team over their opponent, and a negative value indicated the opposite",
+      "page": 28,
+      "latex": "\\hat w=\\mathbb 1[\\hat y>0]",
+      "symbol_and_unit_ledger": {
+        "y_hat": "predicted point differential (points)",
+        "w_hat": "predicted win indicator"
+      },
+      "assumptions": [
+        "A simple sign threshold turns the regression output into an intuitive win-loss prediction."
+      ],
+      "breakdown_regime": "a predicted margin near zero is a coin-flip; no probability calibration is applied",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Thresholding a predicted margin to a winner is the same decision rule GSE applies, and its near-zero fragility is a known veto.",
+        "source_operator": "sign_decision_rule",
+        "telemetry": "win if y_hat > 0"
+      }
+    },
+    {
+      "primitive_id": "field_coef_touchdown",
+      "name": "Field-status coefficient 3.6 (~touchdown swing)",
+      "verbatim_quote": "the estimated lasso regression coefficients for field status was 3.6",
+      "page": 30,
+      "latex": "\\hat\\beta_{\\text{field}}=3.6\\ \\text{points}",
+      "symbol_and_unit_ledger": {
+        "beta_field": "lasso coefficient on field status (points per unit)"
+      },
+      "assumptions": [
+        "A +1 to -1 field swing is 7.2 points, over a touchdown, after controlling for the other 25 metrics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A controlled venue coefficient of ~3.6 points quantifies home edge; GSE can use it as a sanity anchor for its own venue adjustment.",
+        "source_operator": "field_coef_touchdown",
+        "telemetry": "beta_field = 3.6 pts"
+      }
+    },
+    {
+      "primitive_id": "anova_inseparable",
+      "name": "Top four methods statistically inseparable",
+      "verbatim_quote": "An analysis of variance with Tukey's post-hoc comparisons found that lasso regression, the random forest, the Bayesian linear model, and the XGBoost model were superior to the other three methods, but were not significantly different from each other",
+      "page": 30,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Lasso, RF, Bayesian, XGBoost beat KNN/NN/ridge but are mutually inseparable (p~1); lasso has least RMSE variability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Statistical inseparability means model choice rests on secondary criteria; GSE promotes on stability and interpretability when accuracy ties.",
+        "source_operator": "anova_inseparable",
+        "telemetry": "top 4 inseparable, p~1"
+      }
+    },
+    {
+      "primitive_id": "lasso_recommendation",
+      "name": "Recommend lasso: stability + interpretability",
+      "verbatim_quote": "due to it having the lowest variability among RMSE values and top binary outcome predictive value (as well as the interpretability of model coefficients), the authors lean towards recommending the lasso as the method of choice",
+      "page": 31,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Lasso is top-ranked in only 5/50 reps (RF 16, XGBoost 15) but wins on RMSE stability, binary accuracy, and readable coefficients."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When accuracy is tied, prefer the stable, interpretable model; GSE adopts the same tie-break in favor of explainable selectors.",
+        "source_operator": "lasso_recommendation",
+        "telemetry": "lasso: low variance + interpretable"
+      }
+    },
+    {
+      "primitive_id": "limitations_honesty",
+      "name": "Honest limitations: no new method, not exhaustive",
+      "verbatim_quote": "this manuscript does not present an exhaustive search of advanced statistical methods, nor do we propose any new unique methodology.",
+      "page": 31,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Bradley-Terry state-space models would likely perform similarly; tuning not exhausted; point-diff vs binary outcome choice may change results."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The paper bounds its own claims; GSE inherits the humility that a survey of existing methods is not a novel guarantee of edge.",
+        "source_operator": "limitations_honesty",
+        "telemetry": "no new method; Bradley-Terry comparable"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cfb_forecast2020_trace",
+      "think": "The retrocausal genealogy of this paper is a deliberately modest contribution to a thin academic literature. College football is a huge business, yet public forecasting research is sparse because most strong approaches are proprietary. The lineage runs from Stefani's least-squares rankings in 1977 and 1980, through Elo's chess-born expected-win probability, to Delen's data-mining bowl predictions and Leung and Joseph's classification-by-similar-groups. South and Egros do not invent a new estimator; they combine two data sources, box scores and recruiting ratings, and run a broad survey of modern methods to see which forecasts best, validating on a held-out season. The contribution is the breadth of the comparison and the honesty of the validation, not a novel algorithm. The feature engineering is where the football reasoning lives. Every statistic is a season-long moving average computed strictly from games before the one being predicted, so there is no lookahead. The covariates are relative differences, team offense against opponent defense and vice versa, for points, yards per pass and rush attempt, total yards, turnovers, and win percentage, because a matchup is an interaction not an absolute. Talent is a lagged stock: four years of 247Sports composite recruiting classes, plus two-, three-, and four-year averages, since players have four years of eligibility and talent develops slowly. Venue is a signed field-status code, +1 home, 0 neutral, -1 away, anchored by the empirical 64.1% home win rate and Fair and Oster's 4.1 to 4.7 point estimate. The outcome is the point differential, which keeps more information than a binary win. The recursive theory of mind is most explicit in the Bayesian model. Each team is assigned its own precision tau_i, the inverse of its outcome variance, while the regression coefficients are shared. That is a belief about each team's consistency: some teams are predictable, some volatile, and the model learns a separate noise level per team rather than forcing one global variance. The penalized linear models carry a different theory of mind about the features: ridge keeps everything but shrinks, lasso decides some variables deserve zero weight, and elastic net lets correlated variables enter or leave together. The black-box methods, neural net, random forest, KNN, and XGBoost, encode the same matchup logic implicitly through ensembles and local averages. Cross-layer veto adjudication is rigorous. The team-versus-opponent label is assigned by random chance so the field-status effect is not confounded by an arbitrary reference frame, and because cupcake games make home status endogenous to team quality, the whole assignment is repeated 50 times and the validation RMSEs are compared by ANOVA with Tukey post-hoc tests. The verdict is that lasso, random forest, the Bayesian model, and XGBoost beat the other three but are statistically inseparable from each other, p near 1. The authors then veto a pure accuracy ranking: lasso is top-ranked in only 5 of 50 repetitions, yet they recommend it for its low RMSE variability, its best binary hit rate, and its interpretable coefficients. A controlled field-status coefficient of 3.6 points, a full touchdown swing home versus away, survives all 26 selected metrics. The implementation invariants are exactly what GSE should lift. No-lookahead moving averages, offense-versus-defense differencing, lagged recruiting talent, a signed venue code, and a temporal train/test split, 2011 to 2014 versus 2015, form a clean predictive protocol. The outcome is a point differential, and a simple sign rule converts it to a win-loss call; there are zero sportsbook lines, spreads, totals, or implied odds anywhere, the target is the actual margin. The lasso retains 26 of 83 candidate predictors, and the signal concentrates in team-strength difference, location, and opponent offensive and defensive strength, with coefficient signs matching football intuition. For GSE this is a reusable outcome-regression spine and a feature ontology, not a betting signal. The parameter ledger and the honest limitations close the account. 4,339 FBS games, 83 candidate predictors, 26 lasso-retained, RMSE around 17 points, and a best win-loss accuracy of 75% for lasso on the 2015 test set are the headline numbers. The authors concede they did not exhaust the method space or the tuning grid, that Bradley-Terry state-space models would likely perform similarly, and that choosing point differential over a binary outcome may have changed the ranking. The invariant for GSE is to carry the no-lookahead relative features, the per-team variance hierarchy, and the stability-plus-interpretability tie-break, while remembering that a survey of existing methods, however careful, is not itself a guarantee of edge. The variable-importance analysis converges across paradigms, which is itself a veto on overfitting. Although the lasso retains 26 variables, the model's efficacy is driven by only a few: the difference in team strength, the location of the game, and overall opponent offensive and defensive strength. The coefficient signs match football intuition, more team offensive yards or more opponent yards allowed raises the expected margin, while more team yards allowed or more opponent yards per play lowers it. The black-box methods, which expose no coefficient signs, still rank the same variables most important through caret's varImp: win-percentage difference, both teams' average point differential, and location. Table 2 puts lasso and random forest at RMSE 17.00, the Bayesian and boosting models at 17.02, the neural net at 17.37, and KNN at 17.73, with lasso the smallest standard deviation at 0.08. That cross-method agreement on what matters is the durable football knowledge, independent of which learner is chosen.",
+      "retrocausal_genealogy": "The paper sits in a thin public literature because strong college-football forecasts are proprietary. It traces Stefani's 1977/1980 least-squares rankings, Elo's expected-win probability, Delen's data-mining bowl predictions, and Leung-Joseph's similar-group classification, then positions its own contribution as a broad survey rather than a new estimator: combine box scores and recruiting data, run eight modern methods, and validate on a held-out 2015 season. Every later choice, the no-lookahead moving averages, the relative-difference features, and the laged recruiting talent, inherits from the goal of a fair, comprehensive, out-of-sample comparison rather than a novel algorithm.",
+      "theory_of_mind": "The model holds explicit beliefs about teams and features. The Bayesian specification gives each team its own precision tau_i, a learned belief about that team's consistency, while sharing regression coefficients across teams. The penalized regressions hold beliefs about which features deserve weight: ridge shrinks but keeps all, lasso zeroes some, elastic net groups correlated ones. The black-box ensembles encode the same matchup reasoning implicitly. The random team/opponent labeling is a theory-of-mind guard against the analyst's own reference-frame bias, repeated 50 times because cupcake scheduling makes venue endogenous to quality.",
+      "cross_layer_veto": "Adjudication is statistical and explicit. Random team/opponent assignment removes labeling bias; 50 repetitions feed an ANOVA with Tukey post-hoc tests. Lasso, random forest, Bayesian, and XGBoost beat KNN, neural net, and ridge but are mutually inseparable (p~1), so a pure accuracy ranking is vetoed. Lasso is recommended on low RMSE variability, best binary accuracy, and interpretability despite being top-ranked in only 5/50 reps. The field-status coefficient of 3.6 points survives all 26 metrics, and the authors honestly bound their claims: no new method, tuning not exhausted, Bradley-Terry state-space models likely comparable."
+    }
+  ],
+  "universal_lens": "Game outcomes are forecast from no-lookahead, matchup-relative moving averages plus lagged recruiting talent and a signed venue code, by a held-out bake-off of penalized linear, ensemble, and hierarchical Bayesian models, with model choice adjudicated by ANOVA and broken toward stability and interpretability when accuracy ties.",
+  "gsi_mapping": "GSI treats the point differential as a regression target built from offense-vs-defense differences of strictly-prior moving averages, 4-year recruiting composite lags, and field status in {+1,0,-1}; a Bayesian hierarchy gives each team its own precision, and a sign rule converts the predicted margin to a win-loss call.",
+  "gse_mapping": "GSE lifts the no-lookahead relative-feature protocol, the per-team variance hierarchy, and the stability-plus-interpretability tie-break; the lasso's 26-of-83 selection and 3.6-point controlled venue coefficient anchor its outcome spine and feature ontology, with all targets being actual margins and results, never sportsbook lines."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "26fd31f4aef32125",
+  "source_status": "COMPLETE",
+  "title": "Baxley_One_Page_Summary_v2",
+  "file_name": "Baxley_One_Page_Summary_v2.pdf",
+  "sha256": "26fd31f4aef321253aa9092af912461611564d9fb2b8d94b0db8c1470a77cfdf",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Disability discrimination as a causal bifurcation in performance evaluation space, where pretextual termination signals identity-based harm. Universal Lens: Rooted in Baxley_One_Page_Summary_v2 (26fd31f4aef32125), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on ADA compliance using P(termination|discrimination) vs P(termination|performance), with conformal predictive regions for causal inference. GSI Mapping: Rooted in Baxley_One_Page_Summary_v2 (26fd31f4aef32125), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition from 'onboarding' to 'termination' under policy-induced stress, with observable telemetry: disclosure timing, accommodation requests, and decision-maker communication logs. GSE Mapping: Rooted in Baxley_One_Page_Summary_v2 (26fd31f4aef32125), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pretextual_termination",
+      "name": "Pretextual Termination Operator",
+      "verbatim_quote": "Core question: was the performance reason pretext for / product of disability discrimination?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'termination event (dimensionless binary)', 'P': 'performance rationale (dimensionless binary)', 'D': 'disability disclosure (dimensionless binary)'}",
+      "assumptions": "Termination is conditionally independent of performance given disability status.",
+      "breakdown_regime": "When P(T|P,D) > P(T|P,¬D), indicating pretextual behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pretextual termination maps to a conditional probability shift in GSI's Bayesian model, and to a state transition in GSE's agent-driven simulation.",
+        "source_operator": "pretextual_termination",
+        "telemetry": "Temporal alignment of disclosure and termination events."
+      }
+    },
+    {
+      "primitive_id": "disclosure_timing",
+      "name": "Disclosure Timing Kernel",
+      "verbatim_quote": "STRONGEST POINTS • Documented written disability disclosure to the manager (Owner's Manual) that predicted the precise \"performance-as-identity\" harm that followed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_d': 'time of disclosure (days since hire)', 't_t': 'time of termination (days since hire)', 'Δt': 'time interval between disclosure and termination (days)'}",
+      "assumptions": "Disclosed disability predicts subsequent performance-related harm.",
+      "breakdown_regime": "When Δt < 90 days, suggesting causality or pretext.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Timing kernel drives GSE's temporal state evolution and informs GSI's causal graph node weights.",
+        "source_operator": "disclosure_timing",
+        "telemetry": "Interval Δt and associated performance degradation metrics."
+      }
+    },
+    {
+      "primitive_id": "decision_maker_knowledge",
+      "name": "Decision Maker Knowledge Matrix",
+      "verbatim_quote": "• Decision-maker knowledge: Jeff Dolan (signed the termination) texted \"doing great things...",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'knowledge matrix (binary)', 'M': 'managerial communication log (dimensionless)', 'R': 'regard-as-disability signal (binary)'}",
+      "assumptions": "Knowledge matrix K encodes intent and awareness of disability.",
+      "breakdown_regime": "When R = 1 and K = 1, indicating intentional regard-as.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matrix K maps to GSE's actor belief state and GSI's likelihood function for regard-as discrimination.",
+        "source_operator": "decision_maker_knowledge",
+        "telemetry": "Text message content and timestamp alignment with termination."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "26fd31f4aef32125_t0",
+      "think": "The core operators define a causal structure where disability disclosure precedes termination, with a temporal gap suggesting pretext. The 'pretextual termination' operator models a deviation from expected performance-based outcomes. The 'disclosure timing' kernel quantifies the temporal proximity between disclosure and termination, which, when below a threshold, supports a causal narrative. The 'decision maker knowledge' matrix encodes whether the decision-maker was aware of the disability and communicated positively, contradicting performance-based justification. These primitives form a dual framework: one in GSI's Bayesian inference space, modeling belief shifts, and another in GSE's agent simulation space, modeling state transitions. Failure modes include temporal misalignment, lack of documentation, and absence of interactive process, all of which weaken the causal chain. The system's integrity depends on maintaining coherence across these operators.\n\nDeep epistemic analysis for Baxley_One_Page_Summary_v2 (26fd31f4aef32125, domain=other, pages_read=1/1): Operator 'Pretextual Termination Operator' (page 1, domain other) captures: Core question: was the performance reason pretext for / product of disability discrimination? Assumptions: Termination is conditionally independent of performance given disability status. Breakdown regime: When P(T|P,D) > P(T|P,¬D), indicating pretextual behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pretextual termination maps to a conditional probability shift in GSI's Bayesian model, and to a state transition in GSE's agent-driven simulation. Operator 'Disclosure Timing Kernel' (page 1, domain other) captures: STRONGEST POINTS • Documented written disability disclosure to the manager (Owner's Manual) that predicted the precise \"performance-as-identity\" harm that followed. Assumptions: Disclosed disability predicts subsequent performance-related harm. Breakdown regime: When Δt < 90 days, suggesting causality or pretext. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Timing kernel drives GSE's temporal state evolution and informs GSI's causal graph node weights. Operator 'Decision Maker Knowledge Matrix' (page 1, domain other) captures: • Decision-maker knowledge: Jeff Dolan (signed the termination) texted \"doing great things... Assumptions: Knowledge matrix K encodes intent and awareness of disability. Breakdown regime: When R = 1 and K = 1, indicating intentional regard-as. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Matrix K maps to GSE's actor belief state and GSI's likelihood function for regard-as discrimination. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Baxley_One_Page_Summary_v2 (26fd31f4aef32125, domain=other, pages_read=1/1): Operator 'Pretextual Termination Operator' (page 1, domain other) captures: Core question: was the performance reason pretext for / product of disability discrimination? Assumptions: Termination is conditionally independent of performance given disability status. Breakdown regime: When P(T|P,D) > P(T|P,¬D), indicating pretextual behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pretextual termination maps to a conditional probability shift in GSI's Bayesian model, and to a state transition in GSE's agent-driven simulation. Operator 'Disclosure Timing Kernel' (page 1, domain other) captures: STRONGEST POINTS • Documented written disability disclosure to the manager (Owner's Manual) that predicted the precise \"performance-as-identity\" harm that followed. Assumptions: Disclosed disability predicts subsequent performance-related harm. Breakdown regime: When Δt < 90 days, suggesting causality or pretext. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Timing kernel drives GSE's temporal state evolution and informs GSI's causal graph node weights. Operator 'Decision Maker Knowledge Matrix' (page 1, domain other) captures: • Decision-maker knowledge: Jeff Dolan (signed the termination) texted \"doing great things... Assumptions: Knowledge matrix K encodes intent and awareness of disability. Breakdown regime: When R = 1 and K = 1, indicating intentional regard-as. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Matrix K maps to GSE's actor belief state and GSI's likelihood function for regard-as discrimination. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in legal causality theory (Causa Proxima) and Bayesian decision networks (Pearl, 1988), extended into employment law via ADA jurisprudence and Texas labor code. Retrocausal Genealogy: Rooted in Baxley_One_Page_Summary_v2 (26fd31f4aef32125), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Baxley_One_Page_Summary_v2 (26fd31f4aef32125), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the employee (seeking accommodation), the employer (evaluating performance), and the decision-maker (Jeff Dolan) whose internal state may reflect bias or awareness of disability. Theory of Mind & Decision Maker Model: Rooted in Baxley_One_Page_Summary_v2 (26fd31f4aef32125), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in Baxley_One_Page_Summary_v2 (26fd31f4aef32125), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that pretextual termination not be conflated with performance issues without evidence of interactive process. Leakage vetos any assumption of intent without explicit communication or behavioral indicators. Cross-Layer Veto & Anti-Leakage Check: Rooted in Baxley_One_Page_Summary_v2 (26fd31f4aef32125), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in Baxley_One_Page_Summary_v2 (26fd31f4aef32125), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

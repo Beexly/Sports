@@ -1,0 +1,78 @@
+{
+  "book_id": "19b82aa9242e3aac",
+  "source_status": "COMPLETE",
+  "title": "2512.14121v2",
+  "file_name": "2512.14121v2.pdf",
+  "sha256": "19b82aa9242e3aacc4b18a42f4ef83afcb14524253e48fddc95618e733448185",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "motion_dtw",
+      "name": "MotionDTW",
+      "verbatim_quote": "First, given a set of high-quality target models, we introduce MotionDTW, a twostage time series alignment algorithm designed for accurate keyframe extraction from skeleton-based motion sequences.",
+      "page": 1,
+      "latex": "\\min_{T} \\sum_{t=1}^{T} d(x_t, y_{\\pi(t)}) + \\Omega(\\pi)",
+      "symbol_and_unit_ledger": "{'d(x_t, y_{\\\\pi(t)}):': 'Euclidean distance between aligned skeleton frames', '\\\\Omega(\\\\pi):': 'Monotonicity penalty term', 'T:': 'Alignment length', '\\\\pi:': 'Temporal warping path'}",
+      "assumptions": "Assumes smooth skeleton trajectories and monotonic temporal correspondence.",
+      "breakdown_regime": "Degenerates when noise exceeds signal-to-noise ratio threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction via dynamic time warping as a non-parametric CDF transform.",
+        "source_operator": "motion_dtw",
+        "telemetry": "Temporal error reduction relative to baseline DTW, measured in frames."
+      }
+    },
+    {
+      "primitive_id": "kismam",
+      "name": "KISMAM",
+      "verbatim_quote": "Subsequently, we design a Knowledge-based Interpretable Sports Motion Assessment Model (KISMAM) to obtain a set of interpretable assessment metrics (e.g., insufficient extension) by contrasting the keyframes with the target models.",
+      "page": 1,
+      "latex": "M_i = f_k(K_i - T_i; \\theta), \\quad i = 1...N",
+      "symbol_and_unit_ledger": "{'M_i:': 'Interpretable assessment metric', 'f_k:': 'Knowledge-guided comparison function', 'K_i:': 'Keyframe feature vector', 'T_i:': 'Target model feature vector', '\\\\theta:': 'Model parameters', 'N:': 'Total number of keypoints'}",
+      "assumptions": "Relies on expert-defined target models and differentiable distance metrics.",
+      "breakdown_regime": "Breaks down when target models are inconsistent across skill levels.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Embeds into GSE state-transition logic as a reward shaping kernel for reinforcement learning.",
+        "source_operator": "kismam",
+        "telemetry": "Intersection over Union (IoU) score between predicted and ground-truth diagnostic regions."
+      }
+    },
+    {
+      "primitive_id": "sportsrag",
+      "name": "SportsRAG",
+      "verbatim_quote": "Finally, we propose SportsRAG, a RAG-based training guidance model built upon Qwen3.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes availability of a comprehensive 6B-token knowledge base.",
+      "breakdown_regime": "Fails when retrieved context is semantically distant from query.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Bayesian updating framework where retrieved evidence updates prior distributions over training strategies.",
+        "source_operator": "sportsrag",
+        "telemetry": "Professional training guidance quality assessed via human expert agreement rate."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "19b82aa9242e3aac_t0",
+      "think": "The core challenge is aligning noisy biomechanical time series with idealized reference models. MotionDTW addresses this via a two-stage warping cost that penalizes non-monotonicity, yielding stable keyframe correspondences. KISMAM then quantifies deviations from targets using differentiable functions, producing interpretable diagnostics. SportsRAG integrates these metrics into natural language guidance, closing the loop. Failure occurs when target models are absent or when temporal jitter overwhelms the alignment cost. These primitives form a compositional pipeline: alignment → assessment → guidance, enabling automated coaching.\n\nDeep epistemic analysis for 2512.14121v2 (19b82aa9242e3aac, domain=other, pages_read=15/15): Operator 'MotionDTW' (page 1, domain other) captures: First, given a set of high-quality target models, we introduce MotionDTW, a twostage time series alignment algorithm designed for accurate keyframe extraction from skeleton-based motion sequences. Assumptions: Assumes smooth skeleton trajectories and monotonic temporal correspondence. Breakdown regime: Degenerates when noise exceeds signal-to-noise ratio threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction via dynamic time warping as a non-parametric CDF transform. Operator 'KISMAM' (page 1, domain other) captures: Subsequently, we design a Knowledge-based Interpretable Sports Motion Assessment Model (KISMAM) to obtain a set of interpretable assessment metrics (e.g., insufficient extension) by contrasting the keyframes with the target models. Assumptions: Relies on expert-defined target models and differentiable distance metrics. Breakdown regime: Breaks down when target models are inconsistent across skill levels. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Embeds into GSE state-transition logic as a reward shaping kernel for reinforcement learning. Operator 'SportsRAG' (page 1, domain other) captures: Finally, we propose SportsRAG, a RAG-based training guidance model built upon Qwen3. Assumptions: Assumes availability of a comprehensive 6B-token knowledge base. Breakdown regime: Fails when retrieved context is semantically distant from query. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Bayesian updating framework where retrieved evidence updates prior distributions over training strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2512.14121v2 (19b82aa9242e3aac, domain=other, pages_read=15/15): Operator 'MotionDTW' (page 1, domain other) captures: First, given a set of high-quality target models, we introduce MotionDTW, a twostage time series alignment algorithm designed for accurate keyframe extraction from skeleton-based motion sequences. Assumptions: Assumes smooth skeleton trajectories and monotonic temporal correspondence. Breakdown regime: Degenerates when noise exceeds signal-to-noise ratio threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction via dynamic time warping as a non-parametric CDF transform. Operator 'KISMAM' (page 1, domain other) captures: Subsequently, we design a Knowledge-based Interpretable Sports Motion Assessment Model (KISMAM) to obtain a set of interpretable assessment metrics (e.g., insufficient extension) by contrasting the keyframes with the target models. Assumptions: Relies on expert-defined target models and differentiable distance metrics. Breakdown regime: Breaks down when target models are inconsistent across skill levels. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Embeds into GSE state-transition logic as a reward shaping kernel for reinforcement learning. Operator 'SportsRAG' (page 1, domain other) captures: Finally, we propose SportsRAG, a RAG-based training guidance model built upon Qwen3. Assumptions: Assumes availability of a comprehensive 6B-token knowledge base. Breakdown regime: Fails when retrieved context is semantically distant from query. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Bayesian updating framework where retrieved evidence updates prior distributions over training strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Dynamic Time Warping (Sakoe-Chiba, 1978) for speech recognition, extended by Manifold Alignment (Goldberger et al., 2004) and later adapted for action recognition. The knowledge-guided assessment borrows from metric learning in computer vision, while Retrieval-Augmented Generation originates from RNN-based seq2seq models (Sutskever et al., 2014). Retrocausal Genealogy: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Coaches seek actionable insights; athletes need clear correction steps. Our system models their mental models by translating complex biomechanics into intuitive corrective advice, accounting for potential over-reliance on automation. Theory of Mind & Decision Maker Model: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires independent feature spaces across primitives; leakage would occur if KISMAM directly consumed SportsRAG's output without re-querying the knowledge base, undermining interpretability. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2512.14121v2 (19b82aa9242e3aac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

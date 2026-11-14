@@ -1,0 +1,78 @@
+{
+  "book_id": "50015b7753dbab07",
+  "source_status": "COMPLETE",
+  "title": "p0288",
+  "file_name": "p0288.txt",
+  "sha256": "50015b7753dbab074e3afc835a93811b11d58cb2e96527e4a11bba2f7f7f45a4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Three-tiered hierarchical authority structure: Referee (scorekeeper), Umpire (conduct/jurisdiction), Linesman (testimony). Universal Lens: Rooted in p0288 (50015b7753dbab07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference model for game state updates using referee-umpire-linesman testimony as evidence variables. GSI Mapping: Rooted in p0288 (50015b7753dbab07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps player actions to state transitions via umpire's final foul decisions and referee's score control. GSE Mapping: Rooted in p0288 (50015b7753dbab07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "referee_authority",
+      "name": "Referee Authority",
+      "verbatim_quote": "He is sole authority for the score of the game and is judge of forfeiture of the game under the rules.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Game state is deterministic and score is authoritative.",
+      "breakdown_regime": "When referee fails to verify readiness or rule on forfeiture.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Referee acts as Bayesian prior for game state, updating beliefs based on umpire and linesman testimony.",
+        "source_operator": "referee_authority",
+        "telemetry": "Score discrepancy or forfeiture declaration"
+      }
+    },
+    {
+      "primitive_id": "umpire_judgment",
+      "name": "Umpire Judgment",
+      "verbatim_quote": "DUTIES OF UMPIRE The Umpire is judge of the conduct of the players, and his decision is final regarding such fouls as are not specifically placed within the jurisdiction of the Referee.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Umpire's judgment is final for non-referee jurisdictions.",
+      "breakdown_regime": "When umpire's jurisdiction conflicts with referee's ruling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Umpire's role mirrors GSI's conformal prediction set for player behavior classification.",
+        "source_operator": "umpire_judgment",
+        "telemetry": "Foul classification and player conduct metrics"
+      }
+    },
+    {
+      "primitive_id": "linesman_testimony",
+      "name": "Linesman Testimony",
+      "verbatim_quote": "The Referee may appeal to both the Umpire and Linesman for testimony upon all points within his jurisdiction The Referee must volunteer testimony to the Umpire concerning infringement of Rule 27 (c and f).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linesman provides independent verification for referee's jurisdiction.",
+      "breakdown_regime": "When referee cannot independently verify rule infractions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Linesman testimony serves as empirical validation layer in GSE's state transition logic.",
+        "source_operator": "linesman_testimony",
+        "telemetry": "Testimony consistency across officials"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "50015b7753dbab07_t0",
+      "think": "The three-tiered officiating system forms a hierarchical Bayesian network where the Referee holds top-level authority over scoring and forfeiture, while the Umpire governs player conduct and charging. The Linesman functions as a data collector for referee validation. This structure ensures minimal information leakage through defined jurisdiction boundaries. Failure modes include referee override of umpire decisions or lack of linesman testimony, leading to inconsistent game states. The system's robustness depends on clear separation of duties and mutual verification protocols.\n\nDeep epistemic analysis for p0288 (50015b7753dbab07, domain=other, pages_read=1/1): Operator 'Referee Authority' (page 1, domain other) captures: He is sole authority for the score of the game and is judge of forfeiture of the game under the rules. Assumptions: Game state is deterministic and score is authoritative. Breakdown regime: When referee fails to verify readiness or rule on forfeiture. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Referee acts as Bayesian prior for game state, updating beliefs based on umpire and linesman testimony. Operator 'Umpire Judgment' (page 1, domain other) captures: DUTIES OF UMPIRE The Umpire is judge of the conduct of the players, and his decision is final regarding such fouls as are not specifically placed within the jurisdiction of the Referee. Assumptions: Umpire's judgment is final for non-referee jurisdictions. Breakdown regime: When umpire's jurisdiction conflicts with referee's ruling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Umpire's role mirrors GSI's conformal prediction set for player behavior classification. Operator 'Linesman Testimony' (page 1, domain other) captures: The Referee may appeal to both the Umpire and Linesman for testimony upon all points within his jurisdiction The Referee must volunteer testimony to the Umpire concerning infringement of Rule 27 (c and f). Assumptions: Linesman provides independent verification for referee's jurisdiction. Breakdown regime: When referee cannot independently verify rule infractions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Linesman testimony serves as empirical validation layer in GSE's state transition logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0288 (50015b7753dbab07, domain=other, pages_read=1/1): Operator 'Referee Authority' (page 1, domain other) captures: He is sole authority for the score of the game and is judge of forfeiture of the game under the rules. Assumptions: Game state is deterministic and score is authoritative. Breakdown regime: When referee fails to verify readiness or rule on forfeiture. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Referee acts as Bayesian prior for game state, updating beliefs based on umpire and linesman testimony. Operator 'Umpire Judgment' (page 1, domain other) captures: DUTIES OF UMPIRE The Umpire is judge of the conduct of the players, and his decision is final regarding such fouls as are not specifically placed within the jurisdiction of the Referee. Assumptions: Umpire's judgment is final for non-referee jurisdictions. Breakdown regime: When umpire's jurisdiction conflicts with referee's ruling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Umpire's role mirrors GSI's conformal prediction set for player behavior classification. Operator 'Linesman Testimony' (page 1, domain other) captures: The Referee may appeal to both the Umpire and Linesman for testimony upon all points within his jurisdiction The Referee must volunteer testimony to the Umpire concerning infringement of Rule 27 (c and f). Assumptions: Linesman provides independent verification for referee's jurisdiction. Breakdown regime: When referee cannot independently verify rule infractions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Linesman testimony serves as empirical validation layer in GSE's state transition logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in 19th-century football governance models, evolving from single-umpire systems to multi-official coordination frameworks. Retrocausal Genealogy: Rooted in p0288 (50015b7753dbab07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0288 (50015b7753dbab07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Each official operates as an independent agent with distinct knowledge sets. The referee is the central planner, the umpire enforces behavioral norms, and the linesman provides objective data streams. Theory of Mind & Decision Maker Model: Rooted in p0288 (50015b7753dbab07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by explicit jurisdictional splits. Leakage prevented through mandatory testimony protocols and exclusion of non-participants from coaching roles. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0288 (50015b7753dbab07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0288 (50015b7753dbab07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

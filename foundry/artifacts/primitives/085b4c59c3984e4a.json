@@ -1,0 +1,78 @@
+{
+  "book_id": "085b4c59c3984e4a",
+  "source_status": "COMPLETE",
+  "title": "1366-kelly-criterion-utility-function-stochastic-binary-games",
+  "file_name": "1366-kelly-criterion-utility-function-stochastic-binary-games.md",
+  "sha256": "085b4c59c3984e4a4efce2d69b94921fbfb46168855b315085470a99018839ea",
+  "primary_domain": "math",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The Kelly criterion reformulated via utility function U(F,p) = p·log(1+F) + q·log(1-F) partitions bet fractions into submartingale (growth) and supermartingale (decay) regimes via zero-crossing F*; variance estimates and fractional Kelly offer risk-adjusted sizing.",
+  "gsi_mapping": "GSI employs conformal predictive distributions to map binary game utilities into probabilistic edge metrics, using entropy gap g_i = log(2) - H(p,q) as a signal-to-noise proxy for information-theoretic edge in betting decisions.",
+  "gse_mapping": "GSE applies the F* boundary as a hard constraint on bet sizing, flagging stakes exceeding F* as supermartingale; uses Doob drawdown bounds and variance approximations to enforce bankroll risk caps and dynamic fractional Kelly adjustments.",
+  "primitives": [
+    {
+      "primitive_id": "kelly_utility_partition",
+      "name": "Kelly Utility Partition",
+      "verbatim_quote": "- Sign analysis of U via the zero-crossing F* defined by U(F*,p) = 0 (eq.",
+      "page": 1,
+      "latex": "U(F,p) = p \\cdot \\log(1+F) + q \\cdot \\log(1-F)",
+      "symbol_and_unit_ledger": "{'F': 'bet fraction, dimensionless', 'p': 'probability of win, dimensionless', 'q': 'probability of loss, dimensionless'}",
+      "assumptions": "Binary Bernoulli trials with 1:1 payoff, fixed F across trials, known p",
+      "breakdown_regime": "F* = p - q separates submartingale (F < F*) from supermartingale (F > F*)",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Utility function U(F,p) maps to GSI's entropy gap g_i = log(2) - H(p,q) for edge ranking",
+        "source_operator": "kelly_utility_partition",
+        "telemetry": "Zero-crossing F* as a regime classifier for bet sizing"
+      }
+    },
+    {
+      "primitive_id": "variance_growth_estimate",
+      "name": "Variance Growth Estimate",
+      "verbatim_quote": "- First-order variance expansion via moment generating functions of the binomial (Sec.",
+      "page": 1,
+      "latex": "\\text{VAR}(W(N)) \\approx 2 \\cdot |W(0)|^2 \\cdot N \\cdot p(1-p) \\cdot F^2",
+      "symbol_and_unit_ledger": "{'W(N)': 'wealth after N trials, currency', 'N': 'number of trials, integer', 'p': 'win probability, dimensionless', 'F': 'bet fraction, dimensionless'}",
+      "assumptions": "Small edge p ≈ 0.51–0.52, iid Bernoulli, linear variance approximation valid",
+      "breakdown_regime": "VAR grows quadratically with F, limiting large bet sizes",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Variance estimate informs GSE's fractional Kelly scaling and drawdown risk control",
+        "source_operator": "variance_growth_estimate",
+        "telemetry": "VAR(W(N)) as volatility proxy for risk-adjusted sizing"
+      }
+    },
+    {
+      "primitive_id": "fractional_kelly_adjustment",
+      "name": "Fractional Kelly Adjustment",
+      "verbatim_quote": "Equations & assumptions - **Kelly fraction:** F_K = |p - q| = 2p - 1 (Thm 3.4, eqs.",
+      "page": 1,
+      "latex": "\\bar{F}_K = f \\cdot F_K, \\quad F_K = 2p - 1",
+      "symbol_and_unit_ledger": "{'f': 'fractional factor, dimensionless', 'F_K': 'Kelly fraction, dimensionless', 'p': 'win probability, dimensionless'}",
+      "assumptions": "Fixed p, 1:1 payoff, no memory in trials",
+      "breakdown_regime": "f ∈ [1/2,1) reduces exposure to mitigate overfitting and volatility",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Fractional Kelly provides GSE with adaptive sizing that reduces drawdown risk while preserving growth",
+        "source_operator": "fractional_kelly_adjustment",
+        "telemetry": "f·F_K as dynamic bet size multiplier"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "085b4c59c3984e4a_t0",
+      "think": "The Kelly criterion is derived from maximizing expected logarithmic utility, U(F,p) = p·log(1+F) + q·log(1-F). This utility function defines a zero-crossing F* such that U(F*,p) = 0, separating submartingale (growth) and supermartingale (decay) regimes. The sign of U(F,p) determines whether a bet fraction leads to average wealth growth or decay. The variance estimate VAR(W(N)) ≈ 2·|W(0)|²·N·p(1-p)·F² shows how risk scales with bet size, enabling risk-adjusted sizing. Fractional Kelly F̄_K = f·F_K introduces a safety margin, reducing exposure when edge is uncertain. These primitives form a coherent framework for sizing and regime classification in stochastic binary games.\n\nDeep epistemic analysis for 1366-kelly-criterion-utility-function-stochastic-binary-games (085b4c59c3984e4a, domain=math, pages_read=3/3): Operator 'Kelly Utility Partition' (page 1, domain math) captures: - Sign analysis of U via the zero-crossing F* defined by U(F*,p) = 0 (eq. Assumptions: Binary Bernoulli trials with 1:1 payoff, fixed F across trials, known p Breakdown regime: F* = p - q separates submartingale (F < F*) from supermartingale (F > F*) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Utility function U(F,p) maps to GSI's entropy gap g_i = log(2) - H(p,q) for edge ranking Operator 'Variance Growth Estimate' (page 1, domain math) captures: - First-order variance expansion via moment generating functions of the binomial (Sec. Assumptions: Small edge p ≈ 0.51–0.52, iid Bernoulli, linear variance approximation valid Breakdown regime: VAR grows quadratically with F, limiting large bet sizes Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Variance estimate informs GSE's fractional Kelly scaling and drawdown risk control Operator 'Fractional Kelly Adjustment' (page 1, domain math) captures: Equations & assumptions - **Kelly fraction:** F_K = |p - q| = 2p - 1 (Thm 3.4, eqs. Assumptions: Fixed p, 1:1 payoff, no memory in trials Breakdown regime: f ∈ [1/2,1) reduces exposure to mitigate overfitting and volatility Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Fractional Kelly provides GSE with adaptive sizing that reduces drawdown risk while preserving growth Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1366-kelly-criterion-utility-function-stochastic-binary-games (085b4c59c3984e4a, domain=math, pages_read=3/3): Operator 'Kelly Utility Partition' (page 1, domain math) captures: - Sign analysis of U via the zero-crossing F* defined by U(F*,p) = 0 (eq. Assumptions: Binary Bernoulli trials with 1:1 payoff, fixed F across trials, known p Breakdown regime: F* = p - q separates submartingale (F < F*) from supermartingale (F > F*) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Utility function U(F,p) maps to GSI's entropy gap g_i = log(2) - H(p,q) for edge ranking Operator 'Variance Growth Estimate' (page 1, domain math) captures: - First-order variance expansion via moment generating functions of the binomial (Sec. Assumptions: Small edge p ≈ 0.51–0.52, iid Bernoulli, linear variance approximation valid Breakdown regime: VAR grows quadratically with F, limiting large bet sizes Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Variance estimate informs GSE's fractional Kelly scaling and drawdown risk control Operator 'Fractional Kelly Adjustment' (page 1, domain math) captures: Equations & assumptions - **Kelly fraction:** F_K = |p - q| = 2p - 1 (Thm 3.4, eqs. Assumptions: Fixed p, 1:1 payoff, no memory in trials Breakdown regime: f ∈ [1/2,1) reduces exposure to mitigate overfitting and volatility Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Fractional Kelly provides GSE with adaptive sizing that reduces drawdown risk while preserving growth Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Originating from Shannon's information theory and Kelly's original work on optimal growth, this formulation extends to stochastic processes and martingale theory, particularly through Doob’s decomposition and Jensen’s inequality. Retrocausal Genealogy: Rooted in 1366-kelly-criterion-utility-function-stochastic-binary-games (085b4c59c3984e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1366-kelly-criterion-utility-function-stochastic-binary-games (085b4c59c3984e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may have different beliefs about p, leading to divergent F* boundaries. A conservative agent might use fractional Kelly, while an aggressive one may approach F_K directly, risking supermartingale outcomes. Theory of Mind & Decision Maker Model: Rooted in 1366-kelly-criterion-utility-function-stochastic-binary-games (085b4c59c3984e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If F > F*, the system flags a supermartingale condition and halts the bet. If variance exceeds thresholds, fractional Kelly is enforced. If entropy gap g_i is below a threshold, the pick is deprioritized. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1366-kelly-criterion-utility-function-stochastic-binary-games (085b4c59c3984e4a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "6e6075a35bc2768d",
+  "source_status": "COMPLETE",
+  "title": "p0112",
+  "file_name": "p0112.txt",
+  "sha256": "6e6075a35bc2768d996d0e38cc525702e69f681b2c412e6b15ae0ed37f7f1f20",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "hurdling_definition",
+      "name": "Hurdling Operator",
+      "verbatim_quote": "Hurdling, as used in the rules, applies only to the man carrying the ball.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) Only the ball carrier can perform a legal hurdle; (2) The defender must be upright; (3) The action occurs within defined spatial zones.",
+      "breakdown_regime": "Singularity at simultaneous airborne contact without clear trajectory.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction regions for spatial collision events.",
+        "source_operator": "hurdling_definition",
+        "telemetry": "Observed airborne trajectories and ground reaction forces."
+      }
+    },
+    {
+      "primitive_id": "down_detection",
+      "name": "Down State Transition",
+      "verbatim_quote": "A Down occurs when the Referee blows his whistle or declares the ball dead.",
+      "page": 1,
+      "latex": "\\delta_{\\text{down}}(t) = \\mathbb{I}_{\\{\\text{Referee}(t)\\}}",
+      "symbol_and_unit_ledger": "{'\\\\mathbb{I}: \\\\{0,1\\\\}': 'Indicator function'}",
+      "assumptions": "(1) The referee's signal is instantaneous; (2) The ball immediately loses momentum upon signal.",
+      "breakdown_regime": "Temporal overlap between whistle and physical ball deceleration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as a boundary condition for GSE Markov decision processes.",
+        "source_operator": "down_detection",
+        "telemetry": "Audio latency of whistle to ball velocity drop."
+      }
+    },
+    {
+      "primitive_id": "ball_dead_state",
+      "name": "Ball Death Predicate",
+      "verbatim_quote": "The Ball is Dead (and no play can be made with it except according to rule): When the Referee blows his whistle or declares that a down, fair catch, touchdown, touchback, safety or goal has been made.",
+      "page": 1,
+      "latex": "B_{\\text{dead}} \\iff (\\exists t : \\text{Referee}(t)) \\lor (\\text{Out-of-Bounds}) \\lor (\\text{Hold}) \\lor (\\text{Hurdling})",
+      "symbol_and_unit_ledger": "{'B_{\\\\text{dead}}: \\\\{0,1\\\\}': 'Binary dead-ball indicator'}",
+      "assumptions": "(1) Dead-ball states are mutually exclusive; (2) The referee's declaration is definitive.",
+      "breakdown_regime": "Edge case where multiple conditions trigger simultaneously.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conforms to GSI event-type classification for betting markets.",
+        "source_operator": "ball_dead_state",
+        "telemetry": "Frame-by-frame video analysis of dead-ball triggers."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6e6075a35bc2768d_t0",
+      "think": "The three sovereign primitives form a hierarchical state machine: Hurdling governs spatial maneuverability, Down Detection manages temporal progression, and Ball Death defines terminal conditions. Their mathematical dualities reveal latent symmetries: Hurdling's prohibitive logic mirrors Down Detection's enabling logic, while Ball Death acts as a global absorber. Failure modes emerge at their intersections—e.g., a referee's premature whistle during a legal Hurdle creates a non-measurable set. These primitives are foundational for constructing predictive models of game dynamics.\n\nDeep epistemic analysis for p0112 (6e6075a35bc2768d, domain=other, pages_read=1/1): Operator 'Hurdling Operator' (page 1, domain other) captures: Hurdling, as used in the rules, applies only to the man carrying the ball. Assumptions: (1) Only the ball carrier can perform a legal hurdle; (2) The defender must be upright; (3) The action occurs within defined spatial zones. Breakdown regime: Singularity at simultaneous airborne contact without clear trajectory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction regions for spatial collision events. Operator 'Down State Transition' (page 1, domain other) captures: A Down occurs when the Referee blows his whistle or declares the ball dead. Assumptions: (1) The referee's signal is instantaneous; (2) The ball immediately loses momentum upon signal. Breakdown regime: Temporal overlap between whistle and physical ball deceleration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as a boundary condition for GSE Markov decision processes. Operator 'Ball Death Predicate' (page 1, domain other) captures: The Ball is Dead (and no play can be made with it except according to rule): When the Referee blows his whistle or declares that a down, fair catch, touchdown, touchback, safety or goal has been made. Assumptions: (1) Dead-ball states are mutually exclusive; (2) The referee's declaration is definitive. Breakdown regime: Edge case where multiple conditions trigger simultaneously. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to GSI event-type classification for betting markets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0112 (6e6075a35bc2768d, domain=other, pages_read=1/1): Operator 'Hurdling Operator' (page 1, domain other) captures: Hurdling, as used in the rules, applies only to the man carrying the ball. Assumptions: (1) Only the ball carrier can perform a legal hurdle; (2) The defender must be upright; (3) The action occurs within defined spatial zones. Breakdown regime: Singularity at simultaneous airborne contact without clear trajectory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction regions for spatial collision events. Operator 'Down State Transition' (page 1, domain other) captures: A Down occurs when the Referee blows his whistle or declares the ball dead. Assumptions: (1) The referee's signal is instantaneous; (2) The ball immediately loses momentum upon signal. Breakdown regime: Temporal overlap between whistle and physical ball deceleration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as a boundary condition for GSE Markov decision processes. Operator 'Ball Death Predicate' (page 1, domain other) captures: The Ball is Dead (and no play can be made with it except according to rule): When the Referee blows his whistle or declares that a down, fair catch, touchdown, touchback, safety or goal has been made. Assumptions: (1) Dead-ball states are mutually exclusive; (2) The referee's declaration is definitive. Breakdown regime: Edge case where multiple conditions trigger simultaneously. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to GSI event-type classification for betting markets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams model these primitives probabilistically: defenders anticipate Hurdling windows, while ball carriers exploit referee timing biases to extend plays. Coaches use them to construct optimal downs-and-distance strategies. Theory of Mind & Decision Maker Model: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires independent verification across layers: Hurdling must be confirmed via biomechanical data, Down Detection via audio analysis, and Ball Death via spatial tracking. Leakage occurs if one layer corrupts another's empirical metrics. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0112 (6e6075a35bc2768d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

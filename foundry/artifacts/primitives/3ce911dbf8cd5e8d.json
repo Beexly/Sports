@@ -1,0 +1,662 @@
+{
+  "book_id": "3ce911dbf8cd5e8d",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_LIGATURE_FOLD",
+  "source_note": "Ronald Yurko, Samuel Ventura & Maksim Horowitz (Carnegie Mellon University, Department of Statistics & Data Science), arXiv:1802.00998v2 [stat.AP], 12 Jul 2018, 'nflWAR: A Reproducible Method for Offensive Player Evaluation in Football (Extended Edition)'. fi/fl ligatures and en-dash/U+2212 folded; display math (multinomial logit, EP, observation weight, calibration error, GAM WP, multilevel varying intercepts, iPAA/iPAR, wins conversion) reconstructed as labeled LaTeX from the prose, flagged in assumptions. Outputs are statistical EPA/WPA/WAR from public NFL play-by-play; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "football_lacks_reproducible_ratings",
+      "name": "Football lacks reproducible, interpretable player ratings",
+      "verbatim_quote": "American football lacks comprehensive statistical ratings for player evaluation that are both reproducible and easily interpretable in terms of game outcomes.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Existing methods depend on proprietary data and human judgment, are not reproducible, and lag baseball/basketball/hockey."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A reproducible, outcome-interpretable rating is the standard GSE holds its player evaluations to, against proprietary black boxes.",
+        "source_operator": "football_lacks_reproducible_ratings",
+        "telemetry": "reproducible + interpretable in wins"
+      }
+    },
+    {
+      "primitive_id": "nflwar_multilevel",
+      "name": "nflWAR: multilevel models isolate skill-player contribution",
+      "verbatim_quote": "we introduce our nflWAR framework, using multilevel models to isolate the contributions of individual offensive skill players, and providing estimates for their individual wins above replacement (WAR).",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Four contributions: nflscrapR data package, multinomial-logistic EP, GAM win probability, and multilevel WAR with resampling uncertainty."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A hierarchical model that isolates individual contribution from teammates and competition is the same player-valuation kernel GSE builds.",
+        "source_operator": "nflwar_multilevel",
+        "telemetry": "multilevel WAR for QB/RB/WR/TE"
+      }
+    },
+    {
+      "primitive_id": "not_all_yards_equal",
+      "name": "Not all yards are created equal",
+      "verbatim_quote": "three yards gained on 3rd and 2 are more valuable than three yards gained on 3rd and 7.",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Context (down, distance, field position) determines a play's value; raw yards strip away leverage (Carter-Machol 1971, Carroll 1988)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Play value must be context-conditioned, not raw yardage; GSE values outcomes by game-state leverage, the same principle.",
+        "source_operator": "not_all_yards_equal",
+        "telemetry": "3 yd on 3rd-and-2 > 3rd-and-7"
+      }
+    },
+    {
+      "primitive_id": "ep_garbage_time_problem",
+      "name": "EP ignores garbage-time behavior",
+      "verbatim_quote": "When a team is leading by a large number of points at the end of a game, they will sacrifice scoring points for letting time run off the clock.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Large score differentials change team behavior (run clock, not score), so EP without leverage/score context is biased; WP partially resolves this."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A value function must account for score-dependent behavior; GSE downweights garbage-time plays, the same correction.",
+        "source_operator": "ep_garbage_time_problem",
+        "telemetry": "leading team runs clock, not scores"
+      }
+    },
+    {
+      "primitive_id": "passer_rating_outdated",
+      "name": "Passer rating weights are outdated",
+      "verbatim_quote": "Passing in the NFL has changed substantially since the conception of the passer rating statistic in 1973, so that the chosen weights and thresholds do not have the same meaning in today's game as they did in 1973.",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Passer rating and ANY/A use ad hoc 1973 weights, ignore situation/leverage, and are not interpretable in points or wins."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Legacy linear weights drift from the modern game; GSE refits weights to current data rather than inheriting them, the same skepticism.",
+        "source_operator": "passer_rating_outdated",
+        "telemetry": "1973 weights != modern game"
+      }
+    },
+    {
+      "primitive_id": "fantasy_weights_arbitrary",
+      "name": "Fantasy-point weights are arbitrary",
+      "verbatim_quote": "one rushing yard is worth about 40% of one passing yard in ESPN's standard definitions of these metrics",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Fantasy points use unjustified ad hoc weights, inconsistent event values across positions, no context, and no win interpretability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Arbitrary cross-position weights are not a value model; GSE derives player value from outcome impact, not fantasy scoring conventions.",
+        "source_operator": "fantasy_weights_arbitrary",
+        "telemetry": "rush yd = 0.4 pass yd, arbitrary"
+      }
+    },
+    {
+      "primitive_id": "qbr_human_judgment",
+      "name": "QBR is not reproducible (human judgment)",
+      "verbatim_quote": "Total QBR is not directly reproducible, since it relies on human judgment when evaluating plays.",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "ESPN QBR uses EPA and divides credit (good steps) but charts every play with trained analysts, downweights low-leverage ad hoc, and is QB-only."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Human-charted grades are not reproducible; GSE prefers public-data models whose every step can be audited, the same reproducibility standard.",
+        "source_operator": "qbr_human_judgment",
+        "telemetry": "QBR: EPA + credit split, but human-charted"
+      }
+    },
+    {
+      "primitive_id": "division_of_credit_regression",
+      "name": "Division of credit via player-indicator regression",
+      "verbatim_quote": "A natural approach is to use a regression-based method, with indicators for each player on the field for a play, providing an estimate of their marginal effect.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Adjusted plus-minus style regression accounts for teammates and competition; football plays are more interdependent (22 players) than baseball."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Marginal-effect regression with player indicators is the same credit-assignment GSE uses to isolate a player from his context.",
+        "source_operator": "division_of_credit_regression",
+        "telemetry": "player indicators -> marginal effect"
+      }
+    },
+    {
+      "primitive_id": "replacement_not_average",
+      "name": "Replacement level, not average, is the baseline",
+      "verbatim_quote": "The replacement level baseline informs us how many wins a player adds over a readily available player.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "League-average performance is still valuable, so comparing to a readily available replacement is more useful to a front office than comparing to average."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Value above a freely available replacement is the correct economic baseline; GSE uses replacement, not average, the same front-office logic.",
+        "source_operator": "replacement_not_average",
+        "telemetry": "WAR = wins over readily available player"
+      }
+    },
+    {
+      "primitive_id": "nfl_no_participation_data",
+      "name": "NFL public data lacks on-field participation",
+      "verbatim_quote": "the league does not provide information about which players are present on the playing field for each play",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "No formations (except shotgun), locations, or pre-snap movement publicly; this limits WAR to directly-involved skill players and blocks individual OL/defensive ratings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A data-availability boundary defines which agents can be rated; GSE records participation data as the key enrichment for all-position WAR.",
+        "source_operator": "nfl_no_participation_data",
+        "telemetry": "no public on-field participation"
+      }
+    },
+    {
+      "primitive_id": "ep_classification_not_regression",
+      "name": "EP is classification, not linear regression",
+      "verbatim_quote": "The gaps along the y-axis between the different scoring events reinforce our decision to treat this as a classification problem rather than modeling the point values with linear regression",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Next-score outcomes are discrete (-7,-3,-2,0,2,3,7) with gaps; linear-regression residuals would violate normality, so model event probabilities directly."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A discrete, gapped response calls for classification, not regression; GSE models the next-score distribution directly, the same statistical choice.",
+        "source_operator": "ep_classification_not_regression",
+        "telemetry": "7 discrete next-score events"
+      }
+    },
+    {
+      "primitive_id": "ep_multinomial_logistic",
+      "name": "Multinomial logistic regression for next-score probabilities",
+      "verbatim_quote": "To estimate the probabilities of each possible scoring event conditional on the current game situation, we use multinomial logistic regression.",
+      "page": 9,
+      "latex": "\\log\\frac{P(Y=y\\mid X)}{P(Y=\\text{No Score}\\mid X)}=X\\cdot\\beta_y,\\quad EP=\\sum_y y\\,P(Y=y\\mid X)",
+      "symbol_and_unit_ledger": {
+        "Y": "next scoring event in {-7,-3,-2,0,2,3,7}",
+        "X": "game-state covariates",
+        "beta_y": "event coefficient vector"
+      },
+      "assumptions": [
+        "Six logits relative to No Score; EP is the probability-weighted sum of event point values; probabilities are agnostic of point value (flexible PAT/2pt)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A multinomial next-score model is the same EP kernel GSE uses, with calibration-selected covariates and interactions.",
+        "source_operator": "ep_multinomial_logistic",
+        "telemetry": "EP = sum y*P(Y=y|X)"
+      }
+    },
+    {
+      "primitive_id": "ep_weighting_not_exclusion",
+      "name": "Weight garbage time, do not exclude it",
+      "verbatim_quote": "we don't exclude any observations but instead use a weighting approach.",
+      "page": 11,
+      "latex": "w_i=\\frac{\\max_i|S_i|-|S_i|}{\\max_i|S_i|-|S_i|_{\\min}}",
+      "symbol_and_unit_ledger": {
+        "S_i": "score differential",
+        "w_i": "play weight in [0,1]"
+      },
+      "assumptions": [
+        "Score-differential weight plus drive-distance-to-next-score weight, combined and rescaled; unlike Burke's first/third-quarter within-10 subset, no plays are dropped."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Downweighting biased observations preserves data while correcting behavior; GSE weights rather than truncates, the same choice.",
+        "source_operator": "ep_weighting_not_exclusion",
+        "telemetry": "weight by |score diff| + drives to score"
+      }
+    },
+    {
+      "primitive_id": "calibration_selects_model",
+      "name": "Calibration testing selects the EP model",
+      "verbatim_quote": "If the actual proportion of the event is similar to the bin's estimated probability then the model is well-calibrated.",
+      "page": 12,
+      "latex": "e=\\frac1n\\sum_y n_y\\,e_y,\\quad e_y=\\frac1{n_y}\\sum_b n_{y,b}\\,|\\hat P_b-P_b|",
+      "symbol_and_unit_ledger": {
+        "e": "overall calibration error",
+        "b": "5% probability bin (20 bins)"
+      },
+      "assumptions": [
+        "Variables/interactions chosen to minimize calibration error across all seven events; best model e~0.013 with log(YTG)xDown, YardlinexDown, log(YTG)xGTG."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model selection by out-of-sample calibration is the same discipline GSE uses to choose its EP/WP specifications.",
+        "source_operator": "calibration_selects_model",
+        "telemetry": "bin 5%, e~0.013, 3 interactions"
+      }
+    },
+    {
+      "primitive_id": "loso_cross_validation",
+      "name": "Leave-one-season-out CV for honest calibration",
+      "verbatim_quote": "We calculate the model calibration error using leave-one-season-out cross-validation (LOSO CV) to reflect how the nflscrapR package will generate the probabilities for plays in a season it has not yet observed.",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "LOSO CV mimics predicting an unseen season; ordinal logistic regression was noticeably worse (e~0.022) than multinomial."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Season-level holdout matches the deployment setting; GSE validates on unseen seasons, the same honest temporal split.",
+        "source_operator": "loso_cross_validation",
+        "telemetry": "LOSO CV, multinomial e~0.013 < ordinal 0.022"
+      }
+    },
+    {
+      "primitive_id": "fg_miss_opportunity_cost",
+      "name": "Field-goal EP includes the miss turnover cost",
+      "verbatim_quote": "we incorporate this predicted probability of making the field goal taking into consideration the cost of missing the field goal and turning the ball over to the opposing team.",
+      "page": 14,
+      "latex": "EP_{\\text{FG}}=P(M)\\cdot 3+(1-P(M))\\cdot(-1)\\cdot E[Y\\mid X=m]",
+      "symbol_and_unit_ledger": {
+        "P(M)": "GAM make probability from kick distance",
+        "X=m": "opponent possession after miss (+8 yd, 5.07 s)"
+      },
+      "assumptions": [
+        "A miss gives the opponent the ball, so FG EP subtracts the opponent's expected points; rudimentary distance-only model (no weather)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A scoring attempt's value must net the failure turnover cost; GSE prices FG attempts the same way.",
+        "source_operator": "fg_miss_opportunity_cost",
+        "telemetry": "FG EP = 3*P(make) - E[opp pts]*P(miss)"
+      }
+    },
+    {
+      "primitive_id": "wp_no_team_strength",
+      "name": "WP excludes team strength to avoid biasing players",
+      "verbatim_quote": "Including indicators for a team's overall, offensive, and/or defensive strengths would artificially inflate (deflate) the contributions made by players on bad (good) teams",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Every game starts 50/50; team-strength indicators would shift the baseline and distort individual player WAR, so they are omitted from the WP model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Omitting team strength keeps the player-contribution baseline neutral; GSE makes the same choice to avoid crediting players for team quality.",
+        "source_operator": "wp_no_team_strength",
+        "telemetry": "WP starts 50/50, no team indicators"
+      }
+    },
+    {
+      "primitive_id": "wp_uses_expected_score",
+      "name": "WP incorporates EP via expected score differential",
+      "verbatim_quote": "we incorporate the estimated EP directly into the model by calculating the expected score differential for a play.",
+      "page": 15,
+      "latex": "E[S]=EP+S",
+      "symbol_and_unit_ledger": {
+        "S": "current score differential",
+        "E[S]": "expected score differential"
+      },
+      "assumptions": [
+        "The EP model already values field position and distance; adding E[S], time, half, and timeouts yields a well-calibrated WP."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feeding EP into WP couples the two value functions; GSE uses the same expected-score-differential bridge.",
+        "source_operator": "wp_uses_expected_score",
+        "telemetry": "E[S] = EP + S"
+      }
+    },
+    {
+      "primitive_id": "gam_win_probability",
+      "name": "GAM win probability with smooth nonlinear terms",
+      "verbatim_quote": "We use a generalized additive model (GAM) to estimate the possession team's probability of winning the game conditional on the current game situation.",
+      "page": 16,
+      "latex": "\\log\\frac{P(\\text{Win})}{P(\\text{Loss})}=s(E[S])+s(s_h)\\cdot h+s\\!\\left(E\\!\\left[\\tfrac{S}{s_g+1}\\right]\\right)+h\\cdot u\\cdot t_{\\text{off}}+h\\cdot u\\cdot t_{\\text{def}}",
+      "symbol_and_unit_ledger": {
+        "s(.)": "smooth function",
+        "h": "half",
+        "u": "under-2-min indicator",
+        "t_off,t_def": "timeouts"
+      },
+      "assumptions": [
+        "Semi-parametric: smooth nonlinear relationships plus linear parametric terms; LOSO CV calibration by quarter is well-calibrated (Yam-Lopez 2018 confirm)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A GAM balances flexibility and interpretability for WP; GSE uses the same smooth-plus-linear structure.",
+        "source_operator": "gam_win_probability",
+        "telemetry": "logit WP = s(E[S]) + s(s_h)*h + ..."
+      }
+    },
+    {
+      "primitive_id": "play_value_delta",
+      "name": "Play value is the state-to-state value change",
+      "verbatim_quote": "In order to arrive at a comprehensive measure of player performance, each play in a football game must be assigned an appropriate value",
+      "page": 18,
+      "latex": "\\delta_{f,i}=V_f-V_i",
+      "symbol_and_unit_ledger": {
+        "V_i,V_f": "EP or WP at start/end state",
+        "delta": "EPA or WPA"
+      },
+      "assumptions": [
+        "For scoring plays, V_f is the scoring event's point value; the Philly Special had V_i~2.78, EPA~4.22, WPA~0.1266."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A play's value is the difference in game-state value before and after; GSE computes EPA/WPA the same way.",
+        "source_operator": "play_value_delta",
+        "telemetry": "delta = V_f - V_i"
+      }
+    },
+    {
+      "primitive_id": "air_yac_decomposition",
+      "name": "Split passing value into air yards and YAC",
+      "verbatim_quote": "For each completed passing play, we break the estimation of EP and WP into two plays – one comprising everything leading up to the catch, and one for the yards after the catch.",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A hypothetical catch state separates air value from YAC value; time is adjusted by -5.7s (average incomplete-pass length) for the air segment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Decomposing a pass into air and YAC components is the same skill separation GSE uses to credit throwers versus receivers.",
+        "source_operator": "air_yac_decomposition",
+        "telemetry": "delta_air + delta_yac = delta_pass"
+      }
+    },
+    {
+      "primitive_id": "multilevel_partial_pooling",
+      "name": "Partial pooling shrinks small-sample players to group mean",
+      "verbatim_quote": "QBs and receivers involved in fewer plays will be pulled closer to their overall group averages as compared to those involved in more plays and thus carrying more information, resulting in partially pooled estimates",
+      "page": 20,
+      "latex": "\\delta_{f,i}\\sim N(Q_{q[i]}+C_{c[i]}+X_i\\beta,\\sigma^2),\\quad Q_q\\sim N(\\mu_Q,\\sigma_Q^2)",
+      "symbol_and_unit_ledger": {
+        "Q_q,C_c": "varying player intercepts",
+        "mu_Q,sigma_Q": "group mean/spread"
+      },
+      "assumptions": [
+        "Varying intercepts per positional group, fit by penalized likelihood (lme4); 'all multilevel models are Bayesian' in assigning distributions to coefficients (Gelman-Hill)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Hierarchical shrinkage stabilizes low-volume player estimates; GSE uses partial pooling for the same small-sample reliability.",
+        "source_operator": "multilevel_partial_pooling",
+        "telemetry": "varying intercepts, partial pooling"
+      }
+    },
+    {
+      "primitive_id": "plays_not_independent",
+      "name": "Repeated plays per player are not independent",
+      "verbatim_quote": "since every play involving the same player is a repeated measure of performance, the plays themselves are not independent.",
+      "page": 20,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Positional groups differ in volume (60 QBs vs 400 receivers in 2017) and variation; the multilevel structure accounts for both group differences and within-player dependence."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Within-player correlation violates i.i.d. assumptions; GSE models the hierarchical dependence, the same structure.",
+        "source_operator": "plays_not_independent",
+        "telemetry": "repeated measures per player"
+      }
+    },
+    {
+      "primitive_id": "shared_air_yac_credit",
+      "name": "QB and receiver share both air and YAC credit",
+      "verbatim_quote": "We are not crediting the QB solely for the value gained through the air, nor the receiver solely for the value gained from after the catch.",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Both QB, receiver, and opposing defense get credit for both air and YAC value; incomplete passes assign the full delta to both models, emphasizing completions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Credit for a pass is shared across agents and both phases, not siloed; GSE divides pass credit the same interdependent way.",
+        "source_operator": "shared_air_yac_credit",
+        "telemetry": "QB + receiver + defense share air & YAC"
+      }
+    },
+    {
+      "primitive_id": "ol_side_gap_proxy",
+      "name": "Team-side-gap proxies offensive-line rushing",
+      "verbatim_quote": "T serves as a proxy for the offensive linemen or blockers involved in the rushing attempt.",
+      "page": 23,
+      "latex": "T_\\tau,\\ \\tau\\in\\{\\text{team}\\}\\times\\{\\text{7 side-gaps}\\}",
+      "symbol_and_unit_ledger": {
+        "T": "team-side-gap group intercept (tPA_rush)",
+        "7": "left/right end, tackle, guard + middle"
+      },
+      "assumptions": [
+        "Summing the seven side-gap intercepts gives a team OL rushing-efficiency proxy, the first statistical OL measure controlling for RB and defense."
+      ],
+      "breakdown_regime": "selection bias: RB cutbacks mislabel the gap; no individual lineman identification",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A side-gap random effect is the same OL proxy GSE uses when individual participation data is absent.",
+        "source_operator": "ol_side_gap_proxy",
+        "telemetry": "7 team-side-gaps -> OL rushing proxy"
+      }
+    },
+    {
+      "primitive_id": "replacement_position_specific",
+      "name": "Replacement level is position- and role-specific",
+      "verbatim_quote": "Due to differences in the number of active players across positions in football, we define replacement level separately for each position.",
+      "page": 24,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Roster-based thresholds (96 rushing RBs, 128 receiving WRs, 64 receiving TEs, etc.); receiving and rushing replacement are separate, so a pass-catching RB can be replacement rushing but not receiving."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Replacement thresholds must reflect roster construction and role; GSE defines replacement per position and role, the same granularity.",
+        "source_operator": "replacement_position_specific",
+        "telemetry": "96 rush RB / 128 rec WR / 64 rec TE"
+      }
+    },
+    {
+      "primitive_id": "qb_replacement_bimodal",
+      "name": "QB replacement: backups below 10% involvement",
+      "verbatim_quote": "This is an unsurprising result, since most NFL teams rely on a single QB for an entire season",
+      "page": 25,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "QB involvement is bimodal (starters >80% of QB plays); replacement is defined as <10% QB-play involvement (backups), or alternatively the 32 week-1 starters."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A starter/backup usage gap defines QB replacement differently than skill positions; GSE uses the same usage-based QB baseline.",
+        "source_operator": "qb_replacement_bimodal",
+        "telemetry": "QB bimodal; replacement <10% involvement"
+      }
+    },
+    {
+      "primitive_id": "points_to_wins_conversion",
+      "name": "EPA-based WAR needs a points-to-wins conversion",
+      "verbatim_quote": "for the EPA-based play value response, the iPAR values represent the individual expected points added above replacement, and thus require a conversion from points to wins.",
+      "page": 26,
+      "latex": "\\text{Wins}_t=\\beta_0+\\beta_S S_t+\\varepsilon_t,\\quad WAR_{\\text{EPA}}=iPAR\\cdot\\hat\\beta_S",
+      "symbol_and_unit_ledger": {
+        "beta_S": "wins per point of score differential",
+        "1/beta_S": "points per win"
+      },
+      "assumptions": [
+        "WPA-based iPAR is already WAR; EPA-based iPAR is multiplied by the regression slope of wins on season score differential."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Converting points to wins via the empirical wins-differential slope is the same translation GSE uses to express value in wins.",
+        "source_operator": "points_to_wins_conversion",
+        "telemetry": "WAR = iPAR * beta_S (EPA); WPA direct"
+      }
+    },
+    {
+      "primitive_id": "drive_resampling_uncertainty",
+      "name": "Resample whole drives for WAR uncertainty",
+      "verbatim_quote": "We do this to account for the fact that player usage is dependent on team decision making",
+      "page": 27,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Player usage depends on team decisions, so resampling must be at the team-drive level (not individual plays) to capture play-calling dependencies; 1000 simulated seasons."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Drive-level resampling respects within-drive correlation; GSE uses the same cluster bootstrap for player-value uncertainty.",
+        "source_operator": "drive_resampling_uncertainty",
+        "telemetry": "resample drives, 1000 seasons"
+      }
+    },
+    {
+      "primitive_id": "war_more_stable_than_boxscore",
+      "name": "WAR is more season-stable than box-score stats",
+      "verbatim_quote": "our estimates for QB WAR displayed higher correlations than both the commonly used Passer Rating statistic as well as Pro-Football-Reference.com's Adjusted Net Yards per Passing Attempt (ANY/A)",
+      "page": 30,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "2016-17 autocorrelation: QB WAR 0.598 vs passer rating 0.478 vs ANY/A 0.295; RB WAR 0.431 vs success rate 0.314 vs YPA 0.337."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Higher year-to-year autocorrelation signals a more reliable talent measure; GSE prefers WAR's stability over noisy box-score stats.",
+        "source_operator": "war_more_stable_than_boxscore",
+        "telemetry": "QB WAR 0.598 > rating 0.478 > ANY/A 0.295"
+      }
+    },
+    {
+      "primitive_id": "ol_cutback_selection_bias",
+      "name": "OL side-gap estimates suffer cutback selection bias",
+      "verbatim_quote": "a RB may cut back and find a hole on the left side of the line on a designed run to the right because there is nothing open on the right side, resulting in a play being scored as a run to the left.",
+      "page": 36,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "RBs run toward holes and away from defenders, so the recorded gap is endogenous; side-gap estimates are biased, especially for strong/weak line areas, until tracking data is public."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An endogenous choice of where to run biases the blocking measurement; GSE records this selection bias honestly rather than treating gaps as exogenous.",
+        "source_operator": "ol_cutback_selection_bias",
+        "telemetry": "cutback mislabels gap -> OL bias"
+      }
+    },
+    {
+      "primitive_id": "participation_data_restricted",
+      "name": "All-position WAR blocked by data restrictions",
+      "verbatim_quote": "Sportradar's data sharing agreement explicitly prohibits the use of this data in the creation of new metrics, even if only used privately",
+      "page": 37,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Sportradar Participation Data lists all 22 players per play but clauses 1.6/14.2 forbid new metrics and there is no academic sharing agreement; the framework extends trivially given participation data."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A licensing wall, not a methodological one, blocks all-position WAR; GSE notes the data-access constraint as the binding limit.",
+        "source_operator": "participation_data_restricted",
+        "telemetry": "participation data exists, metrics prohibited"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "nflwar2018_trace",
+      "think": "The retrocausal genealogy of this paper is the absence of reproducible, outcome-interpretable player ratings in American football. Unlike baseball, basketball, and hockey, football's public player evaluation relied on proprietary data and human judgment, from PFF's charted grades to ESPN's Total QBR, none of it reproducible. The play-value lineage runs from Carter and Machol in 1971 and Carroll's Hidden Game through Burke's expected points added and win probability added, Goldner's Markov drive model, and Lock and Nettleton's random-forest win probability, while the player-value lineage runs through baseball's openWAR and hockey's wins above replacement. The authors make four contributions to close the gap: the nflscrapR package exposing public play-by-play since 2009, a multinomial-logistic expected-points model, a generalized-additive win-probability model that consumes expected points, and the nflWAR multilevel framework that isolates offensive skill-player contribution and estimates wins above replacement with resampled uncertainty. Play evaluation begins with the insight that not all yards are equal: three yards on third-and-two beat three yards on third-and-seven. Expected points is modeled as a classification problem over the seven discrete next-score events, because the gaps between scoring values would violate linear-regression residual normality; a multinomial logistic regression estimates each event's probability and expected points is their probability-weighted sum. Rather than exclude garbage-time plays, the model downweights them by score differential and by drive-distance to the next score, and the covariates and interactions are chosen by leave-one-season-out calibration testing, reaching an error near 0.013. Field-goal expected points nets the cost of a miss turning the ball over. Win probability is a generalized additive model on the expected score differential, EP plus the current score, deliberately omitting team-strength indicators so that every game starts at 50 percent and player contributions are not inflated or deflated by team quality. A play's value is the change in expected points or win probability from its start state to its end state, and passing plays are split into air-yard and yards-after-catch components. The recursive theory of mind is the division of credit among interdependent agents. Because the NFL does not publicly say which players are on the field, the model uses multilevel varying-intercept regressions on the directly involved players, with positional groups for passers, receivers, rushers, defenses, and team-side-gaps. Each player's intercept is partially pooled toward his group mean, so a low-volume player is shrunk more than a high-volume one, and the repeated plays per player are treated as dependent rather than independent. Crucially, the quarterback and receiver share credit for both the air value and the yards-after-catch value, with incomplete passes assigning the full play value to both models to emphasize completions. For rushing, a team-side-gap random effect serves as a proxy for the offensive line, the first statistical blocking measure that controls for the running back and the opposing defense. Cross-layer veto adjudication enforces that a player rating be interpretable in wins, reproducible, and uncertainty-quantified. Value is measured above a roster-based replacement level defined separately by position and by receiving versus rushing role, with quarterbacks handled by their bimodal usage distribution, backups below ten percent involvement treated as replacement. Individual points above replacement is the player's effect times his attempts minus a replacement shadow at the same volume; WPA-based values are already wins, while EPA-based values are converted by the empirical slope of wins on season score differential. Uncertainty comes from resampling whole team drives, not individual plays, because player usage depends on team decision making, over a thousand simulated seasons. The resulting WAR is more season-stable than passer rating or ANY/A, with quarterback WAR autocorrelation 0.598 against 0.478 and 0.295. The implementation invariants are precisely GSE's player-valuation kernel. Model the next score as a multinomial classification, calibrate by leave-one-season-out testing, feed expected points into a smooth win-probability model without team-strength bias, divide credit with partially pooled multilevel intercepts, decompose passing into air and YAC, proxy the offensive line by side-gap, and quantify uncertainty by drive-level resampling. The air-YAC-rush decomposition characterizes how a player produces value, distinguishing a deep thrower from a short accurate one and a dual-threat back from a pure rusher. The outputs are statistical wins above replacement from public data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The expected-points model uses 304,896 non-PAT plays from 2009 to 2016, the multilevel models are fit by penalized likelihood in lme4, and results are presented for 2017. The authors are honest that the offensive-line side-gap proxy suffers selection bias because a running back cutback to an open hole mislabels the designed gap, that individual linemen cannot be identified without participation data, and that Sportradar's participation product, which lists all 22 players per play, contractually prohibits creating new metrics. The framework extends trivially to all positions given participation data, and the authors point to NFL applications in free-agent contract valuation and a WAR-based draft-pick value chart. The invariant for GSE is to carry the reproducible multinomial-EP, GAM-WP, multilevel-WAR pipeline with partial pooling and drive-resampled uncertainty, while recording the participation-data wall as the binding limit on all-position ratings. PFF itself adopted this expected-points approach and found a clear relationship between its grades and EPA.",
+      "retrocausal_genealogy": "The paper originates in football's lack of reproducible, win-interpretable player ratings: public evaluation relied on proprietary PFF grades and ESPN QBR. The play-value lineage runs Carter-Machol 1971, Carroll 1988, Burke EPA/WPA, Goldner Markov, Lock-Nettleton random-forest WP; the player-value lineage runs baseball openWAR and hockey WAR. Four contributions close the gap: nflscrapR public data, multinomial-logistic EP, GAM WP consuming EP, and multilevel nflWAR with resampled uncertainty. The thesis is full reproducibility from public data, with every step auditable.",
+      "theory_of_mind": "Division of credit among interdependent agents via multilevel varying intercepts on directly-involved players (passer, receiver, rusher, defense, team-side-gap), partially pooled toward group means so low-volume players shrink more, with repeated plays treated as dependent. QB and receiver share both air and YAC credit; incomplete passes assign full value to both models to emphasize completions. A team-side-gap random effect proxies the offensive line, controlling for RB and defense. The model reasons about each agent's marginal contribution under the constraint that the NFL does not publicly list on-field participation.",
+      "cross_layer_veto": "A rating must be win-interpretable, reproducible, and uncertainty-quantified. EP is multinomial classification (gapped response), calibration-selected by LOSO CV (e~0.013), garbage-time weighted not excluded; FG EP nets the miss turnover. WP is a GAM on E[S]=EP+S with no team-strength indicators (50/50 start). Value is above roster-based replacement (position/role-specific; QB <10% involvement), iPAR = effect*attempts - replacement shadow; EPA converts to wins via the wins-differential slope. Uncertainty resamples whole drives (1000 seasons) because usage depends on team decisions. QB WAR autocorrelation 0.598 > passer rating 0.478 > ANY/A 0.295."
+    }
+  ],
+  "universal_lens": "NFL offensive skill players are valued by a fully reproducible pipeline: multinomial-logistic expected points (calibration-selected, garbage-time-weighted), a GAM win probability consuming expected score differential without team-strength bias, and partially pooled multilevel models that divide play credit among agents, measure value above a roster-based replacement level, convert to wins, and quantify uncertainty by drive-level resampling.",
+  "gsi_mapping": "GSI treats EP as a 7-class multinomial logit (EP=sum y*P(Y=y|X), LOSO calibration e~0.013), WP as a GAM on E[S]=EP+S starting 50/50, and player value as varying-intercept multilevel models (lme4) with air/YAC/rush decomposition, team-side-gap OL proxy, position/role-specific replacement, points-to-wins slope conversion, and 1000-season drive resampling.",
+  "gse_mapping": "GSE lifts the reproducible multinomial-EP / GAM-WP / multilevel-WAR pipeline, partial pooling for small samples, shared QB-receiver air/YAC credit, the side-gap OL proxy, and drive-resampled uncertainty; WAR feeds player evaluation and DFS projections, with all outputs statistical wins above replacement, never sportsbook lines."
+}

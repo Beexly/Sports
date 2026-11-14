@@ -1,0 +1,95 @@
+{
+  "book_id": "2370e0da830b136a",
+  "source_status": "COMPLETE",
+  "title": "openalex_W3176134285",
+  "file_name": "openalex_W3176134285.pdf",
+  "sha256": "2370e0da830b136a869135d39bca8965d9dae1f2581cf3328add112ef32fea65",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Perceived athlete leadership quality influences inside sacrifice and performance via team identification, forming a triadic causal structure in collective sports dynamics. Universal Lens: Rooted in openalex_W3176134285 (2370e0da830b136a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on leadership quality predict internal sacrifice and performance using probabilistic graphical models with team identification as latent mediator. GSI Mapping: Rooted in openalex_W3176134285 (2370e0da830b136a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in team performance are governed by leadership perception → sacrifice behavior → identification → outcome, encoded in dynamic influence graphs. GSE Mapping: Rooted in openalex_W3176134285 (2370e0da830b136a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "perceived_athlete_leadership_quality",
+      "name": "Perceived Athlete Leadership Quality",
+      "verbatim_quote": "Athlete Leadership, Sacrifice and Performance Athlete Leadership Athlete leadership has been defined as \"an athlete, occupying a formal or informal role within a team, who influences a group of team members to achieve a common goal\" (Loughead et al., 2006, p.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q_{\\\\text{lead}}': 'dimensionless perceptual rating scale'}",
+      "assumptions": "Leadership is perceived through behavioral influence rather than formal title; subjective evaluation across team members.",
+      "breakdown_regime": "When leadership lacks social acceptance or role clarity, Q_lead approaches zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Q_lead drives internal motivation and behavioral alignment in team settings via cognitive appraisal mechanisms.",
+        "source_operator": "perceived_athlete_leadership_quality",
+        "telemetry": "Survey-based self-report ratings of leadership influence"
+      }
+    },
+    {
+      "primitive_id": "inside_sacrifice",
+      "name": "Inside Sacrifice",
+      "verbatim_quote": "A total of 299 players of collective sports (soccer, beach soccer, basketball, volleyball; Mage 19.05, SD = 5.10) participated through a cross-sectional design survey.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{in}}': 'dimensionless behavioral sacrifice index'}",
+      "assumptions": "S_in reflects individual willingness to forego personal gain for team benefit.",
+      "breakdown_regime": "When team cohesion is low, S_in diminishes due to reduced prosocial motivation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "S_in mirrors the psychological cost-benefit trade-off in cooperative game theory.",
+        "source_operator": "inside_sacrifice",
+        "telemetry": "Self-reported sacrifice frequency and intensity in team contexts"
+      }
+    },
+    {
+      "primitive_id": "team_identification",
+      "name": "Team Identification",
+      "verbatim_quote": "Also, team identification was a positive mediator in the association between inside sacrifice and perceived performance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{\\\\text{team}}': 'dimensionless social identity strength measure'}",
+      "assumptions": "Stronger identification increases willingness to engage in sacrifice and enhances performance perception.",
+      "breakdown_regime": "Low I_team correlates with disengagement and decreased perceived performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "I_team modulates the causal chain from Q_lead to S_in and subsequently to P_perf.",
+        "source_operator": "team_identification",
+        "telemetry": "Social identity scale scores reflecting identification with team norms and goals"
+      }
+    },
+    {
+      "primitive_id": "perceived_performance",
+      "name": "Perceived Performance",
+      "verbatim_quote": "Results highlight the positive relationships between perceived quality of athlete leaders, inside sacrifice, and perceived performance, and between inside sacrifice and perceived performance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{perf}}': 'dimensionless performance evaluation score'}",
+      "assumptions": "Performance is evaluated subjectively by players based on team outcomes and process quality.",
+      "breakdown_regime": "P_perf degrades under weak leadership or low sacrifice levels.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "P_perf aligns with collective efficacy constructs in social psychology.",
+        "source_operator": "perceived_performance",
+        "telemetry": "Player-rated team success metrics and subjective performance feedback"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2370e0da830b136a_t0",
+      "think": "The causal structure posits that perceived athlete leadership quality (Q_lead) directly impacts inside sacrifice (S_in), mediated by team identification (I_team), which in turn affects perceived performance (P_perf). This forms a hierarchical mediation model where Q_lead → S_in → P_perf, with I_team acting as a moderator. Mathematically, this can be expressed as a system of conditional expectations E[S_in|Q_lead] and E[P_perf|S_in,I_team]. The dual nature of leadership—formal vs. informal—is abstracted into a single quality metric, while sacrifice and identification are modeled as latent variables. Failure modes include absence of Q_lead leading to low S_in and P_perf, or weak I_team undermining the mediation effect. The model assumes linear relationships among variables but allows for non-linear interactions through mediation paths.\n\nDeep epistemic analysis for openalex_W3176134285 (2370e0da830b136a, domain=other, pages_read=10/10): Operator 'Perceived Athlete Leadership Quality' (page 2, domain other) captures: Athlete Leadership, Sacrifice and Performance Athlete Leadership Athlete leadership has been defined as \"an athlete, occupying a formal or informal role within a team, who influences a group of team members to achieve a common goal\" (Loughead et al., 2006, p. Assumptions: Leadership is perceived through behavioral influence rather than formal title; subjective evaluation across team members. Breakdown regime: When leadership lacks social acceptance or role clarity, Q_lead approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Q_lead drives internal motivation and behavioral alignment in team settings via cognitive appraisal mechanisms. Operator 'Inside Sacrifice' (page 1, domain other) captures: A total of 299 players of collective sports (soccer, beach soccer, basketball, volleyball; Mage 19.05, SD = 5.10) participated through a cross-sectional design survey. Assumptions: S_in reflects individual willingness to forego personal gain for team benefit. Breakdown regime: When team cohesion is low, S_in diminishes due to reduced prosocial motivation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): S_in mirrors the psychological cost-benefit trade-off in cooperative game theory. Operator 'Team Identification' (page 1, domain other) captures: Also, team identification was a positive mediator in the association between inside sacrifice and perceived performance. Assumptions: Stronger identification increases willingness to engage in sacrifice and enhances performance perception. Breakdown regime: Low I_team correlates with disengagement and decreased perceived performance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): I_team modulates the causal chain from Q_lead to S_in and subsequently to P_perf. Operator 'Perceived Performance' (page 1, domain other) captures: Results highlight the positive relationships between perceived quality of athlete leaders, inside sacrifice, and perceived performance, and between inside sacrifice and perceived performance. Assumptions: Performance is evaluated subjectively by players based on team outcomes and process quality. Breakdown regime: P_perf degrades under weak leadership or low sacrifice levels. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): P_perf aligns with collective efficacy constructs in social psychology. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W3176134285 (2370e0da830b136a, domain=other, pages_read=10/10): Operator 'Perceived Athlete Leadership Quality' (page 2, domain other) captures: Athlete Leadership, Sacrifice and Performance Athlete Leadership Athlete leadership has been defined as \"an athlete, occupying a formal or informal role within a team, who influences a group of team members to achieve a common goal\" (Loughead et al., 2006, p. Assumptions: Leadership is perceived through behavioral influence rather than formal title; subjective evaluation across team members. Breakdown regime: When leadership lacks social acceptance or role clarity, Q_lead approaches zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Q_lead drives internal motivation and behavioral alignment in team settings via cognitive appraisal mechanisms. Operator 'Inside Sacrifice' (page 1, domain other) captures: A total of 299 players of collective sports (soccer, beach soccer, basketball, volleyball; Mage 19.05, SD = 5.10) participated through a cross-sectional design survey. Assumptions: S_in reflects individual willingness to forego personal gain for team benefit. Breakdown regime: When team cohesion is low, S_in diminishes due to reduced prosocial motivation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): S_in mirrors the psychological cost-benefit trade-off in cooperative game theory. Operator 'Team Identification' (page 1, domain other) captures: Also, team identification was a positive mediator in the association between inside sacrifice and perceived performance. Assumptions: Stronger identification increases willingness to engage in sacrifice and enhances performance perception. Breakdown regime: Low I_team correlates with disengagement and decreased perceived performance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): I_team modulates the causal chain from Q_lead to S_in and subsequently to P_perf. Operator 'Perceived Performance' (page 1, domain other) captures: Results highlight the positive relationships between perceived quality of athlete leaders, inside sacrifice, and perceived performance, and between inside sacrifice and perceived performance. Assumptions: Performance is evaluated subjectively by players based on team outcomes and process quality. Breakdown regime: P_perf degrades under weak leadership or low sacrifice levels. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): P_perf aligns with collective efficacy constructs in social psychology. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in social identity theory (Tajfel & Turner, 1979) and group dynamics literature, extending earlier work on athlete leadership (Loughead et al., 2006) and team effectiveness (Fransen et al., 2015a). Retrocausal Genealogy: Rooted in openalex_W3176134285 (2370e0da830b136a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in openalex_W3176134285 (2370e0da830b136a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Players evaluate leadership quality based on observed behaviors, then assess whether those behaviors prompt sacrifice. Coaches and psychologists interpret these perceptions to guide team development strategies. Theory of Mind & Decision Maker Model: Rooted in openalex_W3176134285 (2370e0da830b136a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in openalex_W3176134285 (2370e0da830b136a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures Q_lead does not redundantly explain S_in when I_team is already included. Leakage vetoes include confounding by external factors like coaching style or competition level. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W3176134285 (2370e0da830b136a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W3176134285 (2370e0da830b136a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

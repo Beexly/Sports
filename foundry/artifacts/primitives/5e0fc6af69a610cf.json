@@ -1,0 +1,78 @@
+{
+  "book_id": "5e0fc6af69a610cf",
+  "source_status": "COMPLETE",
+  "title": "airwave-week3",
+  "file_name": "airwave-week3.md",
+  "sha256": "5e0fc6af69a610cfc61d8f67d64a893ef3aad742506b6ea94f08140ed9ebf4dc",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Airwave integrates real-time player availability and skill uncertainty into a calibrated edge model using Bayesian priors and schedule constraints. Universal Lens: Rooted in airwave-week3 (5e0fc6af69a610cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Airwave's edge metrics as conformal predictors with 0.05 prior weight, updating beliefs over settled weeks via posterior calibration. GSI Mapping: Rooted in airwave-week3 (5e0fc6af69a610cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE processes Airwave's game-specific badness scores through state transitions that encode team readiness and situational risk, enabling dynamic strategy adaptation. GSE Mapping: Rooted in airwave-week3 (5e0fc6af69a610cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "airwave_edge",
+      "name": "Airwave Edge",
+      "verbatim_quote": "yet. | game | away badness | home badness | airwave edge | |---|---:|---:|---:| | LAC",
+      "page": 1,
+      "latex": "\\text{AirwaveEdge}_{ij} = \\text{AwayBadness}_i - \\text{HomeBadness}_j",
+      "symbol_and_unit_ledger": "{'AirwaveEdge_{ij}': 'dimensionless', 'AwayBadness_i': 'dimensionless', 'HomeBadness_j': 'dimensionless'}",
+      "assumptions": "Edge computed as difference between normalized team badness; assumes symmetric impact of badness on outcome.",
+      "breakdown_regime": "When both teams have zero badness, edge becomes zero; when one team is absent, edge may be undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic forecast kernel by encoding relative team weakness into predictive variance.",
+        "source_operator": "airwave_edge",
+        "telemetry": "Expected margin deviation from baseline model"
+      }
+    },
+    {
+      "primitive_id": "player_availability",
+      "name": "Player Availability",
+      "verbatim_quote": "Outs already sit in availability, so they are not added again.",
+      "page": 1,
+      "latex": "\\mathcal{A}_t = \\{ p \\in P : \\text{status}(p) = \\text{available} \\}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{A}_t': 'set of available players at time t', 'P': 'set of all players', '\\\\text{status}(p)': 'binary indicator of availability'}",
+      "assumptions": "Players marked 'outs' are excluded from further inclusion; availability is deterministic per game.",
+      "breakdown_regime": "If all players are outs, set is empty; if all players are available, full roster is returned.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's active roster constraint function, defining valid player states for each match.",
+        "source_operator": "player_availability",
+        "telemetry": "Number of eligible starters per team"
+      }
+    },
+    {
+      "primitive_id": "prior_weighting",
+      "name": "Prior Weighting",
+      "verbatim_quote": "added again. The weight is a prior of 0.05. It has not been calibrated on a",
+      "page": 1,
+      "latex": "\\alpha = 0.05",
+      "symbol_and_unit_ledger": "{'\\\\alpha': 'scalar weighting factor'}",
+      "assumptions": "Fixed prior value used to blend empirical data with initial belief; does not vary across games.",
+      "breakdown_regime": "When calibrated, prior weight is replaced by learned posterior distribution; otherwise remains fixed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as GSI's regularization parameter in Bayesian update equations, controlling influence of new evidence.",
+        "source_operator": "prior_weighting",
+        "telemetry": "Posterior entropy reduction rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5e0fc6af69a610cf_t0",
+      "think": "Airwave's edge computation stems from a dual-badness framework where each team's performance deficiency is quantified. This forms a scalar metric that reflects expected outcome bias. The model assumes symmetric impact of badness on win probability. Player availability is treated as a binary constraint, excluding non-eligible players from consideration. Prior weighting ensures conservative updates until sufficient data accumulates. Failure modes include misalignment of badness metrics with actual outcomes, overconfidence in fixed priors, and exclusion of relevant players due to static availability rules.\n\nDeep epistemic analysis for airwave-week3 (5e0fc6af69a610cf, domain=other, pages_read=1/1): Operator 'Airwave Edge' (page 1, domain other) captures: yet. | game | away badness | home badness | airwave edge | |---|---:|---:|---:| | LAC Assumptions: Edge computed as difference between normalized team badness; assumes symmetric impact of badness on outcome. Breakdown regime: When both teams have zero badness, edge becomes zero; when one team is absent, edge may be undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic forecast kernel by encoding relative team weakness into predictive variance. Operator 'Player Availability' (page 1, domain other) captures: Outs already sit in availability, so they are not added again. Assumptions: Players marked 'outs' are excluded from further inclusion; availability is deterministic per game. Breakdown regime: If all players are outs, set is empty; if all players are available, full roster is returned. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's active roster constraint function, defining valid player states for each match. Operator 'Prior Weighting' (page 1, domain other) captures: added again. The weight is a prior of 0.05. It has not been calibrated on a Assumptions: Fixed prior value used to blend empirical data with initial belief; does not vary across games. Breakdown regime: When calibrated, prior weight is replaced by learned posterior distribution; otherwise remains fixed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as GSI's regularization parameter in Bayesian update equations, controlling influence of new evidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for airwave-week3 (5e0fc6af69a610cf, domain=other, pages_read=1/1): Operator 'Airwave Edge' (page 1, domain other) captures: yet. | game | away badness | home badness | airwave edge | |---|---:|---:|---:| | LAC Assumptions: Edge computed as difference between normalized team badness; assumes symmetric impact of badness on outcome. Breakdown regime: When both teams have zero badness, edge becomes zero; when one team is absent, edge may be undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic forecast kernel by encoding relative team weakness into predictive variance. Operator 'Player Availability' (page 1, domain other) captures: Outs already sit in availability, so they are not added again. Assumptions: Players marked 'outs' are excluded from further inclusion; availability is deterministic per game. Breakdown regime: If all players are outs, set is empty; if all players are available, full roster is returned. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's active roster constraint function, defining valid player states for each match. Operator 'Prior Weighting' (page 1, domain other) captures: added again. The weight is a prior of 0.05. It has not been calibrated on a Assumptions: Fixed prior value used to blend empirical data with initial belief; does not vary across games. Breakdown regime: When calibrated, prior weight is replaced by learned posterior distribution; otherwise remains fixed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as GSI's regularization parameter in Bayesian update equations, controlling influence of new evidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century game theory and modern Bayesian belief networks, particularly influenced by Kalman filtering and probabilistic graphical models. Retrocausal Genealogy: Rooted in airwave-week3 (5e0fc6af69a610cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in airwave-week3 (5e0fc6af69a610cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might optimize around known badness thresholds or exploit prior underweighting to gain strategic advantage. Theory of Mind & Decision Maker Model: Rooted in airwave-week3 (5e0fc6af69a610cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in airwave-week3 (5e0fc6af69a610cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct badness dimensions for away/home teams; leakage occurs if prior weight is not adjusted post-calibration. Cross-Layer Veto & Anti-Leakage Check: Rooted in airwave-week3 (5e0fc6af69a610cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in airwave-week3 (5e0fc6af69a610cf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

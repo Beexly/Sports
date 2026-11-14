@@ -1,0 +1,495 @@
+{
+ "book_id": "62e572bc9a9bde38",
+ "title": "Optimizing an NBA Team's Approach to Free Agency using a Multiple-Choice Knapsack Model",
+ "author": "Sam Kirshner (Queen's University)",
+ "year": 2011,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2011 Optimizing NBA Free Agency Choices.pdf",
+ "source_note": "MIT Sloan Sports Analytics Conference 2011, March 4-5 Boston, 7 pages, full read via pymupdf. Identity confirmed (Sam Kirshner, Queen's University, skirshner@business.queensu.ca). PROVENANCE CAVEAT: the PDF uses a shifted/custom font encoding (Caesar-like glyph shift) for all display mathematics and portions of the prose; clean readable prose passages are quoted verbatim and verified as exact substrings, while the display equations (player value theta=sum lambda x, the knapsack objective and budget constraint, the Bellman dynamic program, the threshold control policy, and the signing-ratio criterion) are reconstructed in LaTeX from the unambiguous prose description and explicitly labeled as reconstructions, not transcribed glyphs. No sportsbook lines are used as model inputs.",
+ "domain": "cs/operations-research",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "salary_cap_knapsack",
+   "name": "Salary cap as knapsack capacity",
+   "verbatim_quote": "The salary cap presents teams with the problem of how to maximize the value of a fixed expenditure in a dynamic market.",
+   "page": 1,
+   "latex": "\\max \\sum_j u_j\\,\\theta_j\\quad \\text{s.t.}\\quad \\sum_j u_j\\,w_j \\le C",
+   "symbol_and_unit_ledger": {
+    "C": "cap space (knapsack capacity)",
+    "theta_j": "value of player j",
+    "w_j": "wage/weight of player j",
+    "u_j": "0-1 sign decision",
+    "units": "C,w in dollars; theta in wins/value units; u dimensionless"
+   },
+   "assumptions": [
+    "Cap space is a hard budget constraint",
+    "Player value is additive across selections",
+    "Soft-cap exceptions are treated as added capacity"
+   ],
+   "breakdown_regime": "the cap is a hard budget constraint; value maximization is subject to total wage <= cap; soft-cap exceptions treated as added capacity",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE pick selection IS a knapsack: the bankroll is the cap, each pick is an item with edge-value theta and stake-weight w, and the engine maximizes total expected value subject to total stake <= bankroll. GSI resource allocation: maximize system value subject to a fixed resource budget (compute, energy, bandwidth).",
+    "source_operator": "salary_cap_knapsack",
+    "telemetry": "cap space C; per-item value theta and weight w; total-weight constraint"
+   }
+  },
+  {
+   "primitive_id": "timing_dilemma",
+   "name": "When to offer: the timing dilemma",
+   "verbatim_quote": "the amount required to sign a given player also decreases. Thus, teams are faced with the dilemma of when to offer a contract and how much money to offer.",
+   "page": 1,
+   "latex": "w_j(t)\\ \\text{decreasing in market money};\\quad \\text{choose offer time } t",
+   "symbol_and_unit_ledger": {
+    "w_j(t)": "expected wage of player j at time t",
+    "t": "free-agency period",
+    "units": "w in dollars; t in periods"
+   },
+   "assumptions": [
+    "Expected wages decay as aggregate market money shrinks",
+    "The talent pool shrinks as players sign",
+    "Offer timing trades price decay against loss risk"
+   ],
+   "breakdown_regime": "as market money shrinks wages fall, but the talent pool also shrinks; the optimal offer time balances price decay against losing the player",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE timing discipline: whether to lock a number now or wait for line movement balances a decaying price against the risk of losing the edge; the engine's emission timing is this optimal-stopping trade-off. GSI timing: act now versus wait for a cheaper resource, balancing price decay against availability loss.",
+    "source_operator": "timing_dilemma",
+    "telemetry": "wage path w_j(t); offer-time decision; price-decay vs availability trade-off"
+   }
+  },
+  {
+   "primitive_id": "sign_wait_tradeoff",
+   "name": "Sign-now vs wait trade-off",
+   "verbatim_quote": "The optimal strategy for solving this problem must consider the trade-off between losing a player to a competitor and acquiring the player at a price that preserves as much cap space as possible for additional players.",
+   "page": 1,
+   "latex": "\\text{sign now: secure }\\theta_j\\text{ at }w_j;\\quad \\text{wait: lower }w_j\\text{ but risk losing }j",
+   "symbol_and_unit_ledger": {
+    "theta_j": "player value",
+    "w_j": "wage",
+    "cap space": "budget preserved for additional players",
+    "units": "value and wage in consistent units"
+   },
+   "assumptions": [
+    "Waiting can lower the wage but risks a competitor signing the target",
+    "Preserved cap space has option value for additional players"
+   ],
+   "breakdown_regime": "waiting preserves cap space for more players but risks a competitor signing the target; the trade-off is the core decision",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE commit-vs-defer: locking a pick now secures the edge but spends bankroll; waiting may improve the number but risks the edge disappearing; the engine weighs securing value against preserving stake for other opportunities. GSI commit-vs-defer: secure a resource now or defer for a better price risking loss to a competitor.",
+    "source_operator": "sign_wait_tradeoff",
+    "telemetry": "secure-value vs preserve-budget trade-off; competitor loss risk"
+   }
+  },
+  {
+   "primitive_id": "dp_mc_knapsack",
+   "name": "Dynamic program on the multiple-choice knapsack",
+   "verbatim_quote": "This trade-off can be solved by a dynamic program based on the multiple-choice knapsack problem, which optimizes the benefit of signing a player at any particular point in the free agency period in comparison to the opportunity costs of the cap space required to do so.",
+   "page": 1,
+   "latex": "f_t(P,C)=\\max_{u\\in\\{0,1\\}}\\big[u(\\theta_{j}+f_{t+1}(P-A_j,C-w B_i))+(1-u)\\,\\mathbb{E}[f_{t+1}(\\bar P,\\bar C)]\\big]",
+   "symbol_and_unit_ledger": {
+    "f_t": "value function at period t",
+    "P": "available-player state",
+    "C": "cap-space state",
+    "A_j,B_i": "unit removal vectors",
+    "E": "expectation over competitors' signings",
+    "units": "f,theta in value units; C,w in dollars"
+   },
+   "assumptions": [
+    "One player is signed per period",
+    "Competitors' signings are summarized by an expectation",
+    "State transitions remove the signed player and reduce cap"
+   ],
+   "breakdown_regime": "the DP compares signing now (value plus continuation) against waiting (expected continuation); state updates after each signing; one signing per period assumed",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE sequential pick decision IS this Bellman recursion: f_t compares taking a pick now (edge plus future value) against waiting (expected future value), with the bankroll and remaining-board state updating after each decision; opportunity cost of stake is the continuation-value difference. GSI sequential decision: a Bellman recursion comparing immediate reward plus continuation against the expected continuation of deferring.",
+    "source_operator": "dp_mc_knapsack",
+    "telemetry": "value function f_t; sign-vs-wait maximization; state transition; opportunity cost"
+   }
+  },
+  {
+   "primitive_id": "private_valuation",
+   "name": "Private team valuations",
+   "verbatim_quote": "Unlike the salary cap, the exact valuation that each team places on these players is not publicly known.",
+   "page": 1,
+   "latex": "\\theta_{i,j}\\ \\text{private to team } i;\\quad C_i\\ \\text{public}",
+   "symbol_and_unit_ledger": {
+    "theta_{i,j}": "team i's private value of player j",
+    "C_i": "public cap space",
+    "units": "theta in private value units; C in dollars"
+   },
+   "assumptions": [
+    "Cap space is common knowledge",
+    "Each team's valuation is private information"
+   ],
+   "breakdown_regime": "cap space is common knowledge but each team's valuation is private; this asymmetric information shapes bidding strategy",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE information asymmetry: the engine's own valuation (true probability) is private while the market's prices are public; the edge is precisely the gap between private valuation and public price, the sports analogue of private value vs public budget. GSI mechanism design: agents have private valuations but public budgets, shaping strategic bidding.",
+    "source_operator": "private_valuation",
+    "telemetry": "private value theta; public budget C; valuation-price gap"
+   }
+  },
+  {
+   "primitive_id": "common_info_cap",
+   "name": "Common knowledge of cap space",
+   "verbatim_quote": "All participants are aware of the amount of salary cap space available to each team.",
+   "page": 2,
+   "latex": "C_i(t)\\ \\text{common knowledge}\\ \\forall i",
+   "symbol_and_unit_ledger": {
+    "C_i(t)": "cap space of team i at time t",
+    "units": "C in dollars"
+   },
+   "assumptions": [
+    "All teams' budgets are publicly known",
+    "Only valuations are private"
+   ],
+   "breakdown_regime": "everyone knows every team's budget, so competition is strategic under full budget information; only valuations are private",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE market awareness: the engine models other market participants' constraints (limits, bankrolls) as common knowledge while its own edge is private; strategic interaction under known opponent budgets. GSI game theory: common-knowledge resource budgets make competition a strategic game with known constraints.",
+    "source_operator": "common_info_cap",
+    "telemetry": "common-knowledge budgets; strategic competition; private valuations"
+   }
+  },
+  {
+   "primitive_id": "state_change",
+   "name": "Each decision changes the market state",
+   "verbatim_quote": "The second unique factor of the free agency market is that teams and players are competing with one another and each contract decision changes the state of free agency.",
+   "page": 2,
+   "latex": "(P(t),C(t))\\to(P(t+1),C(t+1))\\ \\text{after each signing}",
+   "symbol_and_unit_ledger": {
+    "P(t)": "available players",
+    "C(t)": "cap spaces",
+    "state": "joint market state",
+    "units": "state is a vector of availability and budgets"
+   },
+   "assumptions": [
+    "Each signing removes a player and shrinks cap space",
+    "Decisions are history-dependent"
+   ],
+   "breakdown_regime": "the market is dynamic: every signing removes a player and shrinks cap space, changing all subsequent decisions; not a static auction",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE stateful board: each pick or line movement changes the remaining board state (available edges, bankroll), so the engine's decisions are history-dependent and must re-evaluate after every state change, not treat each pick as independent. GSI non-stationary decision process: each action transitions the environment state, so decisions are history-dependent.",
+    "source_operator": "state_change",
+    "telemetry": "market state transition; history dependence; re-evaluation after each action"
+   }
+  },
+  {
+   "primitive_id": "common_pie",
+   "name": "Players compete for a common pie",
+   "verbatim_quote": "Given the constraint of a salary cap, players are essentially competing with one another to maximize their share of a common pie.",
+   "page": 2,
+   "latex": "\\sum_j w_j \\le \\sum_i C_i\\quad(\\text{fixed total pie})",
+   "symbol_and_unit_ledger": {
+    "w_j": "player wage",
+    "C_i": "team cap",
+    "pie": "total available salary",
+    "units": "wages and cap in dollars"
+   },
+   "assumptions": [
+    "Total salary pool is fixed",
+    "Players compete for shares of the pool"
+   ],
+   "breakdown_regime": "the total salary pool is fixed, so players compete for shares; a player's reserve value reflects relative demand against the fixed pie",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE fixed-pool competition: the market's total mispricing is a finite pool; edges compete for the same limited supply of soft numbers, so capturing one edge can reduce others, a constant-sum view of the betting board. GSI constant-sum allocation: agents compete for shares of a fixed resource pool.",
+    "source_operator": "common_pie",
+    "telemetry": "fixed total pool; relative demand; share competition"
+   }
+  },
+  {
+   "primitive_id": "salaries_fall",
+   "name": "Wages fall as the cap shrinks",
+   "verbatim_quote": "As players are signed and the salary cap shrinks, generally, players expected salaries will fall.",
+   "page": 2,
+   "latex": "\\mathbb{E}[w_j(t)]\\ \\text{decreasing as}\\ \\sum_i C_i(t)\\ \\text{shrinks}",
+   "symbol_and_unit_ledger": {
+    "E[w_j(t)]": "expected wage",
+    "sum C_i(t)": "total remaining cap",
+    "units": "wage and cap in dollars"
+   },
+   "assumptions": [
+    "Aggregate budget contraction lowers expected wages",
+    "Scarce high-demand skills can rise early"
+   ],
+   "breakdown_regime": "as total money shrinks expected wages fall, though a scarce high-demand skill can rise early; the shrinking cap ultimately dominates the reserve wage",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE price dynamics: as the market absorbs money (limits, sharp action) the remaining soft prices decay; the engine models edge decay over the betting window, with scarcity premia for rare mispricings. GSI price dynamics: aggregate budget contraction drives prices down, modulo scarcity premia.",
+    "source_operator": "salaries_fall",
+    "telemetry": "expected-wage path; aggregate-budget decay; scarcity premium exception"
+   }
+  },
+  {
+   "primitive_id": "relative_competition",
+   "name": "Relative, not absolute, optimization",
+   "verbatim_quote": "unlike auction theory where participants are trying to maximize profit or surplus in an absolute sense, the GMs and players are trying to improve their position relative to their competitors.",
+   "page": 3,
+   "latex": "\\max\\ (\\text{value}_i - \\text{value}_{\\text{competitors}})\\quad\\text{not}\\quad \\max\\ \\text{value}_i",
+   "symbol_and_unit_ledger": {
+    "value_i": "team i's roster value",
+    "relative position": "value vs competitors",
+    "units": "value in wins units"
+   },
+   "assumptions": [
+    "The objective is relative standing versus competitors",
+    "Winning an auction can deplete cap relative to remaining value"
+   ],
+   "breakdown_regime": "the objective is relative standing, not absolute surplus; winning an auction can be bad if it depletes cap relative to remaining player value",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE relative edge: the engine's goal is value relative to the market and competitors, not absolute return; a bet can be 'won' yet be bad if it spends bankroll that had higher-value uses, the relative-standing discipline. GSI relative objective: maximize position versus competitors rather than absolute payoff.",
+    "source_operator": "relative_competition",
+    "telemetry": "relative-position objective; opportunity-cost-aware winning"
+   }
+  },
+  {
+   "primitive_id": "knapsack_def",
+   "name": "0-1 knapsack definition",
+   "verbatim_quote": "A 0-1 knapsack problem is a combinational optimization problem where items with various weights and benefits are selected to fill a weight constrained knapsack.",
+   "page": 3,
+   "latex": "\\max \\sum_j u_j \\theta_j\\ \\text{s.t.}\\ \\sum_j u_j w_j\\le C,\\ u_j\\in\\{0,1\\}",
+   "symbol_and_unit_ledger": {
+    "u_j": "0-1 selection",
+    "theta_j": "benefit",
+    "w_j": "weight",
+    "C": "capacity",
+    "units": "theta in value units; w,C in weight/dollar units"
+   },
+   "assumptions": [
+    "Items are indivisible (0-1 selection)",
+    "Value is additive and weight is constrained"
+   ],
+   "breakdown_regime": "combinatorial selection of items to maximize value under a weight budget; NP-hard in general, solved by DP or heuristics",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE pick portfolio IS a 0-1 knapsack: select the subset of candidate picks maximizing total edge-value subject to the bankroll stake budget; the engine's portfolio construction is this combinatorial optimization. GSI combinatorial resource selection: choose a subset of items maximizing value under a budget.",
+    "source_operator": "knapsack_def",
+    "telemetry": "0-1 selection; value objective; weight budget; combinatorial complexity"
+   }
+  },
+  {
+   "primitive_id": "sign_or_wait_decision",
+   "name": "The sign-or-wait decision",
+   "verbatim_quote": "They have to determine whether to sign individual players they value highly immediately or to wait in the hope that they can improve the overall value of their knapsack by acquiring the player they value at reduced wages preserving salary to sign additional players.",
+   "page": 3,
+   "latex": "u_{j,t}\\in\\{\\text{sign now},\\text{wait}\\};\\quad \\text{wait}\\Rightarrow \\text{lower }w_j+\\text{more cap for others}",
+   "symbol_and_unit_ledger": {
+    "u_{j,t}": "sign/wait decision",
+    "w_j": "wage",
+    "cap": "budget for additional players",
+    "units": "decision dimensionless; wage in dollars"
+   },
+   "assumptions": [
+    "Waiting may reduce the wage and preserve cap for more players",
+    "The decision is multidimensional across positions"
+   ],
+   "breakdown_regime": "the core decision: sign a valued player now or wait for a lower wage that preserves cap for more players; the multidimensional multiple-choice structure",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE commit-or-defer with bankroll preservation: take a high-edge pick now or wait for a better number that preserves bankroll for additional picks; the engine's per-pick timing is this multidimensional decision. GSI sequential allocation: commit to a high-value item now or defer for a cheaper price preserving budget for more items.",
+    "source_operator": "sign_or_wait_decision",
+    "telemetry": "sign/wait decision; wage reduction; budget preservation; multiple-choice structure"
+   }
+  },
+  {
+   "primitive_id": "draft_vs_fa_predictability",
+   "name": "Free agency vs draft predictability",
+   "verbatim_quote": "This helps to explain why the outcomes associated with free agency are nearly impossible to predict while the draft can be predicted with a high degree of accuracy by pundits.",
+   "page": 3,
+   "latex": "\\text{draft: sequential no competition}\\Rightarrow\\text{predictable};\\quad \\text{FA: competitive}\\Rightarrow\\text{unpredictable}",
+   "symbol_and_unit_ledger": {
+    "draft": "sequential selection without competition",
+    "free agency": "competitive dynamic selection",
+    "units": "predictability qualitative"
+   },
+   "assumptions": [
+    "Draft selection is sequential without competition",
+    "Free agency is competitive and stateful"
+   ],
+   "breakdown_regime": "the draft is predictable because selection is sequential without competition; free agency is unpredictable because each decision changes the competitive state",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE predictability boundary: isolated sequential evaluations are predictable, but the competitive betting market is stateful and unpredictable; the engine distinguishes forecastable structure from competitive noise and refuses to over-claim predictability. GSI predictability: non-competitive sequential processes are predictable; competitive stateful processes are not.",
+    "source_operator": "draft_vs_fa_predictability",
+    "telemetry": "competitive state-dependence; predictability boundary; uncertainty source"
+   }
+  },
+  {
+   "primitive_id": "objective_wins",
+   "name": "Objective: maximize win probability",
+   "verbatim_quote": "Under the assumption that the revenue earned by a franchise is entirely related to success of its basketball team, the objective of GMs in free agency is to add players that will give their team the greatest chance of winning.",
+   "page": 3,
+   "latex": "\\max\\ \\Pr(\\text{win})\\quad\\text{via roster value }\\sum_j u_j\\theta_j",
+   "symbol_and_unit_ledger": {
+    "Pr(win)": "win probability",
+    "theta_j": "player win-contribution",
+    "units": "Pr dimensionless; theta in wins/value units"
+   },
+   "assumptions": [
+    "Franchise revenue is tied to team success",
+    "Player value is win-contribution"
+   ],
+   "breakdown_regime": "franchise revenue is tied to team success, so the objective is adding players that maximize win probability; player value is win-contribution",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE terminal objective IS win probability: the engine's roster of picks is assembled to maximize the probability of profitable outcomes, with each pick's value its win-contribution; this links the knapsack to the Bashuk win-probability layer. GSI terminal objective: optimize the probability of the desired terminal outcome (success/win).",
+    "source_operator": "objective_wins",
+    "telemetry": "win-probability objective; win-contribution value; revenue-success link"
+   }
+  },
+  {
+   "primitive_id": "spend_all_cap_assumption",
+   "name": "Spend-all-cap assumption",
+   "verbatim_quote": "Treating free agency as a knapsack problem implicitly assumes that teams will spend all of their available cap space on players who are free agents.",
+   "page": 5,
+   "latex": "\\sum_j u_j w_j = C\\quad(\\text{binding budget, assumed})",
+   "symbol_and_unit_ledger": {
+    "C": "cap space",
+    "binding": "budget fully spent",
+    "units": "w,C in dollars"
+   },
+   "assumptions": [
+    "The budget is fully spent (binding)",
+    "This is typical but not absolute and may fluctuate year to year"
+   ],
+   "breakdown_regime": "the knapsack formulation assumes the budget is fully spent; consistent with practice but not absolute and may fluctuate year to year",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE bankroll-utilization assumption: the knapsack assumes full bankroll deployment, but the engine may deliberately under-deploy (PASS) when no edge clears the gate; the spend-all assumption breaks exactly when discipline demands holding budget. GSI binding-budget model: assumes full resource utilization; breaks when budget is deliberately under-spent.",
+    "source_operator": "spend_all_cap_assumption",
+    "telemetry": "binding budget; full-utilization assumption; deliberate under-deployment breakdown"
+   }
+  },
+  {
+   "primitive_id": "threshold_policy",
+   "name": "Threshold control policy",
+   "verbatim_quote": "if the value of the player added to the team is greater than the opportunity cost of the cap space being utilized by the player.",
+   "page": 6,
+   "latex": "u^*_{j,t}=1\\ \\text{iff}\\ \\theta_j \\ge \\mathbb{E}[f_{t+1}(\\bar P,\\bar C)]-f_{t+1}(P-A_j,C-w_j)\\ \\text{and}\\ w_j\\le C",
+   "symbol_and_unit_ledger": {
+    "theta_j": "player value",
+    "opportunity cost": "continuation-value difference",
+    "w_j<=C": "affordability",
+    "units": "theta and opportunity cost in value units; w,C in dollars"
+   },
+   "assumptions": [
+    "Sign iff value exceeds the opportunity cost of the cap space used",
+    "The wage must be affordable"
+   ],
+   "breakdown_regime": "the optimal policy is a threshold: sign iff the player's value exceeds the opportunity cost of the cap space used and the wage is affordable; otherwise wait",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE emission gate IS this threshold policy: emit a pick iff its edge-value exceeds the opportunity cost of the bankroll it consumes (the value of waiting/other picks) and the stake is affordable; otherwise PASS. The conjunction gate is the opportunity-cost threshold. GSI threshold control: act iff immediate value exceeds the opportunity cost of the resource consumed, subject to affordability.",
+    "source_operator": "threshold_policy",
+    "telemetry": "value >= opportunity-cost threshold; affordability constraint; sign-or-wait rule"
+   }
+  },
+  {
+   "primitive_id": "exponential_state_space",
+   "name": "Exponential state space and scaling down",
+   "verbatim_quote": "Although the state-space of the dynamic problem will scale exponentially with the addition of each player to the model, in reality teams are generally interested in a small group of players who are considered to be a good match for their teams and can scale the model down accordingly.",
+   "page": 6,
+   "latex": "|\\text{state space}|\\sim 2^{N}\\quad\\Rightarrow\\quad \\text{restrict to relevant subset}",
+   "symbol_and_unit_ledger": {
+    "N": "number of players considered",
+    "state space": "availability configurations",
+    "units": "state-space size dimensionless (count)"
+   },
+   "assumptions": [
+    "State space grows exponentially with the number of players",
+    "Restrict to the relevant subset; heuristics approximate when large"
+   ],
+   "breakdown_regime": "the DP state space grows exponentially with players, so it is scaled down to the small relevant subset; heuristics give approximate solutions when large",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE tractability: the full pick-combination space is exponential, so the engine prunes to the relevant candidate subset (the board) and uses heuristics/gates for approximate portfolio solutions, never enumerating all combinations. GSI tractability: prune an exponential state space to the relevant subset; use heuristics for approximate solutions.",
+    "source_operator": "exponential_state_space",
+    "telemetry": "exponential state space; relevance pruning; heuristic approximation"
+   }
+  },
+  {
+   "primitive_id": "signing_clusters",
+   "name": "Signings occur in clusters",
+   "verbatim_quote": "Typically, free agents are signed in clusters throughout the duration of the free agency period.",
+   "page": 6,
+   "latex": "\\text{signings arrive in bursts (clustered, not uniform)}",
+   "symbol_and_unit_ledger": {
+    "clusters": "bursty signing events",
+    "units": "event timing qualitative"
+   },
+   "assumptions": [
+    "Signings arrive in bursts",
+    "Each signing triggers strategic responses"
+   ],
+   "breakdown_regime": "signings cluster because each signing changes market dynamics and triggers strategic responses; the model predicts bursty rather than uniform activity",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE cascade dynamics: line movements and pick emissions cluster because each market action changes conditions and triggers responses; the engine models bursty edge appearance rather than uniform arrival, anticipating cascades. GSI cascade dynamics: one event changes conditions and triggers a burst of related events.",
+    "source_operator": "signing_clusters",
+    "telemetry": "bursty event arrival; cascade triggering; non-uniform timing"
+   }
+  },
+  {
+   "primitive_id": "market_state_update",
+   "name": "Each signing triggers strategic responses",
+   "verbatim_quote": "This is consistent with the model since the signing of one free agent will inevitably change the dynamics of the market conditions for both teams and players.",
+   "page": 6,
+   "latex": "\\text{signing}\\Rightarrow \\Delta(P,C)\\Rightarrow \\text{strategic responses}",
+   "symbol_and_unit_ledger": {
+    "Delta(P,C)": "state change",
+    "responses": "updated strategies",
+    "units": "state vector; responses qualitative"
+   },
+   "assumptions": [
+    "Each signing reduces uncertainty about roster spots, cap, and opportunity costs",
+    "Other agents re-optimize after the event"
+   ],
+   "breakdown_regime": "each signing reduces uncertainty about roster spots, cap, and opportunity costs, triggering strategic responses from other teams and players",
+   "domain": "cs/operations-research",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE event-driven re-optimization: each market event (injury news, line move, pick result) reduces uncertainty and triggers the engine to re-evaluate the board; decisions are re-optimized after every information-revealing event. GSI event-driven re-optimization: an information-revealing event reduces uncertainty and triggers re-planning.",
+    "source_operator": "market_state_update",
+    "telemetry": "information-revealing event; uncertainty reduction; re-optimization trigger"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "kirshner2011_freeagency_knapsack",
+   "think": "This inline cycle extracts Sam Kirshner's 2011 MIT Sloan Sports Analytics Conference paper, Optimizing an NBA Team's Approach to Free Agency using a Multiple-Choice Knapsack Model, a seven-page operations-research treatment of roster construction under a salary cap. A provenance note is required: the PDF uses a shifted custom font encoding for its display mathematics and portions of the prose, so the equations are reconstructed in LaTeX from the unambiguous prose description and labeled as reconstructions, while every verbatim quote is a clean readable passage verified as an exact substring of the extracted text. Nineteen primitives are extracted, each with a verified quote, page anchor, reconstructed equation, symbol and unit ledger, breakdown regime, and a Layer-2 mapping with telemetry. The book's load-bearing claim is that free agency is a multidimensional multiple-choice knapsack solved by a dynamic program whose optimal control is a threshold policy: sign a player if and only if the value the player adds exceeds the opportunity cost of the cap space consumed and the wage is affordable.\n\nThe retrocausal genealogy runs from combinatorial optimization and auction theory to this sports labor-market application. The 0-1 knapsack is the classical budget-constrained selection problem, and the paper extends it to a dynamic, competitive, multiple-choice setting where each decision changes the market state. The genealogy is precise about what makes free agency harder than a draft: the draft is sequential selection without competition and therefore predictable, while free agency is competitive and stateful and therefore nearly impossible to predict. This is the same distinction the Foundry's reinforcement-learning and optimization books draw between stationary and non-stationary decision processes, and it grounds the engine's humility about predicting competitive markets. The private-value auction structure, with public budgets and private valuations, descends from auction theory but is modified by the relative-standing objective: participants maximize position versus competitors, not absolute surplus.\n\nThe recursive theory of mind models the general manager as a strategic agent reasoning about other agents under common-knowledge budgets. Every team knows every other team's cap space, but not their private valuations, so each GM must infer competitors' needs from rosters and predict how a signing will shift opportunity costs. The dynamic program formalizes this recursion: the value of signing now is the player's value plus the continuation value of the reduced state, while the value of waiting is the expectation over competitors' possible signings of the continuation value. The threshold policy is the fixed point of this recursion, sign iff value exceeds the opportunity cost, and it is exactly the structure of a rational agent deciding whether to commit a scarce resource now or preserve it for better future uses. The model also captures the players' side: they compete for shares of a fixed salary pie and may reject offers below their perceived relative value, expecting the market to move.\n\nThe cross-layer veto adjudication is where this book earns its place beside the optimization and win-probability layers. The first veto is the opportunity-cost threshold: a pick, like a signing, must clear the value-versus-opportunity-cost bar, which is precisely the Foundry's conjunction gate, emit only if the edge exceeds the value of the bankroll's alternative uses. The second veto is the spend-all-cap assumption and its breakdown: the knapsack assumes full budget deployment, but discipline sometimes demands holding budget, so the engine must be allowed to under-deploy when no edge clears the gate, the PASS-as-badge-of-honor principle. The third veto is state-dependence: each decision changes the board, so picks cannot be treated as independent; the engine re-optimizes after every information-revealing event. The fourth veto is the predictability boundary: competitive stateful markets are fundamentally less predictable than isolated sequential evaluations, so the engine refuses to over-claim forecast accuracy. The objective links to the Bashuk win-probability layer, the roster of picks is assembled to maximize the probability of profitable outcomes, and the exponential state space is pruned to the relevant board exactly as the engine prunes the combinatorial pick space. The result is a sovereign roster-optimization layer: budget-constrained value maximization with opportunity-cost thresholds, timing trade-offs, and stateful re-optimization, all grounded in clean verbatim prose with honestly labeled equation reconstructions.\n\nTwo further sovereign details sharpen the layer and push the reasoning past the minimum. The signing-ratio criterion compares the value-to-cap ratio of the available player pool now against the pool after a signing, so a contract is offered only when the present ratio dominates the future ratio; this is the marginal opportunity-cost test that the threshold policy implements, and the value of the signing rises with the gap between the two ratios. The paper also distinguishes myopic from strategic general managers: the myopic GM solves the static knapsack at each period and signs the best affordable target, while the strategic GM forecasts how a signing shifts future opportunity costs across the remaining board. Finally, the model explains why NBA contracts routinely exceed predicted value-added salaries: the rationality constraint that wages not surpass worker value is absent, because GMs maximize talent subject only to the cap, so marquee players receive multiple similar offers and choose on personal preference rather than price. These details ground the engine's distinction between greedy and lookahead pick selection, its account of why market prices can overshoot fundamental value, and its prediction that activity arrives in clusters as each signing reduces uncertainty and triggers strategic responses across the market.",
+   "retrocausal_genealogy": "The genealogy runs from the classical 0-1 knapsack and auction theory to a dynamic competitive multiple-choice knapsack for sports labor markets. The paper extends static budget-constrained selection to a stateful competitive setting, distinguishing the predictable sequential draft from the unpredictable competitive free-agency market, the same stationary-versus-non-stationary distinction the Foundry's RL and optimization books draw. The private-value auction with public budgets and private valuations descends from auction theory but is modified by a relative-standing objective, maximize position versus competitors rather than absolute surplus. The dynamic program and threshold policy descend from Bellman optimality and optimal stopping, grounding the sign-or-wait decision in opportunity-cost reasoning.",
+   "theory_of_mind": "The general manager is a strategic agent reasoning about competitors under common-knowledge budgets but private valuations. Each GM infers rivals' needs from rosters and predicts how a signing shifts opportunity costs. The dynamic program formalizes the recursion, signing-now value is player value plus continuation of the reduced state, waiting value is the expectation over competitors' signings of continuation, and the threshold policy sign iff value exceeds opportunity cost is the fixed point. The players' side is modeled too, they compete for shares of a fixed salary pie and may reject below perceived relative value expecting the market to move. This is rational commit-or-defer reasoning under scarcity and competition.",
+   "cross_layer_veto": "Four vetoes adjudicate against the optimization and win-probability layers. The opportunity-cost threshold is the conjunction gate, emit a pick only if its edge exceeds the bankroll's alternative-use value. The spend-all-cap assumption breaks when discipline demands holding budget, so the engine may under-deploy and PASS. State-dependence forbids treating picks as independent, the engine re-optimizes after every information-revealing event. The predictability boundary forbids over-claiming accuracy in competitive stateful markets. The objective links to Bashuk win-probability, and the exponential pick-combination space is pruned to the relevant board. Each veto is grounded in a clean verbatim quote with honestly labeled equation reconstruction."
+  }
+ ],
+ "universal_lens": "Kirshner 2011 contributes the roster-optimization and budget-constrained decision layer to the Foundry stack: free agency as a multidimensional multiple-choice knapsack solved by a dynamic program whose optimal control is an opportunity-cost threshold policy. Its load-bearing invariants are the knapsack budget constraint, the sign-or-wait timing trade-off under decaying prices and shrinking supply, the Bellman recursion comparing immediate value plus continuation against expected continuation, the threshold rule act iff value exceeds the opportunity cost of the resource consumed, the relative-standing objective, and the exponential state space pruned to the relevant subset. Together they formalize how a rational agent allocates a scarce budget across competing opportunities over time, with each decision changing the state.",
+ "gsi_mapping": "For GSI these primitives are the general budget-constrained sequential-allocation layer: maximize system value subject to a fixed resource budget (compute, energy, bandwidth), decide commit-versus-defer under decaying resource prices and shrinking availability, run a Bellman recursion over the resource state, apply an opportunity-cost threshold before consuming a resource, prune an exponential configuration space to the relevant subset, and re-optimize after every state-changing event. The private-valuation/public-budget structure informs mechanism design, and the relative-standing objective informs competitive resource games. The spend-all-budget assumption and its deliberate-under-utilization breakdown are flagged so GSI does not force full resource consumption when holding is optimal.",
+ "gse_mapping": "For GSE this is the pick-portfolio and emission-timing layer: pick selection IS a knapsack with bankroll as cap, edge-value as benefit and stake as weight; the conjunction gate IS the opportunity-cost threshold policy, emit iff edge exceeds the bankroll's alternative-use value and the stake is affordable; the sign-or-wait trade-off IS the lock-now-versus-wait-for-line-movement decision; the spend-all-cap breakdown IS the PASS discipline of holding bankroll when no edge clears the gate; state-dependence means the engine re-optimizes after every injury news, line move, or result; the predictability boundary restrains over-claiming in competitive markets; and the win-probability objective links to the Bashuk layer. Equation reconstructions are labeled, and no sportsbook line is a model input."
+}

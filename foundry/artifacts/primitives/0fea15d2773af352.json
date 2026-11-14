@@ -1,0 +1,78 @@
+{
+  "book_id": "0fea15d2773af352",
+  "source_status": "COMPLETE",
+  "title": "2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors",
+  "file_name": "2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors.md",
+  "sha256": "0fea15d2773af352c763ce7ef57f1e0f06e050f8b9af01b9658c2b6184c7982e",
+  "primary_domain": "football",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Spatial temporal analysis of quarterback pocket protection via Voronoi tessellation and block sustainability metrics. Universal Lens: Rooted in 2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors (0fea15d2773af352), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on block persistence and pressure onset time using PBWR and spatiotemporal tracking data for probabilistic line effectiveness scoring. GSI Mapping: Rooted in 2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors (0fea15d2773af352), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition modeling of pocket space occupation dynamics using normalized player coordinates and Voronoi cells for real-time situational awareness. GSE Mapping: Rooted in 2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors (0fea15d2773af352), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pocket_block_window_ratio",
+      "name": "Pocket Block Window Ratio",
+      "verbatim_quote": "PBWR is compiled on an individual player basis, assigning either a success (win) or failure (loss) outcome on each play; a win is defined as an offensive player \"sustain[ing] their blocks for 2.5 seconds or longer\", with a failure defined as a failure to do so.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PBWR': 'dimensionless ratio, 0 to 1', 't_{\\\\text{block}}': 'seconds, duration of sustained block'}",
+      "assumptions": "Block sustainability is binary, independent of pressure magnitude or timing.",
+      "breakdown_regime": "When t_{\\text{block}} < 2.5 seconds",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "PBWR serves as a scalar kernel for GSI's Bayesian line evaluation model, encoding block durability over time.",
+        "source_operator": "pocket_block_window_ratio",
+        "telemetry": "Play-level success/failure classification based on 2.5s threshold."
+      }
+    },
+    {
+      "primitive_id": "pocket_occupancy_dynamics",
+      "name": "Pocket Occupancy Dynamics",
+      "verbatim_quote": "We define the pocket as a 10x12 yd</mark><sup>2</sup> <mark>rectangular space, being centered around the initial position of the ball.",
+      "page": 2,
+      "latex": "\\mathcal{P}(x,y,t) = \\{(x',y') \\in \\mathbb{R}^2 : |x'-x| \\leq 5 \\text{yd}, |y'-y| \\leq 6 \\text{yd}\\}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{P}': 'set of points in pocket space', 'x, y': 'coordinates in normalized field space (yards)', 't': 'time (seconds)'}",
+      "assumptions": "Pocket is static and rectangular; spatial dynamics modeled via Voronoi diagrams.",
+      "breakdown_regime": "Outside 10x12 yard bounding box",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Voronoi tessellations map player spatial influence within \\mathcal{P}, enabling GSE's state transitions.",
+        "source_operator": "pocket_occupancy_dynamics",
+        "telemetry": "Player Voronoi cell areas and centroid shifts over time."
+      }
+    },
+    {
+      "primitive_id": "pressure_onset_timing",
+      "name": "Pressure Onset Timing",
+      "verbatim_quote": "That is, the performance of an offensive lineman conceding a pressure 1 second after the snap is considered equal to that of a lineman who concedes pressure after 2.4 seconds, and likewise the metric offers no distinction for the degree of protection the quarterback enjoys.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{\\\\text{pressure}}': 'seconds post-snap', 't_{\\\\text{release}}': 'seconds post-snap'}",
+      "assumptions": "All pressure events are treated equally regardless of timing or severity.",
+      "breakdown_regime": "When t_{\\text{pressure}} approaches t_{\\text{release}}",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pressure timing is a scalar input to GSI's risk-weighted line performance model.",
+        "source_operator": "pressure_onset_timing",
+        "telemetry": "Time-to-pressure distribution per play."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0fea15d2773af352_t0",
+      "think": "The core insight of the framework lies in redefining offensive line effectiveness through spatial-temporal lens rather than traditional counting stats. PBWR captures block sustainability but lacks nuance in timing and degree of protection. Pocket occupancy dynamics introduce a geometric abstraction of the quarterback’s protected zone, modeled via Voronoi diagrams to reflect spatial dominance. Pressure onset timing reveals a critical flaw in existing metrics—uniform treatment of pressure events despite varying impact. These primitives form a dual structure: one temporal (PBWR, pressure timing) and one spatial (pocket dynamics), enabling a richer, multi-dimensional model of line performance. Failure modes include oversimplification of pressure severity and static pocket assumptions. The framework thus bridges discrete event counting with continuous spatial analysis.\n\nDeep epistemic analysis for 2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors (0fea15d2773af352, domain=football, pages_read=10/10): Operator 'Pocket Block Window Ratio' (page 2, domain football) captures: PBWR is compiled on an individual player basis, assigning either a success (win) or failure (loss) outcome on each play; a win is defined as an offensive player \"sustain[ing] their blocks for 2.5 seconds or longer\", with a failure defined as a failure to do so. Assumptions: Block sustainability is binary, independent of pressure magnitude or timing. Breakdown regime: When t_{\\text{block}} < 2.5 seconds Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): PBWR serves as a scalar kernel for GSI's Bayesian line evaluation model, encoding block durability over time. Operator 'Pocket Occupancy Dynamics' (page 2, domain football) captures: We define the pocket as a 10x12 yd</mark><sup>2</sup> <mark>rectangular space, being centered around the initial position of the ball. Assumptions: Pocket is static and rectangular; spatial dynamics modeled via Voronoi diagrams. Breakdown regime: Outside 10x12 yard bounding box Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Voronoi tessellations map player spatial influence within \\mathcal{P}, enabling GSE's state transitions. Operator 'Pressure Onset Timing' (page 2, domain football) captures: That is, the performance of an offensive lineman conceding a pressure 1 second after the snap is considered equal to that of a lineman who concedes pressure after 2.4 seconds, and likewise the metric offers no distinction for the degree of protection the quarterback enjoys. Assumptions: All pressure events are treated equally regardless of timing or severity. Breakdown regime: When t_{\\text{pressure}} approaches t_{\\text{release}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pressure timing is a scalar input to GSI's risk-weighted line performance model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors (0fea15d2773af352, domain=football, pages_read=10/10): Operator 'Pocket Block Window Ratio' (page 2, domain football) captures: PBWR is compiled on an individual player basis, assigning either a success (win) or failure (loss) outcome on each play; a win is defined as an offensive player \"sustain[ing] their blocks for 2.5 seconds or longer\", with a failure defined as a failure to do so. Assumptions: Block sustainability is binary, independent of pressure magnitude or timing. Breakdown regime: When t_{\\text{block}} < 2.5 seconds Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): PBWR serves as a scalar kernel for GSI's Bayesian line evaluation model, encoding block durability over time. Operator 'Pocket Occupancy Dynamics' (page 2, domain football) captures: We define the pocket as a 10x12 yd</mark><sup>2</sup> <mark>rectangular space, being centered around the initial position of the ball. Assumptions: Pocket is static and rectangular; spatial dynamics modeled via Voronoi diagrams. Breakdown regime: Outside 10x12 yard bounding box Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Voronoi tessellations map player spatial influence within \\mathcal{P}, enabling GSE's state transitions. Operator 'Pressure Onset Timing' (page 2, domain football) captures: That is, the performance of an offensive lineman conceding a pressure 1 second after the snap is considered equal to that of a lineman who concedes pressure after 2.4 seconds, and likewise the metric offers no distinction for the degree of protection the quarterback enjoys. Assumptions: All pressure events are treated equally regardless of timing or severity. Breakdown regime: When t_{\\text{pressure}} approaches t_{\\text{release}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pressure timing is a scalar input to GSI's risk-weighted line performance model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in game theory and spatial statistics, particularly Voronoi diagrams used in computational geometry and agent-based modeling. Influenced by earlier work on defensive pressure quantification and player tracking analytics. Retrocausal Genealogy: Rooted in 2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors (0fea15d2773af352), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models the quarterback as a decision-making agent under spatial constraints, with the offensive line as a dynamic protective force. Opposing agents (defensive linemen) are represented through Voronoi influence zones and pressure onset times. Theory of Mind & Decision Maker Model: Rooted in 2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors (0fea15d2773af352), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by decoupling PBWR (temporal) from pocket dynamics (spatial). Leakage occurs when temporal metrics fail to capture spatial degradation of pocket integrity. Veto conditions ensure no single metric dominates the composite score without cross-validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2021 - A Spatial Framework for Analyzing NFL Offensive Line Play - Unknown Authors (0fea15d2773af352), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

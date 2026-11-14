@@ -1,0 +1,561 @@
+{
+  "book_id": "04b253956fe4be89",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_BIOMECHANICS_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Mei, Zhang, Li & Yang, 'Mechanical Output and Post-exercise Jump Responses to Percentage-Based, Repetitions-in-Reserve, and Velocity-Based Back-Squat Training in Trained Sprinters: A Randomized Crossover Study', Journal of Sports Science and Medicine (2026) 25:915-933, DOI 10.52082/jssm.2026.915 (19 pages). Full randomized within-participant crossover (18 male 100m sprinters) comparing PBT/RIR/VBT back-squat (80% 1RM, 5 sets x <=5 reps) with bilateral force-plate kinetics + CMJ/SJ force-time responses. NULL primary result (no condition effect on force/impulse/CMJ/SJ) despite different realized volume loads; explicit null-vs-equivalence and monitoring-requires-actuation caveats. Extracted faithfully (not a derivative summary). The source prints ONE numbered-style display equation (positive vertical impulse integral, lines 496-504) in a shifted/custom font that extracts garbled; it is reconstructed in labeled LaTeX and flagged. Other relations (net COM acceleration, RSImod, power, volume load) are unambiguous prose definitions reconstructed as labeled LaTeX and flagged in assumptions. Domain physics (biomechanics/force-time kinetics) matches catalog; strength-and-conditioning context (sprinters), not football-specific. The load-regulation control policies (RIR feedback, VBT velocity-loss governor), force-time measurement pipeline, realized-exposure accounting, and actuation gate are sport-agnostic and isomorphic to GSE's load-governance and mechanical-output layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "autoregulation_purpose",
+      "name": "Compare acute mechanical output + post-exercise jump across PBT/RIR/VBT back-squat",
+      "verbatim_quote": "compare acute mechanical output and immediate post-exercise jump responses among percentage-based training (PBT), repetitions in reserve (RIR), and velocity-based training (VBT) during the back-squat exercise in trained sprinters",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The study compares session-level mechanical output during back-squat training and immediate postexercise jump responses among percentage-based (PBT), repetitions-in-reserve (RIR), and velocity-based (VBT) protocols in trained male sprinters, integrating force-plate kinetics during training with CMJ/SJ force-time responses rather than relying on barbell velocity or jump height alone."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Comparing load-regulation policies by realized mechanical stimulus is the same control-policy evaluation GSE runs on load governors.",
+        "source_operator": "autoregulation_purpose",
+        "telemetry": "PBT vs RIR vs VBT; mechanical output + CMJ/SJ force-time; trained sprinters"
+      }
+    },
+    {
+      "primitive_id": "pbt_1rm_day_to_day",
+      "name": "PBT limitation: a single 1RM may not reflect day-to-day capacity",
+      "verbatim_quote": "a single 1RM assessment may not reflect an athlete's day-to-day capacity",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Percentage-based training prescribes load relative to 1RM, enabling advance planning and standardized programming, but a single 1RM assessment may not reflect an athlete's day-to-day capacity, and even at the same percentage of 1RM the maximum completable repetitions differ substantially among athletes with different training backgrounds."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The stale-1RM problem is the same fixed-prior-vs-current-state mismatch GSE flags in static load prescriptions.",
+        "source_operator": "pbt_1rm_day_to_day",
+        "telemetry": "PBT = %1RM fixed; 1RM stale vs day-to-day capacity; reps-at-%1RM vary by athlete"
+      }
+    },
+    {
+      "primitive_id": "same_load_different_failure",
+      "name": "Same relative load + rep count = different proximity to task failure",
+      "verbatim_quote": "the same relative load and prescribed repetition count may represent different proximities to task failure",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because repetitions-at-percentage vary by athlete, the same relative load and prescribed repetition count may represent different proximities to task failure, motivating autoregulation via VBT (movement velocity and its decline) or RIR (estimated remaining technically acceptable repetitions)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Load-relative-to-failure is the same effort-proximity variable GSE tracks rather than absolute load.",
+        "source_operator": "same_load_different_failure",
+        "telemetry": "same %1RM + reps != same proximity-to-failure; autoregulation needed"
+      }
+    },
+    {
+      "primitive_id": "vbt_regulates_velocity",
+      "name": "VBT regulates volume by movement velocity and its decline",
+      "verbatim_quote": "VBT regulates training volume according to movement velocity and its decline",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "VBT regulates training volume according to movement velocity and its decline, whereas RIR requires athletes to estimate how many additional technically acceptable repetitions they could complete at set end; velocity loss and RIR are associated during the back squat, so both inform remaining repetition capacity, but they differ only if feedback meaningfully alters load, reps, or within-set effort."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Velocity-loss as a fatigue proxy is the same within-set effort-decay signal GSE uses for termination rules.",
+        "source_operator": "vbt_regulates_velocity",
+        "telemetry": "VBT = velocity + velocity-decline control; RIR = estimated remaining reps; associated"
+      }
+    },
+    {
+      "primitive_id": "monitoring_requires_actuation",
+      "name": "Monitoring helps only when translated into a meaningful stimulus adjustment",
+      "verbatim_quote": "confer an acute advantage only when it is translated into a meaningful adjustment of the training stimulus",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper's central thesis: different regulation methods do not necessarily produce different training exposures; when repetitions per set are capped, permitted within-set exposure and acute mechanical output converge across approaches, so monitoring information confers an acute advantage only when translated into a meaningful adjustment of the training stimulus."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Monitoring-without-actuation is worthless is literally GSE's veto: a signal that never changes the decision adds no edge.",
+        "source_operator": "monitoring_requires_actuation",
+        "telemetry": "monitoring advantage ONLY IF it changes load/reps/effort; capped reps converge exposures"
+      }
+    },
+    {
+      "primitive_id": "crossover_design",
+      "name": "Randomized within-participant crossover, all 18 complete all 3 conditions",
+      "verbatim_quote": "A randomized, within-participant crossover design was used to compare three back-squat conditions: PBT, RIR, and VBT",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A randomized within-participant crossover design compared PBT, RIR, and VBT; all 18 participants completed all three conditions, order randomized by drawing lots, 1RM separated from the first trial by at least 48 h and consecutive trials by at least 72 h to minimize residual fatigue."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The within-participant crossover is the same paired-design control GSE uses to remove between-subject variance.",
+        "source_operator": "crossover_design",
+        "telemetry": "randomized crossover; 18 complete all 3; lots order; 48h/72h washout"
+      }
+    },
+    {
+      "primitive_id": "72h_separation",
+      "name": "72 h between trials to minimize residual fatigue carryover",
+      "verbatim_quote": "consecutive experimental trials were separated by at least 72 h to minimize residual fatigue from the preceding condition",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Consecutive experimental trials were separated by at least 72 h to minimize residual fatigue from the preceding condition, and participants refrained from strenuous activity and additional lower-body resistance training in the 72 h before each trial, standardizing diet, habitual training, and test preparation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The fatigue-washout interval is the same carryover-control GSE enforces between repeated-state measurements.",
+        "source_operator": "72h_separation",
+        "telemetry": ">=72h between trials; no strenuous/lower-body RT pre-trial; standardized prep"
+      }
+    },
+    {
+      "primitive_id": "18_sprinters",
+      "name": "18 male 100-m sprinters: 20.0 y, 74.38 kg, 1RM 150 kg, 100m 11.03 s",
+      "verbatim_quote": "All 18 participants (age = 20.0 ± 1.3 years, height = 181.17 ± 4.60 cm, body mass = 74.38 ± 6.50 kg",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "18 male 100-m sprinters (age 20.0 +/- 1.3 y, height 181.17 +/- 4.60 cm, mass 74.38 +/- 6.50 kg, back-squat 1RM 150.0 +/- 21.3 kg, relative 1RM 1.97 +/- 0.40 kg/kg, resistance-training experience 2.40 +/- 1.24 y, 100m 11.03 +/- 0.14 s), Chinese national second-class or higher; ethics 2026358H Beijing Sport University."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The trained-sprinter cohort is the same high-ecological-validity narrow sample GSE notes for generalization limits.",
+        "source_operator": "18_sprinters",
+        "telemetry": "18 sprinters 20.0y/74.38kg/1RM 150kg/rel 1.97/100m 11.03s; national 2nd-class+"
+      }
+    },
+    {
+      "primitive_id": "sensitivity_power_f031",
+      "name": "Sensitivity power: 80% power for omnibus Cohen's f = 0.31",
+      "verbatim_quote": "the design provided 80% power to detect an omnibus effect of approximately Cohen's f = 0.31",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A sensitivity power analysis (18 participants, 3 repeated conditions, alpha 0.05, assumed repeated-measures correlation 0.50, nonsphericity epsilon 1.0) showed the design had 80% power to detect an omnibus effect of approximately Cohen's f = 0.31, so smaller between-condition effects may have remained undetected."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The a-posteriori detectable-effect floor is the same power-honesty GSE attaches to null results.",
+        "source_operator": "sensitivity_power_f031",
+        "telemetry": "18 subj/3 cond/alpha .05/rho .50/eps 1.0 -> 80% power at f=0.31; smaller effects undetectable"
+      }
+    },
+    {
+      "primitive_id": "rir_remaining_capacity",
+      "name": "RIR = remaining repetition capacity, not pain or general exertion",
+      "verbatim_quote": "RIR reflected remaining repetition capacity rather than pain or general perceived exertion",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "During RIR familiarization participants practiced estimating additional technically acceptable repetitions at set end, with investigators emphasizing that RIR reflected remaining repetition capacity rather than pain or general perceived exertion, distinguishing it from generic RPE."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RIR as a capacity estimate (not exertion) is the same remaining-effort variable GSE separates from perceived fatigue.",
+        "source_operator": "rir_remaining_capacity",
+        "telemetry": "RIR = remaining technically-acceptable reps; NOT pain/general RPE"
+      }
+    },
+    {
+      "primitive_id": "butterworth_20hz",
+      "name": "Force signal: 1000 Hz, 4th-order zero-lag Butterworth 20 Hz low-pass",
+      "verbatim_quote": "the primary signal was low-pass filtered using a fourth-order, zero-lag Butterworth filter with a 20-Hz cutoff",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Bilateral vertical ground-reaction forces (Kistler 9286BA, one foot per plate) sampled at 1000 Hz via BioWare 5.4.8.0, summed left+right, then low-pass filtered with a fourth-order zero-lag Butterworth filter at 20 Hz cutoff; processed offline in Python with laboratory scripts."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The force-signal preprocessing chain is the same clean-kinetics pipeline GSE applies to force-plate data.",
+        "source_operator": "butterworth_20hz",
+        "telemetry": "Kistler 9286BA 1000Hz; sum L+R; 4th-order zero-lag Butterworth 20Hz; Python offline"
+      }
+    },
+    {
+      "primitive_id": "onset_adaptive_threshold",
+      "name": "Movement onset: adaptive threshold = max(3.5% standing, 5x baseline SD, 20 N) for 20 ms",
+      "verbatim_quote": "defined as the greater of 3.5% of standing force, five times the baseline force standard deviation, or 20 N, sustained for at least 20 ms",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Movement onset was identified when vertical GRF deviated from standing force by an adaptive threshold equal to the greater of 3.5% of standing force, five times the baseline force SD, or 20 N, sustained at least 20 ms; takeoff when force fell below 20 N for 20 ms, landing when it exceeded 20 N for 20 ms; standing force = median over the 180-ms window 200 to 20 ms before onset; mass = standing force / g."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The adaptive event-detection threshold is the same robust onset/offset segmentation GSE uses on force signals.",
+        "source_operator": "onset_adaptive_threshold",
+        "telemetry": "onset = max(3.5% standing, 5xSD, 20N) >=20ms; takeoff/landing 20N/20ms; standing=median 180ms"
+      }
+    },
+    {
+      "primitive_id": "net_com_acceleration",
+      "name": "Net COM acceleration = (total vertical force - body weight) / body mass",
+      "verbatim_quote": "Net center-of-mass acceleration was calculated by subtracting body weight from total vertical force and dividing the result by body mass",
+      "page": 3,
+      "latex": "a_{COM}(t) = \\frac{F_z(t) - m g}{m}",
+      "symbol_and_unit_ledger": {
+        "F_z": "total vertical ground-reaction force [N]",
+        "m": "body mass [kg]",
+        "g": "gravitational acceleration [m/s^2]",
+        "a_COM": "net center-of-mass acceleration [m/s^2]"
+      },
+      "assumptions": [
+        "Net center-of-mass acceleration = (total vertical GRF - body weight) / body mass; vertical COM velocity by numerical integration of acceleration, displacement by a second integration; this is Newton's second law applied to the athlete-barbell system.",
+        "Reconstructed from the unambiguous prose definition (no numbered display equation printed for this relation)."
+      ],
+      "breakdown_regime": "valid while force-plate signal is clean and body mass constant; integration drift accumulates without baseline correction",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Force-to-acceleration via Newton's law is the same kinetics-to-kinematics integration GSE uses for COM motion.",
+        "source_operator": "net_com_acceleration",
+        "telemetry": "a_COM = (F_z - mg)/m [m/s^2]; v = integral a; displacement = integral v"
+      }
+    },
+    {
+      "primitive_id": "jump_height_impulse_momentum",
+      "name": "Jump height via impulse-momentum method; flight-time only for QC",
+      "verbatim_quote": "Jump height was calculated primarily using the impulse-momentum method; the flight-time method was used only for quality control",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Jump height was calculated primarily by the impulse-momentum method (integrating net force to takeoff velocity then converting to height), with the flight-time method used only for quality control; CMJ braking phase from minimum COM velocity to 0 m/s, propulsive phase from positive velocity to takeoff."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Impulse-momentum jump height is the same force-derived performance metric GSE prefers over flight-time.",
+        "source_operator": "jump_height_impulse_momentum",
+        "telemetry": "jump height = impulse-momentum (primary); flight-time = QC only; braking/propulsive phases"
+      }
+    },
+    {
+      "primitive_id": "rsmod_definition",
+      "name": "RSImod = jump height / time to takeoff",
+      "verbatim_quote": "RSImod was calculated as jump height divided by time to takeoff",
+      "page": 3,
+      "latex": "RSI_{mod} = \\frac{h_{jump}}{t_{takeoff}}",
+      "symbol_and_unit_ledger": {
+        "h_jump": "impulse-momentum jump height [m]",
+        "t_takeoff": "movement onset to takeoff interval [s]",
+        "RSImod": "modified reactive strength index [m/s]"
+      },
+      "assumptions": [
+        "The modified reactive strength index RSImod = jump height / time to takeoff, where jump height uses the impulse-momentum method and time to takeoff is the interval from detected movement onset to takeoff; a primary CMJ outcome alongside jump height.",
+        "Reconstructed from the unambiguous prose definition."
+      ],
+      "breakdown_regime": "sensitive to onset-detection threshold; breaks down if takeoff event misidentified",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RSImod as height-per-time is the same explosive-efficiency ratio GSE uses for reactive strength.",
+        "source_operator": "rsmod_definition",
+        "telemetry": "RSImod = jump height / time-to-takeoff [m/s]; onset-to-takeoff interval"
+      }
+    },
+    {
+      "primitive_id": "power_force_velocity",
+      "name": "Power = total vertical GRF x COM velocity; normalized to body mass",
+      "verbatim_quote": "Power was calculated as the product of total vertical ground-reaction force and vertical center-of-mass velocity",
+      "page": 3,
+      "latex": "P(t) = F_z(t)\\, v_{COM}(t)",
+      "symbol_and_unit_ledger": {
+        "F_z": "total vertical ground-reaction force [N]",
+        "v_COM": "vertical center-of-mass velocity [m/s]",
+        "P": "instantaneous power [W]"
+      },
+      "assumptions": [
+        "Power = total vertical GRF x vertical COM velocity; peak positive power = maximum instantaneous propulsive-phase power, mean propulsive power = average over the phase; propulsive impulse = integral of net vertical force (GRF minus body weight) over the propulsive phase via trapezoidal rule; peak/mean power and impulse normalized to body mass.",
+        "Reconstructed from the unambiguous prose definition."
+      ],
+      "breakdown_regime": "propulsive-phase only; requires accurate velocity from integration; normalized per kg",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Force-velocity power is the same mechanical-power product GSE computes for explosive output.",
+        "source_operator": "power_force_velocity",
+        "telemetry": "P = F_z * v_COM [W]; peak/mean propulsive; impulse = integral(F_z - mg); /mass"
+      }
+    },
+    {
+      "primitive_id": "rir_load_adjustment",
+      "name": "RIR load rule: -5 kg if RIR<3, +5 kg if RIR>3, unchanged if =3",
+      "verbatim_quote": "The next-set load was reduced by 5 kg when RIR was < 3, increased by 5 kg when RIR was > 3, and left unchanged when RIR was 3",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "RIR protocol: 80% 1RM, 5 sets, up to 5 reps per set, target 3 RIR; RIR reported after each set, next-set load reduced 5 kg when RIR<3, increased 5 kg when RIR>3, unchanged when RIR=3 — a closed-loop feedback load controller targeting a fixed repetition reserve."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The RIR feedback load rule is literally a closed-loop controller GSE maps to readiness-adjusted load governance.",
+        "source_operator": "rir_load_adjustment",
+        "telemetry": "RIR target 3; load -5kg if RIR<3 / +5kg if RIR>3 / hold if =3; up to 5 reps"
+      }
+    },
+    {
+      "primitive_id": "vbt_20pct_termination",
+      "name": "VBT: terminate set at 20% mean concentric velocity loss or 5 reps; load fixed",
+      "verbatim_quote": "A set was terminated when mean concentric velocity had decreased by 20% relative to the reference velocity for that set",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "VBT protocol: 80% 1RM, 5 sets, set terminated when mean concentric velocity decreased 20% relative to the set reference velocity (Tendo Unit linear position transducer) or after 5 reps if threshold not reached; load remained constant; participants could not view numerical velocity values to minimize visual-feedback influence on intent."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The velocity-loss termination rule is the same fatigue-threshold governor GSE uses to cap within-set exposure.",
+        "source_operator": "vbt_20pct_termination",
+        "telemetry": "VBT terminate at 20% velocity loss OR 5 reps; load fixed; Tendo transducer; no visual feedback"
+      }
+    },
+    {
+      "primitive_id": "volume_load_definition",
+      "name": "Session volume load = sum(external load x completed reps) across 5 sets",
+      "verbatim_quote": "Session volume load was calculated as the sum of external load multiplied by completed repetitions across the five sets",
+      "page": 4,
+      "latex": "V_{session} = \\sum_{s=1}^{5} L_s \\cdot r_s",
+      "symbol_and_unit_ledger": {
+        "L_s": "external load in set s [kg]",
+        "r_s": "completed repetitions in set s [count]",
+        "V_session": "session volume load [kg]"
+      },
+      "assumptions": [
+        "Session volume load = sum over the five sets of external load multiplied by completed repetitions; realized exposure: PBT 3000.00 +/- 434.60 kg, RIR 3036.11 +/- 407.64 kg, VBT 2893.06 +/- 474.82 kg; completed reps PBT 25.00, RIR 25.00, VBT 24.06 +/- 0.94.",
+        "Reconstructed from the unambiguous prose definition."
+      ],
+      "breakdown_regime": "load-times-reps proxy ignores velocity/effort; differs from realized mechanical impulse",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Volume load as load-times-reps is the same training-exposure accounting GSE uses to compare realized stimulus.",
+        "source_operator": "volume_load_definition",
+        "telemetry": "volume load = sum(load_kg x reps) [kg]; PBT 3000/RIR 3036/VBT 2893; reps 25/25/24.06"
+      }
+    },
+    {
+      "primitive_id": "positive_impulse_integral",
+      "name": "Positive vertical impulse = integral of max(F_z - F_cal, 0) over the cycle",
+      "verbatim_quote": "all positive portions of the net-force signal within a cycle contributed to the impulse, whereas negative net-force values were set to zero",
+      "page": 4,
+      "latex": "J_{positive} = \\int_{t_1}^{t_2} \\max\\!\\big(F_z(t) - F_{cal},\\, 0\\big)\\, dt",
+      "symbol_and_unit_ledger": {
+        "F_z": "total vertical ground-reaction force [N]",
+        "F_cal": "set-specific calibration (system-weight) force [N]",
+        "t1,t2": "segmented squat-cycle boundaries [s]",
+        "J_positive": "positive vertical impulse [N.s]"
+      },
+      "assumptions": [
+        "Positive vertical impulse J_positive = integral from t1 to t2 of max(F_z(t) - F_cal, 0) dt, where F_z is total vertical GRF, F_cal the set-specific calibration force, t1/t2 the segmented-cycle boundaries; trapezoidal integration; negative net-force values set to zero so they do not reduce positive impulse; mean across valid cycles. The printed integral uses a shifted/custom font and is reconstructed here in labeled LaTeX.",
+        "Printed equation reconstructed from the garbled shifted-font display (source lines 496-504) plus the unambiguous prose description; flagged in source_note."
+      ],
+      "breakdown_regime": "rectification discards braking (negative) impulse; complete-cycle not phase-specific; calibration per set",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The rectified net-force impulse is the same positive-only mechanical-output integral GSE uses for propulsive credit.",
+        "source_operator": "positive_impulse_integral",
+        "telemetry": "J_pos = integral max(F_z - F_cal, 0) dt [N.s]; trapezoidal; negatives zeroed; /calibration"
+      }
+    },
+    {
+      "primitive_id": "vbt_fewer_reps",
+      "name": "VBT realized fewer reps than PBT/RIR (-0.94, Holm p=0.001)",
+      "verbatim_quote": "VBT involved fewer completed repetitions than PBT and RIR",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "VBT involved fewer completed repetitions than PBT and RIR (mean difference -0.94 reps, 95% CI -1.41 to -0.48, Holm-adjusted p=0.001); session volume load higher in RIR than PBT (+36.11 kg, p=0.005) and lower in VBT than PBT (-106.94 kg, p<0.001) and RIR (-143.06 kg, p<0.001)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The realized-exposure difference is the same actuation-effect GSE measures when a governor actually changes behavior.",
+        "source_operator": "vbt_fewer_reps",
+        "telemetry": "VBT reps -0.94 (CI -1.41..-0.48, p=.001); volume RIR>PBT +36.11, VBT<PBT -106.94, VBT<RIR -143.06"
+      }
+    },
+    {
+      "primitive_id": "stats_participant_fixed_effects",
+      "name": "Linear models with participant fixed effects, clustered robust SE, joint F",
+      "verbatim_quote": "Single-session outcomes and maximum heart rate were analyzed using linear models with participant fixed effects",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Statistics in Python 3.12 (statsmodels/SciPy): linear models with participant fixed effects, small-sample-corrected robust standard errors clustered by participant, joint F tests for overall three-condition effects; right-skewed force/impulse analyzed on natural-log scale with pairwise contrasts back-transformed as geometric-mean ratios; jump outcomes as post-minus-pre change scores; Holm pairwise adjustment; paired Hedges' gz (trivial<0.20, small 0.20-0.49, moderate 0.50-0.79, large>=0.80); ICC(A,k) k=3 two-way mixed absolute-agreement average-measures reliability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fixed-effects + clustered-SE + Holm pipeline is the same repeated-measures inference GSE applies to paired state data.",
+        "source_operator": "stats_participant_fixed_effects",
+        "telemetry": "participant FE; clustered robust SE; joint F; log-scale geometric ratios; Holm; Hedges gz; ICC(A,3)"
+      }
+    },
+    {
+      "primitive_id": "null_primary_outcomes",
+      "name": "No significant condition effect on force, impulse, CMJ, or SJ",
+      "verbatim_quote": "The primary analyses did not detect statistically significant overall condition effects on session-level relative peak vertical force, mean positive vertical impulse, or immediate CMJ and SJ outcomes",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Primary analyses detected no significant overall condition effects: relative peak vertical force geometric means 1.260/1.207/1.237 x system weight (F(2,17)=1.123, p=0.348), mean positive impulse 400.2/353.2/388.2 N.s (F=1.452, p=0.262), CMJ height change -0.29/-0.09/-0.27 cm (F=0.032, p=0.969), CMJ RSImod (F=0.113, p=0.894), SJ height (F=0.306, p=0.740)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The null mechanical/jump result is the same no-detected-edge outcome GSE records honestly without claiming equivalence.",
+        "source_operator": "null_primary_outcomes",
+        "telemetry": "force p=.348/impulse p=.262/CMJ height p=.969/RSImod p=.894/SJ p=.740; all null"
+      }
+    },
+    {
+      "primitive_id": "null_not_equivalence",
+      "name": "Null results do not demonstrate the protocols produced the same responses",
+      "verbatim_quote": "These results do not demonstrate that the three protocols produced the same responses",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The authors explicitly caution that nonsignificant results do not demonstrate the three protocols produced the same responses: all began at 80% 1RM with five sets capped at five reps but implemented exposures differed, and with 18 participants sensitivity to smaller effects was limited, so estimates pertain to the implemented protocols and cannot isolate the monitoring-method effect or establish interchangeability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Absence-of-evidence is not evidence-of-absence is the same null-vs-equivalence veto GSE enforces on PASS decisions.",
+        "source_operator": "null_not_equivalence",
+        "telemetry": "null != equivalence; n=18 limited sensitivity; implemented protocols not isolated method effect"
+      }
+    },
+    {
+      "primitive_id": "monitoring_value_feedback",
+      "name": "Monitoring value depends on whether feedback changes load/reps/proximity to failure",
+      "verbatim_quote": "The value of a monitoring tool ultimately depends on whether its feedback changes the load, repetitions per set, or proximity to task failure",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Synthesizing meta-analyses (Liao 2021: 6 studies/124 participants, squat 1RM pooled MD 3.03 kg CI -3.55 to 9.61; Orange 2022: 4 RCTs/88 participants, SMD 0.06/0.11/-0.10 for strength/power/sprint), the authors conclude no consistent VBT-over-PBT advantage and that the value of a monitoring tool ultimately depends on whether its feedback changes the load, repetitions per set, or proximity to task failure."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feedback-must-change-action is the same actuation gate GSE applies before crediting any monitoring signal with edge.",
+        "source_operator": "monitoring_value_feedback",
+        "telemetry": "meta-analyses: no consistent VBT>PBT; value = feedback changes load/reps/failure-proximity"
+      }
+    },
+    {
+      "primitive_id": "kinematics_kinetics_distinct",
+      "name": "Barbell kinematics and ground-reaction kinetics need not change in parallel",
+      "verbatim_quote": "Barbell kinematics and ground-reaction kinetics do not necessarily change in parallel",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Barbell velocity reflects the rate of displacement of the external load, whereas force-plate peak force and impulse reflect the vertical interaction of the athlete-barbell system with the ground; adjustments in movement amplitude, COM motion, and force-application timing can let higher barbell velocity coexist with similar ground-reaction forces, so kinematics and kinetics need not change in parallel."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kinematics-vs-kinetics decoupling is the same proxy-vs-ground-truth distinction GSE flags when velocity stands in for force.",
+        "source_operator": "kinematics_kinetics_distinct",
+        "telemetry": "barbell velocity (load displacement) != GRF/impulse (ground interaction); can diverge"
+      }
+    },
+    {
+      "primitive_id": "not_equivalence_trial",
+      "name": "Not an equivalence trial: nonsignificance is not evidence of equivalence",
+      "verbatim_quote": "the study was not designed as an equivalence trial; consequently, nonsignificant condition effects should not be interpreted as evidence that the strategies are equivalent",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Limitations: realized stimulus not fully matched (PBT fixed 80% 1RM, no within-session progression); session-level outcomes averaged across cycles not matched repetition positions; complete-cycle not phase-specific analysis; 18 male sprinters only; immediate postexercise only (no 24-48 h recovery, lactate, or soreness); and the study was not designed as an equivalence trial, so nonsignificant condition effects should not be interpreted as evidence that the strategies are equivalent."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The explicit not-equivalence-trial caveat is the same statistical-humility veto GSE attaches to every PASS/no-edge call.",
+        "source_operator": "not_equivalence_trial",
+        "telemetry": "not equivalence trial; unmatched stimulus; immediate-only; n=18 male; nonsig != equivalent"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "backsquat2026_trace",
+      "think": "The retrocausal genealogy of this paper is the practical question of whether autoregulating resistance-training load actually changes the acute training stimulus and the immediate explosive-performance decrement that follows it. Mei, Zhang, Li, and Yang, writing in the Journal of Sports Science and Medicine in 2026, note that sprinters need lower-body strength and power but must integrate resistance training without unduly reducing the quality of subsequent sprint, jump, or technical work, and that greater within-set velocity loss accompanies higher lactate, impaired jump performance, and greater neuromuscular fatigue. Percentage-based training prescribes load relative to a one-repetition maximum, but a single 1RM may not reflect day-to-day capacity and the same percentage can represent different proximities to task failure across athletes. Velocity-based training and repetitions-in-reserve offer two autoregulation alternatives, yet the authors observe that different regulation methods do not necessarily produce different training exposures, especially when repetitions per set are capped. The study enrolled 18 trained male 100-meter sprinters, mean age 20.0 years, body mass 74.38 kilograms, back-squat 1RM 150 kilograms, and 100-meter performance 11.03 seconds, in a randomized within-participant crossover with at least 72 hours between trials. Each condition began at 80 percent of 1RM and comprised five sets capped at five repetitions: PBT fixed the load and reps, RIR targeted three repetitions in reserve and adjusted the next-set load by plus or minus five kilograms, and VBT terminated a set at a 20 percent mean concentric velocity loss or five repetitions with load held constant. Bilateral Kistler force plates at 1000 Hz recorded vertical ground-reaction force during squatting and during pre- and post-exercise countermovement and squat jumps, filtered with a fourth-order zero-lag Butterworth at 20 Hz. The recursive theory of mind is the force-time measurement pipeline. Net center-of-mass acceleration was computed by subtracting body weight from total vertical force and dividing by mass, velocity and displacement by successive integration, jump height by the impulse-momentum method with flight-time only for quality control, the modified reactive strength index as jump height divided by time to takeoff, power as force times velocity, and positive vertical impulse as the integral of the rectified net force over each segmented cycle. Session volume load was the sum of external load times completed repetitions. Statistics used linear models with participant fixed effects, clustered robust standard errors, joint F tests, log-scale geometric-mean ratios for skewed force and impulse, Holm pairwise adjustment, and paired Hedges' gz. Cross-layer veto adjudication is the gap between realized exposure and detected effect. VBT produced fewer completed repetitions, a mean difference of -0.94 with Holm-adjusted p of 0.001, and lower session volume load than PBT and RIR, while RIR permitted a higher volume load than PBT; so the monitoring feedback did change behavior. Yet the primary analyses detected no significant overall condition effects on relative peak vertical force, mean positive vertical impulse, CMJ jump height, CMJ modified reactive strength index, or SJ jump height, with p values of 0.348, 0.262, 0.969, 0.894, and 0.740 respectively. The authors are explicit that these null results do not demonstrate the protocols produced the same responses, that with 18 participants the design had 80 percent power only for an omnibus Cohen's f of about 0.31, and that the study was not an equivalence trial. The implementation invariants map directly onto GSE. The RIR plus-or-minus-five-kilogram feedback rule is a closed-loop load controller; the VBT 20 percent velocity-loss termination is a fatigue-threshold governor; volume load is realized-exposure accounting; the rectified net-force impulse is positive-only mechanical credit; and the central thesis that monitoring confers an advantage only when translated into a meaningful stimulus adjustment is GSE's actuation gate. The outputs are mechanical and jump metrics from force plates; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The kinematics-versus-kinetics caution, that barbell velocity and ground-reaction force need not change in parallel, is GSE's proxy-versus-ground-truth distinction. The broader evidence reinforces the humility: meta-analyses of six studies with 124 participants and four randomized trials with 88 participants found no consistent advantage of velocity-based over percentage-based training for strength, power, or sprint, with pooled squat 1RM differences near three kilograms and standardized effects close to zero, and the long-term benefit of autoregulation, where it exists, appears to arise from the accumulation of repeated exposures rather than a smaller decrement after every session. The practical reading is that a five-repetition cap limited how much the velocity-loss termination rule could modify exposure, particularly when the threshold was not reached before the fifth repetition, so the monitoring signal rarely got the chance to act. The caveats close the account. The realized stimulus was not fully matched across conditions, session-level outcomes were averaged across cycles rather than matched repetition positions, the force-time analysis used complete segmented cycles rather than separate braking and propulsion phases, outcomes were assessed only immediately after training without 24-to-48-hour recovery, lactate, or soreness, and the sample was 18 male sprinters only. The invariant for GSE is to carry the load-regulation control policies and the force-time measurement pipeline while recording the null-versus-equivalence veto, the limited sensitivity, the monitoring-requires-actuation principle, and the kinematics-kinetics decoupling before any quantitative reuse, treating a PASS on a bad comparison as a badge of honor rather than a missed bet.",
+      "retrocausal_genealogy": "Does autoregulation change the acute stimulus + postexercise explosive decrement? Mei/Zhang/Li/Yang, J Sports Sci Med 2026;25:915-933, DOI 10.52082/jssm.2026.915, ethics 2026358H. Sprinters need strength/power without degrading subsequent sprint/jump/technical work; velocity loss ~ lactate/impaired jump/neuromuscular fatigue. PBT=%1RM but 1RM stale vs day-to-day capacity, same % = different failure proximity. VBT (velocity+decline) / RIR (remaining reps) autoregulate, but capped reps converge exposures. 18 male 100m sprinters 20.0y/74.38kg/1RM 150kg/100m 11.03s, randomized within-participant crossover, >=72h washout. 80% 1RM, 5 sets x <=5 reps: PBT fixed; RIR target 3, load +/-5kg; VBT 20% velocity-loss or 5 reps, load fixed. Kistler 9286BA 1000Hz, Butterworth 4th-order zero-lag 20Hz; CMJ/SJ pre/post.",
+      "theory_of_mind": "Force-time pipeline: a_COM=(F_z-mg)/m; v=integral a; displacement=integral v; jump height=impulse-momentum (flight-time QC); RSImod=height/time-to-takeoff; power=F_z*v_COM; positive impulse=integral max(F_z-F_cal,0)dt (trapezoidal, negatives zeroed); volume load=sum(load x reps). Onset=max(3.5% standing,5xSD,20N)>=20ms; takeoff/landing 20N/20ms. Stats: participant FE, clustered robust SE, joint F, log-scale geometric ratios, Holm, Hedges gz, ICC(A,3); Python 3.12 statsmodels/SciPy. Sensitivity power 80% at omnibus f=0.31. One printed integral (shifted-font) reconstructed; other formulas from prose.",
+      "cross_layer_veto": "Realized exposure differed: VBT reps -0.94 (CI -1.41..-0.48, Holm p=.001); volume load PBT 3000/RIR 3036/VBT 2893 kg (RIR>PBT +36.11 p=.005; VBT<PBT -106.94 p<.001; VBT<RIR -143.06 p<.001). BUT primary null: rel peak force 1.260/1.207/1.237 x system wt (F=1.123 p=.348), mean pos impulse 400.2/353.2/388.2 N.s (F=1.452 p=.262), CMJ height -0.29/-0.09/-0.27cm (p=.969), RSImod (p=.894), SJ (p=.740). Null != equivalence; n=18 limited sensitivity (f=0.31); not equivalence trial; unmatched stimulus; complete-cycle not phase-specific; immediate-only (no 24-48h/lactate/soreness); male sprinters only. Monitoring value ONLY IF feedback changes load/reps/failure-proximity; barbell kinematics != GRF kinetics. Meta-analyses (Liao 2021 6 studies/124, 1RM MD 3.03kg; Orange 2022 4 RCTs/88, SMD .06/.11/-.10) no consistent VBT>PBT. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "In trained sprinters, three back-squat load-regulation policies (fixed percentage, repetitions-in-reserve feedback, velocity-loss termination) starting at 80% 1RM with five capped sets produce different realized repetition and volume loads but no detected difference in session-level force-plate mechanical output or immediate CMJ/SJ force-time responses — a null result that does not establish equivalence, illustrating that monitoring confers an advantage only when its feedback meaningfully changes the training stimulus.",
+  "gsi_mapping": "GSI treats PBT fixed %1RM / RIR target-3 load +/-5kg / VBT 20% velocity-loss-or-5-reps; 18 sprinters 20.0y/74.38kg/1RM 150kg/100m 11.03s crossover >=72h; Kistler 1000Hz Butterworth 20Hz; a_COM=(F_z-mg)/m, RSImod=h/t_takeoff, P=F_z*v, J_pos=integral max(F_z-F_cal,0)dt, volume=sum(load x reps); participant FE/clustered SE/joint F/log geometric ratios/Holm/Hedges gz/ICC(A,3); sensitivity f=0.31; realized VBT reps -0.94 (p=.001), volume PBT 3000/RIR 3036/VBT 2893; primary null force p=.348/impulse p=.262/CMJ p=.969/RSImod p=.894/SJ p=.740; null != equivalence, not equivalence trial, monitoring-requires-actuation, kinematics != kinetics; one printed integral reconstructed (shifted font).",
+  "gse_mapping": "GSE lifts the RIR closed-loop load controller and VBT velocity-loss fatigue governor as load-governance policies, the force-time pipeline (Newton acceleration, impulse-momentum jump height, RSImod, force-velocity power, rectified impulse) as mechanical-output measurement, volume load as realized-exposure accounting, and the monitoring-requires-actuation principle as its actuation gate; records the null-vs-equivalence veto, limited n=18 sensitivity, unmatched-stimulus and immediate-only caveats, and kinematics-vs-kinetics decoupling as honest limits; all outputs are force-plate mechanical and jump metrics, never sportsbook lines, and a PASS on a bad comparison is a badge of honor."
+}

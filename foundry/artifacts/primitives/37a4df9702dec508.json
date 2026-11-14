@@ -1,0 +1,78 @@
+{
+  "book_id": "37a4df9702dec508",
+  "source_status": "COMPLETE",
+  "title": "openalex_W2078162400",
+  "file_name": "openalex_W2078162400.pdf",
+  "sha256": "37a4df9702dec508084181ef60f8782bb52fe4e1bab1782d0c11aacbc185eb8b",
+  "primary_domain": "other",
+  "pages_total": 40,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sports forecasting models map outcome probabilities to market inefficiencies via Bayesian belief updates and conformal prediction intervals. Universal Lens: Rooted in openalex_W2078162400 (37a4df9702dec508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to calibrate forecast accuracy using betting market data, applying conformal predictive distributions for uncertainty quantification. GSI Mapping: Rooted in openalex_W2078162400 (37a4df9702dec508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes situational reasoning to transition between forecasting states (winner vs. spread), leveraging state-transition matrices informed by historical performance and expert consensus. GSE Mapping: Rooted in openalex_W2078162400 (37a4df9702dec508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "forecast_type_classification",
+      "name": "Forecast Type Classification",
+      "verbatim_quote": "The first topic involves the type of forecast that is made: picking a winner or predicting whether a particular team beats the point spread.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_w': 'Binary indicator for win prediction (0 or 1)', 'F_s': 'Binary indicator for spread prediction (0 or 1)'}",
+      "assumptions": "Forecasts are binary-valued; outcomes are independent across events.",
+      "breakdown_regime": "When event dependencies exceed model assumptions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Win/Spread predictions map to binary classification tasks in GSI's probabilistic framework; GSE transitions use Markovian state machines.",
+        "source_operator": "forecast_type_classification",
+        "telemetry": "Prediction accuracy metrics (Brier score, log-loss) for win vs. spread models."
+      }
+    },
+    {
+      "primitive_id": "market_efficiency_inference",
+      "name": "Market Efficiency Inference",
+      "verbatim_quote": "As it turns out, it is possible to derive considerable information about the forecasts and the forecasting process from the studies that tested the markets for economic efficiency.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_M': 'Efficiency measure of betting market (dimensionless)', 'P_f': 'Implied probability from market (0 to 1)'}",
+      "assumptions": "Markets reflect rational expectations; observed prices encode true probabilities.",
+      "breakdown_regime": "When arbitrage opportunities persist or behavioral biases dominate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Market efficiency inferred through deviation from rational pricing; GSI uses this to validate forecast models; GSE applies it to adjust belief states.",
+        "source_operator": "market_efficiency_inference",
+        "telemetry": "Deviation from efficient price paths; residual variance in betting odds."
+      }
+    },
+    {
+      "primitive_id": "evaluation_procedure_comparison",
+      "name": "Evaluation Procedure Comparison",
+      "verbatim_quote": "Different evaluation procedures will be examined and alternative forecasting methods (models, experts, and the market) will be compared.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_m': 'Model-based forecast accuracy (0 to 1)', 'M_e': 'Expert-based forecast accuracy (0 to 1)', 'M_M': 'Market-based forecast accuracy (0 to 1)'}",
+      "assumptions": "Accuracy measures are comparable across forecasting types; all methods yield scalar scores.",
+      "breakdown_regime": "When evaluation criteria are inconsistent or non-overlapping.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Comparison of forecasting methods maps to multi-armed bandit optimization in GSI; GSE evaluates policy transitions based on comparative performance.",
+        "source_operator": "evaluation_procedure_comparison",
+        "telemetry": "Cross-validation scores across models, experts, and markets."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "37a4df9702dec508_t0",
+      "think": "The core insight of the paper lies in distinguishing between the efficiency of betting markets and the actual quality of forecasts. The authors argue that while prior literature focuses on market efficiency, the underlying forecasts themselves—whether win or spread predictions—are underexplored. This duality necessitates a dual-primitive approach: one for classifying forecast types (win vs. spread) and another for inferring market efficiency from observed betting behavior. The former maps to a binary classification problem in GSI’s Bayesian framework, where each prediction type is evaluated separately. The latter maps to a conformal inference kernel in GSI, where market prices are used to derive confidence bounds on forecast accuracy. In GSE, these primitives inform state transitions between different forecasting regimes, such as switching from expert-driven to market-driven strategies. Failure modes arise when either forecast type is misclassified or when market inefficiencies invalidate assumptions of rationality. Dualities emerge in how both types of forecasts can be evaluated using identical statistical tools, yet their operational implications differ significantly in terms of risk and reward structures.\n\nDeep epistemic analysis for openalex_W2078162400 (37a4df9702dec508, domain=other, pages_read=32/40): Operator 'Forecast Type Classification' (page 3, domain other) captures: The first topic involves the type of forecast that is made: picking a winner or predicting whether a particular team beats the point spread. Assumptions: Forecasts are binary-valued; outcomes are independent across events. Breakdown regime: When event dependencies exceed model assumptions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Win/Spread predictions map to binary classification tasks in GSI's probabilistic framework; GSE transitions use Markovian state machines. Operator 'Market Efficiency Inference' (page 3, domain other) captures: As it turns out, it is possible to derive considerable information about the forecasts and the forecasting process from the studies that tested the markets for economic efficiency. Assumptions: Markets reflect rational expectations; observed prices encode true probabilities. Breakdown regime: When arbitrage opportunities persist or behavioral biases dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Market efficiency inferred through deviation from rational pricing; GSI uses this to validate forecast models; GSE applies it to adjust belief states. Operator 'Evaluation Procedure Comparison' (page 3, domain other) captures: Different evaluation procedures will be examined and alternative forecasting methods (models, experts, and the market) will be compared. Assumptions: Accuracy measures are comparable across forecasting types; all methods yield scalar scores. Breakdown regime: When evaluation criteria are inconsistent or non-overlapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Comparison of forecasting methods maps to multi-armed bandit optimization in GSI; GSE evaluates policy transitions based on comparative performance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W2078162400 (37a4df9702dec508, domain=other, pages_read=32/40): Operator 'Forecast Type Classification' (page 3, domain other) captures: The first topic involves the type of forecast that is made: picking a winner or predicting whether a particular team beats the point spread. Assumptions: Forecasts are binary-valued; outcomes are independent across events. Breakdown regime: When event dependencies exceed model assumptions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Win/Spread predictions map to binary classification tasks in GSI's probabilistic framework; GSE transitions use Markovian state machines. Operator 'Market Efficiency Inference' (page 3, domain other) captures: As it turns out, it is possible to derive considerable information about the forecasts and the forecasting process from the studies that tested the markets for economic efficiency. Assumptions: Markets reflect rational expectations; observed prices encode true probabilities. Breakdown regime: When arbitrage opportunities persist or behavioral biases dominate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Market efficiency inferred through deviation from rational pricing; GSI uses this to validate forecast models; GSE applies it to adjust belief states. Operator 'Evaluation Procedure Comparison' (page 3, domain other) captures: Different evaluation procedures will be examined and alternative forecasting methods (models, experts, and the market) will be compared. Assumptions: Accuracy measures are comparable across forecasting types; all methods yield scalar scores. Breakdown regime: When evaluation criteria are inconsistent or non-overlapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Comparison of forecasting methods maps to multi-armed bandit optimization in GSI; GSE evaluates policy transitions based on comparative performance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in econometric forecasting traditions dating back to Granger (1969) and the efficient-market hypothesis of Fama (1970), this work extends earlier studies on sports betting by focusing on the epistemological distinction between market efficiency and forecast validity. Retrocausal Genealogy: Rooted in openalex_W2078162400 (37a4df9702dec508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bettors who may act rationally or irrationally, forecasters who rely on models or intuition, and market makers who set prices. Each agent operates under distinct information sets and objectives, leading to divergent predictions and outcomes. Theory of Mind & Decision Maker Model: Rooted in openalex_W2078162400 (37a4df9702dec508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that forecast types (win vs. spread) not be conflated in evaluation, as they imply different risk profiles. Leakage vetos prevent using market efficiency measures to directly infer model accuracy without accounting for differing data sources and temporal dynamics. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W2078162400 (37a4df9702dec508), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

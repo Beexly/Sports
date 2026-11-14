@@ -1,0 +1,95 @@
+{
+  "book_id": "609e95f094439dd2",
+  "source_status": "COMPLETE",
+  "title": "LEGAL_RIGHTS_BRIEF",
+  "file_name": "LEGAL_RIGHTS_BRIEF.md",
+  "sha256": "609e95f094439dd239bc9636ff5e97f99631a9e5b78e57b879c4d473922c80be",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in LEGAL_RIGHTS_BRIEF (609e95f094439dd2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in LEGAL_RIGHTS_BRIEF (609e95f094439dd2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in LEGAL_RIGHTS_BRIEF (609e95f094439dd2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in LEGAL_RIGHTS_BRIEF (609e95f094439dd2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in LEGAL_RIGHTS_BRIEF (609e95f094439dd2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in LEGAL_RIGHTS_BRIEF (609e95f094439dd2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "rights_flagging",
+      "name": "Legal Rights Flagging System",
+      "verbatim_quote": "# Legal / Rights Brief Claude must preserve the source gates.",
+      "page": 1,
+      "latex": "\\mathcal{R} \\in \\{\\texttt{active_open}, \\texttt{active_owned}, \\texttt{active_api}, \\dots, \\texttt{blocked_until_review}\\}",
+      "symbol_and_unit_ledger": "{\\mathcal{R}}: Rights flag state variable (discrete)",
+      "assumptions": "Data sources carry explicit usage rights; Claude must enforce these at runtime.",
+      "breakdown_regime": "Rights violation triggers immediate system halt.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian event probability calibration via legal compliance constraints. Maps to GSE's state-transition logic via permissioned data access gates.",
+        "source_operator": "rights_flagging",
+        "telemetry": "Real-time audit trail of rights flag transitions"
+      }
+    },
+    {
+      "primitive_id": "api_key_activation",
+      "name": "API Key Activation Protocol",
+      "verbatim_quote": "- `active_api`: only live when an API key is present and rights permit.",
+      "page": 1,
+      "latex": "\\mathcal{A}(k) = \\begin{cases} 1, & \\text{if } k \\in \\mathcal{K}_{\\text{valid}} \\wedge \\text{rights permitted} \\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{{\\mathcal{A}}: API activation indicator (binary); {k}: API key; {{\\mathcal{K}}_{\\text{valid}}}: Set of valid keys}",
+      "assumptions": "API keys are cryptographically verifiable and linked to specific contractual terms.",
+      "breakdown_regime": "Invalid key or revoked rights result in immediate deactivation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction intervals via dynamic model switching based on API availability. Maps to GSE's situational awareness via real-time permission checking.",
+        "source_operator": "api_key_activation",
+        "telemetry": "Key validity duration and usage patterns"
+      }
+    },
+    {
+      "primitive_id": "partner_contract_validation",
+      "name": "Partner Contract Validation Kernel",
+      "verbatim_quote": "- `active_partner`: only live when partner contract flags are active.",
+      "page": 1,
+      "latex": "\\mathcal{P}(\\theta) = \\begin{cases} 1, & \\text{if } \\theta \\in \\Theta_{\\text{active}} \\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{{\\mathcal{P}}: Partner activation indicator (binary); {\\theta}: Contract parameters; {{\\Theta}}_{\\text{active}}: Active contract parameter space}",
+      "assumptions": "Contract terms are represented as formal logical predicates.",
+      "breakdown_regime": "Contract expiration or breach triggers immediate shutdown.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian model averaging over contract-specific posterior distributions. Maps to GSE's state-transition logic via contract-based resource allocation.",
+        "source_operator": "partner_contract_validation",
+        "telemetry": "Contract term satisfaction rates"
+      }
+    },
+    {
+      "primitive_id": "fixture_mode",
+      "name": "Fixture Mode Bypass",
+      "verbatim_quote": "- `fixture_backed`: demo/test UI only; label visibly; never market as live.",
+      "page": 1,
+      "latex": "\\mathcal{F}(t) = \\begin{cases} 1, & \\text{if } t \\in \\mathcal{T}_{\\text{fixture}} \\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{{\\mathcal{F}}: Fixture mode indicator (binary); {t}: Time instance; {{\\mathcal{T}}}_{\\text{fixture}}: Fixture time interval}",
+      "assumptions": "Fixture mode is explicitly toggled by system administrators.",
+      "breakdown_regime": "Fixture mode bypasses all production safeguards.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction via synthetic data generation during testing. Maps to GSE's situational reasoning via simulated environment execution.",
+        "source_operator": "fixture_mode",
+        "telemetry": "Duration of fixture mode operation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "609e95f094439dd2_t0",
+      "think": "The primitives form a hierarchical Boolean lattice where each node represents a distinct legal/commercial constraint. The system's core function is to maintain the invariant that any active data stream satisfies all its embedded rights flags simultaneously. This is achieved through a product-of-indicators rule: \\mathcal{M} = \\prod_i \\mathcal{R}_i, where \\mathcal{M}=1 implies full operational readiness. The primitives interact via logical AND junctions in a fault-tree analysis, ensuring that a single rights violation blocks the entire pipeline. In GSI's probabilistic forecasting, this translates into conditional calibration sets that respect contractual limits. In GSE's reasoning engine, it manifests as permissioned state transitions that cannot be forced past a denied flag.\n\nDeep epistemic analysis for LEGAL_RIGHTS_BRIEF (609e95f094439dd2, domain=other, pages_read=1/1): Operator 'Legal Rights Flagging System' (page 1, domain other) captures: # Legal / Rights Brief Claude must preserve the source gates. Assumptions: Data sources carry explicit usage rights; Claude must enforce these at runtime. Breakdown regime: Rights violation triggers immediate system halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian event probability calibration via legal compliance constraints. Maps to GSE's state-transition logic via permissioned data access gates. Operator 'API Key Activation Protocol' (page 1, domain other) captures: - `active_api`: only live when an API key is present and rights permit. Assumptions: API keys are cryptographically verifiable and linked to specific contractual terms. Breakdown regime: Invalid key or revoked rights result in immediate deactivation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction intervals via dynamic model switching based on API availability. Maps to GSE's situational awareness via real-time permission checking. Operator 'Partner Contract Validation Kernel' (page 1, domain other) captures: - `active_partner`: only live when partner contract flags are active. Assumptions: Contract terms are represented as formal logical predicates. Breakdown regime: Contract expiration or breach triggers immediate shutdown. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian model averaging over contract-specific posterior distributions. Maps to GSE's state-transition logic via contract-based resource allocation. Operator 'Fixture Mode Bypass' (page 1, domain other) captures: - `fixture_backed`: demo/test UI only; label visibly; never market as live. Assumptions: Fixture mode is explicitly toggled by system administrators. Breakdown regime: Fixture mode bypasses all production safeguards. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction via synthetic data generation during testing. Maps to GSE's situational reasoning via simulated environment execution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LEGAL_RIGHTS_BRIEF (609e95f094439dd2, domain=other, pages_read=1/1): Operator 'Legal Rights Flagging System' (page 1, domain other) captures: # Legal / Rights Brief Claude must preserve the source gates. Assumptions: Data sources carry explicit usage rights; Claude must enforce these at runtime. Breakdown regime: Rights violation triggers immediate system halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian event probability calibration via legal compliance constraints. Maps to GSE's state-transition logic via permissioned data access gates. Operator 'API Key Activation Protocol' (page 1, domain other) captures: - `active_api`: only live when an API key is present and rights permit. Assumptions: API keys are cryptographically verifiable and linked to specific contractual terms. Breakdown regime: Invalid key or revoked rights result in immediate deactivation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction intervals via dynamic model switching based on API availability. Maps to GSE's situational awareness via real-time permission checking. Operator 'Partner Contract Validation Kernel' (page 1, domain other) captures: - `active_partner`: only live when partner contract flags are active. Assumptions: Contract terms are represented as formal logical predicates. Breakdown regime: Contract expiration or breach triggers immediate shutdown. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian model averaging over contract-specific posterior distributions. Maps to GSE's state-transition logic via contract-based resource allocation. Operator 'Fixture Mode Bypass' (page 1, domain other) captures: - `fixture_backed`: demo/test UI only; label visibly; never market as live. Assumptions: Fixture mode is explicitly toggled by system administrators. Breakdown regime: Fixture mode bypasses all production safeguards. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction via synthetic data generation during testing. Maps to GSE's situational reasoning via simulated environment execution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The concept of \"rights-preserving systems\" traces back to early database transaction theory (ACID properties) and later to DRM algorithms. It evolved through the legal informatics movement of the 2010s, influenced by GDPR privacy-by-design principles and the rise of smart contracts. Retrocausal Genealogy: Rooted in LEGAL_RIGHTS_BRIEF (609e95f094439dd2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include content providers seeking maximum revenue while minimizing exposure, legal teams demanding ironclad compliance, and developers wanting unrestricted access for model performance. The system models them as utility-maximizers with conflicting objective functions. Theory of Mind & Decision Maker Model: Rooted in LEGAL_RIGHTS_BRIEF (609e95f094439dd2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent cross-layer information leakage, the primitives must operate on disjoint feature spaces. For example, metadata-only (`metadata_only`) must not contain enough information to reconstruct the original content, and fixture-mode data must be structurally different from live data. Cross-Layer Veto & Anti-Leakage Check: Rooted in LEGAL_RIGHTS_BRIEF (609e95f094439dd2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

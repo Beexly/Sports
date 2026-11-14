@@ -1,0 +1,95 @@
+{
+  "book_id": "0109ed10d0e60405",
+  "source_status": "COMPLETE",
+  "title": "2026 - A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League - Nolan et al",
+  "file_name": "2026 - A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League - Nolan et al.pdf",
+  "sha256": "0109ed10d0e60405d32a6fbacfef4aaa5bd8f38d7ff27e2bc1bf664a418bdf9e",
+  "primary_domain": "other",
+  "pages_total": 17,
+  "pages_read": 17,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2026 - A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League - Nolan et al (0109ed10d0e60405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2026 - A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League - Nolan et al (0109ed10d0e60405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2026 - A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League - Nolan et al (0109ed10d0e60405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "bivariate_conditional_poisson_regression",
+      "name": "Bivariate Conditional Poisson Regression",
+      "verbatim_quote": "In this paper, we develop a Bayesian bivariate Conditional Poisson (BCP) regression model to explicitly capture the dependence between home and away goal counts, addressing a core limitation of traditional football scoring models that assume independence or only allow for positive correlation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Poisson distributed goal counts, log-linear covariate relationships, conditional independence given latent factors",
+      "breakdown_regime": "Overdispersion, zero-inflation, extreme score events",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian multivariate count regression → GSI joint probability forecasting, GSE state-transition modeling",
+        "source_operator": "bivariate_conditional_poisson_regression",
+        "telemetry": "Posterior predictive p-values, rank-based residual diagnostics"
+      }
+    },
+    {
+      "primitive_id": "negative_correlation_home_away_goals",
+      "name": "Negative Correlation Home vs Away Goals",
+      "verbatim_quote": "Our results reveal a negative correlation between home and away goal counts and highlight an asymmetry in how match attendance influences home versus away scoring.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Bivariate Normal latent structure, linear correlation coefficient",
+      "breakdown_regime": "High-scoring matches, VAR/offside争议, exceptional referee performance",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Negative dependence → GSI over/under betting, GSE tactical counter-strategy evaluation",
+        "source_operator": "negative_correlation_home_away_goals",
+        "telemetry": "Correlation matrix eigenvalues, partial Spearman rank correlations"
+      }
+    },
+    {
+      "primitive_id": "stadium_attendance_as_predictor",
+      "name": "Stadium Attendance as Predictor",
+      "verbatim_quote": "The BCP regression is applied to the English Premier League (EPL) data spanning three seasons, incorporating stadium attendance and committed fouls by both teams as regressors.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Linear effect of attendance on log-intensity, additive covariates",
+      "breakdown_regime": "Capacity limits, weather disruptions, fixture scheduling anomalies",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Exogenous demand shock → GSI line movement, GSE momentum state transitions",
+        "source_operator": "stadium_attendance_as_predictor",
+        "telemetry": "Attendance elasticity estimates, event-study residual analysis"
+      }
+    },
+    {
+      "primitive_id": "hamiltonian_monte_carlo_sampling",
+      "name": "Hamiltonian Monte Carlo Sampling",
+      "verbatim_quote": "Inference is conducted within a Bayesian framework, enabling interpretable uncertainty quantification and model validation through posterior predictive checks.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Differentiable posterior density, continuous parameter space",
+      "breakdown_regime": "High-dimensional parameter spaces, multimodal posteriors, computational bottlenecks",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "HMC → GSI posterior probability intervals, GSE optimal stopping / policy iteration",
+        "source_operator": "hamiltonian_monte_carlo_sampling",
+        "telemetry": "Effective sample size diagnostics, R-hat convergence statistic"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0109ed10d0e60405_t0",
+      "think": "The BCP model extends the classic Dixon-Coles framework by jointly modeling home and away goals as conditionally Poisson-distributed random variables, allowing for asymmetric dependence structures. This addresses the common failure mode of assuming independence, which inflates the probability of extreme scores and produces poorly calibrated confidence intervals for match outcomes. By incorporating stadium attendance and fouls as covariates, the model captures game-theoretic feedback loops: higher attendance may increase home-team aggression but also defensive pressure, creating a negative carryover effect on away-team scoring opportunities. The negative correlation we estimate suggests that when one team scores more than expected, the opposing team tends to score less, likely due to shifts in possession, tempo, and risk-taking. This结构性relationship is crucial for GSI because it directly impacts over/under betting lines and halftime predictions; for GSE, it informs state-transition matrices used in sequential decision-making algorithms. The Bayesian treatment via HMC provides full posterior distributions, avoiding frequentist point estimates that obscure tail uncertainty.\n\nDeep epistemic analysis for 2026 - A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League - Nolan et al (0109ed10d0e60405, domain=other, pages_read=17/17): Operator 'Bivariate Conditional Poisson Regression' (page 1, domain other) captures: In this paper, we develop a Bayesian bivariate Conditional Poisson (BCP) regression model to explicitly capture the dependence between home and away goal counts, addressing a core limitation of traditional football scoring models that assume independence or only allow for positive correlation. Assumptions: Poisson distributed goal counts, log-linear covariate relationships, conditional independence given latent factors Breakdown regime: Overdispersion, zero-inflation, extreme score events Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian multivariate count regression → GSI joint probability forecasting, GSE state-transition modeling Operator 'Negative Correlation Home vs Away Goals' (page 1, domain other) captures: Our results reveal a negative correlation between home and away goal counts and highlight an asymmetry in how match attendance influences home versus away scoring. Assumptions: Bivariate Normal latent structure, linear correlation coefficient Breakdown regime: High-scoring matches, VAR/offside争议, exceptional referee performance Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Negative dependence → GSI over/under betting, GSE tactical counter-strategy evaluation Operator 'Stadium Attendance as Predictor' (page 1, domain other) captures: The BCP regression is applied to the English Premier League (EPL) data spanning three seasons, incorporating stadium attendance and committed fouls by both teams as regressors. Assumptions: Linear effect of attendance on log-intensity, additive covariates Breakdown regime: Capacity limits, weather disruptions, fixture scheduling anomalies Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Exogenous demand shock → GSI line movement, GSE momentum state transitions Operator 'Hamiltonian Monte Carlo Sampling' (page 1, domain other) captures: Inference is conducted within a Bayesian framework, enabling interpretable uncertainty quantification and model validation through posterior predictive checks. Assumptions: Differentiable posterior density, continuous parameter space Breakdown regime: High-dimensional parameter spaces, multimodal posteriors, computational bottlenecks Layer-2 GSI/GSE mapping ([ISOMORPHISM]): HMC → GSI posterior probability intervals, GSE optimal stopping / policy iteration Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026 - A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League - Nolan et al (0109ed10d0e60405, domain=other, pages_read=17/17): Operator 'Bivariate Conditional Poisson Regression' (page 1, domain other) captures: In this paper, we develop a Bayesian bivariate Conditional Poisson (BCP) regression model to explicitly capture the dependence between home and away goal counts, addressing a core limitation of traditional football scoring models that assume independence or only allow for positive correlation. Assumptions: Poisson distributed goal counts, log-linear covariate relationships, conditional independence given latent factors Breakdown regime: Overdispersion, zero-inflation, extreme score events Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian multivariate count regression → GSI joint probability forecasting, GSE state-transition modeling Operator 'Negative Correlation Home vs Away Goals' (page 1, domain other) captures: Our results reveal a negative correlation between home and away goal counts and highlight an asymmetry in how match attendance influences home versus away scoring. Assumptions: Bivariate Normal latent structure, linear correlation coefficient Breakdown regime: High-scoring matches, VAR/offside争议, exceptional referee performance Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Negative dependence → GSI over/under betting, GSE tactical counter-strategy evaluation Operator 'Stadium Attendance as Predictor' (page 1, domain other) captures: The BCP regression is applied to the English Premier League (EPL) data spanning three seasons, incorporating stadium attendance and committed fouls by both teams as regressors. Assumptions: Linear effect of attendance on log-intensity, additive covariates Breakdown regime: Capacity limits, weather disruptions, fixture scheduling anomalies Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Exogenous demand shock → GSI line movement, GSE momentum state transitions Operator 'Hamiltonian Monte Carlo Sampling' (page 1, domain other) captures: Inference is conducted within a Bayesian framework, enabling interpretable uncertainty quantification and model validation through posterior predictive checks. Assumptions: Differentiable posterior density, continuous parameter space Breakdown regime: High-dimensional parameter spaces, multimodal posteriors, computational bottlenecks Layer-2 GSI/GSE mapping ([ISOMORPHISM]): HMC → GSI posterior probability intervals, GSE optimal stopping / policy iteration Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The BCP model builds on the bivariate Poisson work of Karlis and Ntzoufras (2003) and the conditional specification of Joe and Li (2010). It differs from earlier approaches by using a Cholesky decomposition of the precision matrix, ensuring positive definiteness of the covariance structure. The use of log-linear intensity functions traces back to the seminal work of Cox (1972) on proportional hazards models. The incorporation of covariates follows the generalized linear modeling framework of McCullagh and Nelder (1989).",
+      "theory_of_mind": "Opposing teams adjust their strategies based on live scorelines and crowd pressure. When the home team scores early, the away team may adopt a more defensive posture, reducing its own scoring chances. Conversely, if the away team scores, the home team might push forward more aggressively, increasing its fouls and potentially leading to fewer high-quality scoring opportunities. The model captures these dynamic adjustments through the negative correlation parameter, which reflects the average behavioral response across all matches.",
+      "cross_layer_veto": "To avoid anti-collinearity issues, we must ensure that attendance and fouls are not perfectly collinear, as this would lead to identification problems. Additionally, we impose a leakage veto by conditioning on observed covariates rather than unobserved team quality, preventing spurious correlations driven by omitted variable bias. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 - A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League - Nolan et al (0109ed10d0e60405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

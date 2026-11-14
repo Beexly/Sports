@@ -1,0 +1,648 @@
+{
+  "book_id": "28506884c90c6a09",
+  "shard": "2",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_CRICKET_FAIRNESS_AUDIT_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Roy, 'A Fairness Audit of the Duckworth-Lewis-Stern Method: Format-Specific and Gender-Differential Bias, with an Interpretable Calibration Layer for Cricket Target Revision', arXiv:2609.04754v1 [cs.LG], 4 Sep 2026 (Soumyadeep Roy, St. Xavier's College Kolkata), 16 pages. First large-scale empirical audit of DLS prediction bias on Cricsheet ball-by-ball data (8,150 internationals; 3,095 ODI + 5,055 T20I; 5,708 men + 2,442 women; 2.78M balls; 2002-2026). DLS resource Z(u,w) (overs remaining, wickets lost), target proportional to resource fraction; 30 synthetic interruptions/innings -> 233,550 examples; temporal split (train<=2022/val 2023/test 2024-2026). Findings: structured state bias spanning 137 runs (over-predict T20 death, under-predict ODI collapse); gender-differential bias +6.13 runs in women's ODIs (single resource table for both genders), surviving match-level block bootstrap (B=2000, effective N=matches), bucket-matching (+8.34/+9.64, conservative), Full-Member stratification (+6.72), and rolled temporal windows; T20I gap +0.51 NOT significant under clustered inference (supersedes naive Welch p=0.008 artifact of ~150k scale). DLS-Cal additive zero-init MLP calibration (Eq1) reduces bias 31% ODI/19% T20I; gender-aware variant cuts women's residual +6.19->+0.65; Win-Flip Rate thresholded fairness metric (Eq2); ablation (lookup over-corrects heavy tail, linear suffices, deep unnecessary); 417 real rain-affected matches corroborate. Extracted faithfully (not a derivative summary). Equations (Z(u,w), DLS-Cal Eq1, WFR Eq2) printed in math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain math matches catalog (cricket analytics / fairness / calibration; not football). Directly isomorphic to GSE's state-conditioned expectancy, calibration-by-state audit, demographic-fairness veto, dependence-aware clustered inference (same as field-hockey small-sample and noisy-judgments bootstrap), additive calibration-map fix, and decision-relevant error metric. Code/models/dataset released (github sami42200/dls-cal, seed 42). No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "first_large_scale_dls_audit",
+      "name": "First large-scale empirical audit of DLS prediction bias",
+      "verbatim_quote": "no large-scale empirical audit of its prediction bias has been published",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Soumyadeep Roy, St. Xavier's College Kolkata; arXiv:2609.04754v1 [cs.LG], 4 Sep 2026) is the first systematic large-scale empirical audit of the Duckworth-Lewis-Stern (DLS) method's prediction bias; DLS has set revised targets in rain-interrupted limited-overs cricket since 1999 (ICC official), yet prior critiques were theoretical/model-based rather than empirical at scale."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The deployed-method bias audit is the same empirical calibration audit GSE runs on its own expectancy engines.",
+        "source_operator": "first_large_scale_dls_audit",
+        "telemetry": "first large-scale DLS bias audit; DLS official since 1999; prior critiques theoretical; Roy arXiv 2609.04754"
+      }
+    },
+    {
+      "primitive_id": "resource_proportional_targets",
+      "name": "DLS resource Z(u,w); revised target proportional to resources available",
+      "verbatim_quote": "and revises targets in proportion to the resources available to each side",
+      "page": 1,
+      "latex": "Z(u,w)\\ \\text{cumulative resources},\\qquad \\text{target}\\propto \\frac{Z(u_{\\text{avail}},w)}{Z_0}",
+      "symbol_and_unit_ledger": {
+        "u": "overs remaining [overs]",
+        "w": "wickets lost [wickets]",
+        "Z(u,w)": "cumulative resource fraction [dimensionless]",
+        "Z0": "baseline 50-over (or 20-over) innings total [runs] (G50)"
+      },
+      "assumptions": [
+        "DLS models cumulative resources Z(u,w) as a function of overs remaining u and wickets lost w, and revises targets in proportion to the resources available to each side; the baseline innings total Z0 corresponds to Duckworth-Lewis's original G50 (Z0_ODI=245, Z0_T20=145). The resource function is printed in math notation and reconstructed here.",
+        "Resource function Z(u,w) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Proportionality fails where scoring rate per resource is not constant",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The resource-fraction target revision is the same state-conditioned expectancy scaling GSE uses.",
+        "source_operator": "resource_proportional_targets",
+        "telemetry": "Z(u,w) cumulative resources (u overs remaining, w wickets lost); target proportional to resource fraction; Z0=G50 (ODI 245/T20 145)"
+      }
+    },
+    {
+      "primitive_id": "cricsheet_8150_matches",
+      "name": "Cricsheet ball-by-ball: 8,150 internationals (3,095 ODI + 5,055 T20I)",
+      "verbatim_quote": "Using ball-by-ball data for 8,150 international matches from Cricsheet",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The audit uses public Cricsheet ball-by-ball data: 8,150 matches (3,095 ODIs, 5,055 T20Is), 5,708 men's and 2,442 women's, 2,781,465 ball records, 27 June 2002 to 5 March 2026; filtered to first innings of >=30 overs (ODI) or >=15 overs (T20I)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The large public ball-by-ball corpus is the same data-scale foundation GSE uses for empirical audits.",
+        "source_operator": "cricsheet_8150_matches",
+        "telemetry": "Cricsheet 8150 matches (3095 ODI/5055 T20I); 5708 men/2442 women; 2,781,465 balls; 2002-2026; first innings >=30/>=15 overs"
+      }
+    },
+    {
+      "primitive_id": "synthetic_interruption_sampling",
+      "name": "Synthetic interruption sampling: 30 points/innings for state-space coverage",
+      "verbatim_quote": "Because genuine rain-interrupted matches are too few to train on directly, we sample synthetic interruption points",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because genuine rain-interrupted matches are too few (~310) to train on, 30 random interruption points are sampled per first innings in [5*6, n_i-5*6] balls (>=5 overs context and remainder), with supervision target the actual post-interruption runs; this yields 233,550 examples (140,160 train / 24,300 val / 69,090 test); the limitation is that real interruptions are not uniform over overs (weather/scheduling/venue shaped), so synthetic state distribution need not match operational."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The synthetic-state coverage with real-transfer validation is the same simulation-to-reality audit GSE performs.",
+        "source_operator": "synthetic_interruption_sampling",
+        "telemetry": "30 synthetic interruptions/innings, [5*6, n-5*6]; 233,550 examples (140160/24300/69090); real interruptions non-uniform; ~310 genuine"
+      }
+    },
+    {
+      "primitive_id": "temporal_split_no_leakage",
+      "name": "Temporal split (train<=2022, val 2023, test 2024-2026); player stats train-only",
+      "verbatim_quote": "To prevent any leakage from future matches into the training distribution, we use a temporal rather than random split",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "To prevent leakage from future matches, a temporal rather than random split is used: train up to 31 Dec 2022, validation 2023, test 2024 to March 2026; all player-level statistics used as features are computed from the training period only."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The temporal split with train-only features is the same leakage-prevention discipline GSE enforces.",
+        "source_operator": "temporal_split_no_leakage",
+        "telemetry": "temporal split train<=2022/val 2023/test 2024-2026; player stats train-only; no future leakage"
+      }
+    },
+    {
+      "primitive_id": "proportionality_assumption",
+      "name": "Audit probes resource-estimation component; valid only where proportionality holds",
+      "verbatim_quote": "expected runs are proportional to the resources consumed, with a constant expected scoring rate per unit resource",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The audit evaluates DLS as a predictor of first-innings runs remaining, whereas DLS operationally sets a two-innings chase target; these coincide under DLS's governing assumption that expected runs are proportional to resources consumed with constant expected scoring rate per unit resource, and diverge precisely where proportionality fails; results are an audit of the resource-estimation component, not direct operational target-setting error."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The proportionality-scope qualification is the same construct-validity honesty GSE attaches to proxy audits.",
+        "source_operator": "proportionality_assumption",
+        "telemetry": "audit = resource-estimation component (not operational target error); valid where runs proportional to resources, constant rate/resource; diverges where proportionality fails"
+      }
+    },
+    {
+      "primitive_id": "structured_bias_not_uniform",
+      "name": "DLS bias is structured, not uniform: 137-run span across state buckets",
+      "verbatim_quote": "formal hypothesis tests confirm the structure is distinguishable from uniform random noise",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "DLS mean training error is +4.79 runs (median +7.98), systematically over-predicting; per-bucket mean bias ranges -111 to +26 (ODI) and -19 to +25 (T20I), a 137-run span; ANOVA/Kruskal-Wallis confirm structure (ODI F=527.16, H=9797.69; T20I F=1540.14, H=9609.67), though F/H are descriptive (non-independent samples) so effect sizes and match-clustered intervals lead."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The state-bucketed bias map is literally GSE's calibration-by-state audit revealing structured miscalibration.",
+        "source_operator": "structured_bias_not_uniform",
+        "telemetry": "mean +4.79 (median +7.98); per-bucket -111..+26 ODI / -19..+25 T20I = 137-run span; ODI F=527.16/H=9797.69, T20I F=1540.14/H=9609.67; descriptive (non-independent)"
+      }
+    },
+    {
+      "primitive_id": "t20_death_overprediction",
+      "name": "DLS over-predicts T20 death overs, under-predicts ODI collapses",
+      "verbatim_quote": "DLS systematically over-predicts the death overs of T20",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The structure matches two known-but-unquantified failures: DLS over-predicts T20 death overs (modern hitting differs most from resource-model assumptions) and under-predicts ODI collapse scenarios (wickets fall faster than smoothed curves anticipate); worst buckets ODI (45-50 overs, 5 wickets) -74.4 (n=586) and (25-30, 6) -40.7 (n=138); T20 (5-10, 6) +25.1 (n=1822) and (10-15, 5) +23.9 (n=621); empirically validates Bhattacharya et al.'s critique."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The format-specific failure modes are the same regime-dependent model-breakdown GSE flags.",
+        "source_operator": "t20_death_overprediction",
+        "telemetry": "over-predict T20 death / under-predict ODI collapse; worst ODI (45-50,5w) -74.4, (25-30,6w) -40.7; T20 (5-10,6w) +25.1, (10-15,5w) +23.9; validates Bhattacharya"
+      }
+    },
+    {
+      "primitive_id": "single_table_both_genders",
+      "name": "One resource table governs both men's and women's cricket (fairness concern)",
+      "verbatim_quote": "because a single resource table governs both men's and women's cricket",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A single DLS resource table is used for both men's and women's international cricket despite well-documented scoring-pattern differences; women's ODI scoring rates and wicket-fall distributions differ markedly from men's, raising the possibility that a calibration designed predominantly on men's data systematically miscalibrates women's matches — previously untested empirically."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The shared-table population miscalibration is the same demographic-fairness veto GSE applies to shared models.",
+        "source_operator": "single_table_both_genders",
+        "telemetry": "single Z(u,w) table for both genders; women's ODI scoring/wicket-fall differ; men's-data calibration may miscalibrate women; previously untested"
+      }
+    },
+    {
+      "primitive_id": "gender_gap_manifests_by_state",
+      "name": "ODI gender gap +6.13 runs (men +1.51, women +7.63); varies by state",
+      "verbatim_quote": "The bias gap manifests differently in different match states",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "On the training split mean DLS bias is +1.51 runs on men's ODIs but +7.63 on women's ODIs, a gender gap of +6.13 runs; the gap varies by state, e.g. bucket (20-25 overs, 6 wickets) men -32.4 vs women -6.3 (within-bucket gap +26.1, DLS under-predicts women's collapses much less severely); T20 gap is only +0.51 (men +7.07, women +7.58)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The state-varying demographic bias is the same population-conditioned miscalibration GSE quantifies.",
+        "source_operator": "gender_gap_manifests_by_state",
+        "telemetry": "ODI men +1.51/women +7.63 -> gap +6.13; bucket (20-25,6w) men -32.4/women -6.3 (gap +26.1); T20 gap +0.51 (men +7.07/women +7.58)"
+      }
+    },
+    {
+      "primitive_id": "innings_samples_nonindependent",
+      "name": "30 samples/innings are non-independent (share match/teams/venue/trajectory)",
+      "verbatim_quote": "The 30 samples drawn from each innings are not independent: they share match, teams, venue, and scoring trajectory",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The 30 samples drawn from each innings are not independent: they share match, teams, venue, and scoring trajectory; naive inference treating 233,550 synthetic examples as independent overstates significance, so the effective sample size is the number of matches, not synthetic examples."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The within-match dependence is literally GSE's effective-sample-size correction for clustered data.",
+        "source_operator": "innings_samples_nonindependent",
+        "telemetry": "30 samples/innings non-independent (share match/teams/venue/trajectory); effective N = matches not synthetic examples"
+      }
+    },
+    {
+      "primitive_id": "match_block_bootstrap",
+      "name": "Primary inference = match-level block bootstrap (2000 whole-match resamples)",
+      "verbatim_quote": "block bootstrap that resamples whole matches with replacement",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The primary inference is a match-level block bootstrap resampling whole matches with replacement (B=2000), keeping within-innings samples grouped; a match drawn twice contributes all its samples twice; percentile 95% CI from the 2.5th/97.5th percentiles; the ODI gender gap remains significant (match-clustered 95% CI [+3.70, +10.07] runs, bootstrap p(gap<=0)<0.001), so interval widths reflect effective matches not synthetic examples."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The match-clustered bootstrap is the same dependence-aware inference GSE uses for honest significance.",
+        "source_operator": "match_block_bootstrap",
+        "telemetry": "match-level block bootstrap B=2000 (whole matches, grouped samples); percentile 95% CI; ODI gap CI [+3.70,+10.07], p(gap<=0)<0.001"
+      }
+    },
+    {
+      "primitive_id": "bucket_matching_strengthens",
+      "name": "Bucket-matched gender gap (+8.34/+9.64) exceeds naive marginal -> conservative",
+      "verbatim_quote": "the bucket-matching strengthens, rather than explains away, the gender finding",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Restricting to (overs-bucket, wickets-lost) cells with >=30 examples in both genders (59 cells), the within-cell female-minus-male gap is +8.34 (unweighted) and +9.64 (min-n weighted), both exceeding the naive marginal +6.86, so bucket-matching strengthens rather than explains away the finding; a sign test finds women's bias exceeds men's in 55 of 59 cells; clustered CI [+5.32,+12.29] unweighted / [+3.77,+10.26] weighted; the bucket-matched gap is the most conservative fairness diagnostic."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The confound-controlled bucket-matched gap is the same stratified fairness diagnostic GSE uses.",
+        "source_operator": "bucket_matching_strengthens",
+        "telemetry": "59 cells >=30 both genders; matched gap +8.34 unweighted/+9.64 min-n weighted > marginal +6.86; sign test 55/59; CI [+5.32,+12.29]/[+3.77,+10.26]; conservative"
+      }
+    },
+    {
+      "primitive_id": "t20i_gap_not_significant",
+      "name": "T20I gender gap NOT significant under clustered inference (CI spans zero)",
+      "verbatim_quote": "the T20I gap is therefore not distinguishable from zero at conventional levels under clustered inference",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For T20I the match-level block bootstrap gives SE~0.82 runs and 95% CI [-1.10, +2.12] with p(gap<=0)~0.27, so the +0.51-run T20I gap is not distinguishable from zero under clustered inference; the gender miscalibration is essentially an ODI-specific phenomenon, corroborated by the operational-threshold test (a +0.51-run difference rounds away on an integer chase target of order 150)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The format-specific significance is the same scope-limited fairness conclusion GSE draws.",
+        "source_operator": "t20i_gap_not_significant",
+        "telemetry": "T20I gap SE~0.82, CI [-1.10,+2.12], p~0.27 (not significant); ODI-specific phenomenon; +0.51 rounds away on ~150 integer target"
+      }
+    },
+    {
+      "primitive_id": "naive_largeN_significance_trap",
+      "name": "Naive large-N significance (p=0.008) was an artifact of ~150k sample scale",
+      "verbatim_quote": "exactly the kind of result the match-clustered reform in Section 3.3 is designed to distrust",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The clustered T20I result supersedes the original submission's naive Welch ANOVA (F=6.96, p=0.008), which registered as significant only because of the ~150,000-sample scale — exactly the kind of result the match-clustered reform is designed to distrust; this is the paper's central methodological lesson about dependence inflating significance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The large-N naive-significance trap is literally GSE's dependence-aware inference veto (same as field-hockey small-sample and noisy-judgments bootstrap).",
+        "source_operator": "naive_largeN_significance_trap",
+        "telemetry": "naive Welch ANOVA F=6.96 p=0.008 significant only via ~150k scale; clustered p~0.27; dependence inflates significance; central methodological lesson"
+      }
+    },
+    {
+      "primitive_id": "full_member_strength_control",
+      "name": "Team-strength control: Full-Member-only gap +6.72 (not a weaker-team artifact)",
+      "verbatim_quote": "Among Full-Member-only matches the gap is essentially unchanged",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Labeling matches by whether both sides are ICC Full Members or at least one Associate, the ODI gender gap among Full-Member-only matches is essentially unchanged (+6.72, clustered CI [+3.38,+10.04]); 97.5% of women's ODI examples already come from Full-Member-only matches (only 270 of 10,719 involve an Associate), so Associate fixtures cannot drive the effect."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The team-strength stratification is the same confound-control GSE applies to fairness findings.",
+        "source_operator": "full_member_strength_control",
+        "telemetry": "Full-Member-only gap +6.72 (CI [+3.38,+10.04]); 97.5% women's ODI already Full-Member (270/10719 Associate); not weaker-team artifact"
+      }
+    },
+    {
+      "primitive_id": "association_not_causal",
+      "name": "Gender finding is association, not demonstrated causation (observational audit)",
+      "verbatim_quote": "establishing causation is beyond the scope of an observational audit",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The gender finding is an empirical association between gender and DLS residuals at matched states, not a demonstrated causal effect; several mechanisms could contribute (team-strength distributions, era/scheduling, venue/boundary dimensions, ball type, innings-length distributions, data coverage); team strength and era are controlled, remaining mechanisms uncontrolled, and establishing causation is beyond the scope of an observational audit."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The association-not-causation caveat is the same causal-humility GSE attaches to observational fairness findings.",
+        "source_operator": "association_not_causal",
+        "telemetry": "association not causal; mechanisms: team strength/era/venue/ball/innings-length/coverage; strength+era controlled, rest uncontrolled; observational audit"
+      }
+    },
+    {
+      "primitive_id": "dlscal_additive_correction",
+      "name": "DLS-Cal: additive state-conditioned correction on published DLS prediction",
+      "verbatim_quote": "DLS-Cal is a lightweight calibration layer that outputs an additive correction",
+      "page": 9,
+      "latex": "\\hat r_{\\text{DLS-Cal}}=\\hat r_{\\text{DLS}}+\\Delta(x),\\qquad x\\in\\mathbb{R}^{18}",
+      "symbol_and_unit_ledger": {
+        "r-hat_DLS": "published DLS remaining-runs prediction [runs]",
+        "Delta(x)": "learned additive state-conditioned correction [runs]",
+        "x": "18-dim feature vector (DLS pred + bucket-bias prior + 16 enriched)",
+        "MLP": "4-layer [18,128,128,64,1], GELU, dropout 0.25, 27265 params"
+      },
+      "assumptions": [
+        "DLS-Cal outputs an additive correction Delta(x) to the DLS prediction: r-hat_DLS-Cal = r-hat_DLS + Delta(x) (Eq 1), where x in R^18 comprises the DLS prediction, the empirical training-set bucket bias (a prior), and 16 enriched features; a 4-layer MLP [18,128,128,64,1], GELU, dropout 0.25, 27,265 parameters, trained on the residual r - r-hat_DLS with Huber loss (delta=10), AdamW, cosine annealing. Equation 1 is printed math-font and reconstructed here.",
+        "Equation 1 (DLS-Cal additive correction) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Final layer zero-init -> Delta=0 at start (can only add value)",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The additive calibration layer is literally GSE's calibration-map fix for inflated-but-monotone rankings.",
+        "source_operator": "dlscal_additive_correction",
+        "telemetry": "r-hat_DLS-Cal = r-hat_DLS + Delta(x) (Eq1); x in R^18 (DLS pred + bucket-bias prior + 16 features); MLP [18,128,128,64,1] GELU dropout 0.25, 27265 params; Huber delta=10"
+      }
+    },
+    {
+      "primitive_id": "zero_init_only_add_value",
+      "name": "Zero-initialized final layer: calibrator can only add value, never corrupt DLS",
+      "verbatim_quote": "the model can therefore only add value to DLS rather than corrupt it",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The final layer is initialized to zero so Delta=0 at the start of training; the model can therefore only add value to DLS rather than corrupt it — a safety-by-construction design that anchors the calibrator to the published baseline; the bucket-bias prior is retained for interpretability (anchors each correction to the audited bias map) rather than accuracy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The zero-init safety anchor is the same do-no-harm calibration design GSE uses when correcting a deployed model.",
+        "source_operator": "zero_init_only_add_value",
+        "telemetry": "final layer zero-init -> Delta=0 start; can only add value not corrupt; bucket prior retained for interpretability (anchors to bias map)"
+      }
+    },
+    {
+      "primitive_id": "wfr_motivation_threshold",
+      "name": "Win-Flip Rate: RMSE treats a 4-run error in a blowout same as in a tight chase",
+      "verbatim_quote": "a 4-run error in a one-sided match counts the same as a 4-run error in a tightly contested chase",
+      "page": 9,
+      "latex": "\\mathrm{WFR}_k(M)=\\frac{1}{N}\\sum_{i=1}^{N}\\mathbb{I}\\big[\\,|\\hat r_{M,i}-r_i|>k\\,\\big]",
+      "symbol_and_unit_ledger": {
+        "WFR_k": "Win-Flip Rate at threshold k [fraction]",
+        "k": "run threshold {3,5,10,15} [runs]",
+        "r-hat_M,i": "method M predicted remaining runs [runs]",
+        "r_i": "actual remaining runs [runs]",
+        "I[.]": "indicator (1 if error exceeds k)"
+      },
+      "assumptions": [
+        "Standard regression metrics (RMSE, MAE) treat all errors as equivalent: a 4-run error in a one-sided match counts the same as a 4-run error in a tightly contested chase, even though only the latter can flip the outcome; the Win-Flip Rate WFR_k(M) = (1/N) sum I[|r-hat_M,i - r_i| > k] (Eq 2) is a thresholded error rate for k in {3,5,10,15}, stratified by format and interruption phase. Equation 2 is printed math-font and reconstructed here.",
+        "Equation 2 (Win-Flip Rate) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Proxy for outcome-flipping, not direct measurement",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The decision-relevant thresholded error is literally GSE's practical-significance metric (errors that flip outcomes matter).",
+        "source_operator": "wfr_motivation_threshold",
+        "telemetry": "WFR_k(M)=(1/N)sum I[|r-hat-r|>k] (Eq2); k in {3,5,10,15}; RMSE/MAE treat blowout=tight chase; only tight-chase errors flip outcome"
+      }
+    },
+    {
+      "primitive_id": "wfr_proxy_not_direct",
+      "name": "WFR is a proxy for outcome-flipping, not a direct measurement (validation future work)",
+      "verbatim_quote": "WFR is a proxy for outcome-flipping rather than a direct measurement",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "WFR is a proxy for outcome-flipping rather than a direct measurement; validating that WFR thresholds correspond to actual flipped chase outcomes is left for future work, an honest construct-validity limitation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The proxy-vs-outcome honesty is the same metric-validity caveat GSE attaches to decision proxies.",
+        "source_operator": "wfr_proxy_not_direct",
+        "telemetry": "WFR proxy for outcome-flipping not direct; validating thresholds vs actual flipped outcomes = future work"
+      }
+    },
+    {
+      "primitive_id": "ml_outperform_dls",
+      "name": "All ML methods substantially outperform every DLS variant",
+      "verbatim_quote": "All ML methods substantially outperform every DLS variant",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "On the test split (N=69,090) all ML methods substantially outperform every DLS variant; the largest single improvement is replacing original DLS (RMSE 37.41) with the canonical formulation (28.92), a 22.6% reduction; the stacking ensemble achieves the lowest RMSE (21.49) and MAE (16.19); ML methods are read as an upper bound on achievable accuracy rather than drop-in DLS substitutes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The ML-upper-bound framing is the same achievable-accuracy benchmark GSE uses against legacy methods.",
+        "source_operator": "ml_outperform_dls",
+        "telemetry": "test N=69090; ML > all DLS variants; original 37.41 -> canonical 28.92 (22.6%); stacking best RMSE 21.49/MAE 16.19; ML = upper bound not drop-in"
+      }
+    },
+    {
+      "primitive_id": "dlscal_interpretability_tradeoff",
+      "name": "DLS-Cal best ODI WFR5 (83%) but trails stacking RMSE by 2.23 — interpretability tradeoff",
+      "verbatim_quote": "it trails stacking on RMSE by 2.23 runs but offers full interpretability",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "DLS-Cal achieves the lowest WFR5 on ODI (83.0%) of any method, beating XGBoost (84.0%) and stacking (85.0%); it trails stacking on RMSE by 2.23 runs but offers full interpretability (predictions decompose as published DLS output plus a small state-attributable correction), a real interpretability-vs-accuracy tradeoff."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The interpretability-accuracy tradeoff is the same governance-value balance GSE weighs (and Harville's criteria).",
+        "source_operator": "dlscal_interpretability_tradeoff",
+        "telemetry": "DLS-Cal best ODI WFR5 83% (XGB 84%/stacking 85%); trails stacking RMSE by 2.23; full interpretability (DLS + state-attributable correction)"
+      }
+    },
+    {
+      "primitive_id": "lookup_overcorrects_tail",
+      "name": "Bucket-mean lookup over-corrects the heavy right tail (degrades accuracy)",
+      "verbatim_quote": "the per-cell mean over-corrects on the heavy right tail of the residual distribution",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A non-learned bucket-mean lookup (adding the average per-cell residual) degrades accuracy relative to uncorrected DLS (RMSE 37.20 vs 28.88) because the per-cell mean over-corrects on the heavy right tail of the residual distribution; this motivates a robust learned correction rather than a lookup."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The heavy-tail over-correction is the same robust-calibration lesson GSE applies (mean lookup fails on skewed residuals).",
+        "source_operator": "lookup_overcorrects_tail",
+        "telemetry": "bucket-mean lookup RMSE 37.20 vs uncorrected 28.88 (degrades); over-corrects heavy right tail; motivates robust learned correction"
+      }
+    },
+    {
+      "primitive_id": "parsimony_learned_layer",
+      "name": "Ablation: lookup insufficient, lightweight learned layer suffices, deep model unnecessary",
+      "verbatim_quote": "a lookup is insufficient, a lightweight learned layer suffices, and a deep model is unnecessary",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The ablation ladder shows a linear least-squares correction on the full feature set recovers most of the achievable gain (RMSE 22.80) and the MLP improves only modestly beyond it (22.09), so the correction is largely but not entirely linear; removing the bucket-bias prior leaves accuracy essentially unchanged (retained for interpretability); in short a lookup is insufficient, a lightweight learned layer suffices, and a deep model is unnecessary."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The parsimony conclusion is the same simplest-sufficient-model principle GSE enforces.",
+        "source_operator": "parsimony_learned_layer",
+        "telemetry": "linear full features RMSE 22.80 (most gain); MLP 22.09 (modest); prior for interpretability not accuracy; lookup insufficient/lightweight suffices/deep unnecessary"
+      }
+    },
+    {
+      "primitive_id": "dlscal_learns_bias_structure",
+      "name": "DLS-Cal correction mirrors the audited bias map (31% ODI / 19% T20I bias reduction)",
+      "verbatim_quote": "and correction panels confirms DLS-Cal learns the bias structure",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "DLS-Cal substantially reduces structured bias: ODI mean |bias| falls 33.74 to 23.29 (31.0%), T20I 20.58 to 16.71 (18.8%); the visual mirroring between the DLS-bias and correction panels confirms DLS-Cal learns the documented bias structure, and the lighter residual column quantifies how much remains unexplained."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The bias-map mirroring is the same calibration-learns-the-audit verification GSE uses.",
+        "source_operator": "dlscal_learns_bias_structure",
+        "telemetry": "ODI mean|bias| 33.74->23.29 (31.0%); T20I 20.58->16.71 (18.8%); correction mirrors bias map; residual column = unexplained"
+      }
+    },
+    {
+      "primitive_id": "real_rain_corroboration",
+      "name": "Real rain-affected matches (417) corroborate the format-specific bias pattern",
+      "verbatim_quote": "DLS shows the same format-specific pattern documented in our audit",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "On 417 Cricsheet D/L-decided matches held out, DLS shows the same format-specific pattern: under-predicts ODIs (mean bias -11.1, RMSE 45.8) and over-predicts T20Is (+8.7, RMSE 25.1); +/-5-run and +/-1-wicket perturbations of the pre-interruption state move bias smoothly and monotonically (ODI -9.7 to +2.0), confirming stability to realistic state variation; limitations: no exact stoppage points encoded, and ~1,290 women's ODI examples too small to resolve the gender gap separately."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The synthetic-to-real transfer check is the same distribution-shift validation GSE requires of simulation audits.",
+        "source_operator": "real_rain_corroboration",
+        "telemetry": "417 D/L-decided real matches; ODI -11.1/RMSE 45.8, T20I +8.7/RMSE 25.1; +/-5-run/+/-1-wicket perturbations smooth monotonic (ODI -9.7..+2.0); no exact stoppage; ~1290 women's ODI too small"
+      }
+    },
+    {
+      "primitive_id": "shared_calibrator_underserves_minority",
+      "name": "Gender-blind calibrator can under-serve the minority group (motivates gender-aware)",
+      "verbatim_quote": "a shared calibrator can itself under-serve the minority group",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The gender-blind calibrator leaves a larger positive residual on women than men, so a shared calibrator can itself under-serve the minority group; the gender-aware DLS-Cal (separate male/female models routed by gender) reduces women's residual bias from +6.19 (canonical) to +0.65 runs (5.54 reduction) with no men's degradation, while the male-specific calibrator is essentially equivalent to gender-blind on men's data."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The shared-model minority under-service is literally GSE's demographic-fairness risk for pooled calibrators.",
+        "source_operator": "shared_calibrator_underserves_minority",
+        "telemetry": "gender-blind leaves larger women's residual; shared calibrator under-serves minority; gender-aware women +6.19->+0.65 (5.54 reduction), no men's degradation; male-specific ~ gender-blind"
+      }
+    },
+    {
+      "primitive_id": "temporal_window_stability",
+      "name": "Gender gap stable across rolled temporal windows (positive 4/5, mean +6.20)",
+      "verbatim_quote": "The effect is stable in direction and magnitude across independent temporal windows",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Re-estimating the ODI gender gap with each year 2021-2025 held out in turn (training on all prior data), the gap is positive in four of five windows (mean +6.20, matching pooled), individually significant in the largest window (2021: +15.11, CI [+5.45,+26.07]) and directionally consistent elsewhere, with 2023 marginally negative (-0.39, [-9.45,+8.94]); per-window intervals are wide because women's ODI fixtures are sparse in any single year."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The rolled-window stability is the same temporal-robustness check GSE applies to fairness findings.",
+        "source_operator": "temporal_window_stability",
+        "telemetry": "roll 2021-2025 holdout; gap positive 4/5 (mean +6.20); 2021 +15.11 (CI [+5.45,+26.07]); 2023 -0.39 ([-9.45,+8.94]); wide per-window CIs (sparse women's fixtures)"
+      }
+    },
+    {
+      "primitive_id": "interpretability_governance_value",
+      "name": "Interpretability has independent governance value beyond raw accuracy",
+      "verbatim_quote": "For governance contexts where match outcomes are subject to public scrutiny, interpretability has independent value beyond raw accuracy",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "DLS-Cal wins on ODI WFR but trails stacking on RMSE — a real tradeoff; the stacking ensemble combines five base learners and is opaque, while DLS-Cal decomposes as published DLS output plus a small state-attributable correction; for governance contexts where match outcomes are subject to public scrutiny, interpretability has independent value beyond raw accuracy; deployment would require validation against official DLS, versioned recalibration, and public documentation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The governance-value of interpretability is the same auditability requirement GSE places on high-stakes models.",
+        "source_operator": "interpretability_governance_value",
+        "telemetry": "DLS-Cal wins ODI WFR/trails stacking RMSE; stacking opaque (5 learners); DLS-Cal decomposable; interpretability independent governance value; needs validation/versioned recalibration/public docs"
+      }
+    },
+    {
+      "primitive_id": "capnet_embedding_coldstart",
+      "name": "CAP-Net underperforms: player-embedding cold-start (long tail <50 balls memorizes)",
+      "verbatim_quote": "the embedding table memorizes training-set patterns rather than learning generalizable representations",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "CAP-Net's underperformance is attributed to the player-embedding cold-start problem: 4,707 unique players appear, but the long tail comprises players with <50 balls of recorded play, so the embedding table memorizes training-set patterns rather than learning generalizable representations; a controlled ablation (training only on players with >=100 balls) is left for future work."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The embedding cold-start is the same data-sufficiency limit GSE flags for learned player representations.",
+        "source_operator": "capnet_embedding_coldstart",
+        "telemetry": "CAP-Net cold-start: 4707 players, long tail <50 balls -> embedding memorizes not generalizes; >=100-ball ablation future work"
+      }
+    },
+    {
+      "primitive_id": "female_calibrator_plateau",
+      "name": "Female calibrator plateaued at available data (75%->100% RMSE changes 0.03)",
+      "verbatim_quote": "indicating the female calibrator has effectively plateaued at the available sample size",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The gender-aware female model is trained on 32,760 examples against 107,400 for the male model (historical fixture record, not pipeline choice); a learning-curve analysis on 25/50/75/100% subsamples shows test RMSE changing by only 0.03 runs between 75% and 100%, indicating the female calibrator has effectively plateaued at the available sample size; a fully independent women's resource table would demand a larger era-current corpus that does not yet exist."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The data-ceiling plateau is the same sample-sufficiency bound GSE recognizes for minority-group models.",
+        "source_operator": "female_calibrator_plateau",
+        "telemetry": "female 32760 vs male 107400 examples; learning curve 75%->100% RMSE changes 0.03 (plateaued); independent women's table needs larger era-current corpus (doesn't exist)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dlsfairness2026_trace",
+      "think": "The retrocausal genealogy of this paper is the empirical fairness audit of a deployed sports decision rule. Soumyadeep Roy, at St. Xavier's College in Kolkata, posting to arXiv in September 2026 as 2609.04754, takes the Duckworth-Lewis-Stern method, the official International Cricket Council target-revision rule since 1999, and subjects it to the first large-scale empirical audit of its prediction bias using Cricsheet ball-by-ball data for eight thousand one hundred fifty international matches. The work sits in the lineage of Duckworth and Lewis's 1998 resource model, Stern's 2016 extension to modern scoring rates, McHale and Asif's arc-tangent DLMA variant, Bhattacharya, Gill, and Swartz's critique that ODI-calibrated resource curves misfit Twenty20, and Zia's player-aware compensation, alongside the calibration tradition of Niculescu-Mizil and Caruana and Guo's modern neural-network calibration. None of these predecessors examined cross-gender bias, which is the gap this paper fills. The recursive theory of mind is the resource-proportionality model and its clustered audit. DLS models cumulative resources as a function of overs remaining and wickets lost and sets the revised chase target in proportion to the resource fraction, an assumption that expected runs are proportional to resources consumed at a constant scoring rate per unit resource; the audit probes exactly this resource-estimation component by sampling thirty synthetic interruption points per innings and comparing the projection to actual remaining runs. Because the thirty samples within an innings share match, teams, venue, and scoring trajectory, they are not independent, so the primary inference is a match-level block bootstrap that resamples whole matches, making the effective sample size the number of matches rather than the two hundred thirty-three thousand synthetic examples. Cross-layer veto adjudication is the structured-bias and gender findings under honest inference. DLS bias is far from uniform: per-bucket mean bias spans one hundred thirty-seven runs, over-predicting the death overs of Twenty20 and under-predicting one-day collapse scenarios, confirming the theoretical critique empirically. The headline fairness finding is that a single resource table governs both men's and women's cricket, producing a gender-differential bias of plus six point one three runs in women's one-day internationals on the training split, a gap that survives match-clustered inference, holds among Full-Member-only matches, strengthens rather than disappears under bucket-matching, and is stable across rolled temporal windows. The methodological centerpiece is that the small Twenty20 gender gap, which a naive Welch ANOVA registered as significant at p equals zero point zero zero eight, is not distinguishable from zero under clustered inference — the naive significance was an artifact of the roughly one hundred fifty thousand sample scale, exactly the trap the clustered reform is designed to distrust. The implementation invariants map directly onto GSE. The resource-fraction target revision is GSE's state-conditioned expectancy scaling; the state-bucketed bias map is GSE's calibration-by-state audit; the gender-differential bias is GSE's demographic-fairness veto on shared models; and the match-clustered bootstrap versus naive large-N significance is GSE's dependence-aware inference rule, the same lesson as the field-hockey small-sample shrinkage and the noisy-judgments bootstrap already in the corpus. DLS-Cal, an additive zero-initialized correction on the published prediction, is literally GSE's calibration-map fix for a monotone-but-inflated ranking, and the Win-Flip Rate is GSE's decision-relevant error metric that counts only errors large enough to flip an outcome. The outputs are revised cricket targets from ball-by-ball data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The calibration and ablation results make the fix concrete and parsimonious. DLS-Cal reduces absolute bias by thirty-one percent on one-day internationals and nineteen percent on Twenty20, and its correction panel visually mirrors the audited bias map; a gender-aware variant trains separate male and female calibrators and cuts women's residual bias from plus six point one nine to plus zero point six five runs with no degradation for men, while a gender-blind calibrator itself leaves a larger residual on women, showing that a shared calibrator can under-serve the minority group. The ablation ladder shows a bucket-mean lookup actually degrades accuracy because it over-corrects the heavy right tail of the residual distribution, a linear correction recovers most of the gain, and a deep model is unnecessary; the bucket-bias prior is kept for interpretability rather than accuracy. On four hundred seventeen real rain-affected matches the same format-specific pattern holds, and perturbation grids confirm the bias estimate is stable to realistic state variation. The caveats close the account with the honest limits of an observational fairness audit. The gender finding is an association robust to clustered inference and to team-strength and era controls, not a demonstrated causal effect, since venue, boundary dimensions, ball type, and data coverage remain uncontrolled; the synthetic interruption distribution need not match the operational one, the ICC's exact annually updated table is proprietary so reconstructions may differ by a few runs, and the female calibrator has plateaued at the available sample size with a fully independent women's table requiring a corpus that does not yet exist. The invariant for GSE is to carry the resource-expectancy audit, the clustered-inference significance rule, the demographic-fairness veto, the additive zero-init calibration layer, and the outcome-flip error metric while recording the association-not-causation scope, the proxy nature of the Win-Flip Rate, and the data ceiling on minority-group calibration before any quantitative reuse, treating interpretability as having independent governance value beyond raw accuracy whenever a model's decisions are subject to public scrutiny.",
+      "retrocausal_genealogy": "Empirical fairness audit of a deployed sports decision rule. Soumyadeep Roy, St. Xavier's College Kolkata; arXiv:2609.04754v1 [cs.LG] 4 Sep 2026. First large-scale empirical DLS bias audit (ICC official since 1999) on Cricsheet 8150 internationals (3095 ODI/5055 T20I; 5708 men/2442 women; 2.78M balls; 2002-2026). Lineage: Duckworth-Lewis 1998 JORS, Stern 2016 JORS, McHale-Asif 2013 DLMA arc-tangent, Bhattacharya-Gill-Swartz 2011 T20 critique, Zia 2022 player-aware; Niculescu-Mizil-Caruana 2005 / Guo 2017 calibration. None examined cross-gender bias. Four contributions: large-scale bias audit (137-run span), first gender-differential bias (+6.13 ODI), DLS-Cal interpretable calibration + gender-aware variant, Win-Flip Rate fairness metric.",
+      "theory_of_mind": "DLS resource Z(u,w) (u overs remaining, w wickets lost); target proportional to resource fraction; Z0=G50 (ODI 245/T20 145); proportionality assumption (constant rate/resource) — audit probes resource-estimation component. 30 synthetic interruptions/innings [5*6,n-5*6]; 233550 examples (140160/24300/69090); temporal split train<=2022/val 2023/test 2024-2026, player stats train-only. Error e=r-hat_DLS - r; bin (format,overs,wickets); ANOVA/KW descriptive. 30 samples/innings non-independent -> match-level block bootstrap B=2000 (whole matches), effective N=matches. DLS-Cal r-hat=r-hat_DLS+Delta(x) (Eq1), x in R^18, MLP [18,128,128,64,1] GELU dropout 0.25 27265 params, zero-init final layer, Huber delta=10. WFR_k=(1/N)sum I[|r-hat-r|>k] (Eq2), k{3,5,10,15}. Equations math-font reconstructed.",
+      "cross_layer_veto": "Bias +4.79 mean (median +7.98); per-bucket -111..+26 ODI/-19..+25 T20I = 137-run span; over-predict T20 death/under-predict ODI collapse (worst ODI (45-50,5w) -74.4). Gender: single table both genders; ODI men +1.51/women +7.63 -> +6.13 gap; clustered CI [+3.70,+10.07] p<0.001; bucket-matched +8.34/+9.64 > marginal +6.86 (55/59 sign test, conservative); Full-Member-only +6.72 (97.5% already Full-Member); rolled windows positive 4/5 (mean +6.20). T20I gap +0.51 NOT significant clustered (CI [-1.10,+2.12] p~0.27) — supersedes naive Welch F=6.96 p=0.008 (artifact of ~150k scale). Association not causal. DLS-Cal bias -31% ODI/-19% T20I; lookup over-corrects heavy tail (degrades); linear suffices/deep unnecessary; gender-aware women +6.19->+0.65 (shared calibrator under-serves minority); female plateau (75->100% RMSE 0.03). 417 real rain matches corroborate (ODI -11.1/T20 +8.7); WFR proxy not direct; CAP-Net cold-start (<50 balls). Interpretability governance value. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A large-scale empirical fairness audit of the Duckworth-Lewis-Stern cricket target-revision method on 8,150 Cricsheet internationals reveals structured state-dependent bias spanning 137 runs (over-predicting T20 death overs, under-predicting ODI collapses) and a previously undocumented gender-differential bias of +6.13 runs in women's ODIs caused by a single resource table serving both genders; the gender finding survives match-level clustered bootstrap, bucket-matching, team-strength stratification, and temporal-window stability, while the small T20 gap's naive large-N significance is exposed as a dependence artifact, and an interpretable additive zero-initialized calibration layer (DLS-Cal) plus a gender-aware variant and a thresholded Win-Flip Rate fairness metric reduce the bias without altering the DLS framework.",
+  "gsi_mapping": "GSI treats DLS resource Z(u,w) (overs remaining u, wickets lost w), target proportional to resource fraction, Z0=G50 (ODI 245/T20 145), proportionality assumption; Cricsheet 8150 matches/2.78M balls; 30 synthetic interruptions/innings -> 233550 examples; temporal split train<=2022/val 2023/test 2024-2026 (player stats train-only); error e=r-hat_DLS-r binned (format,overs,wickets); structured bias +4.79 mean/137-run span (ODI F=527.16/T20I F=1540.14 descriptive); over-predict T20 death/under-predict ODI collapse; gender single-table ODI men +1.51/women +7.63 -> +6.13 gap; 30 samples/innings non-independent -> match-level block bootstrap B=2000 (effective N=matches), ODI CI [+3.70,+10.07] p<0.001; bucket-matched +8.34/+9.64 > marginal +6.86 (55/59, conservative); Full-Member +6.72 (97.5%); rolled windows 4/5 positive (mean +6.20); T20I +0.51 NOT significant clustered (CI [-1.10,+2.12] p~0.27) supersedes naive Welch F=6.96 p=0.008 (~150k artifact); association not causal; DLS-Cal r-hat=r-hat_DLS+Delta(x) (Eq1, MLP [18,128,128,64,1] zero-init, Huber delta=10) bias -31% ODI/-19% T20I; lookup over-corrects heavy tail/linear suffices/deep unnecessary; gender-aware women +6.19->+0.65 (shared under-serves minority); female plateau (75->100% RMSE 0.03); WFR_k=(1/N)sum I[|err|>k] (Eq2, proxy); 417 real rain matches corroborate; CAP-Net cold-start; interpretability governance value; equations math-font reconstructed.",
+  "gse_mapping": "GSE lifts the resource-fraction state-conditioned expectancy, the state-bucketed calibration-by-state bias audit, the demographic-fairness veto on shared models, the match-clustered bootstrap versus naive large-N significance as its dependence-aware inference rule (same lesson as field-hockey small-sample and noisy-judgments bootstrap), the additive zero-init DLS-Cal as its calibration-map fix for monotone-but-inflated rankings, and the Win-Flip Rate as its decision-relevant error metric; treats the association-not-causation scope, the WFR proxy nature, the minority-group data ceiling, and the heavy-tail lookup over-correction as honest limits, and interpretability as independent governance value; all outputs are revised cricket targets from ball-by-ball data, never sportsbook lines, and significance is judged by effective matches not synthetic-example count."
+}

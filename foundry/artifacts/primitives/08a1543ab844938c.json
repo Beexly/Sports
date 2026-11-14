@@ -1,0 +1,78 @@
+{
+  "book_id": "08a1543ab844938c",
+  "source_status": "COMPLETE",
+  "title": "1119-triumphs-tragedies-fandom-emotional-arcs-nfl",
+  "file_name": "1119-triumphs-tragedies-fandom-emotional-arcs-nfl.md",
+  "sha256": "08a1543ab844938c7a5c1174b2157002eafec6fb2e183f3bbb17a23450ee4680",
+  "primary_domain": "football",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fandom geography and emotional arc modeling via tweet activity and lexicon sentiment in 7-day windows around NFL games. Universal Lens: Rooted in 1119-triumphs-tragedies-fandom-emotional-arcs-nfl (08a1543ab844938c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on geotagged tweet density and sentiment arcs to infer fanbase emotional states and spatial influence zones. GSI Mapping: Rooted in 1119-triumphs-tragedies-fandom-emotional-arcs-nfl (08a1543ab844938c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine uses fandom radius and sentiment windows to transition fan engagement states for targeted content and prediction. GSE Mapping: Rooted in 1119-triumphs-tragedies-fandom-emotional-arcs-nfl (08a1543ab844938c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fandom_radius",
+      "name": "Fandom Radius",
+      "verbatim_quote": "- Core/baseline threshold: cumulative **70%** of population; **fandom radius** = first distance from the stadium where normalized activity falls below background.",
+      "page": 1,
+      "latex": "\\mathcal{R}_{\\text{fandom}} = \\min\\left\\{ r \\mid \\sum_{i=1}^{r} P_i < 0.7 \\cdot P_{\\text{total}} \\right\\}",
+      "symbol_and_unit_ledger": "{'r': 'distance in kilometers from stadium', 'P_i': 'normalized tweet activity at location i', 'P_{\\\\text{total}}': 'total population within radius'}",
+      "assumptions": "Geotagged tweets correlate with fan presence; 70% cumulative population defines core fandom zone.",
+      "breakdown_regime": "When geotagging rate drops below 10%, or when population density varies drastically.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps tweet density to spatial fan influence using cumulative distribution functions.",
+        "source_operator": "fandom_radius",
+        "telemetry": "Normalized tweet count per capita within metro areas."
+      }
+    },
+    {
+      "primitive_id": "sentiment_arc",
+      "name": "Sentiment Arc",
+      "verbatim_quote": "- Sentiment: **lexicon-based** scoring (hedonometer-style; scores in the ~6.0 range); pregame/halftime/end-of-game windows compared for winners vs losers.",
+      "page": 1,
+      "latex": "\\vec{S}(t) = \\left( S_{\\text{pre}}, S_{\\text{half}}, S_{\\text{post}} \\right)",
+      "symbol_and_unit_ledger": "{'S(t)': 'sentiment score vector over game window', 'S_{\\\\text{pre}}': 'pre-game sentiment (dimensionless)', 'S_{\\\\text{half}}': 'halftime sentiment (dimensionless)', 'S_{\\\\text{post}}': 'post-game sentiment (dimensionless)'}",
+      "assumptions": "Lexicon-based sentiment reflects collective emotional arc; assumes consistent emotional expression across time windows.",
+      "breakdown_regime": "When sarcasm or context-dependent language dominates sentiment lexicons.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives emotional trajectory from lexicon scores across temporal game windows.",
+        "source_operator": "sentiment_arc",
+        "telemetry": "Average hedonometer-style sentiment scores per game window."
+      }
+    },
+    {
+      "primitive_id": "activity_scaling",
+      "name": "Activity Scaling",
+      "verbatim_quote": "Scaling result: activity ∝ (population)^α with **α = 0.53, R2 = 0.64**.",
+      "page": 1,
+      "latex": "\\mathcal{A} \\propto N^{\\alpha}, \\quad \\alpha = 0.53, R^2 = 0.64",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{A}': 'tweet activity (normalized per 100k people)', 'N': 'population within metro area', '\\\\alpha': 'scaling exponent (dimensionless)'}",
+      "assumptions": "Tweet activity scales sublinearly with population; data represents stable urban dynamics.",
+      "breakdown_regime": "When population density changes dramatically or social media usage shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates tweet volume to urban population using power-law scaling.",
+        "source_operator": "activity_scaling",
+        "telemetry": "Normalized tweet counts per capita across metro areas."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "08a1543ab844938c_t0",
+      "think": "The paper introduces a dual framework: geographic fandom radius and emotional sentiment arcs. The fandom radius is derived from cumulative tweet activity, modeled as a function of population density and normalized tweet counts. This is formalized as a cumulative distribution problem where the 70% threshold demarcates core fan zones. The sentiment arc is captured via lexicon-based scoring across pre-, halftime, and post-game windows. These two primitives form a dual structure: one spatial, one temporal. The scaling law A ∝ N^α links tweet activity to urban population, suggesting a sublinear relationship. The framework’s failure modes include outdated data (2011–2014), self-selection bias in geotagged tweets, and lexicon shortcomings in capturing sarcasm. The model lacks predictive validation but offers descriptive features for GSE’s engagement models.\n\nDeep epistemic analysis for 1119-triumphs-tragedies-fandom-emotional-arcs-nfl (08a1543ab844938c, domain=football, pages_read=2/2): Operator 'Fandom Radius' (page 1, domain football) captures: - Core/baseline threshold: cumulative **70%** of population; **fandom radius** = first distance from the stadium where normalized activity falls below background. Assumptions: Geotagged tweets correlate with fan presence; 70% cumulative population defines core fandom zone. Breakdown regime: When geotagging rate drops below 10%, or when population density varies drastically. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps tweet density to spatial fan influence using cumulative distribution functions. Operator 'Sentiment Arc' (page 1, domain football) captures: - Sentiment: **lexicon-based** scoring (hedonometer-style; scores in the ~6.0 range); pregame/halftime/end-of-game windows compared for winners vs losers. Assumptions: Lexicon-based sentiment reflects collective emotional arc; assumes consistent emotional expression across time windows. Breakdown regime: When sarcasm or context-dependent language dominates sentiment lexicons. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives emotional trajectory from lexicon scores across temporal game windows. Operator 'Activity Scaling' (page 1, domain football) captures: Scaling result: activity ∝ (population)^α with **α = 0.53, R2 = 0.64**. Assumptions: Tweet activity scales sublinearly with population; data represents stable urban dynamics. Breakdown regime: When population density changes dramatically or social media usage shifts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates tweet volume to urban population using power-law scaling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1119-triumphs-tragedies-fandom-emotional-arcs-nfl (08a1543ab844938c, domain=football, pages_read=2/2): Operator 'Fandom Radius' (page 1, domain football) captures: - Core/baseline threshold: cumulative **70%** of population; **fandom radius** = first distance from the stadium where normalized activity falls below background. Assumptions: Geotagged tweets correlate with fan presence; 70% cumulative population defines core fandom zone. Breakdown regime: When geotagging rate drops below 10%, or when population density varies drastically. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps tweet density to spatial fan influence using cumulative distribution functions. Operator 'Sentiment Arc' (page 1, domain football) captures: - Sentiment: **lexicon-based** scoring (hedonometer-style; scores in the ~6.0 range); pregame/halftime/end-of-game windows compared for winners vs losers. Assumptions: Lexicon-based sentiment reflects collective emotional arc; assumes consistent emotional expression across time windows. Breakdown regime: When sarcasm or context-dependent language dominates sentiment lexicons. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives emotional trajectory from lexicon scores across temporal game windows. Operator 'Activity Scaling' (page 1, domain football) captures: Scaling result: activity ∝ (population)^α with **α = 0.53, R2 = 0.64**. Assumptions: Tweet activity scales sublinearly with population; data represents stable urban dynamics. Breakdown regime: When population density changes dramatically or social media usage shifts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates tweet volume to urban population using power-law scaling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in spatial statistics and sentiment analysis, building on earlier work in social media geospatial modeling and affective computing. Influenced by hedonometer and network geography studies. Retrocausal Genealogy: Rooted in 1119-triumphs-tragedies-fandom-emotional-arcs-nfl (08a1543ab844938c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1119-triumphs-tragedies-fandom-emotional-arcs-nfl (08a1543ab844938c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models fan behavior as a collective emotional process governed by proximity and temporal sentiment arcs. Assumed agents are emotionally responsive to game outcomes, expressed through tweet volume and lexicon sentiment. Theory of Mind & Decision Maker Model: Rooted in 1119-triumphs-tragedies-fandom-emotional-arcs-nfl (08a1543ab844938c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Vetoed due to outdated dataset (2011–2014), reliance on lexicon sentiment (prone to sarcasm), and lack of predictive validation. Also vetoed for double-counting hashtag-based matchups and potential leakage from self-selected geotagged samples. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1119-triumphs-tragedies-fandom-emotional-arcs-nfl (08a1543ab844938c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

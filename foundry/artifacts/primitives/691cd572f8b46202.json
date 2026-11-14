@@ -1,0 +1,95 @@
+{
+  "book_id": "691cd572f8b46202",
+  "source_status": "COMPLETE",
+  "title": "calibration-weights",
+  "file_name": "calibration-weights.md",
+  "sha256": "691cd572f8b46202f9970234d055fbd2aa3f5f4fff42e581f42b1727a1b7def9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in calibration-weights (691cd572f8b46202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in calibration-weights (691cd572f8b46202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in calibration-weights (691cd572f8b46202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in calibration-weights (691cd572f8b46202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in calibration-weights (691cd572f8b46202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in calibration-weights (691cd572f8b46202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "calibration_weight",
+      "name": "Calibration Weight",
+      "verbatim_quote": "# Calibration weights The blend weight was chosen by lowest 2024 mean absolute error and then frozen.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The blend weight is selected based on the minimum 2024 Mean Absolute Error (MAE) and remains fixed for subsequent years (2025, 2026).",
+      "breakdown_regime": "When the optimal 2024 MAE selection does not generalize to later years, the model's static weighting fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's cross-validation-based posterior calibration, where weights are derived from minimizing out-of-sample error.",
+        "source_operator": "calibration_weight",
+        "telemetry": "Validation accuracy on holdout data; consistency of MAE across training vs. test splits."
+      }
+    },
+    {
+      "primitive_id": "position_weight",
+      "name": "Position Weight",
+      "verbatim_quote": "Position weights are the 2025 inverse MAE, normalized to sum to 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Weights are inversely proportional to the 2025 projected Mean Absolute Error (MAE) for each position, ensuring they sum to one.",
+      "breakdown_regime": "If the 2025 MAE estimates are inaccurate, the position weights will be incorrectly distributed, leading to biased projections.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSI's Bayesian posterior reweighting, where less reliable positions receive lower influence in the combined forecast.",
+        "source_operator": "position_weight",
+        "telemetry": "Sensitivity analysis of projection errors to weight perturbations; stability of normalized coefficients."
+      }
+    },
+    {
+      "primitive_id": "projection_bias",
+      "name": "Projection Bias",
+      "verbatim_quote": "A position that was harder to project gets less weight.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Positions with higher inherent uncertainty (higher MAE) are down-weighted to reduce overall forecast bias, while the devigged-price baseline serves as a reference point for evaluating performance.",
+      "breakdown_regime": "When high-bias positions dominate the projection due to incorrect down-weighting, the combined forecast becomes systematically skewed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates to GSI's conformal prediction framework, which adjusts for systematic bias by incorporating external baselines like the devigged price.",
+        "source_operator": "projection_bias",
+        "telemetry": "Bias-variance trade-off diagnostics; deviation of predicted means from observed outcomes relative to the baseline."
+      }
+    },
+    {
+      "primitive_id": "elo_validation",
+      "name": "Elo Validation",
+      "verbatim_quote": "This Elo does not beat that baseline, so the calibration contract must not come back VALIDATED.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The Elo rating system's predictive power is assessed against a defined baseline (devigged-price = 0.2122); if it underperforms, the associated calibration contract is deemed invalid.",
+      "breakdown_regime": "When the Elo model consistently fails to outperform the baseline, its credibility as a predictive tool collapses.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Links to GSI's hypothesis testing paradigm, where a model's performance is statistically validated against a null hypothesis (the baseline).",
+        "source_operator": "elo_validation",
+        "telemetry": "p-value calculation for performance difference; win/loss record of the Elo model versus the baseline."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "691cd572f8b46202_t0",
+      "think": "The core challenge is combining multiple probabilistic forecasts from different models (Elo, position-specific regressions) into a coherent blended projection. This requires accounting for heteroskedasticity (varying uncertainty across positions) and temporal drift (changing performance metrics over years). The calibration weight selects the best-performing year's blend, assuming stationarity, which may fail if underlying dynamics shift. Position weights invert MAE to correct for bias, but this assumes MAE is a sufficient measure of uncertainty, ignoring skewness and kurtosis. The validation step uses an external baseline to check for systematic underperformance, preventing overfitting to historical data. Overall, this forms a hierarchical Bayesian-like structure: first, individual model posteriors; second, weighted combination; third, external validation.\n\nDeep epistemic analysis for calibration-weights (691cd572f8b46202, domain=other, pages_read=1/1): Operator 'Calibration Weight' (page 1, domain other) captures: # Calibration weights The blend weight was chosen by lowest 2024 mean absolute error and then frozen. Assumptions: The blend weight is selected based on the minimum 2024 Mean Absolute Error (MAE) and remains fixed for subsequent years (2025, 2026). Breakdown regime: When the optimal 2024 MAE selection does not generalize to later years, the model's static weighting fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's cross-validation-based posterior calibration, where weights are derived from minimizing out-of-sample error. Operator 'Position Weight' (page 1, domain other) captures: Position weights are the 2025 inverse MAE, normalized to sum to 1. Assumptions: Weights are inversely proportional to the 2025 projected Mean Absolute Error (MAE) for each position, ensuring they sum to one. Breakdown regime: If the 2025 MAE estimates are inaccurate, the position weights will be incorrectly distributed, leading to biased projections. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSI's Bayesian posterior reweighting, where less reliable positions receive lower influence in the combined forecast. Operator 'Projection Bias' (page 1, domain other) captures: A position that was harder to project gets less weight. Assumptions: Positions with higher inherent uncertainty (higher MAE) are down-weighted to reduce overall forecast bias, while the devigged-price baseline serves as a reference point for evaluating performance. Breakdown regime: When high-bias positions dominate the projection due to incorrect down-weighting, the combined forecast becomes systematically skewed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSI's conformal prediction framework, which adjusts for systematic bias by incorporating external baselines like the devigged price. Operator 'Elo Validation' (page 1, domain other) captures: This Elo does not beat that baseline, so the calibration contract must not come back VALIDATED. Assumptions: The Elo rating system's predictive power is assessed against a defined baseline (devigged-price = 0.2122); if it underperforms, the associated calibration contract is deemed invalid. Breakdown regime: When the Elo model consistently fails to outperform the baseline, its credibility as a predictive tool collapses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Links to GSI's hypothesis testing paradigm, where a model's performance is statistically validated against a null hypothesis (the baseline). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for calibration-weights (691cd572f8b46202, domain=other, pages_read=1/1): Operator 'Calibration Weight' (page 1, domain other) captures: # Calibration weights The blend weight was chosen by lowest 2024 mean absolute error and then frozen. Assumptions: The blend weight is selected based on the minimum 2024 Mean Absolute Error (MAE) and remains fixed for subsequent years (2025, 2026). Breakdown regime: When the optimal 2024 MAE selection does not generalize to later years, the model's static weighting fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's cross-validation-based posterior calibration, where weights are derived from minimizing out-of-sample error. Operator 'Position Weight' (page 1, domain other) captures: Position weights are the 2025 inverse MAE, normalized to sum to 1. Assumptions: Weights are inversely proportional to the 2025 projected Mean Absolute Error (MAE) for each position, ensuring they sum to one. Breakdown regime: If the 2025 MAE estimates are inaccurate, the position weights will be incorrectly distributed, leading to biased projections. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSI's Bayesian posterior reweighting, where less reliable positions receive lower influence in the combined forecast. Operator 'Projection Bias' (page 1, domain other) captures: A position that was harder to project gets less weight. Assumptions: Positions with higher inherent uncertainty (higher MAE) are down-weighted to reduce overall forecast bias, while the devigged-price baseline serves as a reference point for evaluating performance. Breakdown regime: When high-bias positions dominate the projection due to incorrect down-weighting, the combined forecast becomes systematically skewed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSI's conformal prediction framework, which adjusts for systematic bias by incorporating external baselines like the devigged price. Operator 'Elo Validation' (page 1, domain other) captures: This Elo does not beat that baseline, so the calibration contract must not come back VALIDATED. Assumptions: The Elo rating system's predictive power is assessed against a defined baseline (devigged-price = 0.2122); if it underperforms, the associated calibration contract is deemed invalid. Breakdown regime: When the Elo model consistently fails to outperform the baseline, its credibility as a predictive tool collapses. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Links to GSI's hypothesis testing paradigm, where a model's performance is statistically validated against a null hypothesis (the baseline). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical statistical decision theory (Bayes risk minimization) and modern machine learning ensembling (bagging, boosting). The use of MAE instead of squared error harks back to robust statistics (Huber, 1964), while the calibration via baseline mirrors behavioral finance's reliance on reference points (Kahneman & Tversky, 1979). The static weighting assumption connects to early work on fixed-effect panel models. Retrocausal Genealogy: Rooted in calibration-weights (691cd572f8b46202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bookmakers who set the devigged-price baseline to incorporate market sentiment and risk management, and researchers who might contest the choice of MAE as the sole metric for weighting. Theory of Mind & Decision Maker Model: Rooted in calibration-weights (691cd572f8b46202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity condition: The position weights must be linearly independent to avoid multicollinearity issues in the weighted average. Leakage veto: The 2024 MAE used for calibration cannot contain information from future years (2025, 2026) to prevent circular reasoning. Cross-Layer Veto & Anti-Leakage Check: Rooted in calibration-weights (691cd572f8b46202), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

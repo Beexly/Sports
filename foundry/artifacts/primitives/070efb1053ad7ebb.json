@@ -1,0 +1,95 @@
+{
+  "book_id": "070efb1053ad7ebb",
+  "source_status": "COMPLETE",
+  "title": "2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al",
+  "file_name": "2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al.pdf",
+  "sha256": "070efb1053ad7ebb2da2a210cbbee8f7a5ac5056b33df6c2ba29aeaa3e8479b7",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al (070efb1053ad7ebb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al (070efb1053ad7ebb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al (070efb1053ad7ebb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "power_model",
+      "name": "Power Model",
+      "verbatim_quote": "This paper proposes a power model to estimate tournament outcome probabilities based on past tournament data.",
+      "page": 1,
+      "latex": "P(s_1 \\succ s_2) = \\frac{s_1^{\\alpha}}{s_1^{\\alpha} + s_2^{\\alpha}}",
+      "symbol_and_unit_ledger": "{'s_1, s_2': 'Seeding ranks (dimensionless)', '\\\\alpha': 'Power law exponent (dimensionless)'}",
+      "assumptions": "Assumes win probability depends only on relative seeding ranks and follows a power law scaling.",
+      "breakdown_regime": "Breaks down when seeding information is unavailable or unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: The power model maps directly to a Bradley-Terry style logistic regression with a fixed scale parameter, enabling Bayesian inference about tournament outcomes through probabilistic bracket sampling.",
+        "source_operator": "power_model",
+        "telemetry": "Observed frequency of higher seeds beating lower seeds serves as empirical telemetry for validating the power law assumption."
+      }
+    },
+    {
+      "primitive_id": "bracket_pool_generation",
+      "name": "Bracket Pool Generation",
+      "verbatim_quote": "Hence, rather than focusing on creating a single bracket to perform well, a challenge participant may wish to create a pool of brackets that likely contains at least one highscoring bracket.",
+      "page": 1,
+      "latex": "Generate B brackets \\{b_i\\}_{i=1}^{B}",
+      "symbol_and_unit_ledger": "{'B': 'Number of brackets in the pool (dimensionless)', 'b_i': 'Individual bracket (binary vector of game predictions)'}",
+      "assumptions": "Assumes the goal is to maximize the probability of containing at least one high-scoring bracket, treating each bracket as an independent sample.",
+      "breakdown_regime": "Breaks down when bracket correlations due to shared generation methods reduce diversity below optimal levels.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE: Bracket pool generation implements a state-transition framework where each tournament round represents a branching decision node, and the pool evolves through sequential filtering and expansion based on conditional win probabilities.",
+        "source_operator": "bracket_pool_generation",
+        "telemetry": "Historical tournament progression data tracks the survival rate of initial bracket predictions, providing telemetry for assessing generation algorithm performance."
+      }
+    },
+    {
+      "primitive_id": "espn_scoring_system",
+      "name": "ESPN Scoring System",
+      "verbatim_quote": "The generated brackets are assessed by the ESPN scoring system and compared to those produced by a traditional pick favorite approach as well as the highest scoring brackets in the ESPN Tournament Challenge for each year.",
+      "page": 1,
+      "latex": "S = \\sum_{round \\in \\{1,2,3,4,5,6\\}} w_r \\cdot I(correct prediction)",
+      "symbol_and_unit_ledger": "{'S': 'Total score (points)', 'w_r': 'Weight assigned to round r (dimensionless)', 'I': 'Indicator function (dimensionless)'}",
+      "assumptions": "Assumes point values increase exponentially with each round, giving disproportionate emphasis to late-stage predictions.",
+      "breakdown_regime": "Breaks down when the scoring weight becomes so skewed that early-round errors dominate overall performance variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: The ESPN scoring system induces a non-uniform loss landscape, making it a conformal kernel for evaluating predictive models under asymmetric cost functions.",
+        "source_operator": "espn_scoring_system",
+        "telemetry": "Year-over-year variation in optimal bracket scores serves as telemetry for measuring tournament unpredictability."
+      }
+    },
+    {
+      "primitive_id": "single_bracket_fallibility",
+      "name": "Single Bracket Fallibility",
+      "verbatim_quote": "However, the quantity and unpredictable nature of games suggest a single bracket will likely select some winning teams incorrectly even if created with insightful and sophisticated methods.",
+      "page": 1,
+      "latex": "Pr(single perfect bracket) \\ll 1",
+      "symbol_and_unit_ledger": "{'Pr': 'Probability (dimensionless)', 'perfect bracket': 'All 63 game predictions correct (boolean)'}",
+      "assumptions": "Assumes independence among game outcomes and high individual error rates.",
+      "breakdown_regime": "Breaks down when external factors introduce systematic biases that violate independence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE: Single bracket fallibility manifests as a high-dimensional state-space with sparse optimal regions, requiring multi-agent exploration strategies to navigate effectively.",
+        "source_operator": "single_bracket_fallibility",
+        "telemetry": "Historical accuracy of expert bracket picks provides telemetry for quantifying the inherent randomness floor in tournament predictions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "070efb1053ad7ebb_t0",
+      "think": "The power model bridges combinatorial optimization (bracket generation) with statistical learning (outcome prediction). Its core duality lies in transforming seeding ranks into odds via a calibrated exponent, enabling efficient Monte Carlo sampling of the vast bracket space. However, it fails when tournament structures deviate significantly from standard brackets or when player injuries introduce异质性 heterogeneity not captured by seeds. Cross-layer veto conditions require ensuring that generated brackets are not merely mirror images of each other, preserving ensemble diversity.\n\nDeep epistemic analysis for 2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al (070efb1053ad7ebb, domain=other, pages_read=15/15): Operator 'Power Model' (page 1, domain other) captures: This paper proposes a power model to estimate tournament outcome probabilities based on past tournament data. Assumptions: Assumes win probability depends only on relative seeding ranks and follows a power law scaling. Breakdown regime: Breaks down when seeding information is unavailable or unreliable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: The power model maps directly to a Bradley-Terry style logistic regression with a fixed scale parameter, enabling Bayesian inference about tournament outcomes through probabilistic bracket sampling. Operator 'Bracket Pool Generation' (page 1, domain other) captures: Hence, rather than focusing on creating a single bracket to perform well, a challenge participant may wish to create a pool of brackets that likely contains at least one highscoring bracket. Assumptions: Assumes the goal is to maximize the probability of containing at least one high-scoring bracket, treating each bracket as an independent sample. Breakdown regime: Breaks down when bracket correlations due to shared generation methods reduce diversity below optimal levels. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: Bracket pool generation implements a state-transition framework where each tournament round represents a branching decision node, and the pool evolves through sequential filtering and expansion based on conditional win probabilities. Operator 'ESPN Scoring System' (page 1, domain other) captures: The generated brackets are assessed by the ESPN scoring system and compared to those produced by a traditional pick favorite approach as well as the highest scoring brackets in the ESPN Tournament Challenge for each year. Assumptions: Assumes point values increase exponentially with each round, giving disproportionate emphasis to late-stage predictions. Breakdown regime: Breaks down when the scoring weight becomes so skewed that early-round errors dominate overall performance variance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: The ESPN scoring system induces a non-uniform loss landscape, making it a conformal kernel for evaluating predictive models under asymmetric cost functions. Operator 'Single Bracket Fallibility' (page 1, domain other) captures: However, the quantity and unpredictable nature of games suggest a single bracket will likely select some winning teams incorrectly even if created with insightful and sophisticated methods. Assumptions: Assumes independence among game outcomes and high individual error rates. Breakdown regime: Breaks down when external factors introduce systematic biases that violate independence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: Single bracket fallibility manifests as a high-dimensional state-space with sparse optimal regions, requiring multi-agent exploration strategies to navigate effectively. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al (070efb1053ad7ebb, domain=other, pages_read=15/15): Operator 'Power Model' (page 1, domain other) captures: This paper proposes a power model to estimate tournament outcome probabilities based on past tournament data. Assumptions: Assumes win probability depends only on relative seeding ranks and follows a power law scaling. Breakdown regime: Breaks down when seeding information is unavailable or unreliable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: The power model maps directly to a Bradley-Terry style logistic regression with a fixed scale parameter, enabling Bayesian inference about tournament outcomes through probabilistic bracket sampling. Operator 'Bracket Pool Generation' (page 1, domain other) captures: Hence, rather than focusing on creating a single bracket to perform well, a challenge participant may wish to create a pool of brackets that likely contains at least one highscoring bracket. Assumptions: Assumes the goal is to maximize the probability of containing at least one high-scoring bracket, treating each bracket as an independent sample. Breakdown regime: Breaks down when bracket correlations due to shared generation methods reduce diversity below optimal levels. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: Bracket pool generation implements a state-transition framework where each tournament round represents a branching decision node, and the pool evolves through sequential filtering and expansion based on conditional win probabilities. Operator 'ESPN Scoring System' (page 1, domain other) captures: The generated brackets are assessed by the ESPN scoring system and compared to those produced by a traditional pick favorite approach as well as the highest scoring brackets in the ESPN Tournament Challenge for each year. Assumptions: Assumes point values increase exponentially with each round, giving disproportionate emphasis to late-stage predictions. Breakdown regime: Breaks down when the scoring weight becomes so skewed that early-round errors dominate overall performance variance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: The ESPN scoring system induces a non-uniform loss landscape, making it a conformal kernel for evaluating predictive models under asymmetric cost functions. Operator 'Single Bracket Fallibility' (page 1, domain other) captures: However, the quantity and unpredictable nature of games suggest a single bracket will likely select some winning teams incorrectly even if created with insightful and sophisticated methods. Assumptions: Assumes independence among game outcomes and high individual error rates. Breakdown regime: Breaks down when external factors introduce systematic biases that violate independence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: Single bracket fallibility manifests as a high-dimensional state-space with sparse optimal regions, requiring multi-agent exploration strategies to navigate effectively. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Zipf's law and Lotka's law from bibliometrics, adapted to sports rankings through the Bradley-Terry model's log-linear formulation. Retrocausal Genealogy: Rooted in 2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al (070efb1053ad7ebb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (e.g., betting markets) may exploit predictable patterns in generated pools to skew payout distributions, necessitating robustness against adversarial manipulation. Theory of Mind & Decision Maker Model: Rooted in 2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al (070efb1053ad7ebb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity condition: Generated brackets must incorporate noise terms derived from independent data sources to prevent leakage of identical predictive signals across the ensemble. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2020 - Models for generating NCAA men s basketball tournament bracket pools - Ludden et al (070efb1053ad7ebb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

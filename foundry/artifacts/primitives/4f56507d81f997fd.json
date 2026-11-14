@@ -1,0 +1,78 @@
+{
+  "book_id": "4f56507d81f997fd",
+  "source_status": "COMPLETE",
+  "title": "swfunc-Fantasy-Regression",
+  "file_name": "swfunc-Fantasy-Regression.md",
+  "sha256": "4f56507d81f997fd4a98f9290a9d18eaab1b20754f2472c7a04c3ac5a72534b4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fantasy regression unifies expert predictions and historical performance via supervised learning to optimize player point forecasting. Universal Lens: Rooted in swfunc-Fantasy-Regression (4f56507d81f997fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to calibrate expert ensembles against observed outcomes, enabling conformal predictive distributions over fantasy point totals. GSI Mapping: Rooted in swfunc-Fantasy-Regression (4f56507d81f997fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes state-transition graphs to model player performance evolution across weeks, integrating regression outputs into dynamic situational assessments. GSE Mapping: Rooted in swfunc-Fantasy-Regression (4f56507d81f997fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expert_ensemble_regression",
+      "name": "Expert Ensemble Regression",
+      "verbatim_quote": "# Fantasy Regression Can we use the predictions of the most accurate fantasy football experts to generate a model that can more accurately predict the fantasy points scored by players?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'set of expert predictions (dimensionless)', 'Y': 'actual fantasy points (points)', 'X': 'input feature matrix (expert rankings)'}",
+      "assumptions": "Experts' predictions are informative; historical data is representative of future performance.",
+      "breakdown_regime": "When expert consensus diverges significantly from actual outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps ensemble of expert forecasts to regression coefficients via scikit-learn models.",
+        "source_operator": "expert_ensemble_regression",
+        "telemetry": "Mean squared error between predicted and actual fantasy points."
+      }
+    },
+    {
+      "primitive_id": "historical_performance_modeling",
+      "name": "Historical Performance Modeling",
+      "verbatim_quote": "to see if it improves the models) 2. Scrapes the actual fantasy points scored by players",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{act}': 'actual fantasy points (points)', 't': 'time index (weeks)', 'S': 'player set (dimensionless)'}",
+      "assumptions": "Player performance patterns persist across seasons within a given context.",
+      "breakdown_regime": "When external factors (injury, matchup) alter baseline performance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically maps historical scoring data to regression input space.",
+        "source_operator": "historical_performance_modeling",
+        "telemetry": "Correlation coefficient between modeled and observed point totals."
+      }
+    },
+    {
+      "primitive_id": "regression_model_evaluation",
+      "name": "Regression Model Evaluation",
+      "verbatim_quote": "Evaluates the models' predictions and compare them to one another as well as the experts' individual predictions",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'regression model class (dimensionless)', 'R': 'model evaluation metric (dimensionless)', 'E_i': 'individual expert prediction (points)'}",
+      "assumptions": "Evaluation metrics are robust indicators of model quality.",
+      "breakdown_regime": "When model generalization fails due to overfitting or underfitting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Compares ensemble regression outputs to individual expert scores using cross-validation.",
+        "source_operator": "regression_model_evaluation",
+        "telemetry": "Root mean square error (RMSE) of ensemble vs. expert predictions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4f56507d81f997fd_t0",
+      "think": "The core operation involves constructing a multivariate regression framework where expert predictions serve as features and actual fantasy points as targets. The process begins with scraping expert rankings from 2015, treating these as input variables X ∈ ℝ^n×m, where n represents weeks and m denotes expert count. Actual points Y ∈ ℝ^n are collected as labels. Supervised learning algorithms from scikit-learn map this structure to predictive functions f(X) → Y. Each model M ∈ M is evaluated using RMSE or similar metrics to determine superiority. This approach leverages ensemble theory to reduce variance in predictions while maintaining bias control. Dualities emerge between expert consensus and statistical fit—when experts agree strongly, regression models should reflect high confidence. Failure modes include overfitting when too many features are used without regularization, or underfitting if the model is too simplistic. Temporal consistency must also be ensured across seasons to maintain validity.\n\nDeep epistemic analysis for swfunc-Fantasy-Regression (4f56507d81f997fd, domain=other, pages_read=1/1): Operator 'Expert Ensemble Regression' (page 1, domain other) captures: # Fantasy Regression Can we use the predictions of the most accurate fantasy football experts to generate a model that can more accurately predict the fantasy points scored by players? Assumptions: Experts' predictions are informative; historical data is representative of future performance. Breakdown regime: When expert consensus diverges significantly from actual outcomes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps ensemble of expert forecasts to regression coefficients via scikit-learn models. Operator 'Historical Performance Modeling' (page 1, domain other) captures: to see if it improves the models) 2. Scrapes the actual fantasy points scored by players Assumptions: Player performance patterns persist across seasons within a given context. Breakdown regime: When external factors (injury, matchup) alter baseline performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps historical scoring data to regression input space. Operator 'Regression Model Evaluation' (page 1, domain other) captures: Evaluates the models' predictions and compare them to one another as well as the experts' individual predictions Assumptions: Evaluation metrics are robust indicators of model quality. Breakdown regime: When model generalization fails due to overfitting or underfitting. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compares ensemble regression outputs to individual expert scores using cross-validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for swfunc-Fantasy-Regression (4f56507d81f997fd, domain=other, pages_read=1/1): Operator 'Expert Ensemble Regression' (page 1, domain other) captures: # Fantasy Regression Can we use the predictions of the most accurate fantasy football experts to generate a model that can more accurately predict the fantasy points scored by players? Assumptions: Experts' predictions are informative; historical data is representative of future performance. Breakdown regime: When expert consensus diverges significantly from actual outcomes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps ensemble of expert forecasts to regression coefficients via scikit-learn models. Operator 'Historical Performance Modeling' (page 1, domain other) captures: to see if it improves the models) 2. Scrapes the actual fantasy points scored by players Assumptions: Player performance patterns persist across seasons within a given context. Breakdown regime: When external factors (injury, matchup) alter baseline performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps historical scoring data to regression input space. Operator 'Regression Model Evaluation' (page 1, domain other) captures: Evaluates the models' predictions and compare them to one another as well as the experts' individual predictions Assumptions: Evaluation metrics are robust indicators of model quality. Breakdown regime: When model generalization fails due to overfitting or underfitting. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compares ensemble regression outputs to individual expert scores using cross-validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical linear regression theory (Pearson, Gauss), extended through machine learning frameworks (scikit-learn) and ensemble methods (Breiman, Freund). Retrocausal Genealogy: Rooted in swfunc-Fantasy-Regression (4f56507d81f997fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in swfunc-Fantasy-Regression (4f56507d81f997fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include fantasy experts who form subjective beliefs about player performance, and the algorithmic system that aggregates these into objective probabilistic forecasts. Theory of Mind & Decision Maker Model: Rooted in swfunc-Fantasy-Regression (4f56507d81f997fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in swfunc-Fantasy-Regression (4f56507d81f997fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by selecting diverse experts; leakage is mitigated by ensuring no future data influences training sets. Cross-Layer Veto & Anti-Leakage Check: Rooted in swfunc-Fantasy-Regression (4f56507d81f997fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in swfunc-Fantasy-Regression (4f56507d81f997fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

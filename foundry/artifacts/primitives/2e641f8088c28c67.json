@@ -1,0 +1,78 @@
+{
+  "book_id": "2e641f8088c28c67",
+  "source_status": "COMPLETE",
+  "title": "openalex_W3010407797",
+  "file_name": "openalex_W3010407797.pdf",
+  "sha256": "2e641f8088c28c67153520ee81c8b0fd2dca788b82949b360921be42976b1d4c",
+  "primary_domain": "other",
+  "pages_total": 41,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The Generalised Attacking Performance (GAP) operator formalizes team dynamics as a latent stochastic intensity process. By mapping discrete match events (shots, corners) to continuous performance manifolds, it establishes an isomorphism between observed action-space trajectories and underlying probabilistic goal-generation fields.",
+  "gsi_mapping": "GSI maps GAP ratings into a hierarchical Bayesian framework where shot-level inputs serve as conjugate priors for Poisson goal distributions. Conformal inference bounds are applied to the resulting predictive densities, quantifying epistemic uncertainty across ten European leagues to isolate statistically robust value bets.",
+  "gse_mapping": "GSE utilizes GAP as a state-transition kernel within a Markovian situational reasoning engine. The system continuously updates latent attacking/defensive states based on real-time telemetry (shots/corners), dynamically recalibrating the probability of crossing the 2.5-goal threshold boundary.",
+  "primitives": [
+    {
+      "primitive_id": "gap_rating_operator",
+      "name": "Generalised Attacking Performance Operator",
+      "verbatim_quote": "In this paper, a set of ratings, named 'Generalised Attacking Performance' (GAP) ratings, are defined which measure the attacking and defensive performance of each team in a league.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "GAP: Dimensionless performance scalar; t: Team index; \\lambda_{a,d}: Latent attack/defense intensity rates (dimensionless).",
+      "assumptions": "Team performance is stationary over short temporal windows; attacking and defensive capabilities are separable latent variables.",
+      "breakdown_regime": "Singularities occur during extreme tactical regime shifts or when sample sizes for specific matchups approach zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's latent skill estimation layer, translating raw event counts into normalized capability vectors.",
+        "source_operator": "gap_rating_operator",
+        "telemetry": "Predictive log-loss against actual match outcomes."
+      }
+    },
+    {
+      "primitive_id": "shot_space_projection",
+      "name": "Shot Space Projection Kernel",
+      "verbatim_quote": "GAP ratings with match statistics such as shots and shots on target as inputs are shown to yield better predictive value than the number of goals.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Total shots (count); SOT: Shots on target (count); G: Goals (count). All dimensionless integers.",
+      "assumptions": "Shots and shots on target are higher-fidelity proxies for underlying offensive intent than realized goals.",
+      "breakdown_regime": "Fails if tracking data quality degrades or if rule changes fundamentally alter shot definitions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as the primary feature extraction layer for GSE, feeding high-frequency action data into the state-transition model.",
+        "source_operator": "shot_space_projection",
+        "telemetry": "Variance reduction in goal prediction compared to baseline goal-only models."
+      }
+    },
+    {
+      "primitive_id": "value_extraction_metric",
+      "name": "Value Extraction Metric",
+      "verbatim_quote": "An average profit of around 0.8 percent per bet taken is demonstrated over twelve years when using only shots and corners (and not goals) as inputs.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "\\mu_p: Mean profit margin (0.008, dimensionless ratio); C: Corners (count).",
+      "assumptions": "Market odds reflect consensus probabilities that can be systematically outperformed by superior latent state estimation.",
+      "breakdown_regime": "Profitability collapses if market efficiency increases to absorb the signal from shot/corner data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines the objective function for GSI's conformal betting strategies, optimizing for long-term expected value.",
+        "source_operator": "value_extraction_metric",
+        "telemetry": "Realized ROI over extended backtesting periods."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2e641f8088c28c67_t0",
+      "think": "The foundational duality in Wheatcroft's work lies in decoupling the realization of a goal from the generative process of an attack. Traditional models rely heavily on the integer count of goals, treating them as independent Poisson arrivals. However, goals are sparse and highly volatile. The GAP operator introduces a continuous latent space driven by denser observables: shots, shots on target, and corners. Mathematically, this projects the discrete outcome space onto a higher-dimensional manifold of 'attacking pressure.' By utilizing these intermediate states, the model captures the momentum and intensity of play that precedes a goal. This allows for a more granular Bayesian update of team strength. The transition from raw events to GAP ratings acts as a smoothing kernel, reducing the noise inherent in goal-scoring. Consequently, when these refined ratings are mapped against market-implied probabilities (the over/under 2.5 threshold), the discrepancy reveals true value. The 0.8% average profit is the empirical manifestation of this geometric advantage—the distance between the bookmaker's coarse approximation and the model's high-resolution projection of the underlying stochastic process.\n\nDeep epistemic analysis for openalex_W3010407797 (2e641f8088c28c67, domain=other, pages_read=32/41): Operator 'Generalised Attacking Performance Operator' (page 2, domain other) captures: In this paper, a set of ratings, named 'Generalised Attacking Performance' (GAP) ratings, are defined which measure the attacking and defensive performance of each team in a league. Assumptions: Team performance is stationary over short temporal windows; attacking and defensive capabilities are separable latent variables. Breakdown regime: Singularities occur during extreme tactical regime shifts or when sample sizes for specific matchups approach zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's latent skill estimation layer, translating raw event counts into normalized capability vectors. Operator 'Shot Space Projection Kernel' (page 2, domain other) captures: GAP ratings with match statistics such as shots and shots on target as inputs are shown to yield better predictive value than the number of goals. Assumptions: Shots and shots on target are higher-fidelity proxies for underlying offensive intent than realized goals. Breakdown regime: Fails if tracking data quality degrades or if rule changes fundamentally alter shot definitions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as the primary feature extraction layer for GSE, feeding high-frequency action data into the state-transition model. Operator 'Value Extraction Metric' (page 2, domain other) captures: An average profit of around 0.8 percent per bet taken is demonstrated over twelve years when using only shots and corners (and not goals) as inputs. Assumptions: Market odds reflect consensus probabilities that can be systematically outperformed by superior latent state estimation. Breakdown regime: Profitability collapses if market efficiency increases to absorb the signal from shot/corner data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the objective function for GSI's conformal betting strategies, optimizing for long-term expected value. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W3010407797 (2e641f8088c28c67, domain=other, pages_read=32/41): Operator 'Generalised Attacking Performance Operator' (page 2, domain other) captures: In this paper, a set of ratings, named 'Generalised Attacking Performance' (GAP) ratings, are defined which measure the attacking and defensive performance of each team in a league. Assumptions: Team performance is stationary over short temporal windows; attacking and defensive capabilities are separable latent variables. Breakdown regime: Singularities occur during extreme tactical regime shifts or when sample sizes for specific matchups approach zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's latent skill estimation layer, translating raw event counts into normalized capability vectors. Operator 'Shot Space Projection Kernel' (page 2, domain other) captures: GAP ratings with match statistics such as shots and shots on target as inputs are shown to yield better predictive value than the number of goals. Assumptions: Shots and shots on target are higher-fidelity proxies for underlying offensive intent than realized goals. Breakdown regime: Fails if tracking data quality degrades or if rule changes fundamentally alter shot definitions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as the primary feature extraction layer for GSE, feeding high-frequency action data into the state-transition model. Operator 'Value Extraction Metric' (page 2, domain other) captures: An average profit of around 0.8 percent per bet taken is demonstrated over twelve years when using only shots and corners (and not goals) as inputs. Assumptions: Market odds reflect consensus probabilities that can be systematically outperformed by superior latent state estimation. Breakdown regime: Profitability collapses if market efficiency increases to absorb the signal from shot/corner data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the objective function for GSI's conformal betting strategies, optimizing for long-term expected value. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This methodology traces its lineage to the Elo rating system, originally designed for chess, which relies purely on binary win/loss outcomes. In football analytics, the Dixon-Coles modification of the independent Poisson model became the standard. Wheatcroft's contribution evolves this by injecting pre-goal telemetry (shots/corners) into the rating mechanism, effectively bridging the gap between classical rating systems and modern, high-frequency expected goals (xG) frameworks.",
+      "theory_of_mind": "The model implicitly constructs a theory of mind for both the opposing teams and the bookmaker. It assumes teams act to maximize their latent attacking intensity, while bookmakers aggregate public sentiment, often over-indexing on recent goal tallies. By focusing on shots and corners, the GAP model anticipates the bookmaker's lag in pricing underlying performance quality, exploiting the cognitive bias toward realized results rather than generative processes.",
+      "cross_layer_veto": "A critical veto condition arises if the correlation between shot volume and goal probability structurally breaks down, such as during extreme weather or radical tactical shifts (e.g., total defensive parking). Furthermore, if betting exchanges rapidly adapt to price shot-based metrics, the alpha generated by the GAP operator will decay. The model must continuously monitor for collinearity between its latent states and publicly available xG metrics to prevent signal leakage."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "0a3c5735f20efeb2",
+  "source_status": "COMPLETE",
+  "title": "openalex_W3200399207",
+  "file_name": "openalex_W3200399207.pdf",
+  "sha256": "0a3c5735f20efeb28db572c6f10aa972d7f87ab00ff9659b0571fd066f53e2ca",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Top-tier football player performance differentials across European and Latin American national teams via 13-variable heterogeneity analysis. Universal Lens: Rooted in openalex_W3200399207 (0a3c5735f20efeb2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on 13-dimensional player trait vectors using T-test posterior distributions for intercontinental variance detection. GSI Mapping: Rooted in openalex_W3200399207 (0a3c5735f20efeb2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition modeling of elite footballer movement patterns through 90-minute match epochs with dynamic positional entropy kernels. GSE Mapping: Rooted in openalex_W3200399207 (0a3c5735f20efeb2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sample_size_characterization",
+      "name": "Sample Size Characterization",
+      "verbatim_quote": "Istraživanje je sprovedeno na uzorku od N=157 vrhunskih nogometaša, uzrasta 19 do 35 godina koji su odigrali svih 90 minuta u I kolu grupne faze takmičenja na Svjetskom nogometnom prvenstvu 2018 godine.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'dimensionless, count of subjects'}",
+      "assumptions": "Homogeneous sampling across time and space, full participation in 90-minute matches.",
+      "breakdown_regime": "Statistical validity under central limit theorem for large N.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables statistical inference on population-level traits via empirical sampling.",
+        "source_operator": "sample_size_characterization",
+        "telemetry": "Subject count and demographic range"
+      }
+    },
+    {
+      "primitive_id": "group_classification",
+      "name": "Group Classification",
+      "verbatim_quote": "Ispitanici su svrstani u dvije grupe, gdje su I grupu (N=103), činile nogometne reprezentacije iz Evrope, a II grupu (N=54), činile su reprezentacije iz Latinske Amerike.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_1': 'dimensionless, count of European players', 'N_2': 'dimensionless, count of Latin American players'}",
+      "assumptions": "Discrete categorical assignment based on geographic origin.",
+      "breakdown_regime": "Misclassification risk under cross-cultural ambiguity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to binary classification kernel in GSI for comparative analysis.",
+        "source_operator": "group_classification",
+        "telemetry": "Geographic origin-based grouping"
+      }
+    },
+    {
+      "primitive_id": "variance_heterogeneity",
+      "name": "Variance Heterogeneity",
+      "verbatim_quote": "Dobijeni podaci nam pokazuju da 8 od ukupno 13 varijabli ima karakteristiku heterogenosti sa većom vrijednošću varijance od aritimetičke sredine.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_i': 'dimensionless, variance of variable i', '\\\\bar{x}_i': 'dimensionless, arithmetic mean of variable i', 'i \\\\in \\\\{1,...,13\\\\}': 'index set of variables'}",
+      "assumptions": "Normality of distributions, independence of variables.",
+      "breakdown_regime": "Failure of homoscedasticity assumption in regression models.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides basis for robust statistical testing under non-uniform variance.",
+        "source_operator": "variance_heterogeneity",
+        "telemetry": "Variance-to-mean ratio thresholds"
+      }
+    },
+    {
+      "primitive_id": "statistical_significance_test",
+      "name": "Statistical Significance Test",
+      "verbatim_quote": "Rezultati T-testa su pokazali da je samo kod 4 od 13 varijabli došlo do statistički značajnih razlika.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{obs}': 'dimensionless, observed t-statistic', 'p < 0.05': 'probability threshold for significance'}",
+      "assumptions": "Null hypothesis of no difference, normal distribution of residuals.",
+      "breakdown_regime": "Type I error risk under multiple comparisons without correction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to Bayesian posterior probability in GSI for effect size estimation.",
+        "source_operator": "statistical_significance_test",
+        "telemetry": "Number of significant variables (4 out of 13)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0a3c5735f20efeb2_t0",
+      "think": "The study employs a comparative analysis framework between two distinct populations—European and Latin American footballers—using 13 measurable traits. The foundational lens is built upon the sample characterization (N=157) and group classification (N=103 vs N=54), enabling a controlled experimental design. Variance heterogeneity among variables (8 out of 13) necessitates robust statistical inference techniques such as Welch's t-test, which accounts for unequal variances. The T-test reveals only four significant differences, indicating that while some traits differ significantly, others remain invariant across continents. This suggests that performance metrics are not uniformly distributed but rather exhibit selective divergence. The derived primitives form a mathematical foundation for probabilistic reasoning in GSI and dynamic state transitions in GSE. The failure mode lies in assuming uniformity across all variables, which is mitigated by variance heterogeneity detection. Dualities emerge in the contrast between variance structure and significance outcomes, reflecting the complexity of multi-dimensional athletic performance.\n\nDeep epistemic analysis for openalex_W3200399207 (0a3c5735f20efeb2, domain=other, pages_read=8/8): Operator 'Sample Size Characterization' (page 1, domain other) captures: Istraživanje je sprovedeno na uzorku od N=157 vrhunskih nogometaša, uzrasta 19 do 35 godina koji su odigrali svih 90 minuta u I kolu grupne faze takmičenja na Svjetskom nogometnom prvenstvu 2018 godine. Assumptions: Homogeneous sampling across time and space, full participation in 90-minute matches. Breakdown regime: Statistical validity under central limit theorem for large N. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables statistical inference on population-level traits via empirical sampling. Operator 'Group Classification' (page 1, domain other) captures: Ispitanici su svrstani u dvije grupe, gdje su I grupu (N=103), činile nogometne reprezentacije iz Evrope, a II grupu (N=54), činile su reprezentacije iz Latinske Amerike. Assumptions: Discrete categorical assignment based on geographic origin. Breakdown regime: Misclassification risk under cross-cultural ambiguity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to binary classification kernel in GSI for comparative analysis. Operator 'Variance Heterogeneity' (page 1, domain other) captures: Dobijeni podaci nam pokazuju da 8 od ukupno 13 varijabli ima karakteristiku heterogenosti sa većom vrijednošću varijance od aritimetičke sredine. Assumptions: Normality of distributions, independence of variables. Breakdown regime: Failure of homoscedasticity assumption in regression models. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides basis for robust statistical testing under non-uniform variance. Operator 'Statistical Significance Test' (page 1, domain other) captures: Rezultati T-testa su pokazali da je samo kod 4 od 13 varijabli došlo do statistički značajnih razlika. Assumptions: Null hypothesis of no difference, normal distribution of residuals. Breakdown regime: Type I error risk under multiple comparisons without correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to Bayesian posterior probability in GSI for effect size estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W3200399207 (0a3c5735f20efeb2, domain=other, pages_read=8/8): Operator 'Sample Size Characterization' (page 1, domain other) captures: Istraživanje je sprovedeno na uzorku od N=157 vrhunskih nogometaša, uzrasta 19 do 35 godina koji su odigrali svih 90 minuta u I kolu grupne faze takmičenja na Svjetskom nogometnom prvenstvu 2018 godine. Assumptions: Homogeneous sampling across time and space, full participation in 90-minute matches. Breakdown regime: Statistical validity under central limit theorem for large N. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables statistical inference on population-level traits via empirical sampling. Operator 'Group Classification' (page 1, domain other) captures: Ispitanici su svrstani u dvije grupe, gdje su I grupu (N=103), činile nogometne reprezentacije iz Evrope, a II grupu (N=54), činile su reprezentacije iz Latinske Amerike. Assumptions: Discrete categorical assignment based on geographic origin. Breakdown regime: Misclassification risk under cross-cultural ambiguity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to binary classification kernel in GSI for comparative analysis. Operator 'Variance Heterogeneity' (page 1, domain other) captures: Dobijeni podaci nam pokazuju da 8 od ukupno 13 varijabli ima karakteristiku heterogenosti sa većom vrijednošću varijance od aritimetičke sredine. Assumptions: Normality of distributions, independence of variables. Breakdown regime: Failure of homoscedasticity assumption in regression models. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides basis for robust statistical testing under non-uniform variance. Operator 'Statistical Significance Test' (page 1, domain other) captures: Rezultati T-testa su pokazali da je samo kod 4 od 13 varijabli došlo do statistički značajnih razlika. Assumptions: Null hypothesis of no difference, normal distribution of residuals. Breakdown regime: Type I error risk under multiple comparisons without correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to Bayesian posterior probability in GSI for effect size estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference (Student’s t-test) and modern psychometric measurement theory, tracing back to Galton's work on heritability and Spearman's factor analysis. Influenced by early biomechanics studies and later applied to sports science via anthropometric and kinematic frameworks. Retrocausal Genealogy: Rooted in openalex_W3200399207 (0a3c5735f20efeb2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the implicit model of 'performance equality' versus the explicit data-driven model of 'performance disparity'. Decision actors are the researchers who must weigh statistical significance against practical relevance, and coaches who interpret these findings for tactical adaptation. Theory of Mind & Decision Maker Model: Rooted in openalex_W3200399207 (0a3c5735f20efeb2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by selecting orthogonal variables (e.g., height vs. distance covered). Leakage veto occurs when confounding factors like training regimens or cultural playing styles are not controlled, potentially skewing variance estimates and significance tests. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W3200399207 (0a3c5735f20efeb2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,578 @@
+{
+  "book_id": "1add9f4d39de0d09",
+  "shard": "1",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PRESENTATION_MDP_RECONSTRUCTED_LATEX",
+  "source_note": "Rachael Walker, Craig Fernandes & Timothy Chan (University of Toronto, Applied Optimization Lab, Dept of Mechanical and Industrial Engineering), 'Aiming for Competitive Balance: Designing Fair Handicap Systems for Darts using a Markov Decision Process Framework', NESSIS 2023 presentation slide deck (36 slides). Catalog primary_domain='psych' is a tagging error: this is an operations-research / MDP paper on darts, extracted under domain 'cs'. Mathematical-italic glyphs and shifted-font action-set subscripts (A_throw/A_credit) appear on slides; the Bellman equation and skill-model N(mu,eps*Sigma) are reconstructed as labeled LaTeX from unambiguous prose and flagged in assumptions. Full proofs/equations live in cited Chan-Singal 2016, Haugh-Wang 2022, Chan-et-al 2022. Outputs are fairness designs and win probabilities; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "darts_checkout_double",
+      "name": "Darts: race to zero, check out on a double",
+      "verbatim_quote": "To “check out”, must hit a “double” and result in score of exactly zero",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Two players start at 501 and race to zero; a checkout requires hitting a double to land exactly on zero; landing on an impossible score is a bust."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A terminal-state constraint (exact zero via a double) is the same absorbing-goal structure GSE encodes for drive-ending scoring states.",
+        "source_operator": "darts_checkout_double",
+        "telemetry": "501 -> 0, double to finish"
+      }
+    },
+    {
+      "primitive_id": "handicap_creates_balance",
+      "name": "Handicaps create balance between mismatched players",
+      "verbatim_quote": "Handicap systems create competitive balance between mismatched players",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A wide range of skill levels motivates handicapping; the goal is competitive balance between unequal players."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A handicap that equalizes mismatched agents is the same competitive-balance adjustment GSE applies to uneven matchups.",
+        "source_operator": "handicap_creates_balance",
+        "telemetry": "handicap balances mismatched skill"
+      }
+    },
+    {
+      "primitive_id": "existing_heuristic_headstart",
+      "name": "Existing darts handicaps are heuristic head-starts",
+      "verbatim_quote": "Existing darts handicaps use heuristics to give weaker player a head-start",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Current practice gives the weaker player a spot-point head-start by heuristic, not by optimization; the paper shows this is not fair."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A heuristic head-start is the same uncalibrated adjustment GSE replaces with an optimized, model-driven handicap.",
+        "source_operator": "existing_heuristic_headstart",
+        "telemetry": "heuristic spot-point head-start"
+      }
+    },
+    {
+      "primitive_id": "dynamic_credit_goal",
+      "name": "Novel dynamic credit handicap (Chan-Singal 2016 lineage)",
+      "verbatim_quote": "Model a novel dynamic credit handicap in darts (Chan and Singal, 2016)",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A credit deterministically chooses the outcome of a single throw; the dynamic credit handicap is adapted from Chan and Singal's 2016 tennis MDP handicap."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A deterministic per-action credit is the same controlled intervention GSE uses to offset a skill gap without randomizing outcomes.",
+        "source_operator": "dynamic_credit_goal",
+        "telemetry": "credit = deterministic throw outcome"
+      }
+    },
+    {
+      "primitive_id": "mathematical_balance_goal",
+      "name": "Propose a handicap that mathematically balances competition",
+      "verbatim_quote": "Propose a handicap system that mathematically balances competition",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The research goal is optimization-driven handicapping with a mathematical balance criterion, not a heuristic."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A mathematically defined balance criterion is the same formal fairness objective GSE optimizes rather than approximates.",
+        "source_operator": "mathematical_balance_goal",
+        "telemetry": "optimization-driven balance"
+      }
+    },
+    {
+      "primitive_id": "mdp_state_score_credits",
+      "name": "MDP state: remaining score and remaining credits",
+      "verbatim_quote": "1. Player’s Remaining Score {0, … , 501} 2. Player’s Remaining Credits {0, … , 9}",
+      "page": 7,
+      "latex": "s=(\\text{score},\\text{credits})\\in S,\\ \\text{score}\\in\\{0,\\dots,501\\},\\ \\text{credits}\\in\\{0,\\dots,9\\}",
+      "symbol_and_unit_ledger": {
+        "score": "remaining points to zero",
+        "credits": "remaining deterministic throws (0-9)"
+      },
+      "assumptions": [
+        "The state pairs the player's remaining score with remaining credits; the slide prints the two components and their ranges."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A (score, credit) state is the same resource-augmented game state GSE tracks when an intervention budget is part of the state.",
+        "source_operator": "mdp_state_score_credits",
+        "telemetry": "state = (score 0..501, credits 0..9)"
+      }
+    },
+    {
+      "primitive_id": "action_throw_729_targets",
+      "name": "Throw action: 729 aim targets on the board",
+      "verbatim_quote": "contains 729 targets on the board that a player may aim for",
+      "page": 9,
+      "latex": "A=A_{\\text{throw}}\\cup A_{\\text{credit}},\\ |A_{\\text{throw}}|=729",
+      "symbol_and_unit_ledger": {
+        "A_throw": "729 aim targets",
+        "A_credit": "62 perfect-execution regions"
+      },
+      "assumptions": [
+        "The action set unions throw targets and credit regions; the A_throw/A_credit subscripts are shifted-font on the slide and reconstructed here from the prose counts."
+      ],
+      "breakdown_regime": "shifted-font action labels reconstructed from prose",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A large aim-target action space is the same discrete control set GSE optimizes over for shot/throw selection.",
+        "source_operator": "action_throw_729_targets",
+        "telemetry": "|A_throw| = 729"
+      }
+    },
+    {
+      "primitive_id": "action_credit_62_regions",
+      "name": "Credit action: 62 regions hit with perfect execution",
+      "verbatim_quote": "contains the 62 possible board regions that a player may “hit” with perfect execution",
+      "page": 9,
+      "latex": "|A_{\\text{credit}}|=62",
+      "symbol_and_unit_ledger": {
+        "A_credit": "62 board regions reachable with certainty via a credit"
+      },
+      "assumptions": [
+        "A credit lets the player deterministically hit one of 62 board regions, bypassing execution noise."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A deterministic perfect-execution action is the same noise-free control GSE uses to model an guaranteed outcome.",
+        "source_operator": "action_credit_62_regions",
+        "telemetry": "|A_credit| = 62"
+      }
+    },
+    {
+      "primitive_id": "credit_deterministic_transition",
+      "name": "Credit transition: hit desired region with certainty",
+      "verbatim_quote": "Deterministic Outcome Hit desired board region with certainty",
+      "page": 11,
+      "latex": "p(s'\\mid s,a)=\\mathbf{1}[s'=f(s,a)]\\ \\text{for}\\ a\\in A_{\\text{credit}}",
+      "symbol_and_unit_ledger": {
+        "p(s'|s,a)": "transition probability",
+        "f": "deterministic state update"
+      },
+      "assumptions": [
+        "Throw actions use an uncertain professional skill model; credit actions transition deterministically to the chosen region."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A deterministic vs stochastic transition split is the same controlled-vs-noisy dynamics GSE separates in its simulator.",
+        "source_operator": "credit_deterministic_transition",
+        "telemetry": "credit: p = indicator (certain)"
+      }
+    },
+    {
+      "primitive_id": "skill_execution_error_multiplier",
+      "name": "Skill levels via execution-error multiplier epsilon",
+      "verbatim_quote": "Different skill levels are modelled using an execution error multiplier",
+      "page": 14,
+      "latex": "\\text{strongest}:\\ \\mathcal{N}(\\mu,\\Sigma),\\ \\epsilon=1;\\quad \\text{weaker}:\\ \\mathcal{N}(\\mu,\\epsilon\\Sigma),\\ \\epsilon>1",
+      "symbol_and_unit_ledger": {
+        "epsilon": "execution-error multiplier (>=1)",
+        "Sigma": "base covariance"
+      },
+      "assumptions": [
+        "The strongest player has epsilon=1; weaker players inflate the covariance by epsilon>1 (Chan et al 2022), so skill is a variance scaling, not a mean shift."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Modeling skill as execution variance is the same precision-parameterization GSE uses to distinguish accurate from erratic players.",
+        "source_operator": "skill_execution_error_multiplier",
+        "telemetry": "weaker: N(mu, eps*Sigma), eps>1"
+      }
+    },
+    {
+      "primitive_id": "bellman_optimal_policy",
+      "name": "Bellman equation yields optimal policy and value",
+      "verbatim_quote": "Model Definition Solution Bellman Equation Optimal Policy Optimal Value",
+      "page": 15,
+      "latex": "V(s)=\\min_{a\\in A}\\Big[c(s,a)+\\sum_{s'}p(s'\\mid s,a)\\,V(s')\\Big]",
+      "symbol_and_unit_ledger": {
+        "V(s)": "optimal value (expected throws)",
+        "c": "outcome cost"
+      },
+      "assumptions": [
+        "The slide lists the MDP solution chain (model definition, Bellman equation, optimal policy, optimal value); the Bellman form is reconstructed from the standard MDP framework described, the explicit equation is a slide figure."
+      ],
+      "breakdown_regime": "Bellman equation reconstructed; printed as slide figure",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Bellman optimality recursion is the same dynamic-programming core GSE uses to solve its sequential decision models.",
+        "source_operator": "bellman_optimal_policy",
+        "telemetry": "V = min_a [c + sum p V']"
+      }
+    },
+    {
+      "primitive_id": "theorem1_value_expected_throws",
+      "name": "Theorem 1: value = expected throws to check out",
+      "verbatim_quote": "Value function is the expected number of throws for a player to check out when using a given policy.",
+      "page": 16,
+      "latex": "V^\\pi(s)=\\mathbb{E}[\\text{throws to check out}\\mid s,\\pi]",
+      "symbol_and_unit_ledger": {
+        "V^pi": "expected throws under policy pi"
+      },
+      "assumptions": [
+        "The value function is interpretable as the expected number of throws to check out, giving the MDP a concrete physical unit."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An interpretable value unit (expected throws) is the same outcome-grounded value GSE insists on, rather than an abstract score.",
+        "source_operator": "theorem1_value_expected_throws",
+        "telemetry": "V = expected throws to checkout"
+      }
+    },
+    {
+      "primitive_id": "def1_weaker_more_throws",
+      "name": "Definition 1: weaker player needs more expected throws",
+      "verbatim_quote": "The weaker player has a higher expected throws to check out when starting from a score of 501 (with no credits).",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "From 501 with no credits, the weaker player's expected throws to check out exceed the stronger player's; this defines the imbalance to be corrected."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A baseline expectation gap defines the imbalance; GSE measures the same gap before applying any adjustment.",
+        "source_operator": "def1_weaker_more_throws",
+        "telemetry": "weaker E[throws] > stronger E[throws]"
+      }
+    },
+    {
+      "primitive_id": "def2_competitive_balance",
+      "name": "Definition 2: balance = equal expected throws",
+      "verbatim_quote": "Competitive balance occurs when two players have an equal number of expected throws to check out.",
+      "page": 16,
+      "latex": "\\text{balance}\\iff V_{\\text{weak}}(501)=V_{\\text{strong}}(501)",
+      "symbol_and_unit_ledger": {
+        "V": "expected throws to check out"
+      },
+      "assumptions": [
+        "Competitive balance is defined as equality of expected throws to check out, an expectation-alignment criterion."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Balance as equal expectations is the same mean-alignment fairness criterion GSE uses for matchup adjustment.",
+        "source_operator": "def2_competitive_balance",
+        "telemetry": "balance: E[throws] equal"
+      }
+    },
+    {
+      "primitive_id": "theorem2_unique_credits",
+      "name": "Theorem 2: a unique credit count balances expectations",
+      "verbatim_quote": "There exists a unique number of credits that gives a weaker player the needed advantage to check out with equal or less expected throws compared to a stronger player",
+      "page": 16,
+      "latex": "\\exists!\\,k\\in\\{0,\\dots,9\\}: V_{\\text{weak}}(501,k)\\le V_{\\text{strong}}(501,0)",
+      "symbol_and_unit_ledger": {
+        "k": "unique balancing credit count"
+      },
+      "assumptions": [
+        "A unique number of credits gives the weaker player equal-or-fewer expected throws than the stronger; this guarantees a balancing handicap exists."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An existence-and-uniqueness guarantee for a balancing intervention is the same well-posedness GSE requires of its adjustment operators.",
+        "source_operator": "theorem2_unique_credits",
+        "telemetry": "unique k equalizes E[throws]"
+      }
+    },
+    {
+      "primitive_id": "turn_feature_alternate_3",
+      "name": "Solved model includes turns: alternate every 3 throws",
+      "verbatim_quote": "Solved a more complex model formulation which includes the turn feature of the game (i.e., players alternate every 3 throws).",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The reported results solve a richer formulation with the turn structure (players alternate every three throws), beyond the single-player MDP."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Adding alternation turns is the same turn-structure GSE encodes for possession-based sequential games.",
+        "source_operator": "turn_feature_alternate_3",
+        "telemetry": "alternate every 3 throws"
+      }
+    },
+    {
+      "primitive_id": "imbalance_at_end_game",
+      "name": "Main imbalance is at the end of the game",
+      "verbatim_quote": "Stronger player could dominate across all scores (head-start could never balance competition)",
+      "page": 20,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The expected-turns curves show the main imbalance occurs at the end of the game; a stronger player can dominate across all scores, so a head-start cannot balance competition."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An end-game leverage imbalance is the same closing-phase advantage GSE models, which a static head-start cannot offset.",
+        "source_operator": "imbalance_at_end_game",
+        "telemetry": "imbalance concentrated at endgame"
+      }
+    },
+    {
+      "primitive_id": "heuristic_headstart_unfair",
+      "name": "Heuristic head-start does not balance competition",
+      "verbatim_quote": "Current heuristic head-start handicaps do not balance competition",
+      "page": 21,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The heuristic spot-point handicap leaves the weaker player disadvantaged; simulation shows it does not achieve balance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A heuristic adjustment failing the balance test is the same uncalibrated baseline GSE rejects in favor of an optimized operator.",
+        "source_operator": "heuristic_headstart_unfair",
+        "telemetry": "heuristic head-start: not balanced"
+      }
+    },
+    {
+      "primitive_id": "optimized_headstart_overcorrects",
+      "name": "Optimized head-start overcorrects against the stronger",
+      "verbatim_quote": "Stronger player wins less than 50% of the time using this handicap",
+      "page": 24,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The optimized spot-point handicap pushes the stronger player below 50% win probability, overcorrecting and disadvantaging the stronger player."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An optimization that overshoots fairness is the same overcorrection GSE guards against with a distribution-level rather than mean-level criterion.",
+        "source_operator": "optimized_headstart_overcorrects",
+        "telemetry": "optimized head-start: stronger <50%"
+      }
+    },
+    {
+      "primitive_id": "simulation_10000_matches",
+      "name": "Validate handicaps by 10,000-match simulation",
+      "verbatim_quote": "Probability that the stronger player wins after 10,000 simulated matches for different skill mismatches",
+      "page": 24,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Each player's solved MDP optimal policy is simulated over 10,000 matches to estimate win probabilities and turn distributions under a handicap."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Monte-Carlo match simulation to validate an adjustment is the same world-simulation validation GSE runs on its operators.",
+        "source_operator": "simulation_10000_matches",
+        "telemetry": "10,000 simulated matches -> win prob"
+      }
+    },
+    {
+      "primitive_id": "dynamic_credits_equal_turns",
+      "name": "Dynamic credits equalize expected turns from 501",
+      "verbatim_quote": "Dynamic credit handicap finds the number of credits where the weaker player and stronger player have the same expected number of turns starting from a score of 501",
+      "page": 29,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The dynamic credit handicap selects the credit count that makes the weaker and stronger players' expected turns from 501 equal."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Selecting an intervention to equalize expectations is the same calibrated handicap GSE computes from its value model.",
+        "source_operator": "dynamic_credits_equal_turns",
+        "telemetry": "credits chosen so E[turns] equal"
+      }
+    },
+    {
+      "primitive_id": "dynamic_equal_win_probability",
+      "name": "Dynamic credits yield ~equal win probability",
+      "verbatim_quote": "Stronger and weaker players have ~equal probability of winning",
+      "page": 30,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Under the dynamic credit handicap, simulation shows the stronger and weaker players have approximately equal win probability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equal win probability is the distribution-level fairness GSE targets, achieved here by the dynamic credit rather than a head-start.",
+        "source_operator": "dynamic_equal_win_probability",
+        "telemetry": "dynamic credit: win prob ~equal"
+      }
+    },
+    {
+      "primitive_id": "dynamic_reshapes_distribution",
+      "name": "Dynamic credits reshape the turns distribution",
+      "verbatim_quote": "Dynamic credits reshape the distribution to equalize win probability",
+      "page": 32,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Dynamic credits alter the weaker player's distribution of turns to check out so it mimics the stronger player's, equalizing win probability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reshaping an outcome distribution to match a reference is the same distribution-matching GSE uses for fairness, beyond mean alignment.",
+        "source_operator": "dynamic_reshapes_distribution",
+        "telemetry": "reshape weaker dist -> stronger dist"
+      }
+    },
+    {
+      "primitive_id": "balance_vs_fairness",
+      "name": "Balance (expectations) vs fairness (win probability)",
+      "verbatim_quote": "Fairness occurs when two players have an equal probability of winning",
+      "page": 33,
+      "latex": "\\text{balance}: \\mathbb{E}[T_w]=\\mathbb{E}[T_s];\\quad \\text{fairness}: P(\\text{win}_w)=P(\\text{win}_s)",
+      "symbol_and_unit_ledger": {
+        "T": "throws to check out"
+      },
+      "assumptions": [
+        "The deck distinguishes competitive balance (equal expected throws, one-player model, align expectations, ~2 million states, single MDP, <1 minute, regular RAM) from fairness (equal win probability, two-player model, align distributions, ~2 billion states, system of MDPs, 17 hours, high RAM)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The expectation-vs-distribution fairness distinction is the same mean-vs-variance adjudication GSE makes between a cheap balance proxy and a full fairness solve.",
+        "source_operator": "balance_vs_fairness",
+        "telemetry": "balance ~2M states <1min / fairness ~2B states 17hr"
+      }
+    },
+    {
+      "primitive_id": "two_player_computational_cost",
+      "name": "Two-player fairness model: ~2B states, 17 hours",
+      "verbatim_quote": "Takes 17 hours to solve, high RAM required",
+      "page": 33,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The two-player fairness model has ~2 billion states and a system of MDPs requiring 17 hours and high RAM, versus the one-player balance model's ~2 million states and under a minute."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A computational-cost gap between a proxy and a full solve is the same tractability tradeoff GSE manages when choosing its adjudication depth.",
+        "source_operator": "two_player_computational_cost",
+        "telemetry": "two-player: ~2B states, 17 hr, high RAM"
+      }
+    },
+    {
+      "primitive_id": "conclusion_headstart_not_fair",
+      "name": "Conclusion: head-start approaches are not fair",
+      "verbatim_quote": "Existing head-start handicap approaches are not fair – Main imbalance occurs at the end of the game and cannot be mitigated by a head-start",
+      "page": 34,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The conclusion: main imbalance is at the end and cannot be mitigated by a head-start; heuristic leaves weaker disadvantaged, optimized leaves stronger disadvantaged; a fair head-start is computationally impractical and may not exist."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A negative result on a whole class of adjustments is the same veto GSE records when an operator family fails the fairness criterion.",
+        "source_operator": "conclusion_headstart_not_fair",
+        "telemetry": "head-start family: not fair"
+      }
+    },
+    {
+      "primitive_id": "conclusion_dynamic_guaranteed",
+      "name": "Conclusion: dynamic credit always has a balancing value",
+      "verbatim_quote": "Guaranteed to always have a value that can balance competition",
+      "page": 34,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The dynamic credit handicap is guaranteed to have a balancing value, alters the weaker player's turns distribution to mimic the stronger's, and can be accurately estimated with the simplified framework."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A guaranteed-feasible balancing operator is the same well-posed adjustment GSE prefers over a possibly-infeasible head-start.",
+        "source_operator": "conclusion_dynamic_guaranteed",
+        "telemetry": "dynamic credit: guaranteed balance"
+      }
+    },
+    {
+      "primitive_id": "conclusion_mimic_distribution",
+      "name": "Dynamic credit mimics the stronger player's distribution",
+      "verbatim_quote": "Alters the distribution of turns to check-out of weaker player so that it mimics that of the stronger player",
+      "page": 34,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The mechanism is distribution mimicry: the weaker player's turns-to-checkout distribution is reshaped to match the stronger player's."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Distribution mimicry as the fairness mechanism is the same reference-matching GSE uses to neutralize a skill gap.",
+        "source_operator": "conclusion_mimic_distribution",
+        "telemetry": "weaker dist mimics stronger dist"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dartshandicap2023_trace",
+      "think": "The retrocausal genealogy of this presentation is the problem of competitive imbalance in darts and the inadequacy of heuristic handicaps. Darts spans a wide range of skill levels, and existing handicap systems give the weaker player a heuristic spot-point head-start. The deck, from Rachael Walker, Craig Fernandes, and Timothy Chan at the University of Toronto's Applied Optimization Lab, sets out to replace heuristics with optimization-driven handicapping and to build a mathematical notion of fairness. The lineage runs through Chan and Singal's 2016 Markov-decision-process handicap for tennis, Haugh and Wang's 2022 solution of darts as a dynamic zero-sum game which supplies the professional skill model, and Chan, Fearing, Fernandes, and Kovalchik's 2022 Markov approach to untangling intention versus execution in tennis. The novel contribution is a dynamic credit handicap, where a credit deterministically chooses the outcome of a single throw, adapted to darts. The modeling framework is a Markov decision process. The state pairs the player's remaining score, from zero to 501, with the remaining credits, from zero to nine. The action set is the union of throw actions, the 729 targets on the board a player may aim for, and credit actions, the 62 board regions a player may hit with perfect execution. Throw transitions are uncertain and follow a bivariate Gaussian execution-error model around the aim point, using the professional skill model; credit transitions are deterministic, hitting the desired region with certainty. Skill levels are modeled by an execution-error multiplier epsilon: the strongest player has epsilon equal to one and covariance Sigma, while weaker players inflate the covariance to epsilon Sigma with epsilon greater than one, so skill is a variance scaling rather than a mean shift. The Bellman equation yields the optimal policy and value, and Theorem 1 gives the value function the concrete interpretation of the expected number of throws to check out under a policy. The recursive theory of mind is modeling each player's execution noise and reasoning about the intervention that equalizes them. Definition 1 states that the weaker player has a higher expected throws to check out from 501 with no credits, defining the imbalance. Definition 2 defines competitive balance as two players having an equal number of expected throws to check out. Theorem 2 then guarantees that there exists a unique number of credits giving the weaker player equal or fewer expected throws than the stronger player. The model thus reasons about the opponent as an execution-error distribution and computes the precise deterministic credit that aligns the two players' expectations, rather than guessing a head-start. Cross-layer veto adjudication is the distinction between balance and fairness and the rejection of the head-start family. The main imbalance occurs at the end of the game, where a stronger player can dominate across all scores, so a head-start could never balance competition. The heuristic head-start leaves the weaker player disadvantaged; the optimized head-start overcorrects and leaves the stronger player winning less than 50 percent of the time; finding a fair head-start is computationally impractical and may not exist. The deck separates competitive balance, equal expected throws, achieved by a one-player model aligning expectations with about two million states solved in under a minute, from fairness, equal win probability, requiring a two-player model aligning distributions with about two billion states and a system of MDPs taking 17 hours and high RAM. The dynamic credit handicap passes the fairness test: it reshapes the weaker player's turns-to-checkout distribution to mimic the stronger player's, and 10,000-match simulations show approximately equal win probability. The implementation invariants map onto GSE. The execution-error multiplier is GSE's skill-variance parameter; the deterministic credit is a controlled intervention that offsets a skill gap without randomizing outcomes; the balance-versus-fairness distinction is GSE's mean-versus-distribution adjudication, choosing a cheap expectation proxy or a full distribution solve; and the 10,000-match simulation is GSE's world-simulation validation of an operator. The existence-and-uniqueness guarantee for a balancing credit is the well-posedness GSE requires of its adjustment operators, and the negative result on head-starts is a recorded veto on an operator family that fails the criterion. The outputs are fairness designs and win-probability estimates from a solved MDP, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The game starts at 501, requires a double to check out to exactly zero, and busts on impossible scores; the action space is 729 throw targets and 62 credit regions; credits range from zero to nine and epsilon from one to nine; the one-player model has about two million states and the two-player model about two billion; validation uses 10,000 simulated matches and the reported results include the turn feature where players alternate every three throws. The action-set subscripts are shifted-font on the slides and the Bellman equation is a figure, so both are reconstructed as labeled LaTeX from the unambiguous prose and flagged in the assumptions. The invariant for GSE is to carry the MDP handicap kernel, the execution-variance skill model, the deterministic credit intervention, and the expectation-versus-distribution fairness distinction, while recording that this is a presentation-level source whose full proofs and equations live in the cited Chan-Singal, Haugh-Wang, and Chan-et-al papers.",
+      "retrocausal_genealogy": "The deck originates in darts' competitive imbalance and the failure of heuristic head-start handicaps. Walker/Fernandes/Chan (U Toronto Applied Optimization Lab) propose optimization-driven handicapping with a mathematical fairness criterion. Lineage: Chan-Singal 2016 tennis MDP handicap (JQAS 12(4):179-188), Haugh-Wang 2022 darts zero-sum skill model (arXiv:2011.11031), Chan-Fearing-Fernandes-Kovalchik 2022 tennis intention-vs-execution (JQAS 18(2):127-145). The novel contribution is a dynamic credit handicap (credit = deterministic single-throw outcome) adapted to darts.",
+      "theory_of_mind": "The model reasons about each player as an execution-error distribution and computes the intervention that equalizes them. MDP state = (score 0..501, credits 0..9); action = 729 throw targets union 62 credit regions; throw transitions Gaussian N(mu,Sigma), credit transitions deterministic; skill via epsilon multiplier (weaker N(mu,eps*Sigma)). Theorem 1: value = expected throws to checkout. Definition 1: weaker has higher expected throws; Definition 2: balance = equal expected throws; Theorem 2: a unique credit count equalizes expectations. The model finds the precise credit aligning expectations rather than guessing a head-start.",
+      "cross_layer_veto": "Balance (equal expected throws; one-player, ~2M states, <1min) is distinguished from fairness (equal win probability; two-player, ~2B states, 17hr). Head-start family vetoed: imbalance is at endgame, heuristic disadvantages weaker, optimized overcorrects (stronger <50%), fair head-start impractical/may not exist. Dynamic credit passes: reshapes weaker's turns distribution to mimic stronger's; 10,000-match simulation shows ~equal win probability; Theorem 2 guarantees a balancing value. Action labels shifted-font and Bellman figure reconstructed as labeled LaTeX, flagged."
+    }
+  ],
+  "universal_lens": "A Markov decision process models darts as a (score, credits) state with throw and deterministic-credit actions and Gaussian execution-error skill, defines competitive balance as equal expected throws to check out, guarantees a unique balancing credit count, and distinguishes cheap expectation-alignment from expensive distribution-alignment fairness that equalizes win probability.",
+  "gsi_mapping": "GSI treats the MDP with state (score 0..501, credits 0..9), action A_throw(729) union A_credit(62), Gaussian throw transitions N(mu,eps*Sigma) and deterministic credit transitions, Bellman value = expected throws to checkout, Theorem 2 unique balancing credits, and the balance(~2M states,<1min) vs fairness(~2B states,17hr) split validated by 10,000-match simulation.",
+  "gse_mapping": "GSE lifts the MDP handicap kernel, the execution-variance skill model (epsilon), the deterministic credit intervention, the expectation-vs-distribution fairness adjudication, and the 10,000-world simulation validation; the head-start family is a recorded veto, the dynamic credit a guaranteed-feasible balancing operator; all outputs are fairness designs, never sportsbook lines."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "3ea9a5d9ca18f702",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2606.28389v1",
+  "file_name": "arxiv_2606.28389v1.pdf",
+  "sha256": "3ea9a5d9ca18f70288a5894feb33ef4a0e84693210d13328774e0b9ad31f99a3",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A temporal transformer architecture extends X3D-based TAAD with learnable positional embeddings and L=4 encoder layers for per-player action logits, enabling frame-wise pattern reasoning. Universal Lens: Rooted in arxiv_2606.28389v1 (3ea9a5d9ca18f702), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps TAAD logits to probabilistic action states; conformal prediction ensures calibrated uncertainty bounds over structured game events. GSI Mapping: Rooted in arxiv_2606.28389v1 (3ea9a5d9ca18f702), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models transitions between player-centric actions via DST's autoregressive transformer, encoding game-state features and TAAD outputs into sequential event sequences. GSE Mapping: Rooted in arxiv_2606.28389v1 (3ea9a5d9ca18f702), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_transformer_action_detector",
+      "name": "Temporal Transformer Action Detector",
+      "verbatim_quote": "After ROI-aligned features are extracted per player per frame, we project them to d=256 dimensions and apply L=4 transformer encoder layers with 8 attention heads, feedforward dimension 1024, GELU activation, and pre-norm ordering.",
+      "page": 1,
+      "latex": "\\mathcal{L}_{\\text{TAAD}} = \\text{Softmax}(W_{\\text{cls}} \\cdot \\text{Transformer}(X_{\\text{roi}}))",
+      "symbol_and_unit_ledger": "{'X_{\\\\text{roi}}': 'ROI-aligned features, dimensionless', 'W_{\\\\text{cls}}': 'Classification weight matrix, unitless', 'L': 'Number of transformer layers, dimensionless', 'd': 'Embedding dimension, 256', 'H': 'Attention heads, 8'}",
+      "assumptions": "Features are temporally aligned; attention captures inter-frame dependencies.",
+      "breakdown_regime": "When ROI alignment fails or frame rate drops below 10 FPS.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps spatiotemporal player features to per-frame action logits via learned attention weights.",
+        "source_operator": "temporal_transformer_action_detector",
+        "telemetry": "Macro-F1 score on SoccerNet validation set."
+      }
+    },
+    {
+      "primitive_id": "per_player_attention_mechanism",
+      "name": "Per-Player Attention Mechanism",
+      "verbatim_quote": "We introduce a two-stage per-player attention mechanism before the main transformer encoder.",
+      "page": 1,
+      "latex": "\\mathbf{Z}^{(p)} = \\text{Attention}(\\mathbf{F}_p^{\\text{spatial}}, \\mathbf{F}_p^{\\text{temporal}})",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{F}_p^{\\\\text{spatial}}': 'Spatial player features, dimensionless', '\\\\mathbf{F}_p^{\\\\text{temporal}}': 'Temporal player features, dimensionless', '\\\\mathbf{Z}^{(p)}': 'Processed per-player representation, dimensionless'}",
+      "assumptions": "Player roles are distinct and spatial-temporal features are separable.",
+      "breakdown_regime": "When player identity overlaps or tracking is lost.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically encodes player-specific game-state dynamics into shared latent space.",
+        "source_operator": "per_player_attention_mechanism",
+        "telemetry": "Improvement in DST macro-F1 over flat input baseline."
+      }
+    },
+    {
+      "primitive_id": "agreement_based_ensembling",
+      "name": "Agreement-Based Ensembling",
+      "verbatim_quote": "We contribute improvements to both stages and introduce an agreement-based ensemble strategy.",
+      "page": 1,
+      "latex": "\\hat{y} = \\arg\\max_{c} \\sum_{m=1}^{M} \\mathbb{I}[\\text{argmax}(y_m) = c]",
+      "symbol_and_unit_ledger": "{'\\\\hat{y}': 'Ensemble prediction, class label', 'y_m': 'Prediction from model m, class label', 'M': 'Number of models, dimensionless'}",
+      "assumptions": "Models are diverse but agree on high-confidence predictions.",
+      "breakdown_regime": "When model disagreement exceeds threshold or ensemble size is insufficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Combines multiple DST predictions via majority vote to reduce noise.",
+        "source_operator": "agreement_based_ensembling",
+        "telemetry": "Final Macro-F1 score of 58.94 on challenge set."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3ea9a5d9ca18f702_t0",
+      "think": "The system employs a two-stage pipeline: first, a temporal transformer-based TAAD extracts per-player action logits from video frames, leveraging attention mechanisms to capture temporal dependencies beyond static frame classification. This is followed by a denoising sequence transduction (DST) model that uses these logits along with game-state features to generate structured event sequences. The key innovation lies in introducing per-player attention within DST, allowing it to reason about individual player dynamics rather than treating all players uniformly. Additionally, architectural diversity among DST models enables robust ensembling through agreement-based voting, improving generalization. The temporal transformer in TAAD enhances performance by projecting features into a higher-dimensional space and applying stacked transformer layers with pre-norm ordering, which supports long-range temporal reasoning. Training modifications correct a learning rate bug, ensuring stable convergence. These components form a coherent mathematical framework for soccer action spotting, grounded in attention-based neural architectures and ensemble theory.\n\nDeep epistemic analysis for arxiv_2606.28389v1 (3ea9a5d9ca18f702, domain=other, pages_read=2/2): Operator 'Temporal Transformer Action Detector' (page 1, domain other) captures: After ROI-aligned features are extracted per player per frame, we project them to d=256 dimensions and apply L=4 transformer encoder layers with 8 attention heads, feedforward dimension 1024, GELU activation, and pre-norm ordering. Assumptions: Features are temporally aligned; attention captures inter-frame dependencies. Breakdown regime: When ROI alignment fails or frame rate drops below 10 FPS. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps spatiotemporal player features to per-frame action logits via learned attention weights. Operator 'Per-Player Attention Mechanism' (page 1, domain other) captures: We introduce a two-stage per-player attention mechanism before the main transformer encoder. Assumptions: Player roles are distinct and spatial-temporal features are separable. Breakdown regime: When player identity overlaps or tracking is lost. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically encodes player-specific game-state dynamics into shared latent space. Operator 'Agreement-Based Ensembling' (page 1, domain other) captures: We contribute improvements to both stages and introduce an agreement-based ensemble strategy. Assumptions: Models are diverse but agree on high-confidence predictions. Breakdown regime: When model disagreement exceeds threshold or ensemble size is insufficient. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines multiple DST predictions via majority vote to reduce noise. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_2606.28389v1 (3ea9a5d9ca18f702, domain=other, pages_read=2/2): Operator 'Temporal Transformer Action Detector' (page 1, domain other) captures: After ROI-aligned features are extracted per player per frame, we project them to d=256 dimensions and apply L=4 transformer encoder layers with 8 attention heads, feedforward dimension 1024, GELU activation, and pre-norm ordering. Assumptions: Features are temporally aligned; attention captures inter-frame dependencies. Breakdown regime: When ROI alignment fails or frame rate drops below 10 FPS. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps spatiotemporal player features to per-frame action logits via learned attention weights. Operator 'Per-Player Attention Mechanism' (page 1, domain other) captures: We introduce a two-stage per-player attention mechanism before the main transformer encoder. Assumptions: Player roles are distinct and spatial-temporal features are separable. Breakdown regime: When player identity overlaps or tracking is lost. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically encodes player-specific game-state dynamics into shared latent space. Operator 'Agreement-Based Ensembling' (page 1, domain other) captures: We contribute improvements to both stages and introduce an agreement-based ensemble strategy. Assumptions: Models are diverse but agree on high-confidence predictions. Breakdown regime: When model disagreement exceeds threshold or ensemble size is insufficient. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines multiple DST predictions via majority vote to reduce noise. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in transformer architectures (Vaswani et al., 2017), extended to temporal domains (X3D, 2020) and applied to structured event prediction (DST, 2021). Inspired by prior work on multi-agent perception and ensemble methods in computer vision. Retrocausal Genealogy: Rooted in arxiv_2606.28389v1 (3ea9a5d9ca18f702), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include noisy video inputs, misaligned ROIs, and inconsistent player tracking—each potentially leading to incorrect logits or misclassified actions. The system mitigates this by enforcing agreement across models and using robust attention to extract meaningful features. Theory of Mind & Decision Maker Model: Rooted in arxiv_2606.28389v1 (3ea9a5d9ca18f702), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by varying hyperparameters across DST models (hidden dims, attention layers, branch types). Leakage is prevented by freezing TAAD logits during DST training, ensuring stage separation. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_2606.28389v1 (3ea9a5d9ca18f702), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_2606.28389v1 (3ea9a5d9ca18f702), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

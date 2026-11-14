@@ -1,0 +1,213 @@
+{
+ "book_id": "409f5dad119c06ed",
+ "source_status": "COMPLETE",
+ "pages_total": 53,
+ "pages_read": 53,
+ "extractor_model": "qwen4-max-preview (worker ext-33)",
+ "source_notes": "Internal Beexly/Sports research monograph (exported research dossier, bibliography pp. 50-53). No retraction notice on page 1. Text fully extractable via pymupdf. Known notation defect: 'norm(a)<0' deceleration dip (pp. 17, 20-21) impossible for a norm; flagged, not extracted. Externally attributed results (Yurko et al. 2020; Barber et al. 2020; Lin/Trivedi/Sun 2021; Nguyen & Yurko 2026) labeled as citations within the source. Market-comparator E-process variant documented but not instantiated locally per no-odds doctrine.",
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Conformalized Quantile Regression: non-conformity score, rank index, and finite-sample marginal coverage",
+   "verbatim_quote": "Under the assumption of data exchangeability, the marginal coverage guarantee holds exactly in finite samples:",
+   "page": 35,
+   "latex": "E_i = \\max\\big(\\hat{q}_{\\alpha_{lo}}(X_i) - Y_i,\\; Y_i - \\hat{q}_{\\alpha_{hi}}(X_i)\\big),\\quad k = \\lceil (n+1)(1-\\alpha)\\rceil,\\quad C(X_{n+1}) = \\big[\\hat{q}_{\\alpha_{lo}}(X_{n+1}) - Q_{1-\\alpha}(E;I_2),\\; \\hat{q}_{\\alpha_{hi}}(X_{n+1}) + Q_{1-\\alpha}(E;I_2)\\big],\\quad \\mathbb{P}\\big(Y_{n+1}\\in C(X_{n+1})\\big) \\ge 1-\\alpha",
+   "symbol_and_unit_ledger": "E_i = non-conformity score [response units, e.g. yards]; Y_i, Y_{n+1} = realized response [yards]; X_i = feature vector [mixed covariate units]; q_hat_{alpha_lo}, q_hat_{alpha_hi} = base quantile predictions at alpha_lo=alpha/2 and alpha_hi=1-alpha/2 [yards]; alpha = nominal miscoverage [dimensionless probability, 0<alpha<1]; n = calibration set size [count]; k = rank index [count]; Q_{1-alpha}(E;I_2) = k-th smallest calibration residual [yards]; I_2 = held-out calibration set; C(X_{n+1}) = prediction interval [yards]; P = probability measure [dimensionless]. All terms dimensionally homogeneous in response units; probability statements dimensionless.",
+   "assumptions": "Data exchangeability between calibration set I_2 and test point (as printed p. 35); base quantile regressors fit by pinball loss on a disjoint training split (p. 36); alpha_lo=alpha/2, alpha_hi=1-alpha/2 (p. 32); strictly held-out calibration set (p. 32).",
+   "breakdown_regime": "Exchangeability violated by season drift: weather transitions, roster churn, tactical counter-adjustments over the 272-game season (p. 40) - requires ACI / rolling-origin windows. When k>n (n<ceil(1/alpha)-1) the empirical quantile is +infinity and the construction fails closed (pp. 36-37). Binary outcomes Y in {0,1}: continuous CQR residual math invalid; bounded distribution-free binary intervals impossible without structural assumptions (Barber et al. 2020, p. 39).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0=per-frame prediction (0.1 s)",
+    "tau_1=per-play outcome update",
+    "tau_2=calibration window m=32-64 games",
+    "tau_3=season drift (272 games)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived calibration kernel for the 22-agent probability engine: every continuous internal output (yards-gained density from the CTMDP head, separation corridors, team-strength margins) is wrapped in the CQR corridor operator before any decision gate consumes it. The rank index k acts as a hard constraint on the transition from prediction to execution: the gate may only act on intervals whose certificate is constructible from the held-out residual sample.",
+    "source_operator": "p1",
+    "telemetry": "Held-out non-conformity residuals E_i; empirical coverage rate vs nominal 1-alpha; rank k vs calibration size n; interval width time series; ACI step-error err_t. All internal observables; no market inputs."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Fail-closed small-sample clamp invariant: max-residual coverage equals n/(n+1)",
+   "verbatim_quote": "Quantile clamping falsely presents an interval as possessing 90% confidence while delivering a 6.67% under-coverage defect.",
+   "page": 37,
+   "latex": "k = \\lceil (5+1)(1-0.10)\\rceil = \\lceil 5.4\\rceil = 6 > n = 5,\\quad \\mathbb{P}\\big(Y_{n+1}\\in C(X_{n+1})\\big) = \\frac{n}{n+1} = \\frac{5}{6} \\approx 83.33\\%,\\quad \\text{fail-closed iff } n < \\lceil 1/\\alpha\\rceil - 1",
+   "symbol_and_unit_ledger": "n = calibration sample size [count]; k = required conformal rank [count]; alpha = nominal miscoverage [dimensionless probability]; 0.10 = alpha for 90% nominal coverage [probability]; n/(n+1) = exact finite-sample coverage of the clamped max-residual interval under exchangeability [dimensionless probability]; 83.33% = 5/6 rounded; 6.67% = 1 - 5/6 under-coverage defect [probability points]. Dimensionless probability algebra throughout.",
+   "assumptions": "Exchangeability of the n calibration points and the test point (p. 36); clamping heuristic k=min(n, ceil((n+1)(1-alpha))) selects the maximum calibration residual E_(n) (p. 36); nominal alpha=0.10, n=5 worked example (p. 36).",
+   "breakdown_regime": "The clamp's advertised coverage (90%) is false for every n<ceil(1/alpha)-1; true coverage is exactly n/(n+1), approaching 1 only asymptotically. At n=5 the defect is 6.67 probability points. The source records that cqr.ts tests explicitly expected the clamp - the verification layer was captured by the heuristic (p. 52 audit note). Policy: clamping banned; emit [-inf,+inf] or abstain via No-Bet block (p. 37).",
+   "domain": "cs",
+   "timescales": [
+    "tau_0=early-season scarce samples (n<9)",
+    "tau_1=per-game calibration accrual",
+    "tau_2=rookie/prop sparse segments",
+    "tau_3=season-long coverage audit"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Isomorphic to every small-sample certification gate in the football decision system: rookie props, first-series game plans, new-scheme install periods. The invariant binds as a constraint on the execution transition kernel - when evidence count n cannot support rank k, the only admissible outputs are an unbounded interval or abstention. 'Fake tightness' in an interval is structurally identical to a disguised coverage look: both present a certificate the generative process does not honor.",
+    "source_operator": "p2",
+    "telemetry": "Calibration count n vs ceil(1/alpha)-1 per market segment; realized coverage audit of emitted intervals; abstention (No-Bet) rate; clamp-attempt counter in cqr.ts (must remain zero)."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Helmholtz-Hodge decomposition and Poisson equation for gridiron pitch gravity",
+   "verbatim_quote": "Under the Helmholtz-Hodge decomposition, any sufficiently smooth vector field decomposes into irrotational (curl-free) and solenoidal (divergence-free) components:",
+   "page": 12,
+   "latex": "\\mathbf{u}(\\mathbf{x}) = -\\nabla\\Phi(\\mathbf{x}) + \\nabla\\times\\mathbf{A}(\\mathbf{x}),\\quad \\nabla^{2}\\Phi(\\mathbf{x}) = -\\rho_{gravity}(\\mathbf{x}),\\quad \\rho_{gravity}(\\mathbf{x}) = \\sum_{j\\in Def} q_j^{def}\\,\\delta(\\mathbf{x}-\\mathbf{p}_j) - \\sum_{k\\in Off} q_k^{off}\\,\\delta(\\mathbf{x}-\\mathbf{p}_k)",
+   "symbol_and_unit_ledger": "u(x) = reconstructed collective velocity field [m/s; source grid in yards, 1 yd = 0.9144 m]; x = field position [m or yd, 0.5x0.5 yd mesoscale cells, p. 11]; Phi(x) = latent scalar potential [m^2/s so that grad Phi is m/s]; A(x) = vector potential [m^2/s]; nabla^2 Phi [1/s]; rho_gravity = spatial gravity charge density [1/s]; q_j^def, q_k^off = agent influence charges [m^2/s]; delta(x-p) = 2-D Dirac mass [1/m^2]; p_j, p_k = agent positions [m]; K = anisotropic Gaussian kernel, w_i(t) = positional influence weights (p. 12) [dimensionless weights]. Dimensionally homogeneous: [m^2/s]/[m^2] = [1/s].",
+   "assumptions": "Sufficiently smooth vector field (as printed p. 12); empirical predominantly-irrotational regime (curl u ~ 0) because players move toward tactical waypoints - pursuit angles, route stems (p. 13); kernel-smoothed velocity reconstruction from 10 Hz trajectory crossings on 0.5x0.5 yd grid (pp. 11-12); finite 120x53.3 yd domain with canonical offense-left-to-right orientation (p. 1).",
+   "breakdown_regime": "Irrotationality is an empirical regime, not a theorem: scrambles, option reads, and broken plays inject solenoidal circulation (curl u != 0), so a Phi-only reconstruction misattributes rotational flow to potential wells. Kernel bandwidth and boundary conditions on the finite field are free choices that shift well locations. The source's phase table also prints a deceleration dip 'norm(a)<0' (pp. 17, 20-21), impossible for a norm; it must be read as signed longitudinal acceleration and is not extracted as an invariant.",
+   "domain": "physics",
+   "timescales": [
+    "tau_0=frame 0.1 s",
+    "tau_1=play duration tau (2-8 s)",
+    "tau_2=series/drive tendency",
+    "tau_3=game-level scheme prior"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Isomorphic to a state-variable field over the 22-agent system: Phi_def(x) is the defensive resistance potential whose wells are running lanes and passing windows (p. 14); E_gravity = -grad Phi_def biases the ball-carrier transition kernel toward low-potential corridors. The Poisson solve converts discrete agent positions into a continuous constraint field that any trajectory simulator (PlayGen-MoG branches) must respect.",
+    "source_operator": "p3",
+    "telemetry": "10 Hz velocity field u(x,t) from trajectory crossings; empirical curl/divergence statistics per play to test the irrotational regime; fitted charges q_j; kernel bandwidth sensitivity; potential-well locations vs realized gain paths."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Step-and-turn movement model: Gamma step length and von Mises turn angle",
+   "verbatim_quote": "Step length is modeled via a Gamma likelihood with log-link, while turn angle is modeled via a circular von Mises distribution with concentration parameter",
+   "page": 11,
+   "latex": "\\Delta\\theta_{i,t} \\sim \\mathrm{vonMises}(\\mu_{i,t}, \\kappa_i),\\quad f(\\theta;\\mu,\\kappa) = \\frac{\\exp\\big(\\kappa\\cos(\\theta-\\mu)\\big)}{2\\pi I_0(\\kappa)},\\quad \\Delta l_t = \\|\\mathbf{p}_t - \\mathbf{p}_{t-1}\\|_2",
+   "symbol_and_unit_ledger": "Delta theta_{i,t} = turn angle of agent i at frame t [rad, circular support]; mu_{i,t} = mean direction [rad]; kappa_i = individual concentration (directional agility) [dimensionless, kappa>=0]; I_0(kappa) = modified Bessel function of the first kind, order 0 [dimensionless]; f(theta;mu,kappa) = circular density [1/rad]; 2*pi = full-circle normalization [rad]; Delta l_t = step length [m or yd]; p_t = position [m or yd]; frame spacing 0.1 s (10 Hz, p. 1). Density integrates to 1 over the circle; all terms dimensionally consistent.",
+   "assumptions": "Bayesian step-and-turn formulation (Nguyen & Yurko 2026, p. 10); motion decomposed into step length and turn angle (p. 10); step length via Gamma likelihood with log-link (p. 11); turn angle circular von Mises with per-player concentration kappa_i (p. 11); 10 Hz sampling of the underlying continuous path.",
+   "breakdown_regime": "Von Mises is unimodal and symmetric about mu: it cannot represent bimodal cut tendencies (juke vs power cut) or hard angular bounds from sideline geometry. At kappa->0 the density flattens to uniform (no directional information); at 10 Hz, sub-frame cuts alias into apparent turn angles. Gamma step length assumes positive continuous strides - standing-still frames and tracking dropouts violate the likelihood support.",
+   "domain": "math",
+   "timescales": [
+    "tau_0=inter-frame 0.1 s",
+    "tau_1=step cycle (~0.3-0.5 s)",
+    "tau_2=route/possession (~2-8 s)",
+    "tau_3=season-level agility prior kappa_i"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived generative transition kernel for ghost-defender counterfactuals and alternative carrier steps (p. 10): each agent's next state is sampled from the step-length x turn-angle product kernel, with kappa_i as a persistent per-player agility state variable. Posterior predictive rollouts from this kernel calibrate movement-efficiency residuals against observed trajectories.",
+    "source_operator": "p4",
+    "telemetry": "Per-player Delta l and Delta theta sequences at 10 Hz; fitted kappa_i and mu_{i,t}; posterior predictive coverage of observed paths; ghost-defender rollout dispersion."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Hip-flip biomechanical refractory constraint: 200-400 ms transition recovery delay",
+   "verbatim_quote": "the defender must execute a complete hip flip. This biomechanical constraint enforces a transition recovery delay of 200–400ms during which the defender's instantaneous acceleration drops to near zero, creating an immediate separation window.",
+   "page": 19,
+   "latex": "\\Delta\\theta_{hip} = \\big|\\theta_{o,def} - \\theta_{dir,rec}\\big| > 90^{\\circ} \\;\\Rightarrow\\; \\tau_{recovery} \\in [200, 400]\\,\\mathrm{ms},\\quad \\|\\mathbf{a}(t)\\| \\approx 0 \\text{ during the flip}",
+   "symbol_and_unit_ledger": "theta_{o,def} = defender body/hip orientation angle [deg as printed; cos components elsewhere use rad]; theta_{dir,rec} = receiver velocity motion angle [deg]; Delta theta_hip = orientation mismatch [deg]; 90 deg = pi/2 rad threshold; tau_recovery = hip-flip transition delay [ms], printed range 200-400 ms; a(t) = defender acceleration [m/s^2], near zero during recovery. Angle mismatch dimensionless (deg), delay in ms, acceleration m/s^2 - each term homogeneous.",
+   "assumptions": "Leverage tensor L_ij(t) in R^4 with lateral shade, vertical cushion, and two orientation-mismatch cosine components (pp. 18-19); backpedal state identified by cos(theta_o - theta_dir) ~ -1.0 (p. 19); receiver break triggers the mismatch test (p. 19); 10 Hz orientation and direction channels available (p. 1).",
+   "breakdown_regime": "The 200-400 ms window is a population-level biomechanical range, not a per-player constant: elite hip mobility, anticipatory pre-flips, and angle mismatches just under 90 deg evade it. Orientation estimates from RFID tags carry noise; a mis-estimated theta_o flips the trigger. The constraint applies to the defender's transition kernel only during the flip - it does not bound steady-state pursuit speed.",
+   "domain": "physiology",
+   "timescales": [
+    "tau_0=frame 0.1 s",
+    "tau_1=hip-flip recovery 0.2-0.4 s",
+    "tau_2=route break-to-arrival (~1-2 s)",
+    "tau_3=season-level mobility profile"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Isomorphic to a refractory period in the defender's state-transition kernel: after a >90 deg hip commitment, the defender cannot instantaneously reverse - acceleration is pinned near zero for 200-400 ms. This hard constraint defines the separation window the receiver's break exploits, and it vetoes any counterfactual simulation branch that grants the defender instantaneous reorientation.",
+    "source_operator": "p5",
+    "telemetry": "theta_o vs theta_dir mismatch time series per defender; acceleration-dropout windows aligned to receiver break frames; realized separation S(t) during the 200-400 ms window; per-defender flip-duration estimates."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Disguise entropy: KL divergence between post-snap and pre-snap coverage posteriors",
+   "verbatim_quote": "Defensive coverage disguise is quantified by tracking the dynamic divergence of coverage probabilities across the pre-to-post-snap boundary.",
+   "page": 23,
+   "latex": "D_{disguise} = D_{KL}\\big(P_{coverage}(t_{post})\\,\\|\\,P_{coverage}(t_{snap})\\big) = \\sum_{c\\in\\mathcal{C}} P(c\\mid\\mathcal{F}_{t_{post}})\\,\\ln\\frac{P(c\\mid\\mathcal{F}_{t_{post}})}{P(c\\mid\\mathcal{F}_{t_{snap}})}",
+   "symbol_and_unit_ledger": "D_disguise = informational divergence [nats, natural log as printed]; D_KL = Kullback-Leibler divergence [nats]; P_coverage(t) = posterior over 20 discrete coverage assignments (p. 22) [probability mass, sums to 1]; c = coverage class in C (Deep 1/2, Deep 1/3, Deep 1/4, Flat, Hook-Curl, Hole, man matchings); F_t = continuous filtration generated by the tracking tensor (p. 7) [information set]; t_snap, t_post = snap and post-snap frame times [s at 10 Hz]. Divergence dimensionless in nats; probabilities dimensionless.",
+   "assumptions": "Frame-by-frame assignment tensor P_assign in R^{11x20} and bipartite matching matrix M in [0,1]^{11x5} from the factorized attention transformer (pp. 22-23); pre-snap look C_pre and post-snap structure C_post defined at the snap boundary (p. 23); safety rotation index R_safety(t) logistic in safety lateral/depth/velocity differentials (pp. 24-25).",
+   "breakdown_regime": "KL is asymmetric and unbounded: if P_snap(c)=0 while P_post(c)>0 the divergence is +infinity (a look the prior assigned zero mass), so zero-probability support must be smoothed. Reverse-direction KL measures a different quantity. Disguise that persists past the snap (delayed rotation) is invisible to a single t_post sample; the 20-class discretization misses hybrid match patterns outside the class set.",
+   "domain": "cs",
+   "timescales": [
+    "tau_0=frame 0.1 s",
+    "tau_1=rotation lock ~0.4 s post-snap",
+    "tau_2=pre-snap to release (~1.5-3 s)",
+    "tau_3=game-level disguise tendency"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived information channel quantifying deception in the 22-agent system: D_disguise measures how much the defense's executed coverage diverges from the belief its pre-snap alignment induced. Coach-Mind belief states consume this divergence as the deception observable; R_safety(t) > 0.85 within 400 ms of the snap locks true coverage before QB release (p. 25), converting disguise into a timed information edge for the offense model.",
+    "source_operator": "p6",
+    "telemetry": "Frame-by-frame P_assign tensor and M matching matrix; D_KL time series across the snap boundary; R_safety(t) surge latency; coverage-lock time vs QB release time."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "ESOE residualization: separation over expected conditioned on route, coverage, leverage, and timing",
+   "verbatim_quote": "isolates pure receiver route-running precision by controlling for defensive cushion, coverage identity, and pass timing.",
+   "page": 20,
+   "latex": "\\mathrm{ESOE} = S(t_{arrival}) - \\mathbb{E}\\big[S(t_{arrival}) \\mid \\mathrm{RouteClass}, \\mathrm{CoverageScheme}, L(t_{break}), \\mathbf{v}_{rec}(t_{break}), t_{throw}-t_{break}\\big],\\quad S(t) = \\min_{j\\in Def}\\|\\mathbf{p}_{rec}(t) - \\mathbf{p}_{def_j}(t)\\|_2",
+   "symbol_and_unit_ledger": "S(t) = receiver separation = min Euclidean distance to any defender [yd]; p_rec, p_def_j = positions [yd]; E[...] = conditional expectation from gradient-boosted quantile regressor (p. 19) [yd]; RouteClass, CoverageScheme = categorical conditioners [dimensionless labels]; L(t_break) = defender leverage tensor in R^4 at break [yd, yd, dimensionless cos, dimensionless cos] (pp. 18-19); v_rec(t_break) = receiver velocity at break [m/s]; t_throw - t_break = pass timing offset [s]; ESOE = residual [yd]. All terms in yards or conditioned consistently.",
+   "assumptions": "Twice-differentiable B-spline (degree p=3, Cox-de Boor) trajectory parameterization giving analytic velocity, acceleration, curvature (pp. 14-16); three-phase segmentation stem/break/arrival with curvature-threshold break detection (pp. 16-17); conditional distribution modeled by gradient-boosted quantile regression (p. 19); gross catch-point separation confounded by scheme and QB timing (p. 14).",
+   "breakdown_regime": "Residual inherits every bias of the conditional model: unobserved coverage classes or mislabeled route classes leak into ESOE as fake skill. Break detection via global curvature maximum fails on double-moves (two peaks) and on noisy splines. The source phase table's 'norm(a)<0' deceleration-dip notation (pp. 17, 20-21) is impossible for a norm and is excluded as an invariant; read as signed longitudinal acceleration.",
+   "domain": "football",
+   "timescales": [
+    "tau_0=frame 0.1 s",
+    "tau_1=stem-to-break (~1-2.5 s)",
+    "tau_2=break-to-arrival window",
+    "tau_3=season-level receiver skill estimate"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived residualization operator for the engine's skill attribution: subtracting the scheme/leverage/timing-conditional expectation isolates intrinsic route-running precision as a state variable, exactly parallel to RYOE for running backs (p. 31). DFS projection and Coach-Mind receiver models consume ESOE rather than gross separation, preventing busted-coverage drag routes from inflating skill estimates.",
+    "source_operator": "p7",
+    "telemetry": "S(t_arrival) per target; route class and coverage ID labels; L(t_break) components; throw-timing offset; ESOE distribution and its stability across coverage schemes."
+   }
+  },
+  {
+   "primitive_id": "p8",
+   "name": "Ville's martingale inequality: anytime-valid forecast-skill E-process gate",
+   "verbatim_quote": "Under Ville's inequality, the probability that the martingale wealth M t ​ ever breaches a threshold 1/α threshold ​ at any stopping time τ is bounded:",
+   "page": 46,
+   "latex": "M_t = \\prod_{k=1}^{t}\\frac{P_{model}(Y_k\\mid X_k)}{P_{market}(Y_k\\mid X_k)},\\quad \\mathbb{E}_{H_0}[M_t] \\le 1,\\quad \\mathbb{P}_{H_0}\\Big(\\sup_{t\\ge 1} M_t \\ge \\frac{1}{\\alpha_{threshold}}\\Big) \\le \\alpha_{threshold}",
+   "symbol_and_unit_ledger": "M_t = running likelihood-ratio martingale wealth [dimensionless]; P_model(Y_k|X_k) = model calibrated probability of outcome Y_k given features X_k [probability]; P_market(Y_k|X_k) = comparator probability under the null (de-vigged market implied in the source, p. 45) [probability]; H_0 = null that the model possesses no predictive edge over the comparator (p. 45); alpha_threshold = anytime significance level [dimensionless probability]; 1/alpha_threshold = wealth threshold [dimensionless]; t, tau = discrete observation index / stopping time [count]; E_{H_0} = expectation under the null measure. Fully dimensionless probability algebra.",
+   "assumptions": "Nonnegative martingale (E-process) under H_0 with E_{H_0}[M_t] <= 1 (pp. 45-46); sequential observations; arbitrary stopping time tau permitted (Ville's inequality, p. 46); source instantiation uses de-vigged market implied probabilities as comparator (p. 45).",
+   "breakdown_regime": "The bound holds only under the null measure: if the comparator is misspecified, M_t is not a martingale under truth and the Type-I guarantee lapses. Wealth thresholds inflate required evidence as 1/alpha_threshold; a stalled M_t never unlocks (correct fail-closed behavior). The source's market-comparator instantiation is NOT wired locally: doctrine forbids sportsbook odds as model inputs, so local use substitutes a fixed internal baseline measure (e.g. climatology), for which the same inequality holds verbatim.",
+   "domain": "math",
+   "timescales": [
+    "tau_0=per-outcome wealth update",
+    "tau_1=series of games",
+    "tau_2=season-long sequential test",
+    "tau_3=multi-season skill certification"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Isomorphic to an anytime-valid internal skill gate for the 22-agent engine: the likelihood-ratio wealth process against a fixed internal baseline certifies forecast skill at any stopping time without p-hacking, replacing static p-value thresholds. Execution unlock is a transition guarded by M_t > tau_skill (p. 47); the gate composes with the fail-closed CQR and Venn-Abers bounds so that capital-equivalent decisions require both a certified interval and certified skill.",
+    "source_operator": "p8",
+    "telemetry": "Sequential wealth M_t against internal baseline; empirical null coverage of the gate via replay; unlock/abstain counts; time-to-threshold. No odds inputs; baseline is internal climatology or prior-season base rates."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The deepest invariant in this dossier is not a model but a prohibition: you may not certify what your sample cannot support. Conformalized Quantile Regression earns its guarantee from a single combinatorial fact - under exchangeability, the rank of the test point's non-conformity score among n+1 scores is uniform, so the k-th smallest calibration residual with k=ceil((n+1)(1-alpha)) inflates the quantile corridor just enough that P(Y_{n+1} in C(X_{n+1})) >= 1-alpha holds in finite samples, with no distributional assumption (p. 35). The guarantee is a counting argument, not an asymptotic prayer. That is why the clamp audit on pp. 36-37 is the load-bearing wall of the entire architecture. At n=5 and alpha=0.10, k=ceil(6 x 0.90)=6>5: the empirical CDF cannot reach 1.08, the required quantile is +infinity, and the honest output is an infinite interval or abstention. Clamping k to n silently substitutes the maximum residual E_(n), whose true coverage under exchangeability is exactly n/(n+1)=5/6, about 83.33% - a 6.67-point under-coverage defect wearing a 90% costume. The source names this 'fake tightness,' and the phrase is precise: the interval looks tighter than truth permits, and every downstream gate that trusts it misprices tail risk. Note the recursive failure mode: the defect was not merely present in cqr.ts; the tests explicitly expected the clamp (p. 52 audit note), so the verification layer had been captured by the very heuristic it should have vetoed. A fail-closed system is only as strong as its weakest certificate, and a test suite that asserts the wrong invariant is a forged certificate. The repair is structural, not parametric: ban clamping, emit [-infinity,+infinity] or trigger the No-Bet block when n<ceil(1/alpha)-1, substitute Jackknife+ (coverage at least 1-2alpha) when splitting is too costly, Venn-Abers multiprobability bounds [p0,p1] for binary outcomes because Barber et al. (2020) proves bounded distribution-free binary intervals impossible without structural assumptions (p. 39), and ACI plus rolling-origin windows of m=32-64 games when the 272-game season violates exchangeability through weather, roster churn, and tactical counter-adjustment (p. 40). Each substitute pays an explicit price - wider intervals, 1-2alpha instead of 1-alpha, epistemic spread delta_p - rather than hiding the price inside a clamp. The general lesson for any 22-agent decision system is that uncertainty is a conserved quantity. You can move it (split to jackknife), adapt it (ACI), or abstain on it (fail-closed), but clamping does not destroy it; it merely transfers it, unaccounted, into the tail of every downstream decision. This is also why the dossier separates performance modeling from market pricing (p. 43): feeding closing lines into performance regressors creates circular confirmation bias, the model parroting consensus instead of discovering structural athletic edges. The same conservation logic applies to information: a feature that already contains the answer certifies nothing out of sample. The engine's shadow pipeline therefore routes ESOE, RYOE, CPOE and disguise rates into the ETKF team-strength filter alone, keeping the certificate chain clean from tracking photons to execution gate.",
+   "retrocausal_genealogy": "The scar lineage runs from Vovk's algorithmic-randomness conformal prediction through the quantile-regression under-coverage results of Lin, Trivedi and Sun (2021), which showed the bias scales with parameter dimensionality over sample size (pp. 31-32), into the Beexly codebase audit where cqr.ts carried the same clamp its own tests asserted (p. 52). Each historical failure - asymptotic intervals deployed in finite samples, then 'fixed' by clamping - deposited the hidden state this dossier formalizes: the prohibition itself, written as policy into cqr.ts.",
+   "theory_of_mind": "Three beliefs collide under deadline pressure. The engineer believes the clamp is harmless conservatism - 'the max residual is the safest number I have.' The auditor models the engineer recursively and knows the clamp is a confidence forgery: 83.33% coverage advertised as 90%. The downstream execution gate believes the interval's label and sizes risk accordingly, never seeing the generative process. This is the same belief structure as a quarterback trusting a two-high shell that is actually a disguised single-high rotation: the displayed look is not the generative process, and acting on the look instead of the process is how tails kill. The fix in both domains is identical - verify the process (post-snap trajectories, held-out residuals), never the label.",
+   "cross_layer_veto": "The mathematics of finite samples vetoes the high-EV call regardless of how attractive the point estimate looks. When n<ceil(1/alpha)-1, no measurable interval can carry the nominal certificate, so the physics of evidence overrides expected value: the correct action is abstention, not a tighter number. Likewise the Venn-Abers gate vetoes execution when delta_p>0.20 even if the midpoint probability suggests edge, because the epistemic spread bounds how wrong the midpoint could be. EV computed inside an uncertified interval is not EV; it is a guess wearing units, and the fail-closed policy is the veto that keeps the system honest."
+  },
+  {
+   "trace_id": "t2",
+   "think": "Layer 1 of the spatial stack is a decomposition theorem, not a heuristic. Helmholtz-Hodge says any sufficiently smooth vector field splits as u = -grad Phi + curl A (p. 12); the dossier's empirical claim is that collective NFL movement is predominantly irrotational because players pursue tactical waypoints - pursuit angles, route stems - so the field is generated by a latent scalar potential obeying Poisson's equation, with defensive charges positive and offensive charges negative (p. 13). Running lanes become potential wells of Phi_def; the gradient E = -grad Phi_def is the directional resistance the offense must climb (p. 14). This is a genuine physical invariant imported with its assumptions intact: smoothness, a chosen kernel bandwidth on the 0.5x0.5 yard mesoscale grid, and boundary conditions on a finite 120x53.3 yard domain. The second invariant is biomechanical and harder than any smoothness assumption: when hip-orientation mismatch exceeds 90 degrees, the defender must execute a complete hip flip, and the transition enforces a 200-400 ms recovery delay with near-zero acceleration (p. 19). That delay is a refractory period - a hard constraint on the defender's transition kernel, not a soft tendency. A receiver who breaks at the moment the cornerback's hips are committed creates separation that no athletic comparison can erase, because the constraint is anatomical. The third invariant is informational: disguise is measured as the KL divergence between post-snap and pre-snap coverage posteriors (pp. 23-24), and the safety-rotation index locks true coverage within about 400 ms of the snap, before quarterback release (p. 25). Deception, in this formalism, is literally the divergence between the belief the offense is shown and the belief the defense actually executes. The fourth is sequential: Ville's inequality bounds the probability that the nonnegative forecast-skill martingale ever breaches 1/alpha_threshold by alpha_threshold (pp. 44-46), giving an anytime-valid unlock that survives optional stopping - the exact antidote to the p-hacking that static thresholds invite. Two defects must be carried forward honestly. The phase table prints a deceleration dip 'norm(a)<0' (pp. 17, 20-21), impossible for a norm; it must be read as signed longitudinal acceleration, and it is not extracted as an invariant. And the irrotational claim is an empirical regime, not a theorem: scramble drills and option reads inject solenoidal circulation, so potential-only reconstructions silently misattribute rotational flow to wells. The architecture's coherence comes from binding these layers: ESOE residualizes separation against leverage and scheme (p. 20), RYOE residualizes rushing against blocking (p. 31), and the conformal layer certifies whatever the spatial layers emit. Gravity proposes, biomechanics constrains, information deceives, and only the certificate decides. Note also the provenance: this is an internal research synthesis citing Yurko et al. (2020) 'Going Deep', Nguyen & Yurko (2026) step-and-turn, and PlayGen-MoG; the primitives above cite this document's pages, and the externally attributed results are labeled as such rather than laundered into original claims.",
+   "retrocausal_genealogy": "The potential-flow lineage descends from Helmholtz's nineteenth-century decomposition theorem through the soccer vector-field potential studies listed in the dossier's bibliography (pp. 50-53), while the step-and-turn generative model carries the Nguyen & Yurko (2026) lineage and within-play valuation carries Yurko et al. (2020) 'Going Deep' (p. 8). The hidden state is a century-old physics theorem repurposed as a tactical prior: because the decomposition is exact, any failure lives in the empirical irrotational assumption, not in the mathematics - which is precisely where the audit should look first.",
+   "theory_of_mind": "The quarterback's internal clock believes the pre-snap shell; the defensive coordinator's trap believes the quarterback believes it; the free safety's rotation is the physical act that collapses both beliefs into the true coverage. The receiver, meanwhile, models the cornerback's proprioception - knowing the hips cannot flip faster than 200-400 ms - and times the break to that refractory window. Recursive belief under pressure is thus a race between the offense's KL-divergence estimate of the disguise and the defense's biomechanical commitment, each side modeling the other's update latency. The engine's edge is measuring both latencies from tracking frames instead of guessing them from film habit.",
+   "cross_layer_veto": "Biomechanics vetoes any simulation that lets a defender reverse direction instantaneously: a transition kernel violating the 200-400 ms hip-flip delay generates phantom stops and inflated defensive gravity, so the physics layer rejects those counterfactual branches even when their expected points look high. Conversely, the fluid layer vetoes the potential-only story on scrambles, where measured curl is non-negligible and the solenoidal component must be retained. And the Ville gate vetoes capital-equivalent unlock on a hot streak that optional stopping manufactured, because the martingale bound, not the streak, is the certificate. Each veto is a lower layer refusing an upper layer's convenient fiction."
+  }
+ ],
+ "universal_lens": "A polymath audit lens: certification before deployment. Across statistics, fluid mechanics, biomechanics and information theory the same invariant recurs - a claimed guarantee must be constructible from the evidence actually held. Clamped quantiles, disguised coverages and phantom hip-flips are all failures of certification; the honest system abstains, decomposes, or bounds instead of forging the certificate.",
+ "gsi_mapping": "GSI translation: the Helmholtz split mirrors hemodynamic shear analysis - irrotational pressure-driven flow versus rotational vortical structures near stenoses - with the scalar potential playing the role of a pressure potential reconstructed from velocity telemetry. The 200-400 ms hip-flip refractory window maps to neuromuscular conduction and ATP-PCr bioenergetic recovery constraints in clinical movement telemetry, and fail-closed conformal abstention maps to diagnostic gates that refuse a reading when calibration sample size cannot certify nominal confidence.",
+ "gse_mapping": "GSE translation: frame-by-frame coverage posteriors and disguise KL feed Coach-Mind belief states for deception simulation; ESOE and RYOE residualization supply DFS projection tails separated from scheme effects; fail-closed CQR, Venn-Abers spread gates and the Ville E-process form the internal execution gate. Per doctrine and the source's own leakage prohibition (p. 43), no sportsbook odds enter any regressor; artifacts remain internal and the engine never publishes or deploys."
+}

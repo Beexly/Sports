@@ -1,0 +1,553 @@
+{
+  "book_id": "0fbcbcb524c750ad",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_RECONSTRUCTED_LATEX",
+  "source_note": "Eberhard et al., 'A Machine Learning Approach to Player Value and Decision Making in Professional Ultimate Frisbee', MIT Sloan Sports Analytics Conference 2025 Research Paper Competition, Other Sports track, Paper ID 20251407 (17 pages). Full paper: two XGBoost Bernoulli models (Completion Probability CP, Field Value FV=scoring probability), metrics xCP/CPOE/EC/aEC/ETV with receiver/thrower splits, meta-analytics validation (discrimination/stability/Gaussian-copula independence/dendrogram), SHAP field plots and feature interactions, MVP/All-UFA alignment; extracted faithfully (not a derivative summary). Model and metric equations are shifted-font (doubled-glyph math Unicode) and reconstructed as labeled LaTeX from the surrounding prose. Domain cs (ML framework) matches catalog. Sport is ultimate frisbee (Other Sports track), not football; the CP/FV/CPOE/EC/ETV structure is sport-agnostic and isomorphic to GSE's football expected-points framework (CPOE explicitly cites nflWAR). No sportsbook lines/spreads/totals/implied odds anywhere in the source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "first_empirical_spatial",
+      "name": "First empirical ML framework on professional ultimate spatial data",
+      "verbatim_quote": "This paper presents the first empirical work to leverage this wealth of new data",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Eberhard et al. present the first empirical machine-learning framework for player value and decision quality in professional ultimate, leveraging four seasons of UFA spatial data; ultimate had relied on counting stats (goals/assists/blocks) and post-hoc volunteer metrics, lacking the sabermetrics/Next-Gen-Stats frameworks of established sports."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A first spatial-data valuation framework is the same bootstrap GSE performs for an under-instrumented sport.",
+        "source_operator": "first_empirical_spatial",
+        "telemetry": "first empirical ML on UFA spatial data; beyond counting stats"
+      }
+    },
+    {
+      "primitive_id": "cp_model_definition",
+      "name": "Completion Probability model: P(throw completed | target location)",
+      "verbatim_quote": "a Completion Probability (CP) model, which estimates the probability of a throw being successfully completed at any given target location",
+      "page": 1,
+      "latex": "\\mathrm{Comp}_i\\sim\\mathrm{Bernoulli}(\\pi(X_i^t,X_i^r,X_i^{th},X_i^g)),\\ \\pi=P(\\mathrm{Comp}_i=1\\mid X^t,X^r,X^{th},X^g)",
+      "symbol_and_unit_ledger": {
+        "Comp_i": "completion indicator",
+        "X^t/X^r/X^th/X^g": "thrower/receiver/throw/game context"
+      },
+      "assumptions": [
+        "The CP model estimates the probability a pass is completed from thrower, receiver, throw, and game context, modeled as a Bernoulli outcome and fit with an XGBoost decision-tree ensemble (model equation shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "CP Bernoulli eq shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Completion probability is the same pass-completion kernel GSE uses for QB/thrower evaluation.",
+        "source_operator": "cp_model_definition",
+        "telemetry": "CP = Bernoulli(pi); XGBoost; 4 contexts"
+      }
+    },
+    {
+      "primitive_id": "fv_model_definition",
+      "name": "Field Value model: positional value as scoring probability",
+      "verbatim_quote": "a Field Value (FV) model, which assigns positional value on the field as measured by scoring probability",
+      "page": 1,
+      "latex": "\\mathrm{Goal}_p\\sim\\mathrm{Bernoulli}(\\pi(X_{i(p)}^t,X_{i(p)}^g)),\\ \\pi=P(\\mathrm{Goal}_p=1\\mid X^t,X^g)",
+      "symbol_and_unit_ledger": {
+        "Goal_p": "point ends in goal",
+        "FV": "scoring probability by location"
+      },
+      "assumptions": [
+        "The FV model predicts the probability a point culminates in a goal from thrower and game context, assessing the strategic value of disc location continuously over the field, fit via an XGBoost decision-tree ensemble (model equation shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "FV Bernoulli eq shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Field value as scoring probability is the same expected-points surface GSE builds from field position.",
+        "source_operator": "fv_model_definition",
+        "telemetry": "FV = P(goal | thrower+game); XGBoost; continuous field"
+      }
+    },
+    {
+      "primitive_id": "dataset_327k_throws",
+      "name": "Dataset: 327,179 throws / 604 games / 4 seasons (2021-2024)",
+      "verbatim_quote": "The dataset includes 327,179 recorded throws across 604 games",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The UFA dataset covers four full professional seasons 2021-2024, 327,179 recorded throws across 604 games, the largest of its kind in ultimate, with precise thrower/receiver field locations and game-state variables (score differential, remaining time) for evaluating decision quality."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A large throw-level spatial corpus is the same data substrate GSE needs for stable valuation.",
+        "source_operator": "dataset_327k_throws",
+        "telemetry": "327,179 throws / 604 games / 2021-2024; spatial + game state"
+      }
+    },
+    {
+      "primitive_id": "rules_7sec_stall",
+      "name": "Ultimate rules: 7v7, 7-second stall, continuous play, turnover possession",
+      "verbatim_quote": "The player with the disc must release it within a 7-second stall count kept track of by game officials",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "UFA play is 7v7 on an 80-yard field (53 1/3 wide, 20-yard end zones), four 12-minute quarters, continuous play; the thrower must release within a 7-second stall count, turnovers (incomplete pass or stall) give the opponent immediate possession at the spot, a goal is a completed pass into the end zone worth one point followed by a pull."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The stall-count clock and turnover-possession rule are the same possession-value constraints GSE encodes.",
+        "source_operator": "rules_7sec_stall",
+        "telemetry": "7v7; 7s stall; turnover -> opponent possession at spot; goal=1"
+      }
+    },
+    {
+      "primitive_id": "weiss_childers_prior",
+      "name": "Prior work: Weiss-Childers smoothed KNN on 3,195 amateur throws",
+      "verbatim_quote": "Weiss et al. manually collected data on 3,195 throws from 10 exhibition club ultimate games, utilizing a smoothed K Nearest Neighbors model based on thrower and receiver coordinates",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Weiss and Childers' 'Maps for Reasoning in Ultimate' introduced completion/scoring maps and Expected Point Outcome / Effective Contribution via a smoothed K-Nearest-Neighbors model on thrower/receiver coordinates, but used only 3,195 manually collected throws from 10 exhibition club games, amateur play, no broader game-state variables or whole-point modeling; this paper improves with a larger professional dataset and more robust models."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The small-sample KNN predecessor is the same baseline GSE supersedes with richer data and models.",
+        "source_operator": "weiss_childers_prior",
+        "telemetry": "Weiss-Childers: smoothed KNN, 3,195 throws/10 club games, amateur"
+      }
+    },
+    {
+      "primitive_id": "epa_football_lineage",
+      "name": "Lineage: Carter-Machol Expected Points Added in football",
+      "verbatim_quote": "Carter et al.'s work which laid the foundation for the widely impactful concept of Expected Points Added in football",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The paper situates itself in the analytics lineage of Carter et al.'s foundational Expected Points Added concept in football, noting that before the UFA's in-depth data collection starting in 2021 similar progress in ultimate was nearly impossible; the framework quantifies offensive contribution beyond counting statistics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The EPA lineage is the same expected-points-added ancestry GSE's value framework descends from.",
+        "source_operator": "epa_football_lineage",
+        "telemetry": "Carter-Machol EPA football -> ultimate EC/aEC/ETV"
+      }
+    },
+    {
+      "primitive_id": "fv_continuous_field",
+      "name": "FV assesses disc-location value continuously over the field",
+      "verbatim_quote": "The model allows us to assess the strategic value of disc location continuously over the field",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The FV model evaluates the strategic value of disc location continuously across the field rather than at discrete zones, estimated by an XGBoost ensemble of decision trees on thrower and game context."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A continuous field-value surface is the same spatial EPV map GSE interpolates over the pitch.",
+        "source_operator": "fv_continuous_field",
+        "telemetry": "FV continuous over field; XGBoost ensemble"
+      }
+    },
+    {
+      "primitive_id": "cp_four_contexts",
+      "name": "CP incorporates thrower, receiver, throw, and game context",
+      "verbatim_quote": "It incorporates information about the thrower context, receiver context, throw context, and game context",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The CP model uses thrower X/Y, receiver X/Y, throw distance/angle (0 forward, 180 backward, +/- right/left), Y and X differentials, plus game quarter, quarter point, score differential, and time remaining; like FV it is an XGBoost decision-tree ensemble."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The four-context feature set is the same thrower/receiver/throw/game conditioning GSE uses.",
+        "source_operator": "cp_four_contexts",
+        "telemetry": "CP features: thrower/receiver XY, distance/angle/diffs, quarter/score/time"
+      }
+    },
+    {
+      "primitive_id": "three_holdout_validation",
+      "name": "Validation: 5-fold CV + player/temporal/random holdouts",
+      "verbatim_quote": "a player-based set of 50 throwers with 200+ throws each, a temporal set from the latest 10 games to simulate future predictions, and a random 20% subset",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Models are fit with 5-fold cross-validation and validated on three hold-out sets: a player-based set of 50 throwers with 200+ throws each, a temporal set from the latest 10 games to simulate future prediction, and a random 20% subset, ensuring robustness across temporal and player-specific variation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Player/temporal/random holdouts are the same leakage-resistant validation GSE applies.",
+        "source_operator": "three_holdout_validation",
+        "telemetry": "5-fold CV; 50 throwers 200+ / latest 10 games / random 20%"
+      }
+    },
+    {
+      "primitive_id": "outperform_weiss_baselines",
+      "name": "CP and FV outperform Weiss-Childers baselines on all measures",
+      "verbatim_quote": "The FV and CP models significantly outperform their respective baselines, which were developed using Weiss and Childers' methodology, across all datasets and measures",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Both CP and FV show high AUC, accuracy, positive predictive value, and negative predictive value (Table 1) and significantly outperform their Weiss-Childers-methodology baselines across all datasets and measures."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Beating the prior baseline on AUC/PPV/NPV is the same model-superiority evidence GSE requires.",
+        "source_operator": "outperform_weiss_baselines",
+        "telemetry": "CP/FV high AUC/acc/PPV/NPV; beat Weiss baselines all sets"
+      }
+    },
+    {
+      "primitive_id": "cpoe_football_comparable",
+      "name": "CPOE = C - xCP, directly comparable to NFL quarterback CPOE",
+      "verbatim_quote": "This metric is directly comparable to the CPOE statistic commonly used to evaluate quarterbacks in football",
+      "page": 6,
+      "latex": "\\mathrm{xCP}=\\mathrm{CP}(X^t,X^r,X^{th},X^g);\\ \\mathrm{CPOE}=C-\\mathrm{xCP},\\ C\\in\\{0,1\\}",
+      "symbol_and_unit_ledger": {
+        "xCP": "expected completion prob",
+        "CPOE": "completion % over expected"
+      },
+      "assumptions": [
+        "Expected Completion Probability xCP is the CP model's prediction; Completion Percentage Over Expected CPOE = C - xCP where C is the 0/1 completion indicator, directly comparable to the CPOE statistic used to evaluate football quarterbacks (citing nflWAR), well-suited to assessing ultimate throwers (equations shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "xCP/CPOE eqs shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CPOE is literally the same execution-over-expectation metric GSE uses for NFL QBs.",
+        "source_operator": "cpoe_football_comparable",
+        "telemetry": "CPOE = C - xCP; same as NFL QB CPOE (nflWAR)"
+      }
+    },
+    {
+      "primitive_id": "ec_field_value_delta",
+      "name": "Expected Contribution: FV gain on completion, opponent FV loss on turnover",
+      "verbatim_quote": "FV metrics measure the contribution of a throw, considering not just raw yardage gained, but also its impact on the offense's positioning and potential scoring opportunities",
+      "page": 7,
+      "latex": "\\mathrm{EC}=\\mathrm{FV}_e-\\mathrm{FV}_s\\ (C=1);\\ \\mathrm{EC}=-\\mathrm{FV}_o\\ (C=0)",
+      "symbol_and_unit_ledger": {
+        "FV_s/FV_e": "field value at start/end",
+        "FV_o": "opponent FV at turnover spot"
+      },
+      "assumptions": [
+        "Expected Contribution EC, redefined from Weiss-Childers with a larger dataset and added game/throw context and whole-point FV modeling, equals FV_e - FV_s on a completion and -FV_o on a turnover, measuring a throw's contribution beyond raw yardage via positional value and scoring opportunity (equations shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "EC eq shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "EC is the same WPA-style field-value delta GSE credits per play, with turnover cost.",
+        "source_operator": "ec_field_value_delta",
+        "telemetry": "EC = FV_e-FV_s (complete) / -FV_o (turnover)"
+      }
+    },
+    {
+      "primitive_id": "aec_possession_normalized",
+      "name": "Adjusted EC scales so each goal possession sums to exactly one",
+      "verbatim_quote": "This adjustment scales credit for scoring events so that the total contribution of all throws in a goal-scoring possession sum to exactly one",
+      "page": 7,
+      "latex": "\\mathrm{aEC}=\\frac{\\mathrm{FV}_e-\\mathrm{FV}_s}{1-\\mathrm{FV}_p}\\ (C=1);\\ \\mathrm{aEC}=-\\mathrm{FV}_o\\ (C=0)",
+      "symbol_and_unit_ledger": {
+        "FV_p": "FV at possession start",
+        "aEC": "adjusted expected contribution"
+      },
+      "assumptions": [
+        "Adjusted Expected Contribution aEC divides the completion FV gain by (1 - FV_p), the possession-start field value, so all throws in a goal-scoring possession sum to exactly one (whereas EC sums to one minus the starting FV); eliminating the starting-FV dependency makes credit more equitable and intuitive, e.g. a single-throw goal possession contributes one (equations shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "aEC eq shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Possession-normalized credit is the same sum-to-one attribution kernel GSE uses to compare possessions fairly.",
+        "source_operator": "aec_possession_normalized",
+        "telemetry": "aEC = (FV_e-FV_s)/(1-FV_p); goal possession sums to 1"
+      }
+    },
+    {
+      "primitive_id": "receiver_thrower_credit_split",
+      "name": "EC/aEC split into receiver, thrower, and total contributions",
+      "verbatim_quote": "Because both throwers and receivers contribute to the success of a throw, EC and aEC metrics can be calculate separately for both players",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because both throwers and receivers contribute to a throw's success, EC and aEC are computed separately as Receiver EC (R-EC), Thrower EC (T-EC), and their sum Total EC (Tot EC), and likewise R-aEC/T-aEC/Tot aEC, quantifying each player's individual contribution."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The receiver/thrower credit split is the same multi-agent attribution GSE applies to passer/receiver.",
+        "source_operator": "receiver_thrower_credit_split",
+        "telemetry": "R-EC / T-EC / Tot-EC; R-aEC / T-aEC / Tot-aEC"
+      }
+    },
+    {
+      "primitive_id": "etv_expected_throw_value",
+      "name": "ETV = xCP*FV_e - (1-xCP)*FV_o, expected throw value in [-1,1]",
+      "verbatim_quote": "Expected Throw Value (ETV) quantifies the expected value of a throw by integrating the probability of success with the potential field value at the throw's endpoint",
+      "page": 8,
+      "latex": "\\mathrm{ETV}=\\mathrm{xCP}\\cdot\\mathrm{FV}_e-(1-\\mathrm{xCP})\\cdot\\mathrm{FV}_o\\in[-1,1]",
+      "symbol_and_unit_ledger": {
+        "ETV": "expected throw value",
+        "xCP": "completion prob",
+        "FV_e/FV_o": "own/opponent endpoint FV"
+      },
+      "assumptions": [
+        "Expected Throw Value ETV = xCP*FV_e - (1-xCP)*FV_o integrates success probability with endpoint field value: the positive term is potential gain weighted by completion risk, the negative term is the opponent's scoring opportunity at the turnover location weighted by turnover probability; ETV ranges from -1 (certain interception in the defending end zone) to 1 (certain completion into the end zone for a goal) (equation shifted-font, reconstructed)."
+      ],
+      "breakdown_regime": "ETV eq shifted-font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ETV is the same probability-weighted gain-minus-turnover-cost expected value GSE computes for a pass.",
+        "source_operator": "etv_expected_throw_value",
+        "telemetry": "ETV = xCP*FV_e - (1-xCP)*FV_o; range [-1,1]"
+      }
+    },
+    {
+      "primitive_id": "etv_endpoints",
+      "name": "ETV endpoints: +1 certain goal, -1 certain defending-end-zone interception",
+      "verbatim_quote": "A value of 1 represents a throw with 100% completion into the end zone, resulting in a certain goal",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "ETV's bounds are interpretable: +1 is a 100%-completion throw into the end zone for a certain goal, and -1 is a certain interception in the defending end zone, giving the metric a fixed strategic-value scale."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The bounded interpretable scale is the same normalized value range GSE uses for decision comparison.",
+        "source_operator": "etv_endpoints",
+        "telemetry": "ETV +1 = certain goal; -1 = certain own-end-zone INT"
+      }
+    },
+    {
+      "primitive_id": "meta_analytics_criteria",
+      "name": "Meta-analytics: discrimination, stability, independence, relation to established",
+      "verbatim_quote": "we assess them based on their ability to distinguish between players (discrimination), their consistency over time (stability), their independence from other performance measures",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Metrics are evaluated via meta-analytics (Franks et al., ElHabr): discrimination (variance from true performance vs noise), stability (consistency over time / future prediction), independence (unique non-redundant information), and relation to established metrics; the novel metrics perform comparably to traditional counting stats in discrimination and stability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The discrimination/stability/independence battery is the same metric-quality audit GSE runs.",
+        "source_operator": "meta_analytics_criteria",
+        "telemetry": "meta-analytics: discrimination / stability / independence / relation"
+      }
+    },
+    {
+      "primitive_id": "gaussian_copula_independence",
+      "name": "Independence measured via Gaussian copula regression on established metrics",
+      "verbatim_quote": "Using a Gaussian copula model to measure relationships between metrics quantifies their dependencies",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A Gaussian copula model quantifies inter-metric dependencies, with each metric's independence score from its regression on established metrics; most novel metrics show strong independence except ETV, while aEC has higher independence than EC and CPOE/xCP isolate execution quality and shot selection."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Copula-based independence is the same redundancy check GSE uses to avoid double-counting signals.",
+        "source_operator": "gaussian_copula_independence",
+        "telemetry": "Gaussian copula; independence = regression on established metrics"
+      }
+    },
+    {
+      "primitive_id": "etv_volume_not_quality",
+      "name": "ETV reflects involvement/throw frequency, not unique throw quality",
+      "verbatim_quote": "This suggests that ETV primarily reflects overall player involvement and throw frequency, rather than unique insights into throw quality or decision-making",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "ETV's low independence indicates it primarily reflects overall player involvement and throw frequency rather than unique throw-quality or decision-making insight, making it more effective for throw selection and team-strategy optimization independent of individual performance; the dendrogram clusters ETV near volume metrics like number of throws."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The volume-vs-quality distinction is the same usage-confound GSE flags in value metrics.",
+        "source_operator": "etv_volume_not_quality",
+        "telemetry": "ETV ~ volume/involvement; use for strategy not individual quality"
+      }
+    },
+    {
+      "primitive_id": "shap_feature_importance",
+      "name": "SHAP identifies features driving throw value",
+      "verbatim_quote": "Utilizing Shapley Additive Explanations (SHAP) to identify feature importance, we identify the key factors that influence throw value",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Shapley Additive Explanations (SHAP) identify feature importance for ETV, quantifying how each feature (player position, throw difficulty) impacts the prediction; each scatter point is a throw with feature value on the x-axis and SHAP contribution on the y-axis, revealing which variables most affect throw value and how they interact."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SHAP attribution is the same interpretable feature-importance layer GSE uses to explain decisions.",
+        "source_operator": "shap_feature_importance",
+        "telemetry": "SHAP feature importance + interaction plots for ETV"
+      }
+    },
+    {
+      "primitive_id": "vertical_stack_sideline",
+      "name": "Midfield ETV favors advancing toward sidelines (vertical stack)",
+      "verbatim_quote": "In the middle of the field, ETV suggests advancing the disc by throwing closer to the sidelines",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Plotting smoothed ETV for every possible throw given disc location and game state, midfield ETV recommends advancing toward the sidelines, consistent with the 'vertical stack' strategy that positions players centrally while isolating the edges to create space."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The sideline-advance recommendation is the same spatial strategy GSE derives from its value surface.",
+        "source_operator": "vertical_stack_sideline",
+        "telemetry": "midfield -> throw to sidelines; vertical stack isolates edges"
+      }
+    },
+    {
+      "primitive_id": "fatigue_time_decay",
+      "name": "ETV decays as quarter time elapses (fatigue effect)",
+      "verbatim_quote": "plots examining time remaining in the quarter reveal the effect of player fatigue, with a marked decrease in ETV as time elapses",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "SHAP feature trends show throw distance and Y differential positively correlate with ETV up to a threshold then diminish (declining accuracy / higher turnover risk), and time remaining in the quarter reveals a fatigue effect with a marked ETV decrease as time elapses."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fatigue-driven time decay is the same within-game fatigue kernel GSE models.",
+        "source_operator": "fatigue_time_decay",
+        "telemetry": "distance/y-diff positive then diminishing; ETV falls as time elapses (fatigue)"
+      }
+    },
+    {
+      "primitive_id": "mvp_ec_alignment",
+      "name": "Top-5 EC includes 2021 MVP Ben Jagt + 4 All-UFA; MVP #1 EC 2021/22",
+      "verbatim_quote": "the top five players by total EC (Table 2) include 2021 MVP Ben Jagt and four other All-UFA team selections from their respective seasons",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Empirical validation: the top five players by total EC include 2021 MVP Ben Jagt and four other All-UFA selections; the MVP ranked #1 in EC in 2021 and 2022, #7 in 2023, #4 in 2024, aligning EC with recognized elite performance; aEC identifies unique styles like 2017 MVP Jonathan Nethercutt's high-risk/high-reward play and five-time All-UFA Pawel Janas."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "MVP/All-League alignment is the same external-validity check GSE uses for value metrics.",
+        "source_operator": "mvp_ec_alignment",
+        "telemetry": "top-5 EC: Jagt (2021 MVP) + 4 All-UFA; MVP #1 EC 2021/22"
+      }
+    },
+    {
+      "primitive_id": "cutters_handlers_roles",
+      "name": "R-EC vs T-EC distinguishes cutters (receivers) from handlers (distributors)",
+      "verbatim_quote": "players with high R-EC but low T-EC emphasize their strength as a receiver (known as 'cutters'), while players with higher T-EC demonstrate their effectiveness as a distributor (known as 'handlers')",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Comparing T-EC to R-EC reveals roles: high R-EC / low T-EC marks receivers ('cutters'), high T-EC marks distributors ('handlers'); per-possession contribution analysis guides playing time and roster composition, favoring high contribution-per-possession players over high-volume low-contribution ones."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The cutter/handler role split is the same receiver/distributor role attribution GSE assigns.",
+        "source_operator": "cutters_handlers_roles",
+        "telemetry": "high R-EC = cutter; high T-EC = handler; per-possession for playing time"
+      }
+    },
+    {
+      "primitive_id": "xcp_decision_cpoe_execution",
+      "name": "xCP captures decision tendency; CPOE captures execution vs difficulty",
+      "verbatim_quote": "CPOE, in contrast, evaluates a player's ability to exceed or fall short of these baseline expectations, emphasizing their execution relative to the difficulty of their choices",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "xCP highlights decision-making tendencies (Gus Norrbom's high xCP = safe high-percentage throws; Pollard/Merriman's low xCP = riskier plays), while CPOE evaluates execution relative to choice difficulty (Matt Jackson high xCP + strong CPOE; Nethercutt low xCP but high CPOE completes challenging throws); together they separate decision quality from execution, guiding role assignment (high-xCP resets, low-xCP/high-CPOE deep plays)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The decision-vs-execution decomposition is the same selection/execution split GSE uses for QB grading.",
+        "source_operator": "xcp_decision_cpoe_execution",
+        "telemetry": "xCP = decision tendency (safe/risky); CPOE = execution vs difficulty"
+      }
+    },
+    {
+      "primitive_id": "credit_attribution_limitation",
+      "name": "Limitation: thrower/receiver credit cannot be accurately separated",
+      "verbatim_quote": "the inability to accurately attribute credit between throwers and receivers, as both contribute to the success of a play, potentially leading to discrepancies in player evaluations",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Limitations include the inability to accurately attribute credit between throwers and receivers (both contribute, risking evaluation discrepancies), rule/timing/field-dimension differences across UFA/PUL/WUL requiring league-specific adjustment, and location bias because completed and incomplete throws land in different areas (out of bounds, interceptions); future work adds stall count, teammate/defender locations, and defensive metrics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The credit-attribution ambiguity is the same shared-credit veto GSE flags in passer/receiver valuation.",
+        "source_operator": "credit_attribution_limitation",
+        "telemetry": "limit: thrower/receiver credit ambiguous; league differences; location bias"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ultimate2025_trace",
+      "think": "The retrocausal genealogy of this paper is the expected-points-added lineage that runs from Carter and Machol's foundational operations-research work on football through Weiss and Childers' early ultimate maps to the present framework. Eberhard and colleagues, writing for the MIT Sloan 2025 Other Sports track, observe that ultimate has transformed from an amateur pastime into a professional arena with the Ultimate Frisbee Association, the Premier Ultimate League, and the Western Ultimate League, yet its analytics lagged behind baseball's sabermetrics and football's Next Gen Stats, relying on counting statistics like goals, assists, and blocks. The Weiss-Childers predecessor introduced completion and scoring maps and Expected Point Outcome via a smoothed K-Nearest-Neighbors model, but on only 3,195 manually collected throws from ten exhibition club games, amateur play, without game-state variables or whole-point modeling. The enabling condition was the UFA's in-depth spatial data collection beginning in 2021. The dataset covers four full professional seasons from 2021 to 2024, 327,179 recorded throws across 604 games, the largest of its kind in ultimate, with precise thrower and receiver locations plus game-state context such as score differential and remaining time. The sport itself is seven-versus-seven on an eighty-yard field with twenty-yard end zones, four twelve-minute quarters, continuous play, a seven-second stall count, and turnovers that give the opponent immediate possession at the spot. This is the first empirical work to leverage that wealth of new data for player value and decision quality. The recursive theory of mind is two complementary probabilistic models fit with XGBoost decision-tree ensembles. The Completion Probability model estimates the chance a throw is completed from thrower, receiver, throw, and game context; the Field Value model estimates the probability a point ends in a goal from thrower and game context, assessing disc-location value continuously over the field. Both are Bernoulli-outcome models validated with five-fold cross-validation and three hold-out sets, a player-based set of fifty throwers with two hundred or more throws, a temporal set from the latest ten games, and a random twenty-percent subset, and both significantly outperform the Weiss-Childers baselines on AUC, accuracy, positive and negative predictive value. Cross-layer veto adjudication is the metric construction and its meta-analytics audit. From CP come xCP, the model prediction, and CPOE, completion minus xCP, directly comparable to the NFL quarterback CPOE that cites nflWAR. From FV come Expected Contribution, the field-value gain on a completion or the negative opponent field value on a turnover, and Adjusted Expected Contribution, which divides the gain by one minus the possession-start field value so every goal-scoring possession sums to exactly one, removing the starting-value dependency for equitable credit. The combined Expected Throw Value is xCP times endpoint field value minus one-minus-xCP times opponent field value, bounded from minus one, a certain defending-end-zone interception, to plus one, a certain goal. The implementation invariants map directly onto GSE. Completion probability is GSE's pass-completion kernel; field value is GSE's expected-points surface; CPOE is literally GSE's quarterback execution-over-expectation metric; Expected Contribution is GSE's WPA-style per-play value delta with turnover cost; the possession-normalized aEC is GSE's sum-to-one credit-attribution kernel; and ETV is GSE's probability-weighted gain-minus-turnover-cost expected value. The receiver/thrower split mirrors GSE's passer/receiver attribution, and the cutter/handler role distinction mirrors GSE's receiver/distributor roles. The outputs are player values and decision surfaces from public tracking data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The validation, applications, and limitations close the account. Meta-analytics assess discrimination, stability, independence, and relation to established metrics; a Gaussian copula shows most novel metrics are independent except ETV, which reflects involvement and throw frequency rather than unique quality, so it serves team strategy rather than individual grading, while aEC is more independent than EC and CPOE/xCP isolate execution and selection. SHAP feature importance and field plots recover known strategy, advancing toward the sidelines from midfield in a vertical stack and resetting to center from the sideline, with a fatigue-driven ETV decay as quarter time elapses and a central-positioning advantage. The top five by total EC include 2021 MVP Ben Jagt and four All-UFA selections, with the MVP first in EC in 2021 and 2022. The limitations are honest: thrower/receiver credit cannot be cleanly separated, leagues differ in rules and dimensions, and completion locations bias the sample. The invariant for GSE is to carry the CP/FV/ETV structure and the possession-normalized credit kernel while recording the shared-credit ambiguity and the volume confound in ETV before any quantitative reuse. A further sovereign detail is how the framework converts a static valuation into a real-time decision aid: by evaluating ETV for every possible receiver location given the current disc position and game state, the model produces a field plot that ranks all available throws, so a coach or thrower can read the optimal target directly rather than relying on intuition. The independence audit then dictates which metric to trust for which question, aEC for individual credit because it is possession-normalized and non-redundant, CPOE and xCP for execution and selection because they isolate those facets, and ETV only for team-level throw distribution because its low independence means it mostly counts involvement. This separation of decision quality from execution quality, and of individual credit from team strategy, is precisely the layered attribution GSE needs to avoid conflating a player's choices with their arm talent or their volume with their value, and it is why the paper's meta-analytics battery is as important as the models themselves.",
+      "retrocausal_genealogy": "EPA lineage: Carter-Machol football EPA -> Weiss-Childers ultimate maps (smoothed KNN, Expected Point Outcome/Effective Contribution, 3,195 throws/10 exhibition club games, amateur, no game-state/whole-point) -> Eberhard et al. MIT Sloan 2025 Other Sports ID 20251407. Ultimate professionalized (UFA/PUL/WUL) but analytics lagged sabermetrics/NGS (counting stats). Enabler: UFA spatial collection from 2021; 327,179 throws/604 games/4 seasons 2021-2024, thrower+receiver locations + score/time. Rules: 7v7, 80yd field/20yd end zones, 4x12min quarters, continuous play, 7s stall, turnover->opponent possession at spot, goal=1+pull.",
+      "theory_of_mind": "Two XGBoost Bernoulli models: CP=P(complete|thrower/receiver/throw/game context); FV=P(goal|thrower/game context), continuous disc-location value. 5-fold CV + 3 holdouts (50 throwers 200+ / latest 10 games / random 20%); high AUC/acc/PPV/NPV, beat Weiss-Childers baselines all sets. Metrics: xCP=CP pred; CPOE=C-xCP (C in {0,1}, same as NFL QB CPOE/nflWAR); EC=FV_e-FV_s (C=1)/-FV_o (C=0); aEC=(FV_e-FV_s)/(1-FV_p) (C=1)/-FV_o (C=0), goal possession sums to 1; ETV=xCP*FV_e-(1-xCP)*FV_o in [-1,1] (+1 certain goal, -1 certain own-end-zone INT). R-EC/T-EC/Tot-EC + aEC splits. Equations shifted-font reconstructed.",
+      "cross_layer_veto": "Meta-analytics (Franks/ElHabr): discrimination/stability/independence/relation; novel match traditional discrimination+stability. Gaussian copula independence: most strong except ETV (volume/involvement not quality -> team strategy); aEC>EC independence; CPOE/xCP isolate execution/selection; dendrogram R-EC~goals, T-EC~efficiency, ETV~volume. SHAP feature importance + field plots: midfield->sidelines (vertical stack), sideline->reset center; distance/y-diff positive then diminishing; fatigue ETV decay as time elapses; central-positioning advantage, opposite-side throws higher ETV. Validation: top-5 EC = 2021 MVP Ben Jagt + 4 All-UFA; MVP #1 EC 2021/22, #7 2023, #4 2024; aEC flags Nethercutt high-risk/Janas. xCP=decision tendency (Norrbom safe / Pollard-Merriman risky), CPOE=execution vs difficulty (Jackson high both / Nethercutt low xCP high CPOE); cutters (high R-EC) vs handlers (high T-EC); per-possession for playing time. Limits: thrower/receiver credit ambiguous, UFA/PUL/WUL rule/field differences, completion-location bias; future stall count/defender locations/defensive metrics. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "Player value and decision quality in a continuous-play invasion sport are estimated by two XGBoost probability models — completion probability (CP) and field value as scoring probability (FV) — combined into expected throw value ETV = xCP*FV_e - (1-xCP)*FV_o, with execution-over-expectation (CPOE), possession-normalized credit (aEC summing to one per goal), and receiver/thrower splits, audited by meta-analytics (discrimination, stability, Gaussian-copula independence) and explained via SHAP.",
+  "gsi_mapping": "GSI treats CP~Bernoulli(pi(thrower/receiver/throw/game)) and FV~Bernoulli(pi(thrower/game)) as XGBoost ensembles; 5-fold CV + 3 holdouts (50 throwers 200+/latest 10 games/random 20%), beat Weiss-Childers baselines on AUC/acc/PPV/NPV; xCP=CP pred, CPOE=C-xCP (NFL QB comparable, nflWAR); EC=FV_e-FV_s (C=1)/-FV_o (C=0); aEC=(FV_e-FV_s)/(1-FV_p) goal possession sums to 1; ETV=xCP*FV_e-(1-xCP)*FV_o in [-1,1]; R/T/Tot EC+aEC splits; data 327,179 throws/604 games/2021-2024; meta-analytics discrimination/stability/copula independence (ETV=volume, aEC>EC, CPOE/xCP isolate execution/selection); SHAP midfield->sideline vertical stack / sideline->reset / fatigue decay / central advantage; top-5 EC=Jagt 2021 MVP+4 All-UFA, MVP #1 EC 2021/22; cutters vs handlers; xCP decision / CPOE execution; limits thrower/receiver credit, league differences, location bias.",
+  "gse_mapping": "GSE lifts the CP/FV probability-model pair, the ETV expected-value kernel, CPOE (identical to its NFL QB metric), the possession-normalized aEC sum-to-one credit kernel, the receiver/thrower attribution split, and the meta-analytics + SHAP validation/explanation layer as its sport-agnostic player-value and decision framework; records the shared-credit ambiguity, the ETV volume confound, and league/location biases as vetoes; all outputs are values and decision surfaces from public tracking, never sportsbook lines."
+}

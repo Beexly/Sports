@@ -1,0 +1,327 @@
+{
+  "book_id": "5e3d2c14003c9e74",
+  "title": "2025 NFL Record and Fact Book",
+  "source_status": "COMPLETE",
+  "pages_total": 842,
+  "pages_read": 842,
+  "worker": "ext-23",
+  "tier": "A",
+  "source_file": "2025-NFL-Record-and-Fact-Book.pdf",
+  "extraction_method": "PyMuPDF page.get_text() over all 842 pages; whitespace-normalized; quotes are contiguous verbatim anchor spans verified against the normalized source; scoring weights cross-checked against official box-score arithmetic.",
+  "retraction_check": "Full normalized-text scan for retract/withdrawn/erratum/corrigendum: the only 'withdrawn' hit is the historical note 'Free substitution was withdrawn' (1946/1950 rule history, PDF p. 368), not a retraction of the work. Source is clean.",
+  "primitives": [
+    {
+      "primitive_id": "nfl2025-field-geometry",
+      "name": "NFL field geometry and the goal-line plane scoring condition",
+      "type": "CONSTRAINT",
+      "verbatim_quote": "A player with the ball in his possession scores when the ball breaks the plane of the opponent’s goal line. 2. The field is rimmed by a white border, six feet wide, along the sidelines. All of this area is out of bounds. 3. The hash marks (inbound lines) are 70 feet, nine inches from each sideline. 4. Goal posts must be single-standard type, offset from the end line and paintedbright gold in color. The goal posts must be 18 feet, six inches wide and the top face of the crossbar must be 10 feet above the ground. Vertical posts extend at least 30 feet above the crossbar. A ribbon 4” by 42” long is to be attached to the top of each post. The actual goal is the plane extending indefinitely above the crossbar and between the outer edges of the posts. 5. The field is 360 feet long and 160 feet wide. The end zones are 30 feet deep. The line used in try attempts is 2 yards out from the goal line.",
+      "page": "PDF p. 783 (Digest of Rules, FIELD, items 1-5)",
+      "latex": "L=360\\,\\mathrm{ft},\\quad W=160\\,\\mathrm{ft},\\quad d_{EZ}=30\\,\\mathrm{ft},\\quad h=70.75\\,\\mathrm{ft},\\quad w_{goal}=18.5\\,\\mathrm{ft},\\quad y_{cross}=10\\,\\mathrm{ft}",
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "L",
+          "meaning": "field length (goal line to goal line = 100 yd; total incl. end zones 120 yd)",
+          "unit": "ft"
+        },
+        {
+          "symbol": "W",
+          "meaning": "field width (53 1/3 yd)",
+          "unit": "ft"
+        },
+        {
+          "symbol": "d_EZ",
+          "meaning": "end-zone depth",
+          "unit": "ft"
+        },
+        {
+          "symbol": "h",
+          "meaning": "hash-mark (inbound line) distance from each sideline (70 ft 9 in)",
+          "unit": "ft"
+        },
+        {
+          "symbol": "w_goal",
+          "meaning": "goal-post width (18 ft 6 in)",
+          "unit": "ft"
+        },
+        {
+          "symbol": "y_cross",
+          "meaning": "crossbar height above ground",
+          "unit": "ft"
+        },
+        {
+          "symbol": "W-2h",
+          "meaning": " playable width between hash marks = 18.5 ft",
+          "unit": "ft"
+        }
+      ],
+      "assumptions": [
+        "NFL regulation field; dimensions are institutional constants fixed by rule, not physical laws.",
+        "Scoring is a boundary event: the ball must break the plane of the opponent's goal line while in a player's possession, before the ball is declared dead.",
+        "All distances are exact rule definitions (feet/inches), convertible to yards at 3 ft = 1 yd."
+      ],
+      "breakdown_regime": "Definitional geometry has no internal singularity; its APPLICATION breaks down outside NFL-regulation contexts (NCAA/CFL/high-school fields differ) and at the possession/dead-ball boundary: a ball crossing the plane after the runner is down, or with simultaneous/contested possession, is not a score. The plane condition is a sharp boolean, so measurement disputes (spot of the ball, pylon contact) are the operative failure mode, not the geometry itself.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to boundary-condition specification in a spatial domain problem: the hash marks bound the admissible start-spot domain for each play, and scoring is a boundary-crossing event (goal-line plane) rather than a volume accumulation. The 18.5 ft between hashes equals the 18.5 ft goal width by arithmetic coincidence, not causation.",
+        "source_operator": "nfl2025-field-geometry",
+        "telemetry": "Every play record needs a start spot (x bounded by the hashes) and a terminal plane-break boolean; GSE event ledgers must store both, and must not assume college/CFL geometry."
+      }
+    },
+    {
+      "primitive_id": "nfl2025-scoring-weights",
+      "name": "NFL scoring weight vector (6/3/2/1/2), verified against box-score arithmetic",
+      "type": "DEFINITION",
+      "verbatim_quote": "The successful conversion counts one point by kick or safety, two points for successful conversion by touchdown.",
+      "page": "PDF p. 784 (Digest of Rules, TRY); weights cross-checked vs PDF p. 49, 55, 61 team scoring tables",
+      "latex": "P = 6\\,n_{TD} + 3\\,n_{FG} + 2\\,n_{S} + 1\\,n_{PAT1} + 2\\,n_{PAT2}",
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "P",
+          "meaning": "team points in a game",
+          "unit": "points (dimensionless count)"
+        },
+        {
+          "symbol": "n_TD",
+          "meaning": "touchdowns",
+          "unit": "count"
+        },
+        {
+          "symbol": "n_FG",
+          "meaning": "field goals",
+          "unit": "count"
+        },
+        {
+          "symbol": "n_S",
+          "meaning": "safeties",
+          "unit": "count"
+        },
+        {
+          "symbol": "n_PAT1",
+          "meaning": "successful 1-point tries (kick or safety)",
+          "unit": "count"
+        },
+        {
+          "symbol": "n_PAT2",
+          "meaning": "successful 2-point tries (run/pass from the 2-yd line)",
+          "unit": "count"
+        }
+      ],
+      "assumptions": [
+        "Touchdown = 6 and field goal = 3 are not stated as numerals in the Digest prose; they are derived from official scoring tables (Henry 18 TD = 108 Pts; Tucker 60 PAT + 22 FG = 126 Pts; Andrews 11 TD = 66; Chase 17 TD = 102; McPherson 37 PAT + 16 FG = 85) and confirmed programmatically.",
+        "Try-by-kick/safety = 1 and try-by-touchdown = 2 are stated verbatim in the TRY rule.",
+        "Safety = 2 is stated verbatim in the SAFETY rule (PDF p. 784).",
+        "Weights are the 2025 institutional values; historically they differed (see genealogy primitive)."
+      ],
+      "breakdown_regime": "The linear functional is exact for NFL scoring; it breaks down if applied to other leagues/eras with different weights, or if a 'touchdown' is awarded by palpably-unfair-act penalty without a normal score event. The 2-point try introduces a decision branch (kick vs run/pass) whose expected value depends on situational success rates, so the weight vector alone does not determine optimal try choice.",
+      "derived_check": {
+        "method": "6*TD + 1*PAT + 3*FG == official Pts, for six players across three team tables",
+        "result": "PASS (Henry 108, Andrews 66, Tucker 126, Bass 131, Chase 102, McPherson 85)"
+      },
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Scoring is a linear functional on event counts with integer, versioned weights. The kernel P = w . n is the objective function every drive/win-probability model must accumulate; the weights are parameters, not constants of nature.",
+        "source_operator": "nfl2025-scoring-weights",
+        "telemetry": "GSE drive simulators must reproduce official box scores exactly under this weighted sum; the six-player arithmetic check is the regression test. Try-choice EV requires separate success-rate inputs."
+      }
+    },
+    {
+      "primitive_id": "nfl2025-timing",
+      "name": "NFL timing architecture: 4x15-min periods, 40/25-s play clock, 3 timeouts/half",
+      "type": "CONSTRAINT",
+      "verbatim_quote": "Each period is 15 minutes. The intermission between the periods is two minutes. Halftime is 13 minutes, unless otherwise specified. 3. On charged team time outs, the Back Judge starts watch and blows whistle after 2 minutes and 20 seconds, unless television does not utilize the time for commercial. In this case the length of the time out is reduced to 30 seconds. 4. Referee may allow necessary time to attend to an injured player or repair legal player equipment. 5. Each team is allowed three time outs each half. 6. Time between plays will be 40 seconds from the end of a given play until the snap of the ball for the next play, or a 25-second interval after certain administrative stoppages and game delays.",
+      "page": "PDF p. 783 (Digest of Rules, TIMING, items 2-6)",
+      "latex": "T_{reg}=4\\times 15\\,\\mathrm{min}=60\\,\\mathrm{min},\\quad \\tau_{play}\\in\\{40\\,\\mathrm{s},\\,25\\,\\mathrm{s}\\},\\quad n_{TO}=3/\\mathrm{half}",
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "T_reg",
+          "meaning": "regulation playing time",
+          "unit": "min"
+        },
+        {
+          "symbol": "tau_play",
+          "meaning": "play-clock interval between plays (40 s normal; 25 s after administrative stoppages)",
+          "unit": "s"
+        },
+        {
+          "symbol": "n_TO",
+          "meaning": "charged team timeouts per half",
+          "unit": "count"
+        },
+        {
+          "symbol": "T_half",
+          "meaning": "halftime intermission (13 min unless specified)",
+          "unit": "min"
+        }
+      ],
+      "assumptions": [
+        "Stadium game clock is official; Side Judge takes over if it fails.",
+        "Inter-period intermission is 2 min; halftime 13 min unless otherwise specified.",
+        "Play clock resets to 25 s after charged timeout/two-minute warning/period expiration/penalty enforcement, and to 40 s after a reversed Instant Replay review (per the same TIMING section)."
+      ],
+      "breakdown_regime": "Timing is a state-dependent hybrid system, not a fixed countdown: the two-minute warning, 10-second runoffs (PDF p. 784), injury/equipment stoppages, and replay reviews each switch the clock mode. A model that treats the game clock as a simple monotone countdown breaks at every stoppage branch; the play-clock reset conditions are the operative complexity.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a hybrid automaton: the game clock is a continuous variable with discrete running/stopped modes, and the play clock is a resettable countdown guard on the snap transition. Tempo is a control input that manipulates mode dwell times.",
+        "source_operator": "nfl2025-timing",
+        "telemetry": "GSE pace/tempo and end-of-game win-probability models must simulate mode-aware clocks with the exact 40/25 reset conditions; a flat 60-min countdown is invalid."
+      }
+    },
+    {
+      "primitive_id": "nfl2025-overtime",
+      "name": "NFL modified sudden-death overtime: possession guarantee and absorbing states",
+      "type": "CONSTRAINT",
+      "verbatim_quote": "Both teams must have the opportunity to possess the ball once during the extra period, unless the team that receives the opening kickoff scores a touchdown on its initial possession, in which case it is the winner, or if the team kicking off to start the overtime period scores a safety on the receiving team’s initial possession, in which case the team that kicked off is the winner.",
+      "page": "PDF p. 784 (Digest of Rules, OVERTIME, regular-season item 3); postseason item 1 and PDF p. 314",
+      "latex": "\\text{RS: } t\\le 10\\,\\mathrm{min}\\Rightarrow \\text{tie if still tied};\\quad \\text{PS: } 15\\,\\mathrm{min}\\text{ periods until a winner}",
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "t",
+          "meaning": "regular-season overtime duration (single period max)",
+          "unit": "min"
+        },
+        {
+          "symbol": "period_PS",
+          "meaning": "postseason overtime period length (repeats until winner)",
+          "unit": "min"
+        }
+      ],
+      "assumptions": [
+        "Regular season: maximum one 10-minute period; a tie is a legal terminal outcome.",
+        "Both teams must get a possession opportunity UNLESS the opening-kickoff receiver scores a touchdown on its initial possession (immediate win) or the kicking team scores a safety on the receiver's initial possession (kicking team wins).",
+        "If the first possession ends in a field goal, the second team is guaranteed a possession; if the first possession scores nothing, the next score by any method wins.",
+        "Postseason: both teams must possess at least once (safety exception), and 15-minute periods continue until a winner is declared; no ties."
+      ],
+      "breakdown_regime": "A pure sudden-death model (first score wins) is INVALID for the modern NFL: the possession guarantee changes the absorbing-state structure. The protocol breaks down only at the explicit exceptions (opening TD, safety on first possession) and at the regular-season 10-minute cap where a tie absorbs. Postseason has no tie cap, so the state space is unbounded in periods.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a fair-division / alternating-offer protocol with absorbing states: successive rule revisions (2010, 2012, 2022 per the chronology and OT history) progressively removed the first-mover (coin-toss) advantage, converging toward ex-ante fairness while preserving termination.",
+        "source_operator": "nfl2025-overtime",
+        "telemetry": "OT win probability must condition on the opening-kickoff outcome branch; GSE must not reuse pre-2012 sudden-death assumptions, and must allow ties in regular-season but not postseason simulations."
+      }
+    },
+    {
+      "primitive_id": "nfl2025-seeding-tiebreak",
+      "name": "NFL playoff seeding bracket and 12-step lexicographic tiebreak with coin-toss terminal",
+      "type": "DEFINITION",
+      "verbatim_quote": "The No. 1 seed in each conference will receive the only bye. Using NFL tie-breaking procedures, the remaining division champions in each conference will be seeded 2, 3 and 4, followed by the next three teams per conference seeded 5, 6 and 7. Wild Card games will feature the 2 seed hosting the 7 seed, the 3 seed hosting the 6 seed and the 4 seed hosting the 5 seed.",
+      "page": "PDF p. 11 (Wild Card Weekend Site Priorities); tiebreak procedure PDF p. 37",
+      "latex": "\\text{seeds}=\\mathrm{sort}(\\text{div champs})\\oplus\\mathrm{sort}(\\text{wild cards});\\quad \\text{pairs}=(2,7),(3,6),(4,5)",
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "seed",
+          "meaning": "conference playoff seed 1-7 (1 = division champ with best record, gets sole bye)",
+          "unit": "rank"
+        },
+        {
+          "symbol": "tiebreak",
+          "meaning": "lexicographic comparison over 12 ordered criteria, terminal criterion = coin toss",
+          "unit": "ordered criteria"
+        }
+      ],
+      "assumptions": [
+        "Seven teams per conference qualify: four division champions (seeds 1-4) plus three wild cards (seeds 5-7).",
+        "Only the No. 1 seed receives a bye; Wild Card round pairs 2v7, 3v6, 4v5 with the higher seed hosting.",
+        "Two-club division tiebreak order (PDF p. 37): head-to-head, division record, common games, conference record, strength of victory, strength of schedule, combined conference ranking in points scored/allowed, combined league ranking, net points in common games, net points in all games, net touchdowns, coin toss.",
+        "Three-or-more-club ties restart at Step 1 of the appropriate format whenever clubs are eliminated."
+      ],
+      "breakdown_regime": "The tiebreak is a non-compensatory lexicographic order: a lower criterion can NEVER outweigh a higher one (head-to-head beats strength-of-schedule absolutely). It breaks down as a 'power ranking' model because division winners are guaranteed top-4 seeds regardless of overall record, so a weaker division champ can be seeded above a stronger wild card. The terminal coin toss admits irreducible randomness.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a lexicographic total preorder with a randomized terminal key, and to single-elimination tournament seeding that rewards regular-season quality with home advantage and rest. Identical structure to priority scheduling with deterministic keys and random fallback.",
+        "source_operator": "nfl2025-seeding-tiebreak",
+        "telemetry": "GSE playoff simulators must implement the exact 12-step order and the restart rule, must not collapse criteria into a composite score, and must treat the coin-toss terminal as a genuine random branch."
+      }
+    },
+    {
+      "primitive_id": "nfl2025-scoring-genealogy",
+      "name": "Genealogy of NFL scoring weights: TD 4->5->6, FG 5->4->3 (1898-1912)",
+      "type": "HISTORICAL_CONSTRAINT",
+      "verbatim_quote": "A field goal dropped from four points to three. 1912 u A touchdown was increased from five points to six.",
+      "page": "PDF p. 364 (Chronology of Professional Football, entries 1898/1904/1909/1912)",
+      "latex": "w_{TD}(t):4\\ (\\le1897)\\to5\\ (1898\\text{-}1911)\\to6\\ (1912\\text{-});\\quad w_{FG}(t):5\\to4\\ (1904)\\to3\\ (1909)",
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "w_TD(t)",
+          "meaning": "touchdown point value as a function of season year",
+          "unit": "points"
+        },
+        {
+          "symbol": "w_FG(t)",
+          "meaning": "field-goal point value as a function of season year",
+          "unit": "points"
+        }
+      ],
+      "assumptions": [
+        "1898: 'A touchdown was changed from four points to five.' (PDF p. 364)",
+        "1904: 'A field goal was changed from five points to four.' (PDF p. 364)",
+        "1909: 'A field goal dropped from four points to three.' (PDF p. 364)",
+        "1912: 'A touchdown was increased from five points to six.' (PDF p. 364)",
+        "These are dated institutional revisions, recorded in the league's own chronology."
+      ],
+      "breakdown_regime": "The modern weight vector (6/3/2/1/2) is INVALID for any pre-1912 touchdown or pre-1909 field goal. Historical backtests that score old box scores with modern weights produce systematically wrong totals; the breakdown is temporal, not spatial. The genealogy itself has no singularity but bounds the validity domain of the scoring-weights primitive.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The objective function's weights are versioned parameters tuned by a mechanism designer over a century, not natural constants. Any historical calibration must carry an era-indexed weight vector w(t).",
+        "source_operator": "nfl2025-scoring-genealogy",
+        "telemetry": "GSE historical modules must version the scoring vector by season; pre-1912 data cannot be scored with w_TD=6. This is the retrocausal anchor for the whole scoring kernel."
+      }
+    },
+    {
+      "primitive_id": "nfl2025-hof-selection",
+      "name": "Pro Football Hall of Fame selection: 50-member committee, 80% supermajority, 4-8 annual quota",
+      "type": "GOVERNANCE_CONSTRAINT",
+      "verbatim_quote": "A 50-person Selection Committee composed of media representatives and Hall of Famers, elects new members to the Pro Football Hall of Fame. The nearly year-round selection process culminates with the election of no fewer than four or no more than eight new members each year. An affirmative vote of 80 percent is needed for election.",
+      "page": "PDF p. 347 (Pro Football Hall of Fame, selection process)",
+      "latex": "4\\le |\\mathcal{I}_{year}|\\le 8,\\quad \\theta=0.80,\\quad |C|=50",
+      "symbol_and_unit_ledger": [
+        {
+          "symbol": "|C|",
+          "meaning": "size of the Selection Committee (media representatives + Hall of Famers)",
+          "unit": "persons"
+        },
+        {
+          "symbol": "theta",
+          "meaning": "affirmative-vote threshold for election (80 percent)",
+          "unit": "fraction"
+        },
+        {
+          "symbol": "|I_year|",
+          "meaning": "number of new members elected per year (quota 4 to 8)",
+          "unit": "persons"
+        }
+      ],
+      "assumptions": [
+        "A 50-person Selection Committee elects new members.",
+        "An affirmative vote of 80 percent is needed for election (supermajority, not simple majority).",
+        "Each year elects no fewer than four and no more than eight new members.",
+        "Charter class of 17 enshrinees elected in 1963; honor roll 382 as of May 20, 2025 (context, not part of the rule)."
+      ],
+      "breakdown_regime": "The rule is a social-choice aggregation gate, not a physical law; it breaks down as a model if treated as simple majority (50%+1) or as an unbounded class. The quota couples individual elections: a candidate above 80% can still be excluded by the 8-member cap, and the 4-member floor forces a minimum class even in a weak year. Threshold and quota are negotiable institutional parameters.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to supermajority voting with a quota constraint — the same mathematics as consensus thresholds in distributed systems (e.g., Byzantine agreement requires >2/3; the HOF uses 4/5) and to prestige-economy gatekeeping that keeps an honor scarce while guaranteeing a minimum intake.",
+        "source_operator": "nfl2025-hof-selection",
+        "telemetry": "GSI governance models can use this as a documented real-world supermajority+quota instance; do not model HOF election as simple majority or as independent per-candidate Bernoulli trials (the quota couples them)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1-mechanism",
+      "think": "The 2025 NFL Record and Fact Book is not a physics text; it is the codified specification of a designed mechanism, and reading it as such changes what counts as a sovereign primitive. The load-bearing object is the scoring weight vector P = 6*n_TD + 3*n_FG + 2*n_S + 1*n_PAT1 + 2*n_PAT2. The Digest states the try values (one point by kick or safety, two by touchdown) and the safety value (two) in prose, but it never prints 'touchdown = six' as a numeral. I therefore derived the touchdown and field-goal weights from the league's own scoring tables and verified them programmatically: Derrick Henry's 18 touchdowns yield 108 points (18*6), Mark Andrews' 11 yield 66, Justin Tucker's 60 PATs plus 22 field goals yield 126 (60 + 22*3), and the same arithmetic reproduces Bass (131), Chase (102) and McPherson (85) across three different team pages. Six independent box-score identities confirm the weight vector, so the kernel is grounded in the source's own data rather than in my memory of football. The geometry primitive fixes the spatial domain: a 360-by-160-foot field, 30-foot end zones, hash marks 70 feet 9 inches from each sideline, and a scoring condition that is a boundary event — the ball must break the plane of the opponent's goal line while possessed. The 18.5 feet between the hashes happens to equal the 18.5-foot goal width; that is arithmetic coincidence, not causation, and I record it as such to avoid a fabricated relationship. The timing primitive is a hybrid automaton, not a countdown: four 15-minute periods, a play clock that is 40 seconds normally and 25 after administrative stoppages, three timeouts per half, and mode switches at the two-minute warning, runoffs and replay. The overtime primitive is the clearest example of mechanism design in motion: a modified sudden death with a possession guarantee, a 10-minute regular-season cap that admits ties, and unbounded 15-minute postseason periods. The first-mover advantage of a pure coin-toss sudden death was deliberately eroded by successive revisions. The penalty schedule on the same Digest pages reinforces the mechanism reading: fouls are priced in discrete yardage tiers — five, ten and fifteen yards — with loss-of-down and automatic-first-down modifiers, and a palpably-unfair-act can even award a touchdown. That is a sanction tariff, a designed incentive structure rather than a natural law, and it belongs in the same versioned-parameter family as the scoring weights. What unifies these primitives is that every constant is a dated institutional fact with a validity domain. The geometry is definitional and has no physical singularity, but its application is bounded to NFL-regulation play; the scoring weights are exact today but were different before 1912; the timing and overtime rules are state-dependent protocols whose branches a naive model will miss. Treating the rulebook as a versioned mechanism — objective function, resource automaton, fair-division protocol — is what lets the GSE engine build on auditable constants instead of assumed ones, and it is why the genealogy primitive is not decoration but the validity boundary of the entire scoring kernel.",
+      "retrocausal_genealogy": "The six-point touchdown is a 1912 design decision, not a constant of nature: the league's own chronology records that a touchdown was changed from four points to five in 1898 and increased from five to six in 1912, while a field goal fell from five to four in 1904 and from four to three in 1909. The forward pass was legalized in 1906, hash marks and goal-line posts were adopted from the 1932 indoor championship and the pass was opened to anywhere behind the line in 1933, the hashes moved to their current 70-feet-9-inches position in 1972, goal posts moved to the end line in 1974, and the two-point conversion arrived in 1994. Each revision retroactively redefined what optimal strategy meant, so any historical model must carry era-correct weights and geometry rather than projecting the modern rulebook backward.",
+      "theory_of_mind": "The Competition Committee behaves as a mechanism designer balancing offense, defense, spectacle and competitive equity. The 1974 changes were adopted explicitly 'to add action and tempo'; the 1978 rule limiting defender contact to five yards opened the passing game; and the overtime revisions progressively removed the coin-toss first-mover advantage after complaints that chance decided games. Coaches, in turn, exploit the gap between letter and spirit: intentional grounding in one's own end zone is a deliberate safety trade, and a 10-second runoff can be declined strategically. Modeling the league requires representing both the designer's intent and the agents' strategic response to the written rule, not just the rule text.",
+      "cross_layer_veto": "I veto importing the modern 6/3/2 weight vector into any pre-1912 box score, because the chronology proves the weights differed. I veto sudden-death (first-score-wins) overtime win-probability models for the post-2012 NFL, because the possession guarantee changes the absorbing-state structure. I veto transferring NFL field geometry to NCAA, CFL or high-school contexts, which use different dimensions and rules. And I veto treating the terminal coin-toss tiebreak as deterministic. The geometry primitive has no physical breakdown, but its application is bounded to NFL-regulation play; crossing any of these boundaries invalidates the kernel."
+    },
+    {
+      "trace_id": "t2-social-choice",
+      "think": "The second family of primitives is social-choice and tournament-design mathematics wearing a football uniform. The playoff seeding rule guarantees four division champions the top four seeds regardless of overall record, gives only the No. 1 seed a bye, and pairs 2v7, 3v6, 4v5 in the Wild Card round with the higher seed hosting. This is a tournament mechanism that rewards regular-season quality with rest and home advantage, but it is not a pure power ranking: a weak division champion can be seeded above a stronger wild card, which is a structural feature, not a bug. The tiebreak that feeds seeding is a 12-step lexicographic order — head-to-head, division record, common games, conference record, strength of victory, strength of schedule, combined rankings in points scored and allowed, net points, net touchdowns, and finally a coin toss. The crucial mathematical property is that it is non-compensatory: no lower criterion can outweigh a higher one, so collapsing it into a single composite score destroy information that the rule deliberately preserves. The terminal coin toss is an admission of irreducible randomness after eleven deterministic criteria fail to separate the clubs. The Hall of Fame selection rule is the governance analogue: a 50-person committee, an 80-percent affirmative supermajority, and an annual quota of four to eight inductees. The supermajority forces broad consensus rather than a bare majority, and the quota couples individual elections — a candidate above 80 percent can still be excluded by the eight-member cap, and the four-member floor guarantees a minimum class. Concretely, 80 percent of a 50-member committee is 40 affirmative votes, so a bloc of just eleven voters can block any candidate, and the four-to-eight quota then turns individual thresholds into a coupled selection problem rather than a set of independent elections. Together these are reusable kernels: a lexicographic total preorder with randomized terminal key, a seeded single-elimination bracket, and a supermajority-plus-quota aggregation gate. They are the same mathematics as priority scheduling, fair division and distributed consensus, instantiated in a real, documented institution. For the Foundry's purpose the value is that each kernel is cited to a PDF page and expressed with an explicit symbol-and-unit ledger and a breakdown regime, so a downstream model can reuse the structure without inheriting football-specific assumptions it cannot see.",
+      "retrocausal_genealogy": "The tiebreak and seeding machinery grew with the league: divisions and an annual championship game arrived in 1933, sudden-death playoff overtime in 1941, the wild card in the merger era and a second wild card in 1978, and the seven-team field later. The terminal coin toss descends from the same 'let chance decide only as a last resort' logic that produced sudden-death overtime and the famous 1958 championship. The Hall of Fame's 80-percent threshold and four-to-eight quota were designed to keep the honor scarce while guaranteeing a minimum class; the 1963 charter class of 17 set the precedent. These are dated design choices, not timeless truths.",
+      "theory_of_mind": "The league wants standings to feel earned, so it stacks eleven deterministic criteria before admitting chance, yet it must terminate, so the coin toss sits at the bottom. Hall of Fame voters guard prestige: the 80-percent bar forces broad consensus and resists factional capture, while the quota prevents logrolling an entire slate in or starving a year entirely. Reading these intents tells a modeler which quantities are stable (the criteria order, the supermajority logic) and which are negotiable parameters (the quota bounds, the threshold), and it explains why the rules look the way they do rather than treating them as arbitrary.",
+      "cross_layer_veto": "I veto collapsing the lexicographic tiebreak into a single composite score, because the order is non-compensatory and head-to-head cannot be outweighed by strength of schedule. I veto modeling Hall of Fame election as a simple majority or as independent per-candidate trials, because the 80-percent supermajority and the four-to-eight quota couple the outcomes. I veto treating seeding as a pure power ranking, because division champions are guaranteed top-four seeds regardless of record. Each of these would import a compensatory or independent structure that the actual rule explicitly forbids."
+    }
+  ],
+  "universal_lens": "The NFL rulebook is a compact instance of designed mechanism: a versioned objective function (scoring weights), a hybrid-automaton resource (game and play clocks), a fair-division protocol (possession-guaranteed overtime), a lexicographic social-choice rule (standings tiebreaks), and a supermajority governance gate (Hall of Fame). Each is a reusable kernel for any system that must allocate scarce rewards under explicit, revisable rules.",
+  "gsi_mapping": "For GSI's institutional-analysis layer these primitives supply verified, dated governance constants: a supermajority threshold with quota bounds, a lexicographic ranking with a randomized terminal tiebreak, and the genealogy of how rule parameters get revised. They ground models of committee decision-making, prestige economies and mechanism revision in a real, documented institution rather than in toy assumptions.",
+  "gse_mapping": "For GSE's football engine the scoring vector (6/3/2/1/2), field geometry, 40/25 play-clock modes, possession-guaranteed overtime and the exact 12-step tiebreak are the load-bearing constants for drive simulation, win probability and playoff seeding. Every constant is cited to a PDF page and verified against official box-score arithmetic, so the engine's foundation is auditable rather than assumed."
+}

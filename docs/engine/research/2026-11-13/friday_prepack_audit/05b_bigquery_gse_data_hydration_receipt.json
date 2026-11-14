@@ -1,26 +1,27 @@
 {
   "schema": "gse.bigquery_gse_data_hydration_receipt.v1",
-  "generated_at_utc": "2026-11-14T17:23:20.103965+00:00",
+  "generated_at_utc": "2026-11-14T18:28:47.511180+00:00",
   "project_id": "galaxysportsedge",
   "dataset_id": "gse_data",
   "verify_only": false,
   "staging_expected_counts": {
-    "sovereign_primitives": 18162,
-    "sovereign_reasoning_traces": 3929,
+    "sovereign_primitives": 21252,
+    "sovereign_reasoning_traces": 4743,
     "gcp_shard_b_extractions": 8593,
     "router_and_situational_wiring": 200,
     "week10_entity_and_venue_truth": 518
   },
   "bq_verified_counts": {
-    "sovereign_primitives": 18162,
-    "sovereign_reasoning_traces": 3929,
+    "sovereign_primitives": 21252,
+    "sovereign_reasoning_traces": 4743,
     "gcp_shard_b_extractions": 8593,
     "router_and_situational_wiring": 200,
     "week10_entity_and_venue_truth": 518
   },
-  "total_verified_rows": 31402,
+  "total_verified_rows": 35306,
   "bq_ls_table_ids": [
     "gcp_shard_b_extractions",
+    "morning_analytics_tables_2026_11_14",
     "motif_social_analytics_sweeps",
     "router_and_situational_wiring",
     "sovereign_primitives",

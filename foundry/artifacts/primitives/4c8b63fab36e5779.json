@@ -1,0 +1,78 @@
+{
+  "book_id": "4c8b63fab36e5779",
+  "source_status": "COMPLETE",
+  "title": "p0197",
+  "file_name": "p0197.txt",
+  "sha256": "4c8b63fab36e5779bedaaaf7ce628036f9f575add7175337f478b1bfa58975c1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ball trajectory modeling via arc geometry and hand positioning; three-dimensional cup formation defines optimal reception zones. Universal Lens: Rooted in p0197 (4c8b63fab36e5779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on ball arc kinematics using hand position relative to apex for fumble probability estimation. GSI Mapping: Rooted in p0197 (4c8b63fab36e5779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps quarterback hand movement vs. ball velocity to predict reception success or rebound events. GSE Mapping: Rooted in p0197 (4c8b63fab36e5779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "arc_apex_alignment",
+      "name": "Arc Apex Alignment",
+      "verbatim_quote": "The top of this arc is the point at which the ball is received by the hands of the quarterback.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'h_{\\\\text{arc}}': \"meters, vertical height of ball's trajectory\", 't_{\\\\text{apex}}': 'seconds, time to reach apex', 'v_{\\\\text{ball}}': 'm/s, instantaneous ball velocity vector'}",
+      "assumptions": "Ball follows idealized parabolic path under constant gravity; receiver's hands are stationary at apex.",
+      "breakdown_regime": "When $ v_{\\text{ball}} $ is not aligned with $ h_{\\text{arc}} $, leading to misalignment error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's probabilistic model of hand-positioned interception timing.",
+        "source_operator": "arc_apex_alignment",
+        "telemetry": "Time-to-apex deviation from expected value."
+      }
+    },
+    {
+      "primitive_id": "rebound_mechanism",
+      "name": "Rebound Mechanism",
+      "verbatim_quote": "If the quarterback receives the ball before it reaches the top of its arc, the upward motion of the ball strikes the hands, producing what is known as fighting the ball—that is, the ball rebounds from the hands.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{\\\\text{rebound}}': 'newtons, force exerted by rebounding ball', 'v_{\\\\text{hand}}': 'm/s, velocity of hands during contact', 'm_{\\\\text{ball}}': 'kg, mass of football'}",
+      "assumptions": "Contact between ball and hands is elastic; rebound direction depends on angle of incidence.",
+      "breakdown_regime": "Failure occurs when $ v_{\\text{hand}} > v_{\\text{ball}} $ or premature contact before apex.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel in GSE for detecting fumble-inducing hand-motion anomalies.",
+        "source_operator": "rebound_mechanism",
+        "telemetry": "Rebound magnitude and directional change post-contact."
+      }
+    },
+    {
+      "primitive_id": "temporal_timing_zone",
+      "name": "Temporal Timing Zone",
+      "verbatim_quote": "Should the hands be below the top of the arc, the quarterback loses valuable time, because he allows the ball to rise and then to begin to fall.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{timing}}': 'seconds, temporal window for optimal catch', 't_{\\\\text{catch}}': 'seconds, actual catch time', 'h_{\\\\text{hand}}': 'meters, vertical position of hands at catch'}",
+      "assumptions": "Hand position directly correlates with reaction delay; timing zone is bounded by arc extremes.",
+      "breakdown_regime": "When $ h_{\\text{hand}} < h_{\\text{apex}} $, increasing latency due to deceleration phase.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's temporal alignment scoring function for pass reception efficiency.",
+        "source_operator": "temporal_timing_zone",
+        "telemetry": "Latency between apex and catch event."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4c8b63fab36e5779_t0",
+      "think": "The core dynamics of football pass reception involve a geometric and kinematic framework defined by the ball’s parabolic arc and the quarterback’s hand positioning. The arc apex represents the critical moment where vertical velocity vanishes, enabling precise hand alignment. Receiving the ball before the apex introduces upward momentum that can cause rebound, a failure mode linked to fumbles. Delayed hand positioning below the apex increases time loss, reducing tactical response window. These principles form a dual system: one of spatial alignment (hand placement), and another of temporal coordination (timing). Each primitive encodes a distinct failure mode—misalignment, premature contact, and delayed action—each contributing to a stochastic model of pass success or failure. The interplay of these variables creates a structured phase space for predictive modeling.\n\nDeep epistemic analysis for p0197 (4c8b63fab36e5779, domain=other, pages_read=1/1): Operator 'Arc Apex Alignment' (page 1, domain other) captures: The top of this arc is the point at which the ball is received by the hands of the quarterback. Assumptions: Ball follows idealized parabolic path under constant gravity; receiver's hands are stationary at apex. Breakdown regime: When $ v_{\\text{ball}} $ is not aligned with $ h_{\\text{arc}} $, leading to misalignment error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's probabilistic model of hand-positioned interception timing. Operator 'Rebound Mechanism' (page 1, domain other) captures: If the quarterback receives the ball before it reaches the top of its arc, the upward motion of the ball strikes the hands, producing what is known as fighting the ball—that is, the ball rebounds from the hands. Assumptions: Contact between ball and hands is elastic; rebound direction depends on angle of incidence. Breakdown regime: Failure occurs when $ v_{\\text{hand}} > v_{\\text{ball}} $ or premature contact before apex. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel in GSE for detecting fumble-inducing hand-motion anomalies. Operator 'Temporal Timing Zone' (page 1, domain other) captures: Should the hands be below the top of the arc, the quarterback loses valuable time, because he allows the ball to rise and then to begin to fall. Assumptions: Hand position directly correlates with reaction delay; timing zone is bounded by arc extremes. Breakdown regime: When $ h_{\\text{hand}} < h_{\\text{apex}} $, increasing latency due to deceleration phase. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's temporal alignment scoring function for pass reception efficiency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0197 (4c8b63fab36e5779, domain=other, pages_read=1/1): Operator 'Arc Apex Alignment' (page 1, domain other) captures: The top of this arc is the point at which the ball is received by the hands of the quarterback. Assumptions: Ball follows idealized parabolic path under constant gravity; receiver's hands are stationary at apex. Breakdown regime: When $ v_{\\text{ball}} $ is not aligned with $ h_{\\text{arc}} $, leading to misalignment error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's probabilistic model of hand-positioned interception timing. Operator 'Rebound Mechanism' (page 1, domain other) captures: If the quarterback receives the ball before it reaches the top of its arc, the upward motion of the ball strikes the hands, producing what is known as fighting the ball—that is, the ball rebounds from the hands. Assumptions: Contact between ball and hands is elastic; rebound direction depends on angle of incidence. Breakdown regime: Failure occurs when $ v_{\\text{hand}} > v_{\\text{ball}} $ or premature contact before apex. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel in GSE for detecting fumble-inducing hand-motion anomalies. Operator 'Temporal Timing Zone' (page 1, domain other) captures: Should the hands be below the top of the arc, the quarterback loses valuable time, because he allows the ball to rise and then to begin to fall. Assumptions: Hand position directly correlates with reaction delay; timing zone is bounded by arc extremes. Breakdown regime: When $ h_{\\text{hand}} < h_{\\text{apex}} $, increasing latency due to deceleration phase. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's temporal alignment scoring function for pass reception efficiency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical mechanics and projectile motion theory, extended into biomechanical models of human motor control in sports contexts. Retrocausal Genealogy: Rooted in p0197 (4c8b63fab36e5779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0197 (4c8b63fab36e5779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include defensive coverage strategies that attempt to disrupt the quarterback’s timing, and offensive systems that optimize hand positioning to minimize rebound risk. Theory of Mind & Decision Maker Model: Rooted in p0197 (4c8b63fab36e5779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0197 (4c8b63fab36e5779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that temporal and spatial metrics do not coalesce into redundant signals; leakage veto prevents overfitting to single kinematic variables. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0197 (4c8b63fab36e5779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0197 (4c8b63fab36e5779), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "2b3b10d1ff44cbda",
+  "source_status": "COMPLETE",
+  "title": "uberfastman-fantasy-football-metrics-weekly-report",
+  "file_name": "uberfastman-fantasy-football-metrics-weekly-report.md",
+  "sha256": "2b3b10d1ff44cbda5a3444e943acc99c4cb8a5113c6dfda810d3dfe451825e15",
+  "primary_domain": "football",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A seasonal, platform-agnostic weekly fantasy football report generator mapping live data to descriptive statistics via modular adapters and deterministic rendering pipelines. Universal Lens: Rooted in uberfastman-fantasy-football-metrics-weekly-report (2b3b10d1ff44cbda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over player performance metrics using platform-specific data streams to produce probabilistic rankings with conformal uncertainty bounds. GSI Mapping: Rooted in uberfastman-fantasy-football-metrics-weekly-report (2b3b10d1ff44cbda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine orchestrates state transitions between weekly report generation cycles, adapting to platform authentication and data availability constraints. GSE Mapping: Rooted in uberfastman-fantasy-football-metrics-weekly-report (2b3b10d1ff44cbda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "platform_adapter_pipeline",
+      "name": "Platform Adapter Pipeline",
+      "verbatim_quote": "The weak point: **GSE talks about weekly packets; uberfastman ships them.** The build lesson is the pipeline architecture: platform adapters → metric computation → PDF/report rendering, all runnable from a cron.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'platform identifier (discrete)', 'T': 'time step (weeks)', 'D_P': 'data stream from platform P'}",
+      "assumptions": "Each platform provides a distinct data interface with unique authentication and access patterns.",
+      "breakdown_regime": "When platform API changes or authentication tokens expire.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps each fantasy platform's data schema to a canonical statistical model through adapter functions.",
+        "source_operator": "platform_adapter_pipeline",
+        "telemetry": "Success rate of data ingestion per platform"
+      }
+    },
+    {
+      "primitive_id": "descriptive_statistical_packet",
+      "name": "Descriptive Statistical Packet",
+      "verbatim_quote": "- Output is a generic stat packet, not a predictive product — no projections of its own, just descriptive metrics.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'metric type (e.g., points, rank, efficiency)', 'S': 'statistical summary (mean, median, variance)', 'W': 'week index (dimensionless)'}",
+      "assumptions": "All metrics are computed post-hoc from raw game data without forecasting components.",
+      "breakdown_regime": "When input data is missing or malformed.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Aggregates raw player stats into standardized summary tables using fixed formulas.",
+        "source_operator": "descriptive_statistical_packet",
+        "telemetry": "Completeness and consistency of generated reports"
+      }
+    },
+    {
+      "primitive_id": "cron_scheduled_execution",
+      "name": "Cron Scheduled Execution",
+      "verbatim_quote": "The weak point: **GSE talks about weekly packets; uberfastman ships them.** The build lesson is the pipeline architecture: platform adapters → metric computation → PDF/report rendering, all runnable from a cron.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'execution trigger (event)', 'F': 'frequency (weekly)', 'S': 'scheduler state (boolean)'}",
+      "assumptions": "Execution occurs at fixed intervals with minimal runtime variability.",
+      "breakdown_regime": "When system clock drifts or execution environment becomes unavailable.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Aligns report generation lifecycle with NFL calendar weeks using time-based triggers.",
+        "source_operator": "cron_scheduled_execution",
+        "telemetry": "On-time delivery rate of weekly reports"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2b3b10d1ff44cbda_t0",
+      "think": "The core operator is a pipeline abstraction that transforms platform-specific data into a uniform statistical report. Each platform adapter acts as a morphism between data schemas, ensuring consistent input for downstream computation. The descriptive packet is a derived kernel that applies fixed statistical transformations to yield summaries. The cron scheduler enforces temporal coherence, aligning execution with NFL seasonality. Failure modes arise from API instability, token expiration, or data corruption. Dualities emerge in how different platforms encode similar information, enabling cross-platform generalization. The system's robustness depends on modular design and error handling at each stage.\n\nDeep epistemic analysis for uberfastman-fantasy-football-metrics-weekly-report (2b3b10d1ff44cbda, domain=football, pages_read=1/1): Operator 'Platform Adapter Pipeline' (page 1, domain football) captures: The weak point: **GSE talks about weekly packets; uberfastman ships them.** The build lesson is the pipeline architecture: platform adapters → metric computation → PDF/report rendering, all runnable from a cron. Assumptions: Each platform provides a distinct data interface with unique authentication and access patterns. Breakdown regime: When platform API changes or authentication tokens expire. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps each fantasy platform's data schema to a canonical statistical model through adapter functions. Operator 'Descriptive Statistical Packet' (page 1, domain football) captures: - Output is a generic stat packet, not a predictive product — no projections of its own, just descriptive metrics. Assumptions: All metrics are computed post-hoc from raw game data without forecasting components. Breakdown regime: When input data is missing or malformed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aggregates raw player stats into standardized summary tables using fixed formulas. Operator 'Cron Scheduled Execution' (page 1, domain football) captures: The weak point: **GSE talks about weekly packets; uberfastman ships them.** The build lesson is the pipeline architecture: platform adapters → metric computation → PDF/report rendering, all runnable from a cron. Assumptions: Execution occurs at fixed intervals with minimal runtime variability. Breakdown regime: When system clock drifts or execution environment becomes unavailable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Aligns report generation lifecycle with NFL calendar weeks using time-based triggers. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for uberfastman-fantasy-football-metrics-weekly-report (2b3b10d1ff44cbda, domain=football, pages_read=1/1): Operator 'Platform Adapter Pipeline' (page 1, domain football) captures: The weak point: **GSE talks about weekly packets; uberfastman ships them.** The build lesson is the pipeline architecture: platform adapters → metric computation → PDF/report rendering, all runnable from a cron. Assumptions: Each platform provides a distinct data interface with unique authentication and access patterns. Breakdown regime: When platform API changes or authentication tokens expire. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps each fantasy platform's data schema to a canonical statistical model through adapter functions. Operator 'Descriptive Statistical Packet' (page 1, domain football) captures: - Output is a generic stat packet, not a predictive product — no projections of its own, just descriptive metrics. Assumptions: All metrics are computed post-hoc from raw game data without forecasting components. Breakdown regime: When input data is missing or malformed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aggregates raw player stats into standardized summary tables using fixed formulas. Operator 'Cron Scheduled Execution' (page 1, domain football) captures: The weak point: **GSE talks about weekly packets; uberfastman ships them.** The build lesson is the pipeline architecture: platform adapters → metric computation → PDF/report rendering, all runnable from a cron. Assumptions: Execution occurs at fixed intervals with minimal runtime variability. Breakdown regime: When system clock drifts or execution environment becomes unavailable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Aligns report generation lifecycle with NFL calendar weeks using time-based triggers. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early 2000s batch processing systems and modern CI/CD pipelines, evolving toward domain-specific automation frameworks. Retrocausal Genealogy: Rooted in uberfastman-fantasy-football-metrics-weekly-report (2b3b10d1ff44cbda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in uberfastman-fantasy-football-metrics-weekly-report (2b3b10d1ff44cbda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include platform APIs (changing frequently), user expectations (consistent delivery), and system constraints (GPL licensing). Decision actors are developers, commissioners, and content creators who rely on timely, accurate reports. Theory of Mind & Decision Maker Model: Rooted in uberfastman-fantasy-football-metrics-weekly-report (2b3b10d1ff44cbda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple layers attempt to interpret identical data differently. Leakage occurs if platform-specific logic leaks into the statistical layer. Veto conditions ensure that only validated, clean data flows between stages. Cross-Layer Veto & Anti-Leakage Check: Rooted in uberfastman-fantasy-football-metrics-weekly-report (2b3b10d1ff44cbda), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

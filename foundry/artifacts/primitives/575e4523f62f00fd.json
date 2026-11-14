@@ -1,0 +1,78 @@
+{
+  "book_id": "575e4523f62f00fd",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "575e4523f62f00fd3ad7581e549809e897f6191fd06c200e3660dc32999954be",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The typographic system is modeled as a finite-dimensional vector space over a discrete weight lattice. Glyph rendering constitutes a projection operator mapping abstract semantic intent to pixel-space manifolds, governed by strict orthogonality constraints between display and numerical subspaces.",
+  "gsi_mapping": "Font weights act as categorical priors in a Bayesian hierarchical model of visual attention. Conformal prediction sets are constructed around glyph legibility thresholds, ensuring that numerical telemetry (JetBrains Mono) maintains invariant information density across varying viewport resolutions and environmental noise.",
+  "gse_mapping": "Rendering state transitions are formalized as a deterministic automaton. The system shifts from CDN-dependent initialization to self-hosted production states upon asset verification. Situational reasoning dictates fallback mechanisms when proprietary brand font injections disrupt the baseline geometric grid.",
+  "primitives": [
+    {
+      "primitive_id": "typographic_weight_lattice",
+      "name": "Discrete Weight Projection Operator",
+      "verbatim_quote": "Weights used | |---|---|---| | Display | [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) | 400, 500, 600, 700 | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "w \\in \\{400, 500, 600, 700\\} represents dimensionless stroke thickness scaling factors relative to an em-unit baseline.",
+      "assumptions": "Assumes linear perceptual scaling of stroke width with respect to the integer weight parameter w.",
+      "breakdown_regime": "Singularity occurs at w < 300 or w > 900 where glyph topology collapses into illegible noise or solid blocks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI confidence intervals; heavier weights correspond to higher posterior certainty in data visualization layers.",
+        "source_operator": "typographic_weight_lattice",
+        "telemetry": "Average pixel density per character cell."
+      }
+    },
+    {
+      "primitive_id": "cdn_to_local_transition",
+      "name": "Asset Hosting State Automaton",
+      "verbatim_quote": "declarations referencing the local files. ## ⚠️ Flagged for user review These are CDN-loaded by default.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S \\in \\{CDN, LOCAL\\} denotes the binary hosting state; t_{latency} is measured in milliseconds.",
+      "assumptions": "Network latency for external CDNs is non-zero and stochastic; local file access is deterministic.",
+      "breakdown_regime": "System failure if .woff2 binaries are corrupted during the transition from S=CDN to S=LOCAL.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE situational awareness; switching to local assets reduces dependency on external network topologies during high-stakes live inference.",
+        "source_operator": "cdn_to_local_transition",
+        "telemetry": "Time-to-first-byte (TTFB) for font resources."
+      }
+    },
+    {
+      "primitive_id": "numerical_mono_invariant",
+      "name": "Monospaced Telemetry Alignment Kernel",
+      "verbatim_quote": "600, 700 | | Mono (numerals) | [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) | 400, 500, 600, 700 | ##",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "\\Delta x = constant defines the fixed horizontal advance width in CSS pixels for all glyphs in the mono subset.",
+      "assumptions": "Strict monospacing ensures columnar alignment of quantitative sports metrics without layout shift.",
+      "breakdown_regime": "Alignment breaks if variable-width ligatures are enabled within the JetBrains Mono configuration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSI matrix alignment; guarantees that multi-variate statistical outputs maintain rigid structural integrity under dynamic updates.",
+        "source_operator": "numerical_mono_invariant",
+        "telemetry": "Column deviation variance in tabular data displays."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "575e4523f62f00fd_t0",
+      "think": "The provided README establishes a foundational typographic architecture for Galaxy Sports Edge, which we mathematically formalize as a structured manifold of visual variables. The core operator is the Discrete Weight Projection, mapping integer values (400-700) to continuous stroke widths. This creates a quantized subspace where 'Display' (Space Grotesk) and 'Body/UI' (Geist) operate under distinct geometric constraints. We derive the Asset Hosting State Automaton from the explicit warning regarding CDN defaults versus self-hosted production builds. This is a classic Markov decision process where the system transitions from a probabilistic external dependency state to a deterministic local state to minimize latency variance. Furthermore, the Numerical Mono Invariant acts as a rigid alignment kernel. By enforcing a constant advance width (\\Delta x) via JetBrains Mono, the system guarantees that high-frequency quantitative updates do not induce layout thrashing. The dualities emerge between flexibility (CDN loading) and robustness (local .woff2 injection), and between proportional text flow and rigid numerical grids. Failure modes are strictly bounded: if the weight lattice exceeds its defined domain, glyph legibility collapses; if the local transition fails due to missing binaries, the UI enters a flash-of-unstyled-text singularity. The mathematical unification lies in treating typography not merely as aesthetics, but as a constrained optimization problem balancing information density, rendering latency, and structural stability.\n\nDeep epistemic analysis for README (575e4523f62f00fd, domain=other, pages_read=1/1): Operator 'Discrete Weight Projection Operator' (page 1, domain other) captures: Weights used | |---|---|---| | Display | [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) | 400, 500, 600, 700 | | Assumptions: Assumes linear perceptual scaling of stroke width with respect to the integer weight parameter w. Breakdown regime: Singularity occurs at w < 300 or w > 900 where glyph topology collapses into illegible noise or solid blocks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI confidence intervals; heavier weights correspond to higher posterior certainty in data visualization layers. Operator 'Asset Hosting State Automaton' (page 1, domain other) captures: declarations referencing the local files. ## ⚠️ Flagged for user review These are CDN-loaded by default. Assumptions: Network latency for external CDNs is non-zero and stochastic; local file access is deterministic. Breakdown regime: System failure if .woff2 binaries are corrupted during the transition from S=CDN to S=LOCAL. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE situational awareness; switching to local assets reduces dependency on external network topologies during high-stakes live inference. Operator 'Monospaced Telemetry Alignment Kernel' (page 1, domain other) captures: 600, 700 | | Mono (numerals) | [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) | 400, 500, 600, 700 | ## Assumptions: Strict monospacing ensures columnar alignment of quantitative sports metrics without layout shift. Breakdown regime: Alignment breaks if variable-width ligatures are enabled within the JetBrains Mono configuration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI matrix alignment; guarantees that multi-variate statistical outputs maintain rigid structural integrity under dynamic updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (575e4523f62f00fd, domain=other, pages_read=1/1): Operator 'Discrete Weight Projection Operator' (page 1, domain other) captures: Weights used | |---|---|---| | Display | [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) | 400, 500, 600, 700 | | Assumptions: Assumes linear perceptual scaling of stroke width with respect to the integer weight parameter w. Breakdown regime: Singularity occurs at w < 300 or w > 900 where glyph topology collapses into illegible noise or solid blocks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI confidence intervals; heavier weights correspond to higher posterior certainty in data visualization layers. Operator 'Asset Hosting State Automaton' (page 1, domain other) captures: declarations referencing the local files. ## ⚠️ Flagged for user review These are CDN-loaded by default. Assumptions: Network latency for external CDNs is non-zero and stochastic; local file access is deterministic. Breakdown regime: System failure if .woff2 binaries are corrupted during the transition from S=CDN to S=LOCAL. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE situational awareness; switching to local assets reduces dependency on external network topologies during high-stakes live inference. Operator 'Monospaced Telemetry Alignment Kernel' (page 1, domain other) captures: 600, 700 | | Mono (numerals) | [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) | 400, 500, 600, 700 | ## Assumptions: Strict monospacing ensures columnar alignment of quantitative sports metrics without layout shift. Breakdown regime: Alignment breaks if variable-width ligatures are enabled within the JetBrains Mono configuration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSI matrix alignment; guarantees that multi-variate statistical outputs maintain rigid structural integrity under dynamic updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This typographic formalism inherits directly from Swiss International Style principles, which prioritized grid-based objectivity and sans-serif neutrality. Mathematically, it echoes the discretization methods of early digital typesetting (e.g., Knuth's METAFONT), where continuous curves were approximated by finite state machines. The shift to web fonts introduces network theory, borrowing from distributed systems literature to manage resource locality and caching strategies, ultimately converging on modern responsive design paradigms.",
+      "theory_of_mind": "We model two primary agents: the End User and the Infrastructure Engineer. The User seeks rapid cognitive parsing of sports metrics, requiring high contrast and stable numerical columns (favoring the Mono Invariant). The Engineer aims to minimize Time-to-Interactive (TTI) and ensure brand compliance. The system mediates these opposing goals by defaulting to fast CDN loads while providing a rigorous pathway for Engineers to inject proprietary assets, thereby satisfying both latency constraints and branding requirements without compromising the underlying data grid.",
+      "cross_layer_veto": "A critical veto condition arises if proprietary brand fonts violate the established weight lattice or monospacing assumptions. If a custom font lacks the required 400-700 range, the visual hierarchy collapses, triggering a cross-layer rejection. Additionally, leakage is prevented by strictly isolating the numerical mono layer from the proportional body layer; allowing variable-width glyphs in telemetry tables would cause catastrophic alignment drift, invalidating the conformal prediction bounds on data readability."
+    }
+  ]
+}

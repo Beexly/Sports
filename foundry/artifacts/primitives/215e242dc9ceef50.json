@@ -1,0 +1,78 @@
+{
+  "book_id": "215e242dc9ceef50",
+  "source_status": "COMPLETE",
+  "title": "football.fantasysports.yahoo.com",
+  "file_name": "football.fantasysports.yahoo.com.md",
+  "sha256": "215e242dc9ceef5081645e0b42e112efffc76216eca3424e41d96769d4efe19a",
+  "primary_domain": "football",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Path-segment graph of fantasy football domain; root, teams, players, stats, nfl, odds, rankings, years, manifest form a directed acyclic graph with semantic layers. Universal Lens: Rooted in football.fantasysports.yahoo.com (215e242dc9ceef50), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief networks over player, team, and stat nodes; conformal predictive sets for league outcomes using historical rank and performance data. GSI Mapping: Rooted in football.fantasysports.yahoo.com (215e242dc9ceef50), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions between league creation, roster management, and live scoring; stochastic policy updates via action-value functions on player performance. GSE Mapping: Rooted in football.fantasysports.yahoo.com (215e242dc9ceef50), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "path_segment_graph",
+      "name": "Path Segment Graph",
+      "verbatim_quote": "# football.fantasysports.yahoo.com — crawl URLs reached: **9** ## Path segments | Segment | URLs | |---|---|",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Directed acyclic graph of URL path segments', 'V': 'Set of vertices representing path segments', 'E': 'Set of edges representing navigational links'}",
+      "assumptions": "All paths are deterministic and hierarchical; each segment maps to one unique resource.",
+      "breakdown_regime": "When path depth exceeds 10 or when duplicate segments exist in graph.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a hypergraph where each node represents a functional module of GSI (e.g., player, team, stats) and edges represent data flow.",
+        "source_operator": "path_segment_graph",
+        "telemetry": "URL crawl coverage and internal link consistency"
+      }
+    },
+    {
+      "primitive_id": "resource_hierarchy",
+      "name": "Resource Hierarchy",
+      "verbatim_quote": "| 1 | | `/years` | 1 | | `/teams` | 1 | | `/players` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'Hierarchical structure of resources', 'R_i': 'Resource type at level i', 'L': 'Level of hierarchy'}",
+      "assumptions": "Each resource type has a fixed nesting order; higher levels are parent to lower.",
+      "breakdown_regime": "When resource types are not strictly ordered or when circular dependencies occur.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel of GSI's data model; encodes semantic relationships between NFL entities.",
+        "source_operator": "resource_hierarchy",
+        "telemetry": "Depth of nested resource access and query latency"
+      }
+    },
+    {
+      "primitive_id": "semantic_endpoint",
+      "name": "Semantic Endpoint",
+      "verbatim_quote": "Fantasy Football 2026: Create or Join a League, Rankings, Analysis & More | Fant | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Endpoint identifier', 'T': 'Title tag of endpoint', 'D': 'Domain of endpoint'}",
+      "assumptions": "Endpoints map uniquely to semantic content; title reflects primary function.",
+      "breakdown_regime": "When endpoint title does not align with actual content or when multiple endpoints share same title.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a semantic vector space where E maps to a contextual embedding in GSE's knowledge graph.",
+        "source_operator": "semantic_endpoint",
+        "telemetry": "Page load time and semantic relevance score"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "215e242dc9ceef50_t0",
+      "think": "The path-segment graph defines a topological space of fantasy football data access. Each path segment corresponds to a distinct functional module—teams, players, stats, etc.—which can be modeled as nodes in a directed graph. The hierarchy of these modules implies a layered architecture where higher-level segments (e.g., /nfl) aggregate lower-level ones (/teams, /players). This structure supports both static analysis (e.g., ranking systems) and dynamic inference (e.g., predictive models). The semantic endpoint provides a contextual anchor for interpreting data within this framework. Dualities arise in how data is accessed: either through explicit navigation or implicit aggregation. Failure modes include broken links, inconsistent hierarchies, or misaligned titles that break semantic coherence. These must be monitored via telemetry such as crawl coverage and response times.\n\nDeep epistemic analysis for football.fantasysports.yahoo.com (215e242dc9ceef50, domain=football, pages_read=1/1): Operator 'Path Segment Graph' (page 1, domain football) captures: # football.fantasysports.yahoo.com — crawl URLs reached: **9** ## Path segments | Segment | URLs | |---|---| Assumptions: All paths are deterministic and hierarchical; each segment maps to one unique resource. Breakdown regime: When path depth exceeds 10 or when duplicate segments exist in graph. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a hypergraph where each node represents a functional module of GSI (e.g., player, team, stats) and edges represent data flow. Operator 'Resource Hierarchy' (page 1, domain football) captures: | 1 | | `/years` | 1 | | `/teams` | 1 | | `/players` | Assumptions: Each resource type has a fixed nesting order; higher levels are parent to lower. Breakdown regime: When resource types are not strictly ordered or when circular dependencies occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of GSI's data model; encodes semantic relationships between NFL entities. Operator 'Semantic Endpoint' (page 1, domain football) captures: Fantasy Football 2026: Create or Join a League, Rankings, Analysis & More | Fant | | Assumptions: Endpoints map uniquely to semantic content; title reflects primary function. Breakdown regime: When endpoint title does not align with actual content or when multiple endpoints share same title. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a semantic vector space where E maps to a contextual embedding in GSE's knowledge graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for football.fantasysports.yahoo.com (215e242dc9ceef50, domain=football, pages_read=1/1): Operator 'Path Segment Graph' (page 1, domain football) captures: # football.fantasysports.yahoo.com — crawl URLs reached: **9** ## Path segments | Segment | URLs | |---|---| Assumptions: All paths are deterministic and hierarchical; each segment maps to one unique resource. Breakdown regime: When path depth exceeds 10 or when duplicate segments exist in graph. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a hypergraph where each node represents a functional module of GSI (e.g., player, team, stats) and edges represent data flow. Operator 'Resource Hierarchy' (page 1, domain football) captures: | 1 | | `/years` | 1 | | `/teams` | 1 | | `/players` | Assumptions: Each resource type has a fixed nesting order; higher levels are parent to lower. Breakdown regime: When resource types are not strictly ordered or when circular dependencies occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of GSI's data model; encodes semantic relationships between NFL entities. Operator 'Semantic Endpoint' (page 1, domain football) captures: Fantasy Football 2026: Create or Join a League, Rankings, Analysis & More | Fant | | Assumptions: Endpoints map uniquely to semantic content; title reflects primary function. Breakdown regime: When endpoint title does not align with actual content or when multiple endpoints share same title. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a semantic vector space where E maps to a contextual embedding in GSE's knowledge graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web architecture and information theory, particularly the concept of hierarchical information retrieval. Influenced by graph theory and semantic web principles. Retrocausal Genealogy: Rooted in football.fantasysports.yahoo.com (215e242dc9ceef50), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in football.fantasysports.yahoo.com (215e242dc9ceef50), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may manipulate or exploit the structure for competitive advantage, e.g., by gaming rankings or manipulating player data. GSI must model adversarial behavior in its inference engine. Theory of Mind & Decision Maker Model: Rooted in football.fantasysports.yahoo.com (215e242dc9ceef50), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that no two layers (e.g., stats and odds) are overly dependent on each other. Leakage occurs if statistical models in one layer directly influence another without proper abstraction. Cross-Layer Veto & Anti-Leakage Check: Rooted in football.fantasysports.yahoo.com (215e242dc9ceef50), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

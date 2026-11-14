@@ -1,0 +1,78 @@
+{
+  "book_id": "386f4cf8e7f7c809",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2211.12009v1",
+  "file_name": "arxiv_2211.12009v1.pdf",
+  "sha256": "386f4cf8e7f7c809e7ba3f04111dca34c09edd39f18da7c6c01ca4651c9a6a03",
+  "primary_domain": "other",
+  "pages_total": 22,
+  "pages_read": 22,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Deep learning-based computer vision for ball delivery segmentation and tracking in cricket broadcasts using MobileNet, YOLO, and RetinaNet models. Universal Lens: Rooted in arxiv_2211.12009v1 (386f4cf8e7f7c809), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework for probabilistic segmentation of cricket ball deliveries using temporal frame differencing and object detection confidence thresholds. GSI Mapping: Rooted in arxiv_2211.12009v1 (386f4cf8e7f7c809), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine mapping video shot transitions and ball trajectory states through pitch-scale projection and camera motion alignment. GSE Mapping: Rooted in arxiv_2211.12009v1 (386f4cf8e7f7c809), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ball_delivery_segmentation",
+      "name": "Ball Delivery Segmentation",
+      "verbatim_quote": "Our research tries to solve one of these problems by segmenting ball deliveries in a cricket broadcast using deep learning models, MobileNet and YOLO, thus enabling researchers to use our work as a dataset for their research.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Video frames are temporally sequential; ball delivery events are distinct from replays or non-delivery scenes.",
+      "breakdown_regime": "Failure occurs when background subtraction fails due to camera motion or ball occlusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Segmentation maps video frames to discrete ball delivery shots via convolutional neural network classification of spatial features.",
+        "source_operator": "ball_delivery_segmentation",
+        "telemetry": "Frame-level classification accuracy of delivery vs. replay or non-delivery segments."
+      }
+    },
+    {
+      "primitive_id": "video_shot_extraction",
+      "name": "Video Shot Extraction",
+      "verbatim_quote": "This paper presents an approach to segment and extract video shots in which only the ball is being delivered.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Continuous video frames form temporally coherent shots; shot boundaries align with ball delivery events.",
+      "breakdown_regime": "Breakdown occurs when camera motion or scene transition lacks clear visual cues.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Extracts video shots by detecting abrupt changes in frame content using background subtraction and color difference metrics.",
+        "source_operator": "video_shot_extraction",
+        "telemetry": "Temporal consistency score of extracted shot sequences."
+      }
+    },
+    {
+      "primitive_id": "ball_tracking_and_classification",
+      "name": "Ball Tracking and Classification",
+      "verbatim_quote": "Ball tracking in these video shots is also done using a separate RetinaNet model as a sample of the usefulness of the proposed dataset.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Ball trajectory is visible across frames; pitch scale mapping enables depth estimation.",
+      "breakdown_regime": "Tracking fails when ball is occluded or camera angle shifts beyond calibration range.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "RetinaNet tracks ball movement in 2D space and classifies delivery type based on landing point and pitch geometry.",
+        "source_operator": "ball_tracking_and_classification",
+        "telemetry": "Trajectory deviation from expected pitch path and classification confidence scores."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "386f4cf8e7f7c809_t0",
+      "think": "The core operators derive from the fusion of temporal frame analysis and deep learning-based object detection. Ball delivery segmentation uses MobileNet and YOLO to classify video frames into delivery/non-delivery categories, leveraging spatial feature extraction. Video shot extraction relies on background subtraction and color-difference metrics to isolate continuous scenes. Ball tracking applies RetinaNet to infer 2D trajectories and classify delivery types (full-pitch, good-length, short-pitch) by mapping observed motion onto a calibrated pitch. Dualities emerge between frame-level classification and shot-level coherence, with failure modes tied to camera motion, occlusion, and scene ambiguity. Temporal consistency is enforced through frame differencing and motion vector validation. The system's robustness depends on accurate pitch-scale mapping and camera calibration to translate 2D observations into meaningful cricket-specific semantics.\n\nDeep epistemic analysis for arxiv_2211.12009v1 (386f4cf8e7f7c809, domain=other, pages_read=22/22): Operator 'Ball Delivery Segmentation' (page 1, domain other) captures: Our research tries to solve one of these problems by segmenting ball deliveries in a cricket broadcast using deep learning models, MobileNet and YOLO, thus enabling researchers to use our work as a dataset for their research. Assumptions: Video frames are temporally sequential; ball delivery events are distinct from replays or non-delivery scenes. Breakdown regime: Failure occurs when background subtraction fails due to camera motion or ball occlusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Segmentation maps video frames to discrete ball delivery shots via convolutional neural network classification of spatial features. Operator 'Video Shot Extraction' (page 1, domain other) captures: This paper presents an approach to segment and extract video shots in which only the ball is being delivered. Assumptions: Continuous video frames form temporally coherent shots; shot boundaries align with ball delivery events. Breakdown regime: Breakdown occurs when camera motion or scene transition lacks clear visual cues. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Extracts video shots by detecting abrupt changes in frame content using background subtraction and color difference metrics. Operator 'Ball Tracking and Classification' (page 1, domain other) captures: Ball tracking in these video shots is also done using a separate RetinaNet model as a sample of the usefulness of the proposed dataset. Assumptions: Ball trajectory is visible across frames; pitch scale mapping enables depth estimation. Breakdown regime: Tracking fails when ball is occluded or camera angle shifts beyond calibration range. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RetinaNet tracks ball movement in 2D space and classifies delivery type based on landing point and pitch geometry. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for arxiv_2211.12009v1 (386f4cf8e7f7c809, domain=other, pages_read=22/22): Operator 'Ball Delivery Segmentation' (page 1, domain other) captures: Our research tries to solve one of these problems by segmenting ball deliveries in a cricket broadcast using deep learning models, MobileNet and YOLO, thus enabling researchers to use our work as a dataset for their research. Assumptions: Video frames are temporally sequential; ball delivery events are distinct from replays or non-delivery scenes. Breakdown regime: Failure occurs when background subtraction fails due to camera motion or ball occlusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Segmentation maps video frames to discrete ball delivery shots via convolutional neural network classification of spatial features. Operator 'Video Shot Extraction' (page 1, domain other) captures: This paper presents an approach to segment and extract video shots in which only the ball is being delivered. Assumptions: Continuous video frames form temporally coherent shots; shot boundaries align with ball delivery events. Breakdown regime: Breakdown occurs when camera motion or scene transition lacks clear visual cues. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Extracts video shots by detecting abrupt changes in frame content using background subtraction and color difference metrics. Operator 'Ball Tracking and Classification' (page 1, domain other) captures: Ball tracking in these video shots is also done using a separate RetinaNet model as a sample of the usefulness of the proposed dataset. Assumptions: Ball trajectory is visible across frames; pitch scale mapping enables depth estimation. Breakdown regime: Tracking fails when ball is occluded or camera angle shifts beyond calibration range. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): RetinaNet tracks ball movement in 2D space and classifies delivery type based on landing point and pitch geometry. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical computer vision techniques like background subtraction and optical flow, extended by modern CNN architectures such as MobileNet and YOLO, and refined through domain-specific applications in sports analytics. Retrocausal Genealogy: Rooted in arxiv_2211.12009v1 (386f4cf8e7f7c809), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in arxiv_2211.12009v1 (386f4cf8e7f7c809), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include camera systems with varying motion profiles and environmental factors like lighting or player movement that may obscure the ball. Decision actors are the segmentation and tracking models, each optimizing for distinct aspects of the video stream while maintaining mutual consistency. Theory of Mind & Decision Maker Model: Rooted in arxiv_2211.12009v1 (386f4cf8e7f7c809), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating segmentation (spatial) from tracking (temporal) layers. Leakage is mitigated by enforcing strict frame-level validation before shot-level classification and by using independent models for tracking and classification. Cross-Layer Veto & Anti-Leakage Check: Rooted in arxiv_2211.12009v1 (386f4cf8e7f7c809), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

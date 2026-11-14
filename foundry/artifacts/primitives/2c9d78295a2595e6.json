@@ -1,0 +1,551 @@
+{
+  "book_id": "2c9d78295a2595e6",
+  "shard": "2",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_RECONSTRUCTED_LATEX",
+  "source_note": "'Noisy Judgments: A probability surface-based analysis of umpiring variability', MIT Sloan Sports Analytics Conference 2024 Research Paper Competition, Baseball Track, paper 193964 (20 pages; authors anonymized in the source). Full paper: umpire-as-instrument probability-surface model (1cm grid, heteroscedastic-weighted four-sigmoid 8-param fit), height normalization, bootstrap sensitivity/significance, 2-strike bias (~1 in 10^104), FISZ framing reattribution, pitcher/batter zone reputations, cohort adaptation, and robot-umpire middle ground; extracted faithfully (not a derivative summary). Equations 1 (strike%), 2 (four-sigmoid surface), and 3 (IOU) are shifted-font and reconstructed as labeled LaTeX from prose; the PITCHf/x->Statcast measurement change and constant-within-game umpire/catcher assumptions are flagged as biases. Outputs are called-zone surfaces, umpire IOU accuracy, and situational bias tests from public Statcast/RetroSheet; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "umpire_as_instrument",
+      "name": "Umpires are the measurement instrument for balls/strikes",
+      "verbatim_quote": "In baseball, umpires are the instrument by which we measure balls and strikes",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A measurement is only as good as its instrument; in baseball umpires are the instrument measuring balls and strikes, and because they are human the measurement involves judgment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Treating the human official as a noisy measurement instrument is the same observer-noise framing GSE applies to any subjective call.",
+        "source_operator": "umpire_as_instrument",
+        "telemetry": "umpire = measurement instrument (human, judgment)"
+      }
+    },
+    {
+      "primitive_id": "judgment_implies_variability",
+      "name": "Repeated judgment implies instrument variability",
+      "verbatim_quote": "In any repeated event involving judgment, we expect variability in the instruments’ assessment",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "In any repeated event involving judgment, variability in the instrument's assessment is expected; the paper generates a prior probability surface across the strike zone representing the average called zone for the umpire corps, revealing actual instrument behavior."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Judgment-induced variability is the same inter-rater noise GSE quantifies rather than assuming a fixed rule boundary.",
+        "source_operator": "judgment_implies_variability",
+        "telemetry": "repeated judgment -> variability; prior probability surface"
+      }
+    },
+    {
+      "primitive_id": "carruth_50pct_ellipse",
+      "name": "Carruth 2012: 50% strike-probability ellipse",
+      "verbatim_quote": "Carruth defined the strike zone as the area where a pitch has at least a 50% probability of being called a strike",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Carruth (2012) defined the strike zone as the area where a pitch has at least a 50% probability of being called a strike, finding it approximately elliptical via a best-fit through edge points at 50% or greater strike percentage."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 50%-probability contour definition is the same decision-boundary convention GSE uses for called zones.",
+        "source_operator": "carruth_50pct_ellipse",
+        "telemetry": "Carruth 2012: >=50% strike prob -> ellipse"
+      }
+    },
+    {
+      "primitive_id": "roegele_grid_factors",
+      "name": "Roegele 2013: 1-inch grid, situational factors",
+      "verbatim_quote": "Roegele defined the strike zone as any grid square where more than 50% of the pitches were strikes",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Roegele (2013) binned pitches into one-by-one-inch grid cells and defined the zone as any square with more than 50% strikes (more rectangular than ellipses), identifying pitch count, out count, pitch type and velocity, batter handedness, and baserunner state as factors affecting zone area."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Grid-binning with situational covariates is the same conditional-zone estimation GSE performs.",
+        "source_operator": "roegele_grid_factors",
+        "telemetry": "Roegele: 1in grid >50%; count/outs/type/velo/hand/runners"
+      }
+    },
+    {
+      "primitive_id": "euz_kde_bayes",
+      "name": "Umpire Scorecards EUZ: KDE + Bayes 50% contour",
+      "verbatim_quote": "using kernel density estimation and Bayes’s Theorem to derive a strike probability function",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Umpire Scorecards' Estimated Umpire Zone (2021) uses kernel density estimation and Bayes's Theorem to derive a strike probability function, with the EUZ as the 50% contiguous contour, the boundary where umpires change their minds between ball and strike."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A KDE-plus-Bayes strike-probability contour is the same probabilistic boundary GSE estimates for officiating.",
+        "source_operator": "euz_kde_bayes",
+        "telemetry": "EUZ = KDE + Bayes; 50% contiguous contour"
+      }
+    },
+    {
+      "primitive_id": "dataset_5p3M_called",
+      "name": "5,307,386 called pitches, 139 umpires, 2008-2022",
+      "verbatim_quote": "Approximately half of those pitches—or 5,307,386—were called either a ball or a strike by an umpire",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Statcast holds 10.5 million pitch locations at the front of the plate for 2008-2022 regular and postseasons; about half, 5,307,386, were called ball or strike by an umpire (the pitches of interest), spanning 139 umpires, 1,433 pitchers, 1,688 batters, 228 catchers across 30 teams and 30 ballparks; PITCHf/x to Statcast/TrackMan changed in 2017 (measurement effects ignored, flagged)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A large multi-season called-pitch corpus is the same officiating-data substrate GSE uses.",
+        "source_operator": "dataset_5p3M_called",
+        "telemetry": "5,307,386 called; 139 umpires; 2008-2022; 30 parks"
+      }
+    },
+    {
+      "primitive_id": "umpire_constant_within_game",
+      "name": "Assumption: umpire constant within a game",
+      "verbatim_quote": "The umpire does not change within the game",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Statcast via pybaseball lacks umpire names, so RetroSheet crew data is joined; the key assumption is that the umpire does not change within a game (replacement only for illness/injury under MLB Rule 8.02(d)), which does not materially skew results."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The within-game constant-umpire assumption is the same entity-stability join GSE makes for officiating attribution.",
+        "source_operator": "umpire_constant_within_game",
+        "telemetry": "umpire fixed within game (Rule 8.02(d) exception)"
+      }
+    },
+    {
+      "primitive_id": "sample_size_floor",
+      "name": "Sample floors: umpires 1000, batters/pitchers 100",
+      "verbatim_quote": "We removed any umpires who called fewer than 1,000 pitches, batters who took fewer than 100 pitches, and pitchers who threw fewer than 100 called pitches",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A sample-size limit removes umpires with fewer than 1,000 called pitches, batters who took fewer than 100 pitches, and pitchers who threw fewer than 100 called pitches before generating a best-fit zone, controlling small-sample noise."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Minimum-sample floors are the same small-sample veto GSE applies before fitting per-entity surfaces.",
+        "source_operator": "sample_size_floor",
+        "telemetry": "floors: umpire>=1000, batter>=100, pitcher>=100"
+      }
+    },
+    {
+      "primitive_id": "zone_width_50p6cm",
+      "name": "Official zone width = plate + 2*ball radius = 50.6 cm",
+      "verbatim_quote": "the width of home plate + 2 * (the radius of a baseball) = 43.2 + (2 * 3.7) = 50.6 cm",
+      "page": 4,
+      "latex": "W_{\\text{official}}=43.2+2(3.7)=50.6\\ \\text{cm}",
+      "symbol_and_unit_ledger": {
+        "W": "zone width (center-of-mass convention)"
+      },
+      "assumptions": [
+        "The official zone is a 3D pentagonal prism (midpoint of shoulders/top of pants to below the kneecap) flattened to an x-z rectangle at the front of the plate; its width by center-of-mass is home plate plus twice the ball radius, 43.2 + 2*3.7 = 50.6 cm, while height varies by batter."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The center-of-mass width convention is the same geometric normalization GSE uses to compare called vs official zones.",
+        "source_operator": "zone_width_50p6cm",
+        "telemetry": "W = 43.2 + 2*3.7 = 50.6 cm; prism -> x-z rectangle"
+      }
+    },
+    {
+      "primitive_id": "height_normalization",
+      "name": "Proportional height normalization to average zone",
+      "verbatim_quote": "We then proportionally scaled the data for each individual pitch into the average strike zone height frame of reference",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because each batter has a unique zone height (and stance varies), heights are standardized: the average top (104 cm) and bottom (49 cm) define the average batter's zone, and each pitch is proportionally scaled into that frame (a pitch 25% above the bottom stays 25% above the bottom after normalization)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Proportional height normalization is the same batter-stature standardization GSE applies before comparing zones.",
+        "source_operator": "height_normalization",
+        "telemetry": "avg top 104cm / bottom 49cm; proportional rescale"
+      }
+    },
+    {
+      "primitive_id": "grid_strike_percentage",
+      "name": "1cm grid strike percentage (Eq 1)",
+      "verbatim_quote": "First, we gridded the data into 1 cm by 1 cm square cells",
+      "page": 5,
+      "latex": "\\mathrm{Strike\\%}=\\frac{N(\\text{strikes})}{N(\\text{strikes})+N(\\text{balls})}",
+      "symbol_and_unit_ledger": {
+        "N": "pitch counts per 1cm x 1cm cell"
+      },
+      "assumptions": [
+        "Phase one gridded the data into 1 cm by 1 cm cells, assigning each pitch by its Statcast x-z position; the called balls and strikes per cell define the strike percentage, Strike% = N(strikes)/(N(strikes)+N(balls)) (Equation 1, shifted-font and reconstructed)."
+      ],
+      "breakdown_regime": "Eq 1 shifted-font reconstructed",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A per-cell empirical strike probability is the same discretized call-rate estimate GSE builds.",
+        "source_operator": "grid_strike_percentage",
+        "telemetry": "1cm grid; Strike%=N(S)/(N(S)+N(B))"
+      }
+    },
+    {
+      "primitive_id": "heteroscedastic_cell_errors",
+      "name": "Heteroscedastic per-cell errors weight the fit",
+      "verbatim_quote": "utilizing the heteroscedastic errors present in each cell location during the fitting process is necessary to mitigate noise introduced by small(er) sample sizes",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Phase two computes expected errors in strike percentages from per-cell sample sizes; although 5.3 million pitches is large overall, individual cells (especially subdivided by handedness or umpire) can be small, so heteroscedastic errors must weight the fit to mitigate small-sample noise and ensure consistent results."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Heteroscedastic error weighting is the same sample-size-aware fitting GSE uses to avoid noisy-cell artifacts.",
+        "source_operator": "heteroscedastic_cell_errors",
+        "telemetry": "per-cell heteroscedastic errors weight the fit"
+      }
+    },
+    {
+      "primitive_id": "sigmoid_functional_form",
+      "name": "Sigmoid maps infinite domain to [0,1] probability",
+      "verbatim_quote": "Sigmoidal curves are a form of off- / on-style function common in many analytic disciplines",
+      "page": 5,
+      "latex": "\\sigma(t;\\alpha,\\beta)=\\frac{1}{1+e^{-\\beta(t-\\alpha)}}",
+      "symbol_and_unit_ledger": {
+        "alpha": "midpoint (50% position)",
+        "beta": "transition steepness"
+      },
+      "assumptions": [
+        "Phase three chooses sigmoidal curves because umpires call center pitches strikes nearly 100% and far pitches 0% in both x and z; a sigmoid maps a continuous infinite domain onto [0,1], with one free parameter shifting the midpoint and a second adjusting steepness (the standard logistic form is reconstructed)."
+      ],
+      "breakdown_regime": "logistic form reconstructed from prose (midpoint + steepness params)",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A sigmoidal probability transition is the same soft-boundary kernel GSE uses for called-zone edges.",
+        "source_operator": "sigmoid_functional_form",
+        "telemetry": "sigmoid: alpha=midpoint, beta=steepness; ->[0,1]"
+      }
+    },
+    {
+      "primitive_id": "four_sigmoid_eight_param_surface",
+      "name": "Four-sigmoid surface, eight free parameters (Eq 2)",
+      "verbatim_quote": "Our constructed fitting function, continuously defined in x and y, has two sigmoids in the x direction and two in the y direction",
+      "page": 6,
+      "latex": "P(x,z)=f_x(x)\\,f_z(z),\\quad f_d=\\sigma_{\\text{rise}}\\cdot\\sigma_{\\text{fall}}\\ (8\\text{ params: }\\alpha,\\beta\\text{ per sigmoid})",
+      "symbol_and_unit_ledger": {
+        "alpha": "positional (50% edge)",
+        "beta": "steepness",
+        "8 params": "2 per each of 4 sigmoids"
+      },
+      "assumptions": [
+        "The fitting function has two sigmoids in x and two in z (rise then fall of strike probability across the plate), eight free parameters total (two per sigmoid); alpha terms are positional (where the surface is 0.5, defining zone edges) and beta terms set steepness; cross-sections are rectangular with rounded corners, and the alpha terms extract a rectangular zone (Equation 2 shifted-font, reconstructed as a product of rise/fall sigmoid pairs)."
+      ],
+      "breakdown_regime": "Eq 2 shifted-font reconstructed as rise/fall sigmoid product; exact combination inferred from prose",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A separable four-sigmoid probability surface is the same soft-rectangular zone model GSE fits to called pitches.",
+        "source_operator": "four_sigmoid_eight_param_surface",
+        "telemetry": "P(x,z)=f_x*f_z; 4 sigmoids, 8 params (alpha edge/beta steep)"
+      }
+    },
+    {
+      "primitive_id": "weighted_rms_gradient_descent",
+      "name": "Custom sampling-error-weighted RMS via gradient descent",
+      "verbatim_quote": "we created a custom cost function for the optimizer that first normalized distances between the data points and a candidate fitted surface before summing them",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Phase four optimizes the eight parameters with scipy gradient descent, using a custom cost function that normalizes distances between data points and the candidate surface by each cell's sampling error before summing, accounting for heteroscedastic errors in the RMS between data and each fitted iteration."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sampling-error-weighted RMS optimization is the same noise-aware fitting objective GSE uses.",
+        "source_operator": "weighted_rms_gradient_descent",
+        "telemetry": "scipy GD; cost = sampling-error-normalized RMS"
+      }
+    },
+    {
+      "primitive_id": "called_zone_wider_57p7",
+      "name": "Called zone is 57.7 cm wide, 7.1 cm wider than official",
+      "verbatim_quote": "the best-fit surface gives us a strike zone 57.7 cm wide–7.1 cm wider than the official MLB zone width",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The full-data best-fit zone is 57.7 cm wide (7.1 cm wider than the official 50.6 cm), centered 1.6 cm left from the umpire's perspective, and 56.1 cm tall versus Statcast's average 55.3 cm; most umpires call wider than official, near the top, slightly below the bottom, with more variability at the bottom than the top."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The systematic called-vs-official gap is the same instrument-bias measurement GSE quantifies.",
+        "source_operator": "called_zone_wider_57p7",
+        "telemetry": "called 57.7cm wide (+7.1), 1.6cm left, 56.1cm tall"
+      }
+    },
+    {
+      "primitive_id": "lefty_strike_outside_shift",
+      "name": "Lefty strike: LHB zone shifted 3.9 cm outside",
+      "verbatim_quote": "when we look at the strike zone for LHB, it is 55.6 cm wide and the midpoint is shifted 3.9 cm towards the outside of the plate",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "RHB (3M pitches) and LHB (2.3M) zones have nearly identical area (3,156 vs 3,146 sq cm); the RHB zone is 56.8 cm wide and centered, while the LHB zone is 55.6 cm wide with midpoint shifted 3.9 cm outside (the 'lefty strike'), holding across the corps (not outliers), with LHB zones narrower and taller; the shift is roughly double for RHP than LHP."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The handedness-dependent zone shift is the same situational officiating bias GSE models.",
+        "source_operator": "lefty_strike_outside_shift",
+        "telemetry": "LHB 55.6cm, +3.9cm outside; area ~equal; RHP shift ~2x LHP"
+      }
+    },
+    {
+      "primitive_id": "bootstrap_sensitivity",
+      "name": "Bootstrap sensitivity: 100 refits per sample size",
+      "verbatim_quote": "This process of fitting on random samples was repeated 100 times",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A sensitivity study splits data by season and handedness (30 subsets of 150-200k pitches), randomly samples 50,000 pitches with replacement and refits 100 times, then repeats down to 1,000 pitches; variability decreases smoothly with sample size and distributions are unimodal, showing the method is mathematically well-behaved and yielding bootstrap parameter distributions without a closed form."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Repeated-subsample refitting is the same bootstrap uncertainty quantification GSE uses for fitted surfaces.",
+        "source_operator": "bootstrap_sensitivity",
+        "telemetry": "30 subsets; 100 refits; 50k->1k pitches; unimodal"
+      }
+    },
+    {
+      "primitive_id": "zone_narrowed_low_expanded",
+      "name": "2008-2022: zone narrowed 14%, bottom dropped 16%",
+      "verbatim_quote": "Between the 2008 and 2022 seasons, the strike zone narrowed nearly 14%, from 63 to 54 cm",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "From 2008 to 2022 the zone narrowed nearly 14% (63 to 54 cm), mostly the left side moving ~7 cm toward the plate; the lefty strike largely disappears from 2017 and the midpoint moves from 3.6 cm left (2009) to near center (2022); the top rose 2 cm (2%) while the bottom dropped ~9 cm (>16%), so umpires increasingly call the low strike; area grew and aspect ratio fell 29%, flipping from wider-than-tall to taller-than-wide by 2018."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The secular zone drift is the same time-varying officiating regime GSE must normalize by season.",
+        "source_operator": "zone_narrowed_low_expanded",
+        "telemetry": "narrowed 14% (63->54cm); bottom -9cm (>16%); lefty gone 2017"
+      }
+    },
+    {
+      "primitive_id": "iou_umpire_accuracy",
+      "name": "IOU overlap with official zone: corps 70-90%, ~84%",
+      "verbatim_quote": "the IOU ratio for the umpire corps ranges from 70 percent to 90 percent, with the majority of umpires clustering around the 84 percent mark",
+      "page": 12,
+      "latex": "\\mathrm{IOU}=\\frac{\\mathrm{Area}(Z_{\\text{umpire}}\\cap Z_{\\text{official}})}{\\mathrm{Area}(Z_{\\text{umpire}}\\cup Z_{\\text{official}})}",
+      "symbol_and_unit_ledger": {
+        "IOU": "intersection-over-union of called vs official zone"
+      },
+      "assumptions": [
+        "Umpire accuracy is the intersection-over-union of the individual called zone with the official MLB zone (Equation 3, shifted-font and reconstructed); the corps IOU ranges 70-90% with most near 84%, recent seasons higher, and the histogram's lower skew reflects the zone's shape change over time."
+      ],
+      "breakdown_regime": "Eq 3 shifted-font reconstructed (intersection/union)",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "IOU against the official zone is the same agreement metric GSE uses to grade officiating accuracy.",
+        "source_operator": "iou_umpire_accuracy",
+        "telemetry": "IOU=intersection/union; corps 70-90%, ~84%"
+      }
+    },
+    {
+      "primitive_id": "cohort_adaptation",
+      "name": "Umpire cohorts adapt together; newcomers conform",
+      "verbatim_quote": "new additions to the umpire corps are generally adapting to the existing zone rather than driving the changes",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Plotting IOU by season and tenure shows umpires who started together move as cohorts, changing size/shape/position at the same time; this indicates umpires change their zones over time and new additions adapt to the existing zone rather than driving the changes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cohort-level adaptation is the same population-drift mechanism GSE distinguishes from individual change.",
+        "source_operator": "cohort_adaptation",
+        "telemetry": "cohorts move together; newcomers adapt, not drive"
+      }
+    },
+    {
+      "primitive_id": "two_strike_bias_significance",
+      "name": "2-strike bias: ~1 in 10^104 by bootstrap",
+      "verbatim_quote": "that would result in a fitted strike zone with an area as small as the 2-strike strike zone (or smaller) would be roughly 1 chance in 10104",
+      "page": 14,
+      "latex": "p\\approx 10^{-104}\\ (\\text{2-strike zone area} > 400\\ \\text{cm}^2\\text{ below null mean }3030\\pm20)",
+      "symbol_and_unit_ledger": {
+        "null": "bootstrap area distribution of all-count samples"
+      },
+      "assumptions": [
+        "The 2-strike bias (umpires stricter on strike 3) is tested by bootstrapping: within each season-handedness group, 1,000 random samples matching the 2-strike count size (30-40k pitches) are fit; the 2008 null area centers at 3,030 cm² (sd ~20) while the 2-strike fit is >400 cm² smaller, an outlier with odds ~1 in 10^104, so the bias is very real and consistent across seasons (2-strike counts are ~1 in 5 called pitches)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A bootstrap null-distribution significance test is the same effect-vs-noise adjudication GSE uses for situational biases.",
+        "source_operator": "two_strike_bias_significance",
+        "telemetry": "2-strike area >400cm² below null; p~1e-104; ~1/5 pitches"
+      }
+    },
+    {
+      "primitive_id": "two_strike_high_low_tightening",
+      "name": "2-strike bias tightens top and bottom, not edges",
+      "verbatim_quote": "The 2-strike bias is primarily a bias against high and low strikes",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Although statistically robust, the 2-strike bias's effect size is clearest in the zones: it is primarily a bias against high and low strikes, with the dominant driver of the smaller 2-strike zone being tightening of the top and bottom rather than the plate edges; the disjoint-subsample bootstrap method generalizes to any question framed as distinct subpopulations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Decomposing a bias into vertical vs horizontal components is the same effect-localization GSE performs.",
+        "source_operator": "two_strike_high_low_tightening",
+        "telemetry": "2-strike: top/bottom tighten > edge shifts"
+      }
+    },
+    {
+      "primitive_id": "fisz_framing_attribution",
+      "name": "FISZ: framing-induced zone area above umpire average",
+      "verbatim_quote": "We call the difference between the area of the umpires’ average strike zone and the strike zone for a particular catcher the catcher’s Framing-Induced Strike Zone (FISZ)",
+      "page": 17,
+      "latex": "\\mathrm{FISZ}_{\\text{catcher}}=\\mathrm{Area}(Z_{\\text{umpire}|\\text{catcher}})-\\mathrm{Area}(Z_{\\text{umpire,avg}})",
+      "symbol_and_unit_ledger": {
+        "FISZ": "framing-induced strike zone area difference"
+      },
+      "assumptions": [
+        "Traditional framing metrics count Shadow-Zone strikes against the official zone, but since the official zone is not what is called, some 'framing' strikes are really the umpire's own zone; FISZ measures the catcher-specific zone area minus the umpire average, a more direct framing influence; Jose Molina has the largest FISZ (3+ seasons, ~3,400 cm², >300 cm² above average) for both handednesses, with Hanigan, Grandal, and Ross in the top ten (assuming the starting catcher plays the whole game)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "FISZ reattributes framing credit from the official-zone baseline to the umpire's actual zone, the same confound-correction GSE applies to catcher valuation.",
+        "source_operator": "fisz_framing_attribution",
+        "telemetry": "FISZ = catcher zone area - umpire avg; Molina ~3400cm²"
+      }
+    },
+    {
+      "primitive_id": "pitcher_zone_reputation",
+      "name": "Pitcher zones vary by arsenal; elite reputations measurable",
+      "verbatim_quote": "We expect the size, shape, and position of the pitchers’ best-fit strike zone surfaces to vary more widely than the umpires’ because of their different pitch arsenals, throwing mechanics, and game situations",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Pitcher zones vary more than umpires' (arsenals, mechanics, situations) and are normally distributed; pitchers with >500 pitches average 3,100 cm² (±450, about 4 cm per side); Arroyo, Livan Hernandez, Lowe, Vogelsong, and Weaver consistently earn larger zones; among elites Bumgarner has the largest (~3,300 cm², +2 cm outside to RHB) and Scherzer the smallest (fewer right-edge calls, midpoint 6.4 cm outside to LHB), with outside-to-LHB beneficiaries mostly pre-2017."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pitcher-specific zone reputation is the same player-level officiating treatment GSE quantifies.",
+        "source_operator": "pitcher_zone_reputation",
+        "telemetry": "pitcher avg 3100±450cm²; Bumgarner ~3300 largest"
+      }
+    },
+    {
+      "primitive_id": "batter_eye_judge_soto",
+      "name": "Batter's eye: Votto benefit, Soto taller, Judge smaller",
+      "verbatim_quote": "The top of Judge’s strike zone is consistently 10 cm shorter than the average RHB, which means Aaron Judge has a smaller strike zone than the average RHB",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Votto has a slightly smaller zone than the average LHB (more inside calls outweighed by fewer up calls, benefit of the doubt at edges); Soto's zone is >200 cm² larger and ~5 cm taller than LHB contemporaries (wider/lower two-strike stance) with no benefit of the doubt; Judge's bottom sits at 42.8 cm (~3 cm lower) but his top is 10 cm shorter, so his overall zone is smaller, his 6'7\" frame likely distorting the crouched umpire's perception."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Batter-specific zone treatment is the same individual officiating bias GSE measures for plate-discipline valuation.",
+        "source_operator": "batter_eye_judge_soto",
+        "telemetry": "Votto smaller; Soto +200cm²/+5cm tall; Judge top -10cm"
+      }
+    },
+    {
+      "primitive_id": "robot_umpire_middle_ground",
+      "name": "Robot umpire: target the called zone, not the book zone",
+      "verbatim_quote": "Using the best-fit strike zone from across the umpire corps as the target for a ‘robot umpire’ would preserve the zone as it’s currently called while incorporating an automated system",
+      "page": 19,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "An abrupt shift to robot umpires calling the exact MLB-defined zone would drastically change the game; the rectangular historical surface offers a middle ground, using the corps best-fit zone as the robot target to preserve the zone as currently called while adding automation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Calibrating automation to the empirical called zone is the same behavior-preserving automation principle GSE applies.",
+        "source_operator": "robot_umpire_middle_ground",
+        "telemetry": "robot target = corps best-fit zone (preserve called behavior)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "noisyjudgments2024_trace",
+      "think": "The retrocausal genealogy of this paper is the idea that a measurement is only as good as its instrument, and that in baseball the umpire is the instrument. The authors, writing for the MIT Sloan 2024 Baseball Track, observe that umpires are human, so balls and strikes involve judgment, and any repeated event involving judgment produces variability in the instrument's assessment. They generate a prior probability surface across the strike zone representing the average called zone for the umpire corps. The scientific lineage runs from Carruth's 2012 fifty-percent-probability ellipse, through Roegele's 2013 one-inch grid that identified count, outs, pitch type and velocity, handedness, and baserunner state as factors, to Ben-Porat's 2019 superellipse and Umpire Scorecards' 2021 kernel-density-plus-Bayes Estimated Umpire Zone, all defining the zone by a fifty-percent strike contour. The data are Statcast pitch locations at the front of the plate for 2008 through 2022, of which 5,307,386 were called ball or strike, spanning 139 umpires, 1,433 pitchers, 1,688 batters, and 228 catchers across thirty ballparks. RetroSheet supplies umpire names under the assumption that the umpire does not change within a game, and sample floors remove umpires under 1,000 pitches and batters and pitchers under 100. The official zone is a three-dimensional pentagonal prism flattened to an x-z rectangle of width 50.6 centimeters, home plate plus twice the ball radius, with height normalized proportionally to the average batter's zone of top 104 and bottom 49 centimeters. The recursive theory of mind is modeling an instrument that is itself trying to hit a target. The surface is built in four phases: grid the data into one-centimeter cells and compute strike percentage as strikes over strikes plus balls; compute heteroscedastic per-cell errors because individual cells can be small even when the total is large; choose a functional form of two sigmoids in x and two in z, eight free parameters where alpha sets the fifty-percent edge position and beta sets steepness; and optimize with scipy gradient descent using a custom cost that normalizes distances by sampling error before summing into a root-mean-square error. The alpha terms extract a rectangular zone, letting the authors compare each umpire's attempt against the official execution. Cross-layer veto adjudication is separating real effects from sampling noise and from confounds. The full-data called zone is 57.7 centimeters wide, 7.1 wider than official, shifted 1.6 left; the lefty strike shifts the LHB zone 3.9 centimeters outside with nearly equal area, roughly double for right-handed pitchers. A bootstrap sensitivity study refits 100 random samples per size from 50,000 down to 1,000 pitches, showing smooth, unimodal, well-behaved variability and yielding parameter distributions without a closed form. The two-strike bias is tested against this bootstrap null: the 2008 null area centers at 3,030 square centimeters with standard deviation about 20, while the two-strike fit is more than 400 smaller, odds roughly one in ten to the 104, so the bias is very real, consistent across seasons, and primarily a tightening of the top and bottom. Framing is reattributed through the Framing-Induced Strike Zone, the catcher-specific zone area minus the umpire average, because traditional Shadow-Zone framing credits the umpire's own zone to the catcher; Jose Molina leads at about 3,400 square centimeters. The player-level slices sharpen the instrument picture further. Pitcher zones vary more widely than umpires' because of differing arsenals, mechanics, and situations, averaging 3,100 square centimeters for pitchers with more than 500 pitches; among elites Bumgarner earns the largest zone near 3,300 while Scherzer has the smallest, still receiving the lefty strike after 2017. On the batter side, Votto gets a slightly smaller zone and the benefit of the doubt at the edges, Soto's zone is more than 200 square centimeters larger and about five centimeters taller from his wider lower two-strike stance, and Judge's top is ten centimeters shorter so his overall zone is smaller despite a lower bottom, his six-foot-seven frame likely distorting the crouched umpire's perception. The implementation invariants map directly onto GSE. The umpire-as-noisy-instrument framing is GSE's observer-noise model; the heteroscedastic-weighted four-sigmoid surface is GSE's soft-boundary zone estimator; the bootstrap null is GSE's effect-versus-noise significance gate; the season and handedness normalization is GSE's regime adjustment; and FISZ is GSE's confound-corrected catcher valuation. The outputs are called-zone surfaces, umpire accuracy via intersection-over-union, and situational bias tests from public Statcast and RetroSheet data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger, the temporal drift, and the limitations close the account. From 2008 to 2022 the zone narrowed nearly fourteen percent from 63 to 54 centimeters, the lefty strike largely disappeared from 2017, the bottom dropped about nine centimeters so umpires increasingly call the low strike, and the aspect ratio fell twenty-nine percent; umpire intersection-over-union with the official zone ranges seventy to ninety percent, clustering near eighty-four, and cohorts adapt together while newcomers conform. The equations for strike percentage, the four-sigmoid surface, and intersection-over-union are shifted-font, so they are reconstructed as labeled LaTeX and flagged, and the PITCHf/x-to-Statcast measurement change and the constant-catcher assumption are recorded as biases for future iterations. The invariant for GSE is to carry the probability-surface officiating model and the bootstrap significance machinery, while recording that small subsets need sample floors and that absolute vertical comparisons require height normalization before any quantitative reuse.",
+      "retrocausal_genealogy": "Measurement is only as good as its instrument; the umpire is baseball's ball/strike instrument, human judgment -> variability. Prior probability surface = average called zone for the corps. Lineage: Carruth 2012 (>=50% ellipse), Roegele 2013 (1in grid >50%, count/outs/type/velo/hand/runners), Ben-Porat 2019 superellipse, Umpire Scorecards EUZ 2021 (KDE+Bayes 50% contour). Data: Statcast 2008-2022, 5,307,386 called pitches, 139 umpires/1,433 pitchers/1,688 batters/228 catchers/30 parks; RetroSheet umpire join (constant within game, Rule 8.02(d)); floors umpire>=1000/batter,pitcher>=100; official width 50.6cm (43.2+2*3.7), height normalized to avg top 104/bottom 49cm.",
+      "theory_of_mind": "Modeling an instrument aiming at a target. 4-phase surface: 1cm grid Strike%=N(S)/(N(S)+N(B)) (Eq1); heteroscedastic per-cell errors; 2 sigmoids x + 2 z = 8 params (alpha=50% edge, beta=steepness) (Eq2); scipy gradient descent with sampling-error-normalized RMS cost. Alpha terms -> rectangular zone (attempt vs execution). Called zone 57.7cm wide (+7.1 vs official), 1.6cm left, 56.1cm tall; LHB lefty strike +3.9cm outside (area ~equal, RHP shift ~2x LHP).",
+      "cross_layer_veto": "Bootstrap null separates effect from noise: 100 refits/sample size (50k->1k), unimodal well-behaved; 2-strike bias 2008 null 3030±20cm² vs fit >400cm² smaller, p~1e-104 (very real, consistent, ~1/5 pitches), primarily top/bottom tightening. IOU=intersection/union (Eq3) corps 70-90% ~84%; cohorts adapt together, newcomers conform. FISZ=catcher zone area - umpire avg (Molina ~3400cm²) reattributes framing from official-zone confound. Time: zone narrowed 14% (63->54cm), lefty gone 2017, bottom -9cm (>16%), aspect -29%. Robot umpire middle ground = target corps called zone. Eqs1-3 shifted-font reconstructed; PITCHf/x change + constant-catcher flagged; zero sportsbook lines."
+    }
+  ],
+  "universal_lens": "MLB umpires are treated as a noisy measurement instrument whose called strike zone is estimated as a probability surface over a height-normalized 1cm grid, fit by a heteroscedastic-weighted four-sigmoid (8-parameter) model, with bootstrap refitting providing significance tests for situational biases (2-strike, handedness), IOU accuracy against the official zone, and confound-corrected catcher framing (FISZ).",
+  "gsi_mapping": "GSI treats the model as Strike%=N(S)/(N(S)+N(B)) on a 1cm grid (Eq1), height-normalized to avg top 104/bottom 49cm, official width 50.6cm; surface P(x,z)=f_x*f_z with 2 x + 2 z sigmoids, 8 params (alpha=50% edge, beta=steepness) (Eq2), scipy GD with sampling-error-normalized RMS; data 5,307,386 called pitches 2008-2022, 139 umpires, floors umpire>=1000/batter,pitcher>=100; called zone 57.7cm wide (+7.1)/1.6cm left/56.1cm tall; LHB +3.9cm outside (RHP ~2x); bootstrap 100 refits 50k->1k; 2-strike null 3030±20cm² vs >400 smaller (p~1e-104); IOU=intersection/union (Eq3) 70-90% ~84%; FISZ=catcher area - umpire avg (Molina ~3400cm²); zone narrowed 14%/bottom -16%/lefty gone 2017; robot target = corps called zone.",
+  "gse_mapping": "GSE lifts the umpire-as-noisy-instrument probability-surface model, heteroscedastic four-sigmoid zone fitting, bootstrap effect-vs-noise significance gate, season/handedness regime normalization, IOU officiating accuracy, and FISZ confound-corrected catcher framing; records small-subset sample floors, height normalization for vertical comparisons, and the PITCHf/x measurement-change and constant-umpire/catcher biases; all outputs are called-zone surfaces and bias tests, never sportsbook lines."
+}

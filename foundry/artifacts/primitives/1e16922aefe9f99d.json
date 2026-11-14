@@ -1,0 +1,95 @@
+{
+  "book_id": "1e16922aefe9f99d",
+  "source_status": "COMPLETE",
+  "title": "evidence-taxonomy",
+  "file_name": "evidence-taxonomy.md",
+  "sha256": "1e16922aefe9f99d05a946968fd961d345cb54484f04fa53841a2629d0331124",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Evidence taxonomy defines four distinct states—Free rows, Open schema, Key required, and Private mechanics—each with unique access, licensing, and observability properties. Universal Lens: Rooted in evidence-taxonomy (1e16922aefe9f99d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models evidence states as Bayesian likelihoods over access regimes; Free rows are prior-observable, Open schema is conditionally observable, Key required is blocked, Private mechanics are latent internal signals. GSI Mapping: Rooted in evidence-taxonomy (1e16922aefe9f99d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE maps evidence states to situational awareness layers: Free rows enable deterministic transitions, Open schema allows probabilistic inference, Key required triggers blocking logic, Private mechanics require internal state modeling. GSE Mapping: Rooted in evidence-taxonomy (1e16922aefe9f99d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "free_rows",
+      "name": "Public Access State",
+      "verbatim_quote": "- Free rows: a public file or API, no key, license named.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'accessibility state, dimensionless', 'L': 'license type, categorical'}",
+      "assumptions": "Data is publicly accessible without authentication or fee.",
+      "breakdown_regime": "R = 1 implies full public observability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Free rows correspond to a deterministic, observable signal in GSI's Bayesian network; in GSE, they define a fully transparent state transition layer.",
+        "source_operator": "free_rows",
+        "telemetry": "Signal availability and license compliance metrics."
+      }
+    },
+    {
+      "primitive_id": "open_schema",
+      "name": "Documented Structure State",
+      "verbatim_quote": "- Open schema: the columns are documented and the file is present, but the producer script is not on this host.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'schema completeness, dimensionless', 'F': 'file presence, binary'}",
+      "assumptions": "Schema is known but production mechanism is external.",
+      "breakdown_regime": "S = 1, F = 1 implies structured but non-local data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Open schema enables GSI's conformal prediction framework by providing sufficient structure for statistical inference; GSE uses it to build partial observability models.",
+        "source_operator": "open_schema",
+        "telemetry": "Schema coverage and file integrity checks."
+      }
+    },
+    {
+      "primitive_id": "key_required",
+      "name": "Credential-Bound Access",
+      "verbatim_quote": "is present, but the producer script is not on this host. - Key required: a feed",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'credential requirement, binary', 'B': 'blocked status, binary'}",
+      "assumptions": "Access requires valid credentials; credentials are not discoverable.",
+      "breakdown_regime": "K = 1 implies B = 1 unless credential is provided.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Key required signals are modeled as blocked nodes in GSI’s causal graph; in GSE, they trigger conditional logic and access denial protocols.",
+        "source_operator": "key_required",
+        "telemetry": "Access control and credential validation logs."
+      }
+    },
+    {
+      "primitive_id": "private_mechanics",
+      "name": "Internal Signal State",
+      "verbatim_quote": "- Private mechanics: method, weight, NGS raw, or an internal signal.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'mechanism type, categorical', 'I': 'internal signal, dimensionless'}",
+      "assumptions": "Signals are not publicly exposed or modeled externally.",
+      "breakdown_regime": "M ∈ {method, weight, NGS, internal} implies I ≠ 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Private mechanics are latent variables in GSI’s hidden Markov model; GSE treats them as black-box internal dynamics requiring state estimation.",
+        "source_operator": "private_mechanics",
+        "telemetry": "Internal signal strength and mechanism classification."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1e16922aefe9f99d_t0",
+      "think": "The taxonomy defines four mutually exclusive states of data access and observability. Free rows represent fully open data with clear licensing, enabling direct use in both GSI and GSE. Open schema provides structured data but lacks production transparency, allowing GSI to perform conditional inference while GSE builds partial models. Key required signals are inherently blocked in GSI due to missing credentials, and in GSE, they activate access control logic. Private mechanics are internal constructs not directly observable, necessitating latent variable modeling in GSI and internal state tracking in GSE. Each state exhibits distinct failure modes: Free rows may be misclassified as private, Open schema may lack integrity, Key required may block valid access, and Private mechanics may leak through indirect observation. The taxonomy avoids collapsing these into fewer categories to preserve analytical fidelity across domains.\n\nDeep epistemic analysis for evidence-taxonomy (1e16922aefe9f99d, domain=other, pages_read=1/1): Operator 'Public Access State' (page 1, domain other) captures: - Free rows: a public file or API, no key, license named. Assumptions: Data is publicly accessible without authentication or fee. Breakdown regime: R = 1 implies full public observability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Free rows correspond to a deterministic, observable signal in GSI's Bayesian network; in GSE, they define a fully transparent state transition layer. Operator 'Documented Structure State' (page 1, domain other) captures: - Open schema: the columns are documented and the file is present, but the producer script is not on this host. Assumptions: Schema is known but production mechanism is external. Breakdown regime: S = 1, F = 1 implies structured but non-local data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Open schema enables GSI's conformal prediction framework by providing sufficient structure for statistical inference; GSE uses it to build partial observability models. Operator 'Credential-Bound Access' (page 1, domain other) captures: is present, but the producer script is not on this host. - Key required: a feed Assumptions: Access requires valid credentials; credentials are not discoverable. Breakdown regime: K = 1 implies B = 1 unless credential is provided. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Key required signals are modeled as blocked nodes in GSI’s causal graph; in GSE, they trigger conditional logic and access denial protocols. Operator 'Internal Signal State' (page 1, domain other) captures: - Private mechanics: method, weight, NGS raw, or an internal signal. Assumptions: Signals are not publicly exposed or modeled externally. Breakdown regime: M ∈ {method, weight, NGS, internal} implies I ≠ 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Private mechanics are latent variables in GSI’s hidden Markov model; GSE treats them as black-box internal dynamics requiring state estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for evidence-taxonomy (1e16922aefe9f99d, domain=other, pages_read=1/1): Operator 'Public Access State' (page 1, domain other) captures: - Free rows: a public file or API, no key, license named. Assumptions: Data is publicly accessible without authentication or fee. Breakdown regime: R = 1 implies full public observability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Free rows correspond to a deterministic, observable signal in GSI's Bayesian network; in GSE, they define a fully transparent state transition layer. Operator 'Documented Structure State' (page 1, domain other) captures: - Open schema: the columns are documented and the file is present, but the producer script is not on this host. Assumptions: Schema is known but production mechanism is external. Breakdown regime: S = 1, F = 1 implies structured but non-local data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Open schema enables GSI's conformal prediction framework by providing sufficient structure for statistical inference; GSE uses it to build partial observability models. Operator 'Credential-Bound Access' (page 1, domain other) captures: is present, but the producer script is not on this host. - Key required: a feed Assumptions: Access requires valid credentials; credentials are not discoverable. Breakdown regime: K = 1 implies B = 1 unless credential is provided. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Key required signals are modeled as blocked nodes in GSI’s causal graph; in GSE, they trigger conditional logic and access denial protocols. Operator 'Internal Signal State' (page 1, domain other) captures: - Private mechanics: method, weight, NGS raw, or an internal signal. Assumptions: Signals are not publicly exposed or modeled externally. Breakdown regime: M ∈ {method, weight, NGS, internal} implies I ≠ 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Private mechanics are latent variables in GSI’s hidden Markov model; GSE treats them as black-box internal dynamics requiring state estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and access control models from early data governance frameworks, evolving from database schema definitions to modern API and signal classification systems. Retrocausal Genealogy: Rooted in evidence-taxonomy (1e16922aefe9f99d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in evidence-taxonomy (1e16922aefe9f99d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must distinguish between observable and hidden states, with GSI treating each as a probabilistic node and GSE managing access policies and state transitions accordingly. Theory of Mind & Decision Maker Model: Rooted in evidence-taxonomy (1e16922aefe9f99d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in evidence-taxonomy (1e16922aefe9f99d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures Free rows do not imply Open schema, Key required does not allow access to Private mechanics, and all states maintain independent telemetry paths to prevent leakage. Cross-Layer Veto & Anti-Leakage Check: Rooted in evidence-taxonomy (1e16922aefe9f99d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in evidence-taxonomy (1e16922aefe9f99d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

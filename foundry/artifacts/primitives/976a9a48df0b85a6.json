@@ -1,0 +1,834 @@
+{
+ "book_id": "976a9a48df0b85a6",
+ "source_status": "COMPLETE",
+ "source_note": "Hal Daume III, A Course in Machine Learning, self published course text (ciml.info), copyright 2013 to 2017, second printing January 2017; the draft lineage of the work runs from 2009. Local file: Daume-2017-CourseInMachineLearning.pdf, bucket books-d-models of the full library (the file name given in the task, Daume-2009-ACourseInMachineLearning.pdf, does not exist in the library; the 2017 file is the same work in its current draft). Size 3,921,784 bytes. Scan digest sha256(str(size) + file bytes) = 976a9a48df0b85a67c98ae9fc9669250415a2f42e89978faca1011513e57bd9d, book_id 976a9a48df0b85a6. Plain sha256 of the file bytes = 32251b6d23adf23e887ba1dcb6fbd91c5369a5c6c99df4b16dd2da56bf0fdad5. Extracted text at the matching books-d-models path: 711,695 bytes, 11,905 lines, clean born digital text. Extraction artifacts: some display math is garbled in the text layer (the not equal sign renders as 6=, several display equations are fragmented), so all quotes were drawn from clean prose passages and every quote in this artifact was proven programmatically as one contiguous substring of the extracted text file under the fleet normalization. The text is a working draft: several sections end in TODO markers and the proofs of Theorems 14 and 15 are left incomplete by the author; affected primitives record this. Collision check: book_id absent from the fleet complete list. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "generalization_as_central_goal",
+   "name": "Generalization to unseen data, not fit to training data, is the central concept of machine learning",
+   "verbatim_quote": "Generalization is perhaps the most central concept in machine learning.",
+   "page": "Chapter 1, Section 1.1 (chapter begins p. 8)",
+   "latex": "",
+   "assumptions": [
+    "A data generating distribution exists and future examples come from it",
+    "Training examples are a sample, not the population"
+   ],
+   "breakdown_regime": "Breaks when the deployment distribution differs from the training distribution, which the book treats separately as adaptation in Chapter 8.",
+   "domain": "machine learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine signal is scored by out of sample behavior on games it has never seen, never by how well it retrofits the games it was built from; a factor that only explains the past is stored as description, not as evidence.",
+    "source_operator": "generalization_as_central_goal",
+    "telemetry": "Walk forward prediction logs: predictions frozen before each game, graded after, split by season and week."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "knn_k_hyperparameter_tradeoff",
+   "name": "In K nearest neighbors, K trades overfitting (small K) against underfitting (large K) around a Euclidean distance vote",
+   "verbatim_quote": "So, K is a hyperparameter of the KNN algorithm that allows us to trade-off between overfitting (small value of K) and underfitting (large value of K).",
+   "page": "Chapter 3, Section 3.2 (chapter begins p. 29)",
+   "latex": "d(a,b) = \\left[\\sum_d (a_d - b_d)^2\\right]^{1/2}",
+   "assumptions": [
+    "Features are numeric and comparably scaled",
+    "Closer in feature space means more similar in label"
+   ],
+   "breakdown_regime": "Breaks under irrelevant features and in high dimensions, where distances concentrate (Chapter 3, Section 3.5).",
+   "domain": "machine learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Analogous matchup lookup in the engine (find historical games most similar to this one) must expose its neighborhood size as a tuned hyperparameter: a tiny neighborhood memorizes noise, a huge one washes out the specific matchup.",
+    "source_operator": "knn_k_hyperparameter_tradeoff",
+    "telemetry": "Historical game feature vectors: team efficiency splits, pace, rest days, venue, personnel availability flags."
+   },
+   "symbol_and_unit_ledger": {
+    "a, b": "feature vectors in R^D",
+    "d": "feature index, 1..D",
+    "d(a,b)": "Euclidean distance, in the units of the feature space"
+   }
+  },
+  {
+   "primitive_id": "curse_of_dimensionality_concentration",
+   "name": "Distances concentrate in high dimensions; nearest neighbor methods survive only because real data is not uniform in the hypercube",
+   "verbatim_quote": "The reason is that the data that we get is not uniformly distributed over the unit hypercube.",
+   "page": "Chapter 3, Section 3.5 (chapter begins p. 29)",
+   "latex": "\\mathrm{avgDist}(\\mathcal{D}) = \\mathbb{E}\\lVert a-b\\rVert = \\sqrt{\\mathcal{D}/3}",
+   "assumptions": [
+    "The concentration calculation assumes points uniform in the unit hypercube",
+    "Real data lies on lower dimensional structure, which is the rescue the quote names"
+   ],
+   "breakdown_regime": "Breaks as a rescue when features are close to independent noise; then all pairwise distances look alike and similarity search carries no information.",
+   "domain": "machine learning foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's similarity and clustering layers must measure the intrinsic dimensionality of their feature space before trusting any distance; a high dimensional flat feature dump silently degrades every nearest neighbor and kernel computation downstream.",
+    "source_operator": "curse_of_dimensionality_concentration",
+    "telemetry": "Feature covariance spectra and pairwise distance histograms from the tracking and play by play feature store."
+   },
+   "symbol_and_unit_ledger": {
+    "D (script)": "dimension count of the feature space",
+    "a, b": "two points drawn uniformly from the unit hypercube",
+    "avgDist": "expected Euclidean distance between them, dimensionless in unit cube units"
+   }
+  },
+  {
+   "primitive_id": "perceptron_error_driven_update",
+   "name": "The perceptron is error driven: it updates its weights only on mistakes, in the direction that would fix that example",
+   "verbatim_quote": "Only when the prediction is incorrect does it change its parameters, and it changes them in such a way that it would do better on this example next time around.",
+   "page": "Chapter 4, Section 4.2 (chapter begins p. 41)",
+   "latex": "a = \\sum_d w_d x_d + b",
+   "assumptions": [
+    "Labels are binary, coded +1 and -1",
+    "The update on a mistake is w_d += y x_d and b += y"
+   ],
+   "breakdown_regime": "On non separable data the perceptron cycles forever without converging; the convergence theorem needs a positive margin and bounded inputs.",
+   "domain": "machine learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Online correction in the engine follows the same rule: a model component changes only when it was actually wrong on a graded case, and the change is the smallest one that would have fixed that case; components are never retuned on cases they already had right.",
+    "source_operator": "perceptron_error_driven_update",
+    "telemetry": "Graded prediction ledger with per component error flags on settled games."
+   },
+   "symbol_and_unit_ledger": {
+    "w_d": "weight on feature d, real valued",
+    "x_d": "feature d of the input",
+    "b": "bias term",
+    "a": "activation score; predict positive class iff a > 0"
+   }
+  },
+  {
+   "primitive_id": "cross_validation_robustness",
+   "name": "Cross validation trades speed for robustness against a single lucky or unlucky development split",
+   "verbatim_quote": "Overall, the main advantage to cross validation over development data is robustness. The main advantage of development data is speed.",
+   "page": "Chapter 5, Section 5.6 (chapter begins p. 55)",
+   "latex": "",
+   "assumptions": [
+    "The training data can be partitioned into roughly equal folds",
+    "Each fold is representative of the same distribution"
+   ],
+   "breakdown_regime": "Breaks when folds leak into each other (dependent examples split across folds) or when the deployment distribution has shifted since the data was collected.",
+   "domain": "evaluation methodology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine validation uses repeated blocked folds over seasons rather than one heroic holdout week, because a single split's verdict is mostly split luck; speed is bought only where the decision is cheap to reverse.",
+    "source_operator": "cross_validation_robustness",
+    "telemetry": "Season by season prediction archives with fold assignments recorded per evaluation run."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "independence_unit_grouped_sampling",
+   "name": "The independent sampling unit is the whole object (image, document, game), not its dependent parts (pixels, words, plays)",
+   "verbatim_quote": "The important thing to keep in mind is that it is the images (or documents) that are drawn independently from your data distribution and not the pixels (or words), which are drawn dependently.",
+   "page": "Chapter 5, Section 5.6 (chapter begins p. 55)",
+   "latex": "",
+   "assumptions": [
+    "Objects are drawn independently from the data distribution",
+    "Parts inside one object are dependent and must travel together into the same fold"
+   ],
+   "breakdown_regime": "Breaks silently when evaluation splits at the part level: scores inflate and every downstream promotion decision inherits the leak.",
+   "domain": "evaluation methodology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "All engine evaluation splits at the game level, never the play level: plays from one game share weather, officials, game script and personnel, so a play level split would grade the model partly on the game it is predicting.",
+    "source_operator": "independence_unit_grouped_sampling",
+    "telemetry": "Play by play records grouped by game id, with game level metadata (venue, weather, officiating crew) attached at the group level."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "class_imbalance_problem_definition",
+   "name": "Apparent class imbalance failure is usually a misdefined learning problem (wrong loss), not bad data",
+   "verbatim_quote": "Really, the problem is not with the data, but rather with the way that you have defined the learning problem.",
+   "page": "Chapter 6, Section 6.1 (chapter begins p. 73)",
+   "latex": "",
+   "assumptions": [
+    "The costs of the two error types are actually asymmetric",
+    "The learner is being graded on plain accuracy while the real objective differs"
+   ],
+   "breakdown_regime": "Breaks when the skew is real and the minority class carries almost no examples; then redefinition must be paired with resampling or weighting, which the same section develops.",
+   "domain": "machine learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When an engine head looks broken on rare events (blowouts, shutouts, overtime), the first fix is to restate the loss so the rare class is priced correctly, before touching the model or hunting for more data.",
+    "source_operator": "class_imbalance_problem_definition",
+    "telemetry": "Outcome base rates per prediction head, with per class error costs recorded in the evaluation ledger."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "surrogate_loss_upper_bound",
+   "name": "Surrogate losses must upper bound the true loss, so minimizing the surrogate provably pushes the true loss down",
+   "verbatim_quote": "The surrogate losses we construct will always be upper bounds on the true loss function: this guarantees that if you minimize the surrogate loss, you are also pushing down the real loss.",
+   "page": "Chapter 7, Section 7.2 (chapter begins p. 87)",
+   "latex": "\\ell^{hin}(y,\\hat y) = \\max\\{0,\\ 1 - y\\hat y\\}",
+   "assumptions": [
+    "The true zero one loss is NP hard to minimize directly (Section 7.1), so a convex surrogate is required",
+    "The surrogate is evaluated on the margin y times score"
+   ],
+   "breakdown_regime": "A surrogate that is not an upper bound (or is badly scaled) can be minimized while the true loss stays flat or rises; calibration of the surrogate to the true loss is a separate step.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any proxy objective the engine optimizes (a differentiable stand in for pick correctness) must be audited as an upper bound on the real grading loss; a proxy that can improve while real accuracy worsens is vetoed at design review.",
+    "source_operator": "surrogate_loss_upper_bound",
+    "telemetry": "Paired logs of proxy loss and true graded loss per model version over walk forward windows."
+   },
+   "symbol_and_unit_ledger": {
+    "y": "true label in {+1, -1}",
+    "y-hat": "real valued score before thresholding",
+    "hinge loss": "dimensionless penalty, zero once the example is correct with margin at least 1"
+   }
+  },
+  {
+   "primitive_id": "regularizer_shrinkage_mechanics",
+   "name": "An L2 regularizer acts multiplicatively: every gradient step first shrinks the weight vector by the factor (1 minus lambda)",
+   "verbatim_quote": "By looking at the part of the gradient related to the regularizer, the update says: w ← w − λw = (1 − λ)w.",
+   "page": "Chapter 7, Section 7.4 (chapter begins p. 87)",
+   "latex": "w \\leftarrow w - \\lambda w = (1-\\lambda)w",
+   "assumptions": [
+    "Gradient descent on loss plus a squared norm penalty",
+    "The shrinkage term is separable from the data gradient"
+   ],
+   "breakdown_regime": "Shrinkage toward zero is the wrong prior when the true weights are large or structured; it also interacts with step size, so lambda is not comparable across optimizers.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine factor weights decay toward zero by default at a known rate unless the data keeps re-earning them; the shrink factor is logged per factor so a factor's survival is itself evidence about its durability.",
+    "source_operator": "regularizer_shrinkage_mechanics",
+    "telemetry": "Per factor weight histories across retraining runs, with the applied shrinkage rate stored alongside."
+   },
+   "symbol_and_unit_ledger": {
+    "w": "weight vector being trained",
+    "lambda": "regularization strength, the fraction of each weight removed per step, dimensionless"
+   }
+  },
+  {
+   "primitive_id": "margin_inverse_weight_norm",
+   "name": "For a linear classifier the geometric margin is inversely proportional to the weight norm, so norm control is margin control",
+   "verbatim_quote": "This is a remarkable conclusion: the size of the margin is inversely proportional to the norm of the weight vector.",
+   "page": "Chapter 7, Section 7.7 (chapter begins p. 87)",
+   "latex": "\\gamma = 1/\\lVert w \\rVert",
+   "assumptions": [
+    "Data are scaled so the functional margin is normalized to 1",
+    "The classifier is linear with a bias absorbed or handled separately"
+   ],
+   "breakdown_regime": "The identity is exact only for the hard margin geometry; with slack variables the realized margin on noisy examples is smaller, and feature scaling changes what the norm means.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Confidence in an engine projection can be read off the effective weight norm of the deciding factors: a projection carried by a few huge weights has a thin margin and should be reported with wider uncertainty than one carried by many moderate weights.",
+    "source_operator": "margin_inverse_weight_norm",
+    "telemetry": "Factor weight vectors per projection, with margin proxies computed at publication time."
+   },
+   "symbol_and_unit_ledger": {
+    "gamma": "geometric margin, in feature space distance units",
+    "w": "weight vector of the linear classifier",
+    "||w||": "Euclidean norm of the weight vector"
+   }
+  },
+  {
+   "primitive_id": "importance_weighting_domain_shift",
+   "name": "Under covariate shift, reweight training examples by the ratio of new distribution density to old distribution density",
+   "verbatim_quote": "Intuitively, this makes sense: the classifier is being told to pay more attention to training examples that have high probability under the new distribution, and less attention to training that have low probability under the new distribution.",
+   "page": "Chapter 8, Section 8.2 (chapter begins p. 104)",
+   "latex": "\\beta(x) = D^{new}(x)/D^{old}(x)",
+   "assumptions": [
+    "The label conditional p(y|x) is unchanged; only the input distribution shifts (covariate shift)",
+    "The old distribution has support everywhere the new one does"
+   ],
+   "breakdown_regime": "Breaks when density ratios explode (new region barely present in old data), when the shift is in p(y|x) instead, and the book's Section 8.1 result says adaptation is impossible in general without such assumptions.",
+   "domain": "domain adaptation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When the engine moves across eras (rule changes, pace eras, a season unlike the training seasons), historical games are reweighted by how representative they are of the current environment instead of being dropped or trusted equally.",
+    "source_operator": "importance_weighting_domain_shift",
+    "telemetry": "Per season distributional statistics (pace, play mix, scoring environment) used to compute representativeness weights for historical games."
+   },
+   "symbol_and_unit_ledger": {
+    "beta(x)": "importance weight on training example x, dimensionless",
+    "D_new, D_old": "probability densities of the deployment and training distributions at x"
+   }
+  },
+  {
+   "primitive_id": "mle_relative_frequency",
+   "name": "For a Bernoulli parameter, the maximum likelihood estimate is exactly the observed relative frequency",
+   "verbatim_quote": "In this case, the maximum likelihood estimate is nothing but the relative frequency of observing heads!",
+   "page": "Chapter 9, Section 9.2 (chapter begins p. 116)",
+   "latex": "\\hat\\beta = H/(H+T)",
+   "assumptions": [
+    "Trials are independent with a fixed unknown bias",
+    "The likelihood is maximized over the parameter only"
+   ],
+   "breakdown_regime": "The estimate is 0 or 1 on one sided samples and carries no uncertainty statement; small samples need priors or smoothing, which Chapter 9, Section 9.7 adds.",
+   "domain": "probabilistic modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every rate the engine quotes (a team's conversion rate, a kicker's make rate) starts as a relative frequency over a stated denominator; the denominator is part of the estimate and travels with it into every downstream computation.",
+    "source_operator": "mle_relative_frequency",
+    "telemetry": "Event counts with explicit denominators per rate statistic, versioned by data window."
+   },
+   "symbol_and_unit_ledger": {
+    "beta-hat": "estimated probability of heads, dimensionless in [0,1]",
+    "H": "count of observed heads",
+    "T": "count of observed tails"
+   }
+  },
+  {
+   "primitive_id": "naive_bayes_linear_form",
+   "name": "Naive Bayes with the conditional independence assumption collapses algebraically to a linear classifier in log odds",
+   "verbatim_quote": "The result of the algebra is that the naive Bayes model has precisely the form of a linear model!",
+   "page": "Chapter 9, Section 9.4 (chapter begins p. 116)",
+   "latex": "\\log \\frac{p(y=+1|x)}{p(y=-1|x)} = x \\cdot w + b",
+   "assumptions": [
+    "Features are conditionally independent given the label",
+    "Class conditional feature distributions are estimated from data"
+   ],
+   "breakdown_regime": "When features are strongly dependent given the label, the probabilities are overconfident even if the ranking of classes stays usable; the linear form survives, the calibration does not.",
+   "domain": "probabilistic modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Simple evidence combination heads in the engine (adding independent scouting or situational signals) are naive Bayes in disguise: their combined score is a log odds sum, so their confidence must be discounted for correlation between signals before it is read as a probability.",
+    "source_operator": "naive_bayes_linear_form",
+    "telemetry": "Signal level hit rates and pairwise signal correlations measured on graded history."
+   },
+   "symbol_and_unit_ledger": {
+    "x": "feature vector of the example",
+    "w, b": "weights and bias computed from the class conditional feature probabilities",
+    "left side": "log posterior odds, dimensionless (nats)"
+   }
+  },
+  {
+   "primitive_id": "logistic_regression_logistic_loss_identity",
+   "name": "Logistic regression is the probabilistic model whose negative log likelihood is exactly the logistic loss",
+   "verbatim_quote": "As you can see, the log-likelihood is precisely the negative of (a scaled version of) the logistic loss from Chapter 7.",
+   "page": "Chapter 9, Section 9.6 (chapter begins p. 116)",
+   "latex": "\\sigma(a) = 1/(1+e^{-a})",
+   "assumptions": [
+    "Labels are generated by a Bernoulli whose parameter is the sigmoid of a linear score",
+    "Examples are independent given the parameters"
+   ],
+   "breakdown_regime": "If the true decision boundary is not linear in the given features, the model's probabilities are systematically wrong in the regions the features cannot express.",
+   "domain": "probabilistic modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's probability heads are trained with the loss that matches their probabilistic meaning: a head that outputs probabilities is fit by log likelihood, so its training objective and its published meaning cannot drift apart.",
+    "source_operator": "logistic_regression_logistic_loss_identity",
+    "telemetry": "Predicted probabilities versus realized frequencies, binned, per head and per season."
+   },
+   "symbol_and_unit_ledger": {
+    "a": "real valued score w dot x",
+    "sigma(a)": "modeled probability of the positive class, dimensionless in [0,1]"
+   }
+  },
+  {
+   "primitive_id": "priors_as_regularizers",
+   "name": "Priors and regularizers are the same object: a Gaussian prior gives L2 regularization, a Laplace prior gives L1",
+   "verbatim_quote": "(A 1-norm regularizer can be obtained by using a Laplace prior on w rather than a Gaussian prior on w.)",
+   "page": "Chapter 9, Section 9.7 (chapter begins p. 116)",
+   "latex": "p(w|\\mathcal{D}) \\propto p(\\mathcal{D}|w)\\, p(w)",
+   "assumptions": [
+    "Maximum a posteriori estimation is used in place of full posterior integration",
+    "The prior family is chosen to match the penalty whose geometry is wanted"
+   ],
+   "breakdown_regime": "MAP with a prior is not the full Bayesian posterior; uncertainty is understated, and a misspecified prior biases small sample estimates toward the prior's shape.",
+   "domain": "probabilistic modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every shrinkage choice in the engine is written down as an explicit prior belief about a factor (typical size, plausible range), so a regularizer can be argued with, replaced, or relaxed when the belief changes, instead of hiding inside a tuning constant.",
+    "source_operator": "priors_as_regularizers",
+    "telemetry": "Factor prior registry: stated prior family and scale per factor, reviewed when a factor is promoted or demoted."
+   },
+   "symbol_and_unit_ledger": {
+    "w": "parameter vector",
+    "D (script)": "observed data set",
+    "p(w)": "prior density over parameters",
+    "p(D|w)": "likelihood of the data given the parameters"
+   }
+  },
+  {
+   "primitive_id": "neural_network_initialization_symmetry",
+   "name": "Zero or symmetric initialization traps a neural network: identical hidden units receive identical gradients and never diversify",
+   "verbatim_quote": "This shows that neural networks are sensitive to their initialization.",
+   "page": "Chapter 10, Section 10.3 (chapter begins p. 129)",
+   "latex": "",
+   "assumptions": [
+    "Hidden units in a layer share the same inputs and architecture",
+    "Gradient updates are deterministic functions of the current weights"
+   ],
+   "breakdown_regime": "The trap is specific to symmetric starts; random initialization breaks symmetry, but deep stacks then face the vanishing gradient problem of Section 10.5 instead.",
+   "domain": "neural modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Learned engine components are never seeded identically across ensemble members: identical seeds produce identical members and fake consensus, so seed diversity is checked as part of ensemble validation.",
+    "source_operator": "neural_network_initialization_symmetry",
+    "telemetry": "Initialization seeds and resulting member diversity statistics for every trained ensemble."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "kernel_trick_quadratic_map",
+   "name": "An explicit quadratic feature map's inner product equals (1 + x dot z) squared, computable at the cost of one ordinary inner product",
+   "verbatim_quote": "Thus, you can compute φ( x) · φ(z) in exactly the same amount of time as you can compute x · z",
+   "page": "Chapter 11, Section 11.1 (chapter begins p. 141)",
+   "latex": "\\phi(x)\\cdot\\phi(z) = (1 + x\\cdot z)^2",
+   "assumptions": [
+    "The map phi contains all products x_d x_e plus linear and constant terms with the matching coefficients",
+    "Only the inner product is ever needed, never phi itself"
+   ],
+   "breakdown_regime": "The trick buys the inner product only; anything needing explicit coordinates of phi (per feature importances, for example) cannot use it, and the kernel matrix still costs quadratic memory in the number of examples.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Interaction effects between engine factors (matchup specific combinations) can be scored through a kernel without enumerating every pair as an explicit feature, which keeps the factor store small while letting pairwise chemistry enter projections.",
+    "source_operator": "kernel_trick_quadratic_map",
+    "telemetry": "Pairwise factor interaction evaluations computed on demand from the base factor store."
+   },
+   "symbol_and_unit_ledger": {
+    "phi": "feature map into the space of all degree 2 monomials",
+    "x, z": "input vectors in R^D",
+    "left side": "inner product in the quadratic feature space, computed without materializing phi"
+   }
+  },
+  {
+   "primitive_id": "kernel_validity_inner_product",
+   "name": "A function K is a valid kernel exactly when it is an inner product under some feature map, equivalently when it is positive semi definite",
+   "verbatim_quote": "One way to answer this question is to say that K (·, ·) is a valid kernel if it corresponds to the inner product between two vectors.",
+   "page": "Chapter 11, Section 11.4 (chapter begins p. 141)",
+   "latex": "K(x,z) = \\phi(x)\\cdot\\phi(z)",
+   "assumptions": [
+    "The Gram matrix of K over any finite sample must be positive semi definite (Mercer's condition as presented in the chapter)"
+   ],
+   "breakdown_regime": "An invalid similarity (not positive semi definite) breaks the SVM dual's convexity and can make training diverge or return meaningless dual variables.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any custom similarity the engine defines between games, teams or players must pass a positive semi definite check on real samples before it is used inside a margin method; an intuitive similarity that fails the check is restricted to nearest neighbor use.",
+    "source_operator": "kernel_validity_inner_product",
+    "telemetry": "Gram matrix eigenvalue audits on sampled historical game sets for each registered similarity function."
+   },
+   "symbol_and_unit_ledger": {
+    "K": "candidate similarity function on pairs of inputs",
+    "phi": "some feature map into an inner product space",
+    "x, z": "input objects of any type"
+   }
+  },
+  {
+   "primitive_id": "support_vectors_margin_equality",
+   "name": "By KKT, only training points lying exactly on the margin have nonzero dual weight; those support vectors alone define the SVM",
+   "verbatim_quote": "In other words, the only training examples for which αn 6= 0 are those that lie precisely 1 unit away from the maximum margin decision boundary!",
+   "page": "Chapter 11, Sections 11.5 to 11.6 (chapter begins p. 141)",
+   "latex": "f(\\hat x) = \\mathrm{sign}\\left(\\sum_n \\alpha_n y_n K(x_n, \\hat x)\\right)",
+   "assumptions": [
+    "The SVM dual has been solved to optimality so KKT conditions hold",
+    "Points strictly outside the margin have alpha exactly 0"
+   ],
+   "breakdown_regime": "With heavy slack (small C) many points sit on or inside the margin and the support set grows; the sparsity story weakens exactly when the data are noisy. The extracted text renders the not equal sign as 6=, preserved in the quote as printed.",
+   "domain": "kernel methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine keeps an explicit support set for its margin based heads: the small set of historical cases that actually pin the decision boundary, which can be inspected one by one when a projection looks wrong, instead of auditing the whole training set.",
+    "source_operator": "support_vectors_margin_equality",
+    "telemetry": "Support case lists per margin head, with the boundary cases surfaced in projection review packets."
+   },
+   "symbol_and_unit_ledger": {
+    "alpha_n": "dual variable for training example n, bounded in [0, C]",
+    "y_n": "label of example n in {+1, -1}",
+    "K": "kernel between training example n and the test point",
+    "f": "predicted label of the test point"
+   }
+  },
+  {
+   "primitive_id": "pac_learning_definition",
+   "name": "PAC learning formalizes the achievable goal: error at most e, with failure probability at most delta, over all distributions",
+   "verbatim_quote": "An algorithm A is an (e, δ)-PAC learning algorithm if, for all distributions D : given samples from D , the probability that it returns a “bad function” is at most δ; where a “bad” function is one with test error rate more than e on D .",
+   "page": "Chapter 12, Section 12.3, pp. 156 to 157",
+   "latex": "",
+   "assumptions": [
+    "Guarantees are stated uniformly over all data distributions",
+    "Efficiency means runtime polynomial in 1/e and 1/delta, and sample complexity is tracked as its own resource"
+   ],
+   "breakdown_regime": "Worst case over all distributions is stronger than practice needs; distribution free bounds can be loose to the point of vacuity on real, structured data.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine capability claim is stated in PAC shape: the accuracy being claimed, the confidence attached to it, and the sample size behind it, as three separate numbers that can each be challenged independently.",
+    "source_operator": "pac_learning_definition",
+    "telemetry": "Claim registry: per head, the claimed error bound, the confidence level, and the graded sample count supporting it."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "occams_razor_bound",
+   "name": "Occam's bound: a consistent hypothesis from a finite class of size |H| needs sample size on the order of log |H| to generalize",
+   "verbatim_quote": "In a machine learning context, a reasonable paraphrase is “simple solutions generalize well.”",
+   "page": "Chapter 12, Section 12.5, pp. 160 to 161",
+   "latex": "\\text{sample complexity} \\le \\log |H|",
+   "assumptions": [
+    "The learned function achieves zero error on the training data",
+    "The hypothesis class is finite"
+   ],
+   "breakdown_regime": "Useless for infinite classes (linear classifiers), which is why the VC dimension follows in Section 12.6; the draft also leaves Theorem 15's proof as a TODO, so the bound is used here as the chapter states it, not as a rederived result.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Model complexity in the engine is budgeted in bits: a factor family that needs many free choices to fit history must produce proportionally more graded evidence before it is trusted, because log of the search space is the price of admission.",
+    "source_operator": "occams_razor_bound",
+    "telemetry": "Per factor family: number of fitted choices, graded sample count, and the implied complexity budget in the promotion review."
+   },
+   "symbol_and_unit_ledger": {
+    "H": "finite hypothesis class the learner searches",
+    "|H|": "number of hypotheses in the class",
+    "log |H|": "the draft's stated bound form, suppressing the accuracy and confidence factors"
+   }
+  },
+  {
+   "primitive_id": "vc_dimension_shattering",
+   "name": "VC dimension measures an infinite hypothesis class by the largest set of points it can label in every possible way",
+   "verbatim_quote": "For data drawn from some space X , the VC dimension of a hypothesis space H over X is the maximal K such that: there exists a set X ⊆ X of size | X | = K, such that for all binary labelings of X, there exists a function f ∈ H that matches this labeling.",
+   "page": "Chapter 12, Section 12.6, pp. 162 to 163",
+   "latex": "",
+   "assumptions": [
+    "The shattering set must work for every binary labeling, adversarially chosen",
+    "Sample complexity bounds scale with VC dimension in place of log |H|"
+   ],
+   "breakdown_regime": "VC bounds are typically loose by orders of magnitude on real data and say nothing about which algorithm or prior reaches the good hypotheses.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Capacity audits for engine model families use shattering style stress tests: if a family can fit arbitrary relabelings of a modest graded set, its flexibility, not the signal, is what its training score is measuring.",
+    "source_operator": "vc_dimension_shattering",
+    "telemetry": "Random relabeling stress tests run per model family at promotion time, with the largest fittable set size recorded."
+   },
+   "symbol_and_unit_ledger": {}
+  },
+  {
+   "primitive_id": "bagging_bootstrap_coverage",
+   "name": "A bootstrap sample of size N omits about 36.8 percent of the data, so each bagged member sees only about 63 percent of the examples",
+   "verbatim_quote": "So only about 63% of the original training examples will be represented in any given bootstrapped set.",
+   "page": "Chapter 13, Section 13.1, pp. 165 to 166",
+   "latex": "(1 - 1/N)^N \\to 1/e \\approx 0.3679",
+   "assumptions": [
+    "Sampling is uniform with replacement from the training set",
+    "N is large enough for the limit to be accurate (the book notes four decimal places by N = 1000)"
+   ],
+   "breakdown_regime": "Members trained on overlapping 63 percent subsets are correlated, so variance reduction saturates; bagging does not reduce bias.",
+   "domain": "ensemble methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Ensemble members in the engine are built on bootstrap resamples of graded history with the coverage math made explicit: the omitted third of games per member is the out of bag set used to grade that member honestly.",
+    "source_operator": "bagging_bootstrap_coverage",
+    "telemetry": "Out of bag grades per ensemble member, computed on exactly the games that member never trained on."
+   },
+   "symbol_and_unit_ledger": {
+    "N": "number of training examples, also the bootstrap sample size",
+    "left side": "probability that a given example is never selected in one bootstrap sample"
+   }
+  },
+  {
+   "primitive_id": "adaboost_adaptive_weight_alpha",
+   "name": "AdaBoost weights each weak learner by alpha = (1/2) log((1 minus error)/error), positive whenever the learner beats chance",
+   "verbatim_quote": "As long as the weak learner does, indeed, achieve < 50% error, then α will be greater than zero. As the error drops to zero, α grows without bound.",
+   "page": "Chapter 13, Section 13.2, pp. 166 to 168",
+   "latex": "\\alpha^{(k)} = \\frac{1}{2} \\log \\frac{1 - \\hat e^{(k)}}{\\hat e^{(k)}}",
+   "assumptions": [
+    "The weak learner accepts weighted training data",
+    "Its weighted error stays strictly below 50 percent"
+   ],
+   "breakdown_regime": "If a weak learner hits exactly 50 percent error alpha is zero and boosting stalls; worse than chance flips its sign. Label noise makes later rounds chase mislabeled examples with growing weights.",
+   "domain": "ensemble methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Weak engine signals are combined with error priced weights of the same form: a signal's vote weight is a log odds function of its graded error, so a signal at chance level automatically gets zero say and a degrading signal loses say without a manual demotion.",
+    "source_operator": "adaboost_adaptive_weight_alpha",
+    "telemetry": "Per signal graded error rates on rolling windows, feeding the combination weights each cycle."
+   },
+   "symbol_and_unit_ledger": {
+    "alpha^(k)": "vote weight of the kth weak learner, dimensionless",
+    "e-hat^(k)": "weighted training error of the kth weak learner under the current example distribution"
+   }
+  },
+  {
+   "primitive_id": "sgd_noisy_gradient_optimization",
+   "name": "Stochastic optimization works with noisy gradient measurements from small samples instead of exact full data gradients",
+   "verbatim_quote": "Despite this lack of information, you can still run a gradient-based algorithm, where you simply compute local gradients on a current sample of data.",
+   "page": "Chapter 14, Section 14.2, pp. 172 to 173",
+   "latex": "\\min_z \\mathbb{E}_{\\zeta}[F(z, \\zeta)]",
+   "assumptions": [
+    "Sampled gradients are unbiased estimates of the full gradient",
+    "Step sizes decay, with convergence guaranteed for rates of the form eta0 over sqrt(k) as the chapter states"
+   ],
+   "breakdown_regime": "Noisy gradients make the method sensitive to step size choice, and unpermuted streaming order can badly bias the path; the chapter warns explicitly about both.",
+   "domain": "scalable learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine retraining on streaming graded results uses minibatch updates with decaying step sizes rather than full refits, and the update order is shuffled per pass so schedule artifacts in the data cannot steer the parameters.",
+    "source_operator": "sgd_noisy_gradient_optimization",
+    "telemetry": "Training run logs: batch composition, step size schedule, and permutation seed per pass."
+   },
+   "symbol_and_unit_ledger": {
+    "z": "parameter vector being optimized",
+    "zeta": "a random draw of examples from the training distribution",
+    "F(z, zeta)": "loss on the drawn sample plus its share of the regularizer"
+   }
+  },
+  {
+   "primitive_id": "l1_norm_tightest_convex_sparsity",
+   "name": "The 1-norm is the tightest convex upper bound on the 0-norm, exactly as hinge loss is the tightest convex bound on zero one loss",
+   "verbatim_quote": "Just as hinge-loss is the tightest convex upper bound on zero-one error, the one-norm is the tighest convex upper bound on the zero-norm.",
+   "page": "Chapter 14, Section 14.3, pp. 174 to 175",
+   "latex": "\\lVert w\\rVert_1 = \\sum_d |w_d|",
+   "assumptions": [
+    "The true sparsity count (0-norm) is discrete and NP hard to optimize, per the chapter",
+    "Subgradients at zero are chosen in [-1, +1], with truncated gradients used to land exactly on zero"
+   ],
+   "breakdown_regime": "Plain subgradient descent overshoots zero and rarely produces exact sparsity without truncation; L1 also biases large weights downward, distorting magnitudes it keeps.",
+   "domain": "scalable learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Factor pruning in the engine uses L1 style pressure when a sparse published factor set is wanted, accepting the known magnitude bias and correcting it in a refit pass on the surviving factors only.",
+    "source_operator": "l1_norm_tightest_convex_sparsity",
+    "telemetry": "Factor survival lists per pruning run, with pre and post pruning weight magnitudes compared."
+   },
+   "symbol_and_unit_ledger": {
+    "w": "weight vector",
+    "d": "feature index",
+    "||w||_1": "sum of absolute weights, the convex sparsity surrogate"
+   }
+  },
+  {
+   "primitive_id": "feature_hashing_projection",
+   "name": "Feature hashing compresses a huge feature space into P buckets by summing colliding features, at small accuracy cost",
+   "verbatim_quote": "Feature hashing is an incredibly simple technique for reducing the memory footprint of linear models, with very small sacrifices in accuracy.",
+   "page": "Chapter 14, Section 14.4, pp. 176 to 177",
+   "latex": "\\phi(x)_p = \\sum_{d \\in h^{-1}(p)} x_d",
+   "assumptions": [
+    "The learner is robust to the noise collisions introduce",
+    "The hash is fixed before training and shared between training and prediction"
+   ],
+   "breakdown_regime": "Collisions merge unrelated features irreversibly; the chapter shows the induced kernel gains a collision term whose variance shrinks like 1 over P squared, so small P is the failure regime.",
+   "domain": "scalable learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "High cardinality categorical inputs to the engine (player ids, matchup pair ids) are hashed into fixed width embeddings rather than one hot encoded, with the bucket count chosen from the collision variance budget the chapter derives.",
+    "source_operator": "feature_hashing_projection",
+    "telemetry": "Collision rate measurements per hashed input, tracked against downstream accuracy deltas."
+   },
+   "symbol_and_unit_ledger": {
+    "h": "hash function from D feature indices to P buckets, P much smaller than D",
+    "x_d": "value of feature d",
+    "phi(x)_p": "hashed feature value in bucket p"
+   }
+  },
+  {
+   "primitive_id": "kmeans_convergence_theorem",
+   "name": "K-means converges in finitely many steps to a local optimum of the sum of squared distances objective, never worse, never guaranteed global",
+   "verbatim_quote": "Theorem 16 (K-Means Convergence Theorem). For any dataset D and any number of clusters K, the K-means algorithm converges in a finite number of iterations, where convergence is measured by L ceasing the change.",
+   "page": "Chapter 15, Section 15.1, pp. 178 to 181",
+   "latex": "L(z,\\mu; \\mathcal{D}) = \\sum_n \\lVert x_n - \\mu_{z_n} \\rVert^2",
+   "assumptions": [
+    "Both the assignment step and the mean step can only decrease L, as the proof shows",
+    "Centers are means of subsets of the data, so only finitely many configurations exist"
+   ],
+   "breakdown_regime": "Convergence is to a local optimum and can take exponential time on adversarial inputs; initialization decides which optimum, which is why the chapter adds furthest first and K-means++ seeding.",
+   "domain": "unsupervised learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Game and team clustering inside the engine is always run from multiple seeds with the objective value reported per run; a clustering whose objective is not the best of the seed set is treated as a failed run, not as a finding.",
+    "source_operator": "kmeans_convergence_theorem",
+    "telemetry": "Clustering run registry: seed, final objective value, and cluster stability across seeds."
+   },
+   "symbol_and_unit_ledger": {
+    "z_n": "cluster assignment of example n",
+    "mu_k": "center of cluster k",
+    "L": "total within cluster squared distance, in squared feature units"
+   }
+  },
+  {
+   "primitive_id": "pca_variance_reconstruction_equivalence",
+   "name": "PCA's two definitions coincide: maximizing projected variance is the same optimization as minimizing reconstruction error",
+   "verbatim_quote": "Minimizing this final term is equivalent to maximizing ||Xu||2 , which is exactly the form of the maximum variance derivation of PCA.",
+   "page": "Chapter 15, Section 15.2, pp. 182 to 185",
+   "latex": "\\lambda u = X^{\\top} X u",
+   "assumptions": [
+    "Data are centered at the origin before projection",
+    "Projection directions are constrained to unit length and successive directions are mutually orthogonal"
+   ],
+   "breakdown_regime": "PCA is linear and variance driven, so it keeps high variance noise directions and discards low variance signal directions when the two are crossed; nonlinear structure needs the manifold methods the chapter only gestures at.",
+   "domain": "unsupervised learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Dimensionality reduction of engine tracking features is validated both ways the theorem licenses: a kept component set must show both high retained variance and low reconstruction error on held out games, and a disagreement between the two checks flags scaling problems.",
+    "source_operator": "pca_variance_reconstruction_equivalence",
+    "telemetry": "Per component variance shares and held out reconstruction errors for each reduced feature set."
+   },
+   "symbol_and_unit_ledger": {
+    "X": "centered data matrix, examples by features",
+    "u": "unit length projection direction",
+    "lambda": "variance of the data along u, in squared feature units"
+   }
+  },
+  {
+   "primitive_id": "gmm_soft_assignments",
+   "name": "Gaussian mixture EM replaces hard cluster labels with fractional responsibilities that sum to one per example",
+   "verbatim_quote": "This time, instead of making hard assignments (“example 10 belongs to cluster 4”), we’ll make soft assignments (“example 10 belongs half to cluster 4, a quarter to cluster 2 and a quarter to cluster 5”).",
+   "page": "Chapter 16, Section 16.2, pp. 190 to 191",
+   "latex": "z_{n,k} = p(y_n = k | x_n)",
+   "assumptions": [
+    "Data are generated by a mixture of Gaussians with unknown mixing weights, means and variances",
+    "Parameters are re-estimated by counting fractional points exactly as the labeled case counts whole points"
+   ],
+   "breakdown_regime": "Like K-means, EM here is prone to local optima and initialization quality; a component can also collapse onto a single point and drive its variance to zero.",
+   "domain": "unsupervised learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Archetype assignment in the engine (what kind of game is this, what kind of team is this) is kept probabilistic: a game can be 60 percent one archetype and 40 percent another, and downstream reasoning consumes the mixture instead of a forced single label.",
+    "source_operator": "gmm_soft_assignments",
+    "telemetry": "Responsibility vectors per game and team stored with the mixture model version that produced them."
+   },
+   "symbol_and_unit_ledger": {
+    "z_{n,k}": "responsibility of cluster k for example n, a probability in [0,1] summing to 1 over k",
+    "y_n": "hidden cluster label of example n",
+    "x_n": "observed example"
+   }
+  },
+  {
+   "primitive_id": "em_lower_bound_framework",
+   "name": "EM works because it maximizes a Jensen lower bound on the log likelihood that touches the true likelihood at the current parameters",
+   "verbatim_quote": "Expectation maximization is a family of algorithms for performing maximum likelihood estimation in probabilistic models with hidden variables.",
+   "page": "Chapter 16, Section 16.3, pp. 192 to 194",
+   "latex": "\\mathcal{L}(X|\\theta) \\ge \\sum_n \\sum_{y_n} q(y_n) \\log \\frac{p(x_n, y_n|\\theta)}{q(y_n)}",
+   "assumptions": [
+    "The model has hidden variables that must be marginalized, which is what makes the log of a sum intractable directly",
+    "Jensen's inequality applies because log is concave"
+   ],
+   "breakdown_regime": "EM climbs to a local optimum of the likelihood, not the global one, and the bound argument guarantees monotone improvement of the bound, not of generalization.",
+   "domain": "probabilistic modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Latent state estimation in the engine (unobserved team form, hidden game script states) is fit with the same bound discipline: the surrogate being optimized must provably touch the true objective at the current estimate, or improvements in the surrogate prove nothing.",
+    "source_operator": "em_lower_bound_framework",
+    "telemetry": "Bound gap measurements (true objective minus surrogate) logged at each iteration of latent state fits."
+   },
+   "symbol_and_unit_ledger": {
+    "L": "log likelihood of the observed data, in nats",
+    "theta": "model parameters",
+    "q": "any distribution over the hidden variables; the bound is tight when q is the posterior at the current theta",
+    "y_n": "hidden variables for example n"
+   }
+  },
+  {
+   "primitive_id": "viterbi_trellis_argmax",
+   "name": "Structured argmax over exponentially many label sequences is computed exactly in O(L K squared) by dynamic programming on a trellis",
+   "verbatim_quote": "In particular, it’s runtime is O( LK2 ), which is an exponential improvement on the naive O(K L ) runtime if one were to enumerate every possible output sequence.",
+   "page": "Chapter 17, Section 17.7, pp. 208 to 211",
+   "latex": "\\alpha_{l+1,k} = \\max_{k'} \\left[ \\alpha_{l,k'} + w \\cdot \\phi_{l+1}(x, \\ldots, k', k) \\right]",
+   "assumptions": [
+    "Features decompose over positions into unary and adjacent label (Markov) terms",
+    "Scores are sums of per position terms, so the associative decomposition holds"
+   ],
+   "breakdown_regime": "Higher order dependencies blow the trellis up to O(L K to the M); features that look further back than the Markov order break the recursion entirely, which is the chapter's stated limit.",
+   "domain": "structured prediction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Play sequence reasoning in the engine (drive level and game script inference) uses trellis decoding over per play scores plus transition scores, so the best full sequence is found exactly instead of by greedy per play choices that contradict each other.",
+    "source_operator": "viterbi_trellis_argmax",
+    "telemetry": "Per play score tables and transition score tables from the sequence models, with decoded paths stored per drive."
+   },
+   "symbol_and_unit_ledger": {
+    "alpha_{l,k}": "score of the best output prefix ending at position l with label k",
+    "phi_{l+1}": "unary plus Markov features for position l+1 given previous label k' and current label k",
+    "L": "sequence length",
+    "K": "number of labels"
+   }
+  },
+  {
+   "primitive_id": "structured_hinge_loss_augmented_margin",
+   "name": "Structured SVMs require the true output to beat every imposter by a margin equal to that imposter's loss (loss augmented inference)",
+   "verbatim_quote": "In fact, this loss augmentation is essentially playing the role of a margin, where the required margin scales according to the loss.",
+   "page": "Chapter 17, Section 17.4, pp. 202 to 204",
+   "latex": "\\xi_n = \\max\\left\\{0,\\ \\max_{\\hat y \\in Y(x_n)} \\left[ w\\cdot\\phi(x_n,\\hat y) + \\ell(y_n,\\hat y) \\right] - w\\cdot\\phi(x_n, y_n)\\right\\}",
+   "assumptions": [
+    "The loss decomposes compatibly with the features so loss augmented argmax stays computable",
+    "Only the most violating imposter matters, which is what collapses exponentially many constraints into one per example"
+   ],
+   "breakdown_regime": "If the loss does not decompose over the structure, loss augmented inference becomes intractable and the whole construction stalls at the argmax step.",
+   "domain": "structured prediction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sequence and slate level engine outputs are trained against loss scaled margins: a candidate game script that is almost right needs a small margin over the truth, a badly wrong one needs a large margin, so training effort concentrates on the confusions that cost the most.",
+    "source_operator": "structured_hinge_loss_augmented_margin",
+    "telemetry": "Most violating alternative outputs per training case, logged with their structured loss values."
+   },
+   "symbol_and_unit_ledger": {
+    "xi_n": "structured hinge loss (slack) on example n, in score units",
+    "phi(x, y)": "joint feature vector of input x and candidate output y",
+    "ell": "structured loss between the true output and an imposter, for example Hamming loss",
+    "Y(x_n)": "set of all possible structured outputs for x_n"
+   }
+  },
+  {
+   "primitive_id": "imitation_compounding_error_bound",
+   "name": "Supervised imitation has a T squared compounding error bound: small per step errors cascade because the learner visits states the expert never showed it",
+   "verbatim_quote": "The biggest single issue with the supervised learning approach to imitation learning is that it cannot learn to recover from failures.",
+   "page": "Chapter 18, Sections 18.1 to 18.2, pp. 213 to 215",
+   "latex": "\\mathbb{E}_{\\tau \\sim f} \\sum_t \\ell_t \\le \\mathbb{E}_{\\tau \\sim expert} \\sum_t \\ell_t + \\ell^{(max)} T^2 e",
+   "assumptions": [
+    "Instantaneous losses lie in [0, ell^(max)]",
+    "The classifier's error e is measured on expert visited states, which is exactly the distribution mismatch the bound prices"
+   ],
+   "breakdown_regime": "The bound is tight: the chapter's XOR construction shows problems where the T squared growth is unavoidable for pure supervised imitation, and if e reaches 1/T the guarantee is vacuous.",
+   "domain": "imitation learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any engine policy that acts sequentially (in game adjustments, live re-projection) is graded on trajectories it generates itself, not on expert trajectories: per step accuracy on historical states systematically overstates live performance by the compounding factor this theorem names.",
+    "source_operator": "imitation_compounding_error_bound",
+    "telemetry": "Self generated trajectory grades: policies rolled out on held out games and scored over the full sequence, not per step."
+   },
+   "symbol_and_unit_ledger": {
+    "T": "time horizon, number of sequential decisions",
+    "e": "per step classification error rate of the learned policy under the expert's state distribution",
+    "ell^(max)": "maximum instantaneous loss",
+    "tau": "a full trajectory of observations, actions and losses"
+   }
+  },
+  {
+   "primitive_id": "dagger_dataset_aggregation",
+   "name": "DAgger fixes compounding error by aggregating expert labels on states the learner itself visits, improving the bound from T squared e to T e",
+   "verbatim_quote": "This is exactly what the Dataset Aggregation algorithm (“Dagger”) does.",
+   "page": "Chapter 18, Section 18.3, pp. 216 to 218",
+   "latex": "\\mathbb{E}_{\\tau \\sim f} \\sum_t \\ell_t \\le \\mathbb{E}_{\\tau \\sim expert} \\sum_t \\ell_t + \\ell^{(max)} T e + O(e)",
+   "assumptions": [
+    "An expert (or oracle) can be queried on states the learner visits, during training",
+    "Enough aggregation rounds run (the chapter's first bound needs MaxIter at least T log T; the T e form assumes a strongly convex loss)"
+   ],
+   "breakdown_regime": "DAgger demands interactive expert access, which is expensive or impossible when the expert is a human or a slow search; its policies also do not improve monotonically, so the best round must be selected on held out tasks.",
+   "domain": "imitation learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine policies are retrained on their own failure states: cases where the live policy drifted are labeled with the correct continuation and aggregated into training, so recovery behavior is learned data, not a hope.",
+    "source_operator": "dagger_dataset_aggregation",
+    "telemetry": "Failure state bank: states visited by the engine's own policies in held out rollouts, with corrected continuations attached."
+   },
+   "symbol_and_unit_ledger": {
+    "T": "time horizon",
+    "e": "error rate of the classifier on the aggregated data distribution",
+    "ell^(max)": "maximum instantaneous loss",
+    "f": "the best of the policies produced across aggregation rounds, chosen on held out tasks"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "976a9a48df0b85a6-t1",
+   "think": "This book is a single author course text that rebuilds machine learning from one question: what does it mean for a function induced from a finite sample to keep working on data it has never seen. Daume starts with induction and generalization, gives decision trees as the concrete first learner, and then refuses to let any method stand without its failure mode attached. The first movement of the book is conceptual hygiene. Expected loss is defined against an unknown distribution, training error is defined against the sample, and the gap between them is the whole subject. The Bayes optimal classifier shows the floor imposed by label noise. Inductive bias names what a learner prefers when data runs out. Overfitting and underfitting are introduced as the two directions of failure, and the cardinal rule, never touch your test data, is stated as an ethical constraint on the experimenter rather than a tip. The second movement is the working core: geometry and nearest neighbors, the perceptron with its margin based convergence theorem, and then a long practical chapter that most textbooks skip. Representation changes beat algorithm changes. Evaluation is treated as a measurement problem with its own traps: precision and recall for skewed problems, confidence intervals that do not mean what readers think, cross validation as the robust default, and the independence unit warning that the sample is the image or the document or the game, never its dependent parts. Chapter 6 then shows how multiclass, ranking and cost sensitive problems reduce to binary ones with explicit error bounds, including the quietly radical claim that class imbalance is usually a misdefined problem rather than bad data. The third movement is optimization and probability, and the book's central trick is to show they are the same machinery viewed twice. Zero one loss is NP hard, so convex surrogates are built that upper bound it; gradient descent fits them; the regularizer is revealed as a multiplicative shrink on the weights; the SVM margin turns out to be one over the weight norm, so norm control is margin control, and the optimal slack variable is exactly the hinge loss. Chapter 9 then rederives the same objects probabilistically: maximum likelihood as relative frequency, naive Bayes collapsing into a linear model, Gaussian noise turning maximum likelihood into least squares, logistic regression as the model whose log likelihood is the logistic loss, and priors turning back into regularizers, Laplace for L1 and Gaussian for L2. Neural networks get the treatment honestly: universal approximation alongside initialization symmetry traps and vanishing gradients in deep stacks. Kernel methods close the movement with the representer theorem and the dual, where only margin points survive as support vectors. The fourth movement is limits and scale. Learning theory first proves induction is impossible in the strong sense, then salvages the achievable version: PAC guarantees with accuracy and failure probability as separate resources, Occam's bound pricing a finite hypothesis class at log of its size, and VC dimension extending the accounting to infinite classes. Ensembles follow, with bagging's exact 63 percent coverage arithmetic and AdaBoost's alpha as a log odds price on weighted error. The scale chapter is engineering with theorems attached: stochastic gradients as noisy measurements, the 1-norm as the tightest convex stand in for counting features, and feature hashing whose induced kernel picks up a collision term with variance shrinking like one over P squared. Unsupervised learning and EM are presented as optimization with missing pieces: K-means converging only locally, PCA's variance and reconstruction views proven identical, and EM justified by a Jensen lower bound that must touch the true likelihood at the current parameters to mean anything. The final movement is where the book becomes most valuable for a reasoning engine. Structured prediction replaces single labels with scored configurations, solves the exponential argmax exactly with a trellis dynamic program, and generalizes the margin so the true output must beat imposters by their loss. Imitation learning then shows the deepest trap in the book: a policy trained on expert trajectories suffers compounding error with a T squared bound, because it is graded on states it visits, not states the expert visited, and DAgger repairs this by aggregating expert labels on the learner's own visited states, restoring a T times e bound. For an engine that reasons sequentially about unfolding events, this is the difference between a model that looks right on history and one that survives contact with its own predictions. The book's limits are visible and stated in its own pages: it is a draft, several proofs are left as TODO, including the Occam bound's, binary classification dominates, calibration is touched only lightly, and the deep learning chapter predates modern practice. None of that reduces the value of its discipline: every claim carries its assumptions, every method carries its breakdown regime, and every guarantee separates what is being claimed, with what confidence, on how much evidence. Two habits of the book deserve special weight because they transfer directly to engine design. The first is its treatment of uncertainty as bookkeeping rather than mood: probabilities come from stated generative stories, priors are written as regularizers where they can be inspected, and confidence intervals are accompanied by a warning about what they do not mean. The second is its insistence that abstention and problem redefinition are first class moves. Imbalance is fixed by redefining the problem, adaptation is refused when its assumptions cannot be stated, and the PAC framework itself is a negotiated settlement with impossibility: do pretty well, most of the time, and say exactly what pretty well and most of the time cost in samples. An engine built in this image does not merely produce projections; it produces projections with their evidence budgets, their assumption lists, and their known failure regimes attached, and it treats a missing assumption as a defect on the same level as a wrong number.",
+   "retrocausal_genealogy": "The book is a synthesis of the statistical learning theory tradition as it stood in the 2010s. Its perceptron chapter descends from Rosenblatt's 1958 model, cited in its own bibliography. The learning theory chapter descends from Valiant's 1984 invention of PAC learning and from Vapnik and Chervonenkis's capacity theory, with Vapnik's support vector machines closing the loop in the kernel chapter. Decision trees come from Quinlan's 1986 induction work. Boosting descends from Freund and Schapire's AdaBoost, which the book notes won the Paris Kanellakis Award. The domain adaptation chapter grows out of Daume's own 2007 Frustratingly Easy Domain Adaptation and the Ben David et al. representation analysis, both in the bibliography. The imitation learning chapter is built directly on Ross, Gordon and Bagnell's 2011 DAgger paper and Kaarianen's lower bound construction, and the fairness material in the adaptation chapter draws on Friedler, Scheidegger and Venkatasubramanian and on Hardt, Price and Srebro. The genealogy matters because the book is not a bag of algorithms: each method is presented as the answer to a specific earlier failure, perceptron to linear separability, margins to perceptron brittleness, kernels to feature engineering, PAC to the impossibility of perfect induction, DAgger to compounding error.",
+   "theory_of_mind": "Daume writes for a reader who will implement these methods and be tempted to believe their training scores. His model of that reader is precise: the reader's characteristic failure is confusing fit with knowledge, so nearly every chapter pairs a method with the exact way it deceives you, and the running sidebar questions voice the reader's objections before the reader has to. He assumes the reader can follow algebra but has not yet internalized that evaluation is an experiment that can be contaminated, which is why the cardinal rule is stated as morality rather than technique. He also believes impossibility results are practical knowledge: a full section argues induction is impossible before defining what is achievable, on the theory that knowing the ceiling focuses effort. His model of the domain itself is that machine learning is one subject, not many: the same shrink term appears as regularizer, as prior, and as margin control, and he expects the reader to notice the recurrence and be changed by it.",
+   "cross_layer_veto": "Several results in this book veto practices at other layers of any reasoning stack built on it. The cardinal rule vetoes any signal, feature or threshold that was selected using test data, no matter how strong its apparent performance. The independence unit result vetoes evaluation designs that split dependent parts of one object across train and test, because the resulting scores are leaks, not measurements. The PAC and Occam accounting vetoes capacity claims that exceed what the graded sample can pay for: a family flexible enough to fit arbitrary relabelings has spent its evidence before it starts. The adaptation impossibility result vetoes distribution shift corrections that do not state their assumptions, permitting importance weighting only under explicit covariate shift with support overlap. The surrogate discipline vetoes any proxy objective that does not upper bound the true loss. And the compounding error theorem vetoes grading a sequential policy on expert trajectories: a component can be vetoed by its own rollout behavior even when its per step accuracy looks excellent."
+  }
+ ],
+ "universal_lens": "Read as a general template, this book is a discipline for any system that must act on generalizations from finite evidence. Its recurring move is to separate three questions that are usually merged: what is being claimed, under what assumptions, and what happens when the assumptions fail. The same pattern recurs at every scale, in the shrink factor that is simultaneously a regularizer, a prior and a margin, in the bound that prices a hypothesis class before trusting it, and in the imitation result showing that a decision maker must be trained on the states its own decisions create. Any forecasting, planning or diagnostic system can adopt the template directly: state the loss, bound the proxy, price the capacity, name the breakdown regime, and grade on self generated trajectories.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book as a methods curriculum and an audit standard. Its evaluation chapters define how institute studies must be designed: game level independence units, cross validation as the default, and claims stated with accuracy, confidence and sample size separated. Its learning theory chapters define how the institute prices model complexity in reviews, and its adaptation chapter supplies the approved protocol for studying performance across eras and rule changes, with assumptions stated before any reweighting is trusted. The imitation learning chapters set the institute's standard for sequential decision research: policies are studied on their own rollouts, with compounding error treated as the default expectation rather than a surprise.",
+ "gse_mapping": "The Galaxy Sports Edge reasoning engine takes concrete machinery from nearly every chapter. Evaluation hygiene comes from Chapters 5 and 12: game level splits, walk forward folds, and PAC shaped claim accounting for every head. Factor discipline comes from Chapters 7 and 9: surrogate objectives audited as upper bounds, shrinkage rates logged as explicit priors, and margin read off effective weight norms. Era handling comes from Chapter 8: historical games reweighted by representativeness under stated covariate shift assumptions. Combination weights for weak signals follow AdaBoost's log odds pricing from Chapter 13, similarity components must pass the kernel validity check of Chapter 11, sequence reasoning uses the trellis decoding of Chapter 17, and sequential policies are retrained DAgger style on their own failure states per Chapter 18."
+}

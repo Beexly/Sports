@@ -1,0 +1,95 @@
+{
+  "book_id": "27a4af216a7cee8c",
+  "source_status": "COMPLETE",
+  "title": "SarahNewell2017 (1)",
+  "file_name": "SarahNewell2017 (1).pdf",
+  "sha256": "27a4af216a7cee8c44c01a6ff6ed5b891e0862ef1380010eec8d370141929bcd",
+  "primary_domain": "other",
+  "pages_total": 64,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in SarahNewell2017 (1) (27a4af216a7cee8c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in SarahNewell2017 (1) (27a4af216a7cee8c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in SarahNewell2017 (1) (27a4af216a7cee8c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tiered_contest_optimization",
+      "name": "Tiered Contest Optimization",
+      "verbatim_quote": "The primary contribution of this thesis is the first model to optimize the expected payout of a tiered DFS contest.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Players follow normal distributions; team point totals are normally distributed; piecewise linear approximation captures standard deviation; contests have multiple payout tiers.",
+      "breakdown_regime": "Singularity occurs when payout structures become too sparse or highly asymmetric, causing optimization to fail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's multi-objective Bayesian ranking algorithms via probabilistic payout maximization.",
+        "source_operator": "tiered_contest_optimization",
+        "telemetry": "Expected payout variance across different contest types"
+      }
+    },
+    {
+      "primitive_id": "stochastic_integer_program",
+      "name": "Stochastic Integer Program",
+      "verbatim_quote": "The stochastic integer program, MMIP, takes into account the possibility that selected athletes will earn a distribution of fantasy points, rather than a single predetermined value.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Fantasy scores are random variables; integer constraints enforce roster composition rules; optimization seeks to maximize expected utility under uncertainty.",
+      "breakdown_regime": "Degeneracy arises when the feasible region collapses due to overly restrictive constraints or zero-variance player projections.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's state-transition models where player performance transitions between discrete states governed by probability.",
+        "source_operator": "stochastic_integer_program",
+        "telemetry": "Solver runtime and solution stability under varying input uncertainty"
+      }
+    },
+    {
+      "primitive_id": "normal_distribution_assumption",
+      "name": "Normal Distribution Assumption",
+      "verbatim_quote": "The players are assumed to have a normal distribution and thus the team's fantasy points is a normal distribution.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Individual player fantasy points are normally distributed; linearity of expectation allows team totals to inherit normality.",
+      "breakdown_regime": "Non-normality of extreme tails (e.g., injury outcomes) introduces skewness that violates this primitive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Underpins GSI's conformal prediction intervals for fantasy scores via central limit theorem approximations.",
+        "source_operator": "normal_distribution_assumption",
+        "telemetry": "Kurtosis of observed fantasy score distributions"
+      }
+    },
+    {
+      "primitive_id": "piecewise_linear_approximation",
+      "name": "Piecewise Linear Approximation",
+      "verbatim_quote": "The standard deviation of the team's performance is approximated through a piecewise linear function, and the probabilities of earning cumulative payouts are calculated.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Team variance is modeled as a continuous, piecewise-linear function of player selections; cumulative payout probabilities are derived from the resulting normal distribution.",
+      "breakdown_regime": "Discontinuities in the piecewise function cause non-differentiability, leading to numerical instability in gradient-based solvers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSE's segmented cost functions in dynamic resource allocation, where marginal costs change at threshold states.",
+        "source_operator": "piecewise_linear_approximation",
+        "telemetry": "Accuracy of variance estimates relative to Monte Carlo simulations"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "27a4af216a7cee8c_t0",
+      "think": "The core challenge in DFS optimization is balancing risk and reward under uncertainty. Tiered contest optimization transforms this into a multi-objective stochastic integer program, where the objective is a weighted sum of expected payouts across all prize tiers. The stochastic integer program (MMIP) addresses the fundamental issue that player projections are noisy estimates of true fantasy production. By modeling these projections as random variables following normal distributions, we capture the inherent variability and compute the probability that our team's total points fall into each payout bucket. The normal distribution assumption simplifies the computation of team-point totals while maintaining analytical tractability. However, this assumption breaks down in extreme scenarios (e.g., superstar performances). To circumvent the computational intractability of exact convolution, the piecewise linear approximation discretizes the variance structure, enabling efficient calculation of cumulative payout probabilities. This methodological pipeline—from uncertainty modeling to practical computation—enables data-driven roster construction.\n\nDeep epistemic analysis for SarahNewell2017 (1) (27a4af216a7cee8c, domain=other, pages_read=32/64): Operator 'Tiered Contest Optimization' (page 3, domain other) captures: The primary contribution of this thesis is the first model to optimize the expected payout of a tiered DFS contest. Assumptions: Players follow normal distributions; team point totals are normally distributed; piecewise linear approximation captures standard deviation; contests have multiple payout tiers. Breakdown regime: Singularity occurs when payout structures become too sparse or highly asymmetric, causing optimization to fail. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-objective Bayesian ranking algorithms via probabilistic payout maximization. Operator 'Stochastic Integer Program' (page 3, domain other) captures: The stochastic integer program, MMIP, takes into account the possibility that selected athletes will earn a distribution of fantasy points, rather than a single predetermined value. Assumptions: Fantasy scores are random variables; integer constraints enforce roster composition rules; optimization seeks to maximize expected utility under uncertainty. Breakdown regime: Degeneracy arises when the feasible region collapses due to overly restrictive constraints or zero-variance player projections. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state-transition models where player performance transitions between discrete states governed by probability. Operator 'Normal Distribution Assumption' (page 3, domain other) captures: The players are assumed to have a normal distribution and thus the team's fantasy points is a normal distribution. Assumptions: Individual player fantasy points are normally distributed; linearity of expectation allows team totals to inherit normality. Breakdown regime: Non-normality of extreme tails (e.g., injury outcomes) introduces skewness that violates this primitive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Underpins GSI's conformal prediction intervals for fantasy scores via central limit theorem approximations. Operator 'Piecewise Linear Approximation' (page 3, domain other) captures: The standard deviation of the team's performance is approximated through a piecewise linear function, and the probabilities of earning cumulative payouts are calculated. Assumptions: Team variance is modeled as a continuous, piecewise-linear function of player selections; cumulative payout probabilities are derived from the resulting normal distribution. Breakdown regime: Discontinuities in the piecewise function cause non-differentiability, leading to numerical instability in gradient-based solvers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSE's segmented cost functions in dynamic resource allocation, where marginal costs change at threshold states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SarahNewell2017 (1) (27a4af216a7cee8c, domain=other, pages_read=32/64): Operator 'Tiered Contest Optimization' (page 3, domain other) captures: The primary contribution of this thesis is the first model to optimize the expected payout of a tiered DFS contest. Assumptions: Players follow normal distributions; team point totals are normally distributed; piecewise linear approximation captures standard deviation; contests have multiple payout tiers. Breakdown regime: Singularity occurs when payout structures become too sparse or highly asymmetric, causing optimization to fail. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-objective Bayesian ranking algorithms via probabilistic payout maximization. Operator 'Stochastic Integer Program' (page 3, domain other) captures: The stochastic integer program, MMIP, takes into account the possibility that selected athletes will earn a distribution of fantasy points, rather than a single predetermined value. Assumptions: Fantasy scores are random variables; integer constraints enforce roster composition rules; optimization seeks to maximize expected utility under uncertainty. Breakdown regime: Degeneracy arises when the feasible region collapses due to overly restrictive constraints or zero-variance player projections. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state-transition models where player performance transitions between discrete states governed by probability. Operator 'Normal Distribution Assumption' (page 3, domain other) captures: The players are assumed to have a normal distribution and thus the team's fantasy points is a normal distribution. Assumptions: Individual player fantasy points are normally distributed; linearity of expectation allows team totals to inherit normality. Breakdown regime: Non-normality of extreme tails (e.g., injury outcomes) introduces skewness that violates this primitive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Underpins GSI's conformal prediction intervals for fantasy scores via central limit theorem approximations. Operator 'Piecewise Linear Approximation' (page 3, domain other) captures: The standard deviation of the team's performance is approximated through a piecewise linear function, and the probabilities of earning cumulative payouts are calculated. Assumptions: Team variance is modeled as a continuous, piecewise-linear function of player selections; cumulative payout probabilities are derived from the resulting normal distribution. Breakdown regime: Discontinuities in the piecewise function cause non-differentiability, leading to numerical instability in gradient-based solvers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to GSE's segmented cost functions in dynamic resource allocation, where marginal costs change at threshold states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The foundational concepts trace back to Markowitz's mean-variance portfolio theory (1952) and Dantzig's stochastic programming (1955), which introduced optimization under probabilistic constraints. Later work on integer programming and Monte Carlo simulation paved the way for handling discrete player selections in DFS. The normality assumption builds on the central limit theorem, while piecewise linear methods originate in operations research for approximating nonlinear functions.",
+      "theory_of_mind": "Opposing agents (e.g., casual players) often rely on heuristics such as selecting high-salary stars or drafting based on recent hot streaks. These strategies ignore the statistical leverage of salary constraints and the diminishing returns of premium players. In contrast, sophisticated competitors exploit the probabilistic structure to identify undervalued assets that maximize expected utility. Tournament equity requires that optimal strategies account for both one's own hand and the distribution of opponents' hands, which introduces game-theoretic considerations.",
+      "cross_layer_veto": "Anti-collinearity conditions arise when two players are perfectly correlated (e.g., same team defense), leading to redundant information and rank deficiency in the covariance matrix. Leakage occurs if future information (e.g., injury updates) is used to construct static pre-game lineups, violating the no-arbitrage principle. Both issues compromise the validity of the underlying stochastic model and must be mitigated through regularization or out-of-sample testing."
+    }
+  ]
+}

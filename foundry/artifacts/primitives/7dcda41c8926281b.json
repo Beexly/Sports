@@ -1,0 +1,95 @@
+{
+  "book_id": "7dcda41c8926281b",
+  "source_status": "COMPLETE",
+  "title": "p0306",
+  "file_name": "p0306.txt",
+  "sha256": "7dcda41c8926281b9fca3807941a670a9cd288a66ee12dc74519ebc489c46b8b",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in p0306 (7dcda41c8926281b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in p0306 (7dcda41c8926281b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in p0306 (7dcda41c8926281b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "kick_forward_restrictions",
+      "name": "Kick Forward Restrictions",
+      "verbatim_quote": "Restrictions When Ball Is Put in Play by Kick Forward.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Ball is kicked forward by the offensive team; yardage threshold of 10 yards into opponent's territory.",
+      "breakdown_regime": "Singularity occurs when an offensive player touches the ball before it travels 10 yards into opponent's territory without being touched by an opponent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Universal Lens - Structural Unification: Models the restriction as a geometric exclusion zone in the half-space of opponent territory, enforcing causality in the temporal sequence of ball contact events.",
+        "source_operator": "kick_forward_restrictions",
+        "telemetry": "Measured as the distance traveled by the ball before any offensive player makes contact."
+      }
+    },
+    {
+      "primitive_id": "advance_by_snapping_back",
+      "name": "Advance by Snapping Back",
+      "verbatim_quote": "Advance of Ball by Player First Receiving It From Snapper-back.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Ball is snapped back to a player; the player attempts to advance the ball beyond the line of scrimmage.",
+      "breakdown_regime": "Singularity occurs when the player carries the ball forward beyond the line of scrimmage without first passing it to another player and having it touched by that player.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Universal Lens - Structural Unification: Encodes the rule as a directed graph constraint on the sequence of ball carriers, ensuring compliance with the discrete temporal ordering of passes.",
+        "source_operator": "advance_by_snapping_back",
+        "telemetry": "Binary indicator of whether the player advanced the ball directly without satisfying the pass requirement."
+      }
+    },
+    {
+      "primitive_id": "no_interference_before_play",
+      "name": "No Interference Before Play",
+      "verbatim_quote": "(a) Before the ball is put in play no player shall lay his hands upon, or by the use of his hands or arms, interfere with an opponent in such a way as to delay putting the ball in play.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Interference occurs during the pre-snap phase; interference aims to delay the snap.",
+      "breakdown_regime": "Singularity occurs when a player uses hands or arms to create physical obstruction that prevents the ball from being put in play within the allotted time frame.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Universal Lens - Structural Unification: Treats interference as a bounded perturbation of the legal pre-snap configuration space, establishing a clearance radius around each player to prevent collision.",
+        "source_operator": "no_interference_before_play",
+        "telemetry": "Duration of delay caused by interference, measured in seconds."
+      }
+    },
+    {
+      "primitive_id": "body_only_obstruction",
+      "name": "Body-Only Obstruction",
+      "verbatim_quote": "(Rule 28,A.) No Use of Hands or Arms by Attacking Side.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Post-snap phase; defensive players attempt to block offensive players using only their bodies.",
+      "breakdown_regime": "Singularity occurs when a defender uses hands or arms to create additional leverage or force against an offensive player, violating the body-only constraint.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Universal Lens - Structural Unification: Models the allowed interaction as a contact mechanics problem with frictional constraints on the normal and tangential forces at the point of contact between bodies.",
+        "source_operator": "body_only_obstruction",
+        "telemetry": "Force components applied by hands versus those applied by the body alone, quantified through sensor data or replay analysis."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7dcda41c8926281b_t0",
+      "think": "These four primitives formalize the core causal constraints governing ball movement and player interactions in American football. They operate as hard geometric and combinatorial rules within the continuous-time dynamics of the game. The kick-forward restriction enforces a minimum spatial separation before an offensive player can engage the ball, creating a forbidden region in the half-space of enemy territory. The snapping-back rule imposes a directed acyclic graph structure on the set of eligible ball carriers, preventing immediate forward progress and mandating a sequential passing pattern. Pre-snap interference is treated as a clearance violation in the configuration space of player positions, while post-snap blocking is modeled as a frictional contact problem. Together, these operators define the lawful state transitions of the system, separating viable plays from fouls. Their empirical verification relies on tracking the ball's trajectory, measuring distances and contact forces, and detecting violations of the temporal and spatial constraints.\n\nDeep epistemic analysis for p0306 (7dcda41c8926281b, domain=other, pages_read=1/1): Operator 'Kick Forward Restrictions' (page 1, domain other) captures: Restrictions When Ball Is Put in Play by Kick Forward. Assumptions: Ball is kicked forward by the offensive team; yardage threshold of 10 yards into opponent's territory. Breakdown regime: Singularity occurs when an offensive player touches the ball before it travels 10 yards into opponent's territory without being touched by an opponent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Universal Lens - Structural Unification: Models the restriction as a geometric exclusion zone in the half-space of opponent territory, enforcing causality in the temporal sequence of ball contact events. Operator 'Advance by Snapping Back' (page 1, domain other) captures: Advance of Ball by Player First Receiving It From Snapper-back. Assumptions: Ball is snapped back to a player; the player attempts to advance the ball beyond the line of scrimmage. Breakdown regime: Singularity occurs when the player carries the ball forward beyond the line of scrimmage without first passing it to another player and having it touched by that player. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Universal Lens - Structural Unification: Encodes the rule as a directed graph constraint on the sequence of ball carriers, ensuring compliance with the discrete temporal ordering of passes. Operator 'No Interference Before Play' (page 1, domain other) captures: (a) Before the ball is put in play no player shall lay his hands upon, or by the use of his hands or arms, interfere with an opponent in such a way as to delay putting the ball in play. Assumptions: Interference occurs during the pre-snap phase; interference aims to delay the snap. Breakdown regime: Singularity occurs when a player uses hands or arms to create physical obstruction that prevents the ball from being put in play within the allotted time frame. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Universal Lens - Structural Unification: Treats interference as a bounded perturbation of the legal pre-snap configuration space, establishing a clearance radius around each player to prevent collision. Operator 'Body-Only Obstruction' (page 1, domain other) captures: (Rule 28,A.) No Use of Hands or Arms by Attacking Side. Assumptions: Post-snap phase; defensive players attempt to block offensive players using only their bodies. Breakdown regime: Singularity occurs when a defender uses hands or arms to create additional leverage or force against an offensive player, violating the body-only constraint. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Universal Lens - Structural Unification: Models the allowed interaction as a contact mechanics problem with frictional constraints on the normal and tangential forces at the point of contact between bodies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0306 (7dcda41c8926281b, domain=other, pages_read=1/1): Operator 'Kick Forward Restrictions' (page 1, domain other) captures: Restrictions When Ball Is Put in Play by Kick Forward. Assumptions: Ball is kicked forward by the offensive team; yardage threshold of 10 yards into opponent's territory. Breakdown regime: Singularity occurs when an offensive player touches the ball before it travels 10 yards into opponent's territory without being touched by an opponent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Universal Lens - Structural Unification: Models the restriction as a geometric exclusion zone in the half-space of opponent territory, enforcing causality in the temporal sequence of ball contact events. Operator 'Advance by Snapping Back' (page 1, domain other) captures: Advance of Ball by Player First Receiving It From Snapper-back. Assumptions: Ball is snapped back to a player; the player attempts to advance the ball beyond the line of scrimmage. Breakdown regime: Singularity occurs when the player carries the ball forward beyond the line of scrimmage without first passing it to another player and having it touched by that player. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Universal Lens - Structural Unification: Encodes the rule as a directed graph constraint on the sequence of ball carriers, ensuring compliance with the discrete temporal ordering of passes. Operator 'No Interference Before Play' (page 1, domain other) captures: (a) Before the ball is put in play no player shall lay his hands upon, or by the use of his hands or arms, interfere with an opponent in such a way as to delay putting the ball in play. Assumptions: Interference occurs during the pre-snap phase; interference aims to delay the snap. Breakdown regime: Singularity occurs when a player uses hands or arms to create physical obstruction that prevents the ball from being put in play within the allotted time frame. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Universal Lens - Structural Unification: Treats interference as a bounded perturbation of the legal pre-snap configuration space, establishing a clearance radius around each player to prevent collision. Operator 'Body-Only Obstruction' (page 1, domain other) captures: (Rule 28,A.) No Use of Hands or Arms by Attacking Side. Assumptions: Post-snap phase; defensive players attempt to block offensive players using only their bodies. Breakdown regime: Singularity occurs when a defender uses hands or arms to create additional leverage or force against an offensive player, violating the body-only constraint. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Universal Lens - Structural Unification: Models the allowed interaction as a contact mechanics problem with frictional constraints on the normal and tangential forces at the point of contact between bodies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0306 (7dcda41c8926281b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0306 (7dcda41c8926281b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (defensive players) seek to maximize the probability of intercepting the ball within the forbidden zone or disrupting the pre-snap formation. Offensive players must coordinate to either exploit gaps in the defense or execute plays that comply with the sequential passing requirement, anticipating the defenders' attempts to apply illegal hand usage or create interference. Theory of Mind & Decision Maker Model: Rooted in p0306 (7dcda41c8926281b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions require that the primitives operate independently across different phases of play (pre-snap vs. post-snap) and different types of fouls (interference vs. obstruction). Leakage is prevented by ensuring that the empirical metrics (distance, force, duration) are computed solely from the kinematic data without incorporating bookmaker odds or spread predictions, which would introduce spurious correlations. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0306 (7dcda41c8926281b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

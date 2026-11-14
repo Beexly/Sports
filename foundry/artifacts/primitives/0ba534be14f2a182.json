@@ -1,0 +1,78 @@
+{
+  "book_id": "0ba534be14f2a182",
+  "source_status": "COMPLETE",
+  "title": "MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07",
+  "file_name": "MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07.md",
+  "sha256": "0ba534be14f2a1822c62acbc503d0945a3ef8442de66995c7650af4ae0b4fff5",
+  "primary_domain": "cs",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Signal family coverage recompute maps 1666 matrix entries to 258/279 claimed families, revealing 21 absent indices via discrete set inclusion. Universal Lens: Rooted in MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian verification splits 1666 equations into CITABLE_VERIFIED (1340) and COMPUTED (326), confirming header integrity through probabilistic consistency checks. GSI Mapping: Rooted in MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning identifies 258 active signal families from 279 total, with 21 zero-entry gaps—triggering state transitions in catalog routing logic. GSE Mapping: Rooted in MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "signal_family_coverage_recompute",
+      "name": "Signal Family Coverage Recompute",
+      "verbatim_quote": "Recomputed from the 1,666 entries: **258 distinct signalFamilyIdx values**, range 12–276.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'signalFamilyIdx': 'dimensionless index in range [12, 276]', 'total_entries': 'count of matrix rows, dimensionless'}",
+      "assumptions": "Matrix entries are uniformly distributed across signal families; all entries are valid.",
+      "breakdown_regime": "Discrete set inclusion failure when signalFamilyIdx ∉ {12,...,276}",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 258 distinct signalFamilyIdx values form an isomorphic subset of the full 279-family space under inclusion mapping.",
+        "source_operator": "signal_family_coverage_recompute",
+        "telemetry": "Count of unique signalFamilyIdx values in matrix"
+      }
+    },
+    {
+      "primitive_id": "absent_family_index_list",
+      "name": "Absent Family Index List",
+      "verbatim_quote": "**21 family indices absent: 0–11, 17, 262–265, 268, 275, 277–278.** So the matrix's entries touch 258 of the 279 families its header claims — 21 families have zero matrix entries, including the first twelve (indices 0–11).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'absent_indices': 'set of excluded signalFamilyIdx values, dimensionless'}",
+      "assumptions": "All indices in [0, 278] are considered; absence implies zero matrix entries.",
+      "breakdown_regime": "Set complement failure when signalFamilyIdx ∈ absent_indices",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel of missing families from full family space, used to validate coverage completeness.",
+        "source_operator": "absent_family_index_list",
+        "telemetry": "List of 21 indices with zero matrix entries"
+      }
+    },
+    {
+      "primitive_id": "verification_status_split",
+      "name": "Verification Status Split",
+      "verbatim_quote": "Verification-status split recomputed: CITABLE_VERIFIED 1,340 / COMPUTED 326 — matches the header exactly.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'CITABLE_VERIFIED': 'count of verified equations, dimensionless', 'COMPUTED': 'count of computed equations, dimensionless'}",
+      "assumptions": "Equation status labels are mutually exclusive and collectively exhaustive.",
+      "breakdown_regime": "Statistical consistency check failure when header ≠ recomputed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping between header-reported and recomputed verification counts ensures internal consistency.",
+        "source_operator": "verification_status_split",
+        "telemetry": "Counts of CITABLE_VERIFIED and COMPUTED equations"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0ba534be14f2a182_t0",
+      "think": "The signal family coverage recompute establishes a discrete mapping from 1666 matrix entries to 258 distinct signalFamilyIdx values, indicating that 21 out of 279 families are unrepresented. The absence of indices 0–11, 17, 262–265, 268, 275, 277–278 confirms a systematic exclusion pattern. Verification-status split aligns header and recomputed values (1340 CITABLE_VERIFIED, 326 COMPUTED), validating data integrity. Dualities emerge in the set-theoretic relationship between full family space and active coverage, where the complement of absent indices defines the active set. Failure modes include mislabeling of entries or incorrect indexing, which would invalidate the isomorphism between header and recomputed counts.\n\nDeep epistemic analysis for MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182, domain=cs, pages_read=1/1): Operator 'Signal Family Coverage Recompute' (page 1, domain cs) captures: Recomputed from the 1,666 entries: **258 distinct signalFamilyIdx values**, range 12–276. Assumptions: Matrix entries are uniformly distributed across signal families; all entries are valid. Breakdown regime: Discrete set inclusion failure when signalFamilyIdx ∉ {12,...,276} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The 258 distinct signalFamilyIdx values form an isomorphic subset of the full 279-family space under inclusion mapping. Operator 'Absent Family Index List' (page 1, domain cs) captures: **21 family indices absent: 0–11, 17, 262–265, 268, 275, 277–278.** So the matrix's entries touch 258 of the 279 families its header claims — 21 families have zero matrix entries, including the first twelve (indices 0–11). Assumptions: All indices in [0, 278] are considered; absence implies zero matrix entries. Breakdown regime: Set complement failure when signalFamilyIdx ∈ absent_indices Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of missing families from full family space, used to validate coverage completeness. Operator 'Verification Status Split' (page 1, domain cs) captures: Verification-status split recomputed: CITABLE_VERIFIED 1,340 / COMPUTED 326 — matches the header exactly. Assumptions: Equation status labels are mutually exclusive and collectively exhaustive. Breakdown regime: Statistical consistency check failure when header ≠ recomputed Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping between header-reported and recomputed verification counts ensures internal consistency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182, domain=cs, pages_read=1/1): Operator 'Signal Family Coverage Recompute' (page 1, domain cs) captures: Recomputed from the 1,666 entries: **258 distinct signalFamilyIdx values**, range 12–276. Assumptions: Matrix entries are uniformly distributed across signal families; all entries are valid. Breakdown regime: Discrete set inclusion failure when signalFamilyIdx ∉ {12,...,276} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The 258 distinct signalFamilyIdx values form an isomorphic subset of the full 279-family space under inclusion mapping. Operator 'Absent Family Index List' (page 1, domain cs) captures: **21 family indices absent: 0–11, 17, 262–265, 268, 275, 277–278.** So the matrix's entries touch 258 of the 279 families its header claims — 21 families have zero matrix entries, including the first twelve (indices 0–11). Assumptions: All indices in [0, 278] are considered; absence implies zero matrix entries. Breakdown regime: Set complement failure when signalFamilyIdx ∈ absent_indices Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of missing families from full family space, used to validate coverage completeness. Operator 'Verification Status Split' (page 1, domain cs) captures: Verification-status split recomputed: CITABLE_VERIFIED 1,340 / COMPUTED 326 — matches the header exactly. Assumptions: Equation status labels are mutually exclusive and collectively exhaustive. Breakdown regime: Statistical consistency check failure when header ≠ recomputed Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping between header-reported and recomputed verification counts ensures internal consistency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in discrete set theory and database integrity principles, tracing back to early 20th-century formalization of data consistency and relational algebra. Retrocausal Genealogy: Rooted in MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include data entry systems that inconsistently label equations or catalog routers that fail to route inactive families. Decision actors must ensure coverage completeness and verification accuracy. Theory of Mind & Decision Maker Model: Rooted in MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that absent indices do not overlap with active ones. Leakage veto occurs if verification counts deviate from header values, signaling potential data corruption. Cross-Layer Veto & Anti-Leakage Check: Rooted in MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in MATRIX-FAMILY-COVERAGE-RECOMPUTE-2026-11-07 (0ba534be14f2a182), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

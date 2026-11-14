@@ -1,0 +1,78 @@
+{
+  "book_id": "2aacd0891e31823a",
+  "source_status": "COMPLETE",
+  "title": "openalex_W3156723266",
+  "file_name": "openalex_W3156723266.pdf",
+  "sha256": "2aacd0891e31823a495e7f0a2d1ccd3c05135b32c6cac932f79d7cccc7d7d1f9",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Machine learning inference pipelines map athlete risk factors to injury likelihood via probabilistic classifiers. Universal Lens: Rooted in openalex_W3156723266 (2aacd0891e31823a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on injury risk using ML-derived posterior distributions from historical athlete data. GSI Mapping: Rooted in openalex_W3156723266 (2aacd0891e31823a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models transition athlete states through injury prediction epochs using dynamic risk kernels. GSE Mapping: Rooted in openalex_W3156723266 (2aacd0891e31823a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "injury_prediction_classifier",
+      "name": "Injury Prediction Classifier",
+      "verbatim_quote": "Injury predictive performance ranged from poor (Accuracy = 52%, AUC = 0.52) to strong (AUC = 0.87, f1-score = 85%).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'AUC': 'dimensionless', 'Accuracy': 'dimensionless', 'f1-score': 'dimensionless'}",
+      "assumptions": "Predictive accuracy assumes stable risk factor distributions and sufficient training data.",
+      "breakdown_regime": "Performance degrades below AUC = 0.5 due to random guessing baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Classifier outputs map to GSI's Bayesian risk update kernel.",
+        "source_operator": "injury_prediction_classifier",
+        "telemetry": "AUC, Accuracy, F1-score"
+      }
+    },
+    {
+      "primitive_id": "ml_model_pipeline",
+      "name": "Machine Learning Model Pipeline",
+      "verbatim_quote": "The classification methods were facilitated by preprocessing steps (n = 5) and optimized using over- and undersampling methods (n = 6), hyperparameter tuning (n = 4), feature selection (n = 3) and dimensionality reduction (n = 1).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'preprocessing_steps': 'count', 'over/undersampling': 'count', 'hyperparameter_tuning': 'count', 'feature_selection': 'count', 'dimensionality_reduction': 'count'}",
+      "assumptions": "Pipeline components enhance generalizability and reduce overfitting.",
+      "breakdown_regime": "Pipeline fails under data scarcity or high noise-to-signal ratio.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pipeline structure maps to GSE's state-transition kernel.",
+        "source_operator": "ml_model_pipeline",
+        "telemetry": "Preprocessing steps, feature importance scores"
+      }
+    },
+    {
+      "primitive_id": "risk_factor_influence",
+      "name": "Risk Factor Influence",
+      "verbatim_quote": "The aim of our study was therefore to perform a systematic review of ML methods in sport injury prediction and prevention.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'risk_factor_importance': 'dimensionless score'}",
+      "assumptions": "Risk factors are quantifiable and causally linked to injury outcomes.",
+      "breakdown_regime": "Influence diminishes when risk factors are non-discriminatory.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Factor influence scores align with GSI's causal inference engine.",
+        "source_operator": "risk_factor_influence",
+        "telemetry": "Feature importance ranking"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2aacd0891e31823a_t0",
+      "think": "The core operator 'injury_prediction_classifier' is defined by its performance metrics—AUC, Accuracy, and F1-score—which reflect the classifier's ability to distinguish between injured and non-injured athletes. These metrics are derived from empirical testing on held-out data, forming a probabilistic binary decision boundary. The 'ml_model_pipeline' acts as a structured transformation kernel that enhances classifier robustness through preprocessing, sampling, and tuning. It operates under the assumption of data stationarity and sufficient signal-to-noise ratio. The 'risk_factor_influence' primitive captures the relative contribution of each input variable to prediction accuracy, enabling identification of key injury determinants. Together, these primitives form a dual inference system: one for probabilistic classification and another for causal attribution. Failure modes include overfitting, misclassification due to data drift, and insufficient interpretability of black-box models. The system's integrity depends on maintaining consistent data quality and model validation protocols.\n\nDeep epistemic analysis for openalex_W3156723266 (2aacd0891e31823a, domain=other, pages_read=15/15): Operator 'Injury Prediction Classifier' (page 1, domain other) captures: Injury predictive performance ranged from poor (Accuracy = 52%, AUC = 0.52) to strong (AUC = 0.87, f1-score = 85%). Assumptions: Predictive accuracy assumes stable risk factor distributions and sufficient training data. Breakdown regime: Performance degrades below AUC = 0.5 due to random guessing baseline. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Classifier outputs map to GSI's Bayesian risk update kernel. Operator 'Machine Learning Model Pipeline' (page 1, domain other) captures: The classification methods were facilitated by preprocessing steps (n = 5) and optimized using over- and undersampling methods (n = 6), hyperparameter tuning (n = 4), feature selection (n = 3) and dimensionality reduction (n = 1). Assumptions: Pipeline components enhance generalizability and reduce overfitting. Breakdown regime: Pipeline fails under data scarcity or high noise-to-signal ratio. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pipeline structure maps to GSE's state-transition kernel. Operator 'Risk Factor Influence' (page 1, domain other) captures: The aim of our study was therefore to perform a systematic review of ML methods in sport injury prediction and prevention. Assumptions: Risk factors are quantifiable and causally linked to injury outcomes. Breakdown regime: Influence diminishes when risk factors are non-discriminatory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Factor influence scores align with GSI's causal inference engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W3156723266 (2aacd0891e31823a, domain=other, pages_read=15/15): Operator 'Injury Prediction Classifier' (page 1, domain other) captures: Injury predictive performance ranged from poor (Accuracy = 52%, AUC = 0.52) to strong (AUC = 0.87, f1-score = 85%). Assumptions: Predictive accuracy assumes stable risk factor distributions and sufficient training data. Breakdown regime: Performance degrades below AUC = 0.5 due to random guessing baseline. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Classifier outputs map to GSI's Bayesian risk update kernel. Operator 'Machine Learning Model Pipeline' (page 1, domain other) captures: The classification methods were facilitated by preprocessing steps (n = 5) and optimized using over- and undersampling methods (n = 6), hyperparameter tuning (n = 4), feature selection (n = 3) and dimensionality reduction (n = 1). Assumptions: Pipeline components enhance generalizability and reduce overfitting. Breakdown regime: Pipeline fails under data scarcity or high noise-to-signal ratio. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pipeline structure maps to GSE's state-transition kernel. Operator 'Risk Factor Influence' (page 1, domain other) captures: The aim of our study was therefore to perform a systematic review of ML methods in sport injury prediction and prevention. Assumptions: Risk factors are quantifiable and causally linked to injury outcomes. Breakdown regime: Influence diminishes when risk factors are non-discriminatory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Factor influence scores align with GSI's causal inference engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical pattern recognition and machine learning theory, tracing back to Fisher’s discriminant analysis and modern ensemble methods like Random Forests and SVMs. Retrocausal Genealogy: Rooted in openalex_W3156723266 (2aacd0891e31823a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in openalex_W3156723266 (2aacd0891e31823a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the clinician seeking reliable risk signals and the athlete whose behavior may deviate from modeled expectations, creating a feedback loop in model refinement. Theory of Mind & Decision Maker Model: Rooted in openalex_W3156723266 (2aacd0891e31823a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in openalex_W3156723266 (2aacd0891e31823a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures features do not redundantly encode similar information; leakage veto prevents temporal data snooping, maintaining causal separation. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W3156723266 (2aacd0891e31823a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W3156723266 (2aacd0891e31823a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

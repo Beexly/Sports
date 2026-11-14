@@ -1,0 +1,431 @@
+{
+  "book_id": "2c8c36af2305e179",
+  "shard": "2",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_RECONSTRUCTED_LATEX",
+  "source_note": "Declan, 'Transformer-Based Baseball Modeling for Pitch Outcome Prediction and Strategy Optimization', MIT Sloan Sports Analytics Conference 2025 Research Paper Competition, Baseball Track, paper 20251439 (23 pages). Full paper: 12-layer transformer over 400-pitch batter sequences (87-dim features, sub-token masking, ~800k params, 10-class result + 9-class location heads), top-4 precision evaluation, identifier-free Judge/Arraez tendency adaptation, and a counterfactual optimal-pitch-selection framework (weighted pitch score, Ohtani/Cole/Santos case study); extracted faithfully (not a derivative summary). The multi-task loss and Equation 1 pitch score are doubled-letter shifted font and reconstructed as labeled LaTeX. Catalog domain cs is correct (transformer ML paper applied to MLB). Outputs are pitch-outcome/hit-location probabilities and pitch recommendations from public Statcast; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "pitch_level_not_atbat",
+      "name": "Pitch-level prediction beats at-bat-level for real-time decisions",
+      "verbatim_quote": "Models operating at the at-bat level are limited in providing actionable insights for individual pitches",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "At-bat-level models and static player embeddings limit actionable per-pitch insight and generalize poorly to unseen players or changing contexts; this model predicts individual pitch outcomes for real-time pitch sequencing and defensive alignment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Granular per-event prediction is the same fine-scale decision support GSE prioritizes over aggregate stats.",
+        "source_operator": "pitch_level_not_atbat",
+        "telemetry": "pitch-level > at-bat-level for real-time"
+      }
+    },
+    {
+      "primitive_id": "dynamic_unseen_players",
+      "name": "Dynamic model applies to any player with pitch context",
+      "verbatim_quote": "capable of learning general trends in pitch outcomes while applying to any player with sufficient pitch context",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Unlike static embeddings or aggregate stats, the approach is dynamic and adaptable, learning general pitch-outcome trends while applying to any player with sufficient pitch context, enabling real-time deployment and application to players beyond the training data."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Context-conditioned generalization to unseen entities is the same player-agnostic inference GSE requires.",
+        "source_operator": "dynamic_unseen_players",
+        "telemetry": "dynamic; any player with sufficient context"
+      }
+    },
+    {
+      "primitive_id": "dual_result_and_location",
+      "name": "Dual head: pitch result + hit location for defense",
+      "verbatim_quote": "our model not only predicts the result of a pitch but also forecasts the likely hit location should contact occur",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The model predicts both the pitch result and the likely hit location if contact occurs, a dual capability informing pitching strategy and defensive alignments."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Joint outcome-plus-location prediction is the same multi-head forecast GSE uses for alignment decisions.",
+        "source_operator": "dual_result_and_location",
+        "telemetry": "dual: pitch result + hit location"
+      }
+    },
+    {
+      "primitive_id": "no_game_theory_equilibrium",
+      "name": "Pure prediction, no game-theoretic equilibrium computation",
+      "verbatim_quote": "our model operates independently of a strategic game-theoretic framework",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Unlike Melville et al.'s zero-sum game-theoretic pitch sequencing (OptimusPitch RNN seeking equilibrium to minimize expected run value), this model operates independently of a strategic game-theoretic framework, prioritizing single-pitch predictive accuracy for real-time decisions without equilibrium computations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Prediction-first rather than equilibrium-first is the same tractability choice GSE makes for in-game speed.",
+        "source_operator": "no_game_theory_equilibrium",
+        "telemetry": "no game theory; prediction-only (vs OptimusPitch)"
+      }
+    },
+    {
+      "primitive_id": "data_2015_2024_temporal_split",
+      "name": "Statcast 2015-2024; train 2015-22, test 2023-24",
+      "verbatim_quote": "Data from 2015 to 2022 was utilized for model training and validation, while data from 2023 to 2024 was reserved for testing purposes",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Statcast pitch-by-pitch data via pybaseball covers every MLB game 2015-2024; 2015-2022 for training/validation and 2023-2024 reserved for testing, a temporal split preventing leakage; each record is one pitch with pitch, outcome, players, and game context."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A forward temporal train/test split is the same leakage-free evaluation GSE enforces.",
+        "source_operator": "data_2015_2024_temporal_split",
+        "telemetry": "2015-22 train/val; 2023-24 test"
+      }
+    },
+    {
+      "primitive_id": "87dim_feature_vector",
+      "name": "87-dim pitch vector: continuous + one-hot categorical",
+      "verbatim_quote": "Each pitch is thus represented as an 87-dimensional feature vector",
+      "page": 3,
+      "latex": "x_{\\text{pitch}}\\in\\mathbb{R}^{87}\\ (+\\text{mask dims})",
+      "symbol_and_unit_ledger": {
+        "87": "standardized continuous + one-hot categorical features"
+      },
+      "assumptions": [
+        "Each pitch is an 87-dimensional vector: continuous features (velocity, spin rate, exit velocity, launch angle, hit coordinates, release point) standardized to zero mean/unit variance, plus one-hot categorical (result, type, hit location, game state of ball/strike/out count, base occupancy, inning, handedness, zone); player names/game IDs build sequences but are not input features; rare types and pickoffs excluded, and Grounded-into-Double-Play and Fielder's Choice consolidated into Field Out."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A standardized-plus-one-hot event vector is the same multimodal pitch encoding GSE uses.",
+        "source_operator": "87dim_feature_vector",
+        "telemetry": "87-dim; continuous z-scored + categorical one-hot"
+      }
+    },
+    {
+      "primitive_id": "sliding_window_400",
+      "name": "400-pitch sliding window, 1-pitch overlap, per batter",
+      "verbatim_quote": "Sequences of 400 consecutive pitches are then extracted for each player using a sliding window with a one-pitch overlap",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Pitches are grouped by batter and ordered by game date, at-bat, and pitch number; 400-consecutive-pitch sequences are extracted with a one-pitch sliding-window overlap (a batter with 401 pitches yields two sequences); window sizes 200/400/600 were tested and 400 performed best on validation accuracy and efficiency."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A per-entity chronological sliding window is the same sequence-construction GSE uses for player context.",
+        "source_operator": "sliding_window_400",
+        "telemetry": "400-pitch window, 1 overlap; 200/400/600 tested, 400 best"
+      }
+    },
+    {
+      "primitive_id": "12layer_transformer_encoder",
+      "name": "12-layer transformer encoder, ~800k params, 24-dim output",
+      "verbatim_quote": "The core of the architecture consists of a 12-layer transformer encoder",
+      "page": 5,
+      "latex": "x\\xrightarrow{\\text{linear emb}}\\xrightarrow{+\\text{sinusoidal PE}}\\text{12-layer encoder}\\xrightarrow{\\text{concat last-pitch}}\\text{2 FC(ReLU)}\\to\\mathbb{R}^{24}",
+      "symbol_and_unit_ledger": {
+        "params": "~800,000",
+        "output": "24-dim (10 result + 9 location + 5 continuous)"
+      },
+      "assumptions": [
+        "The architecture projects 87-dim inputs via a linear embedding, adds sinusoidal positional encodings, and runs a 12-layer transformer encoder (multi-head self-attention + feedforward, residual connections + layer normalization); the last pitch's original features are linearly transformed and concatenated with the encoder output (a residual preserving last-pitch info), then two ReLU fully-connected layers produce a 24-dim output with roughly 800,000 parameters total."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A positional-encoded transformer encoder with a last-token residual is the same sequence backbone GSE deploys.",
+        "source_operator": "12layer_transformer_encoder",
+        "telemetry": "12-layer encoder; sinusoidal PE; last-pitch residual; ~800k params"
+      }
+    },
+    {
+      "primitive_id": "10class_result_9class_location",
+      "name": "10-class result + 9-class location distributions",
+      "verbatim_quote": "The pitch result is captured by a 10-class distribution, encompassing outcomes such as strikes, balls, singles, and home runs",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The 24-dim output models pitch result as a 10-class distribution (strikes, balls, singles, home runs, etc.) and hit location as nine classes (fielder positions such as left field, shortstop, right field); the remaining dimensions predict continuous launch angle, exit velocity, and hit coordinates as auxiliary multi-task signals."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Categorical outcome and location heads are the same classification targets GSE predicts per pitch.",
+        "source_operator": "10class_result_9class_location",
+        "telemetry": "result 10-class; location 9-class; +continuous aux"
+      }
+    },
+    {
+      "primitive_id": "continuous_aux_not_used",
+      "name": "Continuous auxiliary heads dropped from final outputs",
+      "verbatim_quote": "the predictions for these continuous features were found to be less accurate and ultimately not useful for practical applications",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The continuous predictions (launch angle, exit velocity, hit coordinates) were included for multi-task learning to improve generalization but proved less accurate and not useful practically, so they are excluded from final outputs and downstream analyses though their training inclusion may have aided generalization."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Dropping weak auxiliary heads while keeping their training signal is the same multi-task pruning GSE applies.",
+        "source_operator": "continuous_aux_not_used",
+        "telemetry": "continuous aux: trained but not used downstream"
+      }
+    },
+    {
+      "primitive_id": "subtoken_masking_final_pitch",
+      "name": "Sub-token masking hides the final pitch's outcome",
+      "verbatim_quote": "the model applies sub-token masking to the final pitch in each sequence",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Sub-token masking obscures outcome-related features of the final pitch while preserving observable characteristics so the model cannot access the true result: continuous outcome values are replaced with global means, categorical one-hot values are zeroed with a 'masked' dimension activated, while velocity, spin rate, and release point remain unmasked as real-world-available information."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Outcome masking with observable features retained is the same leakage-free prediction setup GSE uses.",
+        "source_operator": "subtoken_masking_final_pitch",
+        "telemetry": "mask outcome (mean/zero+mask dim); keep velocity/spin/release"
+      }
+    },
+    {
+      "primitive_id": "multitask_loss_07_03",
+      "name": "Multi-task loss: 0.7 categorical + 0.3 continuous",
+      "verbatim_quote": "The multi-task loss function combines objectives for categorical and continuous predictions",
+      "page": 7,
+      "latex": "L_{\\text{total}}=0.7\\,(L_{\\text{pitch}}+L_{\\text{location}})+0.3\\,L_{\\text{continuous}}",
+      "symbol_and_unit_ledger": {
+        "L_pitch,L_location": "cross-entropy",
+        "L_continuous": "MSE"
+      },
+      "assumptions": [
+        "The total loss is 0.7 times the sum of the pitch-outcome and hit-location cross-entropy losses plus 0.3 times the continuous MSE loss; the categorical terms dominate to emphasize accurate result and location prediction while the continuous MSE acts as a supplemental learning signal (the formula is shifted/doubled-font and reconstructed)."
+      ],
+      "breakdown_regime": "loss formula doubled-letter font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A weighted categorical-dominant multi-task loss is the same objective GSE uses for joint outcome prediction.",
+        "source_operator": "multitask_loss_07_03",
+        "telemetry": "L=0.7(CE_pitch+CE_loc)+0.3*MSE_cont"
+      }
+    },
+    {
+      "primitive_id": "top4_precision_class_imbalance",
+      "name": "Top-4 precision chosen for class imbalance",
+      "verbatim_quote": "The choice of k = 4 is motivated by the class imbalance inherent in baseball pitch outcomes",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Evaluation uses top-4 precision (proportion of times the true outcome is among the top four predicted probabilities) because Ball and Strike dominate, so traditional accuracy misses rare but crucial events; top-4 includes both common and significant rare events for a balanced evaluation, with the historical baseline randomly sampling four events from the 2022 distribution."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Top-k precision under class imbalance is the same rare-event-aware metric GSE uses.",
+        "source_operator": "top4_precision_class_imbalance",
+        "telemetry": "top-4 precision; Ball/Strike dominate"
+      }
+    },
+    {
+      "primitive_id": "rare_event_precision_edge",
+      "name": "Transformer wins rare events: Single 97 vs 86, HR 34 vs 23",
+      "verbatim_quote": "For 'Single', the transformer achieved a top-4 precision of 97%, outperforming the XGBoost model's 86%",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "On common Ball/Strike both transformer and XGBoost exceed 99% top-4 precision; on rare strategic events the transformer leads: Single 97% vs XGBoost 86% vs baseline 35%, Double 43% vs 30%, Home Run 34% vs 23%; hit-location top-4 favors the transformer at shortstop 60%, second base 53%, third base 52% and rare pitcher/catcher locations, with outfield comparable to XGBoost."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Superior rare-event ranking is the same strategic-event advantage GSE values for decision-making.",
+        "source_operator": "rare_event_precision_edge",
+        "telemetry": "Single 97/86/35; Double 43/30; HR 34/23; SS 60/56"
+      }
+    },
+    {
+      "primitive_id": "judge_power_adaptation",
+      "name": "Adapts to Judge's power without player IDs",
+      "verbatim_quote": "The transformer's predictions for home runs are closer to the actual count of 32, indicating a better adaptation to Judge's power-hitting tendency",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Summing per-pitch predicted probabilities over Aaron Judge's 1,612 pitches in 2023 gives expected event totals; the transformer predicts 25.60 home runs (vs XGBoost 13.94, actual 32) and 15.66 doubles (vs 11.04, actual 14), better capturing his power profile, with strikeouts comparable (105.76 vs 107.50, actual 107), all without explicit player identifiers in the input."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Identifier-free adaptation to a power profile is the same tendency inference GSE derives from context alone.",
+        "source_operator": "judge_power_adaptation",
+        "telemetry": "Judge HR 25.60 vs XGB 13.94 (actual 32); 1,612 pitches"
+      }
+    },
+    {
+      "primitive_id": "arraez_contact_adaptation",
+      "name": "Adapts to Arraez's contact: singles 100 vs 65, K 38 vs 88",
+      "verbatim_quote": "the transformer model predicts significantly more singles (100.42) than the XGBoost model (64.54), aligning more closely with the actual count of 116",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "For Luis Arraez's 1,848 pitches in 2023, the transformer predicts 100.42 singles (vs XGBoost 64.54, actual 116), 37.96 strikeouts (vs 88.22, actual 25), and 6.27 home runs (vs 12.59, actual 9), capturing his contact-hitting, low-strikeout, low-power profile far better than XGBoost; hit-location predictions also match his ground-ball/line-drive infield tendency."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Identifier-free contact-profile adaptation is the same context-driven tendency modeling GSE uses.",
+        "source_operator": "arraez_contact_adaptation",
+        "telemetry": "Arraez singles 100.42 vs 64.54 (actual 116); K 37.96 vs 88.22 (actual 25)"
+      }
+    },
+    {
+      "primitive_id": "optimal_pitch_score",
+      "name": "Pitch score: weighted desired minus undesired probabilities (Eq 1)",
+      "verbatim_quote": "we compute a pitch score for each based on a weighted combination of the probabilities of the desired outcomes and hit locations",
+      "page": 15,
+      "latex": "S=\\omega_1\\sum P_{\\text{desired event}}+\\omega_2\\sum P_{\\text{desired loc}}-\\omega_3\\sum(P_{\\text{undesired event}}+P_{\\text{undesired loc}})",
+      "symbol_and_unit_ledger": {
+        "omega": "adjustable strategic weights",
+        "P": "model predicted probabilities"
+      },
+      "assumptions": [
+        "The optimal-pitch framework builds context from the batter's most recent 399 pitches, defines desired event/location and undesired events/locations to minimize, generates all feasible pitch-type-by-zone combinations (13 zones, generalizable) with average velocity/spin from the pitcher's per-type history, appends each as the 400th pitch, and scores S = omega1*sum desired-event probs + omega2*sum desired-location probs - omega3*sum(undesired-event + undesired-location probs), ranking the highest as optimal (Equation 1 doubled-font, reconstructed)."
+      ],
+      "breakdown_regime": "Eq 1 doubled-letter font reconstructed",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A weighted desired-minus-undesired probability score is the same counterfactual action-ranking GSE uses for pitch selection.",
+        "source_operator": "optimal_pitch_score",
+        "telemetry": "S=w1*P_des_event+w2*P_des_loc-w3*(P_und_event+P_und_loc)"
+      }
+    },
+    {
+      "primitive_id": "scenario1_first_pitch_curve",
+      "name": "Scenario 1: first-pitch strike -> knuckle curveballs zones 2/5/3",
+      "verbatim_quote": "The top three pitches recommended by the model are knuckle curveballs delivered to zones 2, 5, and 3",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "For the first pitch of the game (get ahead in the count), desired event is Strike and undesired are all Hit events, with weights 0.4 desired-event, 0.6 minimizing-undesired, 0 location; for Gerrit Cole facing Ohtani the top three recommendations are knuckle curveballs to zones 2, 5, and 3, exploiting batters anticipating fastballs early."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Count-state-conditioned pitch recommendation is the same situational strategy GSE generates.",
+        "source_operator": "scenario1_first_pitch_curve",
+        "telemetry": "first pitch: w=(0.4,0,0.6); Cole knuckle curve zones 2/5/3"
+      }
+    },
+    {
+      "primitive_id": "scenario2_02_low_fastball",
+      "name": "Scenario 2: 0-2 strikeout -> low fastballs, pitcher-tailored",
+      "verbatim_quote": "the model recommends low fastballs delivered to zones 7, 8, and 9",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "At an 0-2 count seeking a strikeout, the model recommends low fastballs to zones 7, 8, 9 for Cole, matching Ohtani's low-zone strikeout weakness and Cole's fastball strength; swapping in Gregory Santos (a breaking-ball pitcher) shifts the recommendation to a slider to zones 1 and 4 or a sinker to zone 9, tailoring to the pitcher's repertoire."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matchup-aware pitch selection that swaps with the pitcher is the same arsenal-conditioned strategy GSE produces.",
+        "source_operator": "scenario2_02_low_fastball",
+        "telemetry": "0-2: Cole low FB 7/8/9; Santos slider 1/4 or sinker 9"
+      }
+    },
+    {
+      "primitive_id": "scenario3_groundball_cutter",
+      "name": "Scenario 3: runner on 1st, ground ball -> cutters/changeup",
+      "verbatim_quote": "the model recommends cutters delivered to zones 3 and 12, or a changeup to zone 4",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "With a runner on first seeking a ground-ball double play, desired event is Field Out with infield hit locations and undesired all Hits, weights 0.4 event/0.3 location/0.3 undesired; the model recommends cutters to zones 3 and 12 or a changeup to zone 4 (high-inside cutters jam the batter for weak contact), and the hit-location heatmap concentrates toward the infield."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Outcome-plus-location objectives for a double-play ball is the same multi-objective pitch optimization GSE performs.",
+        "source_operator": "scenario3_groundball_cutter",
+        "telemetry": "R1: w=(0.4,0.3,0.3); cutter 3/12 or changeup 4; infield heatmap"
+      }
+    },
+    {
+      "primitive_id": "playerless_pitcher_limitation",
+      "name": "Limitation: playerless from pitcher side; future pitcher embeddings",
+      "verbatim_quote": "Our current approach focuses primarily on the batter's historical pitch sequence, effectively being \"playerless\" from the pitcher's perspective",
+      "page": 20,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The model uses only the batter's historical sequence, effectively 'playerless' from the pitcher's perspective; future work adds pitcher embeddings from the pitcher's own pitch sequences and arsenal (types, average velocities, usage frequencies), and ungroups consolidated events (Fielder's Choice, Fly Ball, Field Out) for finer granularity while managing class imbalance and sparsity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The missing pitcher-side context is the same bilateral-matchup gap GSE must close for full pitcher-batter modeling.",
+        "source_operator": "playerless_pitcher_limitation",
+        "telemetry": "batter-only context; future: pitcher embeddings + ungroup events"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "transformerbaseball2025_trace",
+      "think": "The retrocausal genealogy of this paper is the duel between pitcher and batter, where each pitch can alter a game's trajectory and predicting individual pitches is fundamental to defensive alignment, pitch sequencing, and strategy. The author, Declan, writing for the MIT Sloan 2025 Baseball Track, argues that traditional aggregate statistics and heuristics like hard-in-soft-away lack the granularity and temporal adaptability of pitch sequences, and that at-bat-level models with static player embeddings generalize poorly to unseen players. The lineage runs from Heaton and Mitra's 2021 player-impact embeddings and 2023 sixty-four-dimensional contextual event embeddings, through Melville and colleagues' 2023 game-theoretic OptimusPitch recurrent network that seeks zero-sum equilibrium to minimize expected run value, to this transformer that deliberately operates without a game-theoretic framework, prioritizing single-pitch predictive accuracy for real-time decisions. The data are Statcast pitch-by-pitch records via pybaseball for every MLB game from 2015 to 2024, with 2015 through 2022 for training and validation and 2023 through 2024 reserved for testing. Each pitch is an 87-dimensional vector combining standardized continuous features, velocity, spin rate, exit velocity, launch angle, hit coordinates, and release point, with one-hot categorical features for result, type, hit location, game state, handedness, and zone; player names and game identifiers build sequences but are not model inputs. Rare pitch types and pickoffs are excluded, and Grounded-into-Double-Play and Fielder's Choice are consolidated into Field Out. Pitches are grouped by batter, ordered chronologically, and cut into 400-pitch sliding windows with one-pitch overlap, after 200 and 600 were tested and 400 won on validation accuracy and efficiency. The recursive theory of mind is a model that infers a hidden outcome from observable pitch characteristics and surrounding context. The architecture projects the 87-dim input through a linear embedding, adds sinusoidal positional encodings, and runs a 12-layer transformer encoder with multi-head self-attention, feedforward networks, residual connections, and layer normalization; the final pitch's original features are linearly transformed and concatenated with the encoder output as a residual, then two ReLU fully-connected layers produce a 24-dim output with roughly 800,000 parameters. Sub-token masking hides the final pitch's outcome, replacing continuous values with global means and zeroing categorical one-hots while activating a masked dimension, but leaves velocity, spin rate, and release point unmasked because they are available in-game. The multi-task loss is 0.7 times the sum of pitch-result and hit-location cross-entropy plus 0.3 times continuous MSE. Cross-layer veto adjudication is the rare-event evaluation and the identifier-free player adaptation. Because Ball and Strike dominate, top-4 precision is used so rare but crucial events are counted; the transformer and XGBoost both exceed 99 percent on common outcomes, but the transformer leads on Single at 97 versus 86 percent, Double 43 versus 30, and Home Run 34 versus 23, and on infield hit locations like shortstop at 60 percent. Summing per-pitch probabilities over a season adapts to players without identifiers: for Aaron Judge's 1,612 pitches the transformer predicts 25.60 home runs against an actual 32, far better than XGBoost's 13.94, and for Luis Arraez's 1,848 pitches it predicts 100.42 singles against an actual 116 and only 37.96 strikeouts against an actual 25, capturing contact versus power profiles. The hit-location predictions reinforce this: for Judge the transformer forecasts more outfield contact, 33.42 left-field hits against an actual 40, while for Arraez it forecasts more infield contact, 58.75 second-base hits against an actual 56, matching each player's batted-ball profile. The continuous auxiliary heads proved less accurate and are dropped from final outputs though kept as training signals. The implementation invariants map directly onto GSE. The 12-layer transformer with a last-pitch residual is GSE's pitch-sequence encoder; sub-token masking is GSE's leakage-free outcome inference; the weighted categorical-dominant loss is GSE's multi-task objective; and the optimal-pitch framework is GSE's counterfactual action ranker. That framework builds context from the batter's last 399 pitches, enumerates feasible pitch-type-by-zone combinations with the pitcher's average velocity and spin, appends each as the 400th pitch, and scores S equals omega-one times desired-event probability plus omega-two times desired-location probability minus omega-three times undesired-event and location probability, ranking the highest. The outputs are pitch-outcome and hit-location probabilities and pitch recommendations from public Statcast data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The case study, the parameter ledger, and the limitations close the account. Facing Ohtani, Cole's first-pitch strike objective with weights 0.4, 0, 0.6 yields knuckle curveballs to zones 2, 5, 3; at 0-2 the strikeout objective yields low fastballs to zones 7, 8, 9 matching Ohtani's low-zone weakness, while swapping Santos shifts to a slider or sinker; with a runner on first and weights 0.4, 0.3, 0.3 the ground-ball objective yields cutters to zones 3 and 12 or a changeup to zone 4 with an infield-concentrated heatmap. The loss and pitch-score equations are doubled-letter shifted font, so they are reconstructed as labeled LaTeX and flagged. The key limitation is that the model is playerless from the pitcher's perspective, using only batter history; future work adds pitcher embeddings and arsenal context and ungroups consolidated events. The invariant for GSE is to carry the pitch-outcome transformer and the counterfactual pitch-score ranker, while recording that bilateral pitcher-batter context and finer event granularity are needed before full quantitative reuse.",
+      "retrocausal_genealogy": "Pitcher-batter duel; per-pitch prediction fundamental to alignment/sequencing/strategy. Aggregate stats + hard-in-soft-away heuristics lack granularity/temporal adaptability; at-bat-level + static embeddings generalize poorly. Declan, MIT Sloan 2025 Baseball Track 20251439. Lineage: Heaton/Mitra 2021 player-impact + 2023 64-dim contextual embeddings; Melville et al. 2023 game-theoretic OptimusPitch RNN (zero-sum equilibrium min expected run value); this transformer deliberately NO game theory (prediction-first, real-time). Data: Statcast/pybaseball 2015-2024, train/val 2015-22, test 2023-24 (temporal split).",
+      "theory_of_mind": "Infer hidden outcome from observable pitch + context. 87-dim vector (standardized continuous: velo/spin/exit velo/launch angle/hit coords/release + one-hot categorical: result/type/location/game state/handedness/zone; names/IDs only for sequences; rare types/pickoffs dropped; GIDP+FC->Field Out). Per-batter chronological 400-pitch sliding window (1 overlap; 200/400/600 tested, 400 best). Linear emb + sinusoidal PE -> 12-layer encoder (MHA+FFN, residual+LN); last-pitch original features linear+concat residual -> 2 FC ReLU -> 24-dim, ~800k params. Sub-token masking: outcome continuous->global mean, categorical->zero+mask dim; keep velo/spin/release. Loss=0.7(CE_pitch+CE_loc)+0.3*MSE_cont.",
+      "cross_layer_veto": "Top-4 precision (Ball/Strike dominate): common >99% both; transformer rare-event edge Single 97 vs XGB 86, Double 43 vs 30, HR 34 vs 23, SS location 60 vs 56. Identifier-free adaptation: Judge 1,612 pitches HR 25.60 vs XGB 13.94 (actual 32); Arraez 1,848 pitches singles 100.42 vs 64.54 (actual 116), K 37.96 vs 88.22 (actual 25). Continuous aux dropped (less accurate). Optimal-pitch framework: 399-pitch context, enumerate type x 13 zones w/ pitcher avg velo/spin, append as 400th, S=w1*P_des_event+w2*P_des_loc-w3*(P_und_event+P_und_loc) (Eq1). Case Ohtani/Cole/Santos: first-pitch w(0.4,0,0.6)->knuckle curve 2/5/3; 0-2->low FB 7/8/9 (Santos slider/sinker); R1 w(0.4,0.3,0.3)->cutter 3/12 or changeup 4. Limitation: playerless pitcher side; future pitcher embeddings + ungroup events. Loss/Eq1 doubled-font reconstructed; zero sportsbook lines."
+    }
+  ],
+  "universal_lens": "Individual MLB pitches are predicted by a 12-layer transformer over 400-pitch per-batter sequences of 87-dim standardized-plus-one-hot features with sub-token outcome masking, jointly forecasting a 10-class pitch result and 9-class hit location, adapting to player tendencies without identifiers, and driving a counterfactual optimal-pitch-selection framework that ranks simulated pitch-type-by-zone candidates by a weighted desired-minus-undesired probability score.",
+  "gsi_mapping": "GSI treats the model as linear emb + sinusoidal PE -> 12-layer encoder (MHA+FFN, residual+LN) + last-pitch residual -> 2 FC ReLU -> 24-dim (~800k params); 87-dim pitch vector (continuous z-scored + one-hot categorical), 400-pitch sliding window (1 overlap, 400 best of 200/400/600); sub-token masking (outcome->mean/zero+mask dim, keep velo/spin/release); L=0.7(CE_pitch+CE_loc)+0.3*MSE_cont; data Statcast 2015-22 train/2023-24 test; top-4 precision Single 97 vs XGB 86/HR 34 vs 23/SS 60 vs 56; Judge HR 25.60 (actual 32), Arraez singles 100.42 (actual 116)/K 37.96 (actual 25) without IDs; pitch score S=w1*P_des_event+w2*P_des_loc-w3*(P_und_event+P_und_loc) (Eq1), 399-pitch context + type x 13 zones; case Ohtani/Cole/Santos (knuckle curve 2/5/3; low FB 7/8/9; cutter 3/12 or changeup 4); playerless-pitcher limitation.",
+  "gse_mapping": "GSE lifts the pitch-outcome transformer (12-layer, sub-token masking, last-pitch residual, multi-task loss), identifier-free player-tendency adaptation, top-4 rare-event evaluation, and the counterfactual weighted pitch-score ranker for situational pitch selection; records the playerless-pitcher gap (needs bilateral pitcher embeddings/arsenal) and consolidated-event granularity loss; loss/Eq1 reconstructed from doubled font; all outputs are pitch probabilities and recommendations, never sportsbook lines."
+}

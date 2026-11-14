@@ -1,0 +1,228 @@
+{
+ "book_id": "74b7272fc5b1919d",
+ "source_status": "COMPLETE",
+ "pages_total": 494,
+ "pages_read": 74,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Probability as an objective logical relation between proposition-sets (a/h)",
+   "verbatim_quote": "When once the facts are given which determine our knowledge, what is probable or improbable in these circumstances has been fixed objectively, and is independent of our opinion.",
+   "page": 23,
+   "page_printed": 4,
+   "page_convention": "0-indexed PDF page index; printed book page = index - 19 for the body",
+   "latex": "a/h = \\alpha",
+   "symbol_and_unit_ledger": "a = conclusion proposition-set (dimensionless logical object); h = premiss/evidence corpus (dimensionless logical object); alpha = degree of rational belief authorized by h for a, a probability measure value in [0,1] (dimensionless). OCR text layer renders Greek alpha as Latin 'a' ('This will be written a/h -a.', PDF p.23 footnote); printed notation is a/h = alpha. No physical units: the relation is logical, not frequentist.",
+   "assumptions": "h is a consistent conjunction (axiom (i), Ch.XII: one and only one probability relation exists between any conclusion and any consistent premiss). Probability is a relation relative to a specified corpus of knowledge, never an intrinsic property of a proposition; it is objective in the sense of being fixed by the evidence, not by opinion. Not all probabilities are numerical or mutually comparable (Ch.III).",
+   "breakdown_regime": "Undefined when h is inconsistent. Fails as a description if probability is reified as a property of 'events' (Keynes dispenses with 'event' language, Ch.I sec.4). Non-numerical and non-comparable probabilities cannot be forced into [0,1] without the measurement conditions of Ch.III-V. Elliptical speech ('b is probable' without specifying h) is meaningless, exactly as 'b is greater than' without a comparand.",
+   "domain": "math",
+   "timescales": [
+    "tau_0:fixed_evidence_corpus",
+    "tau_1:single_argument",
+    "tau_2:evidence_revision",
+    "tau_3:logical_relation_persists_across_revisions"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Binds to the Coach-Mind belief state: the degree of belief over a latent play-state hypothesis a (e.g. 'coverage is Cover-3 buzz') given the evidence corpus h (formation, down-distance, personnel, motion, film priors). The state variable is the relation a/h itself, not a frequency: when h changes at the snap, the old relation still exists (Keynes's 'three miles distant' analogy) but the operative posterior is a/h_new. Constraint: every model output must carry its conditioning corpus explicitly; a probability emitted without h is an elliptical, audit-failing claim.",
+    "source_operator": "p1",
+    "telemetry": "Pre-snap vs post-snap belief revisions logged with the exact evidence delta; calibration curves of stated degrees against outcomes; audit trail showing which h each probability was conditioned on."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Multiplication Theorem (Def. X) and definition of independence (Def. XIII)",
+   "verbatim_quote": "It is, in fact, the ordinary rule for the multiplication of the probabilities of events which are not ' independent.' It has, however, a much more central position in the development of the theory than has been usually recognised.",
+   "page": 155,
+   "page_printed": 136,
+   "page_convention": "0-indexed PDF page index; printed book page = index - 19 for the body",
+   "latex": "ab/h = a/bh \\cdot b/h = b/ah \\cdot a/h",
+   "symbol_and_unit_ledger": "a, b, h = propositions (dimensionless); ab = conjunctive combination 'a and b' (Keynes writes conjunction by juxtaposition, Ch.XII sec.3); a/bh = probability of a on premiss b-and-h; all values are dimensionless probability-relation values in [0,1]. OCR text layer renders Def. X as 'ab/lt -a/bh.b/h^b/ah.a/h' (PDF p.154); the printed identity is the chain rule above. Independence (Def. XIII, PDF p.157): a1/a2h = a1/h AND a2/a1h = a2/h.",
+   "assumptions": "h consistent; the products and sums must EXIST as probability relations - Keynes defines addition/multiplication only for certain types of relations (Ch.XII sec.6), not for arbitrary pairs. Independence is a two-sided condition on the same premisses; irrelevance 'on the whole' (Def. XIV: a1/a2h = a1/h) is the weaker one-sided notion.",
+   "breakdown_regime": "Division form a/bh = ab/h / b/h fails when b/h = 0 (bh inconsistent). The general chain rule still holds as a product, but numerical factorization into independent factors fails whenever the two-sided independence condition is violated - e.g. correlated trials sharing a hidden common cause (the two-headed coin, Ch.XXIX sec.5). Non-numerical probabilities: products exist only under the definitional existence conditions; associativity of sums is NOT free (P+(S+T) vs (P+S)+T must be checked, Ch.XII sec.6).",
+   "domain": "math",
+   "timescales": [
+    "tau_0:single_premiss",
+    "tau_1:sequential_conditioning",
+    "tau_2:joint_occurrence",
+    "tau_3:independence_audit"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Transition-kernel factorization for the 22-player dynamical system: P(s_{t+1}, o_t | h) = P(o_t | s_{t+1}, h) * P(s_{t+1} | h), where s_t is the latent play-state (coverage shell, leverage, front) and o_t the observable (receiver release, backfield flow). The kernel chain is exactly Def. X; treating successive observations as independent factors is licensed ONLY when the two-sided Def. XIII condition holds against the shared premiss h. Constraint: any simulator that multiplies per-observation likelihoods must first test conditional independence given the latent state.",
+    "source_operator": "p2",
+    "telemetry": "Per-down transition counts; conditional observation frequencies P(o|s,h) estimated from tracking data; conditional-independence tests (residual correlation of observations given inferred state)."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Addition Theorem for exclusive alternatives (24.1) and general form (24)",
+   "verbatim_quote": "If ab/h = 0, i.e. if a and b are exclusive alternatives relative to the hypothesis, then (a + b)/h = alh + b/h. This is the ordinary rule for the addition of the probabilities of exclusive alternatives.",
+   "page": 163,
+   "page_printed": 144,
+   "page_convention": "0-indexed PDF page index; printed book page = index - 19 for the body",
+   "latex": "ab/h = 0 \\;\\Rightarrow\\; (a+b)/h = a/h + b/h;\\qquad (a+b)/h = a/h + b/h - ab/h",
+   "symbol_and_unit_ledger": "a, b = propositions; a+b = disjunctive combination 'a or b' (Keynes's '+' does NOT exclude 'a and b', Ch.XII sec.3); ab/h = probability of the conjunction; all terms dimensionless probability values in [0,1]. OCR text layer renders (24.1) as '(a + b)/h = alh + b/h' (PDF p.163); general theorem (24) OCR is garbled but its prose statement and the exclusive-alternative corollary are legible. Printed page 144.",
+   "assumptions": "Exclusivity is RELATIVE to h (ab/h = 0), not absolute. The sum must exist as a probability relation per Ch.XII sec.6; the general form (24) subtracts the overlap ab/h. Finite additivity only is derived from the axioms; the inclusion-exclusion extension (24.4)-(24.5) requires all intermediate sums/products to exist.",
+   "breakdown_regime": "Double-counting whenever ab/h > 0 and the exclusive form is used anyway - the standard error when 'play-call families' overlap (a call that is both 'run' and 'play-action'). Infinite/countable additivity is not granted by Keynes's axioms. Non-existent sums: P+Q has no interpretation for arbitrary probability relations, so partition sums must be checked for existence, not assumed.",
+   "domain": "math",
+   "timescales": [
+    "tau_0:partition_definition",
+    "tau_1:single_observation",
+    "tau_2:mixture_over_families",
+    "tau_3:partition_refinement"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Total-probability mixture over mutually exclusive offensive-call hypotheses: P(o|h) = sum_i P(o|c_i,h) P(c_i|h) where {c_i} is an exclusive, exhaustive partition of the call space relative to h. State variable: the mixture weights P(c_i|h). Constraint: the partition must be verified exclusive relative to the actual evidence (play-action is not disjoint from run unless h makes it so); otherwise the general form with the -ab/h overlap term is mandatory.",
+    "source_operator": "p3",
+    "telemetry": "Call-family frequency tables; per-family outcome rates; overlap audits showing which 'families' co-occur (run+play-action) and the measured ab/h correction."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Inverse Principle (38) and Johnson's Cumulative Formula (46) with the coefficient of dependence",
+   "verbatim_quote": "It is this second incorrect statement of the formula which leads to the fallacious rule for the combination of the testimonies of independent witnesses ordinarily given in the text-books.",
+   "page": 171,
+   "page_printed": 152,
+   "page_convention": "0-indexed PDF page index; printed book page = index - 19 for the body",
+   "latex": "a/bh = \\{a^{b}\\}_{h}\\cdot a/h;\\qquad x/habc\\ldots \\propto \\{a^{x}b^{x}c^{x}\\ldots\\}_{h}\\cdot x/ah \\cdot x/bh \\cdot x/ch \\cdots",
+   "symbol_and_unit_ledger": "{a^b}_h = coefficient of influence/dependence of b upon a on hypothesis h (Def. XV, PDF p.169: 'a/bh, = {ahb}a/h'), dimensionless ratio (a/bh)/(a/h); equals 1 iff a/h and b/h are independent arguments (44.1). x, x' = exclusive exhaustive candidate conclusions; a, b, c = evidence items; h = background premisses; all probabilities dimensionless in [0,1]. The cumulative formula (46.1) also carries the prior factor (x/h)^n in its full form (46); the proportionality shown is the simplified (46.1) branch. OCR of the displayed formulas is heavily garbled; the prose statements on PDF pp.169-172 are legible and are the citation anchor.",
+   "assumptions": "bh consistent (the observed event must be possible on the data); the separative factors {a^x b^x c^x...} must be KNOWN or bounded - they are not generally unity; the full formula requires the a priori probabilities x/h and the coefficients of dependence between evidence items on each hypothesis xh. Johnson's formula was unpublished; Keynes prints it with permission (footnote, PDF p.169).",
+   "breakdown_regime": "The textbook rule for combining 'independent witnesses' is EXPLICITLY named fallacious: it (1) sets all dependence coefficients to unity and (2) omits the (x/h)^n factor. Breaks down whenever evidence items share a common source or are counterdependent given the hypothesis; the inverse formula gives only COMPARATIVE probability (odds between x and x'), not absolute probability, unless the alternatives are exhaustive and normalized (46.2). Zero denominators when bh inconsistent.",
+   "domain": "math",
+   "timescales": [
+    "tau_0:single_evidence_item",
+    "tau_1:sequential_accumulation",
+    "tau_2:dependence_correction",
+    "tau_3:comparative_posterior"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Information-channel fusion for deception detection: multiple scouting signals a, b, c (formation tendency, motion tell, personnel grouping, film-graded leverage) about the same latent play-state x. The naive product of likelihood ratios is the exact fallacy Keynes names; the kernel must multiply by the measured coefficient of dependence {a^x b^x c^x}_h. A DC who coordinates formation and motion to emit ONE disguised signal makes the signals highly dependent - the fusion kernel must down-weight their joint force. Constraint: no signal-fusion module may assume unit separative factors without a measured conditional-correlation audit.",
+    "source_operator": "p4",
+    "telemetry": "Conditional correlation matrix of signals given inferred play-state; mutual information I(a;b|x); ablation deltas when each signal is added; measured separative factors vs the unit assumption."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Weight of arguments V(a/h): evidence volume independent of probability balance",
+   "verbatim_quote": "The weight, to speak metaphorically, measures the sum of the favourable and unfavour able evidence, the probability measures the difference.",
+   "page": 96,
+   "page_printed": 77,
+   "page_convention": "0-indexed PDF page index; printed book page = index - 19 for the body",
+   "latex": "V(a/h)\\ \\text{(evidential weight)};\\qquad V(a/h) = V(\\bar{a}/h)",
+   "symbol_and_unit_ledger": "V = evidential weight of the argument a/h: an ordinal magnitude measuring the absolute amount of relevant knowledge vs relevant ignorance (Ch.VI sec.1-3); dimensionless, generally NON-numerical. a/h = probability (balance of favourable vs unfavourable evidence); a-bar = contradictory of a. Keynes's metaphor: weight measures the SUM of favourable and unfavourable evidence, probability the DIFFERENCE (PDF p.96). No physical units.",
+   "assumptions": "Relevance in the strict sense: evidence part-favourable part-unfavourable still increases weight even if it leaves probability unchanged (Ch.VI sec.2). Weight comparison is always possible when one argument's evidence includes the other's; V(a/h)=V(a-bar/h). Minimum weight corresponds to a priori probability. Probable error is NOT weight except in a limited class of cases (urn example, sec.6).",
+   "breakdown_regime": "High weight does NOT mean 'more likely to be right' - the probabilities state relations with equal accuracy in either case (sec.7). Weight is not generally numerical or comparable across disjoint evidence bases. Keynes himself doubts practical significance: there is no evident principle for how far to push evidence acquisition before acting (sec.7) - an unbounded information-cost regress. Probable error can INCREASE with weight (sec.6 counterexample).",
+   "domain": "math",
+   "timescales": [
+    "tau_0:a_priori_minimum_weight",
+    "tau_1:evidence_accession",
+    "tau_2:weight_comparison",
+    "tau_3:action_under_weight_uncertainty"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Second axis of the DFS/portfolio and Coach-Mind decision state: two projections can carry identical probability (balance) yet radically different weight (volume of relevant evidence). State variable: V alongside a/h. Constraint: position sizing and go/no-go decisions must condition on weight, not only on the point estimate - a 0.62 probability from 400 graded snaps and a 0.62 from 6 snaps are different decision objects. The urn isomorphism: known 50/50 composition vs unknown composition both give P(white)=1/2 but different weight and different long-run probable error.",
+    "source_operator": "p5",
+    "telemetry": "Sample counts per projection (snaps, games, seasons); evidence-coverage audits; dispersion of the underlying evidence base; realized calibration error stratified by sample size."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Principle of Indifference and the indivisible-alternatives qualification",
+   "verbatim_quote": "In short, the Principle of Indifference is not applicable to a pair of alternatives, if we know that either of them is capable of being further split up into a pair of possible but incompatible alternatives of the same form as the original pair.",
+   "page": 80,
+   "page_printed": 61,
+   "page_convention": "0-indexed PDF page index; printed book page = index - 19 for the body",
+   "latex": "[\\phi(a_r') + \\phi(a_r'')]/h = 1,\\quad \\phi(a_r')\\phi(a_r'')/h = 0,\\quad \\phi(a_r')/h > 0,\\ \\phi(a_r'')/h > 0 \\;\\Rightarrow\\; \\phi(a_r)\\ \\text{divisible}",
+   "symbol_and_unit_ledger": "phi(x) = propositional function defining the alternatives; a_r', a_r'' = sub-alternatives of the SAME form phi; h = evidence corpus; all probabilities dimensionless in [0,1]. The three conditions are Keynes's definition of a DIVISIBLE alternative (Ch.IV sec.21, PDF p.79, OCR legible); the Principle applies only to indivisible, exclusive, exhaustive alternatives of a common form. Original enunciation PDF p.61 (printed 42).",
+   "assumptions": "Alternatives must be exclusive, exhaustive, indivisible relative to h, and expressible by a common propositional function phi(x) distinct from 'x is x'. Knowledge of the MEANING of the alternatives is part of the evidence (sec.18-19): substituting a known individual for a variable can change the probability. Equal probability is asserted only in the absence of known reason to prefer one alternative.",
+   "breakdown_regime": "The unqualified principle yields contradictions: book-colour contraries (three exclusive alternatives each 'as likely as not', sec.4); Great Britain/Ireland/British Isles vs France partition paradox (sec.5); specific volume vs specific density reparameterization - any division of the interval can be made equiprobable by choice of measure (sec.6, von Kries's example). Continuous quantities have no indivisible units; a proposition and its contradictory are never satisfactory alternatives (phi(x)=x is always divisible via b + b-bar). Geometrical probability requires re-partitioning into definite indivisible intervals (sec.25).",
+   "domain": "math",
+   "timescales": [
+    "tau_0:partition_choice",
+    "tau_1:prior_assignment",
+    "tau_2:refinement_sensitivity",
+    "tau_3:paradox_audit"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Prior construction over play-call families: a uniform (indifference) prior is valid ONLY over an indivisible, exclusive, exhaustive partition of the call space relative to h. Refining 'pass' into 'quick game / dropback / play-action / screen' changes the prior mass on every family - the football analogue of the volume/density paradox. Constraint: any default uniform prior must declare its partition and pass a refinement-sensitivity audit; priors over 'run vs pass' are not invariant under re-taxonomy.",
+    "source_operator": "p6",
+    "telemetry": "Posterior drift under partition refinement; prior-mass tables at each taxonomy granularity; documented indivisibility justification for the chosen partition."
+   }
+  },
+  {
+   "primitive_id": "p7",
+   "name": "Bernoulli's Theorem: binomial frequency concentration, the mpq condition, and the two-headed-coin counterexample",
+   "verbatim_quote": "But, as we shall see, the theorem is only valid subject to stricter qualifications, than have always been remembered, and in conditions which are the exception, not the rule.",
+   "page": 356,
+   "page_printed": 337,
+   "page_convention": "0-indexed PDF page index; printed book page = index - 19 for the body",
+   "latex": "\\binom{m}{n}p^{n}q^{m-n},\\quad p+q=1;\\qquad \\text{precision} \\propto 1/\\sqrt{m}",
+   "symbol_and_unit_ledger": "m = number of occasions (dimensionless count); n = number of occurrences (count); p = a priori probability of the event on each occasion, dimensionless in [0,1]; q = 1-p; the term is the binomial probability of n occurrences in m occasions. Keynes's precision statement (PDF p.359): precision varies inversely with the square root of the number of instances. Stirling/normal approximation requires m large AND mpq large (OCR renders 'mpq' as 'mjyq', PDF p.358). No physical units.",
+   "assumptions": "The individual probability p is known a priori and the conditions are present on each of the m occasions; the binomial form is 'subject to certain conditions to be elucidated later' (PDF p.357) - namely the independence-type conditions of Ch.XXIX sec.5 ff. The symmetric normal approximation additionally requires mpq large; otherwise the distribution is appreciably unsymmetrical about n=mp.",
+   "breakdown_regime": "The two-headed/two-tailed coin (sec.5, PDF p.360): each toss marginally has P(heads)=1/2 while the results of other tosses are unknown, yet the proportion of heads in 2m tosses does NOT concentrate on 1/2 - the trials are correlated through the unknown coin identity. Bernoulli's theorem 'exhibits algebraical rather than logical insight'; its conditions are 'the exception, not the rule'. Laplace's elevation of the theorem to a general law of nature (and the Napoleon-dedication claim) is explicitly rejected. Regime uncertainty or hidden common causes break the identical-independent-conditions assumption.",
+   "domain": "math",
+   "timescales": [
+    "tau_0:single_occasion",
+    "tau_1:series_of_m_occasions",
+    "tau_2:frequency_concentration",
+    "tau_3:regime_shift_veto"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Season-long frequency calibration of a per-play model: the observed success rate converges to the per-play probability p ONLY under exchangeable, conditionally independent trials with stable conditions. A regime change (new coordinator, new QB, scheme flip) is the two-headed coin: marginal per-play rates look stable while the hidden identity of the generating process makes long-run frequency extrapolation invalid. Constraint: frequency-to-probability inversion must pass a regime-stability gate before calibration claims are admitted.",
+    "source_operator": "p7",
+    "telemetry": "Rolling-window rate stability; autocorrelation of successive outcomes; regime-change indicators (personnel/coordinator/scheme); divergence between marginal rate and conditional-on-regime rates."
+   }
+  },
+  {
+   "primitive_id": "p8",
+   "name": "The Inductive Hypothesis: limitation of independent variety; inductive correlation over universal induction",
+   "verbatim_quote": "What we require d priori, therefore, is not the certainty of the Inductive Hypothesis, but a finite probability in its favour.",
+   "page": 279,
+   "page_printed": 260,
+   "page_convention": "0-indexed PDF page index; printed book page = index - 19 for the body",
+   "latex": "C/HE > C/H,\\qquad C/H > 0",
+   "symbol_and_unit_ledger": "C = conclusion/generalisation (proposition, dimensionless); H = the Inductive Hypothesis (finiteness of the system's independent variety); E = empirical evidence; C/H = a priori probability of the conclusion, C/HE its probability after evidence; all dimensionless probability values in [0,1]. Independent variety = ultimate constituents + laws of necessary connection (PDF p.270). The non-circularity argument: E can strengthen H itself relative to a more primitive H' with H/H' > 0 (PDF p.279).",
+   "assumptions": "A FINITE a priori probability in favour of the Inductive Hypothesis is required - not certainty (PDF p.279). The objects of generalisation must cohere in a finite number of groups of invariable connection (finite generator properties). Universal generalisations additionally require a finite probability against a plurality of causes - a 'more comprehensive and less plausible assumption' (sec.7). Judgments of irrelevance (e.g. mere position in time/space, the Uniformity of Nature) are used but flagged as suspicious (sec.5).",
+   "breakdown_regime": "Infinite independent variety: no finite grouping, induction unjustified. Universal generalisations break on a SINGLE exception - hence Keynes's recommendation that conclusions run 'It is probable that any given phi is f' rather than 'It is probable that all phi are f' (sec.9, PDF p.278; Ch.XXXIII sec.1). The number of instances needed is finite but UNKNOWN; probability of an induction is non-numerical unless the number of independent equiprobable influences can be bounded (sec.10). Plurality of generators defeats perfect analogy (sec.7).",
+   "domain": "other",
+   "timescales": [
+    "tau_0:a_priori_inductive_hypothesis",
+    "tau_1:instance_accumulation",
+    "tau_2:analogy_strength",
+    "tau_3:correlation_not_universal_claim"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The finite-system assumption behind film-study generalisation: an opponent's tendencies are generated by a finite coordinator scheme (finite generator properties), which is what licenses learning from repeated instances. State variable: the posterior on scheme identity. Constraint: tendency claims must be emitted as inductive correlations ('any given 3rd-and-medium is likely play-action') never as universal laws ('they ALWAYS...'), because a single exception falsifies the universal but not the correlation; scheme plurality (two coordinators' worth of calls in one game) is the plurality-of-generators breakdown.",
+    "source_operator": "p8",
+    "telemetry": "Exception rates of universal-style tendency claims; scheme-identity posterior; analogy strength (positive vs negative analogy counts) per tendency; out-of-sample correlation survival."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "Keynes's first sovereign move is to refuse the reification of probability. Probability is not a property of an event, not a long-run frequency, and not a psychological disposition: it is a logical relation a/h between a conclusion-set and a premiss-set, fixed objectively once the evidence is given (PDF p.23). This matters for any decision engine because it forces every number to carry its conditioning corpus. A coach who says 'they're probably in Cover-3' has said nothing until the h is specified - formation, down, distance, personnel, motion, and the film priors that make those observables relevant. The same proposition has different probabilities relative to different corpora, and the old relations do not vanish when the evidence changes; they persist exactly as the destination remains three miles from the old starting point (PDF p.26). An engine that overwrites its posteriors without archiving the conditioning corpus destroys the logical object it claims to compute. The second move is the separation of weight from probability. The balance of favourable against unfavourable evidence gives the probability; the absolute amount of relevant knowledge gives the weight V(a/h), and the two are independent properties (PDF pp.90-96). The urn example is the cleanest calibration: an urn known to be half white gives P(white)=1/2 with high weight; an urn of unknown composition, each ball as likely white as black, gives the same 1/2 with minimum weight. Identical point estimates, radically different decision objects. Keynes's metaphor - weight measures the sum of the evidence, probability the difference - is the audit rule: whenever two projections agree numerically, ask what their evidence volumes are before sizing anything. He is also honest about the regress: there is no evident principle telling us how much evidence to acquire before acting (PDF p.96), so an engine needs an explicit, declared information-cost budget rather than an implicit 'more data always' loop. The third move is the destruction and repair of the Principle of Indifference. The crude rule - equal probability where no known reason prefers an alternative - generates contradictions: three exclusive colour alternatives each as likely as not; the British Isles twice as likely as France while each of its parts is as likely as France; and the specific-volume/specific-density paradox, where any partition of a continuum can be made equiprobable by choosing the measure (PDF pp.61-65). The repair is the indivisibility condition: the principle applies only to exclusive, exhaustive alternatives of a common propositional form that cannot be split into possible, incompatible sub-alternatives of the same form (PDF pp.79-80). For a play-call taxonomy this is a hard constraint: a uniform prior over 'run/pass' is not invariant under refinement into quick game, dropback, play-action, screen. The partition is a modeling choice that silently determines the prior, and the audit must expose it. Together these three moves define the epistemic hygiene layer: condition every probability on its corpus, size by weight as well as balance, and declare the partition before any indifference prior is admitted.",
+   "retrocausal_genealogy": "The lineage is Leibniz's demand for a 'new logic of degrees of probability' (the epigraph of Chapter I), through James Bernoulli's Principle of Non-Sufficient Reason, which Keynes renames the Principle of Indifference (PDF p.60), to von Kries's 1886 paradoxes that supply the destructive examples. The historical scar is the nineteenth-century frequency theory of Ellis and Venn, which tried to secure objectivity by defining probability as long-run frequency; Keynes's counter is that the relation is logical and objective without being frequentist, and that the frequency definition cannot handle single-case evidence at all. Johnson's unpublished cumulative formula, printed here by permission, is the scar-tissue response to the textbook fallacy of combining independent witnesses.",
+   "theory_of_mind": "Recursive belief clash under pressure: the coach's comfort call is rational relative to HIS corpus h_coach (season-long success rates, practice comfort), the defensive coordinator's tendency trap is rational relative to h_DC (the film he has shown and the disguises he has rehearsed), and the quarterback's internal clock is rational relative to h_QB (the pre-snap read he has been trained to trust). Each agent's a/h is objective GIVEN his corpus, so the clash is not irrationality but corpus divergence. The coach must model the DC modeling him: the DC knows the coach's comfort corpus and emits evidence designed to shift it. Second-order theory of mind asks which corpus the opponent believes I am conditioning on, and whether my observable behavior is leaking that corpus.",
+   "cross_layer_veto": "Cross-layer veto: a high-EV call computed from a high probability balance can be vetoed by the weight layer when the evidence volume is thin - six graded snaps do not license the same sizing as four hundred, even at identical point estimates (Ch.VI). The psychology layer vetoes when the coach's corpus is known to be contaminated by comfort bias: the probability is objective relative to h, but h itself was selected by motivated sampling, so the logical relation is sound while the epistemic pipeline is corrupted. The information-cost regress (Ch.VI sec.7) vetoes infinite film review before acting: at some declared budget the engine must act on the weight it has, not the weight it wishes it had."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The inference cluster begins where naive engines fail: combining evidence. The Inverse Principle (38) lets us go from P(effect|cause) to P(cause|effect), but Keynes's deepest result is Johnson's Cumulative Formula (46) and its warning. The correct combination of evidence items a, b, c for hypothesis x carries the coefficient of dependence {a^x b^x c^x...} and the prior factor (x/h)^n; the textbook rule that multiplies 'independent witness' likelihoods is explicitly named fallacious because it sets the dependence coefficients to unity and drops the prior factor (PDF pp.171-172). In football terms, formation tendency, motion tell, and personnel grouping are often ONE coordinated signal emitted by a single deceptive source. Multiplying their likelihood ratios as if independent triple-counts the same information. The kernel must measure the conditional dependence of signals given the latent state and down-weight accordingly; the separative factor is the audit knob. Note also that the inverse formula yields only comparative probability unless the alternatives are exhaustive and normalized - an engine must know whether it is computing odds between hypotheses or an absolute posterior. The second pillar is Bernoulli's theorem and its conditions. The binomial term gives the probability of n occurrences in m occasions, and the proportion concentrates on p as m grows, with precision varying inversely as the square root of m (PDF pp.357-359). But Keynes insists the theorem 'exhibits algebraical rather than logical insight': the two-headed coin shows that marginal per-trial probabilities of 1/2 are compatible with a long-run proportion that never settles at 1/2, because the trials share a hidden common cause - the identity of the coin (PDF p.360). The normal approximation additionally requires mpq large, not merely m large (PDF p.358). The isomorphism to season calibration is exact: a per-play model whose marginal rates look stable can still be the two-headed coin if a hidden regime variable (coordinator identity, scheme, quarterback health) generates the trials. Frequency-to-probability inversion - the subject of Chapter XXXI - is valid only when the material can be likened to a game of chance with exhaustive, exclusive, ultimate alternatives and perfect analogy between instances (PDF pp.404-405); applying it to unanalysed material 'can only lead to error and to delusion' (PDF p.403). The third pillar is the Inductive Hypothesis. Induction is justified only if the system has limited independent variety - a finite number of generator properties and groups of invariable connection - and we have a finite a priori probability in favour of that hypothesis, not certainty (PDF pp.270, 279). The non-circularity argument is subtle: experience can strengthen the inductive hypothesis itself relative to a more primitive assumption. The practical consequence is the preference for inductive correlations over universal generalisations: 'It is probable that any given phi is f' survives a single exception; 'all phi are f' does not (PDF p.278, p.425). For tendency engines this is the difference between a robust probabilistic claim and a falsifiable law. The finite-variety assumption is what makes film study possible at all - an opponent with infinitely many independent qualities could not be learned from - and it is also the assumption that fails when a coordinator imports an entirely new scheme mid-season.",
+   "retrocausal_genealogy": "The genealogy runs from Bernoulli's twenty years on the Ars Conjectandi theorem, through Laplace's elevation of it to a 'general law of nature' - complete with the 1814 claim that the theorem guarantees the downfall of conquerors, which Keynes quotes to expose the overreach (PDF p.360) - to the Lexis, Von Bortkiewicz, and Tschuprow school of statistical inference that Keynes judges more consonant with sound induction (PDF p.403). The scar is the textbook combination-of-testimonies fallacy, corrected by Johnson's unpublished cumulative formula; the deeper scar is Hume's problem of induction, answered here not with certainty but with a finite a priori probability on limited independent variety, and with the retreat from universal laws to inductive correlations.",
+   "theory_of_mind": "The deceptive coordination problem is recursive theory of mind made operational. The DC wants the offense's evidence items to be dependent while LOOKING independent: he shows a formation tell and a motion tell that are actually one rehearsed signal, so that a naive fusion kernel triple-counts it. The quarterback who reads the safety's rotation as a second independent witness has fallen into the trap; the quarterback who models the DC modeling his read checks whether the two tells share a source. The coach, one level up, must decide whether his own tendency evidence is similarly contaminated - whether the film he trusts was emitted by an opponent who knew it would be graded. Belief clash under pressure is then a contest over the dependence structure of the evidence, not merely over its content.",
+   "cross_layer_veto": "Cross-layer veto: the frequency layer vetoes extrapolation when regime uncertainty is present - the two-headed-coin condition means stable marginal rates do not license long-run calibration claims, so a season-long frequency model must be gated on regime stability before it informs sizing. The biomechanical/bioenergetic layer vetoes a high-probability deep shot late in the fourth quarter: the logical probability a/h may be high relative to the coverage corpus, but the quarterback's accumulated axonal-shear and fatigue state changes the execution distribution, and the weight of the physiological evidence overrides the balance of the tactical evidence. The finite-variety layer vetoes universal tendency claims after a scheme change: the generator properties have changed, so the inductive hypothesis must be re-estimated, not inherited."
+  }
+ ],
+ "universal_lens": "A polymath audit lens for any inference engine: every probability is a relation to a declared evidence corpus; every point estimate carries a separate weight (evidence volume); every uniform prior declares an indivisible partition; every fusion of signals measures its dependence coefficients; every frequency-to-probability inversion passes a regime-stability gate; and every generalisation is emitted as an inductive correlation, never a universal law. Keynes supplies the invariant checks that survive translation across domains.",
+ "gsi_mapping": "For GSI clinical and performance telemetry: return-to-play decisions are weight-vs-balance problems - an identical clearance probability from a full axonal-shear and bioenergetic telemetry suite versus a single symptom check carries radically different evidential weight, and sizing of training load must condition on weight. Repeated sub-impact exposures are correlated trials sharing a hidden physiological state, so Bernoulli-style frequency calibration of injury risk requires the regime-stability gate (the two-headed coin). Injury-mechanism taxonomies are partitions subject to the indivisibility audit, and mechanism generalisations must be inductive correlations because a single atypical case falsifies a universal claim.",
+ "gse_mapping": "For GSE Coach-Mind simulation, deception modeling, and DFS/portfolio tail risk: the cumulative formula is the signal-fusion kernel - scouting signals about the same latent play-state must be corrected by measured dependence coefficients before likelihood ratios are multiplied, or a coordinated disguise triple-counts itself. Indifference priors over call families must pass partition-refinement audits. Portfolio sizing conditions on evidential weight as well as probability balance, and tendency claims ship as inductive correlations with exception-rate telemetry, never universal laws. No sportsbook odds anywhere in this pipeline; all inputs are internal evidence corpora.",
+ "notes": "Source: Keynes, A Treatise on Probability, Macmillan 1921 (title page PDF p.10). RETRACTION CHECK: front matter inspected (PDF pp.0-19); zero 'retract' hits across all 494 normalized pages; no publisher retraction notice - this is a 1921 monograph, not a Hindawi-journal item. OCR text layer present (not image-only): pymupdf get_text yields full text; OCR quirks preserved verbatim in quotes (Greek alpha rendered as 'a', line-break hyphenation such as 'unfavour able' and 'know ledge' genuinely in source, 'mpq' rendered 'mjyq'). Page convention: 'page' is the 0-indexed PDF page index; printed book page = index - 19 for the body (verified: PDF 23 = printed 4; PDF 152 = printed 133; PDF 356 = printed 337). Reading coverage: full 494-page text dumped programmatically to scratch; 74 pages read verbatim in context across the core theoretical chapters (I, IV secs 1-6/18-25, VI, VIII secs 1-3, XII, XIV, XXII, XXVI secs 1-3, XXIX secs 1-5, XXXI secs 1-3, XXXIII secs 1-3); remaining pages are historical/philosophical commentary and problem sections scanned programmatically. All 16 verbatim quotes verified as exact substrings of the whitespace-normalized source at the cited pages before commit. DUPLICATE-WORK CHECK: only one Keynes row exists in corpus_queue; no same-title COMPLETE work. Layer-1 is the source invariant throughout; Layer-2 mappings are explicit [ISOMORPHISM]/[DERIVED KERNEL] constructions into the 22-player football dynamical system with no fabricated football era origins for the pure logic/mathematics."
+}

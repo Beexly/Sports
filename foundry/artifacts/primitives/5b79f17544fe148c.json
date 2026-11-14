@@ -1,0 +1,310 @@
+{
+  "book_id": "5b79f17544fe148c",
+  "source_status": "COMPLETE",
+  "title": "ShalevShwartzBenDavid-2014-UnderstandingMachineLearning",
+  "source_note": "Shai Shalev-Shwartz and Shai Ben-David, 'Understanding Machine Learning: From Theory to Algorithms', Cambridge University Press 2014. 449-page PDF read (core theory ch 2-7, 13-14 in full). Legitimate readable textbook, not retracted, title matches content. The book states PDF page indices differ from printed pages but section numbers are stable, so primitives cite by SECTION + printed page. Local SHARD A (sha256 prefix 5). All verbatim quotes verified exact substrings of the extracted text after ligature/quote/whitespace normalization. Zero sportsbook odds; this is the batch/statistical-learning-theory layer governing GSE pre-game generalization, complementing the online layer (Shalev-Shwartz 2012, book 4d07e5902607436f).",
+  "pages_total": 449,
+  "pages_read": 449,
+  "primitives": [
+    {
+      "primitive_id": "statistical_framework",
+      "name": "Statistical learning framework (learner blind to D)",
+      "verbatim_quote": "It is important to note that we do not assume that the learner knows anything about this distribution.",
+      "page": "sec 2.1, printed p.34 (PDF p.34)",
+      "latex": "S=((x_1,y_1),\\ldots,(x_m,y_m))\\sim D^m,\\quad x_i\\in\\mathcal{X},\\ y_i=f(x_i)\\in\\mathcal{Y},\\quad h=A(S):\\mathcal{X}\\to\\mathcal{Y}",
+      "symbol_and_unit_ledger": "X: domain/instance space; Y: label set ({0,1} or {-1,+1}); D: unknown distribution over X; f: unknown labeling function; S: training sample of m i.i.d. pairs; A(S): output predictor. The learner is blind to both D and f and interacts with the world only through S.",
+      "assumptions": "Instances drawn i.i.d. from an arbitrary unknown D; labels from an unknown f (realizable case); the learner has no knowledge of D.",
+      "breakdown_regime": "If the learner knew D or f there would be no learning problem. The whole theory quantifies what can be guaranteed from a finite blind sample. The i.i.d. assumption is essential here (contrast the online setting, which drops it).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's pre-game model is trained on a finite sample of historical games S drawn from the unknown distribution D of football situations, blind to the true outcome-generating process. The PAC framework is the correct model for the PRE-GAME calibration target (an i.i.d. outcome distribution), exactly as the online framework is correct for the in-game adversarial sequence.",
+        "source_operator": "statistical_framework",
+        "telemetry": "GSE telemetry: training-set size m; verify i.i.d. sampling of historical situations; confirm the model never assumes knowledge of D; hold-out vs training split."
+      }
+    },
+    {
+      "primitive_id": "erm_overfitting",
+      "name": "Empirical Risk Minimization and overfitting",
+      "verbatim_quote": "Although the ERM rule seems very natural, without being careful, this approach may fail miserably.",
+      "page": "sec 2.2-2.2.1, printed p.35-36",
+      "latex": "L_S(h)=\\frac{|\\{i\\in[m]:h(x_i)\\ne y_i\\}|}{m},\\qquad \\mathrm{ERM}_{\\mathcal{H}}(S)\\in\\arg\\min_{h\\in\\mathcal{H}}L_S(h);\\qquad L_S(h_S)=0\\ \\text{yet}\\ L_D(h_S)=\\tfrac12",
+      "symbol_and_unit_ledger": "L_S(h): empirical/training error [probability]; L_D(h): true/generalization error [probability]; ERM picks the hypothesis minimizing training error. The memorizing predictor (eq 2.3) has L_S=0 but L_D=1/2: perfect fit, terrible generalization = overfitting.",
+      "assumptions": "ERM minimizes training error; without a restricted hypothesis class it can memorize the sample and fail on new data.",
+      "breakdown_regime": "Unrestricted ERM overfits: a predictor that fits every training point exactly can have large true error. Overfitting is the gap L_D−L_S being large. The cure is inductive bias (restrict H), not abandoning ERM.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE must not memorize historical outcomes. A model that perfectly retrodicts every past game (L_S=0) but fails on new games is the papaya memorizer — exactly the overfitting failure. GSE's calibration discipline (hold-out validation, restricted model class) is the ERM-with-inductive-bias cure.",
+        "source_operator": "erm_overfitting",
+        "telemetry": "GSE telemetry: training error L_S vs hold-out error L_D; the overfitting gap L_D−L_S; detect memorization (near-zero training error, large hold-out error)."
+      }
+    },
+    {
+      "primitive_id": "inductive_bias",
+      "name": "Inductive bias (hypothesis class as prior knowledge)",
+      "verbatim_quote": "Since the choice of such a restriction is determined before the learner sees the training data, it should ideally be based on some prior knowledge about the problem to be learned.",
+      "page": "sec 2.3, printed p.37",
+      "latex": "\\mathrm{ERM}_{\\mathcal{H}}(S)\\in\\arg\\min_{h\\in\\mathcal{H}}L_S(h),\\qquad \\mathcal{H}\\ \\text{chosen before seeing }S",
+      "symbol_and_unit_ledger": "H: hypothesis class (the inductive bias), fixed before data; restricting ERM to H biases the learner toward a particular set of predictors. A more restricted H protects against overfitting but imposes stronger bias (the bias-complexity tradeoff).",
+      "assumptions": "H chosen a priori from domain knowledge; the restriction is what makes generalization possible; ideal H reflects true prior knowledge about the task.",
+      "breakdown_regime": "Choosing H too rich (all functions) overfits; too poor underfits. The choice must encode genuine prior knowledge — for football, the ontology of formations/coverages/down-distance logic IS the inductive bias.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The GSE football ontology (formations, coverage shells, down-distance tendencies, personnel groupings) IS the inductive bias H, fixed before seeing the game data. No-free-lunch (below) says this prior knowledge is mandatory: there is no universal football learner. The ontology is not decoration, it is the restriction that makes generalization possible.",
+        "source_operator": "inductive_bias",
+        "telemetry": "GSE telemetry: the hypothesis class H encoded by the ontology; verify H is fixed pre-data; measure how H's richness trades off bias vs estimation error."
+      }
+    },
+    {
+      "primitive_id": "pac_learnability",
+      "name": "PAC learnability and sample complexity",
+      "verbatim_quote": "The definition of Probably Approximately Correct learnability contains two approximation parameters.",
+      "page": "sec 3.1, printed p.43-44 (Def 3.1, Cor 3.2)",
+      "latex": "\\Pr_{S\\sim D^m}[L_{D,f}(h)\\le\\epsilon]\\ge 1-\\delta\\ \\text{ for } m\\ge m_{\\mathcal{H}}(\\epsilon,\\delta);\\qquad m_{\\mathcal{H}}(\\epsilon,\\delta)\\le\\left\\lceil\\frac{\\log(|\\mathcal{H}|/\\delta)}{\\epsilon}\\right\\rceil",
+      "symbol_and_unit_ledger": "epsilon: accuracy parameter (how far from optimal) [probability]; delta: confidence parameter (failure probability) [probability]; m_H(eps,delta): sample complexity [integer examples]; for finite H, m >= log(|H|/delta)/epsilon. 'Probably' = 1-delta, 'approximately correct' = error <= epsilon.",
+      "assumptions": "Realizable case (some h* in H with zero error); i.i.d. sample; the guarantee is distribution-free (holds for every D and f satisfying realizability).",
+      "breakdown_regime": "The (eps,delta) approximations are inevitable: a finite random sample can always be nonrepresentative. Sample complexity depends on log|H|, not |H| — and later on VCdim, not finiteness. Valiant's original PAC also requires polynomial runtime (the computational aspect, separated here).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's pre-game model carries a PAC guarantee: trained on m historical games, with confidence 1-delta its true calibration error is within epsilon of the best in-class model. The sample-complexity law m >= log(|H|/delta)/epsilon tells GSE how many historical games it needs for a given calibration accuracy and confidence — a concrete data-budget rule.",
+        "source_operator": "pac_learnability",
+        "telemetry": "GSE telemetry: sample complexity m vs log(|H|/delta)/epsilon; achieved (epsilon,delta) calibration on hold-out; data-budget planning per model class."
+      }
+    },
+    {
+      "primitive_id": "agnostic_bayes",
+      "name": "Agnostic PAC and the Bayes optimal predictor",
+      "verbatim_quote": "Clearly, we cannot hope that the learning algorithm will find a hypothesis whose error is smaller than the minimal possible error, that of the Bayes predictor.",
+      "page": "sec 3.2.1, printed p.46 (Def 3.3)",
+      "latex": "L_D(h)\\le \\min_{h'\\in\\mathcal{H}}L_D(h')+\\epsilon;\\qquad f_D(x)=\\mathbb{1}[\\Pr[y=1|x]\\ge\\tfrac12],\\quad L_D(f_D)\\le L_D(g)\\ \\forall g",
+      "symbol_and_unit_ledger": "Agnostic PAC drops realizability: D is a joint distribution over X×Y (labels can be stochastic); the goal is to be within epsilon of the best IN-CLASS predictor, not zero error. f_D: Bayes optimal predictor (threshold the conditional at 1/2); no classifier beats it, but it is unknown because D is unknown.",
+      "assumptions": "No realizability; labels may be noisy/stochastic (two identical situations can have different outcomes); success is relative to min_{h in H} L_D(h).",
+      "breakdown_regime": "Without prior assumptions no algorithm can match the Bayes error. The agnostic benchmark is the best in H, so a poor H caps achievable performance (approximation error). This is the realistic football model: identical down-distance-formation can yield different outcomes.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Football is agnostic, not realizable: the same situation produces different outcomes (stochastic labels). GSE cannot reach zero error or the Bayes optimum; its honest target is to be within epsilon of the best model in its ontology class. The Bayes predictor is the irreducible-calibration floor GSE competes against, never claims to beat.",
+        "source_operator": "agnostic_bayes",
+        "telemetry": "GSE telemetry: agnostic benchmark min_{h in H} L_D(h); gap to Bayes floor; verify the model targets relative (not absolute zero) error; stochastic-label handling."
+      }
+    },
+    {
+      "primitive_id": "uniform_convergence",
+      "name": "Uniform convergence (epsilon-representative sample)",
+      "verbatim_quote": "Put another way, we need that uniformly over all hypotheses in the hypothesis class, the empirical risk will be close to the true risk",
+      "page": "sec 4.1, printed p.54 (Def 4.1, 4.3; Lemma 4.2; Cor 4.4)",
+      "latex": "\\forall h\\in\\mathcal{H}:\\ |L_S(h)-L_D(h)|\\le\\epsilon\\ \\ (\\epsilon\\text{-representative});\\qquad L_D(h_S)\\le\\min_{h\\in\\mathcal{H}}L_D(h)+\\epsilon",
+      "symbol_and_unit_ledger": "S is eps-representative if EVERY hypothesis's empirical risk is within eps of its true risk (uniform over H, not just the chosen h). If S is (eps/2)-representative, ERM returns a hypothesis within eps of the best in-class. Uniform convergence => agnostic PAC learnability via ERM, m_H(eps,delta) <= m_UC(eps/2,delta).",
+      "assumptions": "Uniformity over the whole class H and over all distributions D; bounded loss; i.i.d. sample. The 'uniform' is what prevents the learner from cherry-picking a hypothesis that happens to fit the sample.",
+      "breakdown_regime": "Pointwise convergence (for the chosen h only) is insufficient — ERM searches over H, so the guarantee must hold uniformly. For binary classification uniform convergence is also NECESSARY for learnability (fundamental theorem); for general losses it is not.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's historical calibration must hold UNIFORMLY over its whole model class, not just for the model it happened to pick. If GSE selects the best-fitting model on historical data, the guarantee that its hold-out calibration is close requires uniform convergence over the ontology class — otherwise it is cherry-picking a model that overfits the sample.",
+        "source_operator": "uniform_convergence",
+        "telemetry": "GSE telemetry: sup_{h in H}|L_S(h)−L_D(h)| (uniform gap); eps-representativeness of the historical sample; verify the guarantee is uniform, not pointwise."
+      }
+    },
+    {
+      "primitive_id": "hoeffding",
+      "name": "Hoeffding concentration + union bound (finite-class UC)",
+      "verbatim_quote": "Instead, we will use a measure concentration inequality due to Hoeffding, which quantifies the gap between empirical averages and their expected value.",
+      "page": "sec 4.2, printed p.56-57 (Lemma 4.5, Cor 4.6)",
+      "latex": "\\Pr\\Big[\\Big|\\frac1m\\sum_{i=1}^m\\theta_i-\\mu\\Big|>\\epsilon\\Big]\\le 2\\exp\\!\\big(-2m\\epsilon^2/(b-a)^2\\big);\\qquad m^{UC}_{\\mathcal{H}}(\\epsilon,\\delta)\\le\\left\\lceil\\frac{\\log(2|\\mathcal{H}|/\\delta)}{2\\epsilon^2}\\right\\rceil",
+      "symbol_and_unit_ledger": "theta_i: i.i.d. bounded losses in [a,b] with mean mu; Hoeffding bounds the deviation of the empirical mean; union bound over |H| hypotheses gives the finite-class uniform-convergence sample complexity m_UC <= log(2|H|/delta)/(2 eps^2). Agnostic PAC via ERM: m_H <= 2log(2|H|/delta)/eps^2.",
+      "assumptions": "Loss range bounded [0,1] (or [a,b]); i.i.d. samples; union bound over a FINITE H. The law of large numbers is asymptotic and gives no finite-sample rate — Hoeffding does.",
+      "breakdown_regime": "Unbounded losses break Hoeffding (need bounded range or sub-Gaussian tails). The union bound costs a log|H| factor; for infinite H one needs VCdim/Sauer instead. The discretization trick (64-bit floats => |H|<=2^{64d}) gives a rough practical bound but is representation-dependent.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's finite shell-library calibration gets a concrete finite-sample rate from Hoeffding + union bound: m >= log(2|H|/delta)/(2 eps^2) historical games guarantee uniform eps-calibration with confidence 1-delta. Derived kernel: GSE computes its calibration data budget from this bound, and uses the discretization trick only as a rough sanity estimate, not a rigorous guarantee.",
+        "source_operator": "hoeffding",
+        "telemetry": "GSE telemetry: Hoeffding deviation bound vs observed |L_S−L_D|; union-bound log|H| factor; bounded-loss check; finite-sample calibration rate."
+      }
+    },
+    {
+      "primitive_id": "no_free_lunch",
+      "name": "No-Free-Lunch theorem (no universal learner)",
+      "verbatim_quote": "the theorem states that for binary classification prediction tasks, for every learner there exists a distribution on which it fails.",
+      "page": "sec 5.1, printed p.60-61 (Theorem 5.1)",
+      "latex": "\\forall A,\\ \\forall m<|\\mathcal{X}|/2,\\ \\exists D:\\ \\exists f\\ (L_D(f)=0)\\ \\text{and}\\ \\Pr_{S\\sim D^m}[L_D(A(S))\\ge\\tfrac18]\\ge\\tfrac17",
+      "symbol_and_unit_ledger": "For ANY learning algorithm A and sample size m < |X|/2, there is a distribution D with a realizable target f (L_D(f)=0) on which A fails (error >= 1/8 with probability >= 1/7). Proof: the adversary concentrates D on a set C of 2m points and picks a target labeling contradicting A on the unobserved half.",
+      "assumptions": "Binary classification, 0-1 loss; the adversary chooses D after seeing A; m must be < |X|/2 (otherwise the learner could see everything).",
+      "breakdown_regime": "No learner succeeds on all tasks; prior knowledge (a hypothesis class H) is MANDATORY. The theorem is the formal death of the 'universal AI predictor' — every learner has tasks where it fails while another succeeds. Wolpert-Macready optimization NFL theorems are different objects.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "No-Free-Lunch is the formal justification that GSE MUST encode football-specific prior knowledge (the ontology). There is no universal sports predictor; a generic learner fails on football while a football-biased learner succeeds. The '99% AI Whale' tout with a domain-free model is exactly the universal learner the theorem condemns. GSE's edge comes from its inductive bias, not from a magic universal algorithm.",
+        "source_operator": "no_free_lunch",
+        "telemetry": "GSE telemetry: confirm the model class H encodes football prior knowledge; verify no claim of universal/domain-free prediction; the NFL failure case as a calibration stress test."
+      }
+    },
+    {
+      "primitive_id": "bias_complexity",
+      "name": "Bias-complexity tradeoff (approximation + estimation error)",
+      "verbatim_quote": "The first component reflects the quality of our prior knowledge, measured by the minimal risk of a hypothesis in our hypothesis class",
+      "page": "sec 5.2, printed p.62 (error decomposition)",
+      "latex": "L_D(h_S)=\\underbrace{\\min_{h\\in\\mathcal{H}}L_D(h)}_{\\text{approximation error (bias)}}+\\underbrace{\\big(L_D(h_S)-\\min_{h\\in\\mathcal{H}}L_D(h)\\big)}_{\\text{estimation error}}",
+      "symbol_and_unit_ledger": "Approximation error = min_{h in H} L_D(h): how well the best in-class model fits reality (quality of prior knowledge); independent of sample size; decreases as H grows. Estimation error = L_D(h_S) − min_H L_D: the overfitting gap; depends on H's complexity and sample size; increases as H grows. Richer H lowers bias but raises estimation error.",
+      "assumptions": "ERM over H; the decomposition is exact; the tradeoff is between a complex H (low bias, high overfitting risk) and a simple H (high bias, low overfitting risk).",
+      "breakdown_regime": "Under realizability the approximation error is zero; in the agnostic case it can be large and caps performance. A too-small H cannot be rescued by more data (bias floor); a too-rich H overfits regardless of fit. The sweet spot balances both.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's ontology richness is a bias-complexity dial: a richer football ontology (more coverages, more situational splits) lowers approximation error (better fit to reality) but raises estimation error (overfitting the historical sample). GSE must tune ontology complexity to the available data budget — the central model-design tradeoff, made quantitative.",
+        "source_operator": "bias_complexity",
+        "telemetry": "GSE telemetry: approximation error min_H L_D vs estimation error L_D(h_S)−min_H L_D; ontology-complexity dial; locate the bias-complexity sweet spot for the data budget."
+      }
+    },
+    {
+      "primitive_id": "approximation_error",
+      "name": "Approximation error vanishes only under realizability",
+      "verbatim_quote": "Under the realizability assumption, the approximation error is zero.",
+      "page": "sec 5.2, printed p.64-65",
+      "latex": "\\text{realizable}\\Rightarrow \\min_{h\\in\\mathcal{H}}L_D(h)=0;\\qquad \\text{agnostic}\\Rightarrow \\min_{h\\in\\mathcal{H}}L_D(h)>0\\ \\text{possible}",
+      "symbol_and_unit_ledger": "Approximation error = min_{h in H} L_D(h); it is zero iff some h in H achieves zero true error (realizability). It does not depend on sample size — more data cannot reduce a bias floor. In the agnostic case it can be large.",
+      "assumptions": "Realizability is a strong assumption rarely true for football; the approximation error is the irreducible bias of the chosen class.",
+      "breakdown_regime": "If the ontology class H cannot represent the true outcome process, the approximation error is a hard floor no amount of data removes. This is why GSE must keep expanding H's expressive power where data supports it, but not beyond (estimation error).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE diagnoses whether its calibration error is a bias floor (approximation error, ontology too poor) or an overfitting gap (estimation error, ontology too rich for the data). Derived kernel: if hold-out error plateaus as data grows, the bottleneck is approximation error and GSE must enrich the ontology, not collect more games.",
+        "source_operator": "approximation_error",
+        "telemetry": "GSE telemetry: hold-out error vs data-size curve; plateau => approximation-error floor; distinguish bias floor from estimation gap to route the fix."
+      }
+    },
+    {
+      "primitive_id": "vc_philosophy",
+      "name": "Shattering and the VC epistemic motto",
+      "verbatim_quote": "If someone can explain every phenomenon, his explanations are worthless.",
+      "page": "sec 6.2, printed p.70 (Def 6.3 shattering; Cor 6.4; Thm 6.6)",
+      "latex": "\\mathcal{H}\\ \\text{shatters}\\ C\\iff |\\mathcal{H}_C|=2^{|C|};\\qquad \\mathrm{VCdim}(\\mathcal{H})=\\max\\{|C|:C\\ \\text{shattered}\\};\\qquad \\mathrm{VCdim}=\\infty\\Rightarrow \\text{not PAC learnable}",
+      "symbol_and_unit_ledger": "H_C: restriction of H to C (all labelings H realizes on C); H shatters C if it realizes ALL 2^|C| labelings. VCdim = largest shattered set size. If H shatters a set of size 2m, no algorithm learns H from m examples (Cor 6.4); infinite VCdim => not PAC learnable (Thm 6.6).",
+      "assumptions": "Binary classification; shattering is the combinatorial measure of expressive power; the adversary in the NFL proof exploits a shattered set.",
+      "breakdown_regime": "A class that can realize every labeling of some set has no predictive content on that set — it can 'explain every phenomenon', hence worthless. Infinite VCdim means unlearnable. This is the combinatorial heart of why expressive power must be bounded.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is GSE's epistemic motto in one line: a model that can fit every possible outcome has zero predictive power. If GSE's ontology can realize every labeling of a set of situations (shatters it), it explains everything and predicts nothing. GSE must bound the VCdim of its read classes — a coverage model that 'always has an explanation' for any result is the worthless explainer the theorem condemns.",
+        "source_operator": "vc_philosophy",
+        "telemetry": "GSE telemetry: estimate VCdim of read/coverage classes; flag classes that shatter large situation sets as unlearnable/over-expressive; the 'explains everything' diagnostic."
+      }
+    },
+    {
+      "primitive_id": "fundamental_theorem",
+      "name": "Fundamental theorem of statistical learning",
+      "verbatim_quote": "Not only does the VC-dimension characterize PAC learnability; it even determines the sample complexity.",
+      "page": "sec 6.4, printed p.72-73 (Theorems 6.7, 6.8)",
+      "latex": "\\text{UC}\\iff\\text{ERM agnostic PAC}\\iff\\text{agnostic PAC}\\iff\\text{PAC}\\iff\\text{ERM PAC}\\iff \\mathrm{VCdim}(\\mathcal{H})<\\infty;\\qquad C_1\\frac{d+\\log(1/\\delta)}{\\epsilon^2}\\le m_{\\mathcal{H}}(\\epsilon,\\delta)\\le C_2\\frac{d+\\log(1/\\delta)}{\\epsilon^2}",
+      "symbol_and_unit_ledger": "Six equivalent conditions for binary 0-1 loss: uniform convergence, ERM agnostic PAC, agnostic PAC, PAC, ERM PAC, finite VCdim. Quantitative: with d=VCdim, agnostic sample complexity Theta((d+log(1/delta))/eps^2); realizable Theta((d log(1/eps)+log(1/delta))/eps). C1,C2 absolute constants.",
+      "assumptions": "Binary classification with 0-1 loss; the equivalence is specific to this setting (for general losses learnability can hold without uniform convergence, and ERM can fail while other rules succeed).",
+      "breakdown_regime": "The theorem unifies learnability, ERM, uniform convergence, and VCdim into one object. VCdim — not parameter count, not |H| — is THE complexity measure. For non-binary/general losses the clean equivalence breaks (Remark 6.3).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's model class is learnable iff its VCdim is finite, and its sample complexity is Theta((d+log(1/delta))/eps^2). This is the master law connecting GSE's ontology complexity (d), data budget (m), calibration accuracy (eps), and confidence (delta). GSE reads its required historical-game count directly off the VCdim of its read class.",
+        "source_operator": "fundamental_theorem",
+        "telemetry": "GSE telemetry: VCdim d of the model class; sample complexity vs (d+log(1/delta))/eps^2; verify the six-way equivalence assumptions (binary 0-1) hold or adapt."
+      }
+    },
+    {
+      "primitive_id": "sauer_growth",
+      "name": "Sauer-Shelah-Perles lemma (polynomial growth)",
+      "verbatim_quote": "when m becomes larger than the VC-dimension, the growth function increases polynomially rather than exponentially with m.",
+      "page": "sec 6.5.1, printed p.73-74 (Def 6.9, Lemma 6.10)",
+      "latex": "\\tau_{\\mathcal{H}}(m)=\\max_{|C|=m}|\\mathcal{H}_C|;\\qquad \\mathrm{VCdim}(\\mathcal{H})\\le d\\Rightarrow \\tau_{\\mathcal{H}}(m)\\le\\sum_{i=0}^{d}\\binom{m}{i}\\le\\Big(\\frac{em}{d}\\Big)^{d}\\ (m>d+1)",
+      "symbol_and_unit_ledger": "tau_H(m): growth function = max number of distinct labelings H realizes on m points. For m<=d, tau=2^m (exponential); for m>d, Sauer-Shelah-Perles bounds tau <= (em/d)^d (polynomial). This polynomial effective size is what makes infinite classes with finite VCdim learnable.",
+      "assumptions": "Finite VCdim d; the growth function transitions from exponential to polynomial at m=d; the bound is combinatorial (proved by induction on shattered subsets).",
+      "breakdown_regime": "Without finite VCdim the growth stays exponential and uniform convergence fails. Sauer's lemma is the bridge from the combinatorial VCdim to the analytic uniform-convergence bound (Thm 6.11 uses tau_H(2m)).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's infinite ontology class (continuous parameters) is still learnable because its effective size on m situations grows only polynomially (em/d)^d once m exceeds VCdim. Derived kernel: GSE uses the growth-function bound to convert its combinatorial ontology complexity into a concrete uniform-convergence/sample-complexity guarantee, rather than treating the class as infinitely large.",
+        "source_operator": "sauer_growth",
+        "telemetry": "GSE telemetry: growth function tau_H(m) vs (em/d)^d; the exponential->polynomial transition at m=VCdim; effective-size-based sample budget."
+      }
+    },
+    {
+      "primitive_id": "vc_not_params",
+      "name": "VC dimension is not parameter count",
+      "verbatim_quote": "While this is often the case, it is not always true.",
+      "page": "sec 6.3.5, printed p.72 (sin example); sec 6.3.4 finite bound",
+      "latex": "h_\\theta(x)=\\lceil 0.5\\sin(\\theta x)\\rceil:\\ \\text{1 parameter yet }\\mathrm{VCdim}=\\infty;\\qquad \\text{finite }\\mathcal{H}:\\ \\mathrm{VCdim}(\\mathcal{H})\\le\\log_2|\\mathcal{H}|",
+      "symbol_and_unit_ledger": "VCdim often equals the number of parameters (thresholds=1, intervals=2, axis-aligned rectangles=4) but NOT always: h_theta(x)=ceil(0.5 sin(theta x)) has ONE real parameter yet infinite VCdim. For finite H, VCdim <= log2|H|, and the gap can be arbitrarily large (thresholds on k points: |H|=k, VCdim=1).",
+      "assumptions": "Parameter count is a heuristic, not a definition, of complexity; the sin class shatters arbitrarily large sets with one parameter; finite-class VCdim is bounded by log2|H| but can be far smaller.",
+      "breakdown_regime": "Counting parameters to estimate complexity is WRONG in general — a single oscillating parameter can have infinite VCdim. GSE must measure VCdim (or a proxy) directly, not count ontology features. The discretization trick is representation-dependent and only a rough estimate.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE must not estimate model complexity by counting ontology features/parameters. A single finely-tuned continuous parameter (like a threshold sweep) can have infinite VCdim and be unlearnable. Derived kernel: GSE measures the combinatorial capacity (VCdim/growth) of its read classes directly, because feature count is an unreliable complexity proxy.",
+        "source_operator": "vc_not_params",
+        "telemetry": "GSE telemetry: VCdim vs parameter/feature count; flag classes where a few parameters yield high capacity; reject parameter-count-based complexity claims."
+      }
+    },
+    {
+      "primitive_id": "rlm_stabilizer",
+      "name": "Regularized Loss Minimization (Tikhonov / ridge)",
+      "verbatim_quote": "Another view of regularization is as a stabilizer of the learning algorithm.",
+      "page": "sec 13-13.1, printed p.171-172 (eq 13.1-13.5)",
+      "latex": "A(S)=\\arg\\min_w\\big(L_S(w)+R(w)\\big),\\quad R(w)=\\lambda\\|w\\|^2;\\qquad \\text{ridge: } w=(2\\lambda m I+A)^{-1}b,\\ A=\\sum_i x_i x_i^\\top,\\ b=\\sum_i y_i x_i",
+      "symbol_and_unit_ledger": "RLM minimizes empirical risk + regularizer R(w); Tikhonov R=lambda‖w‖^2 (lambda>0) measures hypothesis complexity / acts as a stabilizer. Ridge regression (squared loss + Tikhonov) has closed form w=(2lambda m I+A)^{-1}b; the matrix is invertible since eigenvalues >= 2lambda m. RLM ~ structural risk minimization over nested norm-balls.",
+      "assumptions": "Convex loss (Lipschitz or smooth); lambda>0 balances fit vs complexity; the regularizer makes the objective strongly convex (2lambda-strongly convex).",
+      "breakdown_regime": "lambda=0 reduces to unregularized ERM (can overfit / be ill-conditioned); lambda too large underfits. The regularizer must be chosen (tuned on validation) to balance the fitting-stability tradeoff. RLM learns all convex-Lipschitz-bounded and convex-smooth-bounded problems even when uniform convergence fails.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's pre-game fit is Regularized Loss Minimization: minimize historical calibration loss plus a complexity penalty lambda‖w‖^2 on the read-weights. The regularizer is the stabilizer that keeps one anomalous historical game from swinging the whole model — the batch analogue of the online FTRL regularizer. Ridge gives GSE a closed-form, well-conditioned pre-game estimator.",
+        "source_operator": "rlm_stabilizer",
+        "telemetry": "GSE telemetry: regularization strength lambda; objective strong-convexity 2lambda; ridge conditioning (eigenvalues >= 2lambda m); fit-vs-complexity balance on validation."
+      }
+    },
+    {
+      "primitive_id": "stability_generalization",
+      "name": "Replace-one stability equals the generalization gap",
+      "verbatim_quote": "Intuitively, a learning algorithm is stable if a small change of the input to the algorithm does not change the output of the algorithm much.",
+      "page": "sec 13.2-13.3, printed p.173-177 (Thm 13.2, Def 13.3, Cor 13.6, 13.8)",
+      "latex": "\\mathbb{E}_S[L_D(A(S))-L_S(A(S))]=\\mathbb{E}_{S,z',i}[\\ell(A(S^{(i)}),z_i)-\\ell(A(S),z_i)];\\qquad \\text{Lipschitz RLM: }\\le\\frac{2\\rho^2}{\\lambda m}",
+      "symbol_and_unit_ledger": "S^{(i)}: S with the i-th example replaced by z'; on-average-replace-one-stability rate eps(m) bounds the expected loss change. Theorem 13.2: the generalization gap E[L_D−L_S] EQUALS the replace-one stability. Tikhonov RLM on convex rho-Lipschitz loss is stable with rate 2rho^2/(lambda m). Oracle inequality (Cor 13.8): E[L_D(A(S))] <= L_D(w*) + lambda‖w*‖^2 + 2rho^2/(lambda m).",
+      "assumptions": "i.i.d. sample; convex Lipschitz (or smooth nonnegative) loss; stability measured by swapping ONE training example; the fitting-stability tradeoff mirrors bias-complexity (lambda up => stability up, fit down).",
+      "breakdown_regime": "A stable algorithm need not be good (a constant predictor is stable but useless) — it must ALSO fit the training set. The oracle inequality trades lambda‖w*‖^2 (fit) against 2rho^2/(lambda m) (stability); optimal lambda ~ sqrt(2rho^2/(B^2 m)).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE gets a concrete, measurable generalization diagnostic: its pre-game generalization gap EQUALS how much its prediction changes when one historical game is swapped out (replace-one stability). GSE can estimate this directly by leave-one-out perturbation. The oracle inequality bounds GSE's risk by best-in-class + regularization + stability, and tunes lambda to balance them.",
+        "source_operator": "stability_generalization",
+        "telemetry": "GSE telemetry: replace-one stability (leave-one-out prediction swing); generalization gap E[L_D−L_S] vs stability rate 2rho^2/(lambda m); oracle-inequality risk bound; lambda tuning."
+      }
+    },
+    {
+      "primitive_id": "sgd_unbiased",
+      "name": "Stochastic Gradient Descent (unbiased subgradient)",
+      "verbatim_quote": "In stochastic gradient descent we do not require the update direction to be based exactly on the gradient.",
+      "page": "sec 14.3, printed p.191 (Thm 14.8); sec 14.4 projection",
+      "latex": "w^{(t+1)}=w^{(t)}-\\eta v_t,\\ \\mathbb{E}[v_t|w^{(t)}]\\in\\partial f(w^{(t)}),\\ \\bar w=\\frac1T\\sum_{t=1}^T w^{(t)};\\qquad \\mathbb{E}[f(\\bar w)]-f(w^\\star)\\le\\frac{B\\rho}{\\sqrt T},\\ \\eta=\\sqrt{\\frac{B^2}{\\rho^2 T}}",
+      "symbol_and_unit_ledger": "v_t: random vector whose conditional expectation is a subgradient of f at w^t (unbiased, not exact); eta: step size; output the average w_bar. Convex-Lipschitz (Thm 14.8): E[f(w_bar)]−f(w*) <= B rho/sqrt(T), needs T >= B^2 rho^2/eps^2. Projection lemma keeps iterates in a bounded convex H; variable step eta_t=B/(rho sqrt t); strongly convex (Thm 14.11): rate rho^2/(2lambda T)(1+log T) with eta_t=1/(lambda t).",
+      "assumptions": "Convex f; unbiased subgradient estimate with ‖v_t‖<=rho; comparator norm <= B; averaging (Jensen) gives the guarantee; projection preserves the bound.",
+      "breakdown_regime": "A biased gradient estimate breaks the guarantee. The 1/sqrt(T) rate is for convex-Lipschitz; strong convexity improves to log(T)/T. The step size must decay (or be tuned to T); a fixed large step overshoots. SGD needs only ONE fresh example per iteration, not the full dataset.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE trains its pre-game model by SGD: each iteration samples ONE fresh historical game and steps along its (unbiased) loss subgradient, w^{t+1}=w^t−eta v_t. This is how GSE scales to large historical corpora without full-batch passes. The B rho/sqrt(T) rate sets GSE's training-iteration budget, and strong convexity (from the Tikhonov regularizer) accelerates it to log(T)/T.",
+        "source_operator": "sgd_unbiased",
+        "telemetry": "GSE telemetry: unbiased-gradient check E[v_t|w^t]=subgradient; step-size schedule eta_t; convergence vs B rho/sqrt(T) (or log(T)/T strongly convex); one-example-per-iteration sampling."
+      }
+    },
+    {
+      "primitive_id": "sgd_risk_fresh_example",
+      "name": "SGD minimizes true risk from a single fresh example",
+      "verbatim_quote": "With SGD, however, all we need is to find an unbiased estimate of the gradient",
+      "page": "sec 14.5.1, printed p.196-197 (eq 14.13, Cor 14.12)",
+      "latex": "v_t=\\nabla\\ell(w^{(t)},z),\\ z\\sim D\\Rightarrow \\mathbb{E}[v_t|w^{(t)}]=\\nabla L_D(w^{(t)});\\qquad T\\ge\\frac{B^2\\rho^2}{\\epsilon^2}\\Rightarrow \\mathbb{E}[L_D(\\bar w)]\\le\\min_{w\\in\\mathcal{H}}L_D(w)+\\epsilon",
+      "symbol_and_unit_ledger": "Sampling z~D and taking v_t=grad l(w^t,z) gives an UNBIASED estimate of the true-risk gradient (eq 14.13, by linearity of expectation/gradient). So SGD minimizes the TRUE risk L_D directly (not the empirical risk L_S). Cor 14.12: T >= B^2 rho^2/eps^2 examples give E[L_D(w_bar)] <= min_H L_D + eps — sample complexity matching RLM (better by a factor 8). Smooth case (Thm 14.13): E[L_D(w_bar)] <= (1/(1−eta beta))(L_D(w*) + ‖w*‖^2/(2 eta T)).",
+      "assumptions": "Differentiable (or subdifferentiable) loss; fresh i.i.d. z each iteration; the single-example gradient is unbiased for the risk gradient; convex-Lipschitz-bounded or convex-smooth-bounded problem.",
+      "breakdown_regime": "This direct-risk minimization is why SGD generalizes without an explicit uniform-convergence argument — it never overfits the empirical sample because it targets L_D. The smooth analysis needs eta beta < 1 (step size below the smoothness scale) or the bound blows up.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's SGD targets the TRUE pre-game calibration risk directly, one fresh historical game at a time, rather than minimizing the empirical historical error — which is precisely why it generalizes instead of memorizing. The single-fresh-example unbiased gradient is the batch counterpart of the online bandit's single-outcome feedback. Online-to-batch (Shalev-Shwartz 2012) and this PAC/SGD theory are the two halves of GSE's learning pipeline.",
+        "source_operator": "sgd_risk_fresh_example",
+        "telemetry": "GSE telemetry: confirm SGD targets L_D (fresh samples) not L_S (fixed batch); unbiased single-example gradient; sample complexity T>=B^2 rho^2/eps^2; smooth step-size constraint eta beta<1."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t0",
+      "think": "If the 2012 online-learning monograph gave GSE its in-game constitution, this 2014 textbook gives it its pre-game epistemology. The two are complementary halves of one pipeline: online learning governs the adversarial snap-by-snap sequence inside a game, and statistical learning theory governs how the pre-game model generalizes from a finite sample of historical games. The book opens with the decisive admission that the learner knows nothing about the data-generating distribution D. GSE's pre-game model is exactly this blind learner: it sees a finite sample S of historical situations drawn i.i.d. from the unknown distribution of football, and must output a predictor whose true error is small. The i.i.d. assumption is appropriate HERE, at the pre-game boundary, even though it fails inside the game — and online-to-batch is the theorem that lets the in-game online learner be converted into this batch setting. The first danger is overfitting. Empirical Risk Minimization, the natural rule of fitting the training data as well as possible, can fail miserably: the memorizing predictor has zero training error and one-half true error. A GSE model that perfectly retrodicts every past game but cannot predict a new one is this memorizer. The cure is not to abandon ERM but to restrict it to a hypothesis class H chosen before seeing the data — the inductive bias. For GSE that class IS the football ontology: formations, coverage shells, down-distance tendencies, personnel logic. The No-Free-Lunch theorem makes this mandatory rather than optional: for every learner there is a distribution on which it fails, so there is no universal football predictor. The domain-free 'AI Whale' tout is precisely the universal learner the theorem condemns; GSE's edge comes from its football-specific prior knowledge, not from a magic algorithm. PAC learnability quantifies the guarantee: with m >= log(|H|/delta)/epsilon historical games, the ERM model is, with confidence 1-delta, within epsilon of correct. Because football is agnostic — the same situation yields different outcomes — GSE cannot reach the Bayes optimum or zero error; its honest target is to be within epsilon of the best model in its ontology class. The engine of the guarantee is uniform convergence: the empirical risk must approximate the true risk uniformly over the WHOLE class, not just for the model GSE happened to pick, otherwise selection cherry-picks an overfit. Hoeffding's concentration inequality plus a union bound gives the finite-class rate m_UC <= log(2|H|/delta)/(2 epsilon^2), a concrete finite-sample calibration budget. The bias-complexity tradeoff then decomposes GSE's error into approximation error (the quality of the ontology, min over H of the true risk, independent of sample size) and estimation error (the overfitting gap, growing with class complexity). A richer ontology lowers bias but raises overfitting risk; if hold-out error plateaus as data grows, the bottleneck is the approximation floor and GSE must enrich the ontology rather than collect more games. The combinatorial heart is the VC dimension. A class shatters a set if it realizes every possible labeling of it, and the book's motto is the epistemic core of the whole Foundry: if someone can explain every phenomenon, his explanations are worthless. A coverage model that always has an explanation for any result predicts nothing. The fundamental theorem unifies six conditions — uniform convergence, ERM, PAC and agnostic PAC learnability, and finite VC dimension — into one object, and pins the sample complexity at Theta((d+log(1/delta))/epsilon^2). Crucially, VC dimension is NOT parameter count: a single oscillating parameter ceil(0.5 sin(theta x)) has infinite VC dimension, so GSE must measure combinatorial capacity directly, never count ontology features. Sauer's lemma is what rescues infinite classes: once the sample exceeds the VC dimension the growth function turns from exponential to polynomial, (em/d)^d, so a continuous ontology is still learnable. The optimization layer closes the loop. Regularized Loss Minimization adds a Tikhonov penalty lambda‖w‖^2 to the empirical risk; ridge regression gives a closed-form, well-conditioned pre-game estimator. The deep result is that stability EQUALS generalization: the expected true-minus-empirical error is exactly the on-average-replace-one stability, how much the prediction swings when a single historical game is swapped out. GSE can measure this directly by leave-one-out perturbation, and the oracle inequality bounds its risk by best-in-class plus lambda‖w*‖^2 plus 2rho^2/(lambda m), tuning lambda to balance fit against stability. Finally SGD minimizes the TRUE risk directly from a single fresh example per iteration, because the single-example gradient is an unbiased estimate of the risk gradient; it generalizes without memorizing precisely because it never targets the empirical sample. The convex-Lipschitz rate B rho/sqrt(T) sets the training budget, and the Tikhonov-induced strong convexity accelerates it to log(T)/T. Two further distinctions keep the pipeline honest. The book separates the STATISTICAL aspect of learning (how many examples suffice) from the COMPUTATIONAL aspect (how much runtime the learner needs); Valiant's original PAC definition demands both be polynomial, and GSE must respect both — a statistically learnable class is useless if fitting it exceeds the crucible's compute budget, which is where the fleet layer's laws re-enter. And model selection must run on a held-out validation set, never the training set: GSE tunes the regularization strength lambda and the ontology complexity on validation, because selecting on training data overfits the selection itself and silently inflates the claimed calibration. Every equation is a load-bearing law of GSE's pre-game generalization, the batch half of the pipeline whose online half was laid down by the 2012 monograph.",
+      "retrocausal_genealogy": "Retrocausal genealogy: the statistical framework and VC theory descend from Vapnik-Chervonenkis (1971) and Vapnik's general learning setting (1982-1998); PAC learnability from Valiant (1984, Turing Award 2010); agnostic PAC from Haussler (1992); uniform convergence / Glivenko-Cantelli classes from Glivenko and Cantelli (1930s); Hoeffding's inequality (1963); the No-Free-Lunch theorem from the VC lower-bound tradition (distinct from Wolpert-Macready 1997 optimization NFL); Sauer's lemma from Sauer (1972), Shelah and Perles independently; the fundamental theorem's tight bounds from Chapter 28's analysis; Tikhonov regularization (1963) and ridge regression (Hoerl-Kennard 1970); replace-one stability from Bousquet-Elisseeff (2002); SGD from Robbins-Monro (1951) with the convex-learning analysis of Shalev-Shwartz-Singer-Srebro; the strongly-convex log(T)/T refinement from Rakhlin-Shamir-Sridharan (2012) and Shamir-Zhang (2013). Each GSE pre-game law is the final cause of a decades-long chain of generalization necessity.",
+      "theory_of_mind": "Recursive theory of mind: the No-Free-Lunch and VC proofs are adversarial theory-of-mind constructions. The adversary chooses the distribution D AFTER seeing the learner A, concentrates it on a shattered set, and picks a target labeling that contradicts A on the unobserved half — it reasons about what the learner can and cannot infer from its sample. GSE mirrors this: the defense reasons about the offense's tendencies, and the engine must reason about what an adversary could force it to mispredict. The replace-one stability diagnostic is itself a theory-of-mind probe: how much does the model's belief change when one piece of evidence is swapped, i.e. how sensitive is its reasoning to a single observation. A model that swings wildly on one swapped game is reasoning fragilely, exactly as an unstable online learner oscillates.",
+      "cross_layer_veto": "Cross-layer veto adjudication: the online layer (2012) VETOES applying i.i.d. PAC guarantees to the in-game adversarial sequence — those belong only at the pre-game batch boundary, reached via online-to-batch. The VC layer VETOES any read class with infinite VC dimension as unlearnable, and VETOES parameter-count complexity claims (the sin counterexample). The bias-complexity layer VETOES enriching the ontology beyond the data budget (estimation error) and VETOES collecting more data to fix an approximation floor. The stability layer VETOES an unregularized pre-game fit (lambda=0) as unstable/ill-conditioned. The SGD layer VETOES a biased gradient estimate and a step size above the smoothness scale (eta beta >= 1). When layers conflict the binding constraint wins and the gatekeeper PASSes rather than fabricating a guarantee: an unlearnable class is refused, not faked. Same fail-closed discipline as the pick-publication gate, and the same epistemic separation between source invariants and derived GSE kernels."
+    }
+  ],
+  "universal_lens": "Any predictor trained on a finite i.i.d. sample from an unknown distribution is governed by generalization theory: success requires inductive bias (no universal learner exists, No-Free-Lunch), uniform convergence of empirical to true risk over the whole hypothesis class, and a complexity measure (VC dimension, not parameter count) that pins the sample complexity. Error decomposes into approximation (bias) and estimation (overfitting) terms; stability under single-example perturbation equals the generalization gap; and regularized or stochastic optimization targets the true risk directly. These laws bind any batch learner — markets, medicine, routing, and football pre-game models alike.",
+  "gsi_mapping": "For GSI, this textbook is the epistemology of generalization from finite evidence. It formalizes why prior knowledge is mandatory (No-Free-Lunch), why a model that explains every outcome is worthless (shattering/VC), why complexity must be measured combinatorially not by parameter count, why the generalization gap is exactly replace-one stability, and why honest success is relative to the best in-class model (agnostic PAC) rather than an unreachable Bayes optimum. It gives GSI the fail-closed verification discipline: refuse unlearnable classes, distinguish bias floors from overfitting gaps, and never claim a guarantee the sample size cannot support.",
+  "gse_mapping": "For GSE, this is the PRE-GAME generalization layer: the football ontology is the inductive bias H; PAC/VC theory sets the historical-game data budget m ~ (d+log(1/delta))/eps^2; uniform convergence + Hoeffding give finite-sample calibration rates; the bias-complexity tradeoff tunes ontology richness to the data budget; replace-one stability is a measurable leave-one-out generalization diagnostic; Tikhonov/ridge gives a well-conditioned pre-game estimator; and SGD minimizes true calibration risk from one fresh historical game per iteration. Together with the online layer (2012) and the online-to-batch bridge, it closes GSE's learning pipeline: adversarial online learning in-game, PAC/SGD generalization at the pre-game boundary, calibrated probability out."
+}

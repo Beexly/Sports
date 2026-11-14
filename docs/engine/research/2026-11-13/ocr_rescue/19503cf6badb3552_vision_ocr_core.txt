@@ -1,0 +1,671 @@
+========== PAGE 1 ==========
+US011107049B2
+(12) United States Patent
+Hertzog et al.
+(54) METHODS FOR EXCHANGING AND
+EVALUATING VIRTUAL CURRENCY
+(71) Applicants: Bprotocol Foundation, Zug (CH);
+Localcoin Ltd., Ramat-Gan (IL)
+(72) Inventors: Eyal Hertzog, Ramat-HaSharon (IL);
+Guy Ben Artzi, Rishpon (IL); Galia
+Benartzi, Tel-Aviv (IL); Yehuda Levi,
+Tel-Aviv (IL)
+(73) Assignees: Bprotocol Foundation, Zug (CH);
+Localcoin Ltd., Tel-Aviv (IL)
+(*) Notice:
+Subject to any disclaimer, the term of this
+patent is extended or adjusted under 35
+U.S.C. 154(b) by 0 days.
+(21) Appl. No.: 16/952,122
+(22) Filed:
+(65)
+Nov. 19, 2020
+Prior Publication Data
+US 2021/0073755 A1 Mar. 11, 2021
+Related U.S. Application Data
+(63) Continuation of application No. 16/476,312, filed as
+application No. PCT/IL2018/050023 on Jan. 8, 2018.
+(Continued)
+(51) Int. Cl.
+G06Q 20/06
+G06F 21/64
+(52) U.S. Cl.
+CPC
+(2012.01)
+(2013.01)
+(Continued)
+G06Q 20/0658 (2013.01); G06F_21/64
+(2013.01); G06Q 20/389 (2013.01);
+(Continued)
+(58) Field of Classification Search
+None
+See application file for complete search history.
+(56)
+(10) Patent No.:
+(45) Date of Patent:
+US 11,107,049 B2
+Aug. 31, 2021
+References Cited
+U.S. PATENT DOCUMENTS
+10,565,645 B1* 2/2020 Kurani
+2015/0363769 A1* 12/2015 Ronca
+G06Q 40/04
+G06Q 40/04
+705/64
+(Continued)
+FOREIGN PATENT DOCUMENTS
+WO
+WO 2018/127923
+7/2018
+OTHER PUBLICATIONS
+Dong He et al., "Virtual Currencies and Beyond: Initial Consider-
+ations", Jan. 2016 (Year: 2016).*
+(Continued)
+Primary Examiner —
+Jacob C. Coppola
+Assistant Examiner - Timothy Paul Sax
+(57)
+ABSTRACT
+There may be provided a secure ledger network for execut-
+ing cryptocurrency transactions, the secure ledger network
+includes at least one hardware processor, a non-transitory
+machine-readable storage medium having an executable
+computer readable program code, the at least one hardware
+processor configured to execute the computer-readable pro-
+gram code to: receive, by the secure ledger network, a
+request to validate a smart contract that determines at least
+one rule for performing a transaction related to a first
+cryptocurrency token, wherein an execution of the transac-
+tion comprising determining a price of the first cryptocur-
+rency token based on a status of the first cryptocurrency
+token, and a status of an other cryptocurrency token; deter-
+mine whether to validate the smart contract; when deter-
+mining to validate the smart contract then updating a secure
+ledger maintained by the secure ledger network with the
+smart contract; receiving, by the secure ledger network, a
+request to execute a transaction related to the first crypto-
+currency token; performing the transaction by executing, by
+the secure ledger network, the smart contract; and updating
+the secure ledger about a completion of the transaction.
+5 Claims, 14 Drawing Sheets
+130
+100
+135
+110
+ITS
+TOKEN_ID= circle
+UNDERLYING_TOKEN » ETH.
+RESERVE RATIO= 0.2:
+totalTokensInCirculation = 1000;
+total Reserve 200 WTH:
+TOKEN I Sta
+UNDERLYING TOKEN=ETH;
+RESERVE RATIO= 0.1.
+Tukensin Circulation = 2000;
+totalReserve 200 ETH;
+TOKEN_ID
+125
+diamond
+UNDERLYING_TOKEN=circle:
+RESERVE RATIO)=([;
+walTokens Inrculation = 500;
+totalkerve 100 circle;
+120
+
+========== PAGE 2 ==========
+US 11,107,049 B2
+Page 2
+Related U.S. Application Data
+(60) Provisional application No. 62/443,722, filed on Jan.
+8, 2017.
+(51) Int. Cl.
+G06Q 20/38
+H04L 9/32
+(2012.01)
+(2006.01)
+(52) U.S. Cl.
+CPC
+(56)
+H04L 9/3239 (2013.01); G06Q 2220/00
+(2013.01); H04L 2209/38 (2013.01); H04L
+2209/56 (2013.01)
+References Cited
+U.S. PATENT DOCUMENTS
+2015/0363876 Al 12/2015 Ronca et al.
+2015/0371224 A1 12/2015 Lingappa
+2016/0092988 Al 3/2016 Letourneau
+2016/0261690 A1 9/2016 Ford
+2017/0005804 A1 1/2017
+2017/0046689 A1 2/2017
+Zinder
+Lohe et al.
+2017/0048235 A1
+2017/0083907 A1
+2017/0155515 A1*
+2017/0221052 Al
+2018/0019873 A1*
+2019/0034888 A1
+2019/0385156 Al
+2020/0027067 A1
+2020/0051043 A1
+2/2017 Lohe et al.
+3/2017 McDonough et al.
+6/2017
+8/2017
+1/2018
+Androulaki
+Sheng et al.
+Kraemer
+...... H04L 9/008
+G06Q 20/06
+1/2019 Grassadonia et al.
+12/2019 Liu
+1/2020 Hertzog et al.
+2/2020 Wilson et al.
+2020/0175506 A1 6/2020 Snow
+2020/0193418 Al 6/2020 Augustine et al.
+OTHER PUBLICATIONS
+International Preliminary Report on Patentability dated Jul. 18,
+2019 From the International Bureau of WIPO Re. Application No.
+PCT/IL2018/050023. (8 Pages).
+International Search Report and the Written Opinion dated Apr. 19,
+2018 From the International Searching Authority Re. Application
+No. PCT/IL2018/050023. (8 Pages).
+Official Action dated Apr. 13, 2021 from the US Patent and
+Trademark Office Re. U.S. Appl. No. 16/476,312. (10 pages).
+* cited by examiner
+
+========== PAGE 3 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 1 of 14
+US 11,107,049 B2
+130
+100
+115
+TOKEN_ID=circle:
+UNDERLYING_TOKEN=ETH;
+RESERVE RATIO= 0.2
+totalTokensInCirculation = 1000;
+total Reserve = 200 ETH:
+135
+110
+C
+TOKEN_ID = star;
+UNDERLYING_TOKEN=ETH;
+RESERVE RATIO= 0.1;
+totalTokenshCirculation = 2000;
+totalReserve 200 ETH;
+125
+TOKEN_ID= diamond;
+UNDERLYING TOKEN=circle;
+RESERVE RATIO=0.1;
+walTokensInCirculation = 500;
+totalReserve 100 circle;
+Fig. 1
+120
+
+========== PAGE 4 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 2 of 14
+US 11,107,049 B2
+201 - Indicating an identifier
+for Token.
+202 - Indicating an underlying
+Token
+203 - Indicating a reserve ratio
+Constant
+FOC
+Indicating number of
+Tokens to be issued
+205
+Depositing a certai
+number of underlying Tokens
+m. reserve
+200
+Fig. 2
+
+========== PAGE 5 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 3 of 14
+US 11,107,049 B2
+301 - retrieving Token state
+parameters
+302 - determining said Token
+price in terms of underlying
+Token
+fur
+300
+Fig. 3
+
+========== PAGE 6 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 4 of 14
+US 11,107,049 B2
+400
+401 - retrieving Token state
+parameters of an evaluated
+Token type
+402 - retrieving Token state
+parameters of branched Token
+403
+Determining a mutual
+ancestor Token type
+404
+determining evaluated
+Token price in terms of
+mutual ancestor Toben
+405
+determining branched
+Token price in terms of
+mutual ancestor Token
+406
+comparing evaluated
+Token and branched Token
+Fig. 4
+
+========== PAGE 7 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 5 of 14
+US 11,107,049 B2
+Indicating a held Token type and amount for exchange 501.
+Indicating requested Token type 502.
+Retrieving state parameters of held Token and requested Token from blockchain
+including Total Tokens in Circulation, Total Reserve, and Reserve Ratio Constant 503.
+Determining the relation of said held and requested token
+types 504.
+held Token is a
+descendant of
+said requested
+Token
+Exchanging held Token
+for its underlying Token
+said requested
+Token is a
+descendant of held
+said Token
+Exchanging said
+held Token for
+said requested Token
+and held Token are
+branched
+510
+Is requested token? 511
+YES
+500
+following
+Tokens 520
+YES
+NO
+Is requested
+token? 521
+NO
+YES
+KKKKKKKKKKKKKKKOORDKROORKKKKKKKKKKKKKKOORRRRRRRRRRROR
+END
+FIG. 5
+Determining a mutual
+ancestor Token type for said
+held Token type and said
+requested Token type 530
+Exchanging said held Token
+for its underlying Token
+531
+●14444444444444
+444444444444444444
+NO
+Is mutual ancestor token ?
+532
+
+========== PAGE 8 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 6 of 14
+US 11,107,049 B2
+601 - retrieving a held Token.
+type and amount for exchange
+602
+retrieving state
+parameters of held Token
+from blockchain.
+603 - determining how many
+underlying Tokens should be
+granted in exchange for held
+Tokens
+604 - deleting held tokens
+decreasing said state
+parameter Total Tokens in
+circulation by the number of
+deleted Tokens
+600
+606 Transferring determined
+number of underlying Tokens
+from Reserve
+Fig. 6
+
+========== PAGE 9 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 7 of 14
+US 11,107,049 B2
+701 - retrieving a held Token
+type and amount for exchange
+702.
+retrieving state
+parameters of following
+Token from blockchain
+703 - determining how many
+underlying Tokens should be
+granted in exchange for held
+Tokens
+704 - transferring beld tokens
+to reserve of following Token
+705
+issuing determined
+number of following Tokens
+700
+706
+increasing said state
+parameter Total Tokens in
+circulation of following Token
+Fig. 7
+
+========== PAGE 10 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 8 of 14
+US 11,107,049 B2
+Header
+S
+ID of block NI
+ID of block N1-1
+Proof of work
+Content
+ID of user of first
+[computer
+-
+Smart contract
+Digitally signed checksum
+Header
+E
+- ID of block N2
+- ID of block N2-1
+Proof of work
+Content
+ID of user of second
+[computer
+- transaction
+Digitally signed checksum
+Block
+NI
+997
+Block N2
+905
+BLOCKCHAIN
+990
+Update a given |
+block (block N1) of 1
+the blockchain with I
+smart contract 906 |
+noxxx
+GO
+20000
+Block N1
+is distributed
+to every
+party of
+the
+blockchain
+network 908
+Update a another |
+block (block N2) |
+of the blockchain |
+with the
+transaction 916 1
+Block N2
+is distributed
+to every
+party of
+the
+blockchain
+network 918
+Validate smart
+contract 904
+Execute transaction)
+according to smart |
+contract 914
+Miners
+812
+1
+Provide smart
+Request to make a
+}
+contract 902
+transaction
+}
+1
+according to smart
+1
+}
+contract 912 1
+First computer
+Second computer
+801
+802
+FIG. 8
+Blockchain
+network 810
+
+========== PAGE 11 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 9 of 14
+US 11,107,049 B2
+Smart
+Secure ledger 1901
+contracts
+Transactions
+1902
+Tokens
+1903
+1903
+KKKK
+XXXX
+KAKAA
+}
+Distributing
+<XXXX
+Update secure
+ledger with smart
+}
+update of the
+Update secure
+(XID
+secure ledger 1808
+contract 1806
+{
+ledger with the I
+transaction 1816 |
+{
+XXXX
+}
+<XXO>>>
+Backend
+10000
+10000
+Validate smart
+contract 1804
+Provide smart
+contract 1802
+KKKKK
+KKKO
+ann
+Distributing
+update of the
+secure ledger 1818
+XXXO
+XXX
+Execute transaction]
+according to smart |
+contract 1814
+}
+}
+}
+}
+wwwww
+www.
+}
+}
+Request to make a
+transaction
+according to smart
+contract 1812
+Front end
+1800
+FIG. 9
+wwwww
+Secure ledger
+network 1810
+
+========== PAGE 12 ==========
+☑
+U.S. Patent
+Aug. 31, 2021
+Sheet 10 of 14
+US 11,107,049 B2
+Token A
+[Token B
+Token C
+FIG. 10A
+Bancor
+token
+[Token A
+Token B
+Token C
+FIG. 10B
+
+========== PAGE 13 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 11 of 14
+US 11,107,049 B2
+Receiving, by the secure ledger network, a request to validate a smart contract that
+determines at least one rule for performing a transaction related to the smart contract
+generated cryptocurrency token, wherein an execution of the transaction may include
+determining a price of the smart contract generated cryptocurrency token based on a
+reserve of an other cryptocurrency token. The secure ledger network may include at
+least one computer that may include at least one hardware processor. 1110
+Performing at least one out of (a) receiving by the secure ledger network, a digital
+signature, (b) verifying the authenticity of the digital signature, and (c) verifying the
+code of the smart contract. 1120
+Updating a secure ledger maintained by the secure ledger network with the smart
+contract. 1130
+Receiving, by the secure ledger network, a request to execute a transaction related to the
+smart contract generated cryptocurrency token. 1140
+464464666666666666666666666666666666666666666666666444444444444444444664644994⑈
+4444
+4444446666666666666666666666666666666666666666666666666666666666664465999
+Performing the transaction by executing, by the secure ledger network, the smart
+contract. 1150
+1100
+FIG. 11
+wwwww
+KAKA
+0000
+XXXX
+00000
+SXXXA
+0000
+00000
+KAKA
+10000
+10000
+KKKK
+0000
+30000
+
+========== PAGE 14 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 12 of 14
+US 11,107,049 B2
+Receiving, by the secure ledger network, a
+request to validate a smart contract that
+determines at least one rule for performing ||
+a transaction related to a first
+cryptocurrency token, wherein an execution
+of the transaction may include determining ||
+a price of the first cryptocurrency token
+based on a status of the first cryptocurrency
+token, and a status of an other token; the
+secure ledger network may include at least 1
+one computer that may include at least one
+hardware processor. 1210
+Receiving by the secure ledger
+network, a digital signature. 1220
+FAIL
+Verifying the
+authenticity of the
+digital signature. 1230
+FAIL Verifying the code of
+the smart contract.
+1240
+END
+SUCCEED
+1
+1
+SUCCEED
+1
+END
+J
+Updating a secure ledger maintained by the secure ledger network with the
+smart contract. 1250
+Receiving, by the secure ledger network, a request to execute a transaction
+related to the first cryptocurrency token. 1260
+Performing the transaction by executing, by the secure ledger network, the
+smart contract. 1270
+1200
+FIG. 12
+
+========== PAGE 15 ==========
+U.S. Patent
+Aug. 31, 2021
+Sheet 13 of 14
+US 11,107,049 B2
+Receiving, by the computer of the secure ledger network, a request to execute
+a transaction related to a first cryptocurrency token. The computer may
+include at least one hardware processor. 1310
+*444
+AAAAA
+Receiving, by the computer of the secure ledger network, a request to verify a
+digital signature. 1320
+}
+wwwwww
+SAAAA
+}
+}
+Verifying, by the computer the authenticity of the digital signature. 1330
+AAAA
+www
+VARA
+AAAAA
+{
+AAAA
+}
+wwww
+AAAA
+VARAA
+Performing the transaction by executing, by the computer of the secure ledger
+network, a smart contract that was validated by the secure ledger network.
+The smart contract determines at least one rule for performing a transaction
+related to the first cryptocurrency token. 1340
+1300
+wwwwwwwww
+FIG. 13
+wwwww
+nana
+له

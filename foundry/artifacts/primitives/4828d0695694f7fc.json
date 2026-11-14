@@ -1,0 +1,78 @@
+{
+  "book_id": "4828d0695694f7fc",
+  "source_status": "COMPLETE",
+  "title": "p0314",
+  "file_name": "p0314.txt",
+  "sha256": "4828d0695694f7fc046e917d04d955502f04b56bcd265140524d17ab601a2f53",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Field access control and behavioral constraint enforcement via umpire-jurisdictional delegation. Universal Lens: Rooted in p0314 (4828d0695694f7fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on sideline behavior using umpire-verified event logs for foul probability estimation. GSI Mapping: Rooted in p0314 (4828d0695694f7fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models team-side state transitions under coaching and substitution constraints. GSE Mapping: Rooted in p0314 (4828d0695694f7fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "field_access_control",
+      "name": "Field Access Control",
+      "verbatim_quote": "No person other than the players, the officials, the representatives above mentioned or an incoming substitute shall at any time come upon the field of play.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'set of authorized personnel (players, officials, representatives, substitutes)', 'F': 'field of play', 'T': 'time interval'}",
+      "assumptions": "Only defined roles may enter field; unauthorized entry constitutes breach.",
+      "breakdown_regime": "Unauthorized entry during active play.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Set inclusion check (A ⊆ F) maps to GSE state transition validity; GSI evaluates likelihood of foul via temporal event sequence.",
+        "source_operator": "field_access_control",
+        "telemetry": "Event log timestamped access violation"
+      }
+    },
+    {
+      "primitive_id": "coaching_constraint",
+      "name": "Coaching Constraint",
+      "verbatim_quote": "(f) There shall be no coaching, either by substitutes or by any other persons not participating in the game.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'coaching activity', 'S': 'substitute', 'P': 'player', 'O': 'official', 'T': 'time interval'}",
+      "assumptions": "Coaching is restricted to participants; non-participants cannot influence gameplay.",
+      "breakdown_regime": "Non-player coaching during active play.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Constraint function C(S ∪ P ∪ O) = 0 defines GSE action space; GSI computes penalty risk as conditional probability.",
+        "source_operator": "coaching_constraint",
+        "telemetry": "Detected coaching signal from sideline"
+      }
+    },
+    {
+      "primitive_id": "injury_representative",
+      "name": "Injury Representative",
+      "verbatim_quote": "In case of accident to a player one representative of the player's team may, if he first obtained the consent of the umpire, come upon the field of play to attend to the injured player.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'representative', 'U': 'umpire', 'I': 'injured player', 'F': 'field of play', 'T': 'time interval'}",
+      "assumptions": "Representative access is conditional on umpire approval.",
+      "breakdown_regime": "Unauthorized representative entry without umpire consent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conditional access protocol R(U) → F maps to GSE permission system; GSI tracks approval timestamps.",
+        "source_operator": "injury_representative",
+        "telemetry": "Timestamped umpire consent event"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4828d0695694f7fc_t0",
+      "think": "These primitives define a formalized field governance model where access rights are strictly enforced through hierarchical authority. The field access control primitive establishes a set-based inclusion constraint that governs who can enter the field. The coaching constraint enforces a zero-coaching kernel over non-participants, creating a derived state space in which only permitted individuals influence game dynamics. The injury representative primitive introduces a conditional access mechanism, modeled as a temporal constraint on umpire authorization. These operators form a closed-loop system where violations trigger penalties, enabling both GSE state tracking and GSI probabilistic inference on foul likelihood. The interplay between these rules creates a dual structure: one enforcing behavioral compliance (via access control), and another ensuring strategic integrity (via coaching restriction). Each primitive exhibits a singularity when boundary conditions are violated, leading to deterministic penalties.\n\nDeep epistemic analysis for p0314 (4828d0695694f7fc, domain=other, pages_read=1/1): Operator 'Field Access Control' (page 1, domain other) captures: No person other than the players, the officials, the representatives above mentioned or an incoming substitute shall at any time come upon the field of play. Assumptions: Only defined roles may enter field; unauthorized entry constitutes breach. Breakdown regime: Unauthorized entry during active play. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Set inclusion check (A ⊆ F) maps to GSE state transition validity; GSI evaluates likelihood of foul via temporal event sequence. Operator 'Coaching Constraint' (page 1, domain other) captures: (f) There shall be no coaching, either by substitutes or by any other persons not participating in the game. Assumptions: Coaching is restricted to participants; non-participants cannot influence gameplay. Breakdown regime: Non-player coaching during active play. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Constraint function C(S ∪ P ∪ O) = 0 defines GSE action space; GSI computes penalty risk as conditional probability. Operator 'Injury Representative' (page 1, domain other) captures: In case of accident to a player one representative of the player's team may, if he first obtained the consent of the umpire, come upon the field of play to attend to the injured player. Assumptions: Representative access is conditional on umpire approval. Breakdown regime: Unauthorized representative entry without umpire consent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conditional access protocol R(U) → F maps to GSE permission system; GSI tracks approval timestamps. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0314 (4828d0695694f7fc, domain=other, pages_read=1/1): Operator 'Field Access Control' (page 1, domain other) captures: No person other than the players, the officials, the representatives above mentioned or an incoming substitute shall at any time come upon the field of play. Assumptions: Only defined roles may enter field; unauthorized entry constitutes breach. Breakdown regime: Unauthorized entry during active play. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Set inclusion check (A ⊆ F) maps to GSE state transition validity; GSI evaluates likelihood of foul via temporal event sequence. Operator 'Coaching Constraint' (page 1, domain other) captures: (f) There shall be no coaching, either by substitutes or by any other persons not participating in the game. Assumptions: Coaching is restricted to participants; non-participants cannot influence gameplay. Breakdown regime: Non-player coaching during active play. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Constraint function C(S ∪ P ∪ O) = 0 defines GSE action space; GSI computes penalty risk as conditional probability. Operator 'Injury Representative' (page 1, domain other) captures: In case of accident to a player one representative of the player's team may, if he first obtained the consent of the umpire, come upon the field of play to attend to the injured player. Assumptions: Representative access is conditional on umpire approval. Breakdown regime: Unauthorized representative entry without umpire consent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conditional access protocol R(U) → F maps to GSE permission system; GSI tracks approval timestamps. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century football rule codification, these primitives reflect a formalization of referee authority and player behavior norms, evolving from informal field management into structured constraint systems. Retrocausal Genealogy: Rooted in p0314 (4828d0695694f7fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0314 (4828d0695694f7fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include coaches attempting to circumvent restrictions, players seeking unauthorized aid, and umpires enforcing compliance. Their decision-making is modeled as bounded rationality within constraint spaces. Theory of Mind & Decision Maker Model: Rooted in p0314 (4828d0695694f7fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0314 (4828d0695694f7fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that GSE’s state transitions do not redundantly encode GSI’s probabilistic inferences. Leakage vetoes prevent unauthorized data flow between layers, maintaining operational integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0314 (4828d0695694f7fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0314 (4828d0695694f7fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -153,6 +153,8 @@ PII_QUARANTINE_SUBSTRINGS = (
     "driver's license",
     "paystub",
     "pay stub",
+    "03_quarantine",
+    "do_not_ingest",
 )
 
 

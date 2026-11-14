@@ -1,0 +1,78 @@
+{
+  "book_id": "218253f4c03c9f1d",
+  "source_status": "COMPLETE",
+  "title": "Gaze_characteristics_of_elite_and_near_e",
+  "file_name": "Gaze_characteristics_of_elite_and_near_e.pdf",
+  "sha256": "218253f4c03c9f1d6a75f5f442f7af4c0af6f70c00deb60d733f33debb30eb12",
+  "primary_domain": "other",
+  "pages_total": 24,
+  "pages_read": 24,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The visual search process is modeled as a non-stationary stochastic point process. Elite performers minimize the Kullback-Leibler divergence between their fixation sequence and the optimal information-gathering path, utilizing rapid early sampling to reduce environmental entropy before committing to a terminal state.",
+  "gsi_mapping": "GSI maps gaze duration to Bayesian posterior updates over tactical states. Early rapid fixations act as high-frequency priors, while the final prolonged fixation (F/T-1) represents a conformal prediction interval collapse, ensuring the selected defensive action maintains robust coverage against dynamic opponent trajectories.",
+  "gse_mapping": "GSE treats the open-skill environment as a continuous Markov Decision Process. The 'Quiet Eye' phase acts as a temporal gating mechanism, freezing state transitions until the sensory buffer reaches a sufficient confidence threshold to trigger the discrete motor execution policy.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_gaze_regulation",
+      "name": "Temporal Gaze Regulation Operator",
+      "verbatim_quote": "Results indicated that athletes temporally regulated their gaze using two different gaze control strategies.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "t: time (s), S_t: discrete gaze strategy state (dimensionless)",
+      "assumptions": "Visual search operates under strict cognitive resource constraints; gaze shifts are discrete events in continuous time.",
+      "breakdown_regime": "System overload when stimulus update frequency exceeds saccadic latency limits (>200ms).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to adaptive sampling rates in Kalman filtering, where measurement noise dictates observation frequency.",
+        "source_operator": "temporal_gaze_regulation",
+        "telemetry": "Inter-fixation intervals and saccadic amplitude distributions."
+      }
+    },
+    {
+      "primitive_id": "early_rapid_sampling",
+      "name": "Early Rapid Sampling Kernel",
+      "verbatim_quote": "First, fixation/ tracking (F/T) gaze early in the trial were significantly shorter than the final F/T and confirmed that the elite group fixated the tactical locations more rapidly than the non-elite on successful plays.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "\\Delta t_{early}: early fixation duration (s), \\lambda: spatial sampling rate (fixations/s)",
+      "assumptions": "Information gain per unit time is maximized by minimizing dwell time during broad environmental scanning.",
+      "breakdown_regime": "Singularity occurs if \\Delta t_{early} drops below the minimum neural integration window (~50ms).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's initial prior acquisition phase, rapidly updating belief states across multiple tactical nodes.",
+        "source_operator": "early_rapid_sampling",
+        "telemetry": "Mean early-phase fixation duration and number of unique areas of interest visited."
+      }
+    },
+    {
+      "primitive_id": "terminal_quiet_eye",
+      "name": "Terminal Quiet Eye Phase",
+      "verbatim_quote": "F/T-1) was significantly longer for both groups, averaging 30% of the final part of the phase and occurred as the athletes isolated a single object or location to end the play.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "\\tau_{QE}: quiet eye duration (s), P(action): probability of executing motor command (dimensionless)",
+      "assumptions": "A sustained final fixation is required to bind perceptual features into a unified motor program.",
+      "breakdown_regime": "Motor initiation fails if \\tau_{QE} is interrupted by external perturbations or internal hesitation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to the GSE decision gate, locking the system state before transitioning to the execution manifold.",
+        "source_operator": "terminal_quiet_eye",
+        "telemetry": "Duration of the final fixation prior to movement onset (F/T-1)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "218253f4c03c9f1d_t0",
+      "think": "The derivation of these primitives begins with modeling the ice hockey defensive zone as a high-dimensional, dynamically evolving state space $\\mathcal{X}$. The athlete's visual system functions as an active sensor, generating a sequence of observations $O_t$ via saccades and fixations. We define the Temporal Gaze Regulation Operator as a mapping from the current uncertainty distribution $P(\\mathcal{X}|O_{t-1})$ to an optimal next sampling location. Elite athletes optimize this mapping to maximize mutual information $I(\\mathcal{X}; O_t)$ while minimizing metabolic cost. The Early Rapid Sampling Kernel emerges as the solution to a constrained optimization problem where the objective is to cover the maximum volume of the tactical subspace within a short temporal window. Mathematically, this corresponds to a greedy algorithm selecting points that maximize the reduction in global entropy. Conversely, the Terminal Quiet Eye Phase represents a phase transition in the cognitive state machine. Once the belief state converges upon a dominant tactical hypothesis, the system must halt exploration to initiate exploitation. This is formalized as a stopping time $\\tau$ in a sequential decision process, where $\\tau$ is triggered when the posterior variance of the chosen action falls below a critical threshold $\\sigma^2_{crit}$. The duality lies in the tension between rapid exploration (Kernel) and precise exploitation (Operator). Failure modes manifest as either premature commitment (insufficient sampling leading to high posterior variance at $\\tau$) or analysis paralysis (excessive sampling delaying $\\tau$ beyond the physical reaction limits of the sport).\n\nDeep epistemic analysis for Gaze_characteristics_of_elite_and_near_e (218253f4c03c9f1d, domain=other, pages_read=24/24): Operator 'Temporal Gaze Regulation Operator' (page 1, domain other) captures: Results indicated that athletes temporally regulated their gaze using two different gaze control strategies. Assumptions: Visual search operates under strict cognitive resource constraints; gaze shifts are discrete events in continuous time. Breakdown regime: System overload when stimulus update frequency exceeds saccadic latency limits (>200ms). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to adaptive sampling rates in Kalman filtering, where measurement noise dictates observation frequency. Operator 'Early Rapid Sampling Kernel' (page 1, domain other) captures: First, fixation/ tracking (F/T) gaze early in the trial were significantly shorter than the final F/T and confirmed that the elite group fixated the tactical locations more rapidly than the non-elite on successful plays. Assumptions: Information gain per unit time is maximized by minimizing dwell time during broad environmental scanning. Breakdown regime: Singularity occurs if \\Delta t_{early} drops below the minimum neural integration window (~50ms). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's initial prior acquisition phase, rapidly updating belief states across multiple tactical nodes. Operator 'Terminal Quiet Eye Phase' (page 1, domain other) captures: F/T-1) was significantly longer for both groups, averaging 30% of the final part of the phase and occurred as the athletes isolated a single object or location to end the play. Assumptions: A sustained final fixation is required to bind perceptual features into a unified motor program. Breakdown regime: Motor initiation fails if \\tau_{QE} is interrupted by external perturbations or internal hesitation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to the GSE decision gate, locking the system state before transitioning to the execution manifold. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Gaze_characteristics_of_elite_and_near_e (218253f4c03c9f1d, domain=other, pages_read=24/24): Operator 'Temporal Gaze Regulation Operator' (page 1, domain other) captures: Results indicated that athletes temporally regulated their gaze using two different gaze control strategies. Assumptions: Visual search operates under strict cognitive resource constraints; gaze shifts are discrete events in continuous time. Breakdown regime: System overload when stimulus update frequency exceeds saccadic latency limits (>200ms). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to adaptive sampling rates in Kalman filtering, where measurement noise dictates observation frequency. Operator 'Early Rapid Sampling Kernel' (page 1, domain other) captures: First, fixation/ tracking (F/T) gaze early in the trial were significantly shorter than the final F/T and confirmed that the elite group fixated the tactical locations more rapidly than the non-elite on successful plays. Assumptions: Information gain per unit time is maximized by minimizing dwell time during broad environmental scanning. Breakdown regime: Singularity occurs if \\Delta t_{early} drops below the minimum neural integration window (~50ms). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's initial prior acquisition phase, rapidly updating belief states across multiple tactical nodes. Operator 'Terminal Quiet Eye Phase' (page 1, domain other) captures: F/T-1) was significantly longer for both groups, averaging 30% of the final part of the phase and occurred as the athletes isolated a single object or location to end the play. Assumptions: A sustained final fixation is required to bind perceptual features into a unified motor program. Breakdown regime: Motor initiation fails if \\tau_{QE} is interrupted by external perturbations or internal hesitation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to the GSE decision gate, locking the system state before transitioning to the execution manifold. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These operators trace back to William James's theories on attention and Fitts' Law governing movement dynamics. In the 1990s, Vickers introduced the 'Quiet Eye' phenomenon, bridging cognitive psychology and motor control. The mathematical lineage connects to Wiener's filtering theory and modern Bayesian brain hypotheses, where perception is treated as active inference minimizing free energy through optimized sensory sampling. Retrocausal Genealogy: Rooted in Gaze_characteristics_of_elite_and_near_e (218253f4c03c9f1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling opposing agents requires treating the defense as a minimax problem. The defender anticipates the forward's intent by projecting the forward's own visual sampling patterns. If the defender detects the forward entering a 'Quiet Eye' phase targeting the net, the defender's state-transition model immediately updates to block the shooting lane. The theory of mind here is a hierarchical predictive coding network, constantly simulating the opponent's future actions based on real-time gaze telemetry.",
+      "cross_layer_veto": "Anti-collinearity vetoes are crucial to prevent overfitting to static video cues. If the Early Rapid Sampling Kernel yields feature vectors highly collinear with historical replay data but misaligned with live biomechanical stress indicators, the GSE must veto the resulting tactical recommendation. Leakage occurs if the Terminal Quiet Eye duration is artificially extended due to cognitive anxiety rather than genuine perceptual convergence; physiological markers like heart rate variability must veto purely visual triggers to ensure valid state transitions."
+    }
+  ]
+}

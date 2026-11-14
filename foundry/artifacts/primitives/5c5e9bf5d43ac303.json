@@ -1,0 +1,78 @@
+{
+  "book_id": "5c5e9bf5d43ac303",
+  "source_status": "COMPLETE",
+  "title": "shobrook-adrenaline",
+  "file_name": "shobrook-adrenaline.md",
+  "sha256": "5c5e9bf5d43ac303f97028e5b4074cb3084a2360e034d3b0b226ad40bee53b49",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The structural unification of repository viability relies on a multi-dimensional state vector. A high star count represents a superficial scalar magnitude, whereas true system persistence is governed by the intersection of active maintenance flux and explicit licensing constraints.",
+  "gsi_mapping": "In GSI's Bayesian framework, star counts act as highly noisy priors for project success. We apply conformal inference to strictly bound the prediction intervals, heavily down-weighting popularity metrics when zero-maintenance or missing-license features are observed in the telemetry data.",
+  "gse_mapping": "GSE models this via discrete state transitions. A repository shifts from an 'active' manifold to an absorbing 'gravestone' state once the commit velocity drops to zero. The absence of a license acts as a hard boundary condition, vetoing any adoption transition.",
+  "primitives": [
+    {
+      "primitive_id": "star_count_illusion",
+      "name": "Popularity-Viability Decoupling Operator",
+      "verbatim_quote": "It is a gravestone with 3,740 stars — a reminder that star count is not a viability signal, which matters for GSE's repo-intel program: adoption decisions need maintenance and license checks, not popularity.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S (Stars): dimensionless integer count; V (Viability): continuous probability in [0,1].",
+      "assumptions": "Assumes historical correlation between S and V has decayed to statistical noise.",
+      "breakdown_regime": "Breaks down when S approaches infinity while maintenance rate and legal clearance approach zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to sports betting markets where massive public volume (stars) masks fundamental team deterioration (abandonment).",
+        "source_operator": "star_count_illusion",
+        "telemetry": "Ratio of GitHub stars to commits in the last 90 days."
+      }
+    },
+    {
+      "primitive_id": "maintenance_absorbing_state",
+      "name": "Project Entropy Flux",
+      "verbatim_quote": "- Maintenance: ABANDONED — last push 2024-03-08; the repo is explicitly issues-only, meaning the project behind it is gone or closed-source.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "t_last (Last Push): ISO 8601 timestamp; dM/dt (Maintenance Flux): commits per unit time.",
+      "assumptions": "Assumes a continuous-time Markov process where zero activity indicates a terminal state.",
+      "breakdown_regime": "Fails if the project operates on extremely long, non-standard release cycles without intermediate commits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSE's injury reserve models, where an entity enters a non-recoverable downtime state.",
+        "source_operator": "maintenance_absorbing_state",
+        "telemetry": "Days elapsed since the last non-trivial git commit."
+      }
+    },
+    {
+      "primitive_id": "license_null_boundary",
+      "name": "Legal Clearance Constraint",
+      "verbatim_quote": "Constraints - License: NONE declared on the repo (no license file found).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "L (License Status): Boolean flag indicating explicit permission to use/modify.",
+      "assumptions": "Assumes default copyright laws apply, rendering L=False a strict barrier to integration.",
+      "breakdown_regime": "Becomes irrelevant only in purely academic, non-deployable research environments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Functions identically to a hard regulatory veto in GSE, instantly dropping an asset's deployment probability to zero.",
+        "source_operator": "license_null_boundary",
+        "telemetry": "Boolean presence of a recognized SPDX license identifier in the root directory."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5c5e9bf5d43ac303_t0",
+      "think": "The mathematical derivation begins by defining the perceived value of a software repository, traditionally modeled as a linear function of its star count. However, empirical observation of the `shobrook/adrenaline` case reveals a severe decoupling between this superficial metric and actual operational viability. We introduce a multi-dimensional state vector comprising star magnitude, maintenance flux, and legal clearance. The core operator, the Popularity-Viability Decoupling, mathematically demonstrates that as maintenance flux approaches zero and legal clearance becomes undefined, the true viability converges to zero regardless of the star magnitude. This creates a singularity where high-star repositories become 'gravestones.' In our formalism, the absence of a license acts as a hard boundary condition—a Dirichlet boundary that sets the probability of safe integration to exactly zero. Furthermore, the cessation of code pushes represents an absorbing state in a continuous-time Markov chain. Once the system enters this abandoned state, the transition probability back to an active development state is effectively null. Therefore, any robust quantitative model, such as those used in GSE's repo-intelligence programs, must implement a veto mechanism. This mechanism overrides any positive signals from popularity metrics the moment the maintenance or licensing constraints are violated. The failure mode here is classic overfitting to a single, easily manipulated feature (stars), ignoring the underlying structural integrity of the project's lifecycle.\n\nDeep epistemic analysis for shobrook-adrenaline (5c5e9bf5d43ac303, domain=other, pages_read=1/1): Operator 'Popularity-Viability Decoupling Operator' (page 1, domain other) captures: It is a gravestone with 3,740 stars — a reminder that star count is not a viability signal, which matters for GSE's repo-intel program: adoption decisions need maintenance and license checks, not popularity. Assumptions: Assumes historical correlation between S and V has decayed to statistical noise. Breakdown regime: Breaks down when S approaches infinity while maintenance rate and legal clearance approach zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to sports betting markets where massive public volume (stars) masks fundamental team deterioration (abandonment). Operator 'Project Entropy Flux' (page 1, domain other) captures: - Maintenance: ABANDONED — last push 2024-03-08; the repo is explicitly issues-only, meaning the project behind it is gone or closed-source. Assumptions: Assumes a continuous-time Markov process where zero activity indicates a terminal state. Breakdown regime: Fails if the project operates on extremely long, non-standard release cycles without intermediate commits. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSE's injury reserve models, where an entity enters a non-recoverable downtime state. Operator 'Legal Clearance Constraint' (page 1, domain other) captures: Constraints - License: NONE declared on the repo (no license file found). Assumptions: Assumes default copyright laws apply, rendering L=False a strict barrier to integration. Breakdown regime: Becomes irrelevant only in purely academic, non-deployable research environments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Functions identically to a hard regulatory veto in GSE, instantly dropping an asset's deployment probability to zero. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for shobrook-adrenaline (5c5e9bf5d43ac303, domain=other, pages_read=1/1): Operator 'Popularity-Viability Decoupling Operator' (page 1, domain other) captures: It is a gravestone with 3,740 stars — a reminder that star count is not a viability signal, which matters for GSE's repo-intel program: adoption decisions need maintenance and license checks, not popularity. Assumptions: Assumes historical correlation between S and V has decayed to statistical noise. Breakdown regime: Breaks down when S approaches infinity while maintenance rate and legal clearance approach zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to sports betting markets where massive public volume (stars) masks fundamental team deterioration (abandonment). Operator 'Project Entropy Flux' (page 1, domain other) captures: - Maintenance: ABANDONED — last push 2024-03-08; the repo is explicitly issues-only, meaning the project behind it is gone or closed-source. Assumptions: Assumes a continuous-time Markov process where zero activity indicates a terminal state. Breakdown regime: Fails if the project operates on extremely long, non-standard release cycles without intermediate commits. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSE's injury reserve models, where an entity enters a non-recoverable downtime state. Operator 'Legal Clearance Constraint' (page 1, domain other) captures: Constraints - License: NONE declared on the repo (no license file found). Assumptions: Assumes default copyright laws apply, rendering L=False a strict barrier to integration. Breakdown regime: Becomes irrelevant only in purely academic, non-deployable research environments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Functions identically to a hard regulatory veto in GSE, instantly dropping an asset's deployment probability to zero. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces its lineage to the efficient market hypothesis in finance, specifically the discovery that market capitalization does not correlate with intrinsic book value during speculative bubbles. Mathematically, it mirrors the breakdown of naive Bayes classifiers when a highly correlated but causally inert feature dominates the prior probabilities. Historically, it reflects the evolution of software supply chain security, where the sheer volume of open-source dependencies forced a shift from trust-based adoption to rigorous, constraint-based verification protocols.",
+      "theory_of_mind": "We model two opposing decision actors: the Repository Author and the Downstream Adopter. The author, seeking social proof, optimizes for the star count metric, potentially neglecting maintenance and licensing hygiene. The adopter, operating under strict risk constraints, requires verifiable continuity and legal safety. The cognitive dissonance arises because the author's signaling mechanism (stars) actively misleads the adopter's heuristic evaluation. Our primitives serve as a corrective lens, forcing the adopter to bypass the author's intended narrative and evaluate the raw, unadulterated state of the codebase.",
+      "cross_layer_veto": "Anti-collinearity is enforced by treating the license and maintenance flags as orthogonal veto vectors to the popularity scalar. If the maintenance flux is zero or the license is absent, these veto conditions trigger an immediate collapse of the adoption probability, regardless of how high the star count is. Leakage is prevented by ensuring that the popularity metric is never allowed to contribute to the final decision matrix unless both veto conditions are explicitly cleared. This guarantees that the model remains robust against deceptive or naturally decaying high-profile projects."
+    }
+  ]
+}

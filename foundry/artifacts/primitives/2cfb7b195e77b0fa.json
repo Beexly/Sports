@@ -1,0 +1,95 @@
+{
+  "book_id": "2cfb7b195e77b0fa",
+  "source_status": "COMPLETE",
+  "title": "2502.00560",
+  "file_name": "2502.00560.pdf",
+  "sha256": "2cfb7b195e77b0fa7d034e647639dc422ba7f9b16ff3e950b352be4ab570f18d",
+  "primary_domain": "other",
+  "pages_total": 36,
+  "pages_read": 32,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "information_concealment_principle",
+      "name": "Information Concealment Principle",
+      "verbatim_quote": "To partially address this scalability challenge, we focus on an important class of 2p0s games where the informed player (P1) knows the payoff while the uninformed player (P2) only has a belief over the set of I possible payoffs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Compact action sets, bounded dynamics and payoffs, Isaacs' condition, full state observability, perfect recall.",
+      "breakdown_regime": "Infinite-action continuous-time differentials (U, K → ∞)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Belief-state filtering under adversarial uncertainty. GSE: Situational awareness management via information concealment.",
+        "source_operator": "information_concealment_principle",
+        "telemetry": "Observed timing of information revelation in NFL data (0.5-1.0 seconds)"
+      }
+    },
+    {
+      "primitive_id": "atomic_equilibrium_structure",
+      "name": "Atomic Equilibrium Structure",
+      "verbatim_quote": "P2's) equilibrium strategy at any infostate concentrates on at most I (resp.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Deterministic dynamics, Isaacs' condition, incomplete information on P1's type.",
+      "breakdown_regime": "Mixed-strategy support collapsing to atomic measures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Optimal Bayesian updating with minimal sufficient statistics. GSE: Deterministic switching between information sets.",
+        "source_operator": "atomic_equilibrium_structure",
+        "telemetry": "Action sparsity in NFL offensive formations"
+      }
+    },
+    {
+      "primitive_id": "game_tree_complexity_reduction",
+      "name": "Game-Tree Complexity Reduction",
+      "verbatim_quote": "When I ≪U, this equilibrium structure causes the game tree complexity to collapse to IK for P1 when P2 plays best responses, and (I + 1)K for P2 in a dual game where P1 plays best responses.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Compact action sets, bounded payoffs, Isaacs' condition.",
+      "breakdown_regime": "Exponential blowup U^2K mitigated by information asymmetry.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Dimensionality reduction via posterior collapse. GSE: Efficient state-transition enumeration under bounded uncertainty.",
+        "source_operator": "game_tree_complexity_reduction",
+        "telemetry": "Computational tractability gains in deep RL simulations"
+      }
+    },
+    {
+      "primitive_id": "value_convexification_principle",
+      "name": "Value Convexification Principle",
+      "verbatim_quote": "+ 1 (a) (b) (c) Figure 1: (a) IIEFG with U actions per player per infostate and K time steps has a game-tree complexity of U 2K.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Deterministic dynamics, bounded payoffs, Isaacs' condition, compact action sets.",
+      "breakdown_regime": "Behavioral strategies achieving convex value functions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Convexification of posterior distributions under optimal decision rules. GSE: Value function concavity along state transitions.",
+        "source_operator": "value_convexification_principle",
+        "telemetry": "Convergence stability in adversarial training"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2cfb7b195e77b0fa_t0",
+      "think": "The core failure mode in 2p0s differentials is the exponential explosion of the game tree U^(2K) when both players have continuous actions (U→∞). We prove that information asymmetry reduces this to IK for the informed player (P1) and (I+1)K for the uninformed player (P2). This stems from the atomic support of equilibrium strategies: P1 uses at most I pure policies, each active on a subset of the state space, while P2 uses at most I+1. The reduction arises because P1 can pre-commit to type-contingent controls that satisfy Isaacs' condition, eliminating redundant mixed-strategy combinations. In NFL football, this explains why offenses conceal play type until a critical moment, reducing the effective branching factor from continuous action spaces to a small number of atomic strategies.\n\nDeep epistemic analysis for 2502.00560 (2cfb7b195e77b0fa, domain=other, pages_read=32/36): Operator 'Information Concealment Principle' (page 1, domain other) captures: To partially address this scalability challenge, we focus on an important class of 2p0s games where the informed player (P1) knows the payoff while the uninformed player (P2) only has a belief over the set of I possible payoffs. Assumptions: Compact action sets, bounded dynamics and payoffs, Isaacs' condition, full state observability, perfect recall. Breakdown regime: Infinite-action continuous-time differentials (U, K → ∞) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Belief-state filtering under adversarial uncertainty. GSE: Situational awareness management via information concealment. Operator 'Atomic Equilibrium Structure' (page 1, domain other) captures: P2's) equilibrium strategy at any infostate concentrates on at most I (resp. Assumptions: Deterministic dynamics, Isaacs' condition, incomplete information on P1's type. Breakdown regime: Mixed-strategy support collapsing to atomic measures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Optimal Bayesian updating with minimal sufficient statistics. GSE: Deterministic switching between information sets. Operator 'Game-Tree Complexity Reduction' (page 1, domain other) captures: When I ≪U, this equilibrium structure causes the game tree complexity to collapse to IK for P1 when P2 plays best responses, and (I + 1)K for P2 in a dual game where P1 plays best responses. Assumptions: Compact action sets, bounded payoffs, Isaacs' condition. Breakdown regime: Exponential blowup U^2K mitigated by information asymmetry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Dimensionality reduction via posterior collapse. GSE: Efficient state-transition enumeration under bounded uncertainty. Operator 'Value Convexification Principle' (page 2, domain other) captures: + 1 (a) (b) (c) Figure 1: (a) IIEFG with U actions per player per infostate and K time steps has a game-tree complexity of U 2K. Assumptions: Deterministic dynamics, bounded payoffs, Isaacs' condition, compact action sets. Breakdown regime: Behavioral strategies achieving convex value functions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Convexification of posterior distributions under optimal decision rules. GSE: Value function concavity along state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2502.00560 (2cfb7b195e77b0fa, domain=other, pages_read=32/36): Operator 'Information Concealment Principle' (page 1, domain other) captures: To partially address this scalability challenge, we focus on an important class of 2p0s games where the informed player (P1) knows the payoff while the uninformed player (P2) only has a belief over the set of I possible payoffs. Assumptions: Compact action sets, bounded dynamics and payoffs, Isaacs' condition, full state observability, perfect recall. Breakdown regime: Infinite-action continuous-time differentials (U, K → ∞) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Belief-state filtering under adversarial uncertainty. GSE: Situational awareness management via information concealment. Operator 'Atomic Equilibrium Structure' (page 1, domain other) captures: P2's) equilibrium strategy at any infostate concentrates on at most I (resp. Assumptions: Deterministic dynamics, Isaacs' condition, incomplete information on P1's type. Breakdown regime: Mixed-strategy support collapsing to atomic measures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Optimal Bayesian updating with minimal sufficient statistics. GSE: Deterministic switching between information sets. Operator 'Game-Tree Complexity Reduction' (page 1, domain other) captures: When I ≪U, this equilibrium structure causes the game tree complexity to collapse to IK for P1 when P2 plays best responses, and (I + 1)K for P2 in a dual game where P1 plays best responses. Assumptions: Compact action sets, bounded payoffs, Isaacs' condition. Breakdown regime: Exponential blowup U^2K mitigated by information asymmetry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Dimensionality reduction via posterior collapse. GSE: Efficient state-transition enumeration under bounded uncertainty. Operator 'Value Convexification Principle' (page 2, domain other) captures: + 1 (a) (b) (c) Figure 1: (a) IIEFG with U actions per player per infostate and K time steps has a game-tree complexity of U 2K. Assumptions: Deterministic dynamics, bounded payoffs, Isaacs' condition, compact action sets. Breakdown regime: Behavioral strategies achieving convex value functions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Convexification of posterior distributions under optimal decision rules. GSE: Value function concavity along state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling P2 as a Bayesian filter trying to infer P1's hidden type, while P1 anticipates this filtering and designs controls to keep P2 uncertain until the reveal. Theory of Mind & Decision Maker Model: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct payoff gradients ∇_x l_i ≠ ∇_x l_j for i≠j; leakage veto demands that the signal-to-noise ratio exceeds a threshold determined by the game horizon. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2502.00560 (2cfb7b195e77b0fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

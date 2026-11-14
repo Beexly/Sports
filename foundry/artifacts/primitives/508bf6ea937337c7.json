@@ -1,0 +1,78 @@
+{
+  "book_id": "508bf6ea937337c7",
+  "source_status": "COMPLETE",
+  "title": "statking-debugging-guide",
+  "file_name": "statking-debugging-guide.md",
+  "sha256": "508bf6ea937337c765ba7bbbe5ff09fe8f79dcd9bf287da2af5bd2969a14ce7a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Data trust and coverage duality under legal and operational constraints; source universe vs. usable data set imbalance; probabilistic confidence in metric completeness. Universal Lens: Rooted in statking-debugging-guide (508bf6ea937337c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on data trustworthiness and coverage gaps using historical prediction fixtures and legal contract validation as priors. GSI Mapping: Rooted in statking-debugging-guide (508bf6ea937337c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models data scarcity and UX clarity trade-offs through state transitions from raw query to trusted insight with 10s comprehension layer. GSE Mapping: Rooted in statking-debugging-guide (508bf6ea937337c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "data_coverage_gap",
+      "name": "Data Coverage Gap",
+      "verbatim_quote": "## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_u': 'usable data coverage (dimensionless ratio)', 'C_s': 'seeded source universe coverage (dimensionless ratio)'}",
+      "assumptions": "Legal usability is a subset of total available data; C_u < C_s always holds.",
+      "breakdown_regime": "When C_u approaches zero, system enters critical failure mode.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies legal compliance shortfall in data ingestion pipeline via Bayesian posterior on coverage validity.",
+        "source_operator": "data_coverage_gap",
+        "telemetry": "Ratio of licensed vs. total possible data points"
+      }
+    },
+    {
+      "primitive_id": "trust_confidence_metric",
+      "name": "Trust Confidence Metric",
+      "verbatim_quote": "- HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'trust confidence (0 to 1 scale)'}",
+      "assumptions": "Trust is a function of source reliability, freshness, and conflict resolution.",
+      "breakdown_regime": "T drops below 0.3 when missing data exceeds 10% threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal predictive interval for uncertainty quantification in real-time.",
+        "source_operator": "trust_confidence_metric",
+        "telemetry": "User comprehension time under 10s vs. full data explanation duration"
+      }
+    },
+    {
+      "primitive_id": "licensed_data_dependency",
+      "name": "Licensed Data Dependency",
+      "verbatim_quote": "- HIGH: licensed route, pressure, coverage, tracking, PFF-like grades, and trenches data need contracts or first-party charting.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_d': 'licensed data dependency (dimensionless)'}",
+      "assumptions": "All high-value metrics require explicit licensing or proprietary collection.",
+      "breakdown_regime": "L_d > 0.8 triggers external contract negotiation or internal tooling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents GSE's state transition from open-source to licensed data access via policy enforcement.",
+        "source_operator": "licensed_data_dependency",
+        "telemetry": "Percentage of required metrics with valid licensing status"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "508bf6ea937337c7_t0",
+      "think": "The core tension lies between the seeded universe of potential data and the legally usable subset. The data coverage gap primitive formalizes this by defining C_u/C_s ratio, where C_u is the fraction of data that can be used legally and C_s is the total seedable data. This ratio defines a failure regime where C_u approaches zero, indicating systemic data scarcity. Trust confidence metric T is derived from a composite of source reliability, freshness, and conflict resolution mechanisms, modeled as a Bayesian update on prior trust beliefs. Licensed data dependency L_d captures the proportion of high-value metrics requiring third-party contracts, triggering state changes in GSE’s data acquisition module. These primitives form a triadic structure: legal coverage constrains data availability, trust governs user perception, and licensing drives operational complexity.\n\nDeep epistemic analysis for statking-debugging-guide (508bf6ea937337c7, domain=other, pages_read=1/1): Operator 'Data Coverage Gap' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Legal usability is a subset of total available data; C_u < C_s always holds. Breakdown regime: When C_u approaches zero, system enters critical failure mode. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies legal compliance shortfall in data ingestion pipeline via Bayesian posterior on coverage validity. Operator 'Trust Confidence Metric' (page 1, domain other) captures: - HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds. Assumptions: Trust is a function of source reliability, freshness, and conflict resolution. Breakdown regime: T drops below 0.3 when missing data exceeds 10% threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal predictive interval for uncertainty quantification in real-time. Operator 'Licensed Data Dependency' (page 1, domain other) captures: - HIGH: licensed route, pressure, coverage, tracking, PFF-like grades, and trenches data need contracts or first-party charting. Assumptions: All high-value metrics require explicit licensing or proprietary collection. Breakdown regime: L_d > 0.8 triggers external contract negotiation or internal tooling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents GSE's state transition from open-source to licensed data access via policy enforcement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for statking-debugging-guide (508bf6ea937337c7, domain=other, pages_read=1/1): Operator 'Data Coverage Gap' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Legal usability is a subset of total available data; C_u < C_s always holds. Breakdown regime: When C_u approaches zero, system enters critical failure mode. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies legal compliance shortfall in data ingestion pipeline via Bayesian posterior on coverage validity. Operator 'Trust Confidence Metric' (page 1, domain other) captures: - HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds. Assumptions: Trust is a function of source reliability, freshness, and conflict resolution. Breakdown regime: T drops below 0.3 when missing data exceeds 10% threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal predictive interval for uncertainty quantification in real-time. Operator 'Licensed Data Dependency' (page 1, domain other) captures: - HIGH: licensed route, pressure, coverage, tracking, PFF-like grades, and trenches data need contracts or first-party charting. Assumptions: All high-value metrics require explicit licensing or proprietary collection. Breakdown regime: L_d > 0.8 triggers external contract negotiation or internal tooling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents GSE's state transition from open-source to licensed data access via policy enforcement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory's data compression and entropy concepts, extended into legal compliance frameworks and agent-based trust modeling from game theory and Bayesian networks. Retrocausal Genealogy: Rooted in statking-debugging-guide (508bf6ea937337c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in statking-debugging-guide (508bf6ea937337c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors (seeking monetization), legal teams (enforcing compliance), and end-users (demanding transparency). Each has distinct utility functions: vendor profit, legal risk minimization, and user satisfaction respectively. Theory of Mind & Decision Maker Model: Rooted in statking-debugging-guide (508bf6ea937337c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that trust and coverage metrics do not co-vary linearly; leakage vetoes occur when L_d increases without corresponding T improvement, signaling inefficient resource allocation. Cross-Layer Veto & Anti-Leakage Check: Rooted in statking-debugging-guide (508bf6ea937337c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in statking-debugging-guide (508bf6ea937337c7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

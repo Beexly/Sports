@@ -1,0 +1,78 @@
+{
+  "book_id": "3f84f9b8bb72e053",
+  "source_status": "COMPLETE",
+  "title": "Sinkhorn_rate",
+  "file_name": "Sinkhorn_rate.pdf",
+  "sha256": "3f84f9b8bb72e053f545e18b1e67069bb6fba0d8c9790cbf4955da494bc9659e",
+  "primary_domain": "other",
+  "pages_total": 30,
+  "pages_read": 29,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Entropic optimal transport via Sinkhorn iterations unifies convex duality, relative entropy minimization, and high-dimensional coupling approximation. Universal Lens: Rooted in Sinkhorn_rate (3f84f9b8bb72e053), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on transport plans leverages Sinkhorn's dual updates for posterior coupling estimation under entropy regularization. GSI Mapping: Rooted in Sinkhorn_rate (3f84f9b8bb72e053), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models state transitions through Sinkhorn marginals, enabling dynamic coupling evolution in probabilistic spaces. GSE Mapping: Rooted in Sinkhorn_rate (3f84f9b8bb72e053), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sinkhorn_convergence_rate",
+      "name": "Sinkhorn Convergence Rate",
+      "verbatim_quote": "Its iterate πt is shown to satisfy H(πt|π∗)+H(π∗|πt) = O(t-1) where H denotes relative entropy and π∗ the optimal coupling.",
+      "page": 1,
+      "latex": "H(\\pi_t \\| \\pi^*) + H(\\pi^* \\| \\pi_t) = \\mathcal{O}(t^{-1})",
+      "symbol_and_unit_ledger": "{'H': 'relative entropy (dimensionless)', '\\\\pi_t': 'transport plan at iteration t (probability measure)', '\\\\pi^*': 'optimal transport plan (probability measure)', 't': 'iteration index (dimensionless)'}",
+      "assumptions": "Cost function c is measurable and non-negative; marginals μ, ν are Polish probability measures.",
+      "breakdown_regime": "As t → ∞, convergence rate degrades without additional regularization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Dual potential updates drive marginal convergence in GSI Bayesian inference.",
+        "source_operator": "sinkhorn_convergence_rate",
+        "telemetry": "Relative entropy between iterates and optimum"
+      }
+    },
+    {
+      "primitive_id": "dual_suboptimality_bound",
+      "name": "Dual Suboptimality Bound",
+      "verbatim_quote": "We also obtain the rate O(t-1) for the dual suboptimality and O(t-2) for the marginal entropies.",
+      "page": 1,
+      "latex": "\\int (\\varphi^* - \\varphi_t) d\\mu + \\int (\\psi^* - \\psi_t) d\\nu = \\mathcal{O}(t^{-1})",
+      "symbol_and_unit_ledger": "{'\\\\varphi_t, \\\\psi_t': 'dual potentials at iteration t (real-valued functions)', '\\\\varphi^*, \\\\psi^*': 'optimal dual potentials (real-valued functions)', 'd\\\\mu, d\\\\nu': 'probability measures (dimensionless)'}",
+      "assumptions": "Subgaussian marginals and quadratic cost functions assumed.",
+      "breakdown_regime": "Failure occurs when cost is unbounded or marginals are not subgaussian.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE state transition maps dual suboptimality to policy update steps.",
+        "source_operator": "dual_suboptimality_bound",
+        "telemetry": "Change in dual potentials over iterations"
+      }
+    },
+    {
+      "primitive_id": "marginal_entropy_decay",
+      "name": "Marginal Entropy Decay",
+      "verbatim_quote": "We also obtain the rate O(t-1) for the dual suboptimality and O(t-2) for the marginal entropies.",
+      "page": 1,
+      "latex": "H(\\mu_t \\| \\mu) + H(\\mu \\| \\mu_t) + H(\\nu_t \\| \\nu) + H(\\nu \\| \\nu_t) = \\mathcal{O}(t^{-2})",
+      "symbol_and_unit_ledger": "{'\\\\mu_t, \\\\nu_t': 'marginals of πt (probability measures)', '\\\\mu, \\\\nu': 'original marginals (probability measures)', 'H': 'relative entropy (dimensionless)'}",
+      "assumptions": "Quadratic cost with subgaussian marginals.",
+      "breakdown_regime": "Degradation in convergence when marginals deviate from subgaussian.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI marginal entropy decay informs uncertainty quantification in transport.",
+        "source_operator": "marginal_entropy_decay",
+        "telemetry": "Symmetric entropy difference of marginals"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3f84f9b8bb72e053_t0",
+      "think": "The Sinkhorn algorithm operates in dual space, updating φt and ψt via iterative proportional fitting. The convergence rate O(t⁻¹) for the total relative entropy H(πt|π∗)+H(π∗|πt) arises from the interplay between the exponential weighting in the update rules and the structure of the cost function. The dual suboptimality bound O(t⁻¹) reflects the convergence of the dual potentials to their optima, while the marginal entropy decay O(t⁻²) indicates faster convergence of the marginals themselves. These rates hold for a broad class of cost functions and marginals, particularly quadratic costs with subgaussian distributions. The non-asymptotic bounds avoid exponential deterioration with regularization parameter ε, unlike prior linear convergence analyses. Stability of the optimal coupling π∗ under marginal perturbations is quantified via relative entropy, ensuring robustness in practical implementations.\n\nDeep epistemic analysis for Sinkhorn_rate (3f84f9b8bb72e053, domain=other, pages_read=29/30): Operator 'Sinkhorn Convergence Rate' (page 1, domain other) captures: Its iterate πt is shown to satisfy H(πt|π∗)+H(π∗|πt) = O(t-1) where H denotes relative entropy and π∗ the optimal coupling. Assumptions: Cost function c is measurable and non-negative; marginals μ, ν are Polish probability measures. Breakdown regime: As t → ∞, convergence rate degrades without additional regularization. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Dual potential updates drive marginal convergence in GSI Bayesian inference. Operator 'Dual Suboptimality Bound' (page 1, domain other) captures: We also obtain the rate O(t-1) for the dual suboptimality and O(t-2) for the marginal entropies. Assumptions: Subgaussian marginals and quadratic cost functions assumed. Breakdown regime: Failure occurs when cost is unbounded or marginals are not subgaussian. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state transition maps dual suboptimality to policy update steps. Operator 'Marginal Entropy Decay' (page 1, domain other) captures: We also obtain the rate O(t-1) for the dual suboptimality and O(t-2) for the marginal entropies. Assumptions: Quadratic cost with subgaussian marginals. Breakdown regime: Degradation in convergence when marginals deviate from subgaussian. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI marginal entropy decay informs uncertainty quantification in transport. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Sinkhorn_rate (3f84f9b8bb72e053, domain=other, pages_read=29/30): Operator 'Sinkhorn Convergence Rate' (page 1, domain other) captures: Its iterate πt is shown to satisfy H(πt|π∗)+H(π∗|πt) = O(t-1) where H denotes relative entropy and π∗ the optimal coupling. Assumptions: Cost function c is measurable and non-negative; marginals μ, ν are Polish probability measures. Breakdown regime: As t → ∞, convergence rate degrades without additional regularization. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Dual potential updates drive marginal convergence in GSI Bayesian inference. Operator 'Dual Suboptimality Bound' (page 1, domain other) captures: We also obtain the rate O(t-1) for the dual suboptimality and O(t-2) for the marginal entropies. Assumptions: Subgaussian marginals and quadratic cost functions assumed. Breakdown regime: Failure occurs when cost is unbounded or marginals are not subgaussian. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state transition maps dual suboptimality to policy update steps. Operator 'Marginal Entropy Decay' (page 1, domain other) captures: We also obtain the rate O(t-1) for the dual suboptimality and O(t-2) for the marginal entropies. Assumptions: Quadratic cost with subgaussian marginals. Breakdown regime: Degradation in convergence when marginals deviate from subgaussian. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI marginal entropy decay informs uncertainty quantification in transport. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Schrödinger’s bridge problem, entropic optimal transport evolved through the IPFP framework. Early work by Sinkhorn laid the foundation for modern numerical solvers. Subsequent developments extended convergence analysis to broader settings, including unbounded costs and non-Gaussian marginals. Retrocausal Genealogy: Rooted in Sinkhorn_rate (3f84f9b8bb72e053), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may vary in their tolerance for regularization error or marginal mismatch. A conservative agent might prioritize slower but stable convergence, whereas an aggressive one may accept faster convergence with higher risk of instability. Theory of Mind & Decision Maker Model: Rooted in Sinkhorn_rate (3f84f9b8bb72e053), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when marginal entropies fail to decay due to poor conditioning. Leakage occurs if the cost function lacks sufficient smoothness or if marginals are not sufficiently regular, leading to breakdown in convergence guarantees. Cross-Layer Veto & Anti-Leakage Check: Rooted in Sinkhorn_rate (3f84f9b8bb72e053), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

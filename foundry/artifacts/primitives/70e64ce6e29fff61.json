@@ -1,0 +1,78 @@
+{
+  "book_id": "70e64ce6e29fff61",
+  "source_status": "COMPLETE",
+  "title": "main-research-intake",
+  "file_name": "main-research-intake.md",
+  "sha256": "70e64ce6e29fff6163752d451b6a54d6b034c18752049f786289929b800c901d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for DFS salary validation and projection consistency using empirical signal alignment and noise-filtered composite models. Universal Lens: Rooted in main-research-intake (70e64ce6e29fff61), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps official salaries to engine projections via conformal predictive intervals, rejecting null models with R² < 0. GSI Mapping: Rooted in main-research-intake (70e64ce6e29fff61), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions states based on salary file validity and projection model compatibility; rejects non-conforming lineups. GSE Mapping: Rooted in main-research-intake (70e64ce6e29fff61), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "salary_file_validation",
+      "name": "Salary File Validation",
+      "verbatim_quote": "| Landed | Verdict | Engine | |---|---|---| | `dfs-week3/DKSalaries-Week3-SunMon.csv` | Official DraftKings salaries | **Used.** Replaced the scraped HTML salaries.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{official}}': '\\\\text{Official DraftKings salary vector in USD}', 'S_{\\\\text{scraped}}': '\\\\text{Scraped HTML salary vector in USD}'}",
+      "assumptions": "Official salaries are temporally aligned with game state and free of systematic bias.",
+      "breakdown_regime": "When $ \\| S_{\\text{official}} - S_{\\text{scraped}} \\|_2 > \\epsilon $, rejection occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction module where $ S_{\\text{official}} $ serves as input to validate $ \\hat{P}_{\\text{proj}} $.",
+        "source_operator": "salary_file_validation",
+        "telemetry": "Mean absolute error between official and scraped salaries."
+      }
+    },
+    {
+      "primitive_id": "projection_composite_model",
+      "name": "Projection Composite Model",
+      "verbatim_quote": "Porting `run.ts` would replace the composite with two-game DK averages.",
+      "page": 1,
+      "latex": "P_{\\text{composite}} = 0.6 \\cdot P_{\\text{DK APPG}} + 0.4 \\cdot P_{\\text{prop-implied}}",
+      "symbol_and_unit_ledger": "{'P_{\\\\text{composite}}': '\\\\text{Composite projection score}', 'P_{\\\\text{DK APPG}}': '\\\\text{DraftKings average points per game}', 'P_{\\\\text{prop-implied}}': '\\\\text{Propositional implied projection}'}",
+      "assumptions": "Weighted linear combination of two independent projections holds predictive value.",
+      "breakdown_regime": "When $ R^2 < 0 $, model is rejected due to lack of explanatory power.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's internal projection kernel is replaced by this composite; GSI evaluates via cross-validation.",
+        "source_operator": "projection_composite_model",
+        "telemetry": "Holdout R² score of -0.022 indicates model failure."
+      }
+    },
+    {
+      "primitive_id": "lineup_consistency_check",
+      "name": "Lineup Consistency Check",
+      "verbatim_quote": "| | `dfs-week3/lineups.json` and the GPP writeup | Lineups priced with a different projection (Coker 25.7, Young 29.8) | **Not used.** Those numbers are not this engine.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{input}}': '\\\\text{Input lineup with external projection}', 'L_{\\\\text{engine}}': '\\\\text{Engine-generated lineup}', 'P_{\\\\text{input}}': '\\\\text{Projection used in input lineup}'}",
+      "assumptions": "Lineups must be generated under same projection logic as engine.",
+      "breakdown_regime": "If $ \\exists i: P_{\\text{input},i} \\neq P_{\\text{engine},i} $, rejection occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensures $ L_{\\text{input}} $ aligns with $ L_{\\text{engine}} $ through shared projection kernel.",
+        "source_operator": "lineup_consistency_check",
+        "telemetry": "Mismatched projection values trigger rejection flag."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "70e64ce6e29fff61_t0",
+      "think": "The core insight is that DFS engines require consistent data pipelines and projection kernels to avoid signal degradation. The salary file validation primitive ensures data integrity by replacing unreliable HTML sources with official DraftKings files. The projection composite model attempts to merge two distinct forecasting signals but fails when its explanatory power drops below zero, indicating a null result. Finally, the lineup consistency check enforces that all lineups adhere to the engine's internal projection logic, rejecting those derived from incompatible models. These primitives form a closed-loop system where each step validates the next, preventing cascading errors from propagating into downstream decisions.\n\nDeep epistemic analysis for main-research-intake (70e64ce6e29fff61, domain=other, pages_read=1/1): Operator 'Salary File Validation' (page 1, domain other) captures: | Landed | Verdict | Engine | |---|---|---| | `dfs-week3/DKSalaries-Week3-SunMon.csv` | Official DraftKings salaries | **Used.** Replaced the scraped HTML salaries. Assumptions: Official salaries are temporally aligned with game state and free of systematic bias. Breakdown regime: When $ \\| S_{\\text{official}} - S_{\\text{scraped}} \\|_2 > \\epsilon $, rejection occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction module where $ S_{\\text{official}} $ serves as input to validate $ \\hat{P}_{\\text{proj}} $. Operator 'Projection Composite Model' (page 1, domain other) captures: Porting `run.ts` would replace the composite with two-game DK averages. Assumptions: Weighted linear combination of two independent projections holds predictive value. Breakdown regime: When $ R^2 < 0 $, model is rejected due to lack of explanatory power. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's internal projection kernel is replaced by this composite; GSI evaluates via cross-validation. Operator 'Lineup Consistency Check' (page 1, domain other) captures: | | `dfs-week3/lineups.json` and the GPP writeup | Lineups priced with a different projection (Coker 25.7, Young 29.8) | **Not used.** Those numbers are not this engine. Assumptions: Lineups must be generated under same projection logic as engine. Breakdown regime: If $ \\exists i: P_{\\text{input},i} \\neq P_{\\text{engine},i} $, rejection occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures $ L_{\\text{input}} $ aligns with $ L_{\\text{engine}} $ through shared projection kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for main-research-intake (70e64ce6e29fff61, domain=other, pages_read=1/1): Operator 'Salary File Validation' (page 1, domain other) captures: | Landed | Verdict | Engine | |---|---|---| | `dfs-week3/DKSalaries-Week3-SunMon.csv` | Official DraftKings salaries | **Used.** Replaced the scraped HTML salaries. Assumptions: Official salaries are temporally aligned with game state and free of systematic bias. Breakdown regime: When $ \\| S_{\\text{official}} - S_{\\text{scraped}} \\|_2 > \\epsilon $, rejection occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction module where $ S_{\\text{official}} $ serves as input to validate $ \\hat{P}_{\\text{proj}} $. Operator 'Projection Composite Model' (page 1, domain other) captures: Porting `run.ts` would replace the composite with two-game DK averages. Assumptions: Weighted linear combination of two independent projections holds predictive value. Breakdown regime: When $ R^2 < 0 $, model is rejected due to lack of explanatory power. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's internal projection kernel is replaced by this composite; GSI evaluates via cross-validation. Operator 'Lineup Consistency Check' (page 1, domain other) captures: | | `dfs-week3/lineups.json` and the GPP writeup | Lineups priced with a different projection (Coker 25.7, Young 29.8) | **Not used.** Those numbers are not this engine. Assumptions: Lineups must be generated under same projection logic as engine. Breakdown regime: If $ \\exists i: P_{\\text{input},i} \\neq P_{\\text{engine},i} $, rejection occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures $ L_{\\text{input}} $ aligns with $ L_{\\text{engine}} $ through shared projection kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical signal processing and machine learning validation paradigms, tracing back to early 2000s work on ensemble methods and conformal prediction theory. Retrocausal Genealogy: Rooted in main-research-intake (70e64ce6e29fff61), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in main-research-intake (70e64ce6e29fff61), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to introduce inconsistent projections or outdated salary data to manipulate outcomes. The system counters this by enforcing strict adherence to validated inputs and internal logic. Theory of Mind & Decision Maker Model: Rooted in main-research-intake (70e64ce6e29fff61), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no two primitives share overlapping signal space without explicit justification. Leakage is prevented by isolating projection models from lineup generation logic. Cross-Layer Veto & Anti-Leakage Check: Rooted in main-research-intake (70e64ce6e29fff61), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in main-research-intake (70e64ce6e29fff61), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

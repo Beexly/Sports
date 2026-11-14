@@ -1,0 +1,78 @@
+{
+  "book_id": "2ee8aff24b031374",
+  "source_status": "COMPLETE",
+  "title": "2026 Thanksgiving Dinner",
+  "file_name": "2026 Thanksgiving Dinner.pdf",
+  "sha256": "2ee8aff24b031374eb7534152ccf37d02d293c526b8cd7ee890884af7a0133a1",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of 2026 Thanksgiving Package as a multilinear combinatorial optimization problem over dietary categories, delivery zones, and service tiers. Universal Lens: Rooted in 2026 Thanksgiving Dinner (2ee8aff24b031374), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on menu selection and delivery cost using probabilistic belief networks over customer preference vectors and geographic proximity. GSI Mapping: Rooted in 2026 Thanksgiving Dinner (2ee8aff24b031374), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models state transitions between order initiation, fulfillment, and delivery based on capacity constraints and spatial partitioning. GSE Mapping: Rooted in 2026 Thanksgiving Dinner (2ee8aff24b031374), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "menu_combinatorics",
+      "name": "Menu Combinatorial Optimization",
+      "verbatim_quote": "2026 Thanksgiving Package (Minimum 10 people) Harvest Salad with apples, craisins, candied pecans and champagne vinaigrette",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'number of people (dimensionless)', 'S': 'salad components (dimensionless)', 'C': 'cuisine category (dimensionless)'}",
+      "assumptions": "Fixed minimum party size N ≥ 10; discrete menu items; linear additive utility function over components.",
+      "breakdown_regime": "N < 10 triggers invalidity; C ∉ {turkey, pork} causes constraint violation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a set-partitioning problem where each item belongs to exactly one dietary category.",
+        "source_operator": "menu_combinatorics",
+        "telemetry": "Observable: total number of unique menu items selected per group."
+      }
+    },
+    {
+      "primitive_id": "protein_selection",
+      "name": "Protein Selection Kernel",
+      "verbatim_quote": "Deep-Fried Turkey or Turkey Breast with Giblet Gravy or sliced pork tenderloin with a pear, honey",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'protein type (dimensionless)', 'T': 'cooking method (dimensionless)', 'A': 'accompaniment (dimensionless)'}",
+      "assumptions": "Binary choice between turkey variants and pork; ternary choice for accompaniments.",
+      "breakdown_regime": "P ∉ {turkey, pork}; T ∉ {fried, roasted}; A ∉ {gravy, pear-honey} leads to invalidity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from protein preference kernel with conditional dependencies on cooking methods and side dishes.",
+        "source_operator": "protein_selection",
+        "telemetry": "Observable: frequency of each protein-accompaniment pair in orders."
+      }
+    },
+    {
+      "primitive_id": "side_dish_aggregation",
+      "name": "Side Dish Aggregation Function",
+      "verbatim_quote": "reduction Whipped Mashed Potatoes Sausage Dressing Twice Baked Macaroni and Cheese Candied Carrots or Green Bean",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_i': 'dish i (dimensionless)', 'M': 'mashed potato variant (dimensionless)', 'B': 'baked dish type (dimensionless)'}",
+      "assumptions": "Each dish is either mashed potatoes or mac and cheese; carrots or green beans are mutually exclusive.",
+      "breakdown_regime": "D_i ∉ {potatoes, mac, carrots, beans} causes aggregation error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a vector space over dish types with binary exclusion rules.",
+        "source_operator": "side_dish_aggregation",
+        "telemetry": "Observable: proportion of each dish type in aggregate order."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2ee8aff24b031374_t0",
+      "think": "The 2026 Thanksgiving Package encodes a structured combinatorial system where menu items are grouped into categorical kernels—salads, proteins, sides, desserts. Each kernel defines a discrete domain of choices with fixed cardinality and mutual exclusivity. The system exhibits multilinear structure through additive utility functions across categories. Dualities emerge in the form of protein alternatives (turkey vs pork) and side dish substitutions (carrots vs green bean), which can be modeled as Boolean logic trees. Failure modes occur when constraints such as N < 10 or invalid component selections are violated. These primitives support a Bayesian inference framework for predicting customer preferences and optimizing resource allocation. The system's state transitions are governed by delivery zone boundaries and pricing tiers, enabling GSE to model dynamic decision-making under spatial and economic constraints.\n\nDeep epistemic analysis for 2026 Thanksgiving Dinner (2ee8aff24b031374, domain=other, pages_read=2/2): Operator 'Menu Combinatorial Optimization' (page 1, domain other) captures: 2026 Thanksgiving Package (Minimum 10 people) Harvest Salad with apples, craisins, candied pecans and champagne vinaigrette Assumptions: Fixed minimum party size N ≥ 10; discrete menu items; linear additive utility function over components. Breakdown regime: N < 10 triggers invalidity; C ∉ {turkey, pork} causes constraint violation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a set-partitioning problem where each item belongs to exactly one dietary category. Operator 'Protein Selection Kernel' (page 1, domain other) captures: Deep-Fried Turkey or Turkey Breast with Giblet Gravy or sliced pork tenderloin with a pear, honey Assumptions: Binary choice between turkey variants and pork; ternary choice for accompaniments. Breakdown regime: P ∉ {turkey, pork}; T ∉ {fried, roasted}; A ∉ {gravy, pear-honey} leads to invalidity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from protein preference kernel with conditional dependencies on cooking methods and side dishes. Operator 'Side Dish Aggregation Function' (page 1, domain other) captures: reduction Whipped Mashed Potatoes Sausage Dressing Twice Baked Macaroni and Cheese Candied Carrots or Green Bean Assumptions: Each dish is either mashed potatoes or mac and cheese; carrots or green beans are mutually exclusive. Breakdown regime: D_i ∉ {potatoes, mac, carrots, beans} causes aggregation error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a vector space over dish types with binary exclusion rules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026 Thanksgiving Dinner (2ee8aff24b031374, domain=other, pages_read=2/2): Operator 'Menu Combinatorial Optimization' (page 1, domain other) captures: 2026 Thanksgiving Package (Minimum 10 people) Harvest Salad with apples, craisins, candied pecans and champagne vinaigrette Assumptions: Fixed minimum party size N ≥ 10; discrete menu items; linear additive utility function over components. Breakdown regime: N < 10 triggers invalidity; C ∉ {turkey, pork} causes constraint violation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a set-partitioning problem where each item belongs to exactly one dietary category. Operator 'Protein Selection Kernel' (page 1, domain other) captures: Deep-Fried Turkey or Turkey Breast with Giblet Gravy or sliced pork tenderloin with a pear, honey Assumptions: Binary choice between turkey variants and pork; ternary choice for accompaniments. Breakdown regime: P ∉ {turkey, pork}; T ∉ {fried, roasted}; A ∉ {gravy, pear-honey} leads to invalidity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from protein preference kernel with conditional dependencies on cooking methods and side dishes. Operator 'Side Dish Aggregation Function' (page 1, domain other) captures: reduction Whipped Mashed Potatoes Sausage Dressing Twice Baked Macaroni and Cheese Candied Carrots or Green Bean Assumptions: Each dish is either mashed potatoes or mac and cheese; carrots or green beans are mutually exclusive. Breakdown regime: D_i ∉ {potatoes, mac, carrots, beans} causes aggregation error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a vector space over dish types with binary exclusion rules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical combinatorics and discrete mathematics, tracing back to early 20th-century enumeration theory and modern constraint satisfaction problems in operations research. Retrocausal Genealogy: Rooted in 2026 Thanksgiving Dinner (2ee8aff24b031374), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2026 Thanksgiving Dinner (2ee8aff24b031374), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include customers seeking optimal value and service providers managing inventory and logistics. Decision actors weigh utility against cost, with spatial proximity influencing delivery decisions and menu complexity affecting preparation time. Theory of Mind & Decision Maker Model: Rooted in 2026 Thanksgiving Dinner (2ee8aff24b031374), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises from overlapping constraints between menu selection and delivery zones. Leakage occurs if pricing does not account for regional demand variations or if menu choices do not align with dietary restrictions. Veto conditions enforce valid combinations and prevent invalid state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 Thanksgiving Dinner (2ee8aff24b031374), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

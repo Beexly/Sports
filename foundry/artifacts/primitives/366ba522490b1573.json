@@ -1,0 +1,227 @@
+{
+ "book_id": "366ba522490b1573",
+ "source_status": "COMPLETE",
+ "pages_total": 141,
+ "pages_read": 141,
+ "primitives": [
+  {
+   "id": "p1",
+   "primitive_id": "p1",
+   "domain": "math",
+   "name": "Equal-inclusion-probability test of a random sample",
+   "verbatim_quote": "The test of the random sample is this: Does every name or thing in the whole group have an equal chance to be in the sample?",
+   "quotes": [
+    "The test of the random sample is this: Does every name or thing in the whole group have an equal chance to be in the sample?"
+   ],
+   "page": 20,
+   "latex": "P(i \\in S) = \\frac{n}{N} \\quad \\forall\\, i \\in U, \\qquad |U| = N,\\ |S| = n",
+   "symbol_and_unit_ledger": "P: inclusion probability [dimensionless, 0..1]; i: population unit index [dimensionless]; S: realized sample set [set]; U: universe/population [set]; N: population size [count]; n: sample size [count]. Both sides dimensionless probabilities; n/N well-defined for 0 < n <= N.",
+   "assumptions": "Finite population U fully enumerated in a sampling frame; selection mechanism known and auditable; 'pure chance' selection so no unit's inclusion probability depends on the value of the variable being measured. Huff's operational test is exactly this equality of chance, and he notes the purely random sample is the only kind examinable 'with entire confidence by means of statistical theory' (p. 20).",
+   "breakdown_regime": "Breaks whenever inclusion probability correlates with the measured quantity: address-unknown and nonresponding Yale alumni are disproportionately low earners (pp. 13-16); telephone/subscriber frames in 1936 loaded Republican voters (p. 19); stratified quotas with wrong group proportions or interviewer convenience selection re-bias the sample (pp. 20-21). Bias does not vanish as n grows — a large biased sample is still biased; the Literary Digest's ten million replies elected Landon.",
+   "timescales": [
+    "tau_0: single draw from the frame",
+    "tau_1: one survey wave / one season of charting",
+    "tau_2: repeated waves exposing frame drift",
+    "tau_3: institutional sampling-frame lifecycle"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The 22-player dynamical system is observed only through samples: charted snaps, tracked frames, scouted games. Highlight-reel scouting is a built-in-bias sample exactly like the Yale questionnaire — inclusion probability correlates with the quality being estimated (stars get more clips; garbage-time snaps get dropped). The sovereign transfer is the audit, not a new estimator: before any player grade or tendency enters Coach-Mind, verify the frame covers all snaps of the relevant population and that inclusion chance is independent of outcome. Stratified sampling by down/distance/field-zone is legitimate only with correct population proportions, mirroring Huff's stratified-random caveat.",
+    "source_operator": "p1",
+    "telemetry": "Per-snap inclusion probability by player/position/down/distance; frame coverage fraction (charted snaps / total snaps); nonresponse analog: fraction of games with missing tracking; direction and magnitude of grade shift when reweighted to the full snap population; stratification quota error vs known league proportions."
+   }
+  },
+  {
+   "id": "p2",
+   "primitive_id": "p2",
+   "domain": "math",
+   "name": "Mean-median-mode trichotomy and skew-induced divergence",
+   "verbatim_quote": "The $15,000 figure I used when I wanted a big one is a mean, the arithmetic average of the incomes of all the families in the neighborhood. You get it by adding up all tHe incomes and dividing by the number there are.",
+   "quotes": [
+    "When you are told that something is an average you still don't know very much about it unless you can find out which of the common kinds of average it is-mean, median. or mode.",
+    "The $15,000 figure I used when I wanted a big one is a mean, the arithmetic average of the incomes of all the families in the neighborhood. You get it by adding up all tHe incomes and dividing by the number there are.",
+    "The smaller figure is a median, and so it tells you that half the families in question havp. morp. than $3,500 a year and half have less."
+   ],
+   "page": 27,
+   "latex": "\\bar{x} = \\frac{1}{n}\\sum_{i=1}^{n} x_i, \\qquad \\mathrm{median} = x_{(\\lceil n/2 \\rceil)}, \\qquad \\mathrm{mode} = \\arg\\max_{x} f(x)",
+   "symbol_and_unit_ledger": "x_i: income of family i [USD]; n: number of families [count, dimensionless]; x_(k): k-th order statistic [USD]; f(x): frequency of value x [count]; bar-x, median, mode all [USD]. Sum of USD divided by a pure count yields USD — dimensionally consistent. For a symmetric unimodal (normal) distribution all three coincide (Huff p. 29).",
+   "assumptions": "The word 'average' is undefined until the kind is specified; the three functionals answer different questions (total-share vs half-split vs most-common). Comparisons across years or groups are valid only when the same functional is used on both sides. Income-type distributions are right-skewed: 'More than ninety-five per cent of the incomes would be under $10,000' with a few very large ones (p. 29).",
+   "breakdown_regime": "Under marked right skew the mean is dragged far above the median by a few extreme values — three millionaire week-enders make the neighborhood mean $15,000 while the median is $3,500, so 'Nearly everybody is below average' (pp. 27-30). An unqualified 'average' then becomes, in Huff's phrase, 'virtually meaningless'; the whipsaw is that the same data legitimately support both the flattering and the damning figure depending on functional choice (pp. 31-33).",
+   "timescales": [
+    "tau_0: one distribution snapshot",
+    "tau_1: season-long salary/production pool",
+    "tau_2: year-over-year functional-consistent comparison",
+    "tau_3: structural shifts in the distribution shape"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "DFS salaries, NFL contract values, and per-player production totals are income-shaped: a few elites carry a long right tail. Kernel: any 'average value' summary fed to lineup construction or cap planning must declare its functional; default to median plus interquartile range, and compute mean/median ratio as a skew alarm. A mean-based 'average starter production' overstates the typical starter exactly as the $15,000 neighborhood mean overstates the typical resident, and cross-year comparisons that silently switch functional (Huff's TIME magazine example, p. 35) manufacture fake trends.",
+    "source_operator": "p2",
+    "telemetry": "Skewness coefficient and mean/median ratio of salary and production pools; fraction of players below the reported mean; functional label audit across seasons (mean vs median vs mode); IQR coverage; sensitivity of lineup value estimates to functional choice."
+   }
+  },
+  {
+   "id": "p3",
+   "primitive_id": "p3",
+   "domain": "math",
+   "name": "Probable-error bands and the overlapping-band comparison veto",
+   "verbatim_quote": "From this you can quickly see that there is one chance in four that Peter's IQ is really above 101 and a similar chance that Linda's is below 98.",
+   "quotes": [
+    "the probable error ot the Stanford-Binet IQ has been found to be three per cent.",
+    "So Peter's indicated IQ might be more fully expressed as 98 ± 3 and Linda's as 101 ± 3.",
+    "From this you can quickly see that there is one chance in four that Peter's IQ is really above 101 and a similar chance that Linda's is below 98.",
+    "What this comes down to is that the only way to think about IQs and many other 5arnpling results is in ranges."
+   ],
+   "page": 55,
+   "latex": "IQ_{\\mathrm{true}} \\in IQ_{\\mathrm{obs}} \\pm PE, \\qquad P\\big(|IQ_{\\mathrm{true}} - IQ_{\\mathrm{obs}}| \\le PE\\big) = \\tfrac{1}{2}, \\qquad PE \\approx 0.6745\\,\\sigma_{\\mathrm{meas}}",
+   "symbol_and_unit_ledger": "IQ_obs: observed test score [IQ points, dimensionless scale]; IQ_true: latent score [IQ points]; PE: probable error [IQ points]; sigma_meas: standard error of measurement [IQ points]; 0.6745: normal-distribution half-coverage constant [dimensionless]. Huff states PE=3 points for the Revised Stanford-Binet, that probable error covers half the cases while standard error covers about two-thirds (pp. 55-56), which fixes the 0.6745 relation under normal errors.",
+   "assumptions": "Measurement error symmetric and stable across the scale; the test measures whatever it measures consistently (reliability, not validity — Huff explicitly separates the two, p. 55); errors approximately normal so the half-coverage and two-thirds-coverage statements hold. The IQ is treated as 'a sampling of the intellect' — a sample of items, hence a figure with statistical error (p. 54).",
+   "breakdown_regime": "When two observed scores differ by less than the combined error bands, any ranking is noise: Peter 98±3 vs Linda 101±3 leaves 'one chance in four that Peter's IQ is really above 101' (p. 56). The veto regime: comparisons between figures with small differences are meaningless; 'Normal is not 100, but the range of 90 to 110' (p. 56). Ignoring implicit ± turns sampling noise into editorial policy (magazine readership 35% vs 40%, pp. 56-57).",
+   "timescales": [
+    "tau_0: single test administration",
+    "tau_1: retest interval / one season of grades",
+    "tau_2: multi-season reliability estimation",
+    "tau_3: instrument revision changing sigma_meas"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every football estimate is an IQ-like sampling figure: EPA/play over a few hundred snaps, charted grades over a handful of games, combine measurables with day-to-day variance. The sovereign transfer is the comparison veto: Coach-Mind and DFS rankings must carry ± bands, and any ordering whose bands overlap is flagged UNRESOLVED rather than published as a strict ranking. Huff's 25% reversal chance is the template for computing rank-reversal probability between adjacent players; a 0.02 EPA/play gap on 300 snaps is a 98-vs-101 IQ comparison, not a finding.",
+    "source_operator": "p3",
+    "telemetry": "Standard error per player metric (bootstrap over snaps/games); band-overlap fraction for adjacent ranks; rank-reversal probability under the error model; minimum detectable difference at fixed sample size; fraction of published comparisons that survive the veto."
+   }
+  },
+  {
+   "id": "p4",
+   "primitive_id": "p4",
+   "domain": "math",
+   "name": "Cube-law scaling of similar solids and pictograph distortion",
+   "verbatim_quote": "the volumes of similar solids vary as the cube of any like dimension. Two times two times two is eight.",
+   "quotes": [
+    "the volumes of similar solids vary as the cube of any like dimension. Two times two times two is eight.",
+    "If one moneybag holds $30, the other, having eigLt tilUes the volume, must hold not $60 but $240."
+   ],
+   "page": 69,
+   "latex": "\\frac{V_2}{V_1} = \\left(\\frac{L_2}{L_1}\\right)^{3}, \\qquad \\frac{A_2}{A_1} = \\left(\\frac{L_2}{L_1}\\right)^{2}",
+   "symbol_and_unit_ledger": "V: volume of a solid [m^3]; A: projected area [m^2]; L: any like linear dimension [m]; ratios V2/V1, A2/A1, L2/L1 all dimensionless. m^3/m^3 and m^2/m^2 cancel — dimensionally consistent. Huff's worked case: L2/L1 = 2 gives A ratio 4 and V ratio 8, so a bag drawn twice as tall for $60 vs $30 visually implies $240 (pp. 68-69).",
+   "assumptions": "Geometric similarity: ALL linear dimensions scale by the same factor (the honest pictograph keeps counts of equal-size icons instead). The reader's perceptual system reads area or volume, not the labeled number. The data ratio being encoded is a ratio of quantities (dollars, tons, people), dimensionless once units match.",
+   "breakdown_regime": "Breaks the moment only one dimension is scaled to encode a quantity: the visual impression scales as the square (area) or cube (volume) of the data ratio. The steel-industry blast-furnace chart turned a 1.425x capacity ratio into an apparent ~3x, and a 50% increase drawn as 150% produced a visual impression 'over 1500 per cent' (pp. 69-70). The regime is any rendering where scale exponent != 1 while the audience integrates area/volume.",
+   "timescales": [
+    "tau_0: single rendered comparison",
+    "tau_1: one broadcast/dashboard season",
+    "tau_2: cross-outlet graphic convention drift",
+    "tau_3: perceptual habit formation in audiences"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Two genuine transfers, no fabricated origins. (1) Perceptual channel: any GSE/GSI visualization that scales player icons, bars-with-width, or 3D objects by a stat inherits the cube law — a 'twice as impactful' player drawn twice as tall reads as 4-8x; the fix is Huff's honest pictograph (count equal icons) or exponent-1 encoding. (2) Biomechanical scaling: for geometrically similar athletes, muscle force scales as cross-section L^2 while mass scales as L^3, so relative strength scales as L^-1 — the same similar-solids geometry governs why size-normalized strength, not absolute strength, is the comparable quantity across body types.",
+    "source_operator": "p4",
+    "telemetry": "Rendered scale exponent vs data exponent per graphic; data-to-visual ratio mismatch factor (target 1.0); audience recall tests of implied ratio vs stated ratio; for biomechanics: allometric exponent fit of force vs body mass (expect ~2/3 power on mass), residual spread by position."
+   }
+  },
+  {
+   "id": "p5",
+   "primitive_id": "p5",
+   "domain": "math",
+   "name": "Exposure-normalized rates and population comparability",
+   "verbatim_quote": "The groups are not comparable. The Kavy is made up mainly of young men in known good health. A civilian population includes infants, the old, and the ill. all of whom have a higher death rate wherever they are.",
+   "quotes": [
+    "Get the rate, by inqniring into the numher of fatalities for each million passenger miles.",
+    "The groups are not comparable. The Kavy is made up mainly of young men in known good health. A civilian population includes infants, the old, and the ill. all of whom have a higher death rate wherever they are."
+   ],
+   "page": 78,
+   "latex": "r = \\frac{D}{10^{6}\\ \\mathrm{passenger\\text{-}miles}}, \\qquad r_A \\gtrless r_B \\ \\not\\!\\!\\implies D_A \\gtrless D_B",
+   "symbol_and_unit_ledger": "D: fatality count [deaths, count]; passenger-miles: exposure [passenger·mile]; r: fatality rate [deaths per 10^6 passenger-miles]; the 10^6 is a pure scaling constant [dimensionless]. Count divided by exposure yields a rate — dimensionally consistent. The second clause states that ordering of raw counts does not transfer to ordering of rates when exposures differ.",
+   "assumptions": "Exposure denominator measured for every group being compared; groups comparable in risk structure (age, health, selection) or else stratified/standardized. Huff: the 7 P.M. vs 7 A.M. fatality count ratio of four reflects traffic volume, not per-driver danger (p. 77); Navy 9/1000 vs civilian 16/1000 is meaningless because the Navy selects young healthy men (p. 82).",
+   "breakdown_regime": "Raw-count comparisons invert or fabricate risk whenever exposure differs: more plane deaths than 1910 because hundreds of times more people fly (p. 78); 4,712 railroad deaths mostly crossing-collision victims and riders on the rods, only 132 passengers (p. 78). Selection-structure mismatch is the second breakdown: comparing a selected healthy cohort to a general population proves nothing about the effect of the institution itself.",
+   "timescales": [
+    "tau_0: single trip/exposure event",
+    "tau_1: one season of injury/usage data",
+    "tau_2: multi-year rate trends with reporting changes",
+    "tau_3: demographic/selection-structure drift"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The 22-player system generates exactly this failure mode: raw tackle counts, raw turnover counts, and raw injury counts all scale with exposure (snaps, possessions, player-hours). The sovereign transfer is the rate discipline: injuries per 1000 player-hours by position and age band; EPA per snap rather than season totals when comparing starters to backups; turnovers per possession rather than per game when pace differs. And the Navy lesson is the comparability gate: a practice-squad cohort vs active roster is a selected population — standardize by age/position/usage before attributing differences to training or treatment.",
+    "source_operator": "p5",
+    "telemetry": "Exposure denominator per player (snaps, routes, player-hours); rate-vs-count ranking disagreement matrix; stratification coverage by age/position/usage; selection-flag on cohort comparisons; reporting-completeness change log (the polio-1952 analog, pp. 83-84)."
+   }
+  },
+  {
+   "id": "p6",
+   "primitive_id": "p6",
+   "domain": "math",
+   "name": "Shifting-base asymmetry of sequential percentage changes",
+   "verbatim_quote": "All this illustrates why to offset a pay cut of fifty per cent you must get a raise of one hundred per cent.",
+   "quotes": [
+    "All this illustrates why to offset a pay cut of fifty per cent you must get a raise of one hundred per cent.",
+    "You can check on this bit of statistical misfiguring by supposing, for simplicity, that the original wage was $1 an hour."
+   ],
+   "page": 110,
+   "latex": "(1-c)(1+r) = 1 \\ \\Longrightarrow\\ r = \\frac{c}{1-c}, \\qquad c = 0.5 \\Rightarrow r = 1.0",
+   "symbol_and_unit_ledger": "c: fractional decrease applied to the original base [dimensionless, 0<=c<1]; r: fractional increase on the reduced base needed to restore it [dimensionless]. Both sides of (1-c)(1+r)=1 are pure numbers — dimensionally consistent. Huff's check: $1 cut 20% -> $0.80; a 5% raise adds $0.04, which is one-fifth of the $0.20 cut, not the claimed one-fourth (pp. 109-110).",
+   "assumptions": "Sequential multiplicative changes, each on its own current base; the base must be declared for every percentage. Percentages on different bases cannot be added: '50% and 20% off list' is a 60% discount, not 70% (p. 111); component cost rises of ~10% each do not sum to 33-40% total inflation (pp. 112-113). Percentage points vs percent are distinct units of change (p. 114).",
+   "breakdown_regime": "Additive intuition is the breakdown regime: as c -> 1 the required recovery r = c/(1-c) diverges (a 90% loss needs +900%; total loss is unrecoverable). The Indianapolis wage story shows the milder failure — restoring 'one-fourth' of a 20% cut with a 5% raise silently switches base and exaggerates recovery (pp. 109-110). Any reporting that adds, subtracts, or compares percentages without a common base is in this regime.",
+   "timescales": [
+    "tau_0: one cut/raise pair",
+    "tau_1: season bankroll path",
+    "tau_2: multi-season compounding",
+    "tau_3: ruin/absorbing boundary"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Bankroll and portfolio tail-risk kernel for DFS and any staking plan: drawdown recovery is asymmetric, r = c/(1-c). A 50% bankroll drawdown demands +100% just to break even, so risk-of-ruin constraints must be set on the drawdown side, not the expected-gain side; position sizing that ignores this overstates recoverability. Second transfer: win-probability and ROI reporting must distinguish percentage points from percent (a move from 3% to 6% ROI is +3 points or +100%, never both at once), and sequential discounts/bonuses must be compounded, never added.",
+    "source_operator": "p6",
+    "telemetry": "Drawdown depth c and implied recovery r per bankroll path; fraction of staking plans whose sizing survives a 2-sigma drawdown; base-consistency audit flag on every percentage pair; points-vs-percent label check; compounding error magnitude when additive shortcuts are used."
+   }
+  },
+  {
+   "id": "p7",
+   "primitive_id": "p7",
+   "domain": "math",
+   "name": "Sign-flip of a correlation beyond its observed support (rain-corn regime)",
+   "verbatim_quote": "The positive correlation holds up to a point and then quickly becomes a negative one. Above so·many inches, the more it rains the less com you get.",
+   "quotes": [
+    "The positive correlation holds up to a point and then quickly becomes a negative one. Above so·many inches, the more it rains the less com you get."
+   ],
+   "page": 90,
+   "latex": "\\frac{\\partial Y}{\\partial R} > 0 \\ \\ (R < R^{*}), \\qquad \\frac{\\partial Y}{\\partial R} < 0 \\ \\ (R > R^{*})",
+   "symbol_and_unit_ledger": "Y: crop yield [bushels/acre]; R: seasonal rainfall [inches]; R*: threshold rainfall where the response turns [inches]; partial derivative [bushels/acre per inch]. Yield-per-inch on both sides — dimensionally consistent. Huff's statement: the positive rain-corn correlation 'holds up to a point and then quickly becomes a negative one' (p. 90).",
+   "assumptions": "A correlation demonstrated within a data range licenses description only within that range; extrapolation carries the implicit clauses 'everything else being equal' and 'present trends continuing' (p. 139), which Huff says are never satisfied. The response is assumed smooth enough to have a turning point rather than a discontinuity.",
+   "breakdown_regime": "Beyond R* the sign of the relationship reverses: above so many inches, more rain means less corn (waterlogging). The general breakdown is uncontrolled extrapolation: projecting 1947-52 TV adoption gives forty sets per family (p. 139); Lincoln's 1860-rate projection gives 251,689,914 Americans by 1930 (p. 141); Twain's Mississippi shortening extrapolates the river to a fishing rod (p. 141). Any linear trend carried past its support is in this regime.",
+   "timescales": [
+    "tau_0: one season's dose-response",
+    "tau_1: within-support trend estimation",
+    "tau_2: regime crossing as covariate drifts",
+    "tau_3: structural change invalidating the old support"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Play-calling dose-response kernel: aggressiveness (4th-down attempt rate, deep-shot frequency, blitz rate) versus EPA is rain-corn shaped — positive through the observed support, then negative as turnover and sack exposure dominate. The kernel rule: fit the response with a turning point (quadratic or regime-switching), record the support interval, and hard-flag any recommendation whose covariate lies outside it. Coach-Mind must never extrapolate a linear 'more aggression is better' trend past the data, exactly as the 1938 presidential commission could not extrapolate population trends past their regime (pp. 139-141).",
+    "source_operator": "p7",
+    "telemetry": "Observed support interval per covariate; estimated turning point R* with confidence band; out-of-support flag count on generated recommendations; sign of marginal effect at the recommended operating point; backtest error inside vs outside support."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "id": "t1",
+   "trace_id": "t1",
+   "think": "This book is not a statistics textbook; it is a catalog of broken invariants in the pipeline from measurement to representation to inference, written by a journalist in 1954 after collecting specimens from working statisticians through the American Statistical Association. That provenance matters for how we mine it. Huff supplies almost no formal derivations; what he supplies is a repeatable audit pattern: every chapter exhibits a transformation that preserves the numbers while destroying the meaning, and then names the missing figure that would have exposed it. The sovereign primitives I extracted are therefore mostly vetoes and consistency conditions rather than estimators, and that is precisely what a fail-closed corpus needs. The equal-chance test for random samples (p1) is a gate on the frame before any estimate is trusted. The mean-median-mode trichotomy (p2) is a type-check on the word 'average': three different functionals of the same data, coincident only under symmetry, and the income examples show how far apart they drift under right skew. The probable-error discussion (p3) is the book's most explicitly quantitative passage: a 3-point probable error on the Stanford-Binet, the 98±3 versus 101±3 example, and the derived one-in-four reversal probability. I formalized the half-coverage definition and its 0.6745 relation to the standard error because Huff states both coverage conventions side by side (half for probable error, about two-thirds for standard error), which pins the constant under normal errors. The comparison veto — never rank two figures whose error bands overlap — is the single most portable object in the book for a sports pipeline, because every per-player metric we compute is a small-sample estimate wearing a precise decimal costume. The cube-law chapter (p4) looked at first like a media-literacy anecdote, but it contains a genuine geometric invariant, the similar-solids scaling V ~ L^3, which Huff quotes from a geometry book and then applies to moneybags and blast furnaces. I kept it as a primitive for two reasons: the perceptual channel failure is real and measurable (a 2x data ratio rendered as 8x visual volume), and the same geometry is the allometric backbone of biomechanical size normalization, force as L^2 against mass as L^3. The exposure-rate primitive (p5) comes from the transportation chapter: fatalities per million passenger-miles, and the Navy-versus-civilian death-rate example which adds the second, subtler condition that populations must be comparable in structure, not just counted per unit exposure. The shifting-base primitive (p6) is the cleanest algebra in the book: (1-c)(1+r)=1, so a fifty percent cut demands a one hundred percent raise, and the Indianapolis wage story gives the worked counterexample where a 5% raise on the reduced base restores one-fifth of the cut, not the claimed one-fourth. Finally the rain-corn passage (p7) is the book's own statement of regime inversion: a correlation that is real and positive inside its support flips sign beyond a threshold. I promoted it to a primitive because breakdown regimes are first-class objects in our schema, and this is the rare popular source that states one explicitly rather than implying it. What I deliberately did not extract: the post-hoc taxonomy (chance correlation, bidirectional causation, common cause) is excellent doctrine but is stated qualitatively, so it lives in the cross-layer veto below rather than as a dimensionally-ledgered primitive; the index-number chapter's geometric-mean trick is a legitimate seventh candidate but its lesson is already covered by p2's functional-choice gate and p6's base discipline; and the five-question assay of the final chapter is a checklist, not an invariant. Every quote in the artifact was extracted programmatically as an exact substring of the normalized pymupdf text layer and re-verified before writing, including the OCR artifacts in the scan's text layer (for example 'inqniring' and 'numher' on page 78 and 'ot' for 'of' on page 55); I preserved them verbatim rather than silently repairing them, because the contract's verbatim gate is against the source as read, not against an idealized edition. Page references are PDF page indices (1-based), which run ahead of the printed page numbers by the front matter; the printed numbers are visible in the text layer and were cross-checked. The book is a 1954 trade monograph, not a journal article; the retraction scan found no retraction, withdrawal, erratum, or corrigendum language anywhere in the full text, and the text layer is complete across all 141 pages, so the source status is COMPLETE. No football origin is claimed for any of this mathematics — every Layer-2 entry is explicitly tagged as an isomorphism or a derived kernel, which is the honest direction of transfer: the statistics came first, from polling, advertising, and census work of the 1930s and 1940s, and we are mapping them onto the 22-player system, not retrojecting them into it. One more structural observation before closing the trace. The final chapter's five questions — who says so, how does he know, what's missing, did somebody change the subject, does it make sense — form a verification protocol that is isomorphic to a fail-closed gate: each question is a check that can independently block acceptance, and the burden of proof sits with the statistic, not the reader. The 'O.K. name' analysis is the sharpest piece of this protocol: an authority cited alongside data is not an authority standing behind the data, and the Cornell marriage study is the specimen — the data were Cornell's, the causal conclusion was the magazine writer's own, yet the prestige transferred. Our corpus gate enforces the same separation mechanically: a quote must be verbatim against the source, a locator must point at a real page, and a mapping must declare itself as a mapping rather than inheriting the source's authority. Huff also distinguishes saying from doing — the British bathing survey measures reported baths, not baths, and the census age-heaping at multiples of five measures rounding behavior, not demography. That distinction is the measurement-theoretic core of the whole book: every dataset records some behavior of the reporting apparatus, and the analyst's first job is to identify which behavior. For a corpus built on scanned sources, the apparatus includes the OCR layer itself, which is why the verbatim gate is checked against the text as extracted, artifacts and all.",
+   "retrocausal_genealogy": "Genealogy of the invariants, backward from the text. The probable-error convention Huff uses descends from nineteenth-century observational astronomy and psychophysics, where the 'probable error' (half-coverage band) was the standard precision report before Fisher's generation standardized on the standard error; Huff notes explicitly that most statisticians of his day had already switched, and that the Stanford-Binet kept the older convention. The similar-solids cube law is Euclidean geometry, Book XII lineage, which is why Huff can quote it from a school geometry book. The sampling doctrine — random, stratified random, the Literary Digest autopsy — crystallized between the 1936 Digest fiasco and the 1948 Gallup miss, both of which Huff cites as live evidence; the book is essentially a field report from that fifteen-year correction cycle. The shifting-base algebra has no single origin; it is commercial arithmetic, and Huff's specimens are newspaper wage stories and installment-loan contracts. Nothing here originates in sport, and the artifact claims none.",
+   "theory_of_mind": "Modeling the minds in the loop. Huff's implied author is a reformed burglar teaching lock-picking for self-defense: he assumes the reader is a busy, numerically anxious citizen who will grant numbers an authority they do not deserve — 'there is terror in numbers' — and that the adversary is usually not a liar but an incentivized selector (advertiser, union, management, publisher) who chooses among legitimate methods the one that flatters the client. The ASA chapter president who scolded Huff supplies the counter-mind: most distortion is incompetence, not chicanery — but Huff's rebuttal is that one-sided error distributions betray intent, since bungling should err in both directions. For our pipeline the lesson is to model every upstream data producer as an incentivized selector: charting vendors, grade providers, and injury reporters each have a favorite functional, a favorite base year, and a favorite truncation, and the audit must assume selection pressure even when no malice is present.",
+   "cross_layer_veto": "Cross-layer veto power granted to these primitives. Layer 0 (data): p1 vetoes any grade or tendency computed on a frame whose inclusion probabilities correlate with the measured outcome — the highlight-reel sample is inadmissible until reweighted. Layer 1 (estimation): p3 vetoes any strict player ranking whose error bands overlap; the output must be UNRESOLVED with a reversal probability attached. Layer 2 (representation): p4 vetoes any graphic whose rendered scale exponent differs from the data exponent; p2 vetoes any unqualified 'average' in a report. Layer 3 (decision): p6 vetoes staking plans sized on additive recovery intuition; p7 vetoes any recommendation whose covariate lies outside the fitted support. And the book's post-hoc doctrine — correlation may be chance, bidirectional, or common-cause (Presbyterian salaries and Havana rum both ride the price level) — vetoes causal language in Coach-Mind explanations unless a confounder audit has run. A veto from any layer blocks publication downstream; that is the fail-closed reading of Huff's five questions.",
+   "primitive_refs": [
+    "p1",
+    "p2",
+    "p3",
+    "p4",
+    "p5",
+    "p6",
+    "p7"
+   ]
+  }
+ ],
+ "universal_lens": "Through the universal lens this book is a field manual of non-commuting diagrams: measurement, aggregation, rendering, and inference each form a path from reality to a claimed fact, and every chapter exhibits a pair of paths that start from identical numbers and end at incompatible conclusions. The invariant that must commute is meaning-preservation under transformation; the book catalogs the transformations — biased selection, functional switching, band suppression, exponent mismatch, base shifting, support extrapolation — that break it, and the five-question assay is the commutativity check.",
+ "gsi_mapping": "For GSI (body and behavior): p3 supplies the measurement-error discipline for combine and physiological testing — no athlete comparison without ± bands and a reversal probability; p4 supplies the allometric size-normalization geometry (force ~ L^2, mass ~ L^3, relative strength ~ L^-1) and the perceptual audit of any body-metric visualization; p5 supplies exposure-normalized injury and load rates per 1000 player-hours with age/position standardization, plus the selected-cohort comparability gate; p2 supplies skew-aware summaries of salary and production distributions that feed behavioral-economics modules.",
+ "gse_mapping": "For GSE (Coach-Mind, DFS, tail-risk): p1 is the frame audit on charted/tracked snap samples before any tendency or grade is admitted; p3 is the overlapping-band veto on player rankings and start/sit edges; p2 forces functional-declared value summaries in lineup construction; p6 is the drawdown-asymmetry kernel r=c/(1-c) for bankroll risk-of-ruin and points-vs-percent reporting hygiene; p7 is the regime-inversion guard on aggressiveness dose-response kernels, forbidding extrapolation past observed support; and the post-hoc taxonomy gates causal claims in generated explanations."
+}

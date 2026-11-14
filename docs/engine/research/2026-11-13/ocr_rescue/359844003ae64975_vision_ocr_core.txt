@@ -1,0 +1,1378 @@
+========== PAGE 1 ==========
+(12) United States Patent
+Lazarus et al.
+US010967281B2
+(10) Patent No.:
+(45) Date of Patent:
+US 10.967.281 B2
+Apr. 6, 2021
+(54) AUTOMATIC FANTASY SPORTS DATA
+ANALYSIS METHOD AND APPARATUS
+(71) Applicant: VERIZON MEDIA INC., New York,
+NY (US)
+(72) Inventors: Michael Lazarus, Simi Valley, CA
+(US); Maxim Sviridenko, New York,
+NY (US); Justin Thaler, New York,
+NY (US)
+(73) Assignee: VERIZON MEDIA INC., New York,
+NY (US)
+(*) Notice:
+Subject to any disclaimer, the term of this
+patent is extended or adjusted under 35
+U.S.C. 154(b) by 0 days.
+(21) Appl. No.: 16/672,487
+(22) Filed:
+(65)
+Nov. 3, 2019
+Prior Publication Data
+US 2020/0129867 A1 Apr. 30, 2020
+Related U.S. Application Data
+(63) Continuation of application No. 15/197,875, filed on
+Jun. 30, 2016, now Pat. No. 10,463,975.
+(51) Int. Cl.
+A63F 13/828
+A63B 71/06
+(52) U.S. Cl.
+CPC
+(2014.01)
+(2006.01)
+(Continued)
+A63F 13/828 (2014.09); A63B 71/06
+(2013.01); A63B 71/0616 (2013.01); A63F
+13/35 (2014.09); A63F 13/46 (2014.09); A63F
+13/65 (2014.09); A63F 13/795 (2014.09);
+A63F 2300/69 (2013.01); A63F 2300/8052
+(2013.01)
+(58) Field of Classification Search
+CPC
+(56)
+A63F 13/828; A63F 13/65; A63F 13/69;
+A63F 13/795; A63F 2300/8052; A63B
+71/06; A63B 71/0616
+See application file for complete search history.
+References Cited
+U.S. PATENT DOCUMENTS
+5,860,862 A
+6,289,348 B1
+1/1999 Junkin
+9/2001 Richard et al.
+(Continued)
+OTHER PUBLICATIONS
+Zelvin, Alex; "Behind FanDuel's Salary Cap"; RotoGrinders; FanDuel
+Fantasy Sports Salary Cap Calculation; https://rotogrinders.com/
+articles/behind-fanduel-s-salary-cap-956; 4 pages (2011).
+(Continued)
+Primary Examiner William H McCulloch, Jr.
+(74) Attorney, Agent, or Firm —
+Greenberg Traurig, LLP
+(57)
+James J. DeCarlo;
+ABSTRACT
+Disclosed are systems and methods for improving interac-
+tions with and between computers in content generating,
+searching, hosting and/or providing systems supported by or
+configured with personal computing devices, servers and/or
+platforms. The systems interact to identify and retrieve data
+within or across platforms, which can be used to improve the
+quality of data used in processing interactions between or
+among processors in such systems. The disclosed systems
+and methods provide systems and methods for automatic
+fantasy sports data analysis, including analysis of data to
+equalize player attractiveness in contestant composition of a
+fantasy sports team.
+20 Claims, 8 Drawing Sheets
+100
+APPLICATION
+SERVER
+SEARCH
+SERVER
+102
+MOBILE
+DEVICE
+MOBILE
+DEVICE
+120
+108
+103
+MOBILE
+DEVICE
+WIRELESS
+NETWORK
+110
+NETWORK
+CONTENT
+SERVER
+CONTENT
+DATABASE
+105
+106
+107
+104
+CLIENT
+DEVICE
+101
+130
+AD
+SERVER
+
+========== PAGE 2 ==========
+US 10,967,281 B2
+Page 2
+(51)
+Int. Cl.
+A63F 13/795
+(2014.01)
+A63F 13/65
+(2014.01)
+A63F 13/46
+(2014.01)
+A63F 13/35
+(2014.01)
+(56)
+References Cited
+U.S. PATENT DOCUMENTS
+6,430,539 B1 8/2002 Lazarus et al.
+6,669,565 B2 12/2003 Liegey
+7,351,150 B2
+4/2008 Sanchez
+11/2009 Kasten
+2009/0011835 A1
+2009/0023495 A1
+2009/0156312 A1
+2010/0100204 A1
+2011/0183731 A1
+2012/0095577 Al
+2012/0149472 A1
+2012/0149473 A1
+2012/0220375 Al
+2012/0270614 A1
+2012/0270615 A1
+2012/0270619 A1
+2012/0283858 A1
+2012/0289340 A1
+2013/0017874 Al
+2013/0079130 A1
+2015/0057074 A1
+2017/0095739 A1
+2018/0001215 A1
+2019/0143225 A1*
+1/2009
+1/2009
+Hansen et al.
+Koustas et al.
+6/2009 Ng et al.
+4/2010 Ng et al.
+7/2011 Barry
+4/2012 Golding
+6/2012 Miller
+6/2012 Moore et al.
+8/2012
+Williams
+10/2012
+Robinson
+10/2012
+10/2012
+11/2012 Lapadula
+11/2012 Pawson
+Jones et al.
+Nicholas et al.
+1/2013
+Trdinich et al.
+3/2013
+2/2015
+Takacs
+Geller et al.
+*
+7/2010 Nicholas et al.
+11/2011 Webb et al.
+12/2017 Hood
+1/2018 Nangia
+1/2018 Moller
+5/2018 Odom
+3/2019 Baazov
+7,618,312 B1
+7,762,878 B2
+8,052,521 B2
+9,849,381 B2
+9,855,503 B2
+9,878,234 B2
+9,984,535 B2
+10,220,321 B2 *
+10,248,290 B2
+10,258,890 B2*
+10.343.074 B2*
+10,463,975 B2
+10,737,182 B2*
+10,744,415 B2 *
+2002/0107590 A1
+2006/0064184 A1
+2006/0105827 Al 5/2006 Metzger et al.
+2006/0217198 A1 9/2006 Johnson
+2006/0258421 A1 11/2006 Nicholas et al.
+2006/0259389 Al
+2007/0021853 A1
+2007/0054718 A1
+2007/0203591 Al
+2007/0233585 A1
+2008/0026804 Al
+2008/0096664 Al
+2008/0102911 A1
+4/2019 Galfond et al.
+4/2019 Amaitis
+7/2019 Thormann
+11/2019 Lazarus
+8/2020 Martin
+8/2020 Sloan
+8/2002 Liegey
+3/2006 Ream et al.
+11/2006 Richter
+Bowerman
+1/2007 Ma et al.
+3/2007 Del Prado
+8/2007
+10/2007 Ben Simon et al.
+1/2008 Baray et al.
+4/2008 Baray et al.
+5/2008
+2008/0153589 Al
+2008/0215168 A1
+Campbell et al.
+6/2008 Baray et al.
+9/2008 Charchian
+2008/0280685 Al 11/2008 Hansen et al.
+2008/0281444 Al
+11/2008 Krieger et al.
+A63F 13/828
+A63F 13/828
+A63F 13/65
+A63B 71/06
+A63F 13/828
+A63F 13/828
+4/2017 Thaler et al.
+1/2018 Lazarus et al.
+5/2019 Baazov
+2019/0176041 A1* 6/2019 Thaler
+2019/0176042 A1* 6/2019 Thaler
+2019/0362600 A1* 11/2019 Odom
+2020/0061476 A1* 2/2020 Gabrail
+2020/0302745 A1* 9/2020 Merati
+2020/0360822 A1* 11/2020 Mix
+OTHER PUBLICATIONS
+A63F 13/35
+463/25
+A63F 13/65
+G07F 17/3276
+.. G07F 17/3288
+A63F 13/55
+G07F 17/3244
+A63F 13/46
+Allen, Sam; "How do daily fantasy sports sites (such as Fanduel)
+determine athletes' salary?"; https://www.quora.com/How-do-daily-
+fantasy-sports-sites-such-as-Fanduel-determine-athletes-salary/answer/
+Sam-Allen-3?srid=onLf&share=1; 1 page (2012).
+Paradise, Jason; "How do daily fantasy sports sites (such as Fanduel)
+determine athletes' salary?"; https://www.quora.com/How-do-daily-
+fantasy-sports-sites-such-as-Fanduel-determine-athletes-salary/answer/
+Jason-Paradise?srid=onLf&share=1; 1 page (2012).
+Blinders; “FSL Shares How They Calculate Player Salaries", Fan-
+tasy Sports Live Daily Fantasy Sports Salary Cap Calculation;
+https://rotogrinders.com/articles/fsl-shares-how-they-calculate-player-
+salaries-930; 5 pages (2011).
+* cited by examiner
+
+========== PAGE 3 ==========
+U.S. Patent
+Apr. 6, 2021
+Sheet 1 of 8
+US 10,967,281 B2
+100
+APPLICATION
+SERVER
+SEARCH
+SERVER
+102
+MOBILE
+DEVICE
+MOBILE
+DEVICE
+108
+120
+103
+MOBILE
+DEVICE
+WIRELESS
+NETWORK
+110
+NETWORK
+CONTENT
+SERVER
+CONTENT
+DATABASE
+104
+101
+CLIENT
+DEVICE
+105
+Figure 1
+106
+107
+AD
+SERVER
+130
+
+========== PAGE 4 ==========
+U.S. Patent
+Apr. 6, 2021
+Sheet 2 of 8
+US 10,967,281 B2
+Figure 2
+MOBILE
+DEVICE
+200
+222
+CPU
+250
+226
+NETWORK
+POWER
+SUPPLY
+INTERFACE
+C 252
+232
+C
+AUDIO
+INTERFACE
+RAM
+254
+241
+OPERATING
+DISPLAY
+SYSTEM
+256
+242
+APPLICATIONS
+KEYPAD
+245
+C
+258
+SEARCH
+CLIENT
+ILLUMINATOR
+260
+264
+234
+INPUT/OUTPUT
+INTERFACE
+ROM
+240
+r
+GPS
+262
+BIOS
+HAPTIC
+INTERFACE
+230
+266
+MEMORY
+CAMERA(S)/
+SENSORS
+
+========== PAGE 5 ==========
+NETWORK
+310
+FANTASY DATA
+ANALYSIS ENGINE
+302
+FACTOR
+DETERMINATION
+MODULE
+DATABASE
+320
+304
+FANTASY SALARY
+DETERMINATION
+MODULE
+Figure 3
+300
+U.S. Patent
+Apr. 6, 2021
+Sheet 3 of 8
+US 10,967,281 B2
+
+========== PAGE 6 ==========
+U.S. Patent
+Apr. 6, 2021
+Sheet 4 of 8
+US 10,967,281 B2
+RECEIVE FANTASY DATA
+ANALYSIS REQUEST
+400
+DETERMINE A SET OF FACTORS FOR EACH
+OF A PLURALITY OF ATHLETES
+DETERMINE A SET OF
+WEIGHTS FOR THE SET OF FACTORS
+402
+404
+406
+DETERMINE A FANTASY SALARY FOR EACH
+408
+ATHLETE OF THE PLURALITY USING THE
+ATHLETE'S SET OF FACTORS AND
+CORRESPONDING WEIGHTS
+COMMUNICATE THE
+DETERMINED FANTASY SALARY FOR EACH
+ATHLETE OF THE PLURALTIY
+Figure 4
+410
+
+========== PAGE 7 ==========
+U.S. Patent
+Apr. 6, 2021
+Sheet 5 of 8
+US 10,967,281 B2
+<projection type="daily" ID="5909" game_date="5/27/2016"
+gameID="1599012"
+gp="1"
+batGS="0.9646739"
+batAB="3.66658"
+batR="0.4860014"
+batH="0.9860885"
+bat1B="0.515126"
+bat2B="0.2434251"
+bat3B="7.221418E-04"
+batHR="0.2268152"
+batRBI="0.7100365"
+batSH="0"
+batSF="0.0502618"
+batSB="6.803823E-04"
+batCS="0"
+batBB="0.5214334"
+batk="0.7062368"
+batGIDP="0.1265511"
+batTB="1.911404"
+batPO="0.346995"
+batAst="3.401912E-02"
+batE="6.803823E-03"
+batFldPct="0.9824561"
+batAvg="0.2689396"
+batOBP="0.3599684"
+batSLG="0.5213042"
+batOPS="0.8812726"
+batXBH="0.4709625"
+batNSB="6.803823E-04"
+batSBPct="1"
+batPA="4.266592"
+BatOFAst="0"
+batDPTurned="1.360765E-02"
+batCl="0"
+pitchApp="1"
+pitchGS="0" pitch Innings="0" pitchW="0" pitchL="0" cg="0"
+shutouts="0" sv="0" outs="0" pitchHits="0" pitchBF="0" pitchRuns="0"
+pitchER="0" pitchHR="0" pitchBB="0" pitchK="0" pitchWP="0"
+bk="0" hld="0" pitchTB="0" era="0" whip="0" kperbb="0" kper9="0"
+pitch1b="0" pitch2b="0" reliefApp="1" pitchOBP="0" wpct="0" hper9="0"
+bbper9="0" qs="0" bs="0" netsy="0" svhld="0" netsvhld="0"/>
+Figure 5
+
+========== PAGE 8 ==========
+U.S. Patent
+Apr. 6, 2021
+Sheet 6 of 8
+US 10,967,281 B2
+MLB (Non-Pitchers):
+F1: 30% Fantasy Point Projection
+PON-
+50% Past Performance over last 30 games
+15% Past Performance over last 80 games
+Past Performance over last 5 games
+Scaling Coefficient
+Global Salary Floor
+F2:
+F3:
+F4:
+5%
+A:
+2.62
+GSF: $7
+MLB (Pitchers):
+F1:
+60%
+F2:
+25%
+F3: 15%
+A: 2.31
+GSF: $25
+Fantasy Point Projection
+Past Performance over last 5 games
+Past Performance over all starts for current season
+Scaling Coefficient
+Global Salary Floor
+NFL (QB, RB, WR, TE, D):
+A:
+Fantasy Point Projection
+F1: 50%
+F2: 25% Past Performance over last 4 games
+F3: 25% Past Performance over last 10 games
+F4: 15% Past Performance over last 80 games
+2.02 QB Scaling Coefficient
+2.10 WR Scaling Coefficient
+2.36 RB Scaling Coefficient
+2.20 TE and D Scaling Coefficient
+GSF: $20 QB Global Salary Floor
+$10
+Non-QB Global Salary Floor
+NHL (Goalies):
+F1: 40% Fantasy Point Projection
+F2: 5%
+Past Performance over last 5 games
+F3:
+F4:
+35%
+Past Performance over last 15 games
+20% Past Performance over last 40 games
+A: 2.9
+Scaling Coefficient
+GSF: $20 Global Salary Floor
+NHL (Non-Goalies):
+F1:
+40%
+F2: 15%
+AW
+Fantasy Point Projection
+Past Performance over last 5 games
+30% Past Performance over all last 15 games
+15% Past Performance over last 40 games
+F3:
+F4:
+A:
+GSF: $12
+3.00
+Scaling Coefficient
+Global Salary Floor
+Figure 6A
+
+========== PAGE 9 ==========
+U.S. Patent
+Apr. 6, 2021
+Sheet 7 of 8
+US 10,967,281 B2
+NBA:
+F1:
+15%
+F2: 20%
+F3: 65%
+1.0
+FFFAO0
+A:
+GSF: $10
+OP: $2
+Fantasy Point Projection
+Past Performance over last 5 games
+Past Performance over last 30 games
+Scaling Coefficient
+Global Salary Floor
+Salary increase for
+1-game series:
+2-game series:
+3-game series:
+4-game series:
+5-game series:
+6-game series:
+7-game series:
+8-game series:
+9-game series:
+10-game series:
+11-game series:
+12-game series:
+13-game series:
+14-game series:
+15-game series:
+athlete using following criteria:
+athlete owned 2x more than the
+expected average ownership
+in the previous contest where the
+athlete appears
+athlete is owned ≥ 66.0% of lineups
+athlete is owned ≥ 44.4% of lineups
+athlete is owned > 33.3% of lineups
+athlete is owned ≥ 26.6% of lineups
+athlete is owned > 22.2% of lineups
+athlete is owned ≥ 19.0% of lineups
+athlete is owned ≥ 16.6% of lineups
+athlete is owned ≥ 14.8% of lineups
+athlete is owned ≥ 13,4% of lineups
+athlete is owned > 12.2% of lineups
+athlete is owned ≥ 11.2% of lineups
+athlete is owned ≥ 10.2% of lineups
+athlete is owned ≥ 9.6% of lineups
+athlete is owned > 8.8% of lineups
+A maximum of one series per day is used for the
+percentage-owned adjustment (the series with the most
+contests in a given day is used)
+The maximum salary for a NBA player at any point this
+season is capped, e.g., at $60 until late-season and then
+$54.
+Figure 6B
+
+========== PAGE 10 ==========
+726
+NETWORK SERVICE
+PROVIDER
+730
+INTERNET
+724
+INTERNET
+$
+HOST
+NETWORK LINK 734
+732
+SERVER(S)
+734
+712
+714
+716
+720
+722
+PROCESSING
+NETWORK
+UNIT(S)
+INTERFACE
+KEYBOARD
+INTERFACE
+POINTING
+DEVICE
+INTERFACE
+CD/DVD
+MISC.OTHER.
+DRIVE
+INTERFACE
+INTERFACE(S)
+702.
+MEMORY
+COMPUTER BUS(ES)
+704
+706
+-708
+STORAGE
+MEDIUM /
+MEDIA
+MEDIA DISK
+INTERFACE
+Figure 7
+-710
+DISPLAY
+INTERFACE
+700
+U.S. Patent
+Apr. 6, 2021
+Sheet 8 of 8
+US 10,967,281 B2
+
+========== PAGE 11 ==========
+1
+US 10,967,281 B2
+AUTOMATIC FANTASY SPORTS DATA
+ANALYSIS METHOD AND APPARATUS
+CROSS REFERENCE TO RELATED
+APPLICATIONS
+This application claims the benefit of and is a continuation
+of U.S. patent application Ser. No. 15/197,875, filed Jun. 30,
+2016, titled "Automatic Fantasy Sports Data Analysis
+Method and Apparatus", which is incorporated by reference
+herein in its entirety.
+FIELD OF THE DISCLOSURE
+The present disclosure relates to analyzing short-term
+fantasy sports data, including historical data involving the
+performance of athletes in real world competitions and the
+popularity athletes with fantasy sport contestants, for use in
+short-term fantasy sports contests.
+BACKGROUND
+5
+10
+15
+2
+athlete's fantasy salary counts against the fantasy salary cap.
+As such, the contestant has to consider the impact of an
+athlete's fantasy salary relative to the fantasy cap when
+building a fantasy team. It is desirable to be able to mimic,
+to some extent, team drafting (or team building) in the real
+world in an online fantasy sports system; however, there are
+aspects that make an online fantasy sports draft (or team
+building exercise) uniquely different from the real world.
+For example, in an online fantasy sports system, the same
+player can be drafted by multiple contestants and for mul-
+tiple teams, which can result in duplication across fantasy
+sports teams. When contestants draft identical, nearly iden-
+tical or very similar teams, the contestants score the same, or
+a similar, number of points in the contest, which makes it
+difficult to rank contestants for purposes of determining the
+wining contestants and/or awarding prizes.
+The present disclosure provides novel systems and meth-
+ods for automatic fantasy sports data analysis, including
+analysis of data to equalize player attractiveness in contes-
+20 tant composition of a fantasy sports team. Attractiveness
+equalization, e.g., making enough athletes roughly equally
+attractive, minimizes lineup duplications, e.g., minimizes
+the likelihood that contestants draft identical, nearly identi-
+cal or very similar teams.
+Daily fantasy contests are a fast growing market. By way
+of a non-limiting example, in fantasy sports, participants
+build a team of real-world athletes, and the team earns points 25
+based on the actual real world performance of the athletes in
+real world competitions. For example, if a participant in a
+fantasy basketball league has Lebron James on his or her
+team, then the user will earn points based on the statistics
+Lebron James produces in actual basketball games.
+SUMMARY
+30
+35
+Traditional fantasy sports contests typically run for an
+entire professional sports season. Short-term fantasy sports
+contests typically run for a much shorter period of time, e.g.,
+one or more days, a week, etc. The Fantasy Sports Trade
+Association Estimates that in 2015 more than 56 million
+people actively played traditional fantasy sports; and this
+number continually increases. Online cash prize tourna- 40
+ments, such as short-term (e.g. daily, weekly, series) fantasy
+sports contests, are quickly becoming a central part of the
+sports industry. However, there are a number of issues
+associated with running a large-scale, prize driven, online
+fantasy sports system.
+45
+50
+Conventional fantasy sports contests allow a contestant
+(or participant or entrant) to build a fantasy sports team for
+a particular fantasy sports contest by "drafting" actual
+players, or athletes, that play in the real world contest(s) on
+which the fantasy sports contest is based to the fantasy sports
+team (or lineup) of the contestant. In one example, a
+contestant that wishes to participate in a fantasy sports
+basketball contest can draft, e.g., add, Lebron James to the
+contestant's fantasy basketball team. Each athlete earns
+"fantasy points" based on each drafted athlete's performance 55
+during the period, e.g., one day, of the fantasy sports contest.
+The "fantasy points" earned (or scored) by an athlete are
+earned by a contestant that included the athlete in the
+contestant's fantasy sports team. Each contestant participat-
+ing in a particular contest are ranked relative to each other 60
+contestant based on the number of fantasy points that the
+contestant's team scores, and prize money is paid out based
+on rank.
+One of the issues associated with running a large-scale
+online fantasy sports system involves “drafting” players to a 65
+fantasy sports team. In the real world, a salary cap can be
+imposed on a contestant building a team, such that each
+In order for an online fantasy sports system to impose a
+fantasy salary cap on a contestant, a fantasy salary for each
+athlete that is eligible for selection by a contestant must be
+set before a contest is offered online by the system. For a
+number of reasons, a manual approach to determining ath-
+letes' salaries is at the very least not viable. Firstly, a contest
+provider, such as Yahoo! Sports, is not permitted to alter
+athletes' fantasy salaries once the contest provider
+announces the fantasy salaries. This makes accuracy in
+fantasy salary determinations a key consideration; and, a
+manual approach can easily introduce inaccuracies. In addi-
+tion to the need for accuracy, a need for timely determina-
+tions makes manual determination of fantasy salaries for
+athletes unacceptable. Contests are typically published by a
+contest provider many hours or days before the start time of
+the real-world competition on which the contest is based.
+Making a contest available as soon as possible benefits both
+the contestant and the contest provider. The contestant
+benefits by having more time to review available contests
+and draft a team of athlete(s) for the contest; and, the contest
+provider benefits by an increased likelihood that the provid-
+er's published contest is filled with contestants before the
+contest must be closed to new contestants. By publishing a
+contest as soon as possible, a contest provider has more time
+to judge the demand and to add additional contests to meet
+the demand. However, a contest cannot be published by a
+provider, and thereby made available to users of an online
+fantasy sports system, until the athletes' fantasy salaries are
+set. An automated approach is more accurate, more efficient
+and timelier than a manual approach. An automated
+approach can accurately, efficiently and speedily analyze
+historical data involving the performance of athletes in real
+world competitions and the popularity athletes with fantasy
+sport contestants to generate the athletes' fantasy salaries
+required to publish a fantasy sports.
+In addition to the above reasons, the sheer number of
+fantasy salaries that must be determined on a daily basis is
+another reason that a manual approach is not a viable
+approach. As an example, an online fantasy sports system
+can have, on average, over 1000 contests per day and
+involve a number of different sports, and a number of
+athletes per sport. A contest can be based on any type of
+sport, e.g., soccer, baseball, basketball, football, hockey,
+
+========== PAGE 12 ==========
+US 10,967,281 B2
+3
+5
+tennis, boxing, auto racing, golf, etc., at various levels, e.g.,
+professional, collegiate, international, national, etc., both
+male and female athletes, etc. On a daily basis, for example,
+approximately 750 fantasy salaries for Major League Base-
+ball (MLB) athletes must be determined before a fantasy
+contest provider can publish a MLB fantasy sports contests,
+approximately 240 fantasy salaries must be determined for
+National Basketball Association (NBA) athletes, 350 fantasy
+salaries for National Hockey League (NHL) athletes, and
+175 fantasy salaries for European Premier League (EPL) 10
+soccer athletes. In addition and on a weekly basis, approxi-
+mately 540 fantasy salaries for National Football League
+(NFL) athletes must be determined before a fantasy football
+contest can be published by a contest provider. Furthermore
+and as discussed above, each one of the 750 MLB fantasy
+salaries, 240 NBA fantasy salaries, 350 NHL fantasy sala-
+ries, 175 EPL fantasy salaries, 540 NFL fantasy salaries,
+etc., must be accurately, timely and efficiently determined,
+which further points to the need for an automated approach.
+To summarize, the need for accuracy and timeliness in 20
+determining fantasy salaries, the significant number fantasy
+salaries that must be determined, the frequency at which the
+fantasy salaries must be updated each point to a need for an
+automated approach for determining fantasy sports salaries,
+such as that provided with the systems and methods pro- 25
+vided herein.
+15
+30
+According to some embodiments, the disclosed systems
+and methods first determine a value for each of a number of
+factors used in determining an athlete's fantasy salary and
+then use a weighted combination, e.g., a linear combination,
+of values determined for the factors to make a fantasy salary
+determination for each athlete of a plurality of athletes. The
+factors include a fantasy point projection factor (or fantasy
+point projection), a number of past performance factors (or
+past performance(s)), and an ownership factor (or owner- 35
+ship). For an athlete, the fantasy point projection is a
+prediction of the number of fantasy points the athlete is
+likely to score in a real world competition if the athlete.
+participates, or starts, in the real world competition. The
+fantasy point projection takes into account specifics of the 40
+real world competition, such as the quality of the athlete's
+opponent, whether the athlete is playing at home or on the
+road, whether the athlete tends to perform better or worse at
+home or on the road, etc. The number of past performance
+factors may comprise, for example, one or more of an 45
+immediate past performance factor (or immediate past per-
+formance), recent past performance factor (or recent past
+performance) and a historical past performance factor (or
+historical past performance). The historical past perfor-
+mance factor provides a long-term baseline of the athlete's 50
+past performance, and the immediate and recent past per-
+formance factors are responsive to “recent” real world
+circumstances that are likely to impact the athlete's long-
+term baseline. Examples of real world circumstances likely
+to impact an athlete's performance include the athlete's 55
+health, change in the athlete's role on the team, etc. The
+historical scope (or range) of each performance factor may
+vary depending on sport, athlete position, and number of
+"starts” by the athlete considered in determining each of
+these performance values.
+60
+The ownership factor takes into account intangible
+aspects, such as an athlete's likability or popularity. An
+athlete's likability or popularity can be determined using
+data from past fantasy sports contests for which the athlete
+was available for selection by contestants, such as and 65
+without limitation the percentage of contestants that drafted
+the athlete, the percentage of fantasy teams (built by con-
+4
+testants) that included the athlete, etc. In some embodi-
+ments, the ownership factor can be used as an incentive or
+a disincentive. For example, the ownership factor can be
+varied in order to increase a popular athlete's fantasy salary,
+thereby acting as a disincentive for selection by a contestant
+working with a salary cap. As yet another example, the
+ownership factor can be decreased as an incentive for
+selection. In other words, the ownership factor for an athlete
+can be varied based on a determined popularity of the athlete
+to make the athlete more or less attractive to contestants.
+The disclosed systems and methods use the fantasy point
+projection, past performance and ownership factors deter-
+mined for a given athlete to determine the athlete's fantasy
+salary. Each factor may have an associated weight that can
+be used in the fantasy salary determination for the athlete.
+The weights assigned to each factor, which can vary, can be
+reflective of a desired importance of each factor on the salary
+determination. As is described in more detail herein, a global
+salary floor, or global minimum fantasy salary threshold, can
+be set and used to verify that an athlete's fantasy salary is at
+least equal to the global salary floor. In addition, an indi-
+vidual salary floor, or individual minimum threshold salary,
+can be set for an individual athlete.
+As discussed below in more detail, the fantasy salaries
+automatically determined for a plurality of athletes in accor-
+dance with embodiments of the present disclosure can be
+published with a contest by an online fantasy sports system,
+and used to limit, along with a fantasy sports salary cap set
+for a contest, a fantasy sports contestant's selection of
+athletes for a given contest. The determined fantasy salaries
+can be published by displaying the fantasy salaries on a
+display at a contestant's (e.g., an online fantasy sports.
+system user) computing device, for example.
+It will be recognized from the disclosure herein that
+embodiments of the instant disclosure provide improve-
+ments to a number of technology areas, for example those
+related to systems and processes that handle or process
+fantasy sports contest generation and delivery to users over
+the internet. The disclosed systems and methods can effec-
+tuate increased speed, efficiency and accuracy in the ways
+that users can access and participate in contests offered by
+online fantasy sports systems. Users are provided with
+contests on a timely basis, and contest providers are pro-
+vided with an automated tool which accurately, efficiently
+and speedily determines athlete salaries for each contest.
+In accordance with one or more embodiments, a method
+is disclosed which includes receiving, at a computing
+device, a request to determine a plurality of fantasy salaries
+for use with a number of fantasy sports contests to be made
+available to users of an online fantasy sports system, the
+plurality of fantasy salaries corresponding to a plurality of
+athletes and a plurality of real world sports competitions on
+which each contest of the number is based; determining, at
+the computing device, a plurality of sets of factors for the
+plurality of athletes, the set of factors determined for an
+athlete of the plurality of athletes and used in a fantasy salary
+determination for the athlete comprising: a fantasy point
+projection factor, the fantasy point projection factor is an
+estimate of a number of fantasy points that the athlete is
+likely to score; a number of past performance factors, each
+past performance factor of the number representing a num-
+ber of fantasy points scored by the athlete over a corre-
+sponding range of past real world competitions in which the
+athlete participated; and an ownership factor for an athlete of
+the plurality, the ownership factor representing a popularity
+of the athlete with users of the online fantasy sports system;
+and determining, using the computing device, a plurality of
+
+========== PAGE 13 ==========
+10
+5
+US 10,967,281 B2
+fantasy sports salaries corresponding to the plurality of
+athletes, the fantasy sports salary determination for the
+athlete of the plurality of athletes comprising a combination
+of the fantasy point projection factor, the number of past
+performance factors and the ownership factor in the set of
+factors determined for the athlete.
+In accordance with one or more embodiments, a non-
+transitory computer-readable storage medium is provided,
+the non-transitory computer-readable storage medium tan-
+gibly storing thereon, or having tangibly encoded thereon,
+computer readable instructions that when executed cause at
+least one processor to perform a method for automatically
+determining a fantasy salary for each athlete of a plurality of
+athletes using a set of factors determined for each athlete of
+the plurality.
+5
+10
+15
+In accordance with one or more embodiments, a system is
+provided that comprises one or more computing devices
+configured to provide functionality in accordance with such
+embodiments. In accordance with one or more embodi-
+ments, functionality is embodied in steps of a method 20
+performed by at least one computing device. In accordance
+with one or more embodiments, program code (or program
+logic) executed by a processor(s) of a computing device to
+implement functionality in accordance with one or more
+such embodiments is embodied in, by and/or on a non- 25
+transitory computer-readable medium.
+DRAWINGS
+The above-mentioned features and objects of the present
+disclosure will become more apparent with reference to the
+following description taken in conjunction with the accom-
+panying drawings wherein like reference numerals denote
+like elements and in which:
+30
+FIG. 1 is a schematic diagram illustrating an example of 35
+a network within which the systems and methods disclosed
+herein could be implemented according to some embodi-
+ments of the present disclosure;
+FIG. 2 depicts is a schematic diagram illustrating an
+example of client device in accordance with some embodi- 40
+ments of the present disclosure;
+FIG. 3 is a schematic block diagram illustrating compo-
+nents of an exemplary system in accordance with embodi-
+ments of the present disclosure;
+FIG. 4 is a flowchart illustrating steps performed in
+accordance with some embodiments of the present disclo-
+sure;
+FIG. 5 provides an illustration of data which can be used
+in a fantasy point projection determination in accordance
+with one or more embodiments of the present disclosure;
+FIGS. 6A and 6B provide examples of variables which
+can be used in an athlete fantasy salary determination in
+accordance with one or more embodiments of the present
+disclosure; and
+45
+50
+FIG. 7 is a block diagram illustrating the architecture of 55
+an exemplary hardware device in accordance with one or
+more embodiments of the present disclosure.
+DETAILED DESCRIPTION
+Subject matter will now be described more fully herein-
+after with reference to the accompanying drawings, which
+form a part hereof, and which show, by way of illustration,
+specific example embodiments. Subject matter may, how-
+ever, be embodied in a variety of different forms and,
+therefore, covered or claimed subject matter is intended to
+be construed as not being limited to any example embodi-
+60
+65
+6
+ments set forth herein; example embodiments are provided
+merely to be illustrative. Likewise, a reasonably broad scope
+for claimed or covered subject matter is intended. Among
+other things, for example, subject matter may be embodied
+as methods, devices, components, or systems. Accordingly,
+embodiments may, for example, take the form of hardware,
+software, firmware or any combination thereof (other than
+software per se). The following detailed description is,
+therefore, not intended to be taken in a limiting sense.
+Throughout the specification and claims, terms may have
+nuanced meanings suggested or implied in context beyond
+an explicitly stated meaning. Likewise, the phrase "in one
+embodiment” as used herein does not necessarily refer to the
+same embodiment and the phrase “in another embodiment”
+as used herein does not necessarily refer to a different
+embodiment. It is intended, for example, that claimed sub-
+ject matter include combinations of example embodiments
+in whole or in part.
+In general, terminology may be understood at least in part
+from usage in context. For example, terms, such as "and",
+“or”, or “and/or,” as used herein may include a variety of
+meanings that may depend at least in part upon the context
+in which such terms are used. Typically, “or” if used to
+associate a list, such as A, B or C, is intended to mean A, B,
+and C, here used in the inclusive sense, as well as A, B or
+C, here used in the exclusive sense. In addition, the term
+“one or more" as used herein, depending at least in part upon
+context, may be used to describe any feature, structure, or
+characteristic in a singular sense or may be used to describe
+combinations of features, structures or characteristics in a
+plural sense. Similarly, terms, such as “a," "an," or "the,”
+again, may be understood to convey a singular usage or to
+convey a plural usage, depending at least in part upon
+context. In addition, the term “based on" may be understood
+as not necessarily intended to convey an exclusive set of
+factors and may, instead, allow for existence of additional
+factors not necessarily expressly described, again, depend-
+ing at least in part on context.
+The present disclosure is described below with reference
+to block diagrams and operational illustrations of methods
+and devices. It is understood that each block of the block
+diagrams or operational illustrations, and combinations of
+blocks in the block diagrams or operational illustrations, can
+be implemented by means of analog or digital hardware and
+computer program instructions. These computer program
+instructions can be provided to a processor of a general
+purpose computer to alter its function as detailed herein, a
+special purpose computer, ASIC, or other programmable
+data processing apparatus, such that the instructions, which
+execute via the processor of the computer or other program-
+mable data processing apparatus, implement the functions/
+acts specified in the block diagrams or operational block or
+blocks. In some alternate implementations, the functions/
+acts noted in the blocks can occur out of the order noted in
+the operational illustrations. For example, two blocks shown
+in succession can in fact be executed substantially concur-
+rently or the blocks can sometimes be executed in the
+reverse order, depending upon the functionality/acts
+involved.
+These computer program instructions can be provided to
+a processor of: a general purpose computer to alter its
+function to a special purpose; a special purpose computer;
+ASIC; or other programmable digital data processing appa-
+ratus, such that the instructions, which execute via the
+processor of the computer or other programmable data
+processing apparatus, implement the functions/acts specified
+
+========== PAGE 14 ==========
+7
+US 10,967,281 B2
+in the block diagrams or operational block or blocks, thereby
+transforming their functionality in accordance with embodi-
+ments herein.
+15
+For the purposes of this disclosure a computer readable
+medium (or computer-readable storage medium/media) 5
+stores computer data, which data can include computer
+program code (or computer-executable instructions) that is
+executable by a computer, in machine readable form. By
+way of example, and not limitation, a computer readable
+medium may comprise computer readable storage media, for 10
+tangible or fixed storage of data, or communication media
+for transient interpretation of code-containing signals. Com-
+puter readable storage media, as used herein, refers to
+physical or tangible storage (as opposed to signals) and
+includes without limitation volatile and non-volatile, remov-
+able and non-removable media implemented in any method
+or technology for the tangible storage of information such as
+computer-readable instructions, data structures, program
+modules or other data. Computer readable storage media
+includes, but is not limited to, RAM, ROM, EPROM, 20
+EEPROM, flash memory or other solid state memory tech-
+nology, CD-ROM, DVD, or other optical storage, magnetic
+cassettes, magnetic tape, magnetic disk storage or other
+magnetic storage devices, or any other physical or material
+medium which can be used to tangibly store the desired 25
+information or data or instructions and which can be
+accessed by a computer or processor.
+For the purposes of this disclosure the term "server"
+should be understood to refer to a service point which
+provides processing, database, and communication facili- 30
+ties. By way of example, and not limitation, the term
+"server" can refer to a single, physical processor with
+associated communications and data storage and database
+facilities, or it can refer to a networked or clustered complex
+of processors and associated network and storage devices, as 35
+well as operating software and one or more database systems
+and application software that support the services provided
+by the server. Servers may vary widely in configuration or
+capabilities, but generally a server may include one or more
+central processing units and memory. A server may also 40
+include one or more mass storage devices, one or more
+power supplies, one or more wired or wireless network
+interfaces, one or more input/output interfaces, or one or
+more operating systems, such as Windows Server, Mac OS
+X, Unix, Linux, FreeBSD, or the like.
+45
+For the purposes of this disclosure a “network" should be
+understood to refer to a network that may couple devices so
+that communications may be exchanged, such as between a
+server and a client device or other types of devices, includ-
+ing between wireless devices coupled via a wireless net- 50
+work, for example. A network may also include mass
+storage, such as network attached storage (NAS), a storage
+area network (SAN), or other forms of computer or machine
+readable media, for example. A network may include the
+Internet, one or more local area networks (LANs), one or 55
+more wide area networks (WANs), wire-line type connec-
+tions, wireless type connections, cellular or any combination
+thereof. Likewise, sub-networks, which may employ differ-
+ing architectures or may be compliant or compatible with
+differing protocols, may interoperate within a larger net- 60
+work. Various types of devices may, for example, be made
+available to provide an interoperable capability for differing
+architectures or protocols. As one illustrative example, a
+router may provide a link between otherwise separate and
+independent LANs.
+A communication link or channel may include, for
+example, analog telephone lines, such as a twisted wire pair,
+65
+8
+a coaxial cable, full or fractional digital lines including T1,
+T2, T3, or T4 type lines, Integrated Services Digital Net-
+works (ISDNs), Digital Subscriber Lines (DSLs), wireless
+links including satellite links, or other communication links
+or channels, such as may be known to those skilled in the art.
+Furthermore, a computing device or other related electronic
+devices may be remotely coupled to a network, such as via
+a wired or wireless line or link, for example.
+For purposes of this disclosure, a "wireless network"
+should be understood to couple client devices with a net-
+work. A wireless network may employ stand-alone ad-hoc
+networks, mesh networks, Wireless LAN (WLAN) net-
+works, cellular networks, or the like. A wireless network
+may further include a system of terminals, gateways, rout-
+ers, or the like coupled by wireless radio links, or the like,
+which may move freely, randomly or organize themselves
+arbitrarily, such that network topology may change, at times
+even rapidly.
+A wireless network may further employ a plurality of
+network access technologies, including Wi-Fi, Long Term
+Evolution (LTE), WLAN, Wireless Router (WR) mesh, or
+2nd, 3rd, or 4th generation (2G, 3G, or 4G) cellular tech-
+nology, or the like. Network access technologies may enable
+wide area coverage for devices, such as client devices with
+varying degrees of mobility, for example.
+For example, a network may enable RF or wireless type
+communication via one or more network access technolo-
+gies, such as Global System for Mobile communication
+(GSM), Universal Mobile Telecommunications System
+(UMTS), General Packet Radio Services (GPRS), Enhanced
+Data GSM Environment (EDGE), 3GPP Long Term Evo-
+lution (LTE), LTE Advanced, Wideband Code Division
+Multiple Access (WCDMA), Bluetooth, 802.11b/g/n, or the
+like. A wireless network may include virtually any type of
+wireless communication mechanism by which signals may
+be communicated between devices, such as a client device
+or a computing device, between or within a network, or the
+like.
+A computing device may be capable of sending or receiv-
+ing signals, such as via a wired or wireless network, or may
+be capable of processing or storing signals, such as in
+memory as physical memory states, and may, therefore,
+operate as a server. Thus, devices capable of operating as a
+server may include, as examples, dedicated rack-mounted
+servers, desktop computers, laptop computers, set top boxes,
+integrated devices combining various features, such as two
+or more features of the foregoing devices, or the like.
+Servers may vary widely in configuration or capabilities, but
+generally a server may include one or more central process-
+ing units and memory. A server may also include one or
+more mass storage devices, one or more power supplies, one
+or more wired or wireless network interfaces, one or more
+input/output interfaces, or one or more operating systems,
+such as Windows Server, Mac OS X, Unix, Linux, FreeBSD,
+or the like.
+For purposes of this disclosure, a client (or consumer or
+user) device may include a computing device capable of
+sending or receiving signals, such as via a wired or a
+wireless network. A client device may, for example, include
+a desktop computer or a portable device, such as a cellular
+telephone, a smart phone, a display pager, a radio frequency
+(RF) device, an infrared (IR) device an Near Field Commu-
+nication (NFC) device, a Personal Digital Assistant (PDA),
+a handheld computer, a tablet computer, a phablet, a laptop
+computer, a set top box, a wearable computer, smart watch,
+an integrated or distributed device combining various fea-
+tures, such as features of the forgoing devices, or the like.
+
+========== PAGE 15 ==========
+9
+US 10,967,281 B2
+A client device may vary in terms of capabilities or
+features. Claimed subject matter is intended to cover a wide
+range of potential variations. For example, a simple smart
+phone, phablet or tablet may include a numeric keypad or a
+display of limited functionality, such as a monochrome 5
+liquid crystal display (LCD) for displaying text. In contrast,
+however, as another example, a web-enabled client device
+may include a high resolution screen, one or more physical
+or virtual keyboards, mass storage, one or more accelerom-
+eters, one or more gyroscopes, global positioning system
+(GPS) or other location-identifying type capability, or a
+display with a high degree of functionality, such as a
+touch-sensitive color 2D or 3D display, for example.
+10
+A client device may include or may execute a variety of
+operating systems, including a personal computer operating 15
+system, such as a Windows, iOS or Linux, or a mobile
+operating system, such as iOS, Android, or Windows
+Mobile, or the like.
+A client device may include or may execute a variety of
+possible applications, such as a client software application 20
+enabling communication with other devices, such as com-
+municating one or more messages, such as via email, for
+example Yahoo!Ⓡ Mail, short message service (SMS), or
+multimedia message service (MMS), for example Yahoo!
+Messenger®, including via a network, such as a social 25
+network, including, for example, Tumblr®, FacebookⓇ,
+LinkedInⓇ, TwitterⓇ, FlickrⓇ, or Google+Ⓡ, Instagram™,
+to provide only a few possible examples. A client device
+may also include or execute an application to communicate
+content, such as, for example, textual content, multimedia 30
+content, or the like. A client device may also include or
+execute an application to perform a variety of possible tasks,
+such as browsing, searching, playing or displaying various
+forms of content, including locally stored or streamed video,
+or games (such as fantasy sports leagues). The foregoing is 35
+provided to illustrate that claimed subject matter is intended
+to include a wide range of possible features or capabilities.
+The detailed description provided herein is not intended
+as an extensive or detailed discussion of known concepts,
+and as such, details that are known generally to those of 40
+ordinary skill in the relevant art may have been omitted or
+may be handled in summary fashion.
+50
+With the widespread popularity of online fantasy sports.
+contests, there is currently a huge demand for tools, such as
+the automated athlete salary determination tool disclosed 45
+herein, to facilitate publication of contests online and meet
+the demand resulting from such popularity. However, exist-
+ing approaches for athlete salary determination are cumber-
+some to use because they require contest providers to
+manually determine each athlete's salary in each sport
+involved in a contest being provided, which as discussed
+above involves over 1000 contests per day and hundreds of
+athletes per sport. A contest provider cannot publish a
+contest without fantasy salaries; and once published, the
+contest provider cannot change the fantasy salaries. Further-
+more, contestants cannot participate in the contest until the
+contest and a corresponding set of fantasy salaries is pub-
+lished. A manual approach is impractical, for at least the
+reasons that it requires extensive human effort, time and
+experience, and is prone to error and increases delays in the
+publication of online fantasy contests by providers of online
+fantasy contests.
+55
+60
+As such, the instant disclosure provides a novel solution
+addressing the immediate demand for an automated system,
+application and/or platform that automatically determines, 65
+for each athlete of a plurality of athletes, the athlete's fantasy
+salary for use in one or more fantasy sports contests pub-
+10
+lished by a fantasy contest provider. The present disclosure
+provides novel systems and methods for automatic determi-
+nation of a fantasy salary for an athlete for use in one or
+more fantasy sports contests published by an online fantasy
+sports system.
+According to some embodiments, the disclosed systems
+and methods first determine a value for each of a number of
+factors for determining an athlete's fantasy salary and then
+use a weighted combination (or aggregation), e.g., a linear
+combination, of the factors in determining the athlete's
+fantasy salary. The factors include a fantasy point projection,
+past performance and ownership. The fantasy point projec-
+tion is a statistical prediction (or statistical estimation or
+projection) of a number of fantasy points an athlete is likely
+to score in a future real world competition if the athlete
+participates, or starts, in the real world competition. The
+fantasy point projection takes into account specifics of the
+real world competition, such as the quality of the athlete's
+opponent, whether the athlete is playing at home or on the
+road, whether the athlete tends to perform better or worse at
+home or on the road, etc.
+In some embodiments, the past performance factor com-
+prises one or more of immediate past performance, recent
+past performance and historical past performance factors.
+The historical past performance factor provides a long-term
+baseline of the athlete's past performance, and the immedi-
+ate and recent past performance factors are responsive to
+“recent” real world circumstances that are likely to impact
+the athlete's long-term baseline. Examples of real world
+circumstances likely to impact an athlete's performance
+include the athlete's health, change in the athlete's role on
+the team, etc. The historical scope (or range) of each
+performance factor may vary depending on sport, athlete
+position, and number of “starts" by the athlete considered in
+determining each of these performance values. In one
+example, for each MLB athlete (or player) that is a hitter,
+immediate performance may be based on the athlete's
+(hitter's) performance in the athlete's last 5 starts, recent
+performance may be based on the athlete's last 30 starts and
+historical performance may be based on the athlete's last 80
+starts. In another example, for each MLB athlete that is in a
+starting pitcher position, which position typically plays far
+less frequently than a hitter, the athlete's (starting pitcher's)
+immediate performance may be based on the starting pitch-
+er's last 1-2 starts, recent performance may be based on the
+starting pitcher's last 6 starts and historical performance
+may be based on the starting pitcher's last 15 starts.
+The ownership factor takes into account intangible
+aspects, such as the athlete's likability or popularity. An
+athlete's likability or popularity can be determined using
+data from past fantasy sports contests for which the athlete
+was available for selection by contestants. The athlete's
+popularity can be expressed as a percentage determined
+using the percentage of contestants that drafted the athlete,
+the percentage of fantasy teams (built by contestants) that
+included the athlete, etc. In some embodiments, the owner-
+ship factor can be used as an incentive or a disincentive. For
+example, the ownership factor can be varied in order to
+increase a popular athlete's fantasy salary, thereby acting as
+a disincentive for selection by a contestant working with a
+salary cap. As yet another example, the ownership factor can
+be decreased as an incentive for selection. In other words,
+the ownership factor for an athlete can be varied based on a
+determined popularity of the athlete to make the athlete
+more or less attractive to contestants.
+The disclosed systems and methods can use a set of
+factors, such as the fantasy point projection, past perfor-

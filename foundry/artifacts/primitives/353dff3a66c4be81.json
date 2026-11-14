@@ -1,0 +1,485 @@
+{
+  "book_id": "353dff3a66c4be81",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_PROSE_SHIFTED_MATH_RECONSTRUCTED",
+  "source_note": "Kolbush & Sokol (2017), International Journal of Computer Science in Sport 16(3), DOI 10.1515/ijcss-2017-0014, Georgia Tech. Prose extracts cleanly; display equations (1)-(4) render in a shifted/custom font (non-Latin glyph substitutes) and are reconstructed as labeled LaTeX from the unambiguous surrounding prose, flagged in assumptions. r_x is a statistical probability of latent superiority, not a sportsbook odds/line; zero sportsbook inputs.",
+  "primitives": [
+    {
+      "primitive_id": "lrmc_lineage",
+      "name": "LRMC ranking lineage (Kvam-Sokol)",
+      "verbatim_quote": "Kvam and Sokol developed a successful logistic regression/Markov chain (LRMC) model for ranking college basketball teams part of Division I of the National Colligate Athletic Association (NCAA).",
+      "page": 185,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "LRMC combines a logistic-regression estimate of pairwise superiority with a Markov chain whose stationary distribution ranks teams."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A ranking is a stationary distribution over a graph of pairwise comparisons, not a list of win totals; GSE strength ratings inherit this fixed-point structure.",
+        "source_operator": "lrmc_lineage",
+        "telemetry": "lineage: basketball LRMC -> football F-LRMC"
+      }
+    },
+    {
+      "primitive_id": "scoreboard_parsimony",
+      "name": "Scoreboard-data-only parsimony",
+      "verbatim_quote": "for each game, the only information taken into consideration was the names of the winning and losing team, the margin of victory of the winning team, and whether the game was played on the winners home court, the losers court, or a neutral location.",
+      "page": 186,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Inputs are winner, loser, margin, and site only; no play-by-play or box-score features are required."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A minimal sufficient statistic for team strength can be built from scoreboard tuples; GSE can seed a strength prior from results alone before richer telemetry arrives.",
+        "source_operator": "scoreboard_parsimony",
+        "telemetry": "input tuple: (winner, loser, margin, site)"
+      }
+    },
+    {
+      "primitive_id": "sparse_schedule",
+      "name": "Sparse-schedule ranking difficulty",
+      "verbatim_quote": "Teams only play 11-13 games per season, yet there are 128 Football Bowl Subdivision (FBS, formerly NCAA Division I-A) teams to be ranked.",
+      "page": 186,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "128 teams, 11-13 games each: the comparison graph is extremely sparse relative to the number of states."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "With ~12 observations per state and 128 states, direct pairwise estimates are underdetermined; indirect (common-opponent) information is mandatory, mirroring GSE small-sample shrinkage.",
+        "source_operator": "sparse_schedule",
+        "telemetry": "states=128, games/team=11-13"
+      }
+    },
+    {
+      "primitive_id": "conference_isolation",
+      "name": "Cross-conference comparability gap",
+      "verbatim_quote": "Most teams only play 3-4 games outside their conference, making it difficult to compare teams from different conferences.",
+      "page": 186,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Only 3-4 non-conference games connect otherwise disjoint conference subgraphs."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The comparison graph is nearly block-diagonal by conference; weak inter-block edges make cross-conference ratings ill-conditioned, the same connectivity problem GSE faces across leagues.",
+        "source_operator": "conference_isolation",
+        "telemetry": "non-conference edges/team=3-4"
+      }
+    },
+    {
+      "primitive_id": "home_and_home_rare",
+      "name": "Home-and-home identification breaks in football",
+      "verbatim_quote": "this direct approach cannot be used with college football, because teams rarely play each other twice during a single college football season; we have found only about 40 instances in the 20 years from 1996-2015.",
+      "page": 187,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The basketball LRMC identifies r_x from home-and-home rematches; football has ~40 such pairs in 20 seasons, far too few."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "When the natural experiment (home-and-home) is absent, an indirect identification strategy (common opponents) must substitute; GSE must likewise swap identification when a clean contrast is unavailable.",
+        "source_operator": "home_and_home_rare",
+        "telemetry": "home-and-home pairs ~40 / 20 seasons"
+      }
+    },
+    {
+      "primitive_id": "rx_definition",
+      "name": "r_x: probability of superiority given margin",
+      "verbatim_quote": "Let rx(g) be an estimate of the probability that the home team of game g is better than the away team of game g given that the home team won by x(g) points, where x(g) is negative if the home team lost.",
+      "page": 187,
+      "latex": "r_x(g)=P(\\text{home }j\\succ\\text{away }i\\mid \\text{margin}=x(g))",
+      "symbol_and_unit_ledger": {
+        "r_x": "probability of superiority, dimensionless in [0,1]",
+        "x(g)": "margin of victory in points (negative if home lost)"
+      },
+      "assumptions": [
+        "r_x is a conditional probability of latent superiority, not a win probability for a future game.",
+        "x(g) carries sign: negative when the home team lost."
+      ],
+      "breakdown_regime": "x(g) far outside observed margin range; r_x saturates at 0 or 1",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "r_x maps a signed margin to a latent-superiority probability; this is the same margin-to-probability link GSE uses to turn point differentials into strength evidence.",
+        "source_operator": "rx_definition",
+        "telemetry": "r_x in [0,1], x in points"
+      }
+    },
+    {
+      "primitive_id": "transition_matrix",
+      "name": "Markov transition probabilities from game outcomes",
+      "verbatim_quote": "There is one state in the Markov chain for each team in Division I NCAA football. Transitions are made according to the outcome of games played during the season.",
+      "page": 187,
+      "latex": "t_{ij}=\\frac{1}{N_i}\\Big[\\sum_{g=(i,j)} r_x(g)+\\sum_{g=(j,i)}\\big(1-r_x(g)\\big)\\Big],\\ j\\ne i",
+      "symbol_and_unit_ledger": {
+        "t_ij": "transition probability from state i to j, dimensionless in [0,1]",
+        "N_i": "number of games played by team i (count)",
+        "r_x(g)": "superiority probability for game g"
+      },
+      "assumptions": [
+        "One state per team; off-diagonal mass accumulates r_x when i is away and (1-r_x) when i is home.",
+        "Rows normalize by N_i so each row sums to 1."
+      ],
+      "breakdown_regime": "N_i=0 (team with no games) makes the row undefined; disconnected graph yields non-unique stationary distribution",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The transition matrix encodes 'who deserves to be thought of as better' as flow of probability; GSE power ratings can be read as the stationary flow of a comparison Markov chain.",
+        "source_operator": "transition_matrix",
+        "telemetry": "row-stochastic t_ij, states=teams"
+      }
+    },
+    {
+      "primitive_id": "stationary_ranking",
+      "name": "Stationary distribution as the ranking",
+      "verbatim_quote": "We can use these transition probabilities to solve for the Markov chain's stationary distribution. By ordering this stationary distribution in decreasing order, we obtain a ranking of the college football teams.",
+      "page": 187,
+      "latex": "\\pi T=\\pi,\\quad \\sum_i \\pi_i=1;\\quad \\text{rank}(i)=\\text{order of }\\pi_i\\text{ decreasing}",
+      "symbol_and_unit_ledger": {
+        "pi": "stationary distribution over teams, dimensionless probabilities summing to 1",
+        "T": "row-stochastic transition matrix"
+      },
+      "assumptions": [
+        "The ranking is the left eigenvector of T at eigenvalue 1, sorted descending.",
+        "A unique stationary distribution requires an irreducible, aperiodic chain."
+      ],
+      "breakdown_regime": "reducible or periodic chain: stationary distribution not unique or not convergent",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ranking as a fixed point pi=pi T is the same eigen-centrality logic as network centrality; GSE strength is a stationary belief, not a running tally.",
+        "source_operator": "stationary_ranking",
+        "telemetry": "pi T = pi, sum pi = 1"
+      }
+    },
+    {
+      "primitive_id": "rx_monotone",
+      "name": "r_x must be increasing in margin",
+      "verbatim_quote": "It is expected that rx should be an increasing function; the more points a team wins a game by, the higher the probability that that team is better than its opponent.",
+      "page": 187,
+      "latex": "r_x\\to 0\\ (x\\to-\\infty),\\quad r_x\\to 1\\ (x\\to+\\infty),\\quad \\frac{dr_x}{dx}>0",
+      "symbol_and_unit_ledger": {
+        "r_x": "superiority probability in [0,1]",
+        "x": "margin in points"
+      },
+      "assumptions": [
+        "Monotonicity and the 0/1 asymptotes are structural constraints on the fit, not free parameters."
+      ],
+      "breakdown_regime": "non-monotone fit would violate the semantics of margin as evidence",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The monotone sigmoid is the canonical link from a signed margin to a probability; GSE uses the same shape to map point differential to win/strength probability.",
+        "source_operator": "rx_monotone",
+        "telemetry": "dr_x/dx > 0, asymptotes 0 and 1"
+      }
+    },
+    {
+      "primitive_id": "common_opponents",
+      "name": "Common-opponents indirect identification",
+      "verbatim_quote": "For our estimate, rather than a direct comparison, we use an indirect approach using common opponents.",
+      "page": 187,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "C(g) is the set of teams that played both the home and away team of game g in the same season."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "When two teams never meet, their shared opponents provide the only bridge for comparison; this transitive-via-common-node inference is exactly GSE's cross-team strength propagation.",
+        "source_operator": "common_opponents",
+        "telemetry": "C(g) = shared opponents of i and j"
+      }
+    },
+    {
+      "primitive_id": "common_rx_estimator",
+      "name": "Common-opponent r_x estimator",
+      "verbatim_quote": "In simple terms, given the winning percentages pi and pj of teams i and j against their common opponents,",
+      "page": 188,
+      "latex": "r_x\\approx \\frac{\\sum_{g\\in G_x}\\big(\\mu(G_j(g))+\\nu(G_i(g))\\big)}{2\\sum_{g\\in G_x}|C(g)|}\\ \\ \\Longleftrightarrow\\ \\ \\frac{p_j+(1-p_i)}{2}",
+      "symbol_and_unit_ledger": {
+        "p_i,p_j": "winning percentages of teams i,j vs common opponents, dimensionless in [0,1]",
+        "mu(G_j)": "games j won vs common opponents (count)",
+        "nu(G_i)": "games i lost vs common opponents (count)",
+        "C(g)": "set of common opponents"
+      },
+      "assumptions": [
+        "The estimator averages j's win rate and i's loss rate against shared opponents.",
+        "It is a proxy for direct superiority, valid only insofar as common opponents are representative."
+      ],
+      "breakdown_regime": "empty common-opponent set C(g)=0 makes the estimator undefined; biased if common opponents are systematically weak/strong",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "(p_j+(1-p_i))/2 is a transitive superiority proxy; GSE uses the same common-opponent averaging to compare teams that never play, a graph-based strength bridge.",
+        "source_operator": "common_rx_estimator",
+        "telemetry": "r_x approx (p_j + 1 - p_i)/2"
+      }
+    },
+    {
+      "primitive_id": "rolling_window",
+      "name": "Rolling four-season training window",
+      "verbatim_quote": "Because college football styles of play change over time, we use a rolling four-season window to compile data.",
+      "page": 188,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "For season Y the r_x fit uses seasons Y-4..Y-1; the window rolls forward each year."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A rolling window is a non-stationarity guard: GSE must likewise window its calibration data because the game's distribution drifts across seasons.",
+        "source_operator": "rolling_window",
+        "telemetry": "window = 4 prior seasons"
+      }
+    },
+    {
+      "primitive_id": "window_bias_variance",
+      "name": "Window-size bias-variance tradeoff",
+      "verbatim_quote": "Too small of a training set resulted in outliers in the data having too great of an impact. Conversely, a large window of seasons resulted in outdated game results shaping the regression.",
+      "page": 188,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Small window -> high variance (outliers dominate); large window -> high bias (stale regimes leak in). Four seasons was empirically best."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the classic bias-variance / recency-stability tradeoff; GSE calibration windows face the identical tension between noisy recent data and stale old data.",
+        "source_operator": "window_bias_variance",
+        "telemetry": "small n -> variance; large n -> bias"
+      }
+    },
+    {
+      "primitive_id": "logistic_smooth",
+      "name": "Logistic smoothing of r_x",
+      "verbatim_quote": "we use logistic regression to smooth the data; the curve shown in Figure 1 is the logistic regression function for 2011-2014.",
+      "page": 188,
+      "latex": "r_x=\\frac{e^{ax+b}}{1+e^{ax+b}}",
+      "symbol_and_unit_ledger": {
+        "a": "logistic slope, units 1/points",
+        "b": "logistic intercept, dimensionless",
+        "x": "margin in points",
+        "r_x": "superiority probability in [0,1]"
+      },
+      "assumptions": [
+        "(a,b) are fit by logistic regression to the common-opponent r_x estimates; e.g. 2016 (a,b)=(0.02375,-0.09720)."
+      ],
+      "breakdown_regime": "extrapolation beyond observed margins; separation if a margin class has all-0 or all-1 outcomes",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The logistic sigmoid is the same link function GSE uses for win probability; here it calibrates margin to latent superiority rather than to a future game outcome.",
+        "source_operator": "logistic_smooth",
+        "telemetry": "r_x = sigmoid(ax+b), a~0.02/pt"
+      }
+    },
+    {
+      "primitive_id": "not_classification",
+      "name": "Logistic used for probabilities, not classification",
+      "verbatim_quote": "Typically, a logistic regression is performed to classify binary data. However, this regression is used to establish the transition probabilities in the Markov chain, thus the logistic regression is not used for direct classification so no cutoff value is needed.",
+      "page": 188,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The logistic output feeds transition probabilities; no decision threshold/cutoff is applied."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Using a classifier's calibrated probability as a soft input (not a hard label) is the same discipline GSE follows: propagate probabilities, do not threshold prematurely.",
+        "source_operator": "not_classification",
+        "telemetry": "no cutoff; probability -> transition mass"
+      }
+    },
+    {
+      "primitive_id": "mov_significance",
+      "name": "Margin statistically significant (Wald)",
+      "verbatim_quote": "The margin of victory was shown to be statistically significant as a predictor of rx for all seasons (p < 0.001, Wald Test).",
+      "page": 188,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Wald test rejects the null that the margin coefficient is zero, p<0.001, in every season."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A pre-registered significance test on the margin coefficient is the evidence that margin carries signal; GSE gates features on the same kind of coefficient test.",
+        "source_operator": "mov_significance",
+        "telemetry": "Wald p < 0.001 all seasons"
+      }
+    },
+    {
+      "primitive_id": "bowl_validation",
+      "name": "Bowl games as the validation set",
+      "verbatim_quote": "Bowl games are an ideal measure for determining the accuracy of a ranking system for three main reasons.",
+      "page": 189,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Bowls occur after a full season, pair similar-strength teams (so models disagree), and are neutral-site (so higher rank should win)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Validation on matched-strength neutral-site games is a clean out-of-sample test of a ranking; GSE validates strength on comparable, context-controlled matchups.",
+        "source_operator": "bowl_validation",
+        "telemetry": "validation = postseason bowls, neutral site"
+      }
+    },
+    {
+      "primitive_id": "neutral_site_assumption",
+      "name": "Neutral-site assumption and its veto",
+      "verbatim_quote": "all the bowl games are played on neutral fields (i.e., neither team is playing at its home stadium)",
+      "page": 189,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The inference 'higher rank wins' holds only at a truly neutral site; home advantage can outweigh a small strength gap."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The neutral-site assumption is a context gate: GSE must veto a strength-only prediction when venue/home advantage is non-neutral, exactly as this model restricts itself to neutral bowls.",
+        "source_operator": "neutral_site_assumption",
+        "telemetry": "neutral site required for rank->favorite"
+      }
+    },
+    {
+      "primitive_id": "accuracy_composite",
+      "name": "F-LRMC accuracy in Massey composite",
+      "verbatim_quote": "the F-LRMC has a bowl game prediction accuracy of 60.79%, which ties it for third amongst all models that appear in Massey's composite",
+      "page": 190,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "60.79% bowl accuracy over 2002-2016 (307/505), tied third in the Massey composite."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A ranking is judged by out-of-sample game prediction, not by face validity; GSE measures strength models on the same held-out outcome criterion.",
+        "source_operator": "accuracy_composite",
+        "telemetry": "accuracy 60.79% (307/505), 2002-2016"
+      }
+    },
+    {
+      "primitive_id": "mcnemar_significance",
+      "name": "McNemar paired significance vs rivals",
+      "verbatim_quote": "we tested for statistical significance between F-LRMC and each other model using McNemar's test.",
+      "page": 190,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "McNemar's test compares paired correct/incorrect predictions; Kambour (63.17%) and PerformanZ (62.57%) lead but are not significant (p=0.1282, 0.1933)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A higher point estimate is not a better model without a paired significance test; GSE compares predictors with the same McNemar-style discipline before promotion.",
+        "source_operator": "mcnemar_significance",
+        "telemetry": "McNemar p: KAM .1282, PFZ .1933 (n.s.)"
+      }
+    },
+    {
+      "primitive_id": "mov_ablation",
+      "name": "Margin-of-victory ablation",
+      "verbatim_quote": "This version is much less accurate, only predicting 53.66% of bowl games between 1998 and 2016, while the original F-LRMC had a prediction accuracy of 60.79%.",
+      "page": 194,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Removing margin (win/loss only) drops accuracy from 60.79% to 53.66%: margin carries ~7 points of predictive signal."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An ablation isolates a feature's causal contribution; GSE uses the same drop-in-accuracy test to decide whether a signal earns its place.",
+        "source_operator": "mov_ablation",
+        "telemetry": "with MOV 60.79% vs without 53.66%"
+      }
+    },
+    {
+      "primitive_id": "policy_vs_evidence",
+      "name": "BCS/CFP policy veto on margin vs evidence",
+      "verbatim_quote": "In 2002, the BCS changed its policy to no longer consider margin of victory in its rankings",
+      "page": 195,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "BCS (2002) and CFP exclude margin to discourage running up the score; this is a policy/incentive choice, not a statistical one, and it costs accuracy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A governance veto (no running up score) can override a statistically superior feature; GSE must record when a constraint is incentive-driven rather than evidence-driven, and price the accuracy cost.",
+        "source_operator": "policy_vs_evidence",
+        "telemetry": "policy excludes MOV; accuracy cost ~7 pts"
+      }
+    },
+    {
+      "primitive_id": "generalization",
+      "name": "Generalizes to sports lacking home-and-home",
+      "verbatim_quote": "Similar approaches to the F-LRMC may be applied in other sports that lack home-and-home games.",
+      "page": 195,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The common-opponents identification is portable to any sport where direct rematches are rare."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The identification strategy, not the sport, is the reusable kernel; GSE lifts the common-opponent bridge to any league with a sparse direct-comparison graph.",
+        "source_operator": "generalization",
+        "telemetry": "portable to sparse-rematch sports"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "flrmc2017_trace",
+      "think": "The retrocausal genealogy of this paper begins with a structural impossibility. College football asks us to rank 128 teams from only 11 to 13 games each, with most teams playing just 3 or 4 games outside their conference. The comparison graph is therefore almost block-diagonal: dense within conferences, nearly empty between them. Kvam and Sokol's basketball LRMC solved ranking by identifying a margin-to-superiority probability r_x from home-and-home rematches, then letting a Markov chain's stationary distribution do the ranking. That identification strategy is the load-bearing wall, and it collapses in football: the authors find only about 40 home-and-home pairs in the entire 20-year span 1996 to 2015. The whole contribution is a replacement identification, not a new estimator. The replacement is indirect comparison through common opponents. For a game g between away team i and home team j, let C(g) be the teams both faced. The estimator averages j's winning percentage and i's losing percentage against those shared opponents, (p_j + (1 - p_i))/2, pooled over all games with an x-point home win. This is a transitive bridge: when i and j never meet, their shared opponents carry the only information about who is better. The raw estimates are then smoothed by a logistic sigmoid r_x = e^(ax+b)/(1+e^(ax+b)), fit on a rolling four-season window. The window choice is an explicit bias-variance adjudication: too short and outliers dominate, too long and stale playing styles leak into the fit. Four seasons won empirically. The recursive theory of mind is in the Markov construction. Each team is a state; transition mass t_ij accumulates r_x when i loses to j and (1-r_x) when i beats j, normalized by games played. The ranking is the stationary distribution pi satisfying pi T = pi, sorted descending. So a team's rating is not its own record but a fixed point of what every other team's results imply about it, propagated through the graph. Strength is a collectively held belief that must be consistent with all pairwise evidence at once. This is eigen-centrality logic: the same stationary-flow reasoning that ranks nodes in a network. The logistic output is deliberately never thresholded into a hard label; it feeds soft transition probabilities, because the chain needs calibrated mass, not a classification. Cross-layer veto adjudication appears three times. First, the margin ablation: stripping margin of victory drops bowl accuracy from 60.79% to 53.66%, so margin carries roughly seven points of real signal, confirmed by a Wald test significant at p<0.001 in every season. Second, a policy veto collides with that evidence: the BCS in 2002 and the CFP today exclude margin to discourage running up the score. That is an incentive constraint, not a statistical finding, and the paper is honest that it costs accuracy. Third, model comparison is gated by McNemar's paired test: Kambour (63.17%) and PerformanZ (62.57%) beat F-LRMC numerically but are not statistically significant (p=0.1282 and 0.1933), so the paper refuses to crown them. A higher point estimate is not a better model without a paired test. The implementation invariants are what make this portable to GSE. The logistic slope is remarkably stable across seasons, a around 0.02 per point and b around -0.1, which means the margin-to-superiority link is a near-constant of the sport that can be reused as a prior. The model is parsimonious: winner, loser, margin, site, nothing else. And the validation is disciplined: neutral-site bowls pair similar-strength teams after a full season, so the higher-ranked team should win, and the neutral-site assumption is itself a veto the model respects by refusing to predict non-neutral games. For GSE the lesson is that a strength rating is a stationary belief over a sparse comparison graph, identified indirectly when direct contrasts are absent, windowed against drift, and promoted only on paired out-of-sample significance. The r_x here is a statistical probability of latent superiority, never a sportsbook line; the Markov stationary distribution is a power-rating prior, and the common-opponent bridge is the reusable kernel for any league where teams rarely meet twice. The parameter ledger and the model's honest limitations deserve their own accounting. Table 1 reports the logistic fit for every season from 2002 to 2016, and the slope a drifts only between about 0.0198 and 0.0238 per point while the intercept b sits between roughly -0.135 and -0.080, with standard errors near 0.0006 and 0.012 respectively. That tightness is the empirical warrant for treating the margin-to-superiority link as a near-constant prior rather than refitting it from scratch each year. The authors also situate F-LRMC against its variants: Brown and Sokol's empirical-Bayes version and Maclay's use of natural-log margins, and against the two rivals that beat it numerically, Kambour's multi-season persistence model and PerformanZ's in-game-statistics model, each of which demands more data than scoreboard tuples. They even handle missing composite years by imputing a model's expected correct count from its average percent difference versus the field, and re-check significance there too, where CPA, ARGH and KLK lead but are not significant. The limitations are stated plainly: the chain ranks but does not predict non-neutral games, the neutral-bowl assumption is only approximately true, and margin remains politically contested. For GSE the invariant is to carry the stable sigmoid prior, window against drift, and never let a governance veto masquerade as a statistical finding.",
+      "retrocausal_genealogy": "The paper's origin is a broken identification strategy. Basketball LRMC reads the margin-to-superiority probability r_x off home-and-home rematches, but football has only about 40 such pairs across 1996-2015, so the direct contrast that anchors the whole model is absent. The authors trace the consequence: with 128 teams, 11-13 games each, and 3-4 non-conference games, the comparison graph is nearly block-diagonal by conference and direct pairwise estimates are underdetermined. The causal fix is to replace the missing natural experiment with an indirect one, common opponents, so that transitive evidence can substitute for the absent head-to-head rematch. Every later choice, the logistic smoothing and the rolling window, inherits from this identification repair.",
+      "theory_of_mind": "Each team's rating is a fixed point of what all other teams' results imply about it. The Markov chain puts one state per team and moves probability mass t_ij according to r_x, so the stationary distribution pi=pi T is a collectively consistent belief about strength. A team is ranked not by its own record but by how its wins and losses, and its opponents' wins and losses against shared opponents, propagate through the graph. This is recursive: i's strength depends on j's, which depends on k's, which loops back. The model reasons about every team simultaneously through the eigen-equation, exactly the eigen-centrality logic of network ranking, and it keeps the logistic output soft because the chain needs calibrated probability mass, not hard labels.",
+      "cross_layer_veto": "Three vetoes are adjudicated. The margin ablation shows dropping margin of victory cuts bowl accuracy from 60.79% to 53.66%, so margin earns its place by evidence (Wald p<0.001 every season). A governance layer then vetoes that evidence: BCS 2002 and the CFP exclude margin to prevent running up the score, an incentive constraint the paper flags as costing accuracy. Finally, rival models Kambour and PerformanZ post higher raw accuracy but fail McNemar's paired significance test (p=0.1282, 0.1933), so they are not promoted over F-LRMC. The neutral-site assumption is a further context veto: the model only predicts neutral bowls, where higher rank should win, and refuses non-neutral games where home advantage could outweigh a small strength gap."
+    }
+  ],
+  "universal_lens": "A ranking is a stationary belief over a sparse graph of pairwise comparisons, identified indirectly through common opponents when direct rematches are absent, smoothed by a monotone sigmoid, windowed against distribution drift, and promoted only on paired out-of-sample significance rather than raw accuracy.",
+  "gsi_mapping": "GSI treats team strength as the stationary distribution of a comparison Markov chain: the common-opponent estimator (p_j+(1-p_i))/2 is the transitive bridge for never-meeting teams, the logistic r_x=sigmoid(ax+b) is the margin-to-superiority link, and the rolling four-season window is the non-stationarity guard.",
+  "gse_mapping": "GSE seeds a power-rating prior from scoreboard tuples (winner, loser, margin, site), propagates strength via the stationary eigen-equation, gates margin on its ablation signal (~7 accuracy points), and refuses strength-only predictions at non-neutral sites; all probabilities are statistical, never sportsbook lines."
+}

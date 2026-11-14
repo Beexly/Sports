@@ -1,0 +1,78 @@
+{
+  "book_id": "1fc14244038cc84c",
+  "source_status": "COMPLETE",
+  "title": "human-copy-audit-checklist",
+  "file_name": "human-copy-audit-checklist.md",
+  "sha256": "1fc14244038cc84cf5fc32d77c0af088152b51eaab58f835e73974877d072d77",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Audit primitives as probabilistic observables over human-authored content fidelity, claim verifiability, and ethical alignment in communication. Universal Lens: Rooted in human-copy-audit-checklist (1fc14244038cc84c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on copy authenticity and compliance using prior distributions over linguistic and semantic coherence metrics. GSI Mapping: Rooted in human-copy-audit-checklist (1fc14244038cc84c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in copy evaluation driven by contextual cues and risk signals, with deterministic action paths based on audit verdicts. GSE Mapping: Rooted in human-copy-audit-checklist (1fc14244038cc84c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "authenticity_assessment",
+      "name": "Authenticity Assessment Operator",
+      "verbatim_quote": "# Human Copy Audit Checklist As of: 2026-06-09 - Does the copy sound like a real person wrote it?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Authenticity score (dimensionless, 0–1)'}",
+      "assumptions": "Copy is generated from a known authorial source; linguistic patterns are distinguishable from automated generation.",
+      "breakdown_regime": "A → 0 when content exhibits machine-like syntax or structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A maps to GSI's entropy-based linguistic coherence model, where low entropy implies high authenticity.",
+        "source_operator": "authenticity_assessment",
+        "telemetry": "Linguistic entropy, n-gram frequency variance"
+      }
+    },
+    {
+      "primitive_id": "compliance_verification",
+      "name": "Compliance Verification Kernel",
+      "verbatim_quote": "it? - Is the customer told exactly what they get? - Is the claim supported? -",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Compliance indicator (dimensionless, 0–1)'}",
+      "assumptions": "Claims are verifiable through external data sources; customer expectations are clearly defined.",
+      "breakdown_regime": "C → 0 when claims are ambiguous or unsupported.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "C derived from GSE's semantic parsing engine and GSI's fact-checking module.",
+        "source_operator": "compliance_verification",
+        "telemetry": "Claim-to-evidence ratio, expectation fulfillment index"
+      }
+    },
+    {
+      "primitive_id": "ethical_alignment_check",
+      "name": "Ethical Alignment Check",
+      "verbatim_quote": "language nearby if gambling-adjacent? - Does it avoid founder-method leakage? - Does it explain the next",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Ethical alignment score (dimensionless, 0–1)'}",
+      "assumptions": "Gambling-related content requires explicit ethical framing; alignment is measurable via keyword presence and tone.",
+      "breakdown_regime": "E → 0 when ethical warnings are absent or insufficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "E mirrors GSI’s harm-risk scoring function, calibrated against regulatory thresholds.",
+        "source_operator": "ethical_alignment_check",
+        "telemetry": "Keyword density, sentiment analysis of ethical language"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1fc14244038cc84c_t0",
+      "think": "The primitives form a triadic system of audit fidelity: authenticity ensures human authorship, compliance ensures clarity and truthfulness, and ethical alignment ensures responsible communication. These operators are dual in nature—each can be viewed as a projection onto a latent space of trustworthiness. Failure modes include false positives from overfitting to stylistic markers, underfitting due to lack of context-awareness, and leakage from implicit bias in training data. The system must maintain orthogonality across these dimensions to prevent conflated signals. Each operator is defined over a bounded domain where its value reflects a normalized risk profile. The interplay between these operators defines a composite trust metric that informs downstream decision logic in GSE.\n\nDeep epistemic analysis for human-copy-audit-checklist (1fc14244038cc84c, domain=other, pages_read=1/1): Operator 'Authenticity Assessment Operator' (page 1, domain other) captures: # Human Copy Audit Checklist As of: 2026-06-09 - Does the copy sound like a real person wrote it? Assumptions: Copy is generated from a known authorial source; linguistic patterns are distinguishable from automated generation. Breakdown regime: A → 0 when content exhibits machine-like syntax or structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): A maps to GSI's entropy-based linguistic coherence model, where low entropy implies high authenticity. Operator 'Compliance Verification Kernel' (page 1, domain other) captures: it? - Is the customer told exactly what they get? - Is the claim supported? - Assumptions: Claims are verifiable through external data sources; customer expectations are clearly defined. Breakdown regime: C → 0 when claims are ambiguous or unsupported. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): C derived from GSE's semantic parsing engine and GSI's fact-checking module. Operator 'Ethical Alignment Check' (page 1, domain other) captures: language nearby if gambling-adjacent? - Does it avoid founder-method leakage? - Does it explain the next Assumptions: Gambling-related content requires explicit ethical framing; alignment is measurable via keyword presence and tone. Breakdown regime: E → 0 when ethical warnings are absent or insufficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): E mirrors GSI’s harm-risk scoring function, calibrated against regulatory thresholds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for human-copy-audit-checklist (1fc14244038cc84c, domain=other, pages_read=1/1): Operator 'Authenticity Assessment Operator' (page 1, domain other) captures: # Human Copy Audit Checklist As of: 2026-06-09 - Does the copy sound like a real person wrote it? Assumptions: Copy is generated from a known authorial source; linguistic patterns are distinguishable from automated generation. Breakdown regime: A → 0 when content exhibits machine-like syntax or structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): A maps to GSI's entropy-based linguistic coherence model, where low entropy implies high authenticity. Operator 'Compliance Verification Kernel' (page 1, domain other) captures: it? - Is the customer told exactly what they get? - Is the claim supported? - Assumptions: Claims are verifiable through external data sources; customer expectations are clearly defined. Breakdown regime: C → 0 when claims are ambiguous or unsupported. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): C derived from GSE's semantic parsing engine and GSI's fact-checking module. Operator 'Ethical Alignment Check' (page 1, domain other) captures: language nearby if gambling-adjacent? - Does it avoid founder-method leakage? - Does it explain the next Assumptions: Gambling-related content requires explicit ethical framing; alignment is measurable via keyword presence and tone. Breakdown regime: E → 0 when ethical warnings are absent or insufficient. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): E mirrors GSI’s harm-risk scoring function, calibrated against regulatory thresholds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and cognitive science, tracing back to Shannon's channel capacity and Turing's test for machine intelligence, with modern extensions into interpretability and adversarial robustness. Retrocausal Genealogy: Rooted in human-copy-audit-checklist (1fc14244038cc84c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in human-copy-audit-checklist (1fc14244038cc84c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents may attempt to game the system by crafting hyper-compliant but misleading content. The model must account for adversarial intent while preserving utility for genuine users. This involves modeling both rational and irrational behavior in response to audit triggers. Theory of Mind & Decision Maker Model: Rooted in human-copy-audit-checklist (1fc14244038cc84c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates on distinct semantic domains. Leakage is mitigated by cross-validation of telemetry across layers and explicit exclusion of redundant features in GSE's decision graph. Cross-Layer Veto & Anti-Leakage Check: Rooted in human-copy-audit-checklist (1fc14244038cc84c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

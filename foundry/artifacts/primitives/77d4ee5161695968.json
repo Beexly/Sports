@@ -1,0 +1,211 @@
+{
+  "book_id": "77d4ee5161695968",
+  "source_status": "COMPLETE",
+  "pages_total": 26,
+  "pages_read": 26,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Min-max normalization of player/team statistics to [0,1] (Equation 1)",
+      "verbatim_quote": "After using this normalization strategy, each value gathered from the aggregate program is rescaled between the fixed range of 0 and 1.",
+      "page": 10,
+      "latex": "\\tilde{x} = \\frac{x - x_{\\min}}{x_{\\max} - x_{\\min}}",
+      "symbol_and_unit_ledger": "x: raw statistical value for a player (or aggregated team) in its native units (e.g. yards, percent, counts). x_min, x_max: minimum and maximum of that column over the normalization population, same native units as x. x_tilde: dimensionless rescaled value in [0,1]. Requires x_max > x_min (non-degenerate column). The LaTeX transcribes the printed Equation 1 'Normalization strategy of Min-Max Scaling applied to each numerical value' (p10, rendered in math font in the PDF); numerator and denominator share units, so the ratio is dimensionally homogeneous.",
+      "assumptions": "As printed: min-max scaling applied to each numerical value of the aggregated team data and of the cleaned individual player data (p10), after quantile-based outlier removal (p9), so that players can be compared across different metrics (p9). Implicit: the normalization population is the league-season aggregate; extrema are estimated from the same season's data; the procedure is applied per column independently.",
+      "breakdown_regime": "Degenerate when x_max = x_min (constant column); extremely outlier-sensitive because both extrema are single observations — the thesis's own quantile trimming (p9) is a precondition, not an optional extra. Not robust across eras or leagues: a [0,1] value is only comparable within the population that produced the extrema. The thesis itself concedes (p20) that normalizing across positions rather than within position classifications mixes WR/TE/RB distributions and that position-segregated normalization 'could be a more appropriate approach'.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE feature-normalization kernel: every rate/volume feature entering a route or outcome model is min-max scaled within position group and league-season, with extrema frozen from the training window and applied unchanged to evaluation windows (no refit on holdout rows). Derived binding adds the within-position population and frozen-extrema constraints the thesis did not enforce. tau_2 = season aggregate is the thesis's native scale; tau_1 = per-game requires re-estimation.",
+        "source_operator": "p1",
+        "telemetry": "Per-feature population extrema and their estimation window, saturation flags (values clipped at 0/1), position-group membership; drift diagnostics when evaluation-window ranges exceed training extrema."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Quantile-based removal of low-sample players before rate statistics",
+      "verbatim_quote": "As PFF+ includes even the barest of data for players who, for instance, played one play over the course of a season, it was important to remove these instances on the lower end of the spectrum.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: quantile() was used for removal of outliers, specifically to drop players at the lower end of the participation spectrum (e.g. one play over a season) before computing statistics such as yards per catch (p9). Implicit: low-participation players carry rate statistics with variance so large that they corrupt league-wide comparisons; a participation floor is a legitimate sample-quality gate.",
+      "breakdown_regime": "A quantile gate is distribution-relative, not variance-aware: it can retain a 5-catch player in a thin position group while dropping a legitimately efficient low-volume specialist; it also removes the very rookies and injury-return cases whose breakout signal a predictive engine wants. The gate must be paired with an explicit minimum-sample rule for each rate statistic (catches, targets, snaps), which the thesis does not formalize.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE sample-quality gate: before any receiver rate statistic (YPC, zone catch rate, contested catch rate) enters a kernel, the player must pass a minimum-count threshold per statistic, logged with the threshold value; quantile trimming is applied to the participation distribution as a secondary screen. Derived binding replaces the thesis's single distribution-relative cut with per-statistic count floors.",
+        "source_operator": "p2",
+        "telemetry": "Per-player snap/target/catch counts, gate thresholds per statistic, excluded-player log with reasons; sensitivity of downstream scores to the gate choice."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Yards per catch as season receiving yards divided by catches",
+      "verbatim_quote": "This essentially took the number of yards total divided by the total number of catches for the player on the season to understand their average yards gained on each catch.",
+      "page": 9,
+      "latex": "\\mathrm{YPC} = \\frac{Y_{\\mathrm{total}}}{C}",
+      "symbol_and_unit_ledger": "Y_total: total receiving yards for the player over the season, units yards. C: total number of catches over the season, dimensionless strictly positive integer count. YPC: average yards gained per catch, units yards per reception. The LaTeX formalizes the printed verbal definition (p9; the source prints no equation for it); yards divided by a count is dimensionally homogeneous as a rate.",
+      "assumptions": "As printed: yards per catch = total yards / total catches for the player on the season, created during data cleaning as a derived statistic (p9). Implicit: catches are the correct denominator for a per-reception efficiency measure; season aggregation is the unit of analysis.",
+      "breakdown_regime": "YPC conflates average depth of target (aDOT) with yards after catch (YAC): a deep-slot receiver and a yards-after-catch back can share a YPC while having opposite skill profiles, so YPC alone cannot rank route effectiveness. It is undefined at C = 0 and high-variance at small C (the p2 gate is a precondition). Season aggregation erases game-script and coverage-conditioned variance.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rate-statistic structure isomorphic across sports: output-per-event ratios (yards per catch, yards per attempt, points per possession) all share the count-denominator variance law and the conflation risk. In GSE, YPC enters receiver-value kernels only after decomposition into aDOT and YAC components, each with its own sample gate; the ratio itself is retained as a coarse sanity check, never as the ranking variable.",
+        "source_operator": "p3",
+        "telemetry": "Per-player season yards, catches, aDOT, YAC; per-game splits for variance estimation; decomposition residuals logged when YPC is reconstructed from components."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Average minimum clearance: mean over route points of distance to nearest defender",
+      "verbatim_quote": "By computing the minimum distance between the offensive player at each route point and all defensive opponents, a set of minimum distances are derived. The average of these distances forms a single metric representing the average minimum clearance from defenders throughout the route.",
+      "page": 14,
+      "latex": "\\bar{d} = \\frac{1}{N} \\sum_{j=1}^{N} \\min_{k \\in \\mathcal{D}} \\lVert \\mathbf{r}_j - \\mathbf{d}_k \\rVert",
+      "symbol_and_unit_ledger": "r_j: position vector of the j-th equidistant sample point along the proposed route, units yards in the field coordinate frame. d_k: position vector of defender k, same units and frame. D: set of defensive opponents on the field. N: number of equidistant route sample points, dimensionless positive integer. ||.||: Euclidean norm on the field plane, units yards. d_bar: average minimum clearance, units yards; higher value denotes lower chance of defensive disturbance as printed (p14). The LaTeX formalizes the printed verbal procedure (source prints no equation); all terms are lengths, so the expression is dimensionally homogeneous.",
+      "assumptions": "As printed: equidistant points along the proposed route are assessed for proximity to defensive players; the minimum distance to all defenders is taken at each point; the average of these minima is the disturbance metric, computed in route_calculation.R from pre-snap play positioning (p14). Implicit: defenders are static at their pre-snap locations; all defenders are symmetric threats; Euclidean distance is the right obstruction proxy; the route polyline is known in advance.",
+      "breakdown_regime": "Three structural blind spots. (1) Uniform averaging over equidistant points overweights long straight stems and underweights the break point where separation is actually created. (2) The min over all defenders ignores coverage assignment: a deep-half safety 15 yards away is not a threat to a 5-yard out, but symmetric min-distance treats him as one. (3) Pre-snap static positions ignore motion, closing speed, and post-snap rotation — the thesis's own future work names dynamic disturbance with defensive movement and offensive motion at the snap as missing (p24). The thesis also excludes linemen and pass-rush dynamics entirely (p11), so the metric has no time budget.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE separation-geometry kernel for Coach-Mind: clearance is computed along the route polyline but re-weighted toward break points, conditioned on coverage assignment (man/zone posteriors from tracking geometry, in the lineage of Dutta et al. 2020 as cited p6), and coupled to a pass-rush time budget that zeroes routes whose break time exceeds predicted pocket survival. Derived, not isomorphic: the football binding adds assignment-conditioning, break weighting, and the time veto absent from the source's static symmetric formulation. tau_0 = pre-snap to break (seconds).",
+        "source_operator": "p4",
+        "telemetry": "Pre-snap and at-snap player coordinates, route polyline sample points, per-point nearest-defender identity and distance, coverage-assignment posteriors, break-time vs pocket-survival estimates; clearance distributions logged per route family."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Route selection by weighted total of normalized route score and disturbance, argmax",
+      "verbatim_quote": "By normalizing the defensive disturbance metrics to ensure comparability, these efficiencies are combined with the route scores through a weighted total. The resulting combined metric thus encapsulates a holistic assessment of each route's viability and the route with the highest combined value is ultimately selected.",
+      "page": 15,
+      "latex": "r^{*} = \\arg\\max_{r \\in \\mathcal{R}} \\left( w_S \\tilde{S}_r + w_D \\tilde{D}_r \\right)",
+      "symbol_and_unit_ledger": "S_tilde_r: normalized route-effectiveness score for candidate route r, dimensionless in [0,1] (built from normalized PFF+ fields, p13). D_tilde_r: normalized defensive-disturbance metric for route r, dimensionless (normalized for comparability as printed, p15). w_S, w_D: dimensionless user-adjustable weights (p13). R: finite candidate route set per position per coverage (3-4 routes per skill position per coverage type, p12). r*: selected route label. The LaTeX formalizes the printed weighted-total-plus-highest-value selection procedure (p15); all additive terms are dimensionless. This is a decision procedure, NOT a validated law of performance: the thesis calls its equations 'sample equations' (p5, p20) and 'foundational and illustrative in nature' (p23), with weights set by user judgment.",
+      "assumptions": "As printed: disturbance metrics are normalized for comparability, combined with route scores through a weighted total, and the route with the highest combined value is selected (p15); route equations are weighted so users can modify the influence of each metric (p13); route scores integrate zone catch percentage, average depth of target, first downs, and contested catch rate (p13). Implicit: the two normalized components are commensurable and a linear aggregation is adequate; candidate routes are pre-enumerated coverage-beaters (p12).",
+      "breakdown_regime": "The weights are user-set heuristics, never fitted or validated against settled outcomes; the evaluation section demonstrates functional responsiveness and illustrative case studies (Smith-Schuster hook vs flat; Ebron out vs hook under relocation, p21-p22) but reports no predictive accuracy, no holdout, and no outcome scoring — despite the abstract's claim of reflecting real-world play outcomes (p3). Linear aggregation also cannot express interactions (e.g. clearance matters only if the QB has time), and argmax over a pre-enumerated coverage-beater set cannot discover routes outside that set.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE multi-criteria play-ranking skeleton: candidate plays/routes are scored by normalized effectiveness and geometry components and ranked by a weighted total — but the weights must be estimated against internally computed settled-outcome values (completion probability, yardage, first-down conversion; never sportsbook odds) and validated on temporal holdouts before any decision use. Derived binding replaces user-set weights with fitted, calibrated ones and adds interaction terms the linear form lacks.",
+        "source_operator": "p5",
+        "telemetry": "Component scores per candidate route, fitted weights with estimation window, held-out calibration of the ranking against settled outcomes, rank-stability diagnostics across seasons; user-weight mode kept only as an exploratory sandbox, never as the decision path."
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Personnel-package combinatorics: 11 players = 5 OL + 1 QB + 5 skill slots",
+      "verbatim_quote": "For example, a team can have 2 wide receivers, 2 tight ends, and 1 running back as positions on the field known as 12 personnel. This does not include the 5 base offensive linemen and 1 quarterback for a total of 11 players on the field.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: 12 personnel = 2 WR + 2 TE + 1 RB; the count excludes the 5 base offensive linemen and 1 quarterback, totaling 11 players (p10); the thesis fixes 11 personnel = 3 WR + 1 TE + 1 RB for all calculations and visualization because of its frequent league use (p10-p11). Implicit: the personnel digit convention encodes RB and TE counts, with WR count filling the remaining skill slots to five.",
+      "breakdown_regime": "The thesis's restriction to 11 personnel is a coverage gap: league usage spans 12, 13, 21, 22 and heavy packages, and route/coverage geometry changes with skill-slot composition (the thesis's own future work names broadening personnel packages, p24). The combinatorial convention also breaks for anomalous alignments (extra linemen, wildcat QB substitutions) that do not change the announced personnel group.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Formation-enumeration structure for the Coach-Mind sim: the five skill slots partition into (RB, TE, WR) counts under the personnel convention, and each partition induces a distinct formation/route-tree space. Isomorphic combinatorial structure; GSE must enumerate across the league's personnel usage distribution rather than fixing 11 personnel as the thesis does. tau_0 = per-snap personnel read.",
+        "source_operator": "p6",
+        "telemetry": "Personnel group per play from play-by-play, league usage distribution per season, formation tags; simulation coverage audit comparing enumerated packages against observed usage."
+      }
+    },
+    {
+      "primitive_id": "p7",
+      "name": "WR1/WR2/WR3 ordering by season base targets (revealed preference)",
+      "verbatim_quote": "This ranking was done with the initial PFF+ data and it’s ordering by the base targets field. Base targets are the number of times a player is thrown to over the course of a season.",
+      "page": 14,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: the WR1/WR2/WR3 labels are assigned by ordering the PFF+ data by base targets, where base targets are the number of times a player is thrown to over the season; the first WR row is WR1, second WR2, and so on (p14). Implicit: target volume is a proxy for the coaching staff's usage hierarchy; the ordering is season-aggregate and team-relative.",
+      "breakdown_regime": "Targets conflate scheme, quarterback preference, game script, and injury absences — they measure revealed usage, not talent or role stability. The label is mobile: the thesis's own case study shows Smith-Schuster classified WR3 in 2019 and WR2 in 2020 with different route preferences against the same cover 3 (p21). A season-aggregate ordering also mislabels mid-season role changes and cannot distinguish a true WR1 from a high-volume slot accumulator.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE role-inference kernel: target-volume ordering supplies a prior over WR1/WR2/WR3 usage roles for coverage-allocation modeling (defenses key doubles to the perceived WR1), but must be blended with snap share, alignment distribution, and game-level windows rather than used as a fixed season label. Derived binding adds role-stability tracking and multi-signal fusion absent from the thesis's single-field ordering.",
+        "source_operator": "p7",
+        "telemetry": "Per-player season and rolling-window target counts, snap shares, alignment splits; role-label transition log (e.g. WR3->WR2) with dates; defensive double-coverage rates conditioned on the inferred role."
+      }
+    },
+    {
+      "primitive_id": "p8",
+      "name": "Coverage-beater structure: corner and post routes exploit cover 2 zone",
+      "verbatim_quote": "For example, the corner and post route indicated in Image 2 were two of the routes chosen for cover 2 as the coverage is highly susceptible to them.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: traditional coverage-beaters were chosen for each coverage type; for cover 2 (illustrated via the Tampa 2 variant with zone responsibilities and historically vulnerable spots marked), the corner and post routes are highly effective, and 3-4 routes were assigned per skill position per coverage type (p12). Coverage set restricted to cover 2, cover 3, cover 4, man, and blitz as the most common league schemes (p11). Implicit: zone coverage creates structurally predictable voids that route geometry can target.",
+      "breakdown_regime": "The vulnerability is variant-dependent: Tampa 2 drops the middle linebacker into the deep middle, partially plugging the post void that standard cover 2 leaves (the thesis's Image 2 is specifically Tampa 2, p12). Coverage-beater priors are also era-dependent — the thesis's own reference [6] is titled 'How cover 2 became an endangered species' (p26) — and modern pattern-matching rotations blur the man/zone distinction the route table assumes. The pre-enumerated 3-4 route set cannot express adaptive route adjustments.",
+      "domain": "football",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Route-vs-coverage payoff structure for Coach-Mind: each coverage shell induces a spatial void map, and route families are matched to voids (corner/post vs cover 2 deep halves; seams vs cover 3). Isomorphic geometric structure; GSE must condition the void map on coverage variant (Tampa 2 vs standard cover 2) and on era, and source coverage labels from tracking-geometry mixture posteriors (Dutta et al. 2020 lineage, cited p6) rather than declared presets alone.",
+        "source_operator": "p8",
+        "telemetry": "Settled outcomes by route family x coverage label x variant, coverage-label posteriors from tracking geometry, era-stratified payoff estimates; void-map validation against observed completion locations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Epistemic audit of the thesis before any kernel is admitted. Chitturi's abstract claims that evaluations using historical play data demonstrate the model's capacity to accurately reflect real-world play outcomes (p3). The evaluation section does not deliver that claim in the form a foundry requires: there is no accuracy figure, no holdout protocol, and no scoring against settled outcomes. What Section 4 actually contains is functional verification — event listeners fire, visual updates occur, null-input crashes were fixed (p19, p23) — plus illustrative case studies: JuJu Smith-Schuster, WR3 by targets in 2019, favors a hook against cover 3; in 2020, now WR2, he favors a flat against the same coverage; Eric Ebron's out route flips to a hook when his preset position is moved to the opposite side near S2 (p21-p22). The thesis is candid about its own status: the route equations are 'sample equations' (p5, p20), 'foundational and illustrative in nature' (p23), and their weights are user-adjustable by design (p13). The foundry therefore extracts structure, not validated effect sizes: the normalization pipeline, the clearance geometry, the decision skeleton, the personnel combinatorics, and the coverage-beater priors are genuine reusable kernels; the specific weights and the claim of outcome accuracy are not imported. The Ebron relocation case deserves separate respect: route scores are held constant while position changes, and the selected route flips (p22). Within the model, that is a clean isolation of the disturbance term's causal contribution — a sensitivity demonstration. It shows the geometry kernel does work inside the decision rule; it does not show the decision rule predicts NFL outcomes. Conflating those two statements would be exactly the fabrication the doctrine forbids. A second structural flaw is conceded by the thesis itself: normalizing across positions rather than within position classifications mixes wide-receiver, tight-end, and running-back distributions, and the author admits position-segregated normalization could be more appropriate but was not deemed crucial (p20). For a predictive engine it is crucial, and the foundry binding enforces within-position normalization. Third, the data lineage bounds every claim: PFF+ Receiving vs Scheme annual aggregates for 2019-2021 (reference [4], p26) and the Kaggle Fernandez offensive-stats dataset (reference [3]) are season-level summaries. Game-level and snap-level variance was averaged away before modeling began — a hidden state created by data access, not by theory. Finally, doctrine check: the thesis's inputs are scheme statistics, positions, and tracking-derived features; no sportsbook odds appear anywhere in its pipeline, so the feature channels pass the odds prohibition cleanly. The abstract's coaching-strategy framing is retained as motivation only.",
+      "retrocausal_genealogy": "The thesis sits in the Kaggle NFL Big Data Bowl lineage: Bradlow et al.'s BEAR metric (Bradley-Terry Elo aggregate rating from tracking data, reference [1]) and Dutta, Yurko and Ventura's unsupervised man/zone mixture models (JQAS 2020, reference [2]) created the tracking-feature culture this work inherits (p6). The institutional demand side is the league's shift from the defenses-win-championships philosophy toward offensive-pedigree head coaches and salary allocation to skill players (p4). The hidden state is access: an undergraduate's tracking data arrived as Kaggle and PFF aggregates, so the model froze at pre-snap static geometry — a scar the thesis's own future work names when it calls for motion at the snap and dynamic disturbance (p24).",
+      "theory_of_mind": "Route selection is a recursive belief game. The offensive coordinator calls coverage-beaters because he knows the defensive coordinator's zone rules; the DC answers with Tampa 2, dropping the middle linebacker into the deep middle precisely to plug the post void the offense is attacking (p12); the quarterback reads the safety's pre-snap leverage and audits whether the corner/post is still open against the rotation. The thesis's disturbance metric is a frozen snapshot of this recursion: it models where defenders stand, not what defenders believe about the route. The Ebron flip near S2 shows geometry acting as a proxy for the safety's threat, but a real safety disguises, rotates, and communicates; clearance must be treated as a belief-conditional quantity, not a static distance.",
+      "cross_layer_veto": "Execution physics vetoes geometric clearance. A corner route demanding a sharp break at depth is only executable if the receiver's deceleration capacity, hip-flip speed, and accumulated fatigue permit it; a heavy or fatigued receiver with ten yards of static clearance still cannot create late separation against a trailing corner with superior closing speed. The thesis explicitly excludes offensive and defensive linemen and pass-rush dynamics (p11), which removes the clock that vetoes deep routes: a twenty-five-yard post with excellent clearance is worth zero when protection telemetry predicts pressure before the break. The foundry re-couples both veto layers — biomechanical execution capacity and pocket-survival time — before any clearance score influences a decision."
+    },
+    {
+      "trace_id": "t2",
+      "think": "Geometry and decision-kernel audit. The average-minimum-clearance metric is a legitimate scalarization of a separation field, but its three blind spots are structural, not tuning issues. First, uniform averaging over equidistant route points weights long straight stems more than the break point, yet separation is created at the break; the foundry re-weights the sum toward break neighborhoods. Second, the minimum over all defenders treats every defender as a symmetric threat, ignoring assignment: in cover 2 the deep-half safety responsible for the top third is irrelevant to a five-yard out, while in man the trailing corner is the only threat that matters. Conditioning the min on coverage-assignment posteriors — the unsupervised mixture-model lineage of Dutta et al. cited on p6 — converts a geometric proxy into a responsibility-aware one. Third, static pre-snap positions cannot see motion, closing speed, or post-snap rotation; the thesis's future work concedes exactly this (p24). The weighted-sum argmax is a decision skeleton, not a performance law: with user-set weights and self-described illustrative equations, its output is a hypothesis generator. The binding is to fit the weights against internally computed settled-outcome values — completion probability, yardage, first-down conversion — never against sportsbook odds, and to validate on temporal holdouts; interaction terms must replace pure additivity because clearance matters only conditional on pocket time. The normalization kernel is sound but must be frozen per league-season and computed within position groups, correcting the cross-position mixing the thesis concedes (p20). The quantile gate protects rate statistics from one-play players but must be paired with per-statistic count floors. YPC must be decomposed into aDOT and YAC before entering receiver-value models, because the ratio conflates depth role with after-catch skill. Personnel combinatorics gives the simulation its enumeration structure, but fixing 11 personnel is a coverage gap: the league's usage distribution spans 12, 13, 21 and 22, and the foundry must enumerate across observed usage. The WR ordering by base targets is revealed preference, not talent ranking: targets encode the coordinator's trust, the quarterback's reads, and game script; the Smith-Schuster WR3-to-WR2 transition with a hook-to-flat change against identical cover 3 (p21) shows the label is season-relative and mobile, so role inference must blend targets with snap share and alignment, and must track transitions rather than freeze a season label. Every kernel from this thesis enters the foundry with the same three bindings: temporal holdout evaluation, population-correct normalization, and doctrine-clean features. One further discretization deserves audit: the thesis assigns only three or four pre-chosen coverage-beater routes per skill position per coverage type (p12). That coarse discretization of the route tree is itself a modeling assumption — it silently excludes option routes, sight adjustments, and check-release decisions that depend on post-snap leverage rather than pre-snap shells. The running back's check release in the thesis's own Image 1 (p11) is precisely such a decision: its correctness is conditional on the blitz being picked up, a game-state event no static coverage label can encode. The foundry must therefore treat the coverage-beater table as a prior over route families, never as the complete action space, and must reserve a post-snap adjustment layer whose inputs are leverage and protection events rather than preset coverage names.",
+      "retrocausal_genealogy": "Min-max scaling and quantile trimming descend from classical robust-statistics practice, industrialized here through the R tidyverse — dplyr, scales, readr for cleaning; group_by aggregation to 32 team rows; rescale for normalization (p8-p10). The pipeline clean-aggregate-normalize-score-store mirrors the CRISP-DM prepare-model-evaluate-deploy loop, except evaluation stops at functionality. The PostgreSQL-plus-Shiny architecture reflects the 2020s reproducible-analytics stack. The hidden state is the data unit: annual PFF aggregates were the accessible granularity, so game-level variance was averaged away before modeling — a data-access scar that bounds every downstream claim and explains why the thesis can demonstrate responsiveness but never predictive calibration.",
+      "theory_of_mind": "The WR1/WR2/WR3 labels by target volume encode a belief hierarchy inside the building: the coordinator designs the plan around the player he trusts on critical downs, the quarterback's pre-snap reads confirm or contradict that trust, and defenders key the perceived WR1 to allocate double coverage. When Smith-Schuster moved from WR3 to WR2 between 2019 and 2020 and his cover-3 preference shifted from hook to flat (p21), the model reads a role change, but the deeper cause is a changed belief equilibrium among quarterback, coordinator, and defense. A kernel that treats the label as an intrinsic player attribute misses the recursion; role must be modeled as a moving equilibrium, not a depth-chart fact.",
+      "cross_layer_veto": "The clearance kernel is vetoed at the break point by execution physics: separation at the stem is worthless if the receiver cannot create late separation against a trailing corner with better closing speed, and deceleration capacity, cut angle at velocity, and prior-load fatigue decide whether a geometrically open corner or post is catchable. The thesis's exclusion of linemen (p11) also deletes the pass-rush clock; the foundry couples a protection-time budget to route depth so any route whose break time exceeds predicted pocket survival is down-weighted to zero regardless of clearance. Clinical telemetry — fatigue and load history — further gates break sharpness, making the veto cross-layer: physics, physiology, and game state all outrank the geometric score."
+    }
+  ],
+  "universal_lens": "Scalarization audit: every multi-criteria score must declare its normalization population, its weighting provenance (user-set versus fitted), and its validation target. Geometry kernels must state which agent responsibilities they ignore; rate statistics must declare sample gates; and functional demonstration must never be mistaken for predictive validation. These rules transfer unchanged to any domain that ranks alternatives by blended normalized scores.",
+  "gsi_mapping": "The clearance-geometry kernel transfers to GSI as a spatial-risk field: minimum-distance-to-threat scalarization along a movement path is isomorphic to collision and impingement risk screening in rehabilitation movement analysis. Quantile gating of one-play players mirrors low-sample patient exclusion, and within-position normalization maps to within-cohort normalization for clinical telemetry comparisons.",
+  "gse_mapping": "Coach-Mind consumes the route-clearance kernel and the weighted-argmax skeleton as a pre-snap play-ranking hypothesis generator, re-fitted against settled outcomes with assignment-conditioned clearance, break-point weighting, and a pass-rush time veto. DFS exposure uses the ranking only after temporal-holdout calibration. Personnel enumeration spans observed league usage, and no sportsbook odds enter any feature channel."
+}

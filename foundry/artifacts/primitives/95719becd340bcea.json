@@ -1,0 +1,162 @@
+{
+  "book_id": "95719becd340bcea",
+  "source_status": "COMPLETE",
+  "pages_total": 73,
+  "pages_read": 73,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Elo residual-update team rating (online gradient-style correction)",
+      "verbatim_quote": "we update an ELO rating after each match by taking the pre-match ELO rating, and adding a weighted difference between the actual number of expected goals and the expected amount of expected goals.",
+      "page": 41,
+      "printed_page": 33,
+      "latex": "R_{t+1}=R_t+\\eta\\,(A_t-E_t); \\qquad R \\leftarrow R + c\\,(\\mu_{\\text{league}}-R)\\ \\text{(between seasons)}",
+      "symbol_and_unit_ledger": "R: team rating [expected goals per match, goals/game]; A_t: actual xG in match t (weighted shot + non-shot xG) [goals]; E_t: expected xG (weighted own-offense vs opponent-defense ratings) [goals]; eta: learning rate [dimensionless], optimized 0.15 (score regression) / 0.12 (outcome classification); (A_t-E_t): residual [goals]; eta*(A_t-E_t): rating increment [goals]; c: between-season mean-reversion coefficient [dimensionless], optimized 0.01 / 0.135; mu_league: league mean rating [goals/game]. All additive terms carry goals/game, so the update is dimensionally homogeneous. The source prints the rule as 'ELO(t + 1) = ELO(t) + eta(actual(t) - expected(t))' (PDF p.41).",
+      "assumptions": "Ratings updated online after each match without retraining the whole model; six ratings per team (general/home/away x offensive/defensive); actual = weighted average of shot-based and non-shot-based xG; expected = weighted average of own general+venue offensive rating and opponent general+venue defensive rating; initialized from prior-season goals scored/conceded (promoted teams from relegated teams' average). As printed: ELO(t + 1) = ELO(t) + ⌘(actual(t) −expected(t))",
+      "breakdown_regime": "High variance of football results caps achievable accuracy (~0.511); too-large eta makes ratings chase noise. The report finds win/loss is more stable than goals, so the optimal eta and between-season mean-reversion differ between the classification and regression objectives (PDF p.55-56). Cold-start bias for promoted teams. The source itself notes the update is gradient-like: This formula works in a similar way to a back-propagation algorithm which ad- justs a value at each iteration using a coefﬁcient, similar to a learning rate.",
+      "domain": "cs",
+      "timescales": [
+        "tau_match",
+        "tau_season",
+        "tau_career"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The source explicitly states the isomorphism to back-propagation: R_{t+1}=R_t+eta(A_t-E_t) is a stochastic-gradient-style residual correction, isomorphic to an Elo/TrueSkill online rating and to a TD(0) value update V<-V+alpha(target-V). Bind it as the GSE team-strength state: offensive/defensive ratings updated per game from an EPA-derived actual-vs-expected residual, with between-season shrinkage toward the league mean (composes with book 3178b5fdce0fc1a5 primitive p5). CROSS-SPORT NOTE: the source is association football (soccer, 11 players, 1-point goals); the mapping to the 22-player American-football dynamical system is an explicit isomorphism of the update rule, not a claim that the two sports share dynamics.",
+        "source_operator": "p1",
+        "telemetry": "Per-game actual-vs-expected scoring residual built from play-by-play EPA/xG-equivalent (no market inputs); per-team rating state with venue splits; between-season mean-reversion coefficient tuned on held-out seasons. No sportsbook odds used as inputs."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Expected goals (xG) as a shot-level scoring-probability integral",
+      "verbatim_quote": "Using an expected goals model enables us to eliminate some of the randomness that is associated with actual goals scored and get a better picture of a team’s performance, and therefore strength.",
+      "page": 29,
+      "printed_page": 21,
+      "latex": "\\mathrm{xG}_{\\text{match}}=\\sum_{\\text{shots}} P(\\text{goal}\\mid d,a,\\text{type})\\cdot w_{\\text{state}}; \\quad d=\\sqrt{\\text{lat}^2+(\\text{lon}-23)^2},\\ a=\\arctan\\frac{|\\text{lon}-23|}{\\text{lat}}",
+      "symbol_and_unit_ledger": "P(goal|d,a,type): per-shot scoring probability [dimensionless, 0-1]; d: distance to goal [pitch coordinate units]; a: angle to goal [radians]; type: shot category {normal, volley, header, direct/indirect free-kick, bicycle, own goal, penalty} [categorical]; w_state: game-state weight [dimensionless], decays linearly toward k in [0,1] after a start time when leading; xG_match: expected goals [goals]. Sum of (probability x dimensionless weight) yields expected goals. Distance/angle formulas printed at PDF p.33 (goal at lat=0, lon=23).",
+      "assumptions": "A separate classifier per shot type, because each type has a different scoring probability from the same location; predictors are distance and angle only; binary shot outcome (goal=1, else=0); leading-team shot value is devalued to reflect the chasing team's increased risk-taking; red-card numerical-superiority adjustment. As printed: We therefore decide to set a time t in the match after which the value of a shot will decrease linearly until the end of the game towards a weight k between 0 and 1.",
+      "breakdown_regime": "The report's stated weakness: no defender-position data at shot time and no pass data, so dangerous situations that do not end in a shot are missed (hence a separate non-shot xG regression). As printed: we do not know the position of the opposing team’s players at the time of the shot. It is clear that, for instance, having a player between the ball and the goal would dramatically reduce the probability of the shot resulting in a goal. The xG-over-actual-goals gain is small (accuracy 0.511 vs 0.496) because of data limitations (PDF p.58).",
+      "domain": "cs",
+      "timescales": [
+        "tau_shot",
+        "tau_match",
+        "tau_season"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "xG is the soccer analog of the opportunity-quality idea behind EPA: a per-event scoring-probability integral that strips finishing luck from finished output. Bind it to GSE as a per-play expected-points surface over the American-football state variables (field position, down, distance, coverage) that replace soccer's distance/angle, with game-state devaluation of garbage-time production (composes with book 3178b5fdce0fc1a5 primitive p1 breakdown). The motivation is identical: the number of goals scored during a match possesses an important random element which leads to large inconsistencies in many games between a team’s performance and number of goals scored or conceded.",
+        "source_operator": "p2",
+        "telemetry": "Event coordinates + shot type -> in GSE, play coordinates + down/distance + coverage flags; per-event probability head calibrated on held-out seasons; game-state weight tuned (source optimized decay start at the 70th minute). No sportsbook odds inputs."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "Poisson score-to-outcome probability kernel (Dixon-Coles lineage)",
+      "verbatim_quote": "The Poisson distribution enables the calculation of the probability of scoring a certain number of goals for each team, which can then be converted into score probabilities and ﬁnally into match outcome probabilities.",
+      "page": 25,
+      "printed_page": 17,
+      "latex": "P(k\\ \\text{goals})=\\frac{e^{-\\lambda}\\lambda^{k}}{k!}; \\qquad P(\\text{outcome})=\\sum_{(i,j)\\in\\text{outcome}} P(i)P(j)",
+      "symbol_and_unit_ledger": "k: goals scored by a team [dimensionless count]; lambda: expected goals in the match [goals/match]; P(k goals): probability mass [dimensionless, 0-1]; P(outcome): sum of joint score-grid probabilities over scorelines realizing win/draw/loss [dimensionless]. The PMF is dimensionless. Source prints 'P(k goals in match)= e^{-lambda} lambda^k / k!' and defines lambda as printed: where λ represents the expected number of goals in the match.",
+      "assumptions": "Goals per team ~ Poisson(lambda); lambda from attacking/defensive ratings (Maher 1982; Dixon & Coles 1997 maximum-likelihood with exponential time-decay weighting of past results); the two teams' scores treated as independent when forming the joint grid. Lineage as printed at PDF p.24-25 (Moroney 1956, Reep 1971, Hill 1974, Maher 1982, Dixon & Coles 1997).",
+      "breakdown_regime": "The report's own empirical veto: Poisson-derived outcome accuracy is only 0.446, and as printed: This could lead to the hypothesis that the Poisson distribution does not accurately model the distribution of goals in a game of football. Low-score dependence / draw inflation (the Dixon-Coles correction) and high-goal outliers are not captured by the independent base Poisson; Forrest & Simmons (2000) avoided the score-interdependence by classifying outcomes directly (PDF p.26).",
+      "domain": "math",
+      "timescales": [
+        "tau_match",
+        "tau_season"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The same Poisson arrival kernel as book 3178b5fdce0fc1a5 primitive p4, isomorphic across sports: a null generator of independent scoring arrivals. Bind it to the GSE scoring-event simulator, but split event types (touchdown, field goal, safety) each with its own lambda, because American football has multi-valued scoring whereas soccer has a single 1-point event (the report itself contrasts rugby's multi-point events at PDF p.10). DOCTRINE NOTE: the source benchmarks against Bet365 bookmaker odds and its dataset contains odds columns; the sovereign kernel extracted here is the PMF, and the GSE mapping uses no sportsbook odds as inputs or targets.",
+        "source_operator": "p3",
+        "telemetry": "Per-game scoring-event counts by type, drive counts, pace (seconds/snap) from play-by-play; lambda by MLE = sample mean per event type; dispersion diagnostic to trigger negative-binomial fallback. No odds inputs."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "Generalized linear model: OLS linear predictor and logit link",
+      "verbatim_quote": "the output variable of the model represents the log-odds score of the positive outcome in the classiﬁcation.",
+      "page": 17,
+      "printed_page": 9,
+      "latex": "y=\\beta_0+\\sum_{k}\\beta_k x_k+\\varepsilon; \\quad \\hat\\beta=\\arg\\min_\\beta\\|X\\beta-Y\\|^2; \\qquad \\ln\\frac{p}{1-p}=\\beta_0+\\sum_k\\beta_k x_k; \\quad \\sigma(z)=\\frac{1}{1+e^{-z}}",
+      "symbol_and_unit_ledger": "y: response [outcome units]; x_k: predictors [feature units]; beta_k: weights [outcome/feature units]; beta_0: intercept [outcome units]; epsilon: Gaussian error [outcome units]; ||X beta - Y||^2: residual sum of squares [outcome^2]; p: positive-class probability [dimensionless 0-1]; z: log-odds [dimensionless]; sigma(z): logistic sigmoid [dimensionless 0-1]. beta_k*x_k carries outcome units matching y; the logit left side is dimensionless matching the dimensionless linear predictor on standardized features. OLS prose as printed: by minimizing the residual sum of squares between the actual responses Y in the dataset and the predicted responses Xβ where X is the matrix of input variables in the dataset.",
+      "assumptions": "Output is a linear combination of inputs; Gaussian-distributed error for OLS; logit link maps the bounded 0-1 probability to an unbounded log-odds linear predictor; fitted coefficients are interpretable (direction and magnitude of association). The report warns the linearity assumption can be too simple and that highly-correlated inputs degrade performance (PDF p.18).",
+      "breakdown_regime": "Nonlinearity and multicollinearity break the GLM (PDF p.18). Empirically the report's outcome classifier chose a linear-kernel SVM over logistic regression (PDF p.52), so logistic is a candidate baseline, not the winner; the logit link's probability calibration is not guaranteed when the linear assumption fails.",
+      "domain": "math",
+      "timescales": [
+        "tau_play",
+        "tau_match",
+        "tau_season"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The GLM is the base policy-evaluation surface for Coach-Mind, identical in form to book 3178b5fdce0fc1a5 primitive p3: bind the logit link to binary play outcomes (completion, fourth-down conversion, sack allowed) and OLS to continuous outputs (yards, EPA). The interpretable-coefficient property is what lets a coach read the direction of each feature's association, which a deep model obscures.",
+        "source_operator": "p4",
+        "telemetry": "Play-by-play features (down, distance, field position, air yards, pressure flags) with held-out calibration; coefficient signs audited against domain knowledge. No sportsbook odds inputs."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "F1 score as harmonic precision-recall balance for imbalanced classes",
+      "verbatim_quote": "The F1 score is in general recognised to be more useful than accuracy as it takes false positives and false negatives into account. It is especially useful for uneven class distribution, as we have here (home wins happen more often than draws or away wins).",
+      "page": 49,
+      "printed_page": 41,
+      "latex": "F_1=2\\,\\frac{\\text{precision}\\cdot\\text{recall}}{\\text{precision}+\\text{recall}}; \\quad \\text{precision}=\\frac{tp}{tp+fp},\\ \\text{recall}=\\frac{tp}{tp+fn}",
+      "symbol_and_unit_ledger": "tp, fp, fn: true-positive / false-positive / false-negative counts [dimensionless counts]; precision, recall: ratios [dimensionless 0-1]; F1: harmonic mean [dimensionless 0-1]. All terms dimensionless. For the 3-class problem the report computes F1 per category and takes the average (macro). Accuracy = ntrue/ntotal is the companion metric (PDF p.49).",
+      "assumptions": "A defined positive class; confusion-matrix counts from held-out predictions; per-class F1 then macro-average for the multiclass (home win/draw/away win) problem. The report uses F1 alongside accuracy precisely because home wins dominate the class distribution (PDF p.49).",
+      "breakdown_regime": "F1 ignores true negatives and is threshold-dependent; a macro-average can mask a rare class. The report's F1=0.382 is low despite accuracy 0.511 because home-win dominance inflates accuracy while draws/away wins remain hard (PDF p.58). F1 alone therefore cannot certify a model on imbalanced high-leverage events.",
+      "domain": "math",
+      "timescales": [
+        "tau_evaluation (held-out folds)",
+        "tau_season"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the harmonic-mean F-measure in information retrieval and to balanced-accuracy concerns in clinical detection. Bind it to GSE evaluation of rare high-leverage events (fourth-down conversions, turnovers, red-zone stops) where class imbalance makes raw accuracy misleading - composing with book 3178b5fdce0fc1a5's warning that high-leverage plays are not stable predictors. A model must be judged on the rare class, not the majority class.",
+        "source_operator": "p5",
+        "telemetry": "Confusion matrices on held-out play outcomes per event class; macro-F1 and per-class recall reported together with accuracy; no odds inputs."
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Naive Bayes factorized posterior with Gaussian likelihood",
+      "verbatim_quote": "assumption that every two different features are independent, thus enabling the use of Bayes’ Theorem:",
+      "page": 19,
+      "printed_page": 11,
+      "latex": "P(y\\mid x_1,\\dots,x_n)\\propto P(y)\\prod_{i=1}^{n}P(x_i\\mid y); \\quad P(x_i\\mid y)=\\frac{1}{\\sqrt{2\\pi\\sigma_y^2}}\\exp\\!\\Big(-\\frac{(x_i-\\mu_y)^2}{2\\sigma_y^2}\\Big)",
+      "symbol_and_unit_ledger": "P(y|x): posterior class probability [dimensionless 0-1]; P(y): class prior [dimensionless]; P(x_i|y): per-feature class-conditional likelihood [1/feature units]; mu_y: class-conditional feature mean [feature units]; sigma_y: class-conditional feature standard deviation [feature units]; exponent (x_i-mu_y)^2/(2 sigma_y^2): dimensionless. The Gaussian prefactor 1/sqrt(2 pi sigma_y^2) carries 1/feature units, matching the likelihood. Parameters estimated by maximum likelihood; decision by MAP (PDF p.20).",
+      "assumptions": "Conditional independence of every pair of features given the class (the 'naive' assumption); Gaussian class-conditional likelihood for continuous features; MLE for mu_y and sigma_y; MAP decision rule chooses the most probable class. The report chose Gaussian Naive Bayes as its shot-xG classifier because it gave the best accuracy among logistic/kNN/Naive Bayes/random forest (PDF p.50).",
+      "breakdown_regime": "The independence assumption is violated when features are coupled - shot distance and angle are geometrically related - and the report notes predicted probabilities are 'somewhat inaccurate' even when the decision rule is robust (PDF p.20). Thus Naive Bayes can win on accuracy while being poorly calibrated, which matters whenever the probability itself (xG) is the product, not just the class label.",
+      "domain": "math",
+      "timescales": [
+        "tau_shot",
+        "tau_match"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A fast per-event probability head: the report's actual shot-xG model. Bind it to GSE as a lightweight per-play outcome classifier where features are approximately independent, but pair it with a calibration check (reliability discipline from book 3178b5fdce0fc1a5 primitive p2) because the xG probability is the deliverable, not merely a class label. The independence veto must be checked feature-by-feature before trusting the posterior.",
+        "source_operator": "p6",
+        "telemetry": "Per-event features (distance/angle analogs: field position, down/distance, coverage) with class-conditional Gaussian fits; calibration curve and reliability gate on held-out seasons. No sportsbook odds inputs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Follow the rating idea back to its origin before trusting it. The report states the most famous rating system 'was invented in 1978 by Elo to rate chess players' (PDF p.28, printed p.20), and that the name was carried into football by Buchdahl's 2003 work and Hvattum's 2010 ELO covariates. So the Elo update is not a football invention; it is a chess-rating algorithm imported into sport, and its lineage must be recorded honestly rather than given a fabricated football origin. The sovereign invariant is the residual-update rule R_{t+1}=R_t+eta(A_t-E_t): a rating moves in proportion to the gap between what happened and what was expected. The report itself flags the deep structure: 'This formula works in a similar way to a back-propagation algorithm which adjusts a value at each iteration using a coefficient, similar to a learning rate' (PDF p.41). That is the isomorphism the foundry extracts - an online stochastic-gradient-style correction, the same family as a TD(0) value update V<-V+alpha(target-V). What makes the report's version modern is that A_t is not the raw score but an expected-goals residual: the actual is a weighted blend of shot-based and non-shot-based xG, and the expected is a blend of the team's own offensive rating and the opponent's defensive rating, each with general and home/away splits. This is a deliberate noise filter: by updating on xG rather than finished goals, the rating chases opportunity quality rather than finishing luck. The report also builds in regression toward the mean between seasons, pulling every rating toward the league mean by an optimized coefficient (0.01 for the score-regression objective, 0.135 for the outcome-classification objective). The divergence of those two coefficients is itself a finding: goals scored/conceded persist across seasons more than win/draw/loss probabilities do, so the classification rating needs more shrinkage. This composes directly with the reliability-before-valuation discipline of the Eager & Erickson book (3178b5fdce0fc1a5, primitive p5): shrinkage strength should track the reliability of the signal being shrunk. The optimized learning rates (0.15 regression, 0.12 classification) encode the same lesson - scoring depends more on recent form than winning does, so the scoring rating may move faster. Compile this into GSE as the team-strength state: an offensive and defensive rating per team, updated each game from an EPA-derived actual-vs-expected residual, with venue splits and between-season shrinkage. The cross-sport caution is essential: the source is association football, eleven players and a single one-point scoring event, whereas the GSE target is the 22-player American-football dynamical system with multi-valued scoring. The update rule is isomorphic; the dynamics are not. The mapping transfers the correction mechanism, not a claim that soccer and American football share a state space. And the doctrine boundary is explicit: the report benchmarks its accuracy against Bet365 bookmaker odds, but the GSE compilation uses no sportsbook odds as inputs or targets - the rating is learned from play-by-play residuals alone.",
+      "retrocausal_genealogy": "The hidden state that produced this rating is a chain of imports. Elo's 1978 chess system was built for a zero-sum, draw-rich, individual game; Buchdahl (2003) and Hvattum (2010) carried it into football because team strength needed a cheap online summary that did not require retraining. The report's scar is computational: it wanted a rating that improves after each game 'without the need to train the whole model again' (PDF p.54), so it chose an online residual update and then upgraded the residual from finished goals to expected goals. Each layer left a mark: the chess origin explains the symmetric win/loss logic, and the xG upgrade explains why the learning rate and shrinkage differ between scoring and outcome objectives.",
+      "theory_of_mind": "Recursive belief clash in the game-state adjustment: the model believes a team leading by one goal will face a chasing opponent that takes risks, so it devalues the leading team's late shots toward k~0.52-0.6 after the 70th minute; the leading manager believes he should protect the lead and bring on defensive players; the chasing manager believes he must commit attackers. The rating designer must model all three beliefs, because the value of a shot depends on whose risk posture is correct on the day. The report's optimized decay is a compressed theory of mind about how managers behave when the score is unequal - it encodes the chasing team's aggression as a reduction in the opponent's shot quality, not as a change to the leading team's skill.",
+      "cross_layer_veto": "Two cross-layer vetoes. First, the variance veto: the report hits an accuracy ceiling near 0.511 and attributes it to the high variance of football results (PDF p.54), so a rating - however cleanly updated - cannot license confident single-match predictions; the noise layer overrules the rating's apparent precision. Second, the noise-chasing veto: too large a learning rate makes the rating track finishing luck rather than stable strength, which is why the report shrinks between seasons and tunes eta down for the more stable win/loss objective. A higher-layer statistical convenience (a fast-moving rating) is overruled by the lower-layer reality of noisy outcomes, and the artifact records the veto rather than letting a clean update rule imply a clean prediction."
+    },
+    {
+      "trace_id": "t2",
+      "think": "The second arc is the luck-stripping project: why expected goals exists, and where its independence assumptions fail. The report's abstract states the problem plainly - 'the number of goals scored during a match possesses an important random element which leads to large inconsistencies in many games between a team's performance and number of goals scored or conceded' (PDF p.3). In a low-scoring sport (under three goals per game in the Premier League), finished goals are a noisy performance signal, so the field built expected goals to estimate the goals a team should have scored from its chances. The lineage is honest and cross-sport: Moroney (1956) and Reep (1971) modeled goals with Poisson and negative-binomial distributions; Maher (1982) and Dixon & Coles (1997) added attack/defense ratings; MacDonald (2012) brought expected goals to NHL hockey via Fenwick and Corsi; Lucey (2015) and Eggels (2016) used spatio-temporal shot features; FiveThirtyEight combined xG with team ratings. The report's contribution is to test multiple ML classifiers per shot type and to add a non-shot xG regression, because dangerous situations often do not end in a shot. The sovereign invariant is the per-event scoring-probability integral xG = sum P(goal | distance, angle, type) x w_state: opportunity quality, not finished output. This is the soccer cousin of EPA's state-conditioned value difference (3178b5fdce0fc1a5, primitive p1): both strip luck by conditioning on the situation rather than counting the result. But the report is candid about the limits. Its shot-xG classifier is Gaussian Naive Bayes, chosen for best accuracy, yet the naive assumption - that every pair of features is independent - is geometrically false: shot distance and angle are coupled through the goal geometry. The report itself warns that Naive Bayes probabilities are 'somewhat inaccurate' even when the decision rule is robust (PDF p.20). That is the calibration veto: when the probability itself is the product (xG), accuracy is not enough; a poorly calibrated posterior misprices every chance. The deeper data veto is missing defender positions: 'we do not know the position of the opposing team's players at the time of the shot' (PDF p.65), so a shot blocked by a defender is scored as if it were clean. The xG-over-actual-goals gain is consequently small (0.511 vs 0.496 accuracy), and the report attributes this to data quality rather than to a failure of the idea. The Poisson outcome model is empirically vetoed too: converting predicted scores to outcome probabilities yields only 0.446 accuracy, leading the report to hypothesize that the Poisson distribution does not accurately model goal distributions (PDF p.59). Compile all of this into GSE with the same discipline: build a per-play expected-points surface, but gate it by calibration and by feature-independence checks, treat missing coverage data as a first-class uncertainty, and never let a clean probability integral stand in for a contested opportunity. The cross-sport mapping is explicit - soccer's distance/angle become American football's field position/down/distance/coverage - and no sportsbook odds enter the compilation, even though the source used Bet365 odds as a benchmark.",
+      "retrocausal_genealogy": "The hidden state is the low-scoring nature of association football: when goals are rare, finished scorelines are dominated by luck, so a performance metric had to be invented that counts chances rather than outcomes. The idea migrated across sports - Poisson goal models (Moroney 1956, Reep 1971), attack/defense ratings (Maher 1982, Dixon-Coles 1997), NHL expected goals (MacDonald 2012), spatio-temporal shot models (Lucey 2015, Eggels 2016) - before this report combined them with ML classifiers and a non-shot xG regression. The scar is data scarcity: the report could not scrape WhoScored's anti-scraping protection and fell back to the Kaggle database, which lacks defender positions, so the xG metric inherits a structural blind spot that no algorithm can fully repair.",
+      "theory_of_mind": "Three-way belief clash: the analyst believes xG isolates true performance from luck; the coach believes his scheme created the chances; the player believes his finishing is skill, not noise. The report's design is a theory-of-mind compromise - it devalues a leading team's shots because it models the chasing opponent's risk-taking, and it adds non-shot xG because it models the fact that dangerous possession need not end in a shot. But the missing defender-position data means the model cannot see what the shooter saw: a defender between ball and goal. The metric designer must therefore hold a humble belief about his own metric - xG is a partial read of opportunity, not the opportunity itself - or the number will be over-trusted downstream.",
+      "cross_layer_veto": "Three cross-layer vetoes. The independence veto: Naive Bayes assumes distance and angle are independent, but goal geometry couples them, so the posterior is structurally misspecified even when its argmax is right. The calibration veto: the report notes Naive Bayes probabilities are inaccurate, and since xG is a probability product, accuracy alone cannot certify it - the reliability layer overrules the accuracy layer. The data veto: missing defender positions and the small xG-over-actual gain (0.511 vs 0.496) mean the metric cannot claim to fully strip luck; and the Poisson outcome conversion (0.446 accuracy) is empirically vetoed by the report's own results. In each case a higher-layer modeling convenience is overruled by a lower-layer geometric, calibration, or data reality, and the artifact records the veto instead of hiding it behind a clean expected-goals number."
+    }
+  ],
+  "universal_lens": "The polymath audit lens this report compiles to is a noise-versus-signal checklist for any low-event-rate decision system: separate opportunity quality from finished output (xG/EPA), update beliefs online by a residual times a learning rate (Elo/gradient), shrink toward the population mean in proportion to signal reliability, convert counts to outcome probabilities only after checking the count distribution's assumptions (Poisson), and judge classifiers on the rare class (F1), not the majority class (accuracy). Any domain - sport, clinic, market - fails the audit if it trusts finished outcomes, ignores calibration, or lets a clean probability integral hide a contested opportunity.",
+  "gsi_mapping": "For GSI's fluid/axonal shear, bioenergetics, and clinical telemetry the kernels compile directly: the Elo residual update is an online biomarker baseline that corrects by actual-minus-expected with a tuned learning rate and between-visit shrinkage; xG is an opportunity-quality integral that separates underlying physiological capacity from noisy discrete events; the Poisson kernel models discrete clinical events per monitoring window with an explicit check of the independence/constant-rate assumptions; the logit GLM maps bounded clinical probabilities to interpretable linear predictors; and F1 guards evaluation of rare adverse events where accuracy is misleading. The calibration and independence vetoes are identical whether the agent is an athlete or a patient.",
+  "gse_mapping": "For GSE's Coach-Mind simulation, deception modeling, and DFS/portfolio tail risk: the Elo residual update binds as the per-game team-strength state (offense/defense, venue splits, between-season shrinkage); xG binds as the per-play expected-points surface over field position/down/distance/coverage; the Poisson kernel binds as an odds-free scoring-event generator split by event type (touchdown/field goal/safety); the logit GLM binds as binary play-outcome policy evaluation; Naive Bayes binds as a lightweight per-play head with a mandatory calibration gate; F1 binds as the evaluation metric for rare high-leverage events. Deception is modeled as a perturbation of the opponent's expected-points surface. CROSS-SPORT: the source is soccer; the mapping transfers update/probability mechanisms, not shared dynamics. No sportsbook odds are used as model inputs or targets anywhere in this artifact."
+}

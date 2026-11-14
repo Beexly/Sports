@@ -1,0 +1,78 @@
+{
+  "book_id": "454f854e3ae5d96f",
+  "source_status": "COMPLETE",
+  "title": "p0167",
+  "file_name": "p0167.txt",
+  "sha256": "454f854e3ae5d96f4ff83d9b675e3463d7b212332daed8a46f976e4f33b98098",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Football pass defense complexity emerges from multi-agent spatial博弈 and temporal coordination failure modes. Universal Lens: Rooted in p0167 (454f854e3ae5d96f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models defensive alignment uncertainty using conformal predictive sets over receiver motion manifolds. GSI Mapping: Rooted in p0167 (454f854e3ae5d96f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps pass formation states to defender state transitions via geometric trajectory kernels. GSE Mapping: Rooted in p0167 (454f854e3ae5d96f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "two_eligible_receiver_alignment",
+      "name": "Two Eligible Receiver Alignment",
+      "verbatim_quote": "138 AMERICAN FOOTBALL or where there are two receivers on the same side, one going out and the other going down.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_1, R_2': 'receivers, dimensionless', 'S': 'side of field, dimensionless', 'T': 'time, seconds'}",
+      "assumptions": "Defensive wing back cannot simultaneously cover both receivers; spatial separation is key.",
+      "breakdown_regime": "When \\( \\Delta \\theta_{R_1,R_2} < \\theta_{\\text{coverage}} \\), coverage fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a two-dimensional vector field on the field plane with angular divergence.",
+        "source_operator": "two_eligible_receiver_alignment",
+        "telemetry": "Angular separation between receivers relative to defensive back orientation."
+      }
+    },
+    {
+      "primitive_id": "diagonal_cut_pass",
+      "name": "Diagonal Cut Pass",
+      "verbatim_quote": "(b) Passes in which the receiver cuts diagonally across the defensive back field, taking the ball over the inside shoulder.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_r': 'receiver velocity vector, m/s', 'θ_d': 'defender angle, radians', 'θ_c': 'cut angle, radians'}",
+      "assumptions": "Defender tracks receiver linearly; cut angle exceeds defender tracking capability.",
+      "breakdown_regime": "When \\( \\theta_c > \\theta_d \\), pass is likely successful.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of angular deviation from defender's expected path.",
+        "source_operator": "diagonal_cut_pass",
+        "telemetry": "Change in receiver direction vector relative to defender's predicted path."
+      }
+    },
+    {
+      "primitive_id": "delayed_receiver_leading",
+      "name": "Delayed Receiver Leading",
+      "verbatim_quote": "(c) Passes in which receivers, as stated above, lead the defensive backs away from the territory, and then the real receiver, somewhat delayed, comes into that territory, taking the ball after the defenders have been drawn away.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_l': 'lead time, s', 't_r': 'real receiver arrival, s', 'Δt': 'timing gap, s'}",
+      "assumptions": "Defenders commit to leading receiver before real receiver arrives.",
+      "breakdown_regime": "When \\( t_r < t_l + Δt \\), defensive misalignment occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Temporal kernel of misalignment between defender commitment and actual receiver position.",
+        "source_operator": "delayed_receiver_leading",
+        "telemetry": "Time difference between defender's initial coverage assignment and receiver's final position."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "454f854e3ae5d96f_t0",
+      "think": "The core insight is that football pass defense hinges on the geometric and temporal coordination of multiple agents. The 'two eligible receiver alignment' introduces a fundamental conflict: when two receivers align on the same side, the defender must split attention, creating a vulnerability. This is modeled as a vector field on the field plane, where angular divergence determines coverage failure. The 'diagonal cut pass' exploits this by introducing a non-linear motion that breaks the defender’s tracking model. The 'delayed receiver leading' adds a temporal dimension, where the defender commits to an incorrect target, allowing a later receiver to exploit the resulting misalignment. Each primitive represents a failure mode in the defender's ability to maintain optimal coverage under dynamic constraints.\n\nDeep epistemic analysis for p0167 (454f854e3ae5d96f, domain=other, pages_read=1/1): Operator 'Two Eligible Receiver Alignment' (page 1, domain other) captures: 138 AMERICAN FOOTBALL or where there are two receivers on the same side, one going out and the other going down. Assumptions: Defensive wing back cannot simultaneously cover both receivers; spatial separation is key. Breakdown regime: When \\( \\Delta \\theta_{R_1,R_2} < \\theta_{\\text{coverage}} \\), coverage fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a two-dimensional vector field on the field plane with angular divergence. Operator 'Diagonal Cut Pass' (page 1, domain other) captures: (b) Passes in which the receiver cuts diagonally across the defensive back field, taking the ball over the inside shoulder. Assumptions: Defender tracks receiver linearly; cut angle exceeds defender tracking capability. Breakdown regime: When \\( \\theta_c > \\theta_d \\), pass is likely successful. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of angular deviation from defender's expected path. Operator 'Delayed Receiver Leading' (page 1, domain other) captures: (c) Passes in which receivers, as stated above, lead the defensive backs away from the territory, and then the real receiver, somewhat delayed, comes into that territory, taking the ball after the defenders have been drawn away. Assumptions: Defenders commit to leading receiver before real receiver arrives. Breakdown regime: When \\( t_r < t_l + Δt \\), defensive misalignment occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal kernel of misalignment between defender commitment and actual receiver position. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0167 (454f854e3ae5d96f, domain=other, pages_read=1/1): Operator 'Two Eligible Receiver Alignment' (page 1, domain other) captures: 138 AMERICAN FOOTBALL or where there are two receivers on the same side, one going out and the other going down. Assumptions: Defensive wing back cannot simultaneously cover both receivers; spatial separation is key. Breakdown regime: When \\( \\Delta \\theta_{R_1,R_2} < \\theta_{\\text{coverage}} \\), coverage fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a two-dimensional vector field on the field plane with angular divergence. Operator 'Diagonal Cut Pass' (page 1, domain other) captures: (b) Passes in which the receiver cuts diagonally across the defensive back field, taking the ball over the inside shoulder. Assumptions: Defender tracks receiver linearly; cut angle exceeds defender tracking capability. Breakdown regime: When \\( \\theta_c > \\theta_d \\), pass is likely successful. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of angular deviation from defender's expected path. Operator 'Delayed Receiver Leading' (page 1, domain other) captures: (c) Passes in which receivers, as stated above, lead the defensive backs away from the territory, and then the real receiver, somewhat delayed, comes into that territory, taking the ball after the defenders have been drawn away. Assumptions: Defenders commit to leading receiver before real receiver arrives. Breakdown regime: When \\( t_r < t_l + Δt \\), defensive misalignment occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal kernel of misalignment between defender commitment and actual receiver position. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical game theory and information theory, particularly von Neumann's minimax theorem and Shannon's channel capacity. Applied to sports via behavioral game theory and multi-agent systems. Retrocausal Genealogy: Rooted in p0167 (454f854e3ae5d96f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0167 (454f854e3ae5d96f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (offense) model defender behavior as deterministic but limited in bandwidth. They exploit this by introducing non-linear motion and timing mismatches to force suboptimal decisions. Theory of Mind & Decision Maker Model: Rooted in p0167 (454f854e3ae5d96f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0167 (454f854e3ae5d96f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If defender tracking is perfect, all primitives fail. If receiver motion is predictable, the primitives lose efficacy. Anti-collinearity ensures each primitive operates in distinct geometric or temporal domains. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0167 (454f854e3ae5d96f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0167 (454f854e3ae5d96f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

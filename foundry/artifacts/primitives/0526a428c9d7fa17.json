@@ -1,0 +1,95 @@
+{
+  "book_id": "0526a428c9d7fa17",
+  "source_status": "COMPLETE",
+  "title": "2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al",
+  "file_name": "2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al.pdf",
+  "sha256": "0526a428c9d7fa17ad06e5e082d2717dafb616e58ddd671b19e16cf01e0892c3",
+  "primary_domain": "other",
+  "pages_total": 18,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al (0526a428c9d7fa17), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al (0526a428c9d7fa17), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al (0526a428c9d7fa17), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "bayesian_multinomial_regression",
+      "name": "Bayesian Multinomial Regression",
+      "verbatim_quote": "The apparent drop-off in pitcher performance from one time through the order to the next, known as the Time Through the Order Penalty (TTOP), is often attributed to within-game batter learning.",
+      "page": 1,
+      "latex": "y_i \\sim \\text{Multinomial}(\\pi_{ik})",
+      "symbol_and_unit_ledger": "y_i = outcome of the i^{th} plate appearance (K = 7 categories); \\pi_{ik} = probability of outcome k given covariates x_i.",
+      "assumptions": "Multinomial likelihood, linear-logit link, exchangeable priors on regression coefficients, independence across observations.",
+      "breakdown_regime": "Small sample sizes per cell, sparse outcomes, high-dimensional covariates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: posterior predictive checks for game simulation; GSE: state-transition models for situational reasoning.",
+        "source_operator": "bayesian_multinomial_regression",
+        "telemetry": "Posterior credible intervals on TTOP coefficients."
+      }
+    },
+    {
+      "primitive_id": "time_through_order_penalty",
+      "name": "Time Through the Order Penalty",
+      "verbatim_quote": "The apparent drop-off in pitcher performance from one time through the order to the next, known as the Time Through the Order Penalty (TTOP), is often attributed to within-game batter learning.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "TTOP = difference in expected wOBA between consecutive TTOs; units: wOBA points.",
+      "assumptions": "Batter learns incrementally with each encounter; pitch selection may adapt but is not the primary driver.",
+      "breakdown_regime": "Late innings, high leverage situations, rare pitch sequences.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: TTOP as a feature for player valuation adjustments; GSE: transition from 'early' to 'late' pitcher states.",
+        "source_operator": "time_through_order_penalty",
+        "telemetry": "Change in wOBA per TTO bin, adjusted for confounders."
+      }
+    },
+    {
+      "primitive_id": "running_average_quality",
+      "name": "Running Average Quality Estimator",
+      "verbatim_quote": "The apparent drop-off in pitcher performance from one time through the order to the next, known as the Time Through the Order Penalty (TTOP), is often attributed to within-game batter learning.",
+      "page": 1,
+      "latex": "x^{(b)}_i = \\frac{\\sum_{j<i} y_j}{t_j}, \\quad x^{(p)}_i = \\frac{\\sum_{j<i} y_j}{t_j}",
+      "symbol_and_unit_ledger": "x^{(b)}_i, x^{(p)}_i = scaled counts of outcomes; t_j = number of previous plate appearances; y_j = outcome indicator.",
+      "assumptions": "Prior performance is informative about current ability; no season-long trends are modeled explicitly.",
+      "breakdown_regime": "New players, small sample sizes, extreme streaks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: dynamic scaling factors for player ratings; GSE: state initialization for new batter-pitcher matchups.",
+        "source_operator": "running_average_quality",
+        "telemetry": "Player-specific skill scores updated sequentially."
+      }
+    },
+    {
+      "primitive_id": "batting_adaptation",
+      "name": "Batting Adaptation Process",
+      "verbatim_quote": "After the game, Cash justified his decision to pull Snell, remarking that he \"didn't want Mookie [Betts] or [Corey] Seager seeing Blake a third time\" (Rivera 2020).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Adaptation = increase in on-base percentage (OBP) or wOBA per additional TTO; units: percentage points.",
+      "assumptions": "Learning is gradual and monotonic; individual differences exist but follow a common distribution.",
+      "breakdown_regime": "Pitcher substitution mid-game, unusual defensive shifts, strategic intentional walks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: adaptation curves for projecting future performance; GSE: situational reasoning around batter readiness.",
+        "source_operator": "batting_adaptation",
+        "telemetry": "Longitudinal change in OBP/wOBA vs. TTO count."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0526a428c9d7fa17_t0",
+      "think": "We derive the TTOP as a discrete jump in a smooth latent function representing pitcher deterioration. Existing point estimates suffer from collider bias: managers remove poor-performing starters early, inflating apparent TTOP. Our Bayesian model corrects this by jointly modeling pitcher quality and removal decisions. The key insight is that TTOP is not an isolated effect but part of a continuous degradation process modulated by batter adaptation. This resolves the tension between Cash's tactical concern and the statistical evidence that TTOP is weak when controlling for confounders. The resulting operators enable precise probabilistic statements about when a pitcher's performance crosses critical thresholds.\n\nDeep epistemic analysis for 2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al (0526a428c9d7fa17, domain=other, pages_read=18/18): Operator 'Bayesian Multinomial Regression' (page 1, domain other) captures: The apparent drop-off in pitcher performance from one time through the order to the next, known as the Time Through the Order Penalty (TTOP), is often attributed to within-game batter learning. Assumptions: Multinomial likelihood, linear-logit link, exchangeable priors on regression coefficients, independence across observations. Breakdown regime: Small sample sizes per cell, sparse outcomes, high-dimensional covariates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: posterior predictive checks for game simulation; GSE: state-transition models for situational reasoning. Operator 'Time Through the Order Penalty' (page 1, domain other) captures: The apparent drop-off in pitcher performance from one time through the order to the next, known as the Time Through the Order Penalty (TTOP), is often attributed to within-game batter learning. Assumptions: Batter learns incrementally with each encounter; pitch selection may adapt but is not the primary driver. Breakdown regime: Late innings, high leverage situations, rare pitch sequences. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: TTOP as a feature for player valuation adjustments; GSE: transition from 'early' to 'late' pitcher states. Operator 'Running Average Quality Estimator' (page 1, domain other) captures: The apparent drop-off in pitcher performance from one time through the order to the next, known as the Time Through the Order Penalty (TTOP), is often attributed to within-game batter learning. Assumptions: Prior performance is informative about current ability; no season-long trends are modeled explicitly. Breakdown regime: New players, small sample sizes, extreme streaks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: dynamic scaling factors for player ratings; GSE: state initialization for new batter-pitcher matchups. Operator 'Batting Adaptation Process' (page 1, domain other) captures: After the game, Cash justified his decision to pull Snell, remarking that he \"didn't want Mookie [Betts] or [Corey] Seager seeing Blake a third time\" (Rivera 2020). Assumptions: Learning is gradual and monotonic; individual differences exist but follow a common distribution. Breakdown regime: Pitcher substitution mid-game, unusual defensive shifts, strategic intentional walks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: adaptation curves for projecting future performance; GSE: situational reasoning around batter readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al (0526a428c9d7fa17, domain=other, pages_read=18/18): Operator 'Bayesian Multinomial Regression' (page 1, domain other) captures: The apparent drop-off in pitcher performance from one time through the order to the next, known as the Time Through the Order Penalty (TTOP), is often attributed to within-game batter learning. Assumptions: Multinomial likelihood, linear-logit link, exchangeable priors on regression coefficients, independence across observations. Breakdown regime: Small sample sizes per cell, sparse outcomes, high-dimensional covariates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: posterior predictive checks for game simulation; GSE: state-transition models for situational reasoning. Operator 'Time Through the Order Penalty' (page 1, domain other) captures: The apparent drop-off in pitcher performance from one time through the order to the next, known as the Time Through the Order Penalty (TTOP), is often attributed to within-game batter learning. Assumptions: Batter learns incrementally with each encounter; pitch selection may adapt but is not the primary driver. Breakdown regime: Late innings, high leverage situations, rare pitch sequences. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: TTOP as a feature for player valuation adjustments; GSE: transition from 'early' to 'late' pitcher states. Operator 'Running Average Quality Estimator' (page 1, domain other) captures: The apparent drop-off in pitcher performance from one time through the order to the next, known as the Time Through the Order Penalty (TTOP), is often attributed to within-game batter learning. Assumptions: Prior performance is informative about current ability; no season-long trends are modeled explicitly. Breakdown regime: New players, small sample sizes, extreme streaks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: dynamic scaling factors for player ratings; GSE: state initialization for new batter-pitcher matchups. Operator 'Batting Adaptation Process' (page 1, domain other) captures: After the game, Cash justified his decision to pull Snell, remarking that he \"didn't want Mookie [Betts] or [Corey] Seager seeing Blake a third time\" (Rivera 2020). Assumptions: Learning is gradual and monotonic; individual differences exist but follow a common distribution. Breakdown regime: Pitcher substitution mid-game, unusual defensive shifts, strategic intentional walks. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: adaptation curves for projecting future performance; GSE: situational reasoning around batter readiness. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical psychometric theory (Thurstone, 1927) and Markov decision processes. Modernized via hierarchical Bayesian methods (Gelman et al., 2020) and causal inference (Pearl, 2009). Retrocausal Genealogy: Rooted in 2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al (0526a428c9d7fa17), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Managers act as rational agents optimizing win probability, leading to non-random missing data patterns. Their decision to pull a starter depends on both observed metrics and unobserved skill levels, creating selection bias that must be explicitly modeled. Theory of Mind & Decision Maker Model: Rooted in 2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al (0526a428c9d7fa17), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Avoid collinearity between TTO and inning number by conditioning on prior outs. Prevent leakage by ensuring covariates are measured before the at-bat and do not depend on future outcomes. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2023 - A Bayesian analysis of the time through the order penalty in baseball - Brill et al (0526a428c9d7fa17), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

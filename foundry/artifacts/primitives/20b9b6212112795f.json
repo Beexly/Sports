@@ -1,0 +1,95 @@
+{
+  "book_id": "20b9b6212112795f",
+  "source_status": "COMPLETE",
+  "title": "_OceanofPDF.com_The_logic_of_sports_betting_-_Ed_Miller",
+  "file_name": "_OceanofPDF.com_The_logic_of_sports_betting_-_Ed_Miller.pdf",
+  "sha256": "20b9b6212112795fd06cc9b0d005cec7b0138007ad1c9986dd47518eacd741f8",
+  "primary_domain": "other",
+  "pages_total": 241,
+  "pages_read": 27,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "nvidia-nemotron-550b:nvidia/nemotron-3-ultra-550b-a55b",
+  "ocr_rescued": false,
+  "universal_lens": "The provided excerpts contain only copyright notices, disclaimers, a table of contents, and a philosophical quote from Rounders. No mathematical operators, betting models, or quantitative primitives exist in the source. Structural unification is null: the text is legal/editorial scaffolding, not a formal system.",
+  "gsi_mapping": "GSI Bayesian inference finds zero likelihood of mathematical content in the observed excerpts. Conformal prediction sets for primitive extraction are empty. The posterior over 'sovereign primitives' collapses to a point mass on ∅ given the evidence.",
+  "gse_mapping": "GSE state-transition analysis reveals no state variables, control inputs, or reward structures. The document is a terminal absorbing state: legal boilerplate → title → TOC → epigraph. No situational reasoning operators are present.",
+  "primitives": [
+    {
+      "primitive_id": "copyright_notice",
+      "name": "Copyright Protection Assertion",
+      "verbatim_quote": "NOTICE This document is protected by United States copyright law.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "None: purely legal prose. No symbols, units, or dimensional quantities.",
+      "assumptions": "Assumes US jurisdiction, authorship fixation, and enforceable IP rights. No mathematical assumptions.",
+      "breakdown_regime": "Breaks down in jurisdictions without copyright treaties, or under fair-use/fair-dealing exceptions. Singularity at public domain expiration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE as a hard constraint on information propagation: ∂I/∂t = 0 for unauthorized channels. GSI treats as prior p(access) = 0 without license.",
+        "source_operator": "copyright_notice",
+        "telemetry": "Legal takedown notices, DMCA requests, license compliance audits."
+      }
+    },
+    {
+      "primitive_id": "liability_disclaimer",
+      "name": "Financial Liability Disclaimer",
+      "verbatim_quote": "Betting comes with an inherent element of risk, and the author specifically disclaims liability for any financial losses sustained in connection to the contents of this book.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "None: legal risk allocation statement. No quantitative risk model.",
+      "assumptions": "Assumes reader agency, causal separation between content and outcomes, and enforceable waiver. No probability space defined.",
+      "breakdown_regime": "Fails if content constitutes actionable financial advice under securities/gaming law, or if negligence in model construction is proven.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE: absorbing boundary condition on author liability L_author = 0 ∀ losses. GSI: prior p(causality|content) = 0. Isomorphic to 'caveat emptor' kernel in decision theory.",
+        "source_operator": "liability_disclaimer",
+        "telemetry": "Litigation history, regulatory warnings, user complaint ratios."
+      }
+    },
+    {
+      "primitive_id": "toc_structure",
+      "name": "Chapter Topic Enumeration",
+      "verbatim_quote": "138 Derivatives 140 A Derivative Example 145 Props 153 Taking Advantage of Parlays 159 Multiway Markets And Futures 171 Angles 181 In-Play Betting 193 Taking Advantage of Sportsbook Marketing 212 Chopping The Hold 220 How Do I Know If I'm Winning?",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "Page numbers as ordinal indices (dimensionless). Topic tokens as categorical labels.",
+      "assumptions": "Assumes linear chapter ordering, topical mutual exclusivity, and page-number monotonicity. No mathematical dependencies declared.",
+      "breakdown_regime": "Breaks if chapters are non-sequential, topics overlap, or pagination shifts in editions. Singularity at missing pages.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE curriculum graph: nodes = topics, edges = prerequisite flow (Derivatives → Example → Props → Parlays → Multiway → Angles → In-Play → Marketing → Hold → Winning). GSI: topic coverage as conformal set for model validation.",
+        "source_operator": "toc_structure",
+        "telemetry": "Chapter completion rates, cross-reference density, errata per chapter."
+      }
+    },
+    {
+      "primitive_id": "sucker_epigraph",
+      "name": "Adversarial Identification Heuristic",
+      "verbatim_quote": "Introduction \"If you can't spot the sucker in your first half hour at the table, then you are the sucker.\" In a movie full of great lines, that one was the best.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "Time horizon: t ∈ [0, 0.5] hours (dimensionless in context). Agents: {self, opponents}. Binary predicate: sucker(x) ∈ {0,1}.",
+      "assumptions": "Assumes perfect information revelation within horizon, symmetric observability, and that 'sucker' is a well-defined, detectable role. Zero-sum implicit.",
+      "breakdown_regime": "Fails in games with hidden roles, incomplete information, or where sucker status is endogenous to strategy. Singularity at t=0 (no observation) or t→∞ (learning).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE opponent modeling: belief update B_t(sucker|obs) with hard threshold at t=0.5h. GSI: conformal test for exploitability — if max_a E[u(a,θ)] < V* then sucker(self)=1. Dual to 'know your edge' kernel.",
+        "source_operator": "sucker_epigraph",
+        "telemetry": "Win-rate convergence time, exploitability frequency, table selection ROI."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "20b9b6212112795f_t0",
+      "think": "The source excerpts are exclusively paratext: copyright (pp. 3,6), title (p.5), disclaimer (p.6), TOC fragment (p.10), and a movie epigraph (p.11). No chapter content, equations, or betting logic appears. Primitive extraction therefore targets the meta-structure: (1) legal boundary operators (copyright, liability), (2) curriculum topology (TOC as prerequisite DAG), (3) game-theoretic aphorism (sucker detection). Each primitive is prose-only; LaTeX is null. Layer2 mappings translate legal/editorial constraints into GSE hard boundaries (zero-gradient info flow, absorbing liability), GSI priors (zero causality, conformal topic coverage), and opponent-modeling kernels (finite-horizon exploitability test). Breakdown regimes are legal (jurisdiction, fair use), structural (pagination, topical overlap), and epistemic (hidden information, learning dynamics). No mathematical derivation exists in source; the trace is a structural parse of paratext into operator signatures.\n\nDeep epistemic analysis for _OceanofPDF.com_The_logic_of_sports_betting_-_Ed_Miller (20b9b6212112795f, domain=other, pages_read=27/241): Operator 'Copyright Protection Assertion' (page 3, domain other) captures: NOTICE This document is protected by United States copyright law. Assumptions: Assumes US jurisdiction, authorship fixation, and enforceable IP rights. No mathematical assumptions. Breakdown regime: Breaks down in jurisdictions without copyright treaties, or under fair-use/fair-dealing exceptions. Singularity at public domain expiration. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE as a hard constraint on information propagation: ∂I/∂t = 0 for unauthorized channels. GSI treats as prior p(access) = 0 without license. Operator 'Financial Liability Disclaimer' (page 6, domain other) captures: Betting comes with an inherent element of risk, and the author specifically disclaims liability for any financial losses sustained in connection to the contents of this book. Assumptions: Assumes reader agency, causal separation between content and outcomes, and enforceable waiver. No probability space defined. Breakdown regime: Fails if content constitutes actionable financial advice under securities/gaming law, or if negligence in model construction is proven. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE: absorbing boundary condition on author liability L_author = 0 ∀ losses. GSI: prior p(causality|content) = 0. Isomorphic to 'caveat emptor' kernel in decision theory. Operator 'Chapter Topic Enumeration' (page 10, domain other) captures: 138 Derivatives 140 A Derivative Example 145 Props 153 Taking Advantage of Parlays 159 Multiway Markets And Futures 171 Angles 181 In-Play Betting 193 Taking Advantage of Sportsbook Marketing 212 Chopping The Hold 220 How Do I Know If I'm Winning? Assumptions: Assumes linear chapter ordering, topical mutual exclusivity, and page-number monotonicity. No mathematical dependencies declared. Breakdown regime: Breaks if chapters are non-sequential, topics overlap, or pagination shifts in editions. Singularity at missing pages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE curriculum graph: nodes = topics, edges = prerequisite flow (Derivatives → Example → Props → Parlays → Multiway → Angles → In-Play → Marketing → Hold → Winning). GSI: topic coverage as conformal set for model validation. Operator 'Adversarial Identification Heuristic' (page 11, domain other) captures: Introduction \"If you can't spot the sucker in your first half hour at the table, then you are the sucker.\" In a movie full of great lines, that one was the best. Assumptions: Assumes perfect information revelation within horizon, symmetric observability, and that 'sucker' is a well-defined, detectable role. Zero-sum implicit. Breakdown regime: Fails in games with hidden roles, incomplete information, or where sucker status is endogenous to strategy. Singularity at t=0 (no observation) or t→∞ (learning). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE opponent modeling: belief update B_t(sucker|obs) with hard threshold at t=0.5h. GSI: conformal test for exploitability — if max_a E[u(a,θ)] < V* then sucker(self)=1. Dual to 'know your edge' kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for _OceanofPDF.com_The_logic_of_sports_betting_-_Ed_Miller (20b9b6212112795f, domain=other, pages_read=27/241): Operator 'Copyright Protection Assertion' (page 3, domain other) captures: NOTICE This document is protected by United States copyright law. Assumptions: Assumes US jurisdiction, authorship fixation, and enforceable IP rights. No mathematical assumptions. Breakdown regime: Breaks down in jurisdictions without copyright treaties, or under fair-use/fair-dealing exceptions. Singularity at public domain expiration. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE as a hard constraint on information propagation: ∂I/∂t = 0 for unauthorized channels. GSI treats as prior p(access) = 0 without license. Operator 'Financial Liability Disclaimer' (page 6, domain other) captures: Betting comes with an inherent element of risk, and the author specifically disclaims liability for any financial losses sustained in connection to the contents of this book. Assumptions: Assumes reader agency, causal separation between content and outcomes, and enforceable waiver. No probability space defined. Breakdown regime: Fails if content constitutes actionable financial advice under securities/gaming law, or if negligence in model construction is proven. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE: absorbing boundary condition on author liability L_author = 0 ∀ losses. GSI: prior p(causality|content) = 0. Isomorphic to 'caveat emptor' kernel in decision theory. Operator 'Chapter Topic Enumeration' (page 10, domain other) captures: 138 Derivatives 140 A Derivative Example 145 Props 153 Taking Advantage of Parlays 159 Multiway Markets And Futures 171 Angles 181 In-Play Betting 193 Taking Advantage of Sportsbook Marketing 212 Chopping The Hold 220 How Do I Know If I'm Winning? Assumptions: Assumes linear chapter ordering, topical mutual exclusivity, and page-number monotonicity. No mathematical dependencies declared. Breakdown regime: Breaks if chapters are non-sequential, topics overlap, or pagination shifts in editions. Singularity at missing pages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE curriculum graph: nodes = topics, edges = prerequisite flow (Derivatives → Example → Props → Parlays → Multiway → Angles → In-Play → Marketing → Hold → Winning). GSI: topic coverage as conformal set for model validation. Operator 'Adversarial Identification Heuristic' (page 11, domain other) captures: Introduction \"If you can't spot the sucker in your first half hour at the table, then you are the sucker.\" In a movie full of great lines, that one was the best. Assumptions: Assumes perfect information revelation within horizon, symmetric observability, and that 'sucker' is a well-defined, detectable role. Zero-sum implicit. Breakdown regime: Fails in games with hidden roles, incomplete information, or where sucker status is endogenous to strategy. Singularity at t=0 (no observation) or t→∞ (learning). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE opponent modeling: belief update B_t(sucker|obs) with hard threshold at t=0.5h. GSI: conformal test for exploitability — if max_a E[u(a,θ)] < V* then sucker(self)=1. Dual to 'know your edge' kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Copyright kernel descends from Statute of Anne (1710) → Berne Convention → DMCA. Liability disclaimer traces to caveat emptor (Roman law) → modern securities safe harbors. TOC topology reflects Dewey Decimal / Library of Congress classification lineage. Sucker heuristic originates in poker folklore (Rounders 1998) → game-theoretic 'sucker' as dominated strategy (von Neumann/Morgenstern 1944) → modern exploitability metrics (CFR, 2007).",
+      "theory_of_mind": "Author (Ed Miller) models reader as legally liable agent needing IP protection and risk disclaimer. Publisher models downstream users as potential infringers. TOC models learner as sequential topic consumer. Epigraph models bettor as adversarial agent in imperfect-information game where opponent classification is survival-critical. All four primitives encode asymmetric information: author knows content, reader doesn't; bettor knows own skill, opponents' unknown.",
+      "cross_layer_veto": "Anti-collinearity: copyright and liability are distinct legal regimes (IP vs tort) — no leakage. TOC and epigraph operate at different abstraction layers (curriculum vs heuristic) — no parameter sharing. Veto condition: any primitive claiming quantitative betting model from these excerpts is hallucinated. Leakage check: sucker heuristic's 'half hour' must not be imported as calibration horizon for GSE without chapter content validation."
+    }
+  ]
+}

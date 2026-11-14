@@ -1,0 +1,528 @@
+{
+  "book_id": "03758c7b1508cfe0",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_LIGATURE_FOLD",
+  "source_note": "Pifer (Texas Tech) & Huml (Cincinnati), 2020, Journal of Sports Analytics 6:45-60, DOI 10.3233/JSA-190362, open access CC BY-NC. fi/fl ligatures folded; a few PDF-merged spans avoided. Model equations (1)-(5) printed cleanly and reproduced as labeled LaTeX; regression coefficients taken from Tables 4-10. Outcomes are winning percentage and SRS (actual performance); zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "year_two_truism",
+      "name": "Year-Two Effect: an untested media truism",
+      "verbatim_quote": "a phenomenon whereby an NCAA Division I football program is expected to make large improvements during a head coach's second season in charge.",
+      "page": 45,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The Year-Two Effect is the expected second-season jump under a new head coach; it had gone untested in peer-reviewed literature."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A widely repeated sports cliché is a hypothesis to test, not a prior to trust; GSE treats every media truism as a claim requiring evidence.",
+        "source_operator": "year_two_truism",
+        "telemetry": "Year-Two Effect = expected Y2 improvement"
+      }
+    },
+    {
+      "primitive_id": "availability_heuristic",
+      "name": "Availability-heuristic suspicion",
+      "verbatim_quote": "Does historical and statistical evidence actually support this assumption, or are the media and the public falling victim to an availability heuristic",
+      "page": 46,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Salient examples (Smart, Stoops, Snyder, Saban, Richt) may make the effect seem universal when it is just memorable."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Vivid anecdotes are not base rates; GSE must veto a narrative supported only by availability and demand the full distribution.",
+        "source_operator": "availability_heuristic",
+        "telemetry": "salient cases != base rate"
+      }
+    },
+    {
+      "primitive_id": "balanced_panel",
+      "name": "Balanced panel: 114 programs x 11 seasons",
+      "verbatim_quote": "The data were then organized into a balanced panel containing 11 seasons (2007–2017) of statistical, recruiting, and coaching observations from 114 Power Five and Group of Five programs",
+      "page": 48,
+      "latex": "N=1{,}254,\\quad n=114,\\quad T=11",
+      "symbol_and_unit_ledger": {
+        "N": "total observations (count)",
+        "n": "programs (count)",
+        "T": "seasons (count)"
+      },
+      "assumptions": [
+        "Data scraped from sports-reference.com/cfb and 247sports.com; balanced panel of FBS programs."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A balanced school-by-season panel is the same longitudinal structure GSE uses to track program trajectories over time.",
+        "source_operator": "balanced_panel",
+        "telemetry": "114 x 11 = 1,254 obs, 2007-2017"
+      }
+    },
+    {
+      "primitive_id": "two_way_fixed_effects",
+      "name": "Two-way fixed effects: school + season",
+      "verbatim_quote": "The two-way fixed effects model implies that unobserved heterogeneities in both the time periods (e.g., the seasons) and the programs were controlled for.",
+      "page": 50,
+      "latex": "y_{it}=X'_{it}\\beta+e_i+h_t+u_{it}",
+      "symbol_and_unit_ledger": {
+        "e_i": "school fixed effect (time-invariant)",
+        "h_t": "season fixed effect (common shock)",
+        "u_it": "idiosyncratic error"
+      },
+      "assumptions": [
+        "School FE absorb time-invariant reputation/history; season FE absorb common rule/conference/postseason changes."
+      ],
+      "breakdown_regime": "FE allow e_i correlated with regressors; time-varying school shocks remain in u_it",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Two-way FE is the same omitted-variable guard GSE needs to separate a coach's effect from school quality and era effects.",
+        "source_operator": "two_way_fixed_effects",
+        "telemetry": "y = X beta + e_i + h_t + u"
+      }
+    },
+    {
+      "primitive_id": "within_estimation",
+      "name": "Within (demeaning) estimation equals LSDV",
+      "verbatim_quote": "the within effect estimation method produces β coefficients that are identical to those that are produced when a least squares dummy variable (LSDV) approach is used to model the fixed effects",
+      "page": 50,
+      "latex": "(y_{it}-\\bar y_i)=(x_{it}-\\bar x_i)'\\beta+(\\varepsilon_{it}-\\bar\\varepsilon_i)",
+      "symbol_and_unit_ledger": {
+        "bar y_i": "school-i mean outcome",
+        "bar x_i": "school-i mean predictors"
+      },
+      "assumptions": [
+        "Demeaning by school removes e_i; the within estimator yields the same beta as least-squares dummy variables."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Within-demeaning is the same fixed-effects computation GSE uses to difference out stable unit heterogeneity.",
+        "source_operator": "within_estimation",
+        "telemetry": "within = LSDV beta"
+      }
+    },
+    {
+      "primitive_id": "outcomes_win_srs",
+      "name": "Outcomes: overall WIN% and SRS",
+      "verbatim_quote": "There were two primary outcome variables of interest in this study: (1) a team's overall winning percentage (WIN%) and (2) its Simple Rating System (SRS) rating.",
+      "page": 49,
+      "latex": "y\\in\\{\\text{WIN\\%},\\ \\text{SRS}\\}",
+      "symbol_and_unit_ledger": {
+        "WIN%": "overall win fraction incl. postseason (dimensionless)",
+        "SRS": "points better than average (points)"
+      },
+      "assumptions": [
+        "Overall record (not conference) avoids small-sample conference variability and includes postseason."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Two complementary outcomes, a binary-derived rate and a margin-based rating, is the same dual-metric validation GSE uses.",
+        "source_operator": "outcomes_win_srs",
+        "telemetry": "WIN% and SRS"
+      }
+    },
+    {
+      "primitive_id": "srs_definition",
+      "name": "SRS = margin + strength of schedule",
+      "verbatim_quote": "SRS is a rating system devised by sports-reference.com that takes into account average point differential and strength of schedule.",
+      "page": 49,
+      "latex": "\\text{SRS}=\\overline{\\text{margin}}+\\text{SOS}",
+      "symbol_and_unit_ledger": {
+        "margin": "average point differential (points)",
+        "SOS": "opponent strength vs average (points)"
+      },
+      "assumptions": [
+        "A team winning by 5.1 against opponents 1.5 worse than average has SRS 3.6; average team is 0.0."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SRS is the same schedule-adjusted margin rating GSE uses as a strength metric, separating margin from opponent quality.",
+        "source_operator": "srs_definition",
+        "telemetry": "SRS = margin + SOS"
+      }
+    },
+    {
+      "primitive_id": "first_difference_outcomes",
+      "name": "Outcomes as season-to-season change",
+      "verbatim_quote": "the outcome variables are frequently represented in the models as the associated increase or decrease from a prior season",
+      "page": 49,
+      "latex": "\\Delta y_{it}=y_{it}-y_{i,t-1}",
+      "symbol_and_unit_ledger": {
+        "Delta y": "year-over-year change in outcome"
+      },
+      "assumptions": [
+        "Modeling the change isolates improvement rather than level, matching the turnaround question."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "First-differencing the outcome targets the improvement itself, the same delta-focus GSE uses for turnaround prediction.",
+        "source_operator": "first_difference_outcomes",
+        "telemetry": "Delta y = y_t - y_{t-1}"
+      }
+    },
+    {
+      "primitive_id": "tenure_dummies",
+      "name": "Coach-tenure dummies Y1-Y5, Y6+ reference",
+      "verbatim_quote": "a series of categorical dummy variables indicating whether a school's head coach was in his first (Y1), second (Y2), third (Y3), fourth (Y4), or fifth (Y5) season with a program.",
+      "page": 49,
+      "latex": "\\text{COACHTENURE}\\in\\{Y1,Y2,Y3,Y4,Y5\\},\\ \\text{ref}=Y6+",
+      "symbol_and_unit_ledger": {
+        "Yk": "dummy for coach's k-th season (0/1)"
+      },
+      "assumptions": [
+        "Seasons six and higher are the reference group; each tenure year gets its own coefficient."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Tenure-year dummies let the data speak to each season's effect, the same categorical-time encoding GSE uses for coaching regimes.",
+        "source_operator": "tenure_dummies",
+        "telemetry": "Y1..Y5 vs Y6+ reference"
+      }
+    },
+    {
+      "primitive_id": "table4_raw_means",
+      "name": "Raw means: Y2 +5.76% WIN%, +2.026 SRS",
+      "verbatim_quote": "In year two, however, it improves by nearly 6%, giving preliminary evidence of the Year-Two Effect.",
+      "page": 51,
+      "latex": "\\Delta\\text{WIN\\%}: Y1{-}1.84,\\ Y2{+}5.76,\\ Y3{+}1.48,\\ Y4{+}2.13,\\ Y5{-}4.16,\\ Y6+{-}2.48",
+      "symbol_and_unit_ledger": {
+        "values": "mean season-to-season WIN% change by tenure (percentage points)"
+      },
+      "assumptions": [
+        "t-tests show Y2 mean change differs from every other tenure (p<0.05); SRS Y2 +2.026."
+      ],
+      "breakdown_regime": "raw means confound schedule, talent, and regression to the mean",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A raw tenure comparison is only preliminary; GSE must control confounds before crediting a coaching effect.",
+        "source_operator": "table4_raw_means",
+        "telemetry": "Y2 +5.76% raw, t-test p<0.05"
+      }
+    },
+    {
+      "primitive_id": "eq3_controls",
+      "name": "Eq 3: control schedule, conference, inherited talent",
+      "verbatim_quote": "The basic intent of this model was to control for factors outside of a second-year head coach's",
+      "page": 51,
+      "latex": "\\Delta y_{it}=\\beta_1\\text{TENURE}_{it}+\\beta_2\\Delta\\text{SOS}_{it}+\\beta_3\\text{NEWCONF}_{it}+\\beta_4\\Delta\\text{JRRk}_{it}+\\beta_5\\Delta\\text{SRRk}_{it}+e_i+h_t+u_{it}",
+      "symbol_and_unit_ledger": {
+        "JRRk,SRRk": "junior/senior class recruiting rankings (rank)",
+        "NEWCONF": "conference-change dummy"
+      },
+      "assumptions": [
+        "Junior/senior recruiting changes capture the former coach's talent coming of age, netting it out of the Y2 effect."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Controlling inherited talent and schedule is the same confound-isolation GSE needs to attribute improvement to the new coach.",
+        "source_operator": "eq3_controls",
+        "telemetry": "Delta y ~ tenure + Delta SOS + NEWCONF + Delta JRRk + Delta SRRk"
+      }
+    },
+    {
+      "primitive_id": "y2_controlled_effect",
+      "name": "Y2 effect survives controls: +10% WIN%, +3.5 SRS",
+      "verbatim_quote": "Controlling for the fixed effects and holding all other variables constant, a program can expect to improve on its winning percentage from the prior season by approximately 10% during the head coach's second season.",
+      "page": 52,
+      "latex": "\\hat\\beta_{Y2}^{\\text{WIN\\%}}=0.1042,\\quad \\hat\\beta_{Y2}^{\\text{SRS}}=3.5429\\ (p<0.001)",
+      "symbol_and_unit_ledger": {
+        "beta_Y2": "second-season coefficient (WIN% fraction / SRS points)"
+      },
+      "assumptions": [
+        "Y3 and Y4 also significant but about half the Y2 size; Y1 and Y5 non-significant; within R2 ~0.058."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A controlled second-season bump is a real but modest prior; GSE can use it as a tenure adjustment, not a guarantee.",
+        "source_operator": "y2_controlled_effect",
+        "telemetry": "Y2 +0.1042 WIN%, +3.54 SRS"
+      }
+    },
+    {
+      "primitive_id": "recruiting_y2_jump",
+      "name": "Recruiting improves 8-9 spots in Y2",
+      "verbatim_quote": "During a coach's second season, the team's national recruiting rankings were expected to improve by approximately eight to nine spots from the prior season, holding all other variables constant.",
+      "page": 53,
+      "latex": "\\hat\\beta_{Y2}^{\\text{FRRk}}=-8.516\\ (p<0.001)",
+      "symbol_and_unit_ledger": {
+        "FRRk": "freshman class national recruiting rank (rank, lower=better)"
+      },
+      "assumptions": [
+        "Eq 4 controls prior win% change and conference change; a negative coefficient means a better (lower) rank."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Improved recruiting is a measurable mechanism of the turnaround; GSE talent-stock models can encode the Y2 recruiting bounce.",
+        "source_operator": "recruiting_y2_jump",
+        "telemetry": "Y2 recruiting -8.5 spots"
+      }
+    },
+    {
+      "primitive_id": "recruiting_y1_dip",
+      "name": "Recruiting falls 3-4 spots in Y1",
+      "verbatim_quote": "a new coach's first season with a program will actually see a team fall in the national recruiting rankings by three to four spots.",
+      "page": 53,
+      "latex": "\\hat\\beta_{Y1}^{\\text{FRRk}}=+3.701\\ (p=0.016)",
+      "symbol_and_unit_ledger": {
+        "beta_Y1": "first-season recruiting coefficient (rank)"
+      },
+      "assumptions": [
+        "Recruits are wary of first-year uncertainty; the dip reverses in year two."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A first-year recruiting dip followed by a bounce is the same uncertainty-then-stability pattern GSE expects in regime transitions.",
+        "source_operator": "recruiting_y1_dip",
+        "telemetry": "Y1 recruiting +3.7 spots (worse)"
+      }
+    },
+    {
+      "primitive_id": "turnovers_chemistry",
+      "name": "Fewer turnovers in Y2 (chemistry proxy)",
+      "verbatim_quote": "teams with second-year head coaches will commit nearly 0.23 fewer offensive turnovers per game than they did the prior season",
+      "page": 54,
+      "latex": "\\hat\\beta_{Y2}^{\\text{OTOVPG}}=-0.229\\ (p=0.0005)",
+      "symbol_and_unit_ledger": {
+        "OTOVPG": "offensive turnovers per game (turnovers/game)"
+      },
+      "assumptions": [
+        "~0.23 fewer turnovers/game is ~3 fewer over a regular season; survives controls for all four recruiting classes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Turnover reduction is a chemistry/scheme-installation signal; GSE can use Y2 ball-security improvement as a turnaround marker.",
+        "source_operator": "turnovers_chemistry",
+        "telemetry": "Y2 -0.229 TO/game (~3/season)"
+      }
+    },
+    {
+      "primitive_id": "penalties_null",
+      "name": "Penalties (discipline proxy) not significant",
+      "verbatim_quote": "penalties seem to be rather random from year-to-year, and the variables indicating the tenure of the observed coach do not appear to impart any kind of significant influence on a team's tendency to get flagged.",
+      "page": 54,
+      "latex": "\\hat\\beta_{Y2}^{\\text{PENYDSPG}}=-1.809\\ (p=0.323,\\ \\text{n.s.})",
+      "symbol_and_unit_ledger": {
+        "PENYDSPG": "penalty yards per game (yards/game)"
+      },
+      "assumptions": [
+        "The discipline narrative fails: no tenure variable predicts penalties; the chemistry (turnover) channel survives."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A plausible mechanism (discipline) is vetoed by the data while another (chemistry) survives; GSE must let evidence select the channel.",
+        "source_operator": "penalties_null",
+        "telemetry": "penalties n.s., turnovers significant"
+      }
+    },
+    {
+      "primitive_id": "fired_perf_strongest",
+      "name": "Strongest Y2 when replacing a fired-for-performance coach",
+      "verbatim_quote": "the largest effects were seen in the second season, as the models indicated general improvements of 13.42% and 4.9 points in WIN% and SRS, respectively.",
+      "page": 55,
+      "latex": "\\hat\\beta_{\\text{REP\\_FIRED\\_PERF},Y2}^{\\text{WIN\\%}}=0.1342,\\ \\text{SRS}=4.9328",
+      "symbol_and_unit_ledger": {
+        "REP_FIRED_PERF": "dummy: new coach replaced one fired for on-field performance"
+      },
+      "assumptions": [
+        "Y1 also +10.63%/+3.3; the fired coach left a low baseline, so there is room to improve."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The turnaround prior is strongest when the predecessor was fired for losing; GSE conditions its coaching-change adjustment on why the change happened.",
+        "source_operator": "fired_perf_strongest",
+        "telemetry": "fired-perf Y2 +13.42% WIN%, +4.93 SRS"
+      }
+    },
+    {
+      "primitive_id": "newjob_decline",
+      "name": "Replacing a new-job departee: Y1 decline",
+      "verbatim_quote": "WIN% and SRS tended to decline by 13.07% and 4.7 points, respectively, during a coach's first season at the helm.",
+      "page": 56,
+      "latex": "\\hat\\beta_{\\text{REP\\_NEWJOB},Y1}^{\\text{WIN\\%}}=-0.1307,\\ \\text{SRS}=-4.7047",
+      "symbol_and_unit_ledger": {
+        "REP_NEWJOB": "dummy: predecessor left voluntarily for another job"
+      },
+      "assumptions": [
+        "A coach who left for a new job did so after success, so there is nowhere to go but down; the decline wears off by Y2."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Succession after a peak predicts regression, not improvement; GSE must flip its tenure prior when the predecessor left on a high.",
+        "source_operator": "newjob_decline",
+        "telemetry": "new-job Y1 -13.07% WIN%, -4.7 SRS"
+      }
+    },
+    {
+      "primitive_id": "reg_mean_variable",
+      "name": "REG_MEAN: prior season vs 3-year average",
+      "verbatim_quote": "an explanatory variable (REG MEAN) representing how much higher or lower the prior season's win percentage had been compared to its prior 3-year average for win percentage",
+      "page": 56,
+      "latex": "\\text{REG\\_MEAN}_t=\\text{WIN\\%}_{t-1}-\\frac{\\text{WIN\\%}_{t-2}+\\text{WIN\\%}_{t-3}+\\text{WIN\\%}_{t-4}}{3}",
+      "symbol_and_unit_ledger": {
+        "REG_MEAN": "deviation of last season's win% from its prior 3-year mean (fraction)"
+      },
+      "assumptions": [
+        "Captures how far the prior season sat above/below the program's recent baseline, the regression-to-mean lever."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An explicit deviation-from-baseline regressor is the same mean-reversion control GSE must include before crediting any turnaround.",
+        "source_operator": "reg_mean_variable",
+        "telemetry": "REG_MEAN = WIN%_{t-1} - mean(WIN%_{t-2..t-4})"
+      }
+    },
+    {
+      "primitive_id": "reg_mean_result",
+      "name": "REG_MEAN dominates: Y2 shrinks to 0.079",
+      "verbatim_quote": "indicating that for every 1% higher (lower) a team's WIN% had been in the previous season compared to the average WIN% of the prior three seasons, its WIN% in the observed season would decline (improve) by nearly half a percent, holding all else constant.",
+      "page": 56,
+      "latex": "\\hat\\beta_{\\text{REG\\_MEAN}}=-0.459\\ (t=-16.08),\\quad \\hat\\beta_{Y2}=0.079,\\ R^2:0.058\\to0.235",
+      "symbol_and_unit_ledger": {
+        "beta_REG_MEAN": "mean-reversion coefficient (dimensionless)",
+        "R2": "within R-squared"
+      },
+      "assumptions": [
+        "Adding REG_MEAN shrinks Y2 from 0.1042 to 0.079, barely above Y3 (0.073) and Y4 (0.077); within R2 jumps to 0.235."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mean-reversion control is the decisive veto: most of the apparent Year-Two Effect is regression to the mean, the same confound GSE must price.",
+        "source_operator": "reg_mean_result",
+        "telemetry": "REG_MEAN -0.459; Y2 0.1042->0.079; R2 0.235"
+      }
+    },
+    {
+      "primitive_id": "mean_reversion_conclusion",
+      "name": "Year-Two Effect largely regression to the mean",
+      "verbatim_quote": "while the Year-Two Effect may be quite evident throughout the FBS ranks, it is driven in large part by a regression to the mean.",
+      "page": 57,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The effect remains significant but is mostly mean-reversion; the honest conclusion deflates the media truism."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A real-but-mostly-confounded effect is the canonical GSE lesson: quantify how much of a signal is just regression to the mean before betting on it.",
+        "source_operator": "mean_reversion_conclusion",
+        "telemetry": "Y2 real but largely mean-reversion"
+      }
+    },
+    {
+      "primitive_id": "coaching_turnover_stats",
+      "name": "Coaching turnover base rates",
+      "verbatim_quote": "Over 230 coaching changes occurred during the sampled timeframe, and the mean and median lengths of service were 5.87 and 4 seasons, respectively.",
+      "page": 57,
+      "latex": "\\bar t=5.87,\\ \\text{median}=4\\ \\text{seasons}",
+      "symbol_and_unit_ledger": {
+        "t": "coach tenure (seasons)"
+      },
+      "assumptions": [
+        "~25% of changes follow year four; 59% of new coaches replaced a fired-for-performance coach, 26% new-job, 11% retired, 4% non-performance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Turnover base rates tell GSE how often the tenure prior applies and which succession scenario dominates.",
+        "source_operator": "coaching_turnover_stats",
+        "telemetry": "230+ changes, mean 5.87/median 4 yrs"
+      }
+    },
+    {
+      "primitive_id": "fired_share",
+      "name": "59% of successions follow a performance firing",
+      "verbatim_quote": "59% of the head coaches in the sample took over for coaches who had resigned or been fired due to their team's inability to perform on the field.",
+      "page": 57,
+      "latex": "P(\\text{REP\\_FIRED\\_PERF})\\approx 0.59",
+      "symbol_and_unit_ledger": {
+        "0.59": "share of successions after a performance firing (fraction)"
+      },
+      "assumptions": [
+        "The most common succession is exactly the scenario where the Year-Two Effect is strongest."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The dominant succession type is the high-reversion one; GSE's default coaching-change prior should lean improvement but discount mean-reversion.",
+        "source_operator": "fired_share",
+        "telemetry": "59% fired-perf successions"
+      }
+    },
+    {
+      "primitive_id": "recruiting_success_link",
+      "name": "Recruiting explains next-season performance",
+      "verbatim_quote": "various recruiting metrics from Scout and Rivals explained up to 45% of the variance in teams' Sagarin rankings and win totals the next season.",
+      "page": 48,
+      "latex": "R^2_{\\text{recruit}\\to\\text{perf}}\\le 0.45",
+      "symbol_and_unit_ledger": {
+        "R2": "variance explained (fraction)"
+      },
+      "assumptions": [
+        "Herda et al.: recruiting explains up to 45% of next-season Sagarin/wins; on-field success explains 51% of next-year recruiting (reverse)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Talent stock predicts future performance and performance predicts future talent, a feedback loop GSE models as a coupled dynamical system.",
+        "source_operator": "recruiting_success_link",
+        "telemetry": "recruit->perf R2<=0.45; perf->recruit 0.51"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "year_two2020_trace",
+      "think": "The retrocausal genealogy of this paper is the deliberate testing of a media cliché. The Year-Two Effect, the expected jump in a head coach's second season, is recycled every time a Kirby Smart or Bob Stoops or Nick Saban turns a program around, and the authors suspect an availability heuristic: a handful of vivid cases standing in for a base rate. The prior literature is thin and mostly anecdotal, Connelly's ratings comparison and Hokanson's case list, with peer-reviewed work like Dohrn's revenue-tiered succession study and Maxcy's recruiting-efficiency analysis only circling the phenomenon. No study had explicitly tested the Year-Two Effect with the necessary controls. The contribution is to take the truism seriously enough to try to falsify it. The identification strategy is a balanced panel of 114 FBS programs over 11 seasons, 1,254 observations, fit with two-way fixed effects. School fixed effects absorb time-invariant reputation and history; season fixed effects absorb common shocks like rule, conference, and postseason changes. The within estimator demeans by school and yields the same coefficients as least-squares dummy variables. Outcomes are first-differenced, the season-to-season change in overall winning percentage and in the Simple Rating System, which is average margin plus strength of schedule. Coach tenure enters as Y1 through Y5 dummies against a Y6-plus reference, and the model controls for schedule change, conference change, and the recruiting rankings of the junior and senior classes. The recursive theory of mind is about what a coach inherits versus what he creates. The junior and senior recruiting controls capture the former coach's talent coming of age, so the second-year coefficient is net of inherited players. The scenario dummies encode the state of the program at arrival, whether the predecessor was fired for performance, fired for scandal, left for a new job, or retired. And the REG_MEAN variable encodes the program's own baseline tendency, how far last season sat above or below its prior three-year average. The model is reasoning about the counterfactual: how much of this improvement is the new coach, and how much is just the program returning to its level? Cross-layer veto adjudication proceeds in stages, each tightening the claim. Raw t-tests show year two improving winning percentage by 5.76% versus a 1.84% drop in year one, significantly different from every other tenure. The fixed-effects model nets out schedule, conference, and inherited talent and still finds a second-year bump of about 10% in winning percentage and 3.5 SRS points. Mechanism models then show recruiting improving eight to nine spots in year two after a three-to-four-spot dip in year one, and offensive turnovers falling by 0.23 per game, while penalties, the discipline proxy, are random and non-significant. Scenario models show the effect is strongest when replacing a coach fired for performance, plus 13.42%, and reverses to a 13.07% first-year decline when replacing a coach who left for a new job. The decisive veto is REG_MEAN: its coefficient is minus 0.459 with a t of minus 16, the within R-squared jumps from 0.058 to 0.235, and the year-two coefficient shrinks to 0.079, barely above year three's 0.073 and year four's 0.077. The implementation invariants are exactly the epistemic discipline GSE needs. Test the truism rather than assume it; difference the outcome to target improvement; absorb unit and era heterogeneity with two-way fixed effects; control inherited talent and schedule; and above all include an explicit regression-to-the-mean regressor before crediting any turnaround. The honest conclusion is that the Year-Two Effect is real but driven in large part by regression to the mean. For GSE this is a coaching-turnaround prior that must be discounted by mean reversion and conditioned on why the coaching change happened. The outcomes are winning percentage and SRS, actual performance measures; there are zero sportsbook lines, spreads, totals, or implied odds anywhere in the study. The parameter ledger and the limitations close the account. 1,254 observations, 114 schools, 11 seasons; the year-two coefficient falls from 0.1042 to 0.079 once REG_MEAN enters; the mean-reversion coefficient is minus 0.459; over 230 coaching changes occurred with mean tenure 5.87 and median 4 seasons, and 59% of successions followed a performance firing, exactly the high-reversion scenario. The authors concede the design is observational, that specific scheme changes were not measured, and that penalties behave randomly. The invariant for GSE is to carry the tenure prior, the succession-scenario conditioning, and the talent feedback loop, while never forgetting that most of an apparent turnaround is a program snapping back to its baseline, not a coach bending reality. The surrounding literature quantifies the talent feedback that makes the turnaround plausible. Caro found recruiting success explained 63% to 80% of conference records in the SEC, Big Ten, and Big 12, and Bergman and Logan estimated a five-star recruit worth more than $150,000 in expected bowl revenue even after school fixed effects. Holmes documented a firing paradox: recent winning decreases dismissal risk while historical winning increases it, as if a program cannot escape the standard its own past set. These are the stakes that make the Year-Two question economic, not just statistical, with coaching salaries outpacing student-athlete expenses by more than 750% since 2006. The practical payoff is contract design: if year-two improvement is the attainable benchmark after a performance firing, buyouts and bonuses should be structured around that realistic timeline rather than an immediate miracle, and more leniency is warranted when a coach inherits a peak that just departed for a new job.",
+      "retrocausal_genealogy": "The paper originates in suspicion of a media cliché: the Year-Two Effect is repeated whenever a prominent coach improves in season two, which smells like an availability heuristic rather than a base rate. Prior work is anecdotal (Connelly, Hokanson) or adjacent (Dohrn's revenue-tiered succession, Maxcy's recruiting efficiency), and no peer-reviewed study had explicitly tested the phenomenon with proper controls. The authors therefore build a balanced 114-by-11 panel and a two-way fixed-effects design specifically to falsify or confirm the truism. Every later choice, first-differenced outcomes, inherited-talent controls, and the regression-to-the-mean regressor, inherits from that falsification intent.",
+      "theory_of_mind": "The model reasons about what a coach inherits versus creates. Junior and senior recruiting controls capture the former coach's talent maturing, so the second-year effect is net of inherited players. Scenario dummies encode the program's state at arrival, fired for performance, fired for scandal, left for a new job, or retired, each implying a different room for improvement. The REG_MEAN variable encodes the program's baseline tendency. Together they form a counterfactual theory of mind: how much of the observed improvement is the new coach's doing, and how much is the program simply returning to its own level?",
+      "cross_layer_veto": "Adjudication tightens in stages. Raw t-tests show Y2 +5.76% WIN% versus Y1 -1.84%, significant against all tenures. Two-way FE nets out schedule, conference, and inherited talent and still finds Y2 ~+10% WIN% and +3.5 SRS. Mechanism models show recruiting +8-9 spots and turnovers -0.23/game in Y2, but penalties (discipline) are random and vetoed. Scenario models show the effect strongest after a performance firing (+13.42%) and reversed after a new-job departure (-13.07% in Y1). The decisive veto is REG_MEAN: coefficient -0.459 (t=-16), within R2 0.058 to 0.235, and Y2 shrinks to 0.079, barely above Y3/Y4, revealing regression to the mean as the main driver."
+    }
+  ],
+  "universal_lens": "A sports media truism is treated as a falsifiable hypothesis and tested on a balanced school-by-season panel with two-way fixed effects, first-differenced outcomes, inherited-talent and schedule controls, succession-scenario dummies, and an explicit regression-to-the-mean regressor that reveals most of the apparent effect is mean reversion.",
+  "gsi_mapping": "GSI models program turnaround as Delta WIN% and Delta SRS on coach-tenure dummies (Y1-Y5 vs Y6+), controlling Delta SOS, conference change, and junior/senior recruiting; the Year-Two prior (~+10% WIN%, +3.5 SRS) is conditioned on succession type and discounted by REG_MEAN = WIN%_{t-1} - mean(WIN%_{t-2..t-4}).",
+  "gse_mapping": "GSE lifts the falsify-the-truism discipline, the two-way fixed-effects design, the inherited-talent controls, and the decisive regression-to-the-mean veto; its coaching-change prior leans improvement after a performance firing (59% of successions) but prices mean reversion, with all targets being actual win% and SRS, never sportsbook lines."
+}

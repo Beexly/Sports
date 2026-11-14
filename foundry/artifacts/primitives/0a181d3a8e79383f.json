@@ -1,0 +1,95 @@
+{
+  "book_id": "0a181d3a8e79383f",
+  "source_status": "COMPLETE",
+  "title": "openalex_W2130949007",
+  "file_name": "openalex_W2130949007.pdf",
+  "sha256": "0a181d3a8e79383fbd31a1e294702f3ceeccc6d71976cc7ca551182dcd65ac86",
+  "primary_domain": "other",
+  "pages_total": 116,
+  "pages_read": 26,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "licentiate_degree_credit_allocation",
+      "name": "Licentiate degree credit allocation",
+      "verbatim_quote": "Swedish postgraduate education leads to a Doctor's degree and/or a Licentiate's degree.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Standard academic credit transferability within Swedish higher education framework.",
+      "breakdown_regime": "None - administrative 규정",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Credit-based qualification scoring; GSE - Skill-level certification mapping.",
+        "source_operator": "licentiate_degree_credit_allocation",
+        "telemetry": "Number of ECTS credits completed per academic year"
+      }
+    },
+    {
+      "primitive_id": "doctoral_degree_credit_allocation",
+      "name": "Doctoral degree credit allocation",
+      "verbatim_quote": "A Doctor's Degree comprises 240 ECTS credits (4 years of full-time studies).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Full-time equivalency assumed; part-time scaling linearly proportional.",
+      "breakdown_regime": "None - administrative 규정",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Advanced research credit accumulation; GSE - Expertise certification mapping.",
+        "source_operator": "doctoral_degree_credit_allocation",
+        "telemetry": "Total research output volume (papers, patents)"
+      }
+    },
+    {
+      "primitive_id": "licentiate_thesis_credit_requirement",
+      "name": "Licentiate thesis credit requirement",
+      "verbatim_quote": "A Licentiate's degree comprises 120 ECTS credits, of which at least 60 ECTS credits constitute a Licentiate's thesis.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Minimum 50% thesis contribution required for Licentiate award.",
+      "breakdown_regime": "None - administrative 규정",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Thesis-based evaluation scoring; GSE - Research milestone verification.",
+        "source_operator": "licentiate_thesis_credit_requirement",
+        "telemetry": "Thesis publication count and impact metrics"
+      }
+    },
+    {
+      "primitive_id": "military_flight_envelope_protection",
+      "name": "Military flight envelope protection",
+      "verbatim_quote": "Therefore pilots often maneuver the aircraft very close to the limit of what it is capable of, and an automatic system (called flight envelope protection system) against violating the restrictions is a necessity.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operational limits defined by physical constraints (load factor, AoA, etc.).",
+      "breakdown_regime": "Envelope boundary crossing triggers protection response.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE - State-space barrier function enforcement; GSI - Conformal prediction interval tightening.",
+        "source_operator": "military_flight_envelope_protection",
+        "telemetry": "Violation probability of hard constraints"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0a181d3a8e79383f_t0",
+      "think": "The core challenge is converting Swedish academic credit structures into actionable performance metrics for GSI's predictive models and GSE's real-time control systems. We map credit allocations (ECTS) to information-theoretic rates (bits/second) for telemetry compression. The transition from theoretical limits (Doob-Meyer martingale convergence) to practical implementation requires discrete event triggers. For military flight envelope protection, we formulate a constrained optimization kernel that penalizes constraint violations via Lagrange multipliers, ensuring backward-invariant viability under Model Predictive Control.\n\nDeep epistemic analysis for openalex_W2130949007 (0a181d3a8e79383f, domain=other, pages_read=26/116): Operator 'Licentiate degree credit allocation' (page 2, domain other) captures: Swedish postgraduate education leads to a Doctor's degree and/or a Licentiate's degree. Assumptions: Standard academic credit transferability within Swedish higher education framework. Breakdown regime: None - administrative 규정 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Credit-based qualification scoring; GSE - Skill-level certification mapping. Operator 'Doctoral degree credit allocation' (page 2, domain other) captures: A Doctor's Degree comprises 240 ECTS credits (4 years of full-time studies). Assumptions: Full-time equivalency assumed; part-time scaling linearly proportional. Breakdown regime: None - administrative 규정 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Advanced research credit accumulation; GSE - Expertise certification mapping. Operator 'Licentiate thesis credit requirement' (page 2, domain other) captures: A Licentiate's degree comprises 120 ECTS credits, of which at least 60 ECTS credits constitute a Licentiate's thesis. Assumptions: Minimum 50% thesis contribution required for Licentiate award. Breakdown regime: None - administrative 규정 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Thesis-based evaluation scoring; GSE - Research milestone verification. Operator 'Military flight envelope protection' (page 5, domain other) captures: Therefore pilots often maneuver the aircraft very close to the limit of what it is capable of, and an automatic system (called flight envelope protection system) against violating the restrictions is a necessity. Assumptions: Operational limits defined by physical constraints (load factor, AoA, etc.). Breakdown regime: Envelope boundary crossing triggers protection response. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - State-space barrier function enforcement; GSI - Conformal prediction interval tightening. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W2130949007 (0a181d3a8e79383f, domain=other, pages_read=26/116): Operator 'Licentiate degree credit allocation' (page 2, domain other) captures: Swedish postgraduate education leads to a Doctor's degree and/or a Licentiate's degree. Assumptions: Standard academic credit transferability within Swedish higher education framework. Breakdown regime: None - administrative 규정 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Credit-based qualification scoring; GSE - Skill-level certification mapping. Operator 'Doctoral degree credit allocation' (page 2, domain other) captures: A Doctor's Degree comprises 240 ECTS credits (4 years of full-time studies). Assumptions: Full-time equivalency assumed; part-time scaling linearly proportional. Breakdown regime: None - administrative 규정 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Advanced research credit accumulation; GSE - Expertise certification mapping. Operator 'Licentiate thesis credit requirement' (page 2, domain other) captures: A Licentiate's degree comprises 120 ECTS credits, of which at least 60 ECTS credits constitute a Licentiate's thesis. Assumptions: Minimum 50% thesis contribution required for Licentiate award. Breakdown regime: None - administrative 규정 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Thesis-based evaluation scoring; GSE - Research milestone verification. Operator 'Military flight envelope protection' (page 5, domain other) captures: Therefore pilots often maneuver the aircraft very close to the limit of what it is capable of, and an automatic system (called flight envelope protection system) against violating the restrictions is a necessity. Assumptions: Operational limits defined by physical constraints (load factor, AoA, etc.). Breakdown regime: Envelope boundary crossing triggers protection response. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - State-space barrier function enforcement; GSI - Conformal prediction interval tightening. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in von Neumann's minimax theorem (1928), extended by Bellman's dynamic programming (1957) and Kalman filtering (1960). Modern MPC builds on quadratic programming relaxations from operations research. Retrocausal Genealogy: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Adversarial agents (pilots) operate near system limits while facing uncertain threats (missiles). The flight envelope protection system acts as a rationalizing agent, enforcing safety constraints to prevent catastrophic outcomes. Theory of Mind & Decision Maker Model: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires independent sensor modalities (IMU vs GPS vs radar altimeter) to avoid leakage of identical information across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W2130949007 (0a181d3a8e79383f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

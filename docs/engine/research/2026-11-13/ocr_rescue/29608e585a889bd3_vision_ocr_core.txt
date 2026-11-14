@@ -1,0 +1,1595 @@
+========== PAGE 1 ==========
+US008938463B1
+(12) United States Patent
+Kim et al.
+(10) Patent No.:
+(45) Date of Patent:
+US 8,938,463 B1
+Jan. 20, 2015
+(54) MODIFYING SEARCH RESULT RANKING
+BASED ON IMPLICIT USER FEEDBACK AND
+A MODEL OF PRESENTATION BIAS
+(75) Inventors: Hyung-Jin Kim, Sunnyvale, CA (US);
+Adrian D. Corduneanu, Mountain
+View, CA (US)
+(73) Assignee: Google Inc., Mountain View, CA (US)
+(*) Notice: Subject to any disclaimer, the term of this
+patent is extended or adjusted under 35
+U.S.C. 154(b) by 836 days.
+(21) Appl. No.: 11/685,095
+Chidlovskii et al.
+1/2002 Yamakawa et al.
+3/2002 Linsk
+3/2002 Conklin et al.
+6.327,590 B1* 12/2001
+6,341,283 B1
+6,353,849 B1
+6,363,378 B1
+6,370,526 B1
+6,421,675 B1
+4/2002 Agrawal et al.
+7/2002 Ryan et al.
+(Continued)
+FOREIGN PATENT DOCUMENTS
+WO
+WO 00/77689
+WO
+WO 01/16807
+12/2000
+3/2001
+... 707/5
+(Continued)
+OTHER PUBLICATIONS
+Boyan, Freitag, Joachims, "A Machine Learning Architecture for
+Optimizing Web Search Engines"; Oct. 9, 1996; AAAI Techincal
+Report Ws-96-06.*
+(Continued)
+(22) Filed:
+Mar. 12, 2007
+(51) Int. Cl.
+G06F 17/30
+(52) U.S. Cl.
+USPC
+(2006.01)
+Primary Examiner
+Ajay Bhatia
+707/751
+(58) Field of Classification Search
+USPC
+See application file for complete search history.
+Assistant Examiner Kurt Mueller
+(74) Attorney, Agent, or Firm
+Fish & Richardson P.C.
+707/751
+(57)
+(56)
+References Cited
+U.S. PATENT DOCUMENTS
+5,265,065 A 11/1993 Turtle
+5,488,725 A
+1/1996 Turtle
+5,696,962 A
+12/1997 Kupiec
+6,006,222 A 12/1999 Culliss
+6,014,665 A
+6,026,388 A
+6,067,565 A
+6,078,916 A
+6,078,917 A
+6,088,692 A
+6,182,068 B1
+6,185.559 B1
+6,249,252 B1
+6,285,999 B1
+1/2000 Culliss
+2/2000 Liddy et al.
+5/2000 Horvitz
+6/2000 Culliss
+6/2000 Paulsen et al.
+7/2000 Driscoll
+1/2001 Culliss
+2/2001 Brin et al.
+6/2001 Dupray
+9/2001 Page
+6,321,228 B1 11/2001 Crandall et al.
+ABSTRACT
+The present disclosure includes systems and techniques relat-
+ing to ranking search results of a search query. In general, the
+subject matter described in this specification can be embodied
+in a computer-implemented method that includes: receiving
+multiple features, including a first feature indicative of pre-
+sentation bias that affects document result selection for search
+results presented in a user interface of a document search
+service; obtaining, based on the multiple features, informa-
+tion regarding document result selections for searches per-
+formed using the document search service; generating a prior
+model using the information, the prior model representing a
+background probability of document result selection given
+values of the multiple features; and outputting the prior model
+to a ranking engine for ranking of search results to reduce
+influence of the presentation bias.
+27 Claims, 8 Drawing Sheets
+4300
+USER SELECTIONS LOG(S)
+4310
+QUERY
+QUERY N
+4320
+4322
+RELEVANCE
+DOCUMENT FEATURE
+RESULT DISPLAY
+FEATURE
+4324
+:
+4330
+RELEVANCE
+DOCUMENT FEATURE
+RESULT DISPLAY
+FEATURE
+4350
+COLLECT USER SELECTIONS ACROSS
+QUERIES FOR MULTIPLE COMBINATIONS
+OF VALUES OF SELECTED FEATURES
+I
+DETERMINE QUERY-INDEPENDENT
+SELECTION PROBABILITY GIVEN
+THE SELECTED FEATURES
+4360
+
+========== PAGE 2 ==========
+(56)
+US 8,938,463 B1
+Page 2
+References Cited
+U.S. PATENT DOCUMENTS
+7,953,740 B1
+7,974,974 B2
+5/2011
+Vadon et al.
+7/2011
+Tankovich et al.
+7,987,185 B1
+7/2011
+Mysen et al.
+6,480,843 B2
+11/2002 Li
+6,490,575 B1* 12/2002 Berstis
+707/3
+8,001,136 B1
+8,019,650 B2
+8.024.326 B2
+8/2011 Papachristou et al.
+9/2011
+Donsbach et al.
+9/2011
+Tong et al.
+6,526,440 B1
+6,529,903 B2
+6,539,377 B1
+6,560,590 B1
+6,567,103 B1
+2/2003 Bharat
+3/2003 Smith et al.
+3/2003 Culliss
+5/2003 Shwe et al.
+5/2003 Chaudhry
+8,024,330 B1
+9/2011
+Franco et al.
+8,027,439 B2
+9/2011
+Zoldi et al.
+8,037,042 B2
+10/2011
+Anderson et al.
+"
+6,587,848 B1
+6,615,209 B1
+7/2003 Aggarwal et al.
+9/2003 Gomes
+6,623,529 B1
+6,658,423 B1
+6,671,681 B1*
+9/2003 Lakritz
+12/2003
+Pugh et al.
+12/2003 Emens et al.
+.... 707/5
+6,678,681 B1
+1/2004
+Brin et al.
+6,701,309 B1
+3/2004
+Beeferman et al.
+6,725,259 B1
+4/2004
+Bharat
+8,037,043 B2
+8,037,086 B1
+8,051,061 B2
+8,060,497 B1
+8.065,296 B1
+8,069,182 B2
+8,073,263 B2
+8,073,772 B2
+8,086,599 B1
+8,090,717 B1
+10/2011 Zoeter et al.
+10/2011
+Upstill et al.
+11/2011
+Niu et al.
+11/2011
+11/2011
+Zatsman et al.
+Franz et al.
+11/2011 Pieper
+12/2011 Hull et al.
+12/2011 Bishop et al.
+12/2011
+Heymans
+1/2012
+Bharat et al.
+6,738,764 B2
+5/2004
+Mao et al.
+8,156,111 B2
+4/2012
+Jones et al.
+"
+6,754,873 B1
+6/2004
+Law et al.
+8,224,827 B2
+7/2012 Dean et al.
+6,792,416 B2*
+9/2004
+Soetarman et al.
+707/3
+2001/0000356 A1
+4/2001
+Woods
+6,795,820 B2 9/2004 Barnett
+2002/0034292 A1*
+3/2002
+Tuoriniemi et al.
+379/219
+6,816,850 B2
+6,853,993 B2
+6,877,002 B2
+6,882,999 B2
+6,901,402 B1
+6,944,611 B2
+6,944,612 B2*
+6,954,750 B2
+6,990,453 B2
+11/2004 Culliss
+2/2005 Ortega et al.
+4/2005 Prince
+2002/0042791 Al
+2002/0049752 A1
+2002/0103790 A1*
+4/2002
+Smith et al.
+4/2002
+Bowman et al.
+8/2002
+Wang et al.
+707/3
+4/2005
+Cohen et al.
+2002/0123988 A1
+9/2002
+Dean et al.
+5/2005 Corston-Oliver et al.
+9/2005 Flank et al.
+2002/0133481 A1
+9/2002
+Smith et al.
+2002/0165849 A1
+11/2002
+Singh et al.
+9/2005
+Roustant et al.
+707/3
+2003/0009399 A1
+1/2003
+Boerner
+10/2005
+Bradford
+1/2006
+Wang et al.
+7,016,939 B1
+3/2006 Rothwell et al.
+7,028,027 B1
+4/2006 Zha et al.
+2003/0018707 Al
+2003/0028529 A1
+2003/0037074 A1
+2003/0078914 A1
+1/2003
+Flocken
+2/2003
+Cheung et al.
+2/2003
+Dwork et al.
+4/2003
+Witbrock
+7,072,886 B2
+7/2006 Salmenkaita et al.
+7,085,761 B2
+8/2006 Shibata
+7,113,939 B2*
+7,117,206 B1
+7,136,849 B2
+7,146,361 B2*
+7,222,127 Bl
+7,231,399 B1*
+7,243,102 B1
+7,266,765 B2
+7,293,016 B1
+9/2006 Chou et al.
+707/3
+10/2006
+11/2006
+12/2006 Broder et al.
+Bharat et al.
+Patrick
+707/5
+5/2007 Bem et al.
+6/2007 Bem et al.
+7/2007 Naam et al.
+9/2007
+11/2007
+.... 707/102
+Golovchinsky et al.
+Shakib et al.
+7,379,951 B2
+5/2008
+Chkodrov et al.
+7,382,358 B2
+6/2008
+Kushler et al.
+7,395,222 B1
+7/2008
+Sotos
+7,426,507 B1
+9/2008
+Patterson
+7,451,487 B2
+7,505,964 B2
+11/2008 Oliver et al.
+3/2009
+7,516,146 B2
+4/2009
+Tong et al.
+Robertson et al.
+7,526,470 B1
+4/2009 Karnawat et al.
+7,533,092 B2
+7,533,130 B2
+7,552,112 B2
+5/2009
+7,565,363 B2
+7,565,367 B2
+Berkhin et al.
+5/2009 Narayana et al.
+6/2009 Jhala et al.
+7/2009 Anwar
+7/2009 Barrett et al.
+7,574,530 B2
+8/2009 Wang et al.
+7,584,181 B2
+9/2009 Zeng et al.
+7,610,282 B1
+7,636,714 B1
+10/2009 Datar et al.
+12/2009 Lamping et al.
+7,657,626 B1
+7,680,775 B2
+2/2010 Zwicky
+3/2010 Levin et al.
+7,693,818 B2
+4/2010 Majumder
+7,716,225 B1
+5/2010 Dean et al.
+7,747,612 B2
+6/2010 Thun et al.
+7,756,887 B1
+7/2010 Haveliwala
+7,783,632 B2
+8/2010 Richardson et al.
+7,801,885 B1
+9/2010 Verma
+7,809,716 B2
+10/2010 Wang et al.
+7,818,320 B2
+10/2010 Makeev
+7,836,058 B2
+11/2010 Chellapilla
+7,844,589 B2
+11/2010 Wang et al.
+7,849,089 B2
+12/2010 Zhang et al.
+7,853,557 B2
+12/2010 Schneider et al.
+7,877,404 B2
+7,895,177 B2
+1/2011 Achan et al.
+2/2011 Wu
+7,925,498 B1
+4/2011 Baker et al.
+2003/0120654 A1
+2003/0135490 A1
+2003/0149704 A1
+2003/0167252 A1*
+2003/0195877 A1
+2003/0204495 A1
+2003/0220913 A1
+2003/0229640 A1
+2004/0006456 Al
+2004/0006740 A1
+2004/0034632 Al
+2004/0059708 A1
+2004/0083205 A1
+2004/0093325 A1*
+2004/0119740 A1
+2004/0122811 A1
+2004/0153472 A1
+2004/0158560 A1
+2004/0186828 Al
+2004/0186996 Al
+2004/0199419 A1
+2004/0215607 A1
+2005/0015366 A1
+2005/0027691 A1
+2005/0033803 A1
+2005/0050014 A1
+2005/0055342 A1
+2005/0055345 A1
+2005/0060290 A1
+2005/0060310 A1
+2005/0060311 A1
+2005/0071741 A1
+2005/0102282 A1
+2005/0125376 Al
+2005/0160083 A1
+2005/0192946 A1
+2005/0198026 A1
+2005/0222987 A1
+2005/0222998 A1
+2005/0240576 A1
+2005/0240580 Al
+2005/0256848 Al
+2006/0047643 Al
+2006/0069667 Al
+2006/0089926 A1
+1/2004
+1/2004 Krohn et al.
+2/2004 Carmel et al.
+3/2004 Dean et al.
+4/2004 Yeager
+5/2004 Banerjee et al.
+6/2004 Chang et al.
+6/2004 Page
+8/2004 Rieffanaugh, Jr.
+8/2004 Wen et al.
+9/2004 Yadav
+9/2004 Gibbs et al.
+10/2004 Kim et al.
+10/2004 Travis, Jr.
+1/2005 Carrasco et al.
+2/2005 Brin et al.
+2/2005 Vleet et al.
+3/2005 Gosse et al.
+3/2005 Bharat et al.
+3/2005 Ripley
+3/2005 Herscovici et al.
+3/2005 Tong et al.
+3/2005 Tong et al.
+3/2005 Acharya et al.
+5/2005 Linden
+6/2005 Curtis et al.
+7/2005 Robinson
+9/2005 Lu et al.
+9/2005 Dehlinger et al.
+10/2005 Vadon
+10/2005 Driessen et al.
+10/2005 Piscitello et al.
+10/2005 Zamir et al.
+11/2005 Alpert et al.
+3/2006 Chaman
+3/2006 Manasse et al.
+4/2006 Knepper et al.
+6/2003 Edlund et al.
+7/2003 Barrett et al.
+8/2003 Yayoi et al.
+9/2003
+10/2003
+10/2003
+Odom et al.
+Ford et al.
+Lehnert
+707/1
+11/2003 Doganata et al.
+12/2003
+Carlson et al.
+Loofbourrow et al.
+707/3
+
+========== PAGE 3 ==========
+(56)
+References Cited
+U.S. PATENT DOCUMENTS
+5/2006 Nagai et al.
+5/2006 Liang
+8/2006 Smyth et al.
+8/2006 Franklin et al.
+2006/0200476 Al 9/2006 Gottumukkala et al.
+2006/0095421 A1
+2006/0106793 A1
+2006/0173830 A1
+2006/0195443 A1
+2006/0200556 Al
+2006/0230040 A1
+2006/0293950 A1*
+2007/0005575 Al
+2007/0005588 Al
+2007/0038659 A1
+2007/0061211 A1
+2007/0081197 A1
+2007/0106659 Al
+2007/0112730 Al
+2007/0130370 A1*
+2007/0156677 Al
+2007/0192190 A1
+9/2006
+Brave et al.
+10/2006
+Curtis et al.
+12/2006
+Meek et al.
+1/2007
+Dai et al.
+1/2007 Zhang et al.
+2/2007 Datar et al.
+3/2007 Ramer et al.
+4/2007 Omoigui
+5/2007 Lu et al.
+5/2007 Gulli et al.
+6/2007 Akaezuwa
+7/2007 Szabo
+8/2007 Granville
+2007/0208730 Al 9/2007 Agichtein et al.
+2007/0214131 A1 9/2007 Cucerzan et al.
+2007/0233653 Al 10/2007
+2007/0255689 Al 11/2007
+2007/0260597 Al 11/2007
+2007/0288450 A1 12/2007
+2008/0052273 Al 2/2008 Pickens
+2007/0266021 A1
+2007/0266439 Al
+11/2007
+11/2007
+Biggs et al.
+Sun et al.
+Cramer
+Aravamudan et al.
+Kraft
+Datta et al.
+2008/0010143 A1
+1/2008
+Kniaz et al.
+2008/0027913 A1
+1/2008
+2008/0052219 A1 2/2008
+Chang et al.
+Sandholm et al.
+2008/0059453 Al
+3/2008
+Laderman
+2008/0077570 A1
+3/2008
+Tang et al.
+2008/0082518 Al
+4/2008
+2008/0091650 A1
+4/2008
+Kitts
+5/2008
+Raman et al.
+5/2008
+Saxena et al.
+6/2008 Jones et al.
+Meggs et al.
+Szulczewski
+2008/0114624 A1 5/2008
+2008/0114729 A1
+2008/0114750 A1
+2008/0140699 A1
+2008/0162475 A1 7/2008
+2008/0183660 Al 7/2008
+2008/0189269 Al
+Loftesness
+Fontoura et al.
+8/2008 Olsen
+2008/0208825 Al 8/2008 Curtis et al.
+2008/0228442 A1
+2008/0256050 Al
+9/2008 Lippincott et al.
+10/2008 Zhang et al.
+2008/0313168 A1 12/2008 Liu et al.
+2008/0313247 Al
+12/2008
+Galvin
+2009/0012969 A1
+2009/0055392 A1
+2009/0157643 Al
+2009/0182723 A1
+1/2009 Rail et al.
+2/2009
+6/2009
+7/2009
+Gupta et al.
+Gollapudi et al.
+Shnitko et al.
+2009/0287656 Al
+11/2009
+Bennett
+2010/0106706 A1
+4/2010
+Rorex et al.
+2010/0131563 Al 5/2010 Yin
+2010/0205541 Al 8/2010 Rapaport et al.
+2010/0228738 Al 9/2010 Mehta et al.
+9/2010
+Hernandez
+2010/0241472 A1
+2011/0295844 A1 12/2011 Sun et al.
+2012/0191705 A1 7/2012 Tong et al.
+FOREIGN PATENT DOCUMENTS
+WO
+WO
+WO 01/67297
+WO 2004/059514
+9/2001
+7/2004
+OTHER PUBLICATIONS
+US 8,938,463 B1
+Page 3
+705/14
+710/1
+Joachims T. Evaluating retrieval performance using clickthrough
+data. Proceedings of the SIGIR Workshop on Mathematical/Formal
+Methods in Information Retrieval; Aug. 12-15, 2002; Tampere, Fin-
+land; 2002.*
+Radlinski, Joachims; "Query Chains : Learnign to Rank for Implict
+Feedback"; International Conference on Knowledge Discovery and
+Data Mining archive, Proceedings of the eleventh ACM SIGKDD
+international conference on Knowledge discovery in data mining;
+2005.*
+Bar-Llan, Keenoy, Levene, Yaari; "Presentation Bias is Significant in
+Determing User Preseference for Search Results-A User Study";
+Journal of the American Society for Information Science and Tech-
+nology, vol. 60, Issue 1 (p. 135-149), Sep. 2008.*
+Jpachins. Radlinski; "Search Engines that Learn from Implict Feed-
+back"; Aug. 2007, IEEE Computer Society.*
+Bar-Ilan, Mat-Hassan, Levene; "Methods for comparing rankings of
+search engine results"; Computer Networks: The International Jour-
+nal of Computer and Telecommunications Networking, vol. 50, Issue
+10 (Jul. 2006).*
+U.S. Appl. No. 10/726,345, filed Dec. 3, 2003, Pearson et al.
+U.S. Appl. No. 10/878,926, filed Jun. 28, 2004, Battle et al.
+Agichtein, et al; Improving Web Search Ranking by Incorporating
+User Behavior Information; Aug. 2006; Proceedings of the Twenty-
+Ninth Annual International ACM SIGIR Conference on Research and
+Development in Information Retrieval, p. 19-26.
+Agichtein, et al; Learning User Interaction Models for Predicting
+Web Search Result Performances; Aug. 2006; Proceedings of the
+Twenty-Ninth Annual International ACM SIGIR Conference on
+Research and Development in Information Retrieval, p. 3-10.
+Boyan et al.; A Machine Learning Architecture for Optimizing Web
+Search Engines; Aug. 1996; Internet-based information systems-
+Workshop Technical Report-American Association for Artificial
+Intelligence, p. 1-8.
+Cutrell, et al.; Eye tracking in MSN Search: Investigating snippet
+length, target position and task types; 2007; Conference on Human
+Factors in Computing Systems-Proceedings of the SIGCHI Con-
+ference on Human Factors in Computing Systems.
+Joachims; Optimizing search engines using clickthrough data; 2002;
+Proceedings of the ACM SIGKDD International Conference on
+Knowledge Discovery and Data Mining, p. 133-142.
+Kelly, et al.; Implicit Feedback for Inferring User Preference: A
+Bibliography; SIGIR Forum, vol. 37, No. 2 (2003), pp. 18-28.
+U.S. Appl. No. 12/331,872, filed Dec. 10, 2008, Le et al.
+W3C, URIs, URLs and URNs: Classification and Recommendations
+1.0, Report from the joint W3C/IETF URI Planning Interest Group,
+Sep. 21, 2001, 8 pages.
+Joachims, "Evaluating Search Engines Using Clickthrough Data",
+Cornell University, Department of Computer Science, Draft, Feb. 19,
+2002, 13 pages.
+Jansen et al., “An Analysis of Web Documents Retrieved and
+Viewed", School of Information Sciences and Technology, The Penn-
+sylvania State University, the 4th International Conference on
+Internet Computing, Las Vegas, Nevada, pp. 65-69, Jun. 23-26, 2003,
+5 pages.
+Boldi, et al.; The Query-flow Graph: Model and Applications; CKIM
+'08, Oct. 26-30, Napaya Valley, California, USA, pp. 609-617.
+Burke, Robin, Integrating Knowledge-based and Collaborative-fil-
+tering Recommender Systems, AAAI Technical Report WS-99-01.
+Compilation copyright © 1999, AAAI (www.aaai.org), pp. 69-72.
+Craswell, et al.; Random Walks on the Click Graph; Jul. 2007; SIGIR
+'07. Amsterdam, The Netherlands, 8 pages.
+Diligenti, et al., Users, Queries and Documents: A Unified Represen-
+tation for Web Mining, wi-iat, vol. 1, 2009 IEEE/WIC/ACM Interna-
+tional Joint Conference on Web Intelligence and Intelligent Agent
+Technology, 2009, pp. 238-244.
+Hofmann, Thomas, Latent Semantic Models for Collaborative Fil-
+tering, ACM Transactions on Information Systems, vol. 22, No. 1,
+Jan. 2004, pp. 89-115.
+Google News archive, Jul. 8, 2003, Webmasterworld.com, [online]
+Retrieved from the Internet http://www.webmasterwolrd.com/fo-
+rum3/15085.htm [retrieved on Nov. 20, 2009] 3 pages.
+Grčar, Miha, User Profiling: Collaborative Filtering, SIKDD 2004,
+Oct. 12-15, 2004, Ljubljana, Slovenia, 4 pages.
+U.S. Appl. No. 11/556,143, filed Nov. 2, 2006, in Office Action
+mailed Jul. 6, 2010, 20 pages.
+U.S. Appl. No. 11/556,143, filed Nov. 2, 2006, in Office Action
+mailed Apr. 20, 2011, 18 pages.
+McDonnell, Philip, A., "Time Based Ranking," U.S. Appl. No.
+11/870,893, filed Oct. 11, 2007, 42 pages.
+Nicole, Kristen, Heeii is StumbleUpon Plus Google Suggestions,
+[online], Retrieved from the Internet http://mashable.com/2007/05/
+15/heeii/, 11 pages.
+
+========== PAGE 4 ==========
+(56)
+References Cited
+OTHER PUBLICATIONS
+US 8,938,463 B1
+Page 4
+Lemire. Daniel. Scale and Translation Invariant Collaborative Fil-
+tering Systems, Published in Information Retrieval, 8(1), pp. 129-
+150, 2005.
+U.S. Appl. No. 11/556,086, filed Nov. 2, 2006, in Office Action
+mailed Jun. 23, 2010, 21 pages.
+Schwab, et al., Adaptivity through Unobstrusive Learning, 2002,
+16(3), pp. 5-9.
+Stoilova, Lubomira et al., GiveALink: Mining a Semantic Network of
+Bookmarks for Web Search and Recommendation, LinkKDD '05,
+Aug. 21, 2005, Chicago, IL, USA, 8 pages.
+Xiao, et al., Measuring Similarity of Interests for Clustering Web-
+Users, ADC, 2001, pp. 107-114.
+Xie et al., Web User Clustering from Access Log Using Belief Func-
+tion, K-CAP '01, Oct. 22-23, 2001, Victoria, British Columbia,
+Canada, pp. 202-208.
+Yu et al., Selecting Relevant Instances for Efficient and Accurate
+Collaborative Filtering, CIKM '01, Nov. 5-10, 2001, Atlanta, Geor-
+gia, pp. 239-246.
+Zeng et al., Similarity Measure and Instance Selection for Collabo-
+rative Filtering, WWW '03, May 20-24, 2003, Budapest, Hungary,
+pp. 652-658.
+Zeng, et al., “Learning to Cluster Web Search Results", SIGIR '04,
+Proceedings of the 27th Annual International ACM SIGIR confer-
+ence on research and development in information retrieval, 2004.
+Soumen Chakrabarti, et al. “Enhanced Topic Distillation using Text,
+Markup tags, and Hyperlinks" ACM, Sep. 9-12, 2001, pp. 208-216.
+Gabriel Somlo et al., “Using Web Hepler Agent Profiles in Query
+Generation", ACM, Jul. 2003, pp. 812-818.
+Australian Patent Office Non-Final Office Action in AU App. Ser. No.
+2004275274, mailed Feb. 3, 2010, 2 pages.
+Dan Olsen et al., “Query-by-critique: Spoken Language Access to
+Large Lists", ACM, Oct. 2002, pp. 131-140.
+Susan Gauch et al., "A Corpus Analysis Approach for Automatic
+Query Expansion and its Extension to Multiple Databases", ACM,
+Jul. 1999, pp. 250-269.
+Nicolas Bruno et al., "Top-K Selection Queries over Relational Data-
+bases: Mapping Strategies and Performance Evaluation", ACM, Jun.
+2002, pp. 153-187.
+Ji-Rong Wen et al., "Query Clustering using User Logs", ACM, Jan.
+2002, pp. 59-81.
+Brin, S. and L. Page, The Anatomy of a Large-Scale Hypertextual
+Web Search Engine, Computer Science Department, Apr. 1998.
+International Search Report and Written Opinion for Application No.
+PCT/US2004/029615, dated Jan. 19, 2005, 8 pages.
+Hungarian Patent Office, International Search Report and Written
+Opinion for Application No. 200806756-3, dated Nov. 19, 2010 12
+pages.
+Authorized Officer Athina Nickitas-Etienne, International Prelimi-
+nary Report and Written Opinion for Application No. PCT/US2004/
+029615, mailed Mar. 23, 2006.
+Indian Office Action in Indian Application No. 686/KOLNP/2006,
+mailed Jun. 3, 2008, 2 pages.
+Danish Search Report and Written Opinion for Application No.
+200601630-7, dated Jun. 21, 2007, 15 pages.
+Jones et al., “Pictures of Relevance: A Geometric Analysis of Simi-
+larity Measures", Journal of the American Society for Information
+Science, Nov. 1987, 23 pages.
+Kaplan et al., "Adaptive Hypertext Navigation Based on User Goals
+and Context", User Modeling and User-Adapted Interaction 2, Sep.
+1, 1993; pp. 193-220, 28 pages.
+Liddy et al., "A Natural Language Text Retrieval System With Rel-
+evance Feedback", 16th National Online, May 2-6, 1995, 3 pages.
+U.S. Appl. No. 11/556,143, filed Nov. 2, 2006, in Office Action
+mailed Jan. 25, 2010, 14 pages.
+* cited by examiner
+
+========== PAGE 5 ==========
+U.S. Patent
+Jan. 20, 2015
+Sheet 1 of 8
+US 8,938,463 B1
+1002c
+CLIENT
+1004c
+1002b
+CLIENT
+1004b
+1002a
+Query
+1015
+1006
+CLIENT
+RAM
+PROCESSOR
+1008
+1004a
+1010a
+Query Signal
+1028Ի
+Search Results
+FIG. 1
+NETWORK
+1012
+$ 1000
+Search
+Query
+Results
+Signal
+1028a
+1010b
+1014
+1018
+SERVER SYSTEM
+PROCESSOR
+1016
+MEMORY
+1030
+SEARCH ENGINE
+INDEXING
+ENGINE
+1020
+RANKING
+ENGINE
+1052
+RANK MODIFIER
+ENGINE
+1056
+INDEX
+DB
+1022
+
+========== PAGE 6 ==========
+U.S. Patent
+Jan. 20, 2015
+Sheet 2 of 8
+US 8,938,463 B1
+SCORING
+ENGINE
+RANKING
+ENGINE
+2020
+2030
+2070
+RANK MODIFIER
+ENGINE
+2010
+INDEXING
+ENGINE
+2040
+RANKING
+RESULT 1
+RESULT 2
+TRACKING
+COMPONENT
+FIG. 2
+RESULT
+SELECTION
+LOG(S)
+2050
+2060
+3000
+CLIENT SYSTEM
+3030
+RESULT
+3050
+SERVER SYSTEM
+3040
+3060
+୮
+RANKING/
+SELECTION
+LOG(S)
+RANK MODIFIER
+ENGINE
+INDEXING
+ENGINE
+3010
+3070
+3020
+TRACKING
+SCORING /
+RANKING
+RANKING
+COMPONENT
+FIG. 3
+ENGINE
+
+========== PAGE 7 ==========
+U.S. Patent
+Jan. 20, 2015
+Sheet 3 of 8
+US 8,938,463 B1
+4000
+Results 1 - 10 of about 63,700,000 for user interface example page. (0.15 seconds)
+Google
+Web Images Video News Maps
+more >>
+user interface example page
+Search
+Advanced Search
+Preferences
+Web
+User Interface Design
+4060
+Download The Java Tutorial
+www.rocketcom.com Professional UI Design since 1992 - Motorola, Intel, Sun, Autodesk, etc
+Creating a User Interface Swing Archive (last updated May 19, 2003)... You might also find
+some relevant information on the Download Help page.
+java.sun.com/docs/books/tutorial/information/download.html - 9k - Cached - Similar pages
+User Interface Component Model Java EE 5 Tutorial
+For example, the two tags in Table 9-1 represent a UICommand component... See
+Implementing the Validator Interface (page 403) for more information.
+java sun.com/javaee/5/docs/tutorial/doc/JSFIntroS html - 44k - Cached - Similar pages
+4050
+Customizing Mozilla
+Windows uses the control key for most of its bindings (for example,
+using user.js: prefs set to non-default values in user.js are also ...
+www.mozilla.org/unix/customizing.html -49k Cached - Similar pages
+Luxor XML UI Language (XUL) Toolkit
+4040
+***
+One caution with
+Luxor is a free, open-source XML User Interface Language (XUL) toolkit in Java ... Bernhard
+wrote a two-page Luxor tutorial for the German Linux Magazin ...
+luxor-xul.sourceforge.net/- 19k - Cached - Similar pages
+User interface.
+4030
+✓ Strip/
+For example, a comic strip may be composed of images with overlaid text elements. When
+magnifying this page, a user agent should keep the text within the ...
+wwwww.wC.org/TR/REC-CSS2/ui.html - 19k - Cached - Similar pages
+Graphical user Interface - Wikipedia, the free encyclopedia
+An example of the graphical user Interface in Apple's Mac OS X... container for the main
+presentation content such as a web page, email message or drawing.
+en.wikipedia.org/wiki/Graphical_user_interface - 46k-Cached - Sirrular pages
+люзия
+Ajax (programming) - Wikipedia, the free encyclopedia
+This functionality is difficult to achieve in a web page without AJAX... [edit] User interface.
+The most obvious reason for using Ajax is an improvement
+en.wikipedia.org/wiki/Ajax_(programming) - 47k - Cached - Similar pages
+Yahool Developer Network Home - Welcome!
+The WADL home page has the code as well as supporting documentation and even a Yahoo!
+usage example. For developers that want to get started quickly with ...
+developer yahoo.com/ - 24k - Cached - Similar pages
+Cover Pages: Extensible User Interface Language (XUL)
+XML User Interface Language (XUL). Home page for Mozilla's XUL documentation.... to, for
+example, bring a boring HTML page to life with some XUL widgets.
+xml.coverpages.org/xul.html - 39k - Cached - Similar pages
+Apple Human Interface Guidelines: Introduction to Apple Human ...
+This document is the primary user interface documentation for Mac OS X. It provides ....
+indicates an example of the correct way to use an interface element.
+developer.apple.com/../UserExperience/
+Conceptual/OSXHIGuidelines/XHIGIntro/chapter_1_section_1.html - 22k -
+Cached - Similar pages
+Sponsored Link
+4010
+G000000000ogle
+4020
+Result Page:
+1 2 3 4 5 6 7 8 9 10
+Next
+FIG. 4A
+
+========== PAGE 8 ==========
+U.S. Patent
+Jan. 20, 2015
+Sheet 4 of 8
+US 8,938,463 B1
+4110
+RECEIVE MULTIPLE FEATURES,
+INCLUDING A FIRST FEATURE
+INDICATIVE OF PRESENTATION BIAS
+IN SEARCH SERVICE USER INTERFACE
+OBTAIN, BASED ON THE FEATURES,
+INFORMATION REGARDING
+DOCUMENT RESULT SELECTIONS,
+SPANNING MULTIPLE QUERIES
+4120
+4130
+GENERATE A PRIOR MODEL
+REPRESENTING PROBABILITY
+OF DOCUMENT RESULT
+SELECTION GIVEN FEATURE VALUES
+4140
+OUTPUT THE PRIOR MODEL TO
+A RANKING ENGINE FOR RANKING OF
+SEARCH RESULTS TO REDUCE
+INFLUENCE OF THE PRESENTATION BIAS
+FIG. 4B
+
+========== PAGE 9 ==========
+U.S. Patent
+Jan. 20, 2015
+Sheet 5 of 8
+US 8,938,463 B1
+4310
+4300
+USER SELECTIONS LOG(S)
+QUERY
+4320
+4322
+RELEVANCE
+DOCUMENT FEATURE
+RESULT
+DISPLAY
+FEATURE
+4324
+4330
+RELEVANCE
+DOCUMENT FEATURE
+RESULT
+DISPLAY
+FEATURE
+QUERY N
+4350
+COLLECT USER SELECTIONS ACROSS
+QUERIES FOR MULTIPLE COMBINATIONS
+OF VALUES OF SELECTED FEATURES
+4360
+୮
+DETERMINE QUERY-INDEPENDENT
+SELECTION PROBABILITY GIVEN
+THE SELECTED FEATURES
+FIG. 4C
+
+========== PAGE 10 ==========
+U.S. Patent
+Jan. 20, 2015
+Sheet 6 of 8
+US 8,938,463 B1
+4410
+RECEIVE A FIRST SET OF FEATURES
+AND A SECOND SET OF FEATURES
+(E.G., THE SECOND SET BEING A
+PROPER SUBSET OF THE FIRST)
+4420
+CREATE A FIRST USER SELECTION
+MODEL BASED ON THE FIRST SET AND
+A SECOND USER SELECTION MODEL
+BASED ON THE SECOND SET
+4430
+OUTPUT BOTH THE FIRST AND SECOND
+USER SELECTION MODELS
+FIG. 4D
+4510
+IDENTIFY, BASED ON FREQUENCY OF
+DOCUMENT RESULT SELECTION, A
+REDUCED SET OF DOCUMENT RESULT
+SELECTION RECORDS
+4520
+COLLECT INFORMATION REGARDING
+DOCUMENT RESULT SELECTIONS
+FROM THE REDUCED SET
+FIG. 4E
+
+========== PAGE 11 ==========
+U.S. Patent
+Jan. 20, 2015
+Sheet 7 of 8
+US 8,938,463 B1
+4610
+OBTAIN, IN ACCORDANCE WITH FIRST
+IMPLICIT USER FEEDBACK MODEL,
+A FIRST SIGNAL CORRESPONDING TO
+AN ASPECT OF DOCUMENT RELEVANCE
+4620
+OBTAIN, IN ACCORDANCE WITH SECOND
+IMPLICIT USER FEEDBACK MODEL,
+A SECOND SIGNAL CORRESPONDING TO
+AN ASPECT OF PRESENTATION
+COMBINE THE FIRST SIGNAL AND
+THE SECOND SIGNAL TO FORM
+A RELEVANCE SIGNAL FOR
+THE DOCUMENT RESULT
+4630
+4640
+OUTPUT THE RELEVANCE SIGNAL
+TO A RANKING ENGINE FOR RANKING
+OF SEARCH RESULTS INCLUDING
+THE DOCUMENT RESULT
+4650
+୮
+IDENTIFY AN ADDITIONAL DOCUMENT
+RESULT NOT INCLUDED IN THE FIRST
+IMPLICIT USER FEEDBACK MODEL
+4670
+OBTAIN, IN ACCORDANCE WITH THIRD
+IMPLICIT USER FEEDBACK MODEL,
+AN ADDITIONAL SIGNAL
+4680
+OUTPUT THE ADDITIONAL SIGNAL TO
+THE RANKING ENGINE FOR RANKING
+OF THE SEARCH RESULTS INCLUDING
+THE ADDITIONAL DOCUMENT RESULT
+FIG. 4F
+
+========== PAGE 12 ==========
+60507
+Processor
+6018
+Storage Device
+6052
+5
+0000
+0
+0
+[+
+D
+6056
+0
+0
+0
+5
+0
+Memory
+6016
+Input/Output
+FIG. 5
+5
+☐
+8
+768888888
+6054
+Input/Output
+Devices
+U.S. Patent
+Jan. 20, 2015
+Sheet 8 of 8
+US 8,938,463 B1
+
+========== PAGE 13 ==========
+1
+US 8,938,463 B1
+MODIFYING SEARCH RESULT RANKING
+BASED ON IMPLICIT USER FEEDBACK AND
+A MODEL OF PRESENTATION BIAS
+BACKGROUND
+The present disclosure relates to ranking of search results.
+Internet search engines aim to identify documents or other
+items that are relevant to a user's needs and to present the
+documents or items in a manner that is most useful to the user.
+Such activity often involves a fair amount of mind-reading-
+inferring from various clues what the user wants. Certain
+clues may be user specific. For example, knowledge that a
+user is making a request from a mobile device, and knowledge
+of the location of the device, can result in much better search
+results for such a user.
+Clues about a user's needs may also be more general. For
+example, search results can have an elevated importance, or
+inferred relevance, if a number of other search results link to
+them. If the linking results are themselves highly relevant,
+then the linked-to results may have a particularly high rel-
+evance. Such an approach to determining relevance, generally
+associated with the GOOGLE®Ⓡ PageRank technology, is
+premised on the assumption that, if authors of web pages felt
+that another web site was relevant enough to be linked to, then
+web searchers would also find the site to be particularly
+relevant. In short, the web authors "vote up" the relevance of
+the sites.
+2
+searches performed using the document search service, the
+information spanning multiple different queries; generating a
+prior model using the information spanning the multiple dif-
+ferent queries, the prior model representing a query-indepen-
+5 dent probability of document result selection given values of
+the multiple features; and outputting the prior model to a
+ranking engine for ranking of search results to reduce influ-
+ence of the presentation bias.
+10
+15
+20
+25
+Other various inputs may be used instead of, or in addition
+to, such techniques for determining and ranking search 30
+results. For example, user reactions to particular search
+results or search result lists may be gauged, so that results on
+which users often click will receive a higher ranking. The
+general assumption under such an approach is that searching
+users are often the best judges of relevance, so that if they
+select a particular search result, it is likely to be relevant, or at
+least more relevant than the presented alternatives.
+SUMMARY
+35
+40
+Systems, methods, and apparatus including computer pro-
+gram products for ranking search results of a search query are
+described. In general, particular inputs may be generated or
+analyzed to affect the presentation of search results. For
+example, such inputs may increase the relevance that a system 45
+will assign to a particular result in a particular situation, thus
+boosting the score or other indicator of relevance for the result
+(and perhaps the relevance of the result in the context of a
+particular query). Such an approach may benefit a user by
+providing them with search results that are more likely to 50
+match their needs. As a result, users can learn more using the
+internet, can find more relevant information more quickly,
+and will thus achieve more in their work or elsewhere, and
+will be more likely to use such a system again. A provider of
+such services may also benefit, by providing more useful 55
+services to users, and by thereby inducing more traffic to their
+search services. Such additional traffic may provide an opera-
+tor with additional revenue, such as in the form of advertising
+that accompanies the searching and the delivery of search
+results.
+60
+The subject matter described in this specification can be
+embodied in a computer-implemented method that includes
+receiving multiple features, including a first feature indicative
+of presentation bias that affects document result selection for
+search results presented in a user interface of a document 65
+search service; obtaining, based on the multiple features,
+information regarding document result selections for
+The receiving can include receiving the first feature includ-
+ing a position of a document result in the user interface of the
+document search service within a context of a search query
+for which the document result is returned. The document
+result can be a first document result, and the receiving can
+include receiving a second feature including a relevance score
+of a second document result within the context of the search
+query for which the first document result and the second
+document result are returned. Moreover, the receiving can
+include receiving a third feature comprising the relevance
+score of the first document result within the context of the
+search query for which the first document result and the
+second document result are returned.
+The receiving can include receiving a second feature
+indicative of relevance for a second document result returned
+along with a first document result within a context of a search
+query, and the obtaining can include collecting the informa-
+tion regarding document result selections, including selection
+of the first document result, for multiple combinations of
+values for the multiple features. The receiving can include
+receiving a first set of features including the first feature and
+a second set of features including the second feature, the
+generating can include creating a first user selection model
+based on the first set of features and creating a second user
+selection model based on the second set of features, and the
+outputting can include outputting the first user selection
+model and the second user selection model. The receiving can
+include receiving the second set of features being a proper
+subset of the first set of features. In addition, the obtaining can
+include identifying, based on frequency of document result
+selection, a reduced set of document result selection records
+from one or more logs of user selections for the document
+search service; and collecting the information regarding
+document result selections from the reduced set of document
+result selection records.
+The subject matter described in this specification can be
+embodied in a computer-implemented method that includes
+obtaining, in accordance with a first implicit user feedback
+model, a first signal for a document result of a search query for
+which the document result is returned, wherein the first signal
+corresponds to an aspect of document relevance; obtaining, in
+accordance with a second implicit user feedback model, a
+second signal for the document result, wherein the second
+signal corresponds to an aspect of search result presentation;
+combining the first signal and the second signal to form a
+relevance signal for the document result; and outputting the
+relevance signal to a ranking engine for ranking of search
+results including the document result.
+The obtaining the first signal can include obtaining, in
+accordance with the first implicit user feedback model, a
+measure of relevance for the document result within a context
+of the search query for which the document result is returned;
+and the obtaining the second signal can include obtaining, in
+accordance with the second implicit user feedback model, a
+measure of presentation bias for the document result indepen-
+dent of the context of the search query for which the docu-
+ment result is returned. The operations can further include
+identifying an additional document result of the search query
+that is not included in the first implicit user feedback model;
+
+========== PAGE 14 ==========
+3
+US 8,938,463 B1
+obtaining, in accordance with a third implicit user feedback
+model, an additional signal for the additional document
+result, wherein the additional signal corresponds to an aspect
+of document relevance independent of the context of the
+search query; and outputting the additional signal to the rank- 5
+ing engine for ranking of the search results including the
+additional document result.
+The obtaining the first signal can include obtaining, in
+accordance with the first implicit user feedback model, a
+measure of relevance for the document result independent of 10
+a context of the search query for which the document result is
+returned; and the obtaining the second signal can include
+obtaining, in accordance with the second implicit user feed-
+back model, a measure of presentation bias for the document
+result independent of the context of the search query for 15
+which the document result is returned.
+The subject matter described in this specification can be
+embodied in a computer-implemented method that includes
+receiving multiple features, including a first feature indicative
+of presentation bias that affects document result selection for 20
+search results presented in a user interface of a document
+search service, and a second feature indicative of relevance
+for a second document result returned along with a first docu-
+ment result within a context of a search query; obtaining,
+based on the multiple features, information regarding docu- 25
+ment result selections for searches performed using the docu-
+ment search service, including selection of the first document
+result; generating a prior model using the information, the
+prior model representing a probability of document result
+selection given values of the multiple features; and outputting 30
+the prior model to a ranking engine for ranking of search
+results to reduce influence of the presentation bias.
+35
+The receiving can include receiving a first set of features
+including the first feature and a second set of features includ-
+ing the second feature, the generating can include creating a
+first user selection model based on the first set of features and
+creating a second user selection model based on the second
+set of features, and the outputting can include outputting the
+first user selection model and the second user selection
+model. The receiving can include receiving the second set of 40
+features being a proper subset of the first set of features. The
+obtaining can include identifying, based on frequency of
+document result selection, a reduced set of document result
+selection records from one or more logs of user selections for
+the document search service; and collecting the information 45
+regarding document result selections from the reduced set of
+document result selection records.
+The subject matter described in this specification can also
+be embodied in various systems, apparatus and correspond-
+ing computer program products (encoded on a computer- 50
+readable medium and operable to cause data processing appa-
+ratus to perform method operations). For example, a system
+can include a tracking component and a rank modifier engine
+structured to perform the operations described. Moreover, a
+system can include various means for performing the opera-
+tions described, as detailed below, and equivalents thereof.
+55
+Particular embodiments of the described subject matter can
+be implemented to realize one or more of the following
+advantages. A ranking sub-system can include a rank modi-
+fier engine that uses implicit user feedback to cause re-rank- 60
+ing of search results in order to improve the final ranking
+presented to a user of an information retrieval system. User
+selections of search results (click data) can be tracked and
+transformed into a background probability of user selection in
+light of one or more presentation bias features, and this back- 65
+ground probability can be used to adjust future search result
+rankings to reduce the influence of presentation bias on
+implicit user feedback. A prior model can be designed to
+assist in separating the effects of result quality and presenta-
+tion bias on user selections, and the prior model can be used
+to normalize the output of a separate implicit user feedback
+model in view of the effects of presentation bias. Moreover, a
+prior model can be used to estimate what the implicit feed-
+back should be for results that are too infrequent, or too recent
+to have sufficient historical records of implicit feedback
+applicable to them.
+The details of one or more implementations are set forth in
+the accompanying drawings and the description below. Other
+features, aspects, and advantages will become apparent from
+the description, the drawings, and the claims.
+DESCRIPTION OF THE DRAWINGS
+FIG. 1 shows an example information retrieval system in
+which the relevance of results obtained for submitted search
+queries can be improved.
+FIG. 2 shows example components of an information
+retrieval system.
+FIG. 3 shows another example information retrieval sys-
+tem.
+FIG. 4A shows an example user interface of a document
+search service for presenting a ranking.
+FIG. 4B shows an example process of building a prior
+model for use in factoring out presentation bias and enhanc-
+ing the quality of signals from document result selections.
+FIG. 4C shows example features and an example process of
+building a prior model.
+FIG. 4D shows another example process of building a prior
+model.
+FIG. 4E shows an example process of building a prior
+model used to predict a measure of implicit user feedback for
+a result having no previously recorded user selections.
+FIG. 4F shows an example process of using implicit user
+feedback models to form a relevance signal for a document
+result, within the context of a search query, for ranking pur-
+poses.
+FIG. 5 is a schematic diagram of an example computer
+system.
+Like reference numbers and designations in the various
+drawings indicate like elements.
+DETAILED DESCRIPTION
+FIG. 1 shows an example system 1000 for improving the
+relevance of results obtained from submitting search queries
+as can be implemented in an internet, intranet, or other client/
+server environment. The system 1000 is an example of an
+information retrieval system in which the systems, compo-
+nents and techniques described below can be implemented.
+Although several components are illustrated, there may
+fewer or more components in the system 1000. Moreover, the
+components can be distributed on one or more computing
+devices connected by one or more networks or other suitable
+communication mediums.
+be
+A user 1002 (1002a, 1002b, 1002c) can interact with the
+system 1000 through a client device 1004 (1004a, 1004b,
+1004c) or other device. For example, the client device 1004
+can be a computer terminal within a local area network (LAN)
+or wide area network (WAN). The client device 1004 can
+include a random access memory (RAM) 1006 (or other
+memory and/or a storage device) and a processor 1008. The
+processor 1008 is structured to process instructions within the
+system 1000. In some implementations, the processor 1008 is
+a single-threaded processor. In other implementations, the
+
+========== PAGE 15 ==========
+10
+5
+US 8,938,463 B1
+processor 1008 is a multi-threaded processor. The processor
+1008 can include multiple processing cores and is structured
+to process instructions stored in the RAM 1006 (or other
+memory and/or a storage device included with the client
+device 1004) to display graphical information for a user inter-
+face.
+5
+10
+15
+A user 1002a can connect to a search engine 1030 within a
+server system 1014 to submit a query 1015. When the user
+1002a submits the query 1015 through an input device
+attached to a client device 1004a, a client-side query signal
+1010a is sent into a network 1012 and is forwarded to the
+server system 1014 as a server-side query signal 1010b.
+Server system 1014 can be one or more server devices in one
+or more locations. A server device 1014 includes a memory
+device 1016, which can include the search engine 1030
+loaded therein. A processor 1018 is structured to process
+instructions within the system 1014. These instructions can
+implement one or more components of the search engine
+1030. The processor 1018 can be a single-threaded processor
+or a multi-threaded processor, and can include multiple pro- 20
+cessing cores. The processor 1018 can process instructions
+stored in the memory 1016 related to the search engine 1030
+and can send information to the client device 1004, through
+the network 1012, to create a graphical presentation in a user
+interface of the client device 1004 (e.g., a search results web
+page displayed in a web browser).
+25
+30
+The server-side query signal 1010b is received by the
+search engine 1030. The search engine 1030 uses the infor-
+mation within the user query 1015 (e.g. query terms) to find
+relevant documents. The search engine 1030 can include an
+indexing engine 1020 that actively searches a corpus (e.g.,
+web pages on the Internet) to index the documents found in
+that corpus, and the index information for the documents in
+the corpus can be stored in an index database 1022. This index
+database 1022 can be accessed to identify documents related 35
+to the user query 1015. Note that, an electronic document
+(which for brevity will simply be referred to as a document)
+does not necessarily correspond to a file. A document can be
+stored in a portion of a file that holds other documents, in a
+single file dedicated to the document in question, or in mul- 40
+tiple coordinated files.
+The search engine 1030 can include a ranking engine 1052
+to rank the documents related to the user query 1015. The
+ranking of the documents can be performed using traditional
+techniques for determining an information retrieval (IR) 45
+score for indexed documents in view of a given query. The
+relevance of a particular document with respect to a particular
+search term or to other provided information may be deter-
+mined by any appropriate technique. For example, the general
+level of back-links to a document that contains matches for a 50
+search term may be used to infer a document's relevance. In
+particular, if a document is linked to (e.g., is the target of a
+hyperlink) by many other relevant documents (e.g., docu-
+ments that also contain matches for the search terms), it can be
+inferred that the target document is particularly relevant. This
+inference can be made because the authors of the pointing
+documents presumably point, for the most part, to other docu-
+ments that are relevant to their audience.
+55
+If the pointing documents are in turn the targets of links
+from other relevant documents, they can be considered more 60
+relevant, and the first document can be considered particu-
+larly relevant because it is the target of relevant (or even
+highly relevant) documents. Such a technique may be the
+determinant of a document's relevance or one of multiple
+determinants. The technique is exemplified in the 65
+GOGGLEⓇ PageRank system, which treats a link from one
+web page to another as an indication of quality for the latter
+6
+page, so that the page with the most such quality indicators is
+rated higher than others. Appropriate techniques can also be
+used to identify and eliminate attempts to cast false votes so as
+to artificially drive up the relevance of a page.
+To further improve such traditional document ranking
+techniques, the ranking engine 1052 can receive an additional
+signal from a rank modifier engine 1056 to assist in determin-
+ing an appropriate ranking for the documents. The rank modi-
+fier engine 1056 provides one or more prior models, or one or
+more measures of relevance for the documents based on one
+or more prior models, which can be used by the ranking
+engine 1052 to improve the search results' ranking provided
+to the user 1002. In general, a prior model represents a back-
+ground probability of document result selection given the
+values of multiple selected features, as described further
+below. The rank modifier engine 1056 can perform one or
+more of the operations described below to generate the one or
+more prior models, or the one or more measures of relevance
+based on one or more prior models.
+The search engine 1030 can forward the final, ranked result
+list within a server-side search results signal 1028a through
+the network 1012. Exiting the network 1012, a client-side
+search results signal 10286 can be received by the client
+device 1004a where the results can be stored within the RAM
+1006 and/or used by the processor 1008 to display the results
+on an output device for the user 1002a.
+FIG. 2 shows example components of an information
+retrieval system. These components can include an indexing
+engine 2010, a scoring engine 2020, a ranking engine 2030,
+and a rank modifier engine 2070. The indexing engine 2010
+can function as described above for the indexing engine 1020.
+In addition, the scoring engine 2020 can generate scores for
+document results based on many different features, including
+content-based features that link a query to document results,
+and query-independent features that generally indicate the
+quality of document results. The content-based features can
+include aspects of document format, such as query matches to
+title or anchor text in an HTML (Hyper Text Markup Lan-
+guage) page. The query-independent features can include
+aspects of document cross-referencing, such as the PageRank
+of the document or the domain. Moreover, the particular
+functions used by the scoring engine 2020 can be tuned, to
+adjust the various feature contributions to the final IR score,
+using automatic or semi-automatic processes.
+The ranking engine 2030 can produce a ranking of docu-
+ment results 2040 for display to a user based on IR scores
+received from the scoring engine 2020 and one or more sig-
+nals from the rank modifier engine 2070. A tracking compo-
+nent 2050 can be used to record information regarding indi-
+vidual user selections of the results presented in the ranking
+2040. For example, the tracking component 2050 can be
+embedded JavaScript code included in a web page ranking
+2040 that identifies user selections (clicks) of individual
+document results and also identifies when the user returns to
+the results page, thus indicating the amount of time the user
+spent viewing the selected document result. In other imple-
+mentations, the tracking component 2050 can be a proxy
+system through which user selections of the document results
+are routed, or the tracking component can include pre-in-
+stalled software at the client (e.g., a toolbar plug-in to the
+client's operating system). Other implementations are also
+possible, such as by using a feature of a web browser that
+allows a tag/directive to be included in a page, which requests
+the browser to connect back to the server with message(s)
+regarding link(s) clicked by the user.
+The recorded information can be stored in result selection
+log(s) 2060. The recorded information can include log entries

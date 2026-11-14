@@ -1,0 +1,167 @@
+{
+ "book_id": "7e3a32c1d8621611",
+ "source_status": "COMPLETE",
+ "pages_total": 136,
+ "pages_read": 136,
+ "extractor_model": "qwen4-max-preview (worker ext-33)",
+ "source_notes": "IntechOpen edited volume 'Frontiers in Traumatic Brain Injury' (eds. Xianli Lv, Yi Guo, Gengsheng Mao; DOI 10.5772/intechopen.98165), 7 chapters, 136 PDF pages, fully text-extractable, no retraction notice. Quantitative invariants drawn from Chapter 1 (introductory, Su & Lv, DOI 10.5772/intechopen.105359: ICP/CPP/SBP/PaCO2/PbtO2 thresholds, PDF pp. 19-21, 32) and Chapter 7 (DAI biomarkers, Gopal et al., DOI 10.5772/intechopen.104933: S100B/GFAP/NSE, PDF pp. 115-117). Values are literature-consensus figures as reported by narrative-review chapters; single-study correlations and validation caveats labeled. Page citations are PDF pages (book pagination offset differs).",
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "ICP/CPP management corridor: treat above 22 mmHg ICP, target 60-70 mmHg CPP, harm above 70",
+   "verbatim_quote": "Recommend treatment for ICP > 22 mmHg, as values above this level are associated with increased mortality.",
+   "page": 21,
+   "latex": "ICP > 22\\,\\mathrm{mmHg} \\Rightarrow \\mathrm{Treat},\\quad CPP_{target} \\in [60,70]\\,\\mathrm{mmHg},\\quad CPP > 70\\,\\mathrm{mmHg} \\Rightarrow \\mathrm{Avoid\\ fluids\\ and\\ vasopressors}",
+   "symbol_and_unit_ledger": "ICP = intracranial pressure [mmHg]; CPP = cerebral perfusion pressure [mmHg] (standard definition CPP = MAP - ICP; the source prints targets, not the defining equation); CPP_target = recommended perfusion corridor [60,70] mmHg; 22 mmHg = ICP treatment threshold associated with increased mortality; 70 mmHg = upper harm boundary (fluids/vasopressors above it raise respiratory-failure risk, p. 21). All pressure terms in mmHg; implications dimensionless. The corridor is two-sided: a lower target band AND an upper harm boundary.",
+   "assumptions": "Severe TBI population, introductory chapter (Su & Lv, DOI 10.5772/intechopen.105359, PDF p. 21); thresholds reported from Brain Trauma Foundation-style guideline consensus; minimum optimal CPP (60 vs 70) explicitly uncertain and autoregulation-dependent (as printed p. 21); ICP values to be combined with clinical and CT findings (p. 21).",
+   "breakdown_regime": "The optimum within [60,70] is not identified - it depends on the patient's autoregulation status (printed). Pushing CPP above 70 with fluids/vasopressors trades cerebral perfusion for respiratory failure: more is not better. The 22 mmHg mortality-associated treatment threshold is distinct from the 20 mmHg >5 min direct-intervention trigger (p. 21) and the 20 mmHg >15 min barbiturate criterion (p. 19); conflating them misstates the rule.",
+   "domain": "physiology",
+   "timescales": [
+    "tau_0=ICP waveform (seconds)",
+    "tau_1=intervention persistence (minutes)",
+    "tau_2=ICU management (hours-days)",
+    "tau_3=outcome horizon (2 weeks-6 months)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Isomorphic to a two-sided certified operating corridor in the engine: a target band [60,70] with an explicit upper harm boundary is structurally identical to a conformal interval plus an abstention regime beyond it. The invariant binds as a constraint on any perfusion-equivalent control transition: operating above the upper boundary is inadmissible even when the tracked metric (perfusion, EV) looks better, because a second subsystem (respiratory, tail risk) pays the cost.",
+    "source_operator": "p1",
+    "telemetry": "Continuous ICP, CPP, MAP traces; time above 22 mmHg; fluids/vasopressor dosing vs CPP; respiratory-failure events; autoregulation indices. Clinical telemetry only."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Age-stratified systolic blood pressure floor: piecewise threshold by age band",
+   "verbatim_quote": "Maintenance of SBP (systolic blood pressure) ≥ 100 mmHg for patients 50–69 years of age or ≥ 110 mmHg or more for patients aging 15–49 years or 70 years may be considered for reduced mortality and improved outcomes.",
+   "page": 20,
+   "latex": "\\mathrm{SBP}_{min}(a) = \\begin{cases} 100\\,\\mathrm{mmHg} & 50 \\le a \\le 69 \\\\ 110\\,\\mathrm{mmHg} & 15 \\le a \\le 49\\ \\mathrm{or}\\ a \\ge 70 \\end{cases}",
+   "symbol_and_unit_ledger": "SBP_min = minimum maintained systolic blood pressure [mmHg]; a = patient age [years]; 100 mmHg floor for ages 50-69; 110 mmHg floor for ages 15-49 and (as interpreted) >=70. Piecewise function of a single demographic state variable; pressure units mmHg throughout, age in years. The source prints 'or 70 years' without an explicit >=; the >=70 reading follows the guideline convention and is flagged as interpretation.",
+   "assumptions": "Severe TBI blood-pressure thresholds (PDF p. 20); deontic strength 'may be considered for reduced mortality and improved outcomes'; age bands as printed (15-49, 50-69, 70); the rule is a floor (>=), not a target ceiling.",
+   "breakdown_regime": "The printed bands leave ages <15 uncovered by this rule (pediatric thresholds live elsewhere); 'or 70 years' is ambiguous as printed. A single SBP measurement is noisy - the floor applies to maintained pressure, not one reading. The age stratification is a population-level schedule: individual autoregulation and baseline hypertension can shift the effective floor, which the rule does not model.",
+   "domain": "physiology",
+   "timescales": [
+    "tau_0=beat-to-beat SBP (seconds)",
+    "tau_1=resuscitation window (minutes-hours)",
+    "tau_2=acute ICU course (days)",
+    "tau_3=age-band schedule (years, static)"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived state-conditioned threshold kernel: the admissible floor is a piecewise function of a demographic state variable (age), so the same measured pressure is adequate for one patient and inadequate for another. This is the general operator of stratified constraints in the engine - thresholds must be conditioned on the agent's state class, never applied as a universal constant.",
+    "source_operator": "p2",
+    "telemetry": "Age band; SBP time series vs band-specific floor; hypotension exposure duration; mortality and 3-/6-month outcome stratified by band."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "PaCO2 ventilation window: forbidden zone below 25, normo-ventilation 35-45, therapeutic override 30-34",
+   "verbatim_quote": "In general, a normo-ventilation with an arterial pCO2 within 35–45 mm Hg should be targeted.",
+   "page": 32,
+   "latex": "\\mathrm{PaCO_2} < 25\\,\\mathrm{mmHg} \\Rightarrow \\mathrm{Avoid}\\ (\\text{vasoconstriction, cerebral ischemia}),\\quad \\mathrm{PaCO_2}^{target} \\in [35,45]\\,\\mathrm{mmHg},\\quad ICP\\uparrow \\Rightarrow \\mathrm{PaCO_2} \\in [30,34]\\,\\mathrm{mmHg}\\ (\\text{mild hyperventilation})",
+   "symbol_and_unit_ledger": "PaCO2 = arterial partial pressure of carbon dioxide [mmHg, printed 'mm Hg']; 25 mmHg = severe-hyperventilation forbidden boundary; [35,45] mmHg = normo-ventilation target band; [30,34] mmHg = mild-hyperventilation therapeutic override band used against elevated ICP; ICP = intracranial pressure [mmHg]. All gas-tension terms mmHg; the control knob is ventilation, the mechanism is CO2-mediated cerebrovascular tone.",
+   "assumptions": "Post-intubation ventilation management in TBI (airway chapter, PDF p. 32); both hyper- and hypoventilation worsen outcomes (printed); severe hyperventilation <25 mmHg avoided for vasoconstriction/ischemia risk; mild hyperventilation 30-34 mmHg 'commonly used' and 'may potentially be beneficial' (reference [24]); hyperosmolar therapy (mannitol/hypertonic saline) preferred when additional bleeding suspected (p. 32).",
+   "breakdown_regime": "The override band is a temporary bridge, not a steady state: sustained hypocapnia risks ischemia through vasoconstriction. CO2 reactivity assumes responsive cerebrovasculature; in vasoparalysis the knob loses authority. Prophylactic prolonged hyperventilation PaCO2 <= 25 mmHg is explicitly not recommended (p. 19). The window is a safety envelope, and the therapeutic override is admissible only under the ICP-elevated condition.",
+   "domain": "physiology",
+   "timescales": [
+    "tau_0=breath cycle (seconds)",
+    "tau_1=CO2 equilibration (minutes)",
+    "tau_2=ICP crisis management (minutes-hours)",
+    "tau_3=ventilator weaning (days)"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Isomorphic to constrained control with a safety envelope and a conditional override: a normal operating band [35,45], a forbidden zone (<25) with a named failure mechanism, and a narrower override band [30,34] admissible only when a specific condition (ICP elevated) holds. This is exactly the structure of the NG252 constrained-dose kernel and of any engine control that permits aggressive action only under a verified trigger and never beyond a harm boundary.",
+    "source_operator": "p3",
+    "telemetry": "PaCO2 (or end-tidal CO2) time series; ventilation settings; ICP concordance; ischemia markers; duration of override-band exposure."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Time-persistence intervention gate: threshold AND duration >5 min for ICP and PbtO2",
+   "verbatim_quote": "According to studies, direct intervention is used for ICP management (if >20 mmHg for >5 min), PbtO2 control (if <20 mmHg for >5 min), or both [10].",
+   "page": 21,
+   "latex": "\\big(ICP > 20\\,\\mathrm{mmHg} \\land \\Delta t > 5\\,\\mathrm{min}\\big) \\lor \\big(PbtO_2 < 20\\,\\mathrm{mmHg} \\land \\Delta t > 5\\,\\mathrm{min}\\big) \\Rightarrow \\mathrm{Intervene}",
+   "symbol_and_unit_ledger": "ICP = intracranial pressure [mmHg]; PbtO2 = brain tissue oxygen tension [mmHg], measured by invasive modified Clark electrode (printed p. 21); 20 mmHg = threshold for both channels (upper for ICP, lower for PbtO2); Delta t = excursion persistence duration [minutes], gate requires >5 min; Intervene = direct ICP management and/or PbtO2 control. Conjunction of magnitude and duration is the invariant; pressures mmHg, duration minutes.",
+   "assumptions": "Multimodality monitoring in severe TBI (PDF p. 21); PbtO2 pathological threshold 20 mmHg (reference [10]); BOOST-II phase II trial showed 74% reduction in hypoxic burden with PbtO2-targeted therapy and no substantial safety concerns (printed); BOOST-III pending (printed); PbtO2 has independent prognostic impact in multivariate analysis (printed).",
+   "breakdown_regime": "The 5-min persistence requirement filters transient spikes but delays response to genuinely rapid herniation - the debounce trades latency for specificity. PbtO2 is a regional probe: a normal reading does not certify global oxygenation, and probe placement biases the channel. The 20 mmHg >5 min trigger differs from the 22 mmHg mortality-associated treatment threshold (p. 21); they are separate rules, not one.",
+   "domain": "physiology",
+   "timescales": [
+    "tau_0=probe sampling (seconds)",
+    "tau_1=persistence gate (5 min)",
+    "tau_2=hypoxic burden accumulation (hours)",
+    "tau_3=hospitalization outcome"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived debounce operator for noisy telemetry gates: an intervention trigger is the conjunction of a magnitude threshold and a minimum persistence duration, so transient excursions cannot fire the action. Directly portable to the engine's execution and alert gates - a signal must persist beyond Delta t before it certifies a transition, which suppresses false triggers from single-frame noise exactly as the 5-min rule suppresses ICP spike artifacts.",
+    "source_operator": "p4",
+    "telemetry": "ICP and PbtO2 traces; excursion magnitude and duration distribution; gate fire rate vs artifact rate; hypoxic burden (BOOST-II style) pre/post."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "S100B biomarker certificate: cutoffs, kinetics, and asymmetric sensitivity/specificity",
+   "verbatim_quote": "Interestingly, serum levels of S100B > 0.7 ng/mL were reported to correlate with 100% mortality [130].",
+   "page": 117,
+   "latex": "S100B > 0.7\\,\\mathrm{ng/mL} \\Rightarrow \\mathrm{mortality} \\approx 100\\%\\ (\\text{reported}),\\quad S100B_{cutoff}^{detect} = 0.1\\,\\mu\\mathrm{g/L},\\quad 0.7\\,\\mathrm{ng/mL} = 0.7\\,\\mu\\mathrm{g/L},\\quad t_{peak} = 20\\,\\mathrm{min},\\quad t_{1/2} \\in [30,113]\\,\\mathrm{min},\\quad \\mathrm{Se} \\le 100\\%,\\ \\mathrm{Sp} = 28\\%",
+   "symbol_and_unit_ledger": "S100B = serum S100 calcium-binding protein B concentration [ng/mL or ug/L; 1 ng/mL = 1 ug/L, so 0.7 ng/mL = 0.7 ug/L - unit identity explicit]; 0.1 ug/L = normal upper limit for intracranial-damage detection (multicenter mild-TBI study, ref [122], p. 117); 0.7 ng/mL = reported 100%-mortality correlate (ref [130]); t_peak = 20 min post-injury maximum serum concentration (printed); t_1/2 = half-life 30-113 min, renal metabolism, not affected by hemolysis (printed); Se = sensitivity up to 100% for significant intracranial pathology; Sp = specificity 28% (printed p. 117). Concentration, time, and probability units kept distinct.",
+   "assumptions": "DAI biomarker chapter (Gopal et al., DOI 10.5772/intechopen.104933, PDF p. 117); S100B astroglial origin, 11 kDa (p. 116); serum (not CSF) levels unaffected by age/gender (printed); second subacute peak indicates secondary astroglial injury/excitotoxicity (printed); survivors' plasma levels decrease after 36 h (printed).",
+   "breakdown_regime": "Extracranial sources confound: adipose tissue, cardiac/skeletal muscle, orthopedic trauma without head injury elevate S100B (printed p. 117) - a positive in polytrauma is not a brain certificate. Children under 2 years have high normal levels, invalidating adult cutoffs (printed). Se up to 100% with Sp 28% makes it a rule-out instrument, not rule-in. Sampling time matters against a 20-min peak and 30-113 min half-life; a late sample can miss the window. The 100%-mortality figure is a reported correlation from one study, not a universal law.",
+   "domain": "physiology",
+   "timescales": [
+    "tau_0=release peak (20 min)",
+    "tau_1=half-life (30-113 min)",
+    "tau_2=36 h survivor decline / subacute second peak",
+    "tau_3=6-month outcome prediction"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Isomorphic to an asymmetric certificate with a confounder set: high sensitivity / low specificity means a negative result certifies absence (rule-out) while a positive demands confounder screening before attribution - exactly the fatigue treatable-factor screen in NG252 and the engine's abstention logic for high-sensitivity detectors. The kinetics (peak, half-life, second peak) bind as a sampling-window constraint on when the channel is informative.",
+    "source_operator": "p5",
+    "telemetry": "Serial S100B with timestamps vs injury time; extracranial-injury flags (orthopedic, muscle, hemolysis); age band; CT correlation; second-peak detection; outcome at 6 months."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "GFAP pathology threshold and release kinetics: extracranial-immune astroglial channel",
+   "verbatim_quote": "An increase in blood level of this biomarker suggests injury to the astrocytes and the BBB. Plasma concentrations >0.033 μg/l are regarded as pathological.",
+   "page": 116,
+   "latex": "GFAP_{plasma} > 0.033\\,\\mu\\mathrm{g/L} \\Rightarrow \\mathrm{pathological},\\quad M_{GFAP} = 52\\,\\mathrm{kDa}\\ (\\text{breakdown products } 44\\text{--}38\\,\\mathrm{kDa}),\\quad t_{peak} \\in [3,34]\\,\\mathrm{h}",
+   "symbol_and_unit_ledger": "GFAP_plasma = plasma glial fibrillary acidic protein concentration [ug/L]; 0.033 ug/L = pathology threshold (printed p. 116); M_GFAP = molecular weight 52 kDa monomeric intermediate filament, breakdown products 44-38 kDa (printed); t_peak = early plasma peak within 3-34 h post-injury (printed); levels decline gradually over the first week starting day 3 (printed). Concentration ug/L, mass kDa, time hours - each homogeneous.",
+   "assumptions": "DAI biomarker chapter (PDF p. 116); GFAP present in astrocyte cytoskeleton; blood elevation indicates astrocyte and BBB injury; serum concentration NOT affected by extracranial injuries (printed, refs [41,96]) - the specificity advantage over S100B and NSE; Missler et al. (2002) first proposed serial serum GFAP (printed); predicts 6-month neurological outcome and day-1 pediatric functional outcome (printed).",
+   "breakdown_regime": "Mild-TBI utility is contested due to contamination from other sources (printed, refs [101-103]); multicenter validation still needed (printed). The 3-34 h peak means very early sampling can under-read - a different window from S100B's 20-min peak, so the two channels are not interchangeable in time. The 0.033 ug/L threshold is a literature consensus value, not a universally standardized assay cutoff; assay differences shift it.",
+   "domain": "physiology",
+   "timescales": [
+    "tau_0=BBB crossing / release (hours)",
+    "tau_1=plasma peak (3-34 h)",
+    "tau_2=first-week decline from day 3",
+    "tau_3=6-month outcome horizon"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived specificity-weighted biomarker channel: GFAP's immunity to extracranial contamination makes it the cleaner attribution channel when polytrauma confounds S100B, and its known release kinetics define the admissible sampling window. The engine generalizes this to channel selection under confounding - prefer the detector whose noise sources are disjoint from the confounder set, and condition every reading on its timing kernel.",
+    "source_operator": "p6",
+    "telemetry": "Serial GFAP with injury-relative timestamps; assay platform; concomitant extracranial injury inventory; 6-month outcome; day-1 pediatric correlation."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1",
+   "think": "The quantitative spine of this volume is a set of two-sided physiological corridors, and the deepest lesson is that the upper boundary is as sovereign as the lower one. The introductory chapter recommends treating ICP above 22 mmHg because values above that level are associated with increased mortality, targets CPP at 60-70 mmHg, and then - crucially - forbids fluids and vasopressors above CPP 70 mmHg because of respiratory-failure risk (p. 21). A naive controller reads 'perfusion is good' and pushes CPP as high as it can; the guideline models that temptation and vetoes it. More perfusion is not more survival once the respiratory subsystem starts paying the bill. The corridor is therefore a certificate with two edges: below the band, ischemia; above the band, iatrogenic respiratory failure. The minimum optimal point inside the band is explicitly unresolved and autoregulation-dependent, which is an honest statement of epistemic limits rather than a false precision. The same two-sided logic governs ventilation: PaCO2 below 25 mmHg is forbidden because hypocapnic vasoconstriction causes cerebral ischemia, normo-ventilation targets 35-45 mmHg, and a narrower override band 30-34 mmHg is admissible only against elevated ICP (p. 32). Carbon dioxide is the control knob, cerebrovascular tone is the mechanism, and the override is a conditional permission, never a steady state. The age-stratified SBP floor (>=100 mmHg at 50-69 years, >=110 mmHg at 15-49 or 70, p. 20) adds a second structural idea: thresholds are piecewise functions of the patient's state class, not universal constants. The same pressure is adequate for one age band and inadequate for another. And the multimodality intervention rule - ICP >20 mmHg for >5 min, or PbtO2 <20 mmHg for >5 min (p. 21) - adds the temporal dimension: a trigger is the conjunction of magnitude and persistence, a debounce that refuses to fire on transient spikes. BOOST-II's 74% reduction in hypoxic burden (p. 21) is the empirical payoff of adding the oxygen channel to the pressure channel. Note the threshold pluralism the audit must preserve: 22 mmHg is the mortality-associated treatment threshold, 20 mmHg >5 min is the direct-intervention trigger, and 20 mmHg >15 min within an hour appears in the barbiturate criterion (p. 19). These are three distinct rules; collapsing them into 'the ICP threshold' would fabricate a consistency the source does not claim. The genealogy is guideline consensus descended from the Brain Trauma Foundation tradition, with the Clark electrode making PbtO2 measurable and the BOOST trial sequence testing whether oxygen-targeted therapy beats pressure-targeted therapy alone. For the engine, the transferable invariant is the architecture: a target band, a named harm mechanism beyond each edge, state-conditioned thresholds, and persistence-gated triggers. That is fail-closed control written in physiology.",
+   "retrocausal_genealogy": "The corridor lineage descends from Brain Trauma Foundation guideline consensus through the introductory chapter's synthesis (DOI 10.5772/intechopen.105359), with the PbtO2 channel enabled by the modified Clark electrode and tested in the BOOST-II/III trial sequence (p. 21). The ventilation window inherits the CO2-vasoreactivity physiology that made hyperventilation a double-edged tool: the hidden state deposited in the <25 mmHg prohibition is the memory of ischemic harm caused by the very maneuver once used to save brains.",
+   "theory_of_mind": "The guideline authors model the treating clinician under herniation pressure: when the brain is swelling, the intuitive move is to push perfusion harder and ventilate faster, and both intuitions kill through secondary mechanisms - respiratory failure above CPP 70, ischemia below PaCO2 25. The rules are written as explicit vetoes on the clinician's stress response, because the authors know that under deadline the clinician will maximize the visible metric (pressure, CO2 washout) and ignore the invisible subsystem paying the cost. The patient, meanwhile, cannot report the trade at all; the monitor speaks for them. The corridor is thus a belief device that aligns the clinician's action with the patient's whole physiology rather than the number on the screen.",
+   "cross_layer_veto": "The respiratory layer vetoes perfusion maximalism: CPP above 70 mmHg bought with fluids and vasopressors is inadmissible because the lungs pay, so the perfusion objective cannot override the respiratory constraint. The cerebrovascular layer vetoes hyperventilation maximalism: PaCO2 below 25 mmHg constricts the vessels it is meant to protect, so the ICP objective cannot override the ischemia constraint. And the temporal layer vetoes instantaneous triggers: a spike shorter than 5 minutes does not certify an intervention. Each veto is a subsystem refusing the optimizer's convenient single-metric fiction - the same discipline the engine applies when tail risk refuses a high-EV call."
+  },
+  {
+   "trace_id": "t2",
+   "think": "The biomarker chapter turns molecules into timed, confounded certificates, and the audit's job is to keep the timing and the confounding explicit. S100B peaks 20 minutes after injury, has a half-life of 30-113 minutes, and a normal upper limit of 0.1 ug/L for detecting intracranial damage (p. 117); serum above 0.7 ng/mL - which is 0.7 ug/L, the unit identity made explicit - was reported to correlate with 100% mortality in one study. The decisive structural fact is the asymmetry: sensitivity up to 100% with specificity of only 28% (p. 117). That asymmetry defines the instrument's logical role - a negative S100B certifies absence (rule-out), while a positive certifies almost nothing until confounders are screened, because adipose tissue, cardiac and skeletal muscle, and orthopedic trauma without head injury all elevate it (p. 117). A positive in a polytrauma patient is not a brain certificate; it is a signal demanding the same treatable-factor discipline the NG252 fatigue rule applies. Children under two have high normal levels, so adult cutoffs simply do not transport (p. 117). The kinetics add a second gate: a sample drawn against a 20-minute peak and a 30-113 minute half-life is only informative inside its window, and the second subacute peak - when it appears - is itself a signal of secondary astroglial injury through excitotoxicity and neuroinflammation (p. 117). The molecule reports not just damage but damage dynamics. GFAP is the contrast that proves the design principle: a 52 kDa astroglial filament protein whose plasma concentration above 0.033 ug/L is pathological, peaking at 3-34 hours, and - critically - not affected by extracranial injuries (p. 116). Where S100B's noise sources overlap the polytrauma confounder set, GFAP's are disjoint, so GFAP is the cleaner attribution channel in exactly the cases where S100B fails. NSE completes the cautionary triangle: neuron-specific but long-lived and elevated by hemorrhagic shock, long-bone fracture, and hemolysis (pp. 115-116), making it a poor TBI marker despite its tissue specificity. The general invariant is channel selection under confounding: prefer the detector whose noise sources are disjoint from the confounder set, condition every reading on its release-kinetics window, and read asymmetric sensitivity/specificity as a rule-out certificate rather than a verdict. Provenance stays honest: these are literature-consensus values reported by a narrative review chapter (DOI 10.5772/intechopen.104933), the 100%-mortality figure is one study's correlation, and the chapter itself calls for multicenter validation. The artifact records the values as reported, with their windows and confounders attached, not as universal laws.",
+   "retrocausal_genealogy": "The S100B cutoff lineage runs through the multicenter mild-TBI study that fixed 0.1 ug/L (ref [122]) and the mortality-correlation study behind 0.7 ng/mL (ref [130]); GFAP's serial-measurement proposal descends from Missler et al. (2002) (p. 116). The hidden state is two decades of confounder discovery: each extracranial source catalogued - adipose, muscle, bone, hemolysis - deposited a caveat that now travels with the number, which is why the chapter's limitation section exists at all.",
+   "theory_of_mind": "The emergency clinician wants one number to decide whether to CT the head; the biomarker author models that desire and refuses to satisfy it naively, because a 28%-specificity positive would flood the scanner with polytrauma false alarms. The chapter therefore writes the asymmetry into the clinician's belief update: trust the negative, interrogate the positive, check the clock against the 20-minute peak, and ask whether the patient is two years old. The patient's body, meanwhile, is producing the signal from multiple tissues at once - the brain is not the only speaker. Reading the biomarker correctly is theory of mind applied to physiology: knowing which tissues could be saying 'injury' and subtracting their voices before attributing the message to the brain.",
+   "cross_layer_veto": "The confounder layer vetoes positive S100B in polytrauma: orthopedic and muscle sources mean the positive does not certify intracranial damage, so the attribution is blocked until the extracranial set is screened. The timing layer vetoes out-of-window sampling: a reading taken against a 20-minute peak and short half-life cannot be interpreted as if kinetics were flat, and GFAP's 3-34 hour peak forbids borrowing S100B's early window. The developmental layer vetoes adult cutoffs in children under two. And the evidence layer vetoes universalizing a single-study 100%-mortality correlation. Each veto keeps the certificate honest about what the molecule actually measured, from which tissue, at which time, in which patient."
+  }
+ ],
+ "universal_lens": "A polymath audit lens: certificates have edges, windows, and confounders. Physiological corridors are two-sided (harm beyond each edge), biomarker readings are timed (release kinetics) and attributed (noise sources vs confounder set), and thresholds are state-conditioned (age bands) and persistence-gated (duration). The same certification discipline governs neurocritical care, statistical calibration, and fail-closed engineering.",
+ "gsi_mapping": "GSI-native neurocritical and biofluid telemetry: ICP/CPP corridors, PaCO2 safety envelopes, age-stratified SBP floors, and persistence-gated PbtO2 triggers are directly deployable clinical invariants; S100B/GFAP release kinetics and extracranial-confounder sets define biomarker sampling windows and attribution rules for axonal-injury telemetry, with GFAP preferred when polytrauma confounds S100B.",
+ "gse_mapping": "GSE translation: two-sided corridors map to certified operating bands with upper harm boundaries; the 5-minute persistence gate is a debounce operator for execution and alert triggers; age-stratified floors generalize to state-conditioned thresholds; asymmetric sensitivity/specificity maps to rule-out certificates and abstention on un-screened positives. No sportsbook odds enter any rule; artifacts remain internal and the engine never publishes."
+}

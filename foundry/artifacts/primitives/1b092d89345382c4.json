@@ -1,0 +1,659 @@
+{
+  "book_id": "1b092d89345382c4",
+  "shard": "1",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_FOOTBALL_GLMM_SENSITIVITY_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Karl, 'The Sensitivity of College Football Rankings to Several Modeling Choices', Journal of Quantitative Analysis in Sports 2012, Manuscript 1471, DOI 10.1515/1559-0410.1471 (Andrew T. Karl, Arizona State University), 44 pages (23 text + appendix tables/plots). Catalog listed 'Unknown Authors'; true author Andrew T. Karl confirmed from title page. A multiple-membership GLMM ranks college football from win/loss only (BCS margin ban); the team-dimensional integral is non-factorable (multi-membership Z: +1 home/-1 visitor), so EM with first-order (LA) and fully exponential (FE) Laplace approximations is used; Mease (2003) is shown to be the PQL approximation under a non-normal random-effect density (~N(0,0.815)). Sensitivity to five choices (link, integral approximation, random-effect distribution, FCS handling, ML/REML) over 2008-2011: rating changes small vs SE but reorder rankings enough to swap the BCS championship #2 team (2009 Alabama/Cincinnati vs Texas; 2011 Oklahoma St vs Alabama) purely from Laplace approximation order; PQL->LA->FE monotonic; sigma_t^2 controls strength-of-schedule emphasis (0->rank W-L, 100->SOS dominates); FCS beta=2.03 -> Phi(2.03)~0.979; ML/REML no top-16 diff. Practical-vs-statistical significance, ~12 binary outcomes/240 subjects data-sufficiency limit, fickle rankings, Harville 7 criteria, comprehensibility-vs-accuracy tradeoff. Extracted faithfully (not a derivative summary). Equations (latent threshold, Z design, likelihoods 4-6, Laplace 7, PQL 8, Mease density 9, EM Q-step, closed-form sigma_t^2, score 10) printed in a shifted/custom math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain football matches catalog; American college football (FBS/FCS). Directly isomorphic to GSE's random-effects rating, estimator-choice veto (same as field-hockey glmer/RStan divergence), practical-significance publication rule, and data-sufficiency veto. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "glmm_win_loss_only",
+      "name": "Multiple-membership GLMM ranks college football from win/loss only",
+      "verbatim_quote": "a multiple-membership generalized linear mixed model for ranking college football teams using only their win/loss records",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Andrew T. Karl, Arizona State University; JQAS 2012 Manuscript 1471, DOI 10.1515/1559-0410.1471) proposes a multiple-membership generalized linear mixed model (GLMM) for ranking college football teams using only win/loss records, as the BCS requires (margin of victory banned to prevent running up the score); the binary response complicates ranking versus continuous margins."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The win-loss-only random-effects rating is the same margin-free GLMM team-strength model GSE uses.",
+        "source_operator": "glmm_win_loss_only",
+        "telemetry": "multiple-membership GLMM; win/loss only (BCS ban on margin); binary response; Karl ASU JQAS 1471"
+      }
+    },
+    {
+      "primitive_id": "intractable_high_dim_integral",
+      "name": "Random effects + nonlinear link -> intractable high-dimensional integral",
+      "verbatim_quote": "integral due to the random effects structure and nonlinear link function",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model results in an intractable, high-dimensional integral due to the random-effects structure and nonlinear link function; the (p+q)-dimensional integral cannot be factored into one-dimensional integrals (as nested longitudinal models can) because of the multi-membership structure, rendering quadrature infeasible."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The intractable non-factorable integral is the same computational bottleneck GSE faces in multi-membership random-effects models.",
+        "source_operator": "intractable_high_dim_integral",
+        "telemetry": "intractable (p+q)-dim integral; random effects + nonlinear link; not factorable (multi-membership); quadrature infeasible"
+      }
+    },
+    {
+      "primitive_id": "sensitivity_affects_bowls",
+      "name": "Varying modeling assumptions changes rankings enough to affect bowl assignments",
+      "verbatim_quote": "Varying the modeling assumptions sometimes leads to changes in the team rankings that could affect bowl assignments",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper uses recent data sets to explore the effect of the choice of integral approximation and other modeling assumptions on the rankings; varying the modeling assumptions sometimes leads to changes in team rankings that could affect bowl assignments, the central sensitivity finding."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The assumption-driven ranking instability is literally GSE's model-choice sensitivity concern for high-stakes ratings.",
+        "source_operator": "sensitivity_affects_bowls",
+        "telemetry": "vary assumptions -> ranking changes -> affect bowl assignments; integral approximation + modeling choices"
+      }
+    },
+    {
+      "primitive_id": "changes_small_vs_se",
+      "name": "Rating changes are small relative to each team's standard error",
+      "verbatim_quote": "the changes in team ratings resulting from varying these assumptions are small relative to the standard errors associated with each team's rating",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The changes in team ratings from varying the five assumptions (link, integral approximation, random-effect distribution, FCS handling, ML vs REML) are small relative to the standard errors associated with each team's rating; yet they reorder rankings, because there is limited information in each binary outcome."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The small-vs-SE rating change is the same statistical-uncertainty framing GSE applies before trusting a rating difference.",
+        "source_operator": "changes_small_vs_se",
+        "telemetry": "rating changes small vs per-team SE; five assumptions; still reorder; limited binary information"
+      }
+    },
+    {
+      "primitive_id": "reorder_practically_significant",
+      "name": "Reordering can be practically significant for bowl selection despite small rating changes",
+      "verbatim_quote": "these changes result in a reordering of the team rankings that may lead to practically significant differences in the bowl selection process",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Although rating changes are small relative to standard errors, they result in a reordering of team rankings that may lead to practically significant differences in the bowl selection process; teams with similar records swap ranks when model properties change, and for link and distribution choices there may be no clear best option."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The practical-significance-despite-statistical-insignificance is the same distinction GSE enforces for pick/rating publication.",
+        "source_operator": "reorder_practically_significant",
+        "telemetry": "small rating changes -> reorder -> practically significant bowl differences; similar-record teams swap; no clear best link/distribution"
+      }
+    },
+    {
+      "primitive_id": "eblup_sorted_rankings",
+      "name": "Random effects avoid separation; EBLUPs sorted form the rankings",
+      "verbatim_quote": "the empirical best linear unbiased predictors (EBLUPs) of the random effects are sorted to form the team rankings",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fixed-effect win/loss models (Thurstone-Mosteller, Bradley-Terry) encounter infinite likelihood with perfect records due to quasi-complete separation; Mease's penalized likelihood circumvents this, and modeling team ratings with random instead of fixed effects avoids complete/quasi-complete separation; the empirical best linear unbiased predictors (EBLUPs) of the random effects are sorted to form the team rankings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The EBLUP-sort ranking is the same shrinkage-based rating GSE uses to avoid separation from undefeated/winless teams.",
+        "source_operator": "eblup_sorted_rankings",
+        "telemetry": "fixed effects -> infinite likelihood (quasi-complete separation, perfect records); random effects avoid; EBLUPs sorted = rankings"
+      }
+    },
+    {
+      "primitive_id": "mease_special_case_glmm",
+      "name": "Mease (2003) penalized likelihood is a special case of this GLMM",
+      "verbatim_quote": "The model proposed by Mease (2003) may be seen as a special case of the generalized linear mixed model (GLMM) we propose",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model proposed by Mease (2003) may be seen as a special case of the proposed GLMM: it arises as one particular approximation of the marginal likelihood; Mease uses a probit link and noted logit 'did not affect the resulting rankings substantially for the football seasons considered'; the choice of link is often minimized in GLMM discussions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The nested-model unification is the same generalization-over-prior-model structure GSE uses to subsume legacy ratings.",
+        "source_operator": "mease_special_case_glmm",
+        "telemetry": "Mease (2003) = special case (one marginal-likelihood approximation); probit link; logit alternative noted"
+      }
+    },
+    {
+      "primitive_id": "eblup_depends_integral_approx",
+      "name": "EBLUPs depend on the integral approximation even with known parameters",
+      "verbatim_quote": "even if the true parameter values were known, the EBLUPs in a GLMM depend on the chosen integral approximation",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "It is important that even if the true parameter values were known, the EBLUPs in a GLMM depend on the chosen integral approximation; the choice of integral approximation depends on computational feasibility determined by the random-effects structure, so the approximation is a genuine modeling choice, not just a numerical convenience."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The approximation-dependence of EBLUPs is literally GSE's estimator-choice veto (same phenomenon as the field-hockey glmer/RStan sign divergence).",
+        "source_operator": "eblup_depends_integral_approx",
+        "telemetry": "EBLUPs depend on integral approximation even with known true parameters; approximation = modeling choice"
+      }
+    },
+    {
+      "primitive_id": "latent_threshold_model",
+      "name": "Latent threshold model: yi = Xi*beta + Zi*eta + eps, ri = I{yi>0}",
+      "verbatim_quote": "we assume that the game outcomes are determined by a latent continuous variable",
+      "page": 7,
+      "latex": "y_i=X_i\\beta+Z_i\\eta+\\epsilon_i,\\qquad r_i=\\mathbb{I}\\{y_i>0\\},\\qquad \\eta\\sim N(0,\\sigma_t^2 I)",
+      "symbol_and_unit_ledger": {
+        "y_i": "latent home-team margin of victory [points, unobserved]",
+        "r_i": "observed binary outcome (1 home win, 0 visitor win)",
+        "X_i": "FCS-effect indicator (1 if FCS visits FBS)",
+        "beta": "FCS fixed effect [rating units]",
+        "Z_i": "multi-membership design row (+1 home, -1 visitor)",
+        "eta": "random team ratings ~ N(0,sigma_t^2 I)",
+        "eps_i": "error ~ N(0,I) (probit) or logistic (logit)"
+      },
+      "assumptions": [
+        "Using McCulloch's (1994) threshold model, game outcomes are determined by a latent continuous variable yi = Xi*beta + Zi*eta + eps_i (interpretable as home-team margin of victory), but only the binary outcome ri = I{yi>0} is observed; eta ~ N(0, sigma_t^2 I) are team ratings, eps ~ N(0,I) gives a probit link, logistic eps gives logit; beta is the FCS effect (Xi=1 when an FCS team visits an FBS team). The latent-variable equation is printed in a shifted math font and reconstructed here.",
+        "Latent threshold equation printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Only sign of yi observed; link determined by eps distribution",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The latent-margin threshold model is the same binary-outcome-from-latent-strength kernel GSE uses for win probability.",
+        "source_operator": "latent_threshold_model",
+        "telemetry": "yi=Xi*beta+Zi*eta+eps_i; ri=I{yi>0}; eta~N(0,sigma_t^2 I); eps~N(0,I)->probit, logistic->logit; beta=FCS effect"
+      }
+    },
+    {
+      "primitive_id": "multimember_design_Z",
+      "name": "Multi-membership Z: row has +1 at home team, -1 at visitor (not nested)",
+      "verbatim_quote": "since each game belongs to multiple levels of the same random effect",
+      "page": 8,
+      "latex": "Z_i = e_{l} - e_{k}\\quad(\\text{team }k\\text{ visits team }l)",
+      "symbol_and_unit_ledger": {
+        "Z_i": "design row for game i",
+        "e_l": "unit vector at home team l",
+        "e_k": "unit vector at visiting team k",
+        "l": "home team index",
+        "k": "visiting team index"
+      },
+      "assumptions": [
+        "The design matrix Z has rows Zi indicating which teams competed: if team k visits team l, Zi is zeros with +1 in position l and -1 in position k; this is a multi-membership design (Browne et al. 2001) since each game belongs to multiple levels of the same random effect, so Z has no patterned structure and cannot be factored as nested designs can. The Z-row construction is printed shifted-font and reconstructed here.",
+        "Z-row construction printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Multi-membership (not nested) -> Z cannot be factored; integral non-separable",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The multi-membership design is the same pairwise-contest random-effects structure GSE uses for team ratings.",
+        "source_operator": "multimember_design_Z",
+        "telemetry": "Zi: +1 at home l, -1 at visitor k; multi-membership (Browne 2001); each game in multiple levels; Z unpatterned, not factorable"
+      }
+    },
+    {
+      "primitive_id": "no_home_field_effect",
+      "name": "No home-field effect included (nonrandom scheduling confound)",
+      "verbatim_quote": "We choose not to include a home field effect",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The author chooses not to include a home-field effect, concerned about nonrandom scheduling's impact on estimating home-field advantage; only three of 120 FBS teams (Notre Dame, UCLA, USC) refrain from scheduling FCS teams; others (Harville, Mease, Wang et al.) advocate including a home-field effect, so this is a deliberate contested choice."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The omitted-home-field choice is the same confound-aware feature-selection veto GSE applies.",
+        "source_operator": "no_home_field_effect",
+        "telemetry": "no home-field effect; nonrandom scheduling confound; only Notre Dame/UCLA/USC avoid FCS; contested (Harville/Mease/Wang include)"
+      }
+    },
+    {
+      "primitive_id": "home_field_scheduling_confound",
+      "name": "Home advantage may be spurious: bigger schools schedule easier home games",
+      "verbatim_quote": "may appear to be significant simply because of the tendency of larger schools to schedule a number of easier home games",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "More competitive programs play more home games, often against low-level FBS teams lacking bargaining leverage for home-and-home series; as a result the 'home field advantage' may appear significant simply because larger schools schedule easier home games — a selection confound that motivates omitting the home-field effect."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The scheduling-selection confound is the same spurious-correlation diagnosis GSE makes of home advantage.",
+        "source_operator": "home_field_scheduling_confound",
+        "telemetry": "competitive programs more home games vs weak opponents (no home-and-home leverage); home advantage spurious via easier-home-game selection"
+      }
+    },
+    {
+      "primitive_id": "michigan_appstate_400k",
+      "name": "BCS ignored inter-division games until Michigan lost to App State ($400k, 2007)",
+      "verbatim_quote": "until fifth-ranked Michigan lost to FCS Appalachian State after paying the team $400,000",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Historically some BCS computer rankings always ignored FBS-FCS inter-division matches, until fifth-ranked Michigan lost to FCS Appalachian State after paying the team $400,000 for a one-off home game in 2007; in 2008 FCS teams won only 2 of 86 games against FBS, and if FBS won all such games the FCS effect would cause infinite likelihood via quasi-complete separation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The App State shock is the same tail-event that forces GSE to keep cross-division signal in ratings.",
+        "source_operator": "michigan_appstate_400k",
+        "telemetry": "BCS ignored FBS-FCS until #5 Michigan lost to App State ($400k one-off, 2007); 2008 FCS 2/86 wins; all-FBS-wins -> separation"
+      }
+    },
+    {
+      "primitive_id": "mease_is_pql_approx",
+      "name": "Mease = PQL approximation to probit GLMM under non-normal random-effect density",
+      "verbatim_quote": "the model of Mease (2003) may be viewed as the PQL approximation to our probit model (6)",
+      "page": 10,
+      "latex": "L(\\sigma_t^2)\\approx (2\\pi)^{n/2}e^{h(\\eta^*)}\\left|-\\frac{\\partial^2 h}{\\partial\\eta\\,\\partial\\eta'}\\bigg|_{\\eta=\\eta^*}\\right|^{-1/2},\\qquad f(\\eta)\\propto\\prod_{j}\\Phi(\\eta_j)\\Phi(-\\eta_j)",
+      "symbol_and_unit_ledger": {
+        "h(eta)": "log of integrand (log-likelihood + log prior)",
+        "eta*": "mode of h(eta)",
+        "L(sigma_t^2)": "marginal likelihood",
+        "f(eta)": "random-effect density (Mease: product of Phi(eta)Phi(-eta), ~N(0,0.815))",
+        "Phi": "standard normal CDF"
+      },
+      "assumptions": [
+        "Following Demidenko (2004), Mease's penalized likelihood derives from the single-population probit model (6) via the Laplace approximation (Eq 7, mode eta*), then assuming the determinant varies slowly yields the Breslow-Clayton quasi-likelihood (Eq 8); if the random effects have density f(eta) proportional to the product of Phi(eta_j)Phi(-eta_j) (Eq 9) rather than normal, Eq 8 yields Mease's likelihood — so Mease is the PQL approximation to the probit model under a non-normal random-effect density. Equations 7-9 are printed shifted-font and reconstructed here.",
+        "Equations 7-9 (Laplace, PQL quasi-likelihood, Mease density) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Laplace consistent (fixed dim); PQL adds slow-determinant approx -> biased",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The PQL-under-non-normal-density derivation is the same nested-approximation unification GSE uses to relate legacy and modern ratings.",
+        "source_operator": "mease_is_pql_approx",
+        "telemetry": "Mease = PQL of probit model (6); Laplace Eq7 (mode eta*); slow-determinant -> PQL Eq8; density Eq9 prod Phi(eta_j)Phi(-eta_j) (non-normal)"
+      }
+    },
+    {
+      "primitive_id": "pql_biased_estimates",
+      "name": "PQL adds one approximation beyond Laplace and produces biased estimates",
+      "verbatim_quote": "PQL is based on the Laplace approximation, but makes one further approximation, and produces biased parameter estimates",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "PQL is based on the Laplace approximation but makes one further approximation and produces biased parameter estimates (Breslow and Lin 1995); the downward bias in PQL variance-component estimates is well documented, and this bias has the same effect as modifying the assumed random-effect distribution."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The PQL bias is the same estimator-bias veto GSE flags when a cheap approximation distorts variance components.",
+        "source_operator": "pql_biased_estimates",
+        "telemetry": "PQL = Laplace + one further approx -> biased (Breslow-Lin 1995); downward variance bias = modifying random-effect distribution"
+      }
+    },
+    {
+      "primitive_id": "laplace_consistent_fixed_dim",
+      "name": "Laplace consistent because integral dimension = #teams, not sample size",
+      "verbatim_quote": "the Laplace approximation produces consistent estimators since the dimension of our integrals is equal to the number of teams and does not increase with the sample size",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "By contrast the Laplace approximation produces consistent estimators since the dimension of the integrals equals the number of teams and does not increase with sample size (Shun and McCullagh 1995); this fixed-dimension property is what makes Laplace preferable to PQL for consistency."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fixed-dimension consistency condition is the same asymptotic-validity check GSE applies to integral approximations.",
+        "source_operator": "laplace_consistent_fixed_dim",
+        "telemetry": "Laplace consistent: integral dim = #teams (fixed), not sample size (Shun-McCullagh 1995)"
+      }
+    },
+    {
+      "primitive_id": "em_random_effects_missing",
+      "name": "EM treats random effects as missing data; closed-form sigma_t^2 M-step",
+      "verbatim_quote": "It may be used for the estimation of mixed models by treating the random effects as missing observations",
+      "page": 11,
+      "latex": "\\hat\\sigma_t^2=\\frac{1}{p+q}\\,\\mathrm{trace}\\!\\big(\\tilde v+\\tilde\\eta\\,\\tilde\\eta'\\big),\\qquad \\tilde\\eta=E[\\eta\\mid r],\\ \\tilde v=\\mathrm{var}[\\eta\\mid r]",
+      "symbol_and_unit_ledger": {
+        "Psi=(beta,sigma_t^2)": "parameters",
+        "eta-tilde": "conditional mean of random effects (becomes team ratings at convergence)",
+        "v-tilde": "conditional variance of random effects",
+        "p+q": "number of FBS+FCS teams",
+        "Q(Psi;Psi(k))": "expected complete-data log-likelihood"
+      },
+      "assumptions": [
+        "The EM algorithm (Dempster et al. 1977) estimates mixed models by treating random effects as missing observations (Laird-Ware 1982), with an integral approximation needed for the nonlinear link; the E-step computes Q(Psi;Psi(k)) = integral of {log f(r|eta)+log f(eta)} f(eta|r;Psi(k)) d eta via conditional mean eta-tilde and variance v-tilde, and the M-step has a closed-form variance update sigma_t^2 = (1/(p+q)) trace(v-tilde + eta-tilde eta-tilde'), with beta solved by Newton-Raphson on the score (Eq 10). The EM equations are printed shifted-font and reconstructed here.",
+        "EM Q-step and closed-form variance update printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "High-dim integral -> quadrature infeasible; Laplace/FE needed in E-step",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The EM-with-Laplace estimator is the same missing-data random-effects fitting GSE uses for team ratings.",
+        "source_operator": "em_random_effects_missing",
+        "telemetry": "EM random effects as missing (Laird-Ware); E-step eta-tilde=E[eta|r], v-tilde=var[eta|r]; M-step sigma_t^2=(1/(p+q))trace(v-tilde+eta-tilde eta-tilde'); beta Newton-Raphson"
+      }
+    },
+    {
+      "primitive_id": "fe_third_fourth_derivatives",
+      "name": "Fully exponential Laplace needs 3rd (mean) and 4th (variance) derivatives",
+      "verbatim_quote": "Calculation of the fully exponential Laplace approximation for the conditional mean of the random effects requires the third derivative, and calculation of the conditional variance requires the fourth derivative",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The EM is fit in custom R code with first-order Laplace (LA, needs first two derivatives) and fully exponential Laplace (FE, Tierney et al. 1989; Steele 1996) approximations in the E-step; FE for the conditional mean requires the third derivative and for the conditional variance the fourth derivative, more accurate than PQL but more computationally demanding, complicated by the multi-membership structure."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The derivative-order cost ladder is the same accuracy-vs-compute tradeoff GSE manages in approximation choice.",
+        "source_operator": "fe_third_fourth_derivatives",
+        "telemetry": "LA: 2 derivatives; FE: 3rd (cond mean) + 4th (cond variance); FE>LA>PQL accuracy; more compute; multi-membership complicates"
+      }
+    },
+    {
+      "primitive_id": "three_part_notation",
+      "name": "Notation {PQL,LA,FE}.{P,L}.{0,1,2} = approximation.link.FCS-handling",
+      "verbatim_quote": "we will introduce a three-part notation to indicate the method of integral approximation",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A three-part notation indicates the integral approximation (PQL, LA for Laplace, FE for fully exponential Laplace), the link (P probit, L logit), and FCS handling (0 consolidate into single effect, 1 separate populations pooled variance, 2 separate populations separate variances); e.g. PQL.P.0 is the PQL probit model consolidating FCS teams."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The factorial model notation is the same systematic sensitivity-grid GSE uses to enumerate modeling choices.",
+        "source_operator": "three_part_notation",
+        "telemetry": "{PQL,LA,FE}.{P,L}.{0,1,2}; approx.link.FCS; 0=consolidate,1=separate pooled var,2=separate var; e.g. PQL.P.0"
+      }
+    },
+    {
+      "primitive_id": "link_2011_top3_swap",
+      "name": "Link choice swaps 2011 top-3: probit LSU/Bama/OkSt vs logit LSU/OkSt/Bama",
+      "verbatim_quote": "FE.P.0 ranks LSU, Alabama, and Oklahoma St. as the top three teams",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In 2011 FE.P.0 (probit) ranks LSU, Alabama, Oklahoma St. as the top three while FE.L.0 (logit) picks LSU, Oklahoma St., Alabama; Alabama and Oklahoma St. have nearly identical ratings in each model, so the link change slightly shifts ratings and prompts ranking shifts; FE is most sensitive to link because it uses four derivatives of the complete-data likelihood; logistic kurtosis exceeds normal so continuous-rating reference lines are not meaningful."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The link-driven top-3 swap is the same link-choice uncertainty GSE flags for nearly-tied ratings.",
+        "source_operator": "link_2011_top3_swap",
+        "telemetry": "2011 FE.P.0 LSU/Bama/OkSt vs FE.L.0 LSU/OkSt/Bama; Bama/OkSt near-identical ratings; FE most link-sensitive (4 derivatives); logistic kurtosis>normal"
+      }
+    },
+    {
+      "primitive_id": "practical_vs_statistical_significance",
+      "name": "Small rating changes can be practically significant even if not statistically significant",
+      "verbatim_quote": "small changes in the ratings may be practically significant, even if they are not statistically significant",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Given the high stakes of the BCS and how the models are used, small changes in ratings may be practically significant even if not statistically significant (Draper 1995 urges caution with EBLUP rankings because individual ratings may have large standard errors); an undefeated third-ranked team takes little consolation in being told its rating is not significantly lower than the top two."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The practical-vs-statistical significance distinction is literally GSE's publication-honesty rule for rating/pick differences.",
+        "source_operator": "practical_vs_statistical_significance",
+        "telemetry": "small changes practically significant though not statistically (Draper 1995 EBLUP caution); high-stakes BCS; large per-rating SE"
+      }
+    },
+    {
+      "primitive_id": "bcs_discretized_not_continuous",
+      "name": "BCS uses discretized rankings, not continuous ratings (uneven spacing -> swaps)",
+      "verbatim_quote": "The BCS uses the discretized rankings from each model, not the continuous ratings",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The BCS uses the discretized rankings from each model, not the continuous ratings; the spacing between team ratings is uneven, so teams with similar ratings are more likely to swap positions when modeling assumptions change, amplifying small rating changes into rank changes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The discretization amplification is the same rank-vs-rating sensitivity GSE accounts for when ratings become ordered decisions.",
+        "source_operator": "bcs_discretized_not_continuous",
+        "telemetry": "BCS uses discretized rankings not continuous ratings; uneven rating spacing; similar ratings swap under assumption changes"
+      }
+    },
+    {
+      "primitive_id": "monotonic_pql_la_fe",
+      "name": "Ranking changes PQL->LA->FE are monotonic (LA between PQL and FE)",
+      "verbatim_quote": "the changes in a team's ranking from PQL to LA to FE are monotonic",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The fully exponential Laplace is more accurate than first-order Laplace, which is better than PQL; the changes in a team's ranking from PQL to LA to FE are monotonic — for 2008-2011, if a team is ranked X by PQL.P.0 and Y by FE.P.0, its LA ranking lies between X and Y inclusive; the PQL downward bias in sigma_t^2 (Breslow-Lin) is clearly present."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The monotonic approximation ladder is the same ordered-estimator-convergence GSE verifies across approximation orders.",
+        "source_operator": "monotonic_pql_la_fe",
+        "telemetry": "FE>LA>PQL accuracy; PQL->LA->FE ranking changes monotonic (LA between X and Y); PQL sigma_t^2 downward bias present"
+      }
+    },
+    {
+      "primitive_id": "championship_depends_laplace_order",
+      "name": "BCS championship #2 depends on Laplace approximation order (2009, 2011)",
+      "verbatim_quote": "Who do you think should play in the BCS championship game?",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In 2009 FE.P.0 lists Alabama and Cincinnati for the championship while PQL.P.0 and LA.P.0 select Alabama and Texas; in 2011 PQL/LA rank Oklahoma St. 2 while FE ranks Alabama 2 — teams move only one position (2nd/3rd) but the exchange arises solely from using a fully exponential (asymptotically second-order) instead of first-order Laplace, so 'who should play in the BCS championship' depends on 'to what order would you prefer to extend your Laplace approximation'."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The championship-depends-on-approximation-order finding is the sharpest possible GSE estimator-choice veto demonstration.",
+        "source_operator": "championship_depends_laplace_order",
+        "telemetry": "2009 FE Alabama/Cincinnati vs PQL/LA Alabama/Texas; 2011 PQL/LA OkSt 2 vs FE Alabama 2; 1-position swap from FE vs LA order"
+      }
+    },
+    {
+      "primitive_id": "variance_disparity_sos",
+      "name": "Larger team-effect variance -> greater estimated disparity -> more strength-of-schedule weight",
+      "verbatim_quote": "the larger the variance of the team effect, the greater the estimated disparity between FBS teams",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "SEC teams tend to benefit from the PQL-to-FE change; the increased random team-effect variance estimated by FE may implicitly place greater emphasis on strength of schedule, since the larger the variance of the team effect, the greater the estimated disparity between FBS teams; this links the variance component to schedule strength weighting."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The variance-as-SOS-knob is the same strength-of-schedule emphasis mechanism GSE recognizes in random-effects ratings.",
+        "source_operator": "variance_disparity_sos",
+        "telemetry": "SEC benefits from FE; larger team-effect variance -> greater FBS disparity -> more strength-of-schedule emphasis"
+      }
+    },
+    {
+      "primitive_id": "sigma_zero_equal_strength",
+      "name": "sigma_t^2=0 -> all teams equal (50% win, rank by W-L); sigma_t^2=100 -> SOS dominates",
+      "verbatim_quote": "This implies that all of the teams are of equal strength, that that the chance of a team winning any given game is 50%",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fixing sigma_t^2=0.0001 implies all teams equal strength, 50% win chance, ranked by wins minus losses (Arkansas St. rises to 11); fixing sigma_t^2=100 puts 12 of the top 15 from the SEC or Big XII including 7-5 Auburn/Texas and 6-6 Texas A&M (strength of schedule dominates); the model's advantage over Mease is estimating sigma_t^2 rather than fixing it arbitrarily; Mease's fixed distribution is ~N(0,0.815), PQL estimates ~0.55 and FE ~0.8, explaining why Mease agrees more with FE."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The variance-extreme behavior is the same prior-strength sensitivity GSE probes in shrinkage ratings.",
+        "source_operator": "sigma_zero_equal_strength",
+        "telemetry": "sigma_t^2=0.0001 -> equal strength/50%/rank W-L (Ark St 11); sigma_t^2=100 -> 12/15 top SEC/BigXII (SOS dominates); Mease~N(0,0.815); PQL~0.55, FE~0.8"
+      }
+    },
+    {
+      "primitive_id": "fcs_beta_0979",
+      "name": "FCS effect beta=2.03 (2011) -> P(random FBS beats random FCS)=Phi(2.03)~0.979",
+      "verbatim_quote": "indicates that the probability of a randomly selected FBS team defeating a randomly selected FCS team in 2011 is",
+      "page": 19,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The difference in means between FBS and FCS populations, obtained via beta-hat=2.03, indicates the probability of a randomly selected FBS team defeating a randomly selected FCS team in 2011 is Phi(2.03) approximately 0.979; FE.P.0 ranks Alabama 2 in 2011 while FE.P.1/FE.P.2 pick Oklahoma St., and in 2008 FE.P.2 ranks Florida 4 while FE.P.1/FE.P.0 rank Texas Tech 4; the author prefers FE.P.2 (separate variances, more information)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The cross-division win probability is the same population-gap calibration GSE uses for FBS-FCS strength separation.",
+        "source_operator": "fcs_beta_0979",
+        "telemetry": "beta-hat=2.03 (2011) -> Phi(2.03)~0.979 FBS beats FCS; FE.P.0 Alabama 2 vs FE.P.1/2 OkSt; prefer FE.P.2 (separate var, more info)"
+      }
+    },
+    {
+      "primitive_id": "ml_reml_top16_identical",
+      "name": "ML vs REML: no top-16 difference (only 1 fixed effect, ~240 random levels)",
+      "verbatim_quote": "none of the top 16 teams from 2008-2011 differ between the ML and the REML rankings",
+      "page": 21,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Under PQL.P.1 none of the top 16 teams from 2008-2011 differ between ML and REML rankings, unsurprising since the model has only one fixed effect (the FCS effect) and around 240 random-effect levels; the ML and REML variance estimates are nearly identical (e.g. 2008 0.4763 vs 0.4768), and the difference would grow if additional fixed effects were added."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The ML-REML insensitivity with few fixed effects is the same bias-correction-irrelevance condition GSE checks.",
+        "source_operator": "ml_reml_top16_identical",
+        "telemetry": "PQL.P.1 ML vs REML: no top-16 diff 2008-2011; 1 fixed effect + ~240 random levels; sigma_t^2 0.4763/0.4768 (2008); grows with more fixed effects"
+      }
+    },
+    {
+      "primitive_id": "comprehensibility_accuracy_tradeoff",
+      "name": "FE.P.2 vs Mease = comprehensibility-vs-accuracy tradeoff (Harville's 7 criteria)",
+      "verbatim_quote": "For practical purposes, the choice between Mease's model and our model FE.P.2",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Harville (2003) discusses seven criteria for an appropriate ranking model: accuracy, appropriateness, impartiality, unobtrusiveness, nondisruptiveness, verifiability, and comprehensibility; the choice between Mease's model and FE.P.2 is a trade-off between comprehensibility and accuracy — FE.P.2 needs much more computation and lacks a closed-form objective (obfuscating the data-ranking relationship) but uses more data and accurately estimates the FBS variance where Mease fixes it."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The comprehensibility-accuracy tradeoff is the same interpretability-vs-performance balance GSE weighs in model selection.",
+        "source_operator": "comprehensibility_accuracy_tradeoff",
+        "telemetry": "Harville 7 criteria (accuracy/appropriateness/impartiality/unobtrusiveness/nondisruptiveness/verifiability/comprehensibility); FE.P.2 vs Mease = comprehensibility vs accuracy"
+      }
+    },
+    {
+      "primitive_id": "limited_info_12_binary_240",
+      "name": "Limited information: ~12 binary outcomes on ~240 subjects drives sensitivity",
+      "verbatim_quote": "around 12 binary outcomes on 240 or so subjects",
+      "page": 23,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The large confidence intervals associated with team ratings suggest the sensitivity to modeling assumptions is due at least in part to limited information: around 12 binary outcomes on 240 or so subjects; given this limited information it seems unreasonable to expect the models to identify the two best teams in a division."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The data-sufficiency limit is literally GSE's information-content veto on over-trusting ratings.",
+        "source_operator": "limited_info_12_binary_240",
+        "telemetry": "~12 binary outcomes / ~240 subjects; large CIs; sensitivity partly from limited information"
+      }
+    },
+    {
+      "primitive_id": "unreasonable_identify_two_best",
+      "name": "Unreasonable to expect binary-outcome models to identify the two best teams",
+      "verbatim_quote": "it seems unreasonable to expect these models to be capable of identifying the two best teams in a division",
+      "page": 23,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Given the limited information it seems unreasonable to expect these models to be capable of identifying the two best teams in a division; the limited accuracy from restriction to binary game outcomes is one reason Stern (2006) called for a boycott of the BCS by quantitative analysts."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The two-best-teams impossibility is the same honest-capability-limit GSE states about binary-only ratings.",
+        "source_operator": "unreasonable_identify_two_best",
+        "telemetry": "unreasonable to identify two best teams from binary outcomes; limited accuracy -> Stern (2006) BCS boycott call"
+      }
+    },
+    {
+      "primitive_id": "fickle_binary_rankings",
+      "name": "Binary-outcome models are a rough classification guide; rankings are fickle",
+      "verbatim_quote": "Models for binary game outcomes may provide a rough guide for the classification of teams, but the fickle nature of their rankings should be kept in mind",
+      "page": 23,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The conclusion: without changing the mean or random-effects structures, rankings shifted with modeling choices; changes are small relative to standard errors but could affect bowl assignments (bowls assigned on point estimates); models for binary game outcomes may provide a rough guide for classification of teams, but the fickle nature of their rankings should be kept in mind; sensitivity analysis should be performed whenever a GLMM is used."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fickle-rankings caveat is the same humility GSE attaches to any binary-data rating used for decisions.",
+        "source_operator": "fickle_binary_rankings",
+        "telemetry": "rankings shift without mean/RE structure change; small vs SE but affect bowls (point estimates); binary models rough guide; fickle rankings; do sensitivity analysis for any GLMM"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "sensitivityrank2012_trace",
+      "think": "The retrocausal genealogy of this paper is the statistical sensitivity analysis of college-football rankings. Andrew T. Karl, at Arizona State University, publishing in the Journal of Quantitative Analysis in Sports in 2012 as Manuscript 1471, proposes a multiple-membership generalized linear mixed model for ranking teams from win/loss records alone, the binary restriction the Bowl Championship Series imposed to stop teams running up the score. The work sits in the lineage of Thurstone-Mosteller and Bradley-Terry paired-comparison models, Mease's 2003 penalized-likelihood rating, Harville's continuous-margin models, and the generalized linear mixed model tradition of McCulloch, Breslow, Clayton, and Lin, with the fully exponential Laplace approximation of Tierney and the EM treatment of random effects as missing data from Laird and Ware. It is the direct companion to Burer's robust-ranking paper in the same journal and year, attacking ranking fragility from the estimator side rather than the worst-case-perturbation side. The recursive theory of mind is the GLMM and its approximation ladder. A latent margin yi equals the FCS fixed effect plus the multi-membership random team effects plus noise, and only its sign is observed as the binary win; the design row carries plus one for the home team and minus one for the visitor, a multi-membership structure that makes the team-dimensional integral non-factorable and quadrature infeasible. The random effects avoid the quasi-complete separation that infinite-likelihoods fixed-effect models with undefeated teams, and their empirical best linear unbiased predictors, sorted, are the rankings. The crucial insight is that Mease's penalized likelihood is exactly the penalized quasi-likelihood approximation to this probit model under a non-normal random-effect density, so the legacy rating is nested inside the new one as a single approximation choice. Cross-layer veto adjudication is the sensitivity grid and its high-stakes consequences. Karl varies five choices — link function, integral approximation, random-effect distribution, FCS handling, and ML versus REML — across the 2008 to 2011 seasons using the same pre-bowl data that fed the final BCS rankings. The rating changes are small relative to each team's standard error, yet they reorder the rankings enough to matter: the integral approximation alone swaps the second championship team in 2009 (Alabama and Cincinnati under fully exponential Laplace versus Alabama and Texas under PQL and first-order Laplace) and in 2011 (Oklahoma State versus Alabama), so who plays for the title depends on the order to which one extends the Laplace approximation. The PQL-to-Laplace-to-fully-exponential ranking changes are monotonic, the fully exponential estimates a larger team-effect variance that implicitly weights strength of schedule more, and the link choice swaps the 2011 top three between probit and logit. The implementation invariants map directly onto GSE. The win-loss random-effects rating is GSE's margin-free team-strength model; the EBLUP-dependence-on-approximation is GSE's estimator-choice veto, the same phenomenon as the field-hockey glmer-versus-RStan sign divergence already in the corpus; the practical-versus-statistical significance distinction is GSE's publication-honesty rule that a small rating difference can still change a decision; and the limited-information bound of roughly twelve binary outcomes on two hundred forty subjects is GSE's data-sufficiency veto. The variance component is GSE's strength-of-schedule emphasis knob, and the comprehensibility-versus-accuracy tradeoff against Harville's seven criteria is GSE's interpretability-versus-performance balance. The outputs are rankings from win-loss data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The behavioral and variance results make the sensitivity concrete. Fixing the team-effect variance near zero collapses every team to equal strength and ranks by wins minus losses, while fixing it at one hundred lets strength of schedule dominate so that twelve of the top fifteen come from the SEC or Big Twelve including seven-and-five Auburn and six-and-six Texas A&M; Mease's fixed distribution is approximately normal with variance zero point eight one five, PQL estimates around zero point five five and fully exponential around zero point eight, which explains why Mease agrees more with the fully exponential model despite using a PQL approximation. The FCS effect of two point zero three in 2011 implies a random FBS team beats a random FCS team with probability about zero point nine seven nine, and ML versus REML leaves the top sixteen unchanged because there is only one fixed effect against two hundred forty random levels. The caveats close the account with the honest limits of binary-data ranking. The author deliberately omits a home-field effect because nonrandom scheduling — bigger programs padding their records with easier home games against opponents lacking home-and-home leverage — can make home advantage appear significant spuriously; the BCS uses discretized rankings rather than continuous ratings, so uneven rating spacing turns tiny rating changes into rank swaps; and the large confidence intervals mean it is unreasonable to expect these models to identify the two best teams in a division, the limited accuracy that prompted Stern's call for a quantitative boycott of the BCS. The invariant for GSE is to carry the GLMM rating, the approximation-order sensitivity, the practical-significance rule, and the data-sufficiency bound while recording the fickle nature of binary-outcome rankings and the obligation to run a sensitivity analysis whenever a generalized linear mixed model is used, treating any rating difference as decision-relevant even when it is not statistically significant. The author notes that this EBLUP-ordering sensitivity to the marginal-likelihood approximation has received far less attention than the well-documented PQL variance bias, and that the same concern transfers to value-added models for teacher assessment whenever student performance is measured categorically, which is exactly the kind of cross-domain ranking fragility GSE must guard against whenever it converts a noisy latent estimate into an ordered, high-stakes decision.",
+      "retrocausal_genealogy": "Statistical sensitivity analysis of college-football rankings. Andrew T. Karl, Arizona State; JQAS 2012 Manuscript 1471, DOI 10.1515/1559-0410.1471. Multiple-membership GLMM from win/loss only (BCS margin ban). Lineage: Thurstone-Mosteller/Bradley-Terry, Mease (2003) penalized likelihood, Harville continuous margins, McCulloch/Breslow-Clayton-Lin GLMM, Tierney fully exponential Laplace, Laird-Ware EM random-effects-as-missing. Companion to Burer robust rankings (same journal/year): estimator-side vs worst-case-side fragility. Five choices: link, integral approximation, random-effect distribution, FCS handling, ML vs REML; seasons 2008-2011 pre-bowl data.",
+      "theory_of_mind": "Latent yi=Xi*beta+Zi*eta+eps_i, ri=I{yi>0}; eta~N(0,sigma_t^2 I) team ratings; eps~N(0,I)->probit, logistic->logit; beta=FCS effect. Z multi-membership row +1 home/-1 visitor (Browne 2001) -> (p+q)-dim integral non-factorable, quadrature infeasible. Random effects avoid quasi-complete separation (undefeated teams); EBLUPs sorted = rankings. Mease = PQL approx to probit model (6) under non-normal density f(eta)~prod Phi(eta_j)Phi(-eta_j) (~N(0,0.815)); Laplace Eq7 mode eta*, PQL Eq8. PQL biased (Breslow-Lin); Laplace consistent (dim=#teams fixed, Shun-McCullagh). EM E-step eta-tilde/v-tilde; M-step sigma_t^2=(1/(p+q))trace(v-tilde+eta-tilde eta-tilde'); FE needs 3rd/4th derivatives. Notation {PQL,LA,FE}.{P,L}.{0,1,2}. Equations shifted-font reconstructed.",
+      "cross_layer_veto": "Rating changes small vs per-team SE but reorder -> practically significant bowl differences (Draper 1995 EBLUP caution; BCS uses discretized rankings, uneven spacing). Integral approx swaps championship #2: 2009 FE Alabama/Cincinnati vs PQL/LA Alabama/Texas; 2011 PQL/LA OkSt 2 vs FE Alabama 2; PQL->LA->FE monotonic. Link swaps 2011 top-3 (probit LSU/Bama/OkSt vs logit LSU/OkSt/Bama). sigma_t^2=0 -> equal strength/rank W-L; =100 -> SOS dominates (12/15 top SEC/BigXII); Mease~0.815, PQL~0.55, FE~0.8; larger variance -> more SOS. FCS beta=2.03 -> Phi(2.03)~0.979. ML vs REML no top-16 diff (1 fixed effect/~240 levels). No home-field (scheduling confound). Harville 7 criteria; FE.P.2 vs Mease = comprehensibility vs accuracy. ~12 binary outcomes/240 subjects -> unreasonable to identify two best (Stern 2006 boycott); fickle rankings. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A multiple-membership generalized linear mixed model ranks college football from win/loss records alone and is used to show that team rankings are sensitive to five modeling choices — link function, integral approximation, random-effect distribution, FCS handling, and ML versus REML — with rating changes small relative to standard errors yet large enough to reorder rankings and swap the BCS championship's second team purely from the order of the Laplace approximation; Mease's legacy penalized-likelihood rating is revealed as the PQL approximation under a non-normal random-effect density, the team-effect variance acts as a strength-of-schedule knob, and the limited information of roughly twelve binary outcomes per team makes the rankings fundamentally fickle.",
+  "gsi_mapping": "GSI treats the multiple-membership GLMM (latent yi=Xi*beta+Zi*eta+eps_i, ri=I{yi>0}; eta~N(0,sigma_t^2 I); Z row +1 home/-1 visitor, non-factorable integral); random effects avoid quasi-complete separation, EBLUPs sorted = rankings; Mease=PQL under non-normal density ~N(0,0.815) (Laplace Eq7/PQL Eq8/density Eq9); PQL biased (Breslow-Lin), Laplace consistent (fixed dim=#teams); EM E-step eta-tilde/v-tilde, M-step sigma_t^2=(1/(p+q))trace(v-tilde+eta-tilde eta-tilde'), FE 3rd/4th derivatives; notation {PQL,LA,FE}.{P,L}.{0,1,2}; five-choice sensitivity 2008-2011; rating changes small vs SE but reorder (practical vs statistical significance, Draper 1995; BCS discretized rankings); championship #2 swaps 2009 (Cincinnati vs Texas) and 2011 (OkSt vs Alabama) from Laplace order; PQL->LA->FE monotonic; sigma_t^2=0 rank W-L / =100 SOS dominates; PQL~0.55/FE~0.8/Mease~0.815; FCS beta=2.03 -> Phi~0.979; ML/REML no top-16 diff; no home-field (scheduling confound); Harville 7 criteria; comprehensibility vs accuracy; ~12 binary/240 subjects -> fickle rankings, unreasonable to identify two best (Stern 2006); equations shifted-font reconstructed.",
+  "gse_mapping": "GSE lifts the win-loss random-effects GLMM rating, the EBLUP-dependence-on-integral-approximation as its estimator-choice veto (the same phenomenon as the field-hockey glmer/RStan sign divergence), the practical-versus-statistical-significance rule as its publication-honesty gate, the variance-as-strength-of-schedule knob, and the ~12-binary-outcomes/240-subjects data-sufficiency bound; treats the championship-swap-from-Laplace-order as the sharpest demonstration that estimator choice changes decisions, the comprehensibility-accuracy tradeoff (Harville 7 criteria) as model-selection balance, and the fickle nature of binary-outcome rankings plus the obligation to run GLMM sensitivity analysis as honest limits; all outputs are rankings from win-loss data, never sportsbook lines, and any rating difference is treated as decision-relevant even when not statistically significant."
+}

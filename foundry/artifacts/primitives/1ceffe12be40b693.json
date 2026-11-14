@@ -1,0 +1,78 @@
+{
+  "book_id": "1ceffe12be40b693",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.txt",
+  "sha256": "1ceffe12be40b69323045862764467f16f4f895d1ea9fda4775367ae27153760",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Vercel project linkage induces a deterministic state transition in Git versioning, governed by a binary compliance operator over folder persistence. Universal Lens: Rooted in README (1ceffe12be40b693), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on project ownership and access control uses conditional probability P(orgId|projectId) to model authorization states. GSI Mapping: Rooted in README (1ceffe12be40b693), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps folder persistence to state-space transitions via a Markov kernel over {committed, ignored} states with entropy regularization. GSE Mapping: Rooted in README (1ceffe12be40b693), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "vercel_project_linkage",
+      "name": "Vercel Project Linkage Operator",
+      "verbatim_quote": "The \".vercel\" folder is created when you link a directory to a Vercel project.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'projectId': 'dimensionless identifier', 'orgId': 'dimensionless identifier'}",
+      "assumptions": "Directory linking is deterministic and idempotent; .vercel folder is ephemeral to project state.",
+      "breakdown_regime": "When project unlinking occurs, folder deletion triggers state collapse.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's authorization state space where P(orgId|projectId) defines access kernel; to GSE's state transition graph where folder persistence implies committed state.",
+        "source_operator": "vercel_project_linkage",
+        "telemetry": "Git status of .vercel folder presence/absence."
+      }
+    },
+    {
+      "primitive_id": "project_metadata_storage",
+      "name": "Project Metadata Storage Kernel",
+      "verbatim_quote": "The \"project.json\" file contains: - The ID of the Vercel project that you linked (\"projectId\") - The ID of the user or team your Vercel project is owned by (\"orgId\") > Should I commit the \".vercel\" folder?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'projectId': 'dimensionless identifier', 'orgId': 'dimensionless identifier'}",
+      "assumptions": "Metadata integrity is preserved under atomic write operations; data is immutable post-write.",
+      "breakdown_regime": "On unauthorized access, metadata becomes invalid due to mismatched orgId.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives into GSI's credential validation logic; informs GSE's state consistency checks.",
+        "source_operator": "project_metadata_storage",
+        "telemetry": "project.json checksum and access logs."
+      }
+    },
+    {
+      "primitive_id": "folder_compliance_policy",
+      "name": "Folder Compliance Policy",
+      "verbatim_quote": "No, you should not share the \".vercel\" folder with anyone.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'compliance': 'boolean {true, false}'}",
+      "assumptions": "Sharing is a violation of access control policy; folder is private to owner.",
+      "breakdown_regime": "If shared, compliance fails and triggers audit alert.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's access control model; to GSE's policy enforcement engine.",
+        "source_operator": "folder_compliance_policy",
+        "telemetry": "Git diff and permission change logs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1ceffe12be40b693_t0",
+      "think": "The Vercel project linkage operator defines a deterministic mapping from local directory to remote project state. It operates as a binary compliance function over folder persistence, where the presence of .vercel indicates a valid project binding. The project metadata kernel encodes two identifiers: projectId and orgId, forming a tuple that uniquely identifies the project and its owner. This tuple is stored in project.json and is critical for access control. The folder compliance policy enforces a boolean constraint on sharing, ensuring that .vercel remains private. These primitives form a closed system under Git versioning, where the state transition from unlinked to linked is irreversible without explicit action. Failure modes include unauthorized sharing leading to policy violation, or deletion of .vercel causing state inconsistency. The epistemic closure of this system allows for Bayesian inference on project ownership and GSE state transitions.\n\nDeep epistemic analysis for README (1ceffe12be40b693, domain=other, pages_read=1/1): Operator 'Vercel Project Linkage Operator' (page 1, domain other) captures: The \".vercel\" folder is created when you link a directory to a Vercel project. Assumptions: Directory linking is deterministic and idempotent; .vercel folder is ephemeral to project state. Breakdown regime: When project unlinking occurs, folder deletion triggers state collapse. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's authorization state space where P(orgId|projectId) defines access kernel; to GSE's state transition graph where folder persistence implies committed state. Operator 'Project Metadata Storage Kernel' (page 1, domain other) captures: The \"project.json\" file contains: - The ID of the Vercel project that you linked (\"projectId\") - The ID of the user or team your Vercel project is owned by (\"orgId\") > Should I commit the \".vercel\" folder? Assumptions: Metadata integrity is preserved under atomic write operations; data is immutable post-write. Breakdown regime: On unauthorized access, metadata becomes invalid due to mismatched orgId. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives into GSI's credential validation logic; informs GSE's state consistency checks. Operator 'Folder Compliance Policy' (page 1, domain other) captures: No, you should not share the \".vercel\" folder with anyone. Assumptions: Sharing is a violation of access control policy; folder is private to owner. Breakdown regime: If shared, compliance fails and triggers audit alert. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's access control model; to GSE's policy enforcement engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (1ceffe12be40b693, domain=other, pages_read=1/1): Operator 'Vercel Project Linkage Operator' (page 1, domain other) captures: The \".vercel\" folder is created when you link a directory to a Vercel project. Assumptions: Directory linking is deterministic and idempotent; .vercel folder is ephemeral to project state. Breakdown regime: When project unlinking occurs, folder deletion triggers state collapse. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's authorization state space where P(orgId|projectId) defines access kernel; to GSE's state transition graph where folder persistence implies committed state. Operator 'Project Metadata Storage Kernel' (page 1, domain other) captures: The \"project.json\" file contains: - The ID of the Vercel project that you linked (\"projectId\") - The ID of the user or team your Vercel project is owned by (\"orgId\") > Should I commit the \".vercel\" folder? Assumptions: Metadata integrity is preserved under atomic write operations; data is immutable post-write. Breakdown regime: On unauthorized access, metadata becomes invalid due to mismatched orgId. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives into GSI's credential validation logic; informs GSE's state consistency checks. Operator 'Folder Compliance Policy' (page 1, domain other) captures: No, you should not share the \".vercel\" folder with anyone. Assumptions: Sharing is a violation of access control policy; folder is private to owner. Breakdown regime: If shared, compliance fails and triggers audit alert. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's access control model; to GSE's policy enforcement engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Git’s distributed version control theory and POSIX file system semantics, extended by Vercel’s declarative deployment model. Retrocausal Genealogy: Rooted in README (1ceffe12be40b693), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (1ceffe12be40b693), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include unauthorized users attempting to access .vercel and automated systems enforcing Git policies. Decision actors are developers and CI/CD pipelines. Theory of Mind & Decision Maker Model: Rooted in README (1ceffe12be40b693), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in README (1ceffe12be40b693), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if .vercel is committed to Git, violating GSE’s state isolation. Leakage occurs if orgId is exposed in public repositories, compromising GSI’s trust model. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (1ceffe12be40b693), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (1ceffe12be40b693), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

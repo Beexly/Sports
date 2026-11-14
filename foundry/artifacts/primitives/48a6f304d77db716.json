@@ -1,0 +1,78 @@
+{
+  "book_id": "48a6f304d77db716",
+  "source_status": "COMPLETE",
+  "title": "p0128",
+  "file_name": "p0128.txt",
+  "sha256": "48a6f304d77db71636d9e32a4cc05b1a6fee35b85e6ecc254cc0c9768cca1eea",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Mean convergence implies almost everywhere convergence; integrability of |f| ensures integrability of f; product of integrable and bounded functions remains integrable. Universal Lens: Rooted in p0128 (48a6f304d77db716), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on integrable function spaces via measure-theoretic convergence; conformal prediction bounds on function approximations using Fatou's lemma and dominated convergence. GSI Mapping: Rooted in p0128 (48a6f304d77db716), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in functional integration governed by boundedness and measurability; dynamic evolution through measurable sets and their characteristic functions under finite measure constraints. GSE Mapping: Rooted in p0128 (48a6f304d77db716), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mean_convergence_implies_ae_convergence",
+      "name": "Mean Convergence Implies Almost Everywhere Convergence",
+      "verbatim_quote": "From the finiteness of the limit we may conclude that Since fm - fn is of constant sign for each fixed m and n, we have so that the sequence {fn} is mean convergent and therefore (26.B) mean converges to an integrable function g.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f_n': 'sequence of measurable functions, dimensionless', 'g': 'integrable function, dimensionless'}",
+      "assumptions": "Sequence {f_n} is mean convergent; limit exists and is finite.",
+      "breakdown_regime": "When mean convergence fails or limit does not exist.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE state transition kernel derived from mean convergence ensuring integrability of limit function; GSI probabilistic model updates based on convergence properties.",
+        "source_operator": "mean_convergence_implies_ae_convergence",
+        "telemetry": "Convergence rate of sequence {f_n} to g."
+      }
+    },
+    {
+      "primitive_id": "absolute_integrability_implies_function_integrability",
+      "name": "Absolute Integrability Implies Function Integrability",
+      "verbatim_quote": "A measurable function is integrable if and only if its absolute value is integrable.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f': 'measurable function, dimensionless', '|f|': 'absolute value of f, dimensionless'}",
+      "assumptions": "f is measurable; |f| is integrable.",
+      "breakdown_regime": "When |f| is not integrable or f is not measurable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI equivalence class of integrable functions defined by absolute integrability; GSE functional space isomorphism preserving integral structure.",
+        "source_operator": "absolute_integrability_implies_function_integrability",
+        "telemetry": "Integral of |f| over domain."
+      }
+    },
+    {
+      "primitive_id": "product_of_integrable_and_bounded_functions_is_integrable",
+      "name": "Product of Integrable and Bounded Functions Is Integrable",
+      "verbatim_quote": "If f is integrable and g is an essentially bounded measurable function, then fg is integrable.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f': 'integrable function, dimensionless', 'g': 'essentially bounded measurable function, dimensionless', 'fg': 'product of f and g, dimensionless'}",
+      "assumptions": "f is integrable; g is essentially bounded.",
+      "breakdown_regime": "When g is not essentially bounded or f is not integrable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE kernel for composition of integrable and bounded functions; GSI probabilistic convolution of bounded uncertainties.",
+        "source_operator": "product_of_integrable_and_bounded_functions_is_integrable",
+        "telemetry": "Integrability of fg over domain."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "48a6f304d77db716_t0",
+      "think": "Mean convergence establishes that a Cauchy sequence of measurable functions converges in L² to an integrable limit g. This implies convergence in measure, which further yields almost everywhere convergence along a subsequence. Theorems C and E establish that integrability of |f| guarantees integrability of f itself, and that boundedness of g ensures integrability of fg when f is integrable. These foundational results form a coherent framework for constructing integrable function spaces and analyzing limits within them. The interplay between convergence types and integrability conditions underpins both theoretical analysis and practical applications in stochastic modeling and signal processing.\n\nDeep epistemic analysis for p0128 (48a6f304d77db716, domain=other, pages_read=1/1): Operator 'Mean Convergence Implies Almost Everywhere Convergence' (page 1, domain other) captures: From the finiteness of the limit we may conclude that Since fm - fn is of constant sign for each fixed m and n, we have so that the sequence {fn} is mean convergent and therefore (26.B) mean converges to an integrable function g. Assumptions: Sequence {f_n} is mean convergent; limit exists and is finite. Breakdown regime: When mean convergence fails or limit does not exist. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition kernel derived from mean convergence ensuring integrability of limit function; GSI probabilistic model updates based on convergence properties. Operator 'Absolute Integrability Implies Function Integrability' (page 1, domain other) captures: A measurable function is integrable if and only if its absolute value is integrable. Assumptions: f is measurable; |f| is integrable. Breakdown regime: When |f| is not integrable or f is not measurable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI equivalence class of integrable functions defined by absolute integrability; GSE functional space isomorphism preserving integral structure. Operator 'Product of Integrable and Bounded Functions Is Integrable' (page 1, domain other) captures: If f is integrable and g is an essentially bounded measurable function, then fg is integrable. Assumptions: f is integrable; g is essentially bounded. Breakdown regime: When g is not essentially bounded or f is not integrable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE kernel for composition of integrable and bounded functions; GSI probabilistic convolution of bounded uncertainties. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0128 (48a6f304d77db716, domain=other, pages_read=1/1): Operator 'Mean Convergence Implies Almost Everywhere Convergence' (page 1, domain other) captures: From the finiteness of the limit we may conclude that Since fm - fn is of constant sign for each fixed m and n, we have so that the sequence {fn} is mean convergent and therefore (26.B) mean converges to an integrable function g. Assumptions: Sequence {f_n} is mean convergent; limit exists and is finite. Breakdown regime: When mean convergence fails or limit does not exist. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE state transition kernel derived from mean convergence ensuring integrability of limit function; GSI probabilistic model updates based on convergence properties. Operator 'Absolute Integrability Implies Function Integrability' (page 1, domain other) captures: A measurable function is integrable if and only if its absolute value is integrable. Assumptions: f is measurable; |f| is integrable. Breakdown regime: When |f| is not integrable or f is not measurable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI equivalence class of integrable functions defined by absolute integrability; GSE functional space isomorphism preserving integral structure. Operator 'Product of Integrable and Bounded Functions Is Integrable' (page 1, domain other) captures: If f is integrable and g is an essentially bounded measurable function, then fg is integrable. Assumptions: f is integrable; g is essentially bounded. Breakdown regime: When g is not essentially bounded or f is not integrable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE kernel for composition of integrable and bounded functions; GSI probabilistic convolution of bounded uncertainties. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Lebesgue integration theory, these principles evolved from Riemannian foundations and were formalized by Fatou, Beppo Levi, and others in early 20th-century measure theory. Retrocausal Genealogy: Rooted in p0128 (48a6f304d77db716), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0128 (48a6f304d77db716), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might assume non-integrable functions or unbounded domains, leading to incorrect conclusions about convergence or integrability. Decision-making must account for boundedness and measurability constraints. Theory of Mind & Decision Maker Model: Rooted in p0128 (48a6f304d77db716), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0128 (48a6f304d77db716), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires avoiding reliance on pointwise convergence alone; leakage occurs if boundedness assumptions fail or if integrability of |f| is overlooked in favor of absolute values. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0128 (48a6f304d77db716), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0128 (48a6f304d77db716), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

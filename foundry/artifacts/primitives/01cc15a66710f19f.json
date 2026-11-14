@@ -1,0 +1,688 @@
+{
+  "book_id": "01cc15a66710f19f",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_BASKETBALL_MRP_PORTFOLIO_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Duma & Benaharon, 'Efficient Frontier Optimization of NBA Shot Selection Using Markov Reward Processes', arXiv:2607.02933v1 [stat.AP], 3 Jul 2026 (Nirek Duma, Leo Benaharon), 20 pages. Models NBA shot selection as a dynamic portfolio: possession-level absorbing Markov reward process (18-state space; fundamental matrix N=(I-Q)^-1) + mean-variance shot allocation over rim/midrange/corner-three/non-corner-three + ridge-fitted timeout-response stability cost. Transient value VT=e_PS^T N(pi)r (continuation-inclusive) vs one-step V1; rim misses highest offensive-rebound continuation (0.384 vs ~0.26 threes); covariance portfolio variance (co-moving families); objective max normalized V - lambda1*variance - lambda2*response, dx/dy-tail knee rule, SLSQP. No-fastbreak optimization (geometry unobserved; removed 129,695 FB possessions) + fixed observed fastbreak recomposition (alphaL=0.105). Findings: all franchises near league efficient frontier; marginal reduce perimeter+midrange/increase rim; EV-only overstates perimeter; 3pt revolution slightly past optimal boundary; calibration 1.149 PPP ~ empirical 1.15; no universal diet (team-conditional); shrinkage fixes Washington small-sample noise but penalizes Denver's true efficient extreme. Refines Fichman-O'Brien MPT (predicted 38% 3pt equilibrium, now 41.5%; non-transient gap). Limitations: make% held constant (attempts not randomly assigned -> endogeneity), macro not granular (no personnel identification), fastbreaks excluded, defense only implicit; future expected-points->expected-wins. Data NBA live PBP 2021-22..2025-26. Extracted faithfully (not a derivative summary). Equations (fundamental matrix, diet row logic, V1/VT, covariance/portfolio variance, ridge response + cost, objective/normalization, knee rule, hybrid, shrinkage) printed in math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain math matches catalog (basketball analytics / stochastic portfolio optimization; not football). Directly isomorphic to GSE's drive-expectancy MRP kernel (same as Goldner 2012), continuation-inclusive EP, diversification-aware risk, opponent-adjustment veto, frontier selection, partial-observability handling, and small-sample-shrinkage caution. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "dynamic_portfolio_not_isolated",
+      "name": "NBA shot selection as dynamic portfolio, not isolated shot attempts",
+      "verbatim_quote": "whether modern NBA shot selection can be evaluated as a dynamic portfolio problem rather than as a collection of isolated shot attempts",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Nirek Duma, Leo Benaharon; arXiv:2607.02933v1 [stat.AP], 3 Jul 2026) asks whether modern NBA shot selection can be evaluated as a dynamic portfolio problem rather than isolated shot attempts, combining a possession-level Markov reward process with a mean-variance shot allocation objective and a defense response cost."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The shot-diet-as-portfolio framing is the same risk-adjusted allocation GSE applies to play-calling.",
+        "source_operator": "dynamic_portfolio_not_isolated",
+        "telemetry": "dynamic portfolio vs isolated shots; possession MRP + mean-variance + defense response cost; Duma/Benaharon arXiv 2607.02933"
+      }
+    },
+    {
+      "primitive_id": "four_shot_categories",
+      "name": "Four shot categories: rim, midrange, corner three, non-corner three",
+      "verbatim_quote": "The model separates rim attempts, midrange attempts, corner threes",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model separates rim (R), midrange (M), corner threes (C3), and non-corner threes (NC3); the shot portfolio pi=(piR,piM,piC3,piNC3) satisfies sum=1 and pi_i>=0; each candidate diet is valued by immediate scoring, continuation after offensive rebounds, empirical game-level variance, and a timeout-response stability cost."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The four-category shot simplex is the same discrete allocation space GSE optimizes over.",
+        "source_operator": "four_shot_categories",
+        "telemetry": "R/M/C3/NC3; pi=(piR,piM,piC3,piNC3), sum=1, pi>=0; valued by immediate + continuation + variance + timeout-response"
+      }
+    },
+    {
+      "primitive_id": "ev_overstates_perimeter",
+      "name": "Optimizing solely for expected value overstates the benefit of perimeter shots",
+      "verbatim_quote": "optimizing solely for expected value mathematically overstates the benefit of perimeter shots",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "By incorporating outcome variance and continuation effects, optimizing solely for expected value mathematically overstates the benefit of perimeter shots; the basic EV argument E[Vz]=pz*rz (make probability times point value) is necessary but not sufficient because threes carry higher game-to-game variance and misses create different transition opportunities."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The EV-only overstatement is literally GSE's variance-aware valuation veto on perimeter-heavy profiles.",
+        "source_operator": "ev_overstates_perimeter",
+        "telemetry": "EV-only overstates perimeter; E[Vz]=pz*rz necessary not sufficient; threes higher variance; misses differ in transition opportunity"
+      }
+    },
+    {
+      "primitive_id": "moreyball_rim_and_arc",
+      "name": "Moreyball: offensive philosophy centered on rim and arc (Daryl Morey)",
+      "verbatim_quote": "Executives like Daryl Morey have built teams with offensive philosophies centered almost entirely on the rim and the arc",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Executives like Daryl Morey built teams with offensive philosophies centered almost entirely on the rim and the arc, popularizing 'Moreyball'; mathematically sound since rim attempts and threes yield higher expected returns than midrange, but the question is whether expected value alone is sufficient given continuation value, game-to-game variance, and defensive response pressure."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Moreyball EV rationale is the same expected-value baseline GSE augments with risk and continuation.",
+        "source_operator": "moreyball_rim_and_arc",
+        "telemetry": "Moreyball (Daryl Morey) rim+arc; rim/threes higher EV than midrange; question EV sufficiency given continuation/variance/defense"
+      }
+    },
+    {
+      "primitive_id": "rockets_27_straight_threes",
+      "name": "Downside-risk exemplar: 2018 Rockets miss 27 straight threes, Game 7 WCF",
+      "verbatim_quote": "the 2018 Houston Rockets missing 27 straight threes in Game 7 of the Western Conference Finals",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The clearest example of high-variance downside risk is the 2018 Houston Rockets missing 27 straight threes in Game 7 of the Western Conference Finals; over the finite sample of a single game or playoff series, a high-variance shot profile exposes a team to downside risk and cold streaks."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The cold-streak tail event is the same finite-sample downside risk GSE weights in variance-aware allocation.",
+        "source_operator": "rockets_27_straight_threes",
+        "telemetry": "2018 Rockets 27 straight missed threes Game 7 WCF; finite-sample high-variance downside/cold streaks"
+      }
+    },
+    {
+      "primitive_id": "fichman_38pct_equilibrium",
+      "name": "Fichman-O'Brien predicted 3pt equilibrium ~38% FGA; reached 2019, now 41.5%",
+      "verbatim_quote": "They predicted that the three-point revolution would reach its equilibrium at about 38% of field-goal attempts",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fichman and O'Brien's Modern Portfolio Theory application to basketball predicted the three-point revolution would reach equilibrium at about 38% of field-goal attempts; that number was reached in 2019, with the three-point attempt share since pushing further past their predicted equilibrium to 41.5%, motivating the question of whether teams now shoot too many threes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The exceeded-equilibrium prediction is the same empirical-test-of-theoretical-optimum GSE performs.",
+        "source_operator": "fichman_38pct_equilibrium",
+        "telemetry": "Fichman-O'Brien MPT predicted 3pt equilibrium ~38% FGA; reached 2019; now 41.5% (past equilibrium); 'too many threes?'"
+      }
+    },
+    {
+      "primitive_id": "fichman_non_transient_gap",
+      "name": "Gap: Fichman-O'Brien treated diets as non-transient (no rebound continuation)",
+      "verbatim_quote": "Fichman and O'Brien treated shot diets as non-transient, not taking account for rebound continuations",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fichman and O'Brien treated shot diets as non-transient, not accounting for rebound continuations; this paper refines their framework by accounting for sequential continuations of live possessions, so a drive to the rim captures both its immediate expected value and the subsequent opportunities it generates; the contribution fuses micro possession stochastic modeling with macro Modern Portfolio Theory."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The continuation refinement is the same transient-value-over-static-EV upgrade GSE makes.",
+        "source_operator": "fichman_non_transient_gap",
+        "telemetry": "Fichman-O'Brien non-transient (no rebound continuation); this paper adds sequential live-possession continuation; rim drive = immediate EV + subsequent opportunities; micro+macro fusion"
+      }
+    },
+    {
+      "primitive_id": "absorbing_mrp_possession",
+      "name": "Possession modeled as absorbing Markov reward process",
+      "verbatim_quote": "We model the possession as an absorbing Markov reward process",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The possession is modeled as an absorbing Markov reward process; the transient possession value is the return term in a portfolio objective, penalizing both shot-return variance and timeout-response instability; the half-court offense's transient-state continuation values inherently capture spatial transition probabilities."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The absorbing MRP is literally GSE's drive-expectancy kernel (same as Goldner 2012 Markov drive model).",
+        "source_operator": "absorbing_mrp_possession",
+        "telemetry": "possession = absorbing MRP; transient possession value = portfolio return; penalize variance + timeout instability; continuation captures spatial transitions"
+      }
+    },
+    {
+      "primitive_id": "made_missed_split_location",
+      "name": "18-state space: made/missed split by location+result; OR split by miss type",
+      "verbatim_quote": "Made and missed shots are split by location and result",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each possession maps into an 18-state space S={PS,RM,RX,MM,MX,C3M,C3X,NC3M,NC3X,FT1,FT2,FT3,ORR,ORM,ORC3,ORNC3,OR,EP}; PS is possession start, EP the absorbing end; made and missed shots are split by location and result, and offensive rebounds are split by the type of missed shot that created them; data are cached NBA live play-by-play 2021-22 through 2025-26."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The location-result-rebound state space is the same granular possession encoding GSE uses.",
+        "source_operator": "made_missed_split_location",
+        "telemetry": "18 states {PS,RM,RX,MM,MX,C3M,C3X,NC3M,NC3X,FT1-3,ORR,ORM,ORC3,ORNC3,OR,EP}; made/missed by location+result; OR by miss type; NBA PBP 2021-22..2025-26"
+      }
+    },
+    {
+      "primitive_id": "no_fastbreak_qualifier_removed",
+      "name": "No-fastbreak sample removes possessions with a live fastbreak qualifier",
+      "verbatim_quote": "after removing any modeled possession containing a live fastbreak qualifier",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In the no-fastbreak sample, after removing any modeled possession containing a live fastbreak qualifier, the diet was R/M/C3/NC3=0.313/0.277/0.105/0.305; the run removed 129,695 modeled fastbreak possessions and 302,262 modeled events; the full-sample league diet was 0.345/0.252/0.103/0.301; fastbreaks are excluded because their value depends on geometry not fully observed in standard play-by-play."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The unobserved-geometry exclusion is the same partial-observability handling GSE applies.",
+        "source_operator": "no_fastbreak_qualifier_removed",
+        "telemetry": "no-fastbreak diet 0.313/0.277/0.105/0.305; removed 129695 FB possessions/302262 events; full 0.345/0.252/0.103/0.301; FB geometry unobserved"
+      }
+    },
+    {
+      "primitive_id": "fundamental_matrix_transient_block",
+      "name": "Fundamental matrix N=(I-Q)^-1 = expected transient-state visits before absorption",
+      "verbatim_quote": "For transient analysis, remove EP and write the remaining transient block",
+      "page": 4,
+      "latex": "N=(I-Q)^{-1}=I+Q+Q^2+Q^3+\\cdots,\\qquad N_{ij}=E[\\text{visits to }j\\text{ before absorption}\\mid X_0=i]",
+      "symbol_and_unit_ledger": {
+        "P": "empirical transition matrix",
+        "Q": "transient block (EP removed)",
+        "I": "identity",
+        "N": "fundamental matrix",
+        "N_ij": "expected visits to transient state j from start i [visits]",
+        "EP": "absorbing end-of-possession state"
+      },
+      "assumptions": [
+        "The empirical transition matrix P_ij=Pr(X_{t+1}=j|X_t=i) has absorbing end state P_EP,EP=1; for transient analysis EP is removed and the remaining transient block Q retained; the fundamental matrix N=(I-Q)^-1=I+Q+Q^2+... has entry N_ij equal to the expected number of visits to transient state j before the possession ends when starting in state i. The fundamental-matrix equation is printed math-font and reconstructed here.",
+        "Fundamental matrix N=(I-Q)^-1 printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Absorbing chain; (I-Q) invertible since transient states eventually absorb",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fundamental matrix is literally GSE's expected-visits drive-expectancy kernel (same as Goldner 2012).",
+        "source_operator": "fundamental_matrix_transient_block",
+        "telemetry": "P_ij=Pr(Xt+1=j|Xt=i); P_EP,EP=1; Q=transient block; N=(I-Q)^-1=I+Q+Q^2+...; N_ij=expected visits to j before end from i"
+      }
+    },
+    {
+      "primitive_id": "diet_reallocates_shot_mass",
+      "name": "Diet P(pi) reallocates shot-outcome mass, preserving non-shot/FT/EP mass + make rates",
+      "verbatim_quote": "reallocates shot-outcome mass in the possession-start and offensive-rebound rows across the four shot categories",
+      "page": 4,
+      "latex": "\\Pr(\\text{row}\\to zM\\mid\\pi)=\\omega\\,\\pi_z p_z,\\qquad \\Pr(\\text{row}\\to zX\\mid\\pi)=\\omega\\,\\pi_z(1-p_z)",
+      "symbol_and_unit_ledger": {
+        "pi_z": "shot-category z share [fraction]",
+        "pz": "category z make rate [probability]",
+        "omega": "row field-goal outcome mass [probability]",
+        "zM/zX": "made/missed shot state for category z"
+      },
+      "assumptions": [
+        "For a candidate diet pi, P(pi) reallocates shot-outcome mass in the possession-start and offensive-rebound rows across the four shot categories while preserving empirical non-shot mass, free-throw mass, end-of-possession mass, and category make rates; with make rate pz and row field-goal outcome mass omega, Pr(row->zM|pi)=omega*pi_z*pz and Pr(row->zX|pi)=omega*pi_z*(1-pz), so pi changes the shot mix without pretending turnovers, fouls, and possession-ending events disappear. The row logic is printed math-font and reconstructed here.",
+        "Diet row-reallocation logic printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Turnovers/fouls/possession-ending events preserved (not removed by diet change)",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mass-preserving diet intervention is the same counterfactual transition reweighting GSE uses.",
+        "source_operator": "diet_reallocates_shot_mass",
+        "telemetry": "P(pi) reallocates PS+OR shot mass across 4 categories; preserves non-shot/FT/EP mass + make rates; Pr(row->zM)=omega*pi_z*pz, Pr(row->zX)=omega*pi_z*(1-pz)"
+      }
+    },
+    {
+      "primitive_id": "rim_miss_highest_continuation",
+      "name": "Rim misses create the most offensive-rebound continuation (0.384 vs ~0.26 threes)",
+      "verbatim_quote": "missed rim attempts have the highest offensive-rebound continuation opportunity",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The miss-to-offensive-rebound rows show rim misses create the most continuation: no-fastbreak Pr(ORR|RX)=0.384, Pr(ORM|MX)=0.270, Pr(ORC3|C3X)=0.258, Pr(ORNC3|NC3X)=0.260; full sample 0.391/0.271/0.262/0.260; corner-three and non-corner-three misses are nearly tied and both slightly below midrange misses, so missed rim attempts have the highest offensive-rebound continuation opportunity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The miss-type continuation asymmetry is the same rebound-continuation kernel GSE values per shot type.",
+        "source_operator": "rim_miss_highest_continuation",
+        "telemetry": "no-FB Pr(ORR|RX)=0.384/ORM|MX=0.270/ORC3|C3X=0.258/ORNC3|NC3X=0.260; full 0.391/0.271/0.262/0.260; rim misses highest continuation; C3~NC3<midrange"
+      }
+    },
+    {
+      "primitive_id": "transient_value_main_object",
+      "name": "Transient value VT=e_PS^T N(pi) r is the main value object (includes continuation)",
+      "verbatim_quote": "It is the main value object because it includes continuation after offensive rebounds, free throws, and possession survival",
+      "page": 7,
+      "latex": "V_1(\\pi)=e_{PS}^{\\mathsf T}Q(\\pi)r,\\qquad V_T(\\pi)=e_{PS}^{\\mathsf T}(I-Q(\\pi))^{-1}r=e_{PS}^{\\mathsf T}N(\\pi)r",
+      "symbol_and_unit_ledger": {
+        "r": "reward vector (immediate points on entering made states) [points]",
+        "e_PS": "possession-start unit vector",
+        "V1": "one-step (next-transition) value [points]",
+        "VT": "transient possession value before absorption [points]",
+        "N(pi)": "fundamental matrix under diet pi"
+      },
+      "assumptions": [
+        "The reward vector attaches immediate points to entering made states (rRM=rMM=2, rC3M=rNC3M=3), free-throw states their empirical expected contribution, miss/end states zero; the one-step value V1(pi)=e_PS^T Q(pi) r is the next-transition value (close to traditional first-shot EV), while the transient value VT(pi)=e_PS^T (I-Q(pi))^-1 r = e_PS^T N(pi) r is the possession value before absorption and the main value object because it includes continuation after offensive rebounds, free throws, and possession survival; comparing V1 and VT shows where continuation changes the ranking. The value equations are printed math-font and reconstructed here.",
+        "One-step and transient value equations printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "VT includes OR/FT/possession-survival continuation; V1 does not",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The transient-vs-one-step value is literally GSE's continuation-inclusive expected points over immediate EP.",
+        "source_operator": "transient_value_main_object",
+        "telemetry": "rRM=rMM=2, rC3M=rNC3M=3; V1=e_PS^T Q(pi) r (first-shot EV); VT=e_PS^T N(pi) r (possession value before absorption, main object); V1 vs VT shows continuation ranking change"
+      }
+    },
+    {
+      "primitive_id": "covariance_diversification",
+      "name": "Portfolio variance pi^T Sigma pi uses covariance (shot families co-move)",
+      "verbatim_quote": "We use covariance rather than independent category variance because shot families can co-move",
+      "page": 7,
+      "latex": "\\sigma^2(\\pi)=\\pi^{\\mathsf T}\\Sigma\\,\\pi,\\qquad \\Sigma=\\frac{1}{T-1}\\sum_{t=1}^{T}(g_t-\\bar g)(g_t-\\bar g)^{\\mathsf T}",
+      "symbol_and_unit_ledger": {
+        "gt,z": "game-t category-z return (points/attempts) [points per attempt]",
+        "Sigma": "game-level covariance matrix of category returns",
+        "pi": "shot-diet weight vector [fraction]",
+        "sigma^2(pi)": "portfolio variance [squared points per attempt]",
+        "T": "number of games"
+      },
+      "assumptions": [
+        "Game-level category returns gt,z = points from category z in game t / attempts from category z in game t; the covariance matrix Sigma=(1/(T-1)) sum (gt-gbar)(gt-gbar)^T; portfolio variance sigma^2(pi)=pi^T Sigma pi; covariance is used rather than independent category variance because shot families can co-move (a high-rim game and a high-corner-three game may not be independent), and covariance is the part of the model that lets diversification matter. The variance equations are printed math-font and reconstructed here.",
+        "Covariance and portfolio-variance equations printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Covariance (not independent variance) because shot families co-move",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The covariance-based portfolio variance is literally GSE's diversification-aware risk kernel.",
+        "source_operator": "covariance_diversification",
+        "telemetry": "gt,z=points/attempts per game; Sigma=(1/(T-1))sum(gt-gbar)(gt-gbar)^T; sigma^2(pi)=pi^T Sigma pi; covariance (co-moving families) enables diversification"
+      }
+    },
+    {
+      "primitive_id": "timeout_implicit_coaching_cost",
+      "name": "Timeout response cost E(pi)=||B s(pi)||^2 = implicit coaching adjustment cost",
+      "verbatim_quote": "This term functions as an implicit coaching adjustment cost, penalizing shot profiles that empirically trigger significant post-timeout movement",
+      "page": 8,
+      "latex": "E(\\pi)=\\|B\\,s(\\pi)\\|^2,\\qquad \\hat B^{\\mathsf T}=(X^{\\mathsf T}X+\\alpha I)^{-1}X^{\\mathsf T}Y",
+      "symbol_and_unit_ledger": {
+        "st": "interval pressure vector (scoring pressure by shot family + FT + OR)",
+        "B": "ridge-fitted timeout response matrix",
+        "s(pi)": "diet-induced pressure vector",
+        "E(pi)": "response cost (post-timeout movement magnitude)",
+        "alpha": "ridge regularization"
+      },
+      "assumptions": [
+        "Timeout intervals are split on team-attributed full timeouts; each interval has a pressure vector st of scoring pressure by shot family plus free-throw and offensive-rebound components; the response matrix is fit by ridge regression Delta st = B st + eps with B^T=(X^T X+alpha I)^-1 X^T Y; the response cost E(pi)=||B s(pi)||^2 functions as an implicit coaching adjustment cost, penalizing shot profiles that empirically trigger significant post-timeout movement. The response-cost equations are printed math-font and reconstructed here.",
+        "Ridge response matrix and response-cost equations printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Implicit defense adaptability; not explicit coverage modeling",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The timeout-response stability cost is the same opponent-adjustment / structural-stability veto GSE applies.",
+        "source_operator": "timeout_implicit_coaching_cost",
+        "telemetry": "intervals split on full timeouts; pressure st; ridge B^T=(X^T X+alpha I)^-1 X^T Y (Delta st=B st+eps); E(pi)=||B s(pi)||^2 = implicit coaching adjustment cost"
+      }
+    },
+    {
+      "primitive_id": "defense_regress_to_mean",
+      "name": "Defense uses timeout to regress an unsustainable advantage back toward the mean",
+      "verbatim_quote": "the opposing defense will use the timeout to structurally regress that specific advantage back toward the mean",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A shot diet can be efficient but structurally unstable; if an offense generates an unsustainably high volume of uncontested three-pointers, the opposing defense will use the timeout to structurally regress that specific advantage back toward the mean, which is why the response cost penalizes such profiles."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The timeout mean-reversion is the same strategic-instability mechanism GSE penalizes in shot profiles.",
+        "source_operator": "defense_regress_to_mean",
+        "telemetry": "efficient but structurally unstable diet; unsustainable uncontested 3pt volume -> defense timeout regresses advantage to mean"
+      }
+    },
+    {
+      "primitive_id": "normalization_mechanical_dominance",
+      "name": "Normalize value/variance/response before objective (else largest term dominates mechanically)",
+      "verbatim_quote": "Without this normalization, the largest numerical term can dominate the objective for a mechanical reason rather than a basketball reason",
+      "page": 8,
+      "latex": "\\max_{\\pi}\\ \\tilde V(\\pi)-\\lambda_1\\tilde{\\sigma^2}(\\pi)-\\lambda_2\\tilde E(\\pi),\\qquad \\tilde A=\\frac{A-A_{\\min}}{A_{\\max}-A_{\\min}}",
+      "symbol_and_unit_ledger": {
+        "Vtilde": "normalized transient value",
+        "sigma^2tilde": "normalized portfolio variance",
+        "Etilde": "normalized response cost",
+        "lambda1/lambda2": "risk/response penalty weights",
+        "Atilde": "min-max normalized term on candidate support"
+      },
+      "assumptions": [
+        "The objective max_pi Vtilde(pi) - lambda1 sigma^2tilde(pi) - lambda2 Etilde(pi) subject to 0<=pi_i<=1 and sum pi_i=1 normalizes each term on the candidate portfolio support via Atilde=(A-Amin)/(Amax-Amin), keeping value, variance, and response cost on comparable scales; without this normalization the largest numerical term can dominate the objective for a mechanical reason rather than a basketball reason; a grid search over lambda1,lambda2 traces the frontier, then constrained SLSQP solves over the continuous simplex. The objective and normalization are printed math-font and reconstructed here.",
+        "Objective and min-max normalization printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Normalization on candidate support; SLSQP over continuous simplex",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The scale normalization is the same comparable-scales discipline GSE enforces on multi-objective optimization.",
+        "source_operator": "normalization_mechanical_dominance",
+        "telemetry": "max Vtilde - lambda1 sigma^2tilde - lambda2 Etilde s.t. simplex; Atilde=(A-Amin)/(Amax-Amin); grid search lambda1/lambda2 -> SLSQP; avoids mechanical dominance"
+      }
+    },
+    {
+      "primitive_id": "knee_rule_vertical_tail",
+      "name": "dx/dy-tail knee rule: select frontier point where risk added faster than value",
+      "verbatim_quote": "this is the part of the frontier where the curve has entered its nearly vertical tail",
+      "page": 8,
+      "latex": "\\left|\\frac{dx}{dy}\\right|_m\\approx\\left|\\frac{x_{m+1}-x_m}{y_{m+1}-y_m}\\right|,\\qquad (x_m,y_m)=(\\sigma^2(\\pi_m),V(\\pi_m))",
+      "symbol_and_unit_ledger": {
+        "xm": "portfolio variance at frontier point m",
+        "ym": "transient value at frontier point m",
+        "|dx/dy|_m": "local tail slope (risk per unit value)"
+      },
+      "assumptions": [
+        "The main knee rule is the dx/dy-tail rule: order the upper efficient envelope as (xm,ym)=(sigma^2(pi_m),V(pi_m)), compute the local tail slope |dx/dy|_m ~ |(x_{m+1}-x_m)/(y_{m+1}-y_m)|, and select the high-value frontier point where this quantity is smallest — the part of the frontier where the curve has entered its nearly vertical tail, more risk being added faster than useful value; it is used as the main rule because it is conservative and matches risk-controlled shot allocation. The knee-rule slope is printed math-font and reconstructed here.",
+        "dx/dy-tail slope printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Select high-value point with smallest tail slope (nearly vertical tail)",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The conservative knee rule is the same risk-return frontier selection GSE uses.",
+        "source_operator": "knee_rule_vertical_tail",
+        "telemetry": "dx/dy-tail rule; envelope (sigma^2,V); local slope |(x_{m+1}-x_m)/(y_{m+1}-y_m)|; select smallest (vertical tail, risk>value); conservative"
+      }
+    },
+    {
+      "primitive_id": "response_min_near_L2",
+      "name": "Response-cost-minimizing diet ~ actual league diet (~ L2 minimum)",
+      "verbatim_quote": "the response cost yields approximately the same minimum as a standard L2 penalty",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The pi minimizing ||B s(pi)||^2 is approximately the actual league shooting distribution (full actual 0.345/0.252/0.103/0.301 vs minimum-response-cost 0.342/0.253/0.108/0.297), so the response cost yields approximately the same minimum as a standard L2 penalty, an expected result given its derivation from aggregated empirical data."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The response-cost minimum near the empirical diet is the same revealed-preference calibration GSE checks.",
+        "source_operator": "response_min_near_L2",
+        "telemetry": "min ||B s(pi)||^2 ~ actual league diet (0.342/0.253/0.108/0.297 vs actual 0.345/0.252/0.103/0.301); ~ L2 minimum (aggregated empirical derivation)"
+      }
+    },
+    {
+      "primitive_id": "asymmetric_cross_correlated_penalty",
+      "name": "Matrix B makes the penalty asymmetric (cross-correlated spatial adjustment cost)",
+      "verbatim_quote": "matrix B ensures that our penalty behaves asymmetrically, accurately capturing the cross-correlated cost of different spatial adjustments",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Although the response-cost minimum resembles an L2 penalty, matrix B ensures the penalty behaves asymmetrically, accurately capturing the cross-correlated cost of different spatial adjustments; negative diagonal entries indicate mean reversion within the same pressure channel while off-diagonal entries show how one pressure source is associated with movement in another."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The asymmetric cross-channel penalty is the same coupled-adjustment cost GSE models beyond independent L2.",
+        "source_operator": "asymmetric_cross_correlated_penalty",
+        "telemetry": "B asymmetric (cross-correlated spatial adjustment cost); negative diagonal = within-channel mean reversion; off-diagonal = cross-channel movement"
+      }
+    },
+    {
+      "primitive_id": "hybrid_fixed_fastbreak_recomposition",
+      "name": "Hybrid recommendation: (1-alpha)*no-FB optimum + alpha*observed fastbreak distribution",
+      "verbatim_quote": "The hybrid recommendation uses the no-fastbreak optimum and fastbreak distribution",
+      "page": 9,
+      "latex": "\\pi^{\\text{Hybrid}}_z=(1-\\alpha)\\pi^{NF*}_z+\\alpha\\,\\rho^{FB}_z,\\qquad \\alpha=N_{FB}/N_{All}",
+      "symbol_and_unit_ledger": {
+        "piNF*": "no-fastbreak optimal diet [fraction]",
+        "rhoFB": "observed fastbreak shot distribution [fraction]",
+        "alpha": "fastbreak-possession probability (league 0.105)",
+        "NFB/NAll": "fastbreak / total modeled possessions"
+      },
+      "assumptions": [
+        "To express a full-game recommendation, fastbreaks are added back as an observed fixed component rather than optimized: piHybrid_z=(1-alpha)piNF*_z + alpha rhoFB_z, where alpha=NFB/NAll is the fastbreak-possession probability (league alphaL=0.105) and rhoFB the observed fastbreak shot distribution (league R/M/C3/NC3=0.571/0.070/0.090/0.269); adding the observed fastbreak component raises rim share and lowers midrange share relative to the no-fastbreak optimum. The hybrid equation is printed math-font and reconstructed here.",
+        "Hybrid recomposition equation printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Fastbreak held fixed (geometry unobserved); only no-fastbreak component optimized",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fixed-component recomposition is the same partial-observability blend GSE uses (optimize observed, fix unobserved).",
+        "source_operator": "hybrid_fixed_fastbreak_recomposition",
+        "telemetry": "piHybrid=(1-alpha)piNF*+alpha rhoFB; alpha=NFB/NAll (league 0.105); rhoFB league 0.571/0.070/0.090/0.269; raises rim/lowers midrange vs no-FB optimum"
+      }
+    },
+    {
+      "primitive_id": "all_franchises_near_frontier",
+      "name": "All NBA franchises' empirical diets live close to the league efficient frontier",
+      "verbatim_quote": "the empirical shot diets of all NBA franchises live in close proximity to the league-wide efficient frontier",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The empirical shot diets of all NBA franchises live in close proximity to the league-wide efficient frontier, indicating modern offensive distributions are already highly optimized within the framework; marginal improvements can be made by slightly reducing three-point and midrange attempt shares while proportionally increasing rim volume; the no-fastbreak transient optimum (0.415/0.233/0.095/0.257) moves toward rim pressure while staying diversified, not a pure rim-and-three profile."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The near-frontier empirical finding is the same revealed-optimality benchmark GSE reports.",
+        "source_operator": "all_franchises_near_frontier",
+        "telemetry": "all franchises near league frontier (already optimized); marginal: reduce 3pt+midrange, increase rim; no-FB transient optimum 0.415/0.233/0.095/0.257 (diversified, not pure rim-and-three)"
+      }
+    },
+    {
+      "primitive_id": "ppp_scale_calibration",
+      "name": "Calibration: model 1.149 PPP ~ empirical league 1.15 PPP (scale aligned)",
+      "verbatim_quote": "close to the empirical league PPP of about 1.15, so the Markov reward scale is aligned with observed scoring",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "As a calibration check, the full-sample league transient frontier (fastbreak and non-fastbreak pooled) has selected model value 1.149 points per possession, close to the empirical league PPP of about 1.15, so the Markov reward scale is aligned with observed scoring."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The PPP scale-alignment check is the same calibration-to-observed-scoring GSE verifies.",
+        "source_operator": "ppp_scale_calibration",
+        "telemetry": "full-sample transient frontier value 1.149 PPP ~ empirical league ~1.15 PPP; Markov reward scale aligned with observed scoring"
+      }
+    },
+    {
+      "primitive_id": "no_universal_shot_diet",
+      "name": "No single universally optimal shot diet (team statistical ecosystems differ)",
+      "verbatim_quote": "Our results demonstrate that a single, universally optimal shot diet does not exist",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The results demonstrate that a single universally optimal shot diet does not exist, as teams have unique suggestions based on their statistical landscapes; the divergence between team-specific optima is generally narrower than the stark stylistic contrasts in the contemporary NBA (Denver and Boston maintain elite efficiency with opposite perimeter-volume philosophies); true offensive optimality is conditional on a team's statistical ecosystem and its unique personnel and offensive philosophy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The conditional-optimality finding is the same context-dependent allocation GSE enforces (no universal policy).",
+        "source_operator": "no_universal_shot_diet",
+        "telemetry": "no universal shot diet; team-specific optima narrower than stylistic contrasts; Denver/Boston opposite perimeter philosophies both elite; optimality conditional on ecosystem+personnel+philosophy"
+      }
+    },
+    {
+      "primitive_id": "washington_denver_shrinkage_asymmetry",
+      "name": "Shrinkage fixes Washington's small-sample noise but penalizes Denver's true extreme",
+      "verbatim_quote": "it correctly regresses Washington's small-sample noise to the mean but inappropriately penalizes Denver's statistically extreme, yet highly efficient, structural reality",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Washington's optimum is an extreme anomaly (almost entirely rim attempts); empirical shrinkage corrected Washington's benchmark and maintained stability across most of the league but introduced severe volatility into Denver's optimum; the authors hypothesize this highlights a fundamental limitation of the shrinkage estimator: it correctly regresses Washington's small-sample noise to the mean but inappropriately penalizes Denver's statistically extreme yet highly efficient structural reality."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The shrinkage noise-vs-true-extreme asymmetry is literally GSE's small-sample-shrinkage caution (same as field hockey).",
+        "source_operator": "washington_denver_shrinkage_asymmetry",
+        "telemetry": "Washington extreme anomaly (all rim); shrinkage fixes Washington but destabilizes Denver; regresses small-sample noise yet penalizes true efficient extreme; fundamental shrinkage limitation"
+      }
+    },
+    {
+      "primitive_id": "make_pct_held_constant",
+      "name": "Make percentage held constant when shot shares change (avoid overfitting)",
+      "verbatim_quote": "The model holds the empirical make percentage constant when shot shares change",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model holds the empirical make percentage constant when shot shares change, deliberately to avoid overfitting; further work with optical tracking data is required to estimate how efficiency changes when shot frequency changes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fixed-make-rate assumption is the same ceteris-paribus intervention scope GSE flags.",
+        "source_operator": "make_pct_held_constant",
+        "telemetry": "make% held constant when shares change (avoid overfitting); needs optical tracking to estimate efficiency-vs-frequency"
+      }
+    },
+    {
+      "primitive_id": "attempts_not_randomly_assigned",
+      "name": "Attempts not randomly assigned (hot hand / defense conceding / personnel good looks)",
+      "verbatim_quote": "attempts are not randomly assigned: a team may shoot more from a category because it is hot that day",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A simple regression of shot attempts on shooting percentage would be flawed because attempts are not randomly assigned: a team may shoot more from a category because it is hot that day, because the defense is conceding that shot, or because personnel created unusually good looks; this endogeneity is why make rates are held fixed rather than regressed on volume."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The attempt-selection endogeneity is literally GSE's selection-bias veto on volume-efficiency regressions.",
+        "source_operator": "attempts_not_randomly_assigned",
+        "telemetry": "attempts not random (hot hand / defense conceding / personnel good looks); regressing attempts on FG% flawed; endogeneity -> hold make rates fixed"
+      }
+    },
+    {
+      "primitive_id": "macro_not_granular_prescription",
+      "name": "Framework is macro prescription, not granular franchise tool (no personnel identification)",
+      "verbatim_quote": "The framework functions most effectively as a macro-level prescription rather than a granular optimization tool for individual franchises",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The framework functions most effectively as a macro-level prescription rather than a granular optimization tool for individual franchises; on a localized team-specific level it lacks critical personnel identification (superstar offensive gravity, lineup spacing, matchup pressure, individual shot-maker identities), so team-specific frontiers naturally mirror the macro league optimum; the directional recommendation is a robust baseline for the average franchise, not an absolute mandate."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The macro-vs-granular scope limit is the same personnel-resolution caveat GSE attaches to league-level models.",
+        "source_operator": "macro_not_granular_prescription",
+        "telemetry": "macro prescription not granular franchise tool; no personnel identification (gravity/spacing/matchup/shot-maker); team frontiers mirror macro; directional baseline not mandate"
+      }
+    },
+    {
+      "primitive_id": "timeout_only_implicit_defense",
+      "name": "No explicit defense model; timeout response is only implicit adaptability",
+      "verbatim_quote": "The timeout response matrix is only an implicit way to measure adaptability after pressure states",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The model does not explicitly model defense; the timeout response matrix is only an implicit way to measure adaptability after pressure states; proper defensive modeling would require more advanced data: exact coverage responses, help positioning, matchup changes, substitutions, and personnel-specific defensive choices."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The implicit-defense limitation is the same opponent-modeling scope GSE flags.",
+        "source_operator": "timeout_only_implicit_defense",
+        "telemetry": "no explicit defense; timeout response = implicit adaptability; proper defense needs coverage responses/help positioning/matchup changes/substitutions/personnel choices"
+      }
+    },
+    {
+      "primitive_id": "future_points_to_wins",
+      "name": "Future: map shot portfolios to expected win probability (points -> wins objective)",
+      "verbatim_quote": "future research should map these portfolios directly to expected win probability",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "While the framework identifies the macro-level efficient frontier for expected possession value, future research should map these portfolios directly to expected win probability; the central question is whether shifting the objective from expected points to expected wins naturally bridges the gap between the theoretical optimum and observed league averages, by optimizing the shot diet against game-state simulators to determine if the high-variance empirical distribution is the mathematical requirement for win maximization."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The points-to-wins objective shift is literally GSE's win-probability-over-expected-points valuation goal.",
+        "source_operator": "future_points_to_wins",
+        "telemetry": "future: map portfolios to expected win probability; shift objective expected points -> expected wins; game-state simulators; is high-variance empirical diet required for win maximization?"
+      }
+    },
+    {
+      "primitive_id": "shrinkage_league_pseudocounts",
+      "name": "Empirical-Bayes shrinkage: P=(n+K*Pleague)/(N+K), K=1000 pseudo-counts",
+      "verbatim_quote": "A positive K acts like league pseudo-counts in those sparse rows",
+      "page": 17,
+      "latex": "P^{(a,K)}_{ij}=\\frac{n^{(a)}_{ij}+K\\,P^{\\text{league}}_{ij}}{N^{(a)}_i+K}",
+      "symbol_and_unit_ledger": {
+        "n^(a)_ij": "team a observed transition count i->j [count]",
+        "N^(a)_i": "team a row total [count]",
+        "P^league_ij": "league transition probability [probability]",
+        "K": "league pseudo-count strength (K=0 empirical, K=1000 used)"
+      },
+      "assumptions": [
+        "As a robustness check, an empirical-Bayes version shrinks each team row toward the league transition matrix: P^(a,K)_ij=(n^(a)_ij + K P^league_ij)/(N^(a)_i + K), where n is the team's observed transition count, N the row total, and K=0 recovers the empirical matrix; a positive K acts like league pseudo-counts in sparse rows; K=1000 was the largest validation-grid candidate with the lowest validation MSE, small relative to each team's total so a stability check rather than identity replacement; K=0 vs K=1000 usually close but at least one team sensitive (max L1 diet distance 0.8575 hybrid / 0.9545 no-fastbreak). The shrinkage equation is printed math-font and reconstructed here.",
+        "Empirical-Bayes shrinkage equation printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Row-level stability for sparse rows; main result uses empirical (K=0), shrinkage as sensitivity",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The league-pseudo-count shrinkage is the same hierarchical stabilization GSE uses for sparse team rows.",
+        "source_operator": "shrinkage_league_pseudocounts",
+        "telemetry": "P^(a,K)=(n+K*Pleague)/(N+K); K=0 empirical; K=1000 (lowest val MSE, stability check); sparse-row pseudo-counts; K=0 vs 1000 max L1 0.8575/0.9545 (>=1 team sensitive)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "nbashotmrp2026_trace",
+      "think": "The retrocausal genealogy of this paper is the fusion of micro possession modeling with macro portfolio theory for basketball shot selection. Nirek Duma and Leo Benaharon, posting to arXiv in July 2026 as 2607.02933, ask whether modern NBA shot selection can be evaluated as a dynamic portfolio problem rather than a collection of isolated shot attempts. The work sits in the lineage of Skinner's optimal-stopping shot-selection model, Sandholtz and Bornn's Markov decision processes with dynamic transition probabilities, Cervone, D'Amour, Bornn, and Goldsberry's multiresolution stochastic possession model, and Pelechrinis and Goldsberry's anatomy of corner threes, while directly refining Fichman and O'Brien's Modern Portfolio Theory application to basketball, which predicted a three-point equilibrium near thirty-eight percent of field-goal attempts that the league reached in 2019 and has since pushed past to forty-one and a half percent. The gap the paper fills is that Fichman and O'Brien treated shot diets as non-transient, ignoring rebound continuations. The recursive theory of mind is the absorbing Markov reward process and its portfolio objective. Each possession maps into an eighteen-state space splitting made and missed shots by location and result and offensive rebounds by the type of miss that created them, with an absorbing end-of-possession state; removing that state leaves a transient block whose fundamental matrix N equals the inverse of I minus Q and counts expected visits before absorption. A candidate shot diet over rim, midrange, corner three, and non-corner three reallocates shot-outcome mass in the possession-start and offensive-rebound rows while preserving non-shot, free-throw, and possession-ending mass and the category make rates, so the transient value, the possession-start row of N times the reward vector, becomes the return term; it exceeds the one-step first-shot value precisely because it includes continuation after offensive rebounds, where rim misses create the most continuation at roughly zero point three eight four versus about zero point two six for threes. Cross-layer veto adjudication is the risk-and-response-augmented frontier and its empirical verdict. The objective maximizes normalized transient value minus a variance penalty and a timeout-response penalty, where portfolio variance uses the full game-level covariance because shot families co-move and diversification matters, and the response cost is the squared norm of a ridge-fitted timeout response matrix acting on the diet's pressure vector, an implicit coaching adjustment cost capturing the defense's tendency to regress an unsustainable advantage back toward the mean after a timeout. A grid search over the two penalty weights traces the frontier and a conservative dx/dy-tail knee rule selects the point where the curve enters its nearly vertical tail, adding risk faster than value. The verdict is that all NBA franchises already live close to the league efficient frontier, with only marginal gains from slightly reducing perimeter and midrange volume in favor of rim attempts, so the three-point revolution has pushed volume slightly past its optimal boundary and optimizing solely for expected value mathematically overstates the benefit of perimeter shots. The implementation invariants map directly onto GSE. The absorbing Markov reward process and its fundamental matrix are GSE's drive-expectancy kernel, the same structure as the Goldner 2012 Markov drive model already in the corpus; the transient-versus-one-step value is GSE's continuation-inclusive expected points over immediate expected points; the covariance-based portfolio variance is GSE's diversification-aware risk kernel; and the timeout-response cost is GSE's opponent-adjustment and structural-stability veto. The min-max normalization before the objective is GSE's comparable-scales discipline, the no-fastbreak optimization with fixed observed recomposition is GSE's partial-observability handling, and the points-per-possession calibration check, where the model's one point one four nine aligns with the empirical league one point one five, is GSE's scale-alignment verification. The outputs are shot-diet recommendations from play-by-play data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The team-level and shrinkage results make the conditional-optimality point concrete and honest. There is no single universally optimal shot diet because teams differ in shot efficiency, rebounding paths, covariance structure, and transition tendencies, yet the divergence between team-specific optima is narrower than the stark stylistic contrasts of the modern league, since Denver and Boston maintain elite efficiency with opposite perimeter philosophies. The shrinkage sensitivity exposes a fundamental limitation: an empirical-Bayes estimator that shrinks team rows toward the league with a thousand pseudo-counts correctly regresses Washington's small-sample noise, whose optimum was an almost-all-rim anomaly, but inappropriately penalizes Denver's statistically extreme yet highly efficient structural reality, introducing severe volatility into Denver's optimum, so the main analysis keeps the empirical team matrices and treats shrinkage as a sensitivity check. The caveats close the account with the scope and endogeneity limits that bound the prescription. The model deliberately holds make percentages constant when shot shares change because attempts are not randomly assigned — a team may shoot more from a category because it is hot, because the defense concedes it, or because personnel created good looks — so regressing attempts on shooting percentage would be flawed and optical tracking is needed to estimate efficiency versus frequency; the framework is a macro-level prescription rather than a granular franchise tool because it lacks personnel identification, superstar gravity, lineup spacing, and matchup pressure; fastbreaks are excluded because their geometry is unobserved; and defense is only implicit through the timeout response. The invariant for GSE is to carry the Markov-reward portfolio valuation, the continuation-inclusive transient value, the covariance-and-response risk penalties, the conservative frontier knee rule, and the partial-observability recomposition while recording the fixed-make-rate endogeneity caution, the shrinkage noise-versus-true-extreme asymmetry, and the future objective of mapping shot portfolios from expected points to expected win probability, treating the near-frontier empirical finding as evidence that elaborate variance-aware optimization yields only marginal gains over already-optimized league behavior.",
+      "retrocausal_genealogy": "Fuse micro possession modeling with macro portfolio theory for NBA shot selection. Nirek Duma, Leo Benaharon; arXiv:2607.02933v1 [stat.AP] 3 Jul 2026. Lineage: Skinner 2011 optimal stopping, Sandholtz-Bornn 2020 AOAS MDP dynamic transitions, Cervone-D'Amour-Bornn-Goldsberry 2016 JASA multiresolution possession, Pelechrinis-Goldsberry 2021 corner-3 anatomy; refines Fichman-O'Brien 2018 J Sports Analytics / 2019 JQAS Modern Portfolio Theory (predicted 3pt equilibrium ~38% FGA, reached 2019, now 41.5%; treated diets non-transient). Gap: add rebound continuation. Moreyball (Daryl Morey rim+arc); 2018 Rockets 27 straight missed threes Game 7 WCF downside exemplar.",
+      "theory_of_mind": "Possession = absorbing MRP; 18-state space (PS, made/missed by location R/M/C3/NC3, FT1-3, OR by miss type, EP absorbing). P_ij=Pr(Xt+1=j|Xt=i); Q transient block; N=(I-Q)^-1=I+Q+Q^2+... (expected visits). Diet pi=(piR,piM,piC3,piNC3) sum=1; P(pi) reallocates PS+OR shot mass preserving non-shot/FT/EP + make rates; Pr(row->zM)=omega*pi_z*pz. Reward rRM=rMM=2/rC3M=rNC3M=3; V1=e_PS^T Q(pi)r (one-step); VT=e_PS^T N(pi)r (transient, main, includes continuation). Rim misses highest OR continuation (0.384 vs ~0.26 threes). Variance sigma^2(pi)=pi^T Sigma pi (game-level covariance, co-moving families). Timeout response ridge B^T=(X^T X+alpha I)^-1 X^T Y; E(pi)=||B s(pi)||^2 (implicit coaching cost). Objective max Vtilde-lambda1 sigma^2tilde-lambda2 Etilde (min-max normalized); grid search + SLSQP; dx/dy-tail knee rule. Hybrid pi=(1-alpha)piNF*+alpha rhoFB (alphaL=0.105). Shrinkage P=(n+K Pleague)/(N+K), K=1000. Equations math-font reconstructed.",
+      "cross_layer_veto": "EV-only overstates perimeter; all franchises near league efficient frontier (already optimized); marginal reduce 3pt+midrange/increase rim; no-FB transient optimum 0.415/0.233/0.095/0.257 (diversified). Response-cost min ~ actual league diet (~L2) but B asymmetric (cross-correlated); negative diagonal mean reversion. Calibration 1.149 PPP ~ empirical 1.15. No universal diet (Denver/Boston opposite philosophies both elite); optimality conditional on ecosystem+personnel. Shrinkage fixes Washington small-sample noise (all-rim anomaly) but penalizes Denver true efficient extreme (destabilizes) -> empirical main, shrinkage sensitivity (K=0 vs 1000 max L1 0.8575/0.9545). Make% held constant (attempts not random: hot/defense/personnel -> endogeneity); macro not granular (no personnel/gravity/spacing); fastbreaks excluded (geometry unobserved); defense only implicit (timeout). Future: expected points -> expected win probability (game-state simulators). Data NBA PBP 2021-22..2025-26; no-FB removed 129695 FB possessions. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A dynamic-portfolio treatment of NBA shot selection models each possession as an absorbing Markov reward process whose fundamental matrix yields a continuation-inclusive transient value, then optimizes a rim/midrange/corner-three/non-corner-three shot diet against normalized transient value minus a covariance-based variance penalty and a ridge-fitted timeout-response stability cost, selecting a conservative efficient-frontier knee; the result is that all NBA franchises already operate near the league frontier with only marginal gains from shifting volume toward rim attempts, demonstrating that optimizing solely for expected value overstates perimeter shots, that no universal shot diet exists, and that shrinkage can correctly regress small-sample noise while inappropriately penalizing a genuinely efficient extreme.",
+  "gsi_mapping": "GSI treats possession absorbing MRP (18 states; N=(I-Q)^-1 expected visits); diet pi over R/M/C3/NC3 (sum=1) reallocates PS+OR shot mass preserving non-shot/FT/EP + make rates (Pr(row->zM)=omega*pi_z*pz); reward 2/2/3/3; V1=e_PS^T Q(pi)r vs VT=e_PS^T N(pi)r (continuation main); rim misses highest OR continuation (no-FB 0.384/0.270/0.258/0.260); covariance sigma^2(pi)=pi^T Sigma pi (co-moving families); timeout ridge B^T=(X^T X+alpha I)^-1 X^T Y, E(pi)=||B s(pi)||^2 (implicit coaching cost, defense regresses to mean); objective max Vtilde-lambda1 var-lambda2 E (min-max normalized), grid+SLSQP, dx/dy-tail knee; no-FB diet 0.313/0.277/0.105/0.305 (removed 129695 FB), full 0.345/0.252/0.103/0.301; hybrid pi=(1-alpha)piNF*+alpha rhoFB (alphaL=0.105, rhoFB 0.571/0.070/0.090/0.269); all franchises near frontier, no-FB transient optimum 0.415/0.233/0.095/0.257; response min ~ actual (~L2) but B asymmetric; calibration 1.149 PPP~1.15; no universal diet (Denver/Boston); shrinkage P=(n+K Pleague)/(N+K) K=1000 fixes Washington noise/penalizes Denver extreme (max L1 0.8575/0.9545); make% constant (attempts not random endogeneity); macro not granular; fastbreaks excluded; defense implicit; future points->wins; refines Fichman-O'Brien (38%->41.5%, non-transient); equations math-font reconstructed.",
+  "gse_mapping": "GSE lifts the absorbing-MRP drive-expectancy kernel and fundamental matrix (same as Goldner 2012), the continuation-inclusive transient value over one-step EP, the covariance-based diversification-aware portfolio variance, the ridge timeout-response cost as its opponent-adjustment/structural-stability veto, the min-max-normalized multi-objective with conservative dx/dy-tail frontier knee, the no-fastbreak-plus-fixed-recomposition partial-observability handling, and the PPP scale-alibration check; treats the fixed-make-rate endogeneity caution (attempts not randomly assigned), the shrinkage noise-versus-true-extreme asymmetry (Washington vs Denver), the macro-not-granular personnel scope, and the implicit-defense limitation as honest bounds, and the expected-points-to-expected-wins objective shift as its valuation goal; all outputs are shot-diet recommendations from play-by-play data, never sportsbook lines, and the near-frontier finding shows variance-aware optimization yields only marginal gains over already-optimized league behavior."
+}

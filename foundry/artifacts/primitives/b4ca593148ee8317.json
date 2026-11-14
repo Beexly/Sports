@@ -1,0 +1,785 @@
+{
+ "book_id": "b4ca593148ee8317",
+ "source_status": "COMPLETE",
+ "source_note": "Jacob Eisenstein, Introduction to Natural Language Processing. The work was published by MIT Press in 2019; the local file is the author's draft dated November 13, 2018, marked 'Under contract with MIT Press, shared under CC-BY-NC-ND license.' Local file: books-d-models/Eisenstein-2019-IntroductionToNaturalLanguageProcessing-Draft.pdf, 3,359,237 bytes; full sha256 scan digest (over str(size) encoded plus full file bytes) b4ca593148ee83175d8cb65893a1d01355f93912fb72ad1d9f108c3b963540be, book_id b4ca593148ee8317. Extracted text is high quality (born-digital typeset PDF, 26,886 lines); mathematical glyphs and some diacritics carry extraction artifacts, so verbatim quotes were drawn from clean prose passages and verified as contiguous substrings of the extracted text under the gatekeeper normalization. Catalog note: the filename carries the 2019 publication year; the draft itself is dated November 13, 2018. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "bag_of_words_representation",
+   "name": "Bag of words: a document is a vector of word counts, with word order discarded",
+   "verbatim_quote": "The object x is a vector, but it is often called a bag of words, because it includes only information about the count of each word, and not the order in which the words appear.",
+   "page": "Section 2.1 (book p. 13); text lines 1113-1116",
+   "latex": "\\Psi(x, y) = \\theta \\cdot f(x, y)",
+   "symbol_and_unit_ledger": {
+    "x": "count vector over the vocabulary; component x_j is the count of word j (unitless counts)",
+    "theta": "weight vector, one score per word per label",
+    "f(x, y)": "feature function extracting the count features scored for label y",
+    "Psi(x, y)": "scalar compatibility score of document x with label y"
+   },
+   "assumptions": [
+    "Word order carries no information needed for the labeling decision",
+    "Each word contributes independently to the score through its count"
+   ],
+   "breakdown_regime": "Fails whenever meaning depends on order, negation, or scope: 'man bites dog' and 'dog bites man' induce the identical count vector, and reversals such as 'not pleasant' are invisible to the representation.",
+   "domain": "text classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any unstructured input stream can be given a first usable representation as a sparse count vector over a fixed vocabulary of event types, which a linear scorer can then weight; this is the template for turning raw text feeds into engine features.",
+    "telemetry": "token counts per document from reports, transcripts, and news text, with document timestamps",
+    "source_operator": "bag_of_words_representation"
+   }
+  },
+  {
+   "primitive_id": "naive_bayes_generative_classifier",
+   "name": "Naive Bayes: classify by a generative model in which features are conditionally independent given the label",
+   "verbatim_quote": "You can plug in any probability distribution to the generative story and it will still be Naı̈ve Bayes, as long as you are making the \"naı̈ve\" assumption that the features are conditionally independent, given the label.",
+   "page": "Section 2.2.1, footnote 10 (book p. 19); text lines 1443-1448",
+   "latex": "\\hat{y} = \\arg\\max_y \\log p(x \\mid y; \\phi) + \\log p(y; \\mu)",
+   "symbol_and_unit_ledger": {
+    "y-hat": "predicted label",
+    "p(x | y; phi)": "label-conditional likelihood of the document under parameters phi (probability)",
+    "p(y; mu)": "label prior under parameters mu (probability)",
+    "x": "bag of words count vector for the document"
+   },
+   "assumptions": [
+    "Features are conditionally independent given the label",
+    "Instances are independent and identically distributed",
+    "The label is drawn first and the text is generated from the label-conditional distribution"
+   ],
+   "breakdown_regime": "The independence assumption is false for real text, so the posterior probabilities are typically overconfident and poorly calibrated even when the argmax label is right; correlated or redundant features are double-counted.",
+   "domain": "probabilistic classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A generative baseline for text triage: estimate label priors and label-conditional word rates from labeled examples, then score new documents by log likelihood plus log prior; useful as the transparent first pass that later discriminative components must beat.",
+    "telemetry": "labeled document corpora with word counts; per-label token frequencies",
+    "source_operator": "naive_bayes_generative_classifier"
+   }
+  },
+  {
+   "primitive_id": "laplace_smoothing_pseudocounts",
+   "name": "Laplace smoothing: add a pseudocount alpha to every count so no estimated probability is zero",
+   "verbatim_quote": "One solution is to smooth the probabilities, by adding a \"pseudocount\" of α to each count, and then normalizing.",
+   "page": "Section 2.2.4 (book p. 22); text lines 1585-1589; equation [2.30]",
+   "latex": "\\phi_{y,j} = \\frac{\\alpha + \\mathrm{count}(y, j)}{V\\alpha + \\sum_{j'} \\mathrm{count}(y, j')}",
+   "symbol_and_unit_ledger": {
+    "phi_{y,j}": "smoothed probability of word j under label y (probability)",
+    "alpha": "pseudocount hyperparameter (unitless count)",
+    "count(y, j)": "observed count of word j in training documents with label y",
+    "V": "vocabulary size"
+   },
+   "assumptions": [
+    "Every label-word pair is possible a priori, so zero observed counts reflect sampling sparsity rather than impossibility",
+    "A single global pseudocount alpha is an adequate prior strength for all words"
+   ],
+   "breakdown_regime": "With very large vocabularies a fixed alpha can swamp the data or, if too small, still leave near-zero estimates; it treats rare informative words and common words identically, which the Kneser-Ney analysis later shows is the wrong redistribution.",
+   "domain": "parameter estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine rule that no unobserved event gets probability zero: reserve prior mass for unseen outcomes in every categorical estimate, with the pseudocount acting as an explicit, tunable statement of how much evidence is required to move off the prior.",
+    "telemetry": "category counts per class from labeled data; vocabulary or outcome-space size",
+    "source_operator": "laplace_smoothing_pseudocounts"
+   }
+  },
+  {
+   "primitive_id": "perceptron_mistake_driven_update",
+   "name": "Perceptron: online discriminative learning that updates weights only on mistakes, with a convergence guarantee on separable data",
+   "verbatim_quote": "Linear separability is important because of the following guarantee: if your data is linearly separable, then the perceptron algorithm will find a separator (Novikoff, 1962).",
+   "page": "Section 2.3.1 (book p. 26); text lines 1768-1770",
+   "latex": "\\theta \\cdot f(x^{(i)}, y^{(i)}) \\ge \\rho + \\max_{y' \\ne y^{(i)}} \\theta \\cdot f(x^{(i)}, y')",
+   "symbol_and_unit_ledger": {
+    "theta": "weight vector",
+    "f(x, y)": "feature vector for instance x under label y",
+    "rho": "margin: minimum score gap between the true label and every rival label (score units)",
+    "i": "training instance index"
+   },
+   "assumptions": [
+    "Training data are linearly separable with some margin rho > 0 for the guarantee to apply",
+    "Features are fixed in advance; only the weights are learned"
+   ],
+   "breakdown_regime": "On non-separable data the algorithm need not converge and can cycle indefinitely; it returns no probability, so its scores cannot be interpreted as confidence, and it is sensitive to instance ordering.",
+   "domain": "online learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Mistake-driven updating is the template for incremental correction in the engine: when a scored prediction is wrong, move the weights toward the features of the correct outcome and away from the predicted one, and make no update when the prediction already stands.",
+    "telemetry": "streamed prediction outcomes with feature vectors and realized labels",
+    "source_operator": "perceptron_mistake_driven_update"
+   }
+  },
+  {
+   "primitive_id": "margin_hinge_loss",
+   "name": "Margin (hinge) loss: zero loss only when the true label beats every alternative by a margin of at least 1",
+   "verbatim_quote": "The loss is zero if there is a margin of at least 1 between the score for the true label and the best-scoring alternative ŷ. This is almost identical to the perceptron loss, but the hinge point is shifted to the right, as shown in Figure 2.2. The margin loss is a convex upper bound on the zero-one loss.",
+   "page": "Section 2.4.1 (book p. 31); text lines 2005-2009; equations [2.44]-[2.45]",
+   "latex": "\\ell_{\\mathrm{MARGIN}}(\\theta; x^{(i)}, y^{(i)}) = \\left(1 - \\gamma(\\theta; x^{(i)}, y^{(i)})\\right)_+",
+   "symbol_and_unit_ledger": {
+    "gamma": "score gap between the true label and the best-scoring alternative (score units)",
+    "(x)_+": "positive part, max(0, x)",
+    "ell_MARGIN": "per-instance loss (unitless)"
+   },
+   "assumptions": [
+    "Scores are on a scale where a gap of 1 is a meaningful required confidence",
+    "A convex surrogate is an acceptable stand-in for the zero-one loss"
+   ],
+   "breakdown_regime": "The loss keeps pushing even on correctly classified instances whose margin is below 1, so outliers and mislabeled instances can dominate training; the resulting scores are margins, not probabilities.",
+   "domain": "loss functions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A decision rule for the engine: a signal is not actionable merely because it ranks first; it must clear its nearest alternative by an explicit margin, and the size of the shortfall is a differentiable training signal.",
+    "telemetry": "score gaps between the top candidate and the runner-up across candidate sets",
+    "source_operator": "margin_hinge_loss"
+   }
+  },
+  {
+   "primitive_id": "logistic_regression_conditional_model",
+   "name": "Logistic regression: model the conditional probability of the label directly with an exponentiated, normalized linear score",
+   "verbatim_quote": "Logistic regression combines advantages of discriminative and probabilistic classifiers.",
+   "page": "Section 2.5 (book p. 35); text lines 2205-2213; equation [2.56]",
+   "latex": "p(y \\mid x; \\theta) = \\frac{\\exp(\\theta \\cdot f(x, y))}{\\sum_{y' \\in Y} \\exp(\\theta \\cdot f(x, y'))}",
+   "symbol_and_unit_ledger": {
+    "p(y | x; theta)": "conditional probability of label y given instance x (probability)",
+    "theta . f(x, y)": "linear compatibility score of x with label y",
+    "Y": "the set of possible labels; the denominator normalizes over it"
+   },
+   "assumptions": [
+    "The log-odds of the label are linear in the features",
+    "Training instances are independent; the feature function is fixed in advance"
+   ],
+   "breakdown_regime": "Cannot represent label boundaries that are nonlinear in the given features; with separable data the unregularized optimum runs off to infinite weights, and correlated features make individual weights uninterpretable.",
+   "domain": "probabilistic classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's default calibrated scorer: exponentiate a linear evidence score and normalize over the candidate set to obtain probabilities that can be thresholded, combined, and audited, rather than raw rankings.",
+    "telemetry": "feature vectors with labeled outcomes; held-out log-likelihood for calibration checks",
+    "source_operator": "logistic_regression_conditional_model"
+   }
+  },
+  {
+   "primitive_id": "feedforward_hidden_layer",
+   "name": "Feedforward network: predict through a hidden layer of learned latent features, each activated to a degree by the input",
+   "verbatim_quote": "If the hidden layer is viewed as a set of latent features, then the sigmoid function in Equation 3.9 represents the extent to which each of these features is \"activated\" by a given input.",
+   "page": "Section 3.2.1 (book p. 50); text lines 2923-2926; equations [3.9]-[3.10]",
+   "latex": "z = \\sigma(\\Theta^{(x \\to z)} x), \\qquad p(y \\mid x; \\Theta, b) = \\mathrm{SoftMax}(\\Theta^{(z \\to y)} z + b)",
+   "symbol_and_unit_ledger": {
+    "z": "hidden layer activation vector (unitless activations)",
+    "sigma": "sigmoid function applied elementwise, range (0, 1)",
+    "Theta^(x->z), Theta^(z->y)": "weight matrices from input to hidden layer and hidden layer to output",
+    "b": "output offset (bias) vector"
+   },
+   "assumptions": [
+    "Useful intermediate features exist that are not observed even in training data and can be learned purely from the input-output mapping",
+    "A fixed architecture (layer sizes, activation) is chosen in advance"
+   ],
+   "breakdown_regime": "Training is non-convex, so results depend on initialization and optimization; hidden units have no guaranteed interpretation, and capacity grows into overfitting without regularization or held-out control.",
+   "domain": "neural networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stacked representation learning: let an intermediate layer invent the features that the final scorer needs, instead of hand-specifying every feature; the engine uses this wherever raw inputs are known to interact in ways a fixed feature list misses.",
+    "telemetry": "raw input vectors with labeled outcomes; hidden activation distributions for drift checks",
+    "source_operator": "feedforward_hidden_layer"
+   }
+  },
+  {
+   "primitive_id": "backpropagation_computation_graph",
+   "name": "Backpropagation: compute all gradients of a loss by sequencing and caching local derivatives on a computation graph",
+   "verbatim_quote": "This combination of sequencing, caching, and differentiation is known as backpropagation. It can be generalized to any directed acyclic computation graph.",
+   "page": "Section 3.3.1 (book p. 55); text lines 3191-3193",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The computation is a directed acyclic graph of differentiable operations",
+    "Local derivatives of each node with respect to its parents are available"
+   ],
+   "breakdown_regime": "Gradients vanish or explode through long chains of saturating or badly scaled operations; discrete or non-differentiable steps (sampling, argmax) block the gradient entirely and need surrogates or estimators.",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Credit assignment through any differentiable pipeline: cache intermediate values on the forward pass, then propagate error signals backward so every parameter learns its share of the final loss; this is what makes multi-stage learned components trainable end to end.",
+    "telemetry": "loss values and gradient norms per layer during training runs",
+    "source_operator": "backpropagation_computation_graph"
+   }
+  },
+  {
+   "primitive_id": "dropout_regularization",
+   "name": "Dropout: randomly zero computation nodes during training so the network cannot co-adapt to any single feature or unit",
+   "verbatim_quote": "Another approach to controlling model complexity is dropout, which involves randomly setting some computation nodes to zero during training (Srivastava et al., 2014).",
+   "page": "Section 3.3.2 (book p. 57); text lines 3298-3299",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Randomly corrupting activations at train time approximates averaging over an ensemble of subnetworks",
+    "The dropout rate rho is tuned on development data (the text reports rho = 0.5 for hidden units, 0.2 for inputs)"
+   ],
+   "breakdown_regime": "With small datasets or already underfitting models, dropout only adds noise and slows convergence; it interacts with other regularizers and with batch statistics, and the train-time stochasticity must be removed or rescaled at prediction time.",
+   "domain": "neural networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Robustness by forced redundancy: randomly ablating inputs or internal features during training prevents the engine from resting a conclusion on one fragile signal, the same discipline as stress-testing a conclusion by removing its strongest single support.",
+    "telemetry": "per-feature ablation deltas on validation performance; dropout rate used per model",
+    "source_operator": "dropout_regularization"
+   }
+  },
+  {
+   "primitive_id": "precision_recall_fmeasure",
+   "name": "Precision, recall, and F-measure: separate the two directions of classification error instead of reporting accuracy alone",
+   "verbatim_quote": "Classifiers that make a lot of false positives have low precision: they predict the label even when it isn't there. Classifiers that make a lot of false negatives have low recall: they fail to predict the label, even when it is there.",
+   "page": "Section 4.4.1 (book p. 81); text lines 4399-4402; equations [4.5]-[4.7]",
+   "latex": "\\mathrm{Recall} = \\frac{TP}{TP + FN}, \\qquad \\mathrm{Precision} = \\frac{TP}{TP + FP}, \\qquad F = \\frac{2rp}{r + p}",
+   "symbol_and_unit_ledger": {
+    "TP, FP, FN": "counts of true positives, false positives, false negatives for a chosen label (counts)",
+    "r, p": "recall and precision (unitless ratios in [0, 1])",
+    "F": "harmonic mean of recall and precision (unitless)"
+   },
+   "assumptions": [
+    "A single label of interest is fixed; metrics are defined per label and then averaged for multiclass problems",
+    "True negatives are deliberately excluded from all three statistics"
+   ],
+   "breakdown_regime": "Precision is undefined for a classifier that never predicts the label (the text notes the 0/0 case); all three metrics depend on the chosen threshold and on class prevalence, so they are not comparable across datasets with different base rates.",
+   "domain": "evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine classifier and extractor is reported with the two error directions separated: how much of what it flags is real (precision) and how much of what is real it catches (recall), with the operating point chosen by which error costs more.",
+    "telemetry": "confusion counts per label on held-out data; cost ratio of false positives to false negatives",
+    "source_operator": "precision_recall_fmeasure"
+   }
+  },
+  {
+   "primitive_id": "kmeans_clustering",
+   "name": "K-means: partition data by alternating between assigning points to the nearest center and recomputing centers as cluster means",
+   "verbatim_quote": "K-means iterates between updates to the assignments and the centers: 1. each instance is placed in the cluster with the closest center; 2. each center is recomputed as the average over points in the cluster.",
+   "page": "Section 5.1.1 (book pp. 96-97); text lines 5089-5095; Algorithm 8",
+   "latex": "z^{(i)} \\leftarrow \\arg\\min_k \\|x^{(i)} - \\nu_k\\|_2",
+   "symbol_and_unit_ledger": {
+    "z^(i)": "cluster assignment of instance i, in {1, ..., K}",
+    "nu_k": "center (mean vector) of cluster k, same units as x",
+    "|| . ||_2": "squared Euclidean distance in feature space"
+   },
+   "assumptions": [
+    "Clusters are well described by a single center with Euclidean distance",
+    "The number of clusters K is fixed in advance"
+   ],
+   "breakdown_regime": "Converges only to a local optimum that depends on initialization; elongated, nested, or differently scaled clusters are split wrongly, and the squared Euclidean objective is dragged by outliers.",
+   "domain": "unsupervised learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Regime discovery: cluster historical situations or documents into a small set of centroids so the engine can reason about which regime a new case belongs to and retrieve comparable past cases by nearest center.",
+    "telemetry": "feature vectors of historical cases; within-cluster dispersion and centroid drift over time",
+    "source_operator": "kmeans_clustering"
+   }
+  },
+  {
+   "primitive_id": "expectation_maximization_latent_variables",
+   "name": "Expectation-maximization: fit a latent-variable model by alternating between a posterior distribution over the latent labels and parameter updates",
+   "verbatim_quote": "But marginalizing over the labels couples these parameters, making direct optimization of log p(x) intractable. We will approximate the log-likelihood by introducing an auxiliary variable q (i) , which is a distribution over the label set Z = {1, 2, . . . , K}.",
+   "page": "Section 5.1.2 (book p. 99); text lines 5168-5172; equations [5.3]-[5.5]",
+   "latex": "\\log p(x; \\phi, \\mu) = \\sum_{i=1}^{N} \\log \\sum_{z=1}^{K} p(x^{(i)} \\mid z; \\phi)\\, p(z; \\mu)",
+   "symbol_and_unit_ledger": {
+    "z": "latent (unobserved) label of an instance, in {1, ..., K}",
+    "q^(i)": "auxiliary distribution over the latent label set for instance i (probabilities)",
+    "phi, mu": "observation parameters and latent-class prior parameters",
+    "p(x; phi, mu)": "marginal likelihood of the observed data with labels summed out (probability)"
+   },
+   "assumptions": [
+    "The observed data are generated by a mixture over a finite set of latent classes with the stated conditional distributions",
+    "Alternating optimization of the bound is an acceptable substitute for direct maximization of the marginal likelihood"
+   ],
+   "breakdown_regime": "The marginal likelihood is non-convex, so EM converges to local optima and is sensitive to initialization; latent classes need not correspond to any real categories, and label switching makes runs hard to compare.",
+   "domain": "unsupervised learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Estimation when the decisive variable is never observed: maintain a soft posterior over the hidden state for each case, re-estimate parameters against those soft assignments, and iterate; the engine uses this pattern wherever ground truth labels are structurally unavailable.",
+    "telemetry": "unlabeled case streams; posterior class probabilities per case across iterations",
+    "source_operator": "expectation_maximization_latent_variables"
+   }
+  },
+  {
+   "primitive_id": "domain_adaptation_transfer",
+   "name": "Domain adaptation: beat direct transfer by learning from data in both the source and target domains",
+   "verbatim_quote": "Domain adaptation algorithms attempt to do better than direct transfer by learning from data in both domains. There are two main families of domain adaptation algorithms, depending on whether any labeled data is available in the target domain.",
+   "page": "Section 5.4 (book p. 111); text lines 5799-5801",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Source and target domains share enough structure that source training is informative for the target",
+    "The algorithm family is chosen by whether any labeled target-domain data exists"
+   ],
+   "breakdown_regime": "When feature meanings themselves shift across domains (the text's example: 'terrifying' is praise for movies and a complaint for appliances), transfer can be worse than a small in-domain model; the text cites an out-of-domain classifier suffering twice the error rate of an in-domain one.",
+   "domain": "transfer learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A standing warning and procedure for the engine: performance measured on one distribution does not transfer to another by default; when the input distribution shifts, re-estimate with target-domain data and re-measure error before trusting carried-over parameters.",
+    "telemetry": "per-domain error rates; feature distribution comparisons between training and deployment data",
+    "source_operator": "domain_adaptation_transfer"
+   }
+  },
+  {
+   "primitive_id": "ngram_markov_language_model",
+   "name": "N-gram language model: factor a sequence probability by the chain rule and condition each word on only the previous n-1 words",
+   "verbatim_quote": "To solve this problem, n-gram models make a crucial simplifying approximation: they condition on only the past n − 1 words.",
+   "page": "Section 6.1 (book p. 127); text lines 6440-6442; equations [6.9]-[6.10]",
+   "latex": "p(w_1, \\ldots, w_M) \\approx \\prod_{m=1}^{M} p(w_m \\mid w_{m-1}, \\ldots, w_{m-n+1})",
+   "symbol_and_unit_ledger": {
+    "w_m": "the token at position m",
+    "n": "model order; conditioning context is the previous n-1 tokens",
+    "M": "sequence length in tokens",
+    "p(w)": "probability of the full sequence (probability)"
+   },
+   "assumptions": [
+    "Markov assumption: the next word depends only on the previous n-1 words",
+    "Stationarity: the same conditional distribution holds at every position"
+   ],
+   "breakdown_regime": "Long-range dependencies (agreement, topic, discourse structure) are invisible beyond the n-1 word window, and the number of contexts grows as V^n, so most long n-grams are never observed and smoothing dominates the estimates.",
+   "domain": "language modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Local sequence priors: score how expected a short sequence is given only its immediate predecessors, a cheap baseline for flagging anomalous phrasing or unlikely event sequences before heavier models are consulted.",
+    "telemetry": "token or event streams with counts of length-n subsequences",
+    "source_operator": "ngram_markov_language_model"
+   }
+  },
+  {
+   "primitive_id": "kneser_ney_smoothing",
+   "name": "Kneser-Ney smoothing: redistribute discounted probability mass to unseen n-grams in proportion to continuation counts, the number of contexts a word appears in",
+   "verbatim_quote": "Kneser-Ney smoothing is based on absolute discounting, but it redistributes the resulting probability mass in a different way from Katz backoff.",
+   "page": "Section 6.2.4 (book p. 133); text lines 6698-6700; equations [6.23]-[6.24]",
+   "latex": "p_{\\mathrm{continuation}}(w) = \\frac{|\\{u : \\mathrm{count}(w, u) > 0\\}|}{\\sum_{w' \\in V} |\\{u : \\mathrm{count}(w', u) > 0\\}|}",
+   "symbol_and_unit_ledger": {
+    "p_continuation(w)": "probability reserved for word w in a context where it was never observed (probability)",
+    "count(w, u)": "observed count of word w in context u",
+    "u": "a context of undefined length",
+    "d": "absolute discount subtracted from every observed count"
+   },
+   "assumptions": [
+    "A word's usefulness in a new context is predicted by the diversity of contexts it has already appeared in, not by its raw frequency",
+    "A single absolute discount d is adequate across counts"
+   ],
+   "breakdown_regime": "Continuation counts are still estimated from the same sparse data, so very rare words get unreliable versatility estimates; the method is specific to count-based n-gram models and was, in the text's words, the dominant technique only until neural language models arrived.",
+   "domain": "language modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Versatility weighting for the engine: when reserving probability for unseen combinations, allocate it by how many distinct contexts an entity has appeared in, not by raw frequency; a versatile entity is a better bet in a novel context than a frequent but one-context entity.",
+    "telemetry": "entity-by-context incidence counts (distinct contexts per entity), not just totals",
+    "source_operator": "kneser_ney_smoothing"
+   }
+  },
+  {
+   "primitive_id": "perplexity_evaluation",
+   "name": "Perplexity: held-out likelihood of a language model, transformed so that lower is better and a uniform model scores the vocabulary size",
+   "verbatim_quote": "Lower perplexities correspond to higher likelihoods, so lower scores are better on this metric - it is better to be less perplexed.",
+   "page": "Section 6.4.2 (book p. 140); text lines 7037-7038; equation [6.42]",
+   "latex": "\\mathrm{Perplex}(w) = 2^{-\\ell(w)/M}",
+   "symbol_and_unit_ledger": {
+    "ell(w)": "total log2 likelihood of the held-out corpus under the model (bits)",
+    "M": "total number of tokens in the held-out corpus (count)",
+    "Perplex(w)": "perplexity (unitless); 1 for a perfect model, V for a uniform unigram model"
+   },
+   "assumptions": [
+    "Held-out data are drawn from the same distribution as future data",
+    "Models are compared on the same held-out corpus and vocabulary handling"
+   ],
+   "breakdown_regime": "Perplexity is not comparable across different vocabularies or tokenizations, and a model can win on perplexity while losing on a downstream task; a single zero probability makes it infinite, so it silently encodes the smoothing choice.",
+   "domain": "evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A single comparable score for sequence models: exponentiate the average negative log likelihood on held-out sequences so model versions can be ranked, with the uniform baseline as the sanity anchor.",
+    "telemetry": "held-out sequence log-likelihoods and token counts per model version",
+    "source_operator": "perplexity_evaluation"
+   }
+  },
+  {
+   "primitive_id": "viterbi_dynamic_programming",
+   "name": "Viterbi algorithm: find the best-scoring label sequence exactly by dynamic programming over locally decomposed scores",
+   "verbatim_quote": "This inference problem can be solved efficiently using dynamic programming, an algorithmic technique for reusing work in recurrent computations.",
+   "page": "Section 7.3 (book p. 149); text lines 7428-7430; equations [7.13]-[7.19]",
+   "latex": "\\hat{y} = \\arg\\max_{y_{1:M}} \\sum_{m=1}^{M+1} s_m(y_m, y_{m-1})",
+   "symbol_and_unit_ledger": {
+    "s_m(y_m, y_{m-1})": "local score for tag y_m following tag y_{m-1} at position m (score units)",
+    "M": "sequence length",
+    "y-hat": "highest-scoring tag sequence"
+   },
+   "assumptions": [
+    "The global score decomposes into a sum of local terms, each depending on at most two adjacent labels",
+    "The label set is small enough that the K-by-K transition table is tractable"
+   ],
+   "breakdown_regime": "Any score term that depends on non-adjacent labels or on global properties of the whole sequence breaks the decomposition and the exact recurrence; cost grows quadratically in the number of labels.",
+   "domain": "sequence labeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exact decoding over sequential hypotheses: whenever a sequence score is a sum of local step scores, the engine finds the global optimum by dynamic programming instead of greedy step-by-step choice, and recovers the winning path from back-pointers.",
+    "telemetry": "local step scores between consecutive states; decoded best paths with their total scores",
+    "source_operator": "viterbi_dynamic_programming"
+   }
+  },
+  {
+   "primitive_id": "hidden_markov_model",
+   "name": "Hidden Markov model: a generative sequence model where each token depends only on its tag and each tag only on its predecessor",
+   "verbatim_quote": "Due to this Markov assumption, probabilistic sequence labeling models are known as hidden Markov models (HMMs).",
+   "page": "Section 7.4 (book p. 154); text lines 7681-7683; equations [7.32]-[7.33]",
+   "latex": "p(w, y) = \\prod_{m=1}^{M} p(y_m \\mid y_{m-1})\\, p(w_m \\mid y_m)",
+   "symbol_and_unit_ledger": {
+    "y_m": "hidden tag at position m; y_0 is the start symbol",
+    "w_m": "observed token at position m",
+    "p(y_m | y_{m-1})": "transition probability between tags (probability)",
+    "p(w_m | y_m)": "emission probability of a token given its tag (probability)"
+   },
+   "assumptions": [
+    "Emission independence: each token depends only on its own tag",
+    "First-order Markov property: each tag depends only on the previous tag"
+   ],
+   "breakdown_regime": "Real sequences violate both assumptions: a word's identity depends on distant context, and tag dependencies span more than one step, so the HMM systematically misprices sequences whose evidence is long-range.",
+   "domain": "sequence labeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Latent state tracking: model an unobserved state sequence with Markov transitions and state-conditional observations, then decode the most likely state path; the engine's template for inferring hidden regimes from observable streams.",
+    "telemetry": "observation streams aligned to time steps; transition and emission counts from labeled sequences",
+    "source_operator": "hidden_markov_model"
+   }
+  },
+  {
+   "primitive_id": "conditional_random_field",
+   "name": "Conditional random field: a globally normalized conditional probability over label sequences, built from logistic regression the way the structured perceptron is built from the perceptron",
+   "verbatim_quote": "The conditional random field (CRF; Lafferty et al., 2001) is a conditional probabilistic model for sequence labeling; just as structured perceptron is built on the perceptron classifier, conditional random fields are built on the logistic regression classifier.",
+   "page": "Section 7.5.3 (book p. 162); text lines 8095-8097; equation [7.74]",
+   "latex": "p(y \\mid w) = \\frac{\\exp(\\Psi(w, y))}{\\sum_{y' \\in Y(w)} \\exp(\\Psi(w, y'))}",
+   "symbol_and_unit_ledger": {
+    "Psi(w, y)": "total score of tag sequence y for token sequence w, a sum of local terms (score units)",
+    "Y(w)": "the set of all tag sequences for w; the denominator sums over it (the partition function)",
+    "p(y | w)": "conditional probability of the tag sequence (probability)"
+   },
+   "assumptions": [
+    "The sequence score decomposes into local terms over adjacent labels so that normalization and decoding stay tractable by dynamic programming",
+    "Features may look at the whole observed input w, unlike in a generative model"
+   ],
+   "breakdown_regime": "Training requires the partition function over all sequences for every instance, which is only feasible under the locality assumption; richer global features break both learning and decoding.",
+   "domain": "sequence labeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Structured prediction with honest normalization: score whole candidate structures with rich overlapping features, then normalize over the full candidate set so probabilities over structures are comparable; decoding reuses the Viterbi recurrence.",
+    "telemetry": "feature vectors over candidate structures; partition function values and decoded structure probabilities",
+    "source_operator": "conditional_random_field"
+   }
+  },
+  {
+   "primitive_id": "cky_chart_parsing",
+   "name": "CKY algorithm: bottom-up chart parsing that fills a table of derivable nonterminals over every span, shortest spans first",
+   "verbatim_quote": "The CKY algorithm1 is a bottom-up approach to parsing in a context-free grammar. It efficiently tests whether a string is in a language, without enumerating all possible parses.",
+   "page": "Section 10.1 (book p. 226); text lines 11042-11044; Algorithm 13",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The grammar is in a form where right-hand sides are at most binary (Chomsky normal form) for the basic version",
+    "Sub-derivations over a span are independent of the surrounding context, so chart cells can be reused"
+   ],
+   "breakdown_regime": "Cubic time in sentence length and quadratic chart memory make it slow on long inputs; grammars with many nonterminals multiply the constant, and the unweighted version returns an arbitrary derivation when several exist.",
+   "domain": "parsing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Compositional search over spans: solve every subproblem once, store it in a chart, and build larger hypotheses only from completed smaller ones; the engine's template for any analysis that assembles a whole from scored parts.",
+    "telemetry": "span-by-span hypothesis tables with derivation scores; parse counts per sentence as an ambiguity signal",
+    "source_operator": "cky_chart_parsing"
+   }
+  },
+  {
+   "primitive_id": "context_free_grammar",
+   "name": "Context-free grammar: a tuple (N, Sigma, R, S) whose productions rewrite a nonterminal independently of its context",
+   "verbatim_quote": "The name \"context-free\" is based on the property that the production rule depends only on the LHS, and not on its ancestors or neighbors; this is analogous to Markov property of finite state automata, in which the behavior at each step depends only on the current state, and not on the path by which that state was reached.",
+   "page": "Section 9.2.1 (book p. 209); text lines 10295-10299",
+   "latex": "A \\to \\beta, \\qquad A \\in N, \\quad \\beta \\in (\\Sigma \\cup N)^{*}",
+   "symbol_and_unit_ledger": {
+    "N": "finite set of nonterminal symbols",
+    "Sigma": "finite alphabet of terminal symbols",
+    "R": "set of production rules A -> beta",
+    "S": "designated start symbol"
+   },
+   "assumptions": [
+    "A nonterminal can be rewritten the same way regardless of its ancestors or neighbors (context-freeness)",
+    "Derivations are sequences of independent local rewrites from the start symbol"
+   ],
+   "breakdown_regime": "Natural languages contain context-sensitive phenomena (cross-serial dependencies, agreement across distance) that no CFG can generate; the book moves to mildly context-sensitive formalisms for exactly this reason.",
+   "domain": "formal language theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A grammar for composable structure: define the legal ways parts combine into wholes with context-independent rewrite rules, so any composite hypothesis can be checked, enumerated, and scored rule by rule.",
+    "telemetry": "production rule inventories; derivation trees produced per input",
+    "source_operator": "context_free_grammar"
+   }
+  },
+  {
+   "primitive_id": "probabilistic_context_free_grammar",
+   "name": "Probabilistic context-free grammar: productions carry probabilities conditional on the left-hand side, estimated by relative frequency, so a parse scores as the product of its production probabilities",
+   "verbatim_quote": "Probabilistic context-free grammars are similar to hidden Markov models, in that they are generative models of text. In this case, the parameters of interest correspond to probabilities of productions, conditional on the left-hand side.",
+   "page": "Section 10.4.1 (book p. 238); text lines 11624-11627; equations [10.19]-[10.20]; definition at Section 10.3.2 (book p. 235)",
+   "latex": "\\hat{p}(X \\to \\alpha) = \\frac{\\mathrm{count}(X \\to \\alpha)}{\\mathrm{count}(X)}",
+   "symbol_and_unit_ledger": {
+    "p-hat(X -> alpha)": "estimated probability of production X -> alpha (probability); per Section 10.3.2 these probabilities are normalized so they sum to 1 over all right-hand sides alpha for each X",
+    "count(X -> alpha)": "number of times production X -> alpha appears in the treebank (count)",
+    "count(X)": "number of times nonterminal X appears as a left-hand side in the treebank (count)",
+    "tau": "a derivation (parse tree); its probability is the product of its production probabilities"
+   },
+   "assumptions": [
+    "Production choices are independent of context: the probability of expanding X does not depend on where X appears in the tree",
+    "Probabilities are normalized per nonterminal"
+   ],
+   "breakdown_regime": "The context-independence of productions is empirically wrong: lexical identity and structural context strongly change expansion probabilities, which is why lexicalized and refined grammars exist; the inside recurrence also sums over exponentially many trees and needs log-space care.",
+   "domain": "parsing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Probabilistic ranking of structured hypotheses: attach a conditional probability to each composition rule, score a whole structure as the product over its rules, and normalize over all structures for the same input to get a defensible posterior over analyses.",
+    "telemetry": "production counts from parsed corpora; parse posterior distributions per input",
+    "source_operator": "probabilistic_context_free_grammar"
+   }
+  },
+  {
+   "primitive_id": "maximum_spanning_tree_dependency_parsing",
+   "name": "Graph-based dependency parsing: under arc-factored scores, the best parse is the maximum spanning tree over the words, found by the Chu-Liu-Edmonds algorithm",
+   "verbatim_quote": "In non-projective dependency parsing, the goal is to identify the highest-scoring spanning tree over the words in the sentence.",
+   "page": "Section 11.2.1 (book p. 264); text lines 12781-12782",
+   "latex": "\\Psi(y, w) = \\sum_{(i \\to j) \\in y} \\psi(i \\to j, w)",
+   "symbol_and_unit_ledger": {
+    "psi(i -> j, w)": "score of the dependency arc from head i to dependent j in sentence w (score units)",
+    "y": "a dependency tree: a spanning tree over the words plus a root",
+    "Psi(y, w)": "total tree score, a sum over its arcs (score units)"
+   },
+   "assumptions": [
+    "Arc-factored scoring: the tree score is exactly the sum of independent arc scores",
+    "Any spanning tree is a legal parse unless projectivity is imposed separately"
+   ],
+   "breakdown_regime": "Arc factorization cannot express interactions between arcs (a head's valency, sibling agreement); higher-order factors restore some interactions at O(M^4) cost, and the optimum is only as good as the arc scorer.",
+   "domain": "parsing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Global structure selection: when a structure's score is a sum over its edges, replace greedy attachment with an exact maximum spanning tree search, so local arc preferences cannot combine into a globally incoherent structure.",
+    "telemetry": "pairwise arc scores between entities; chosen tree structures with total scores",
+    "source_operator": "maximum_spanning_tree_dependency_parsing"
+   }
+  },
+  {
+   "primitive_id": "transition_based_dependency_parsing",
+   "name": "Transition-based parsing: build a parse by a linear-length sequence of actions over parser configurations (stack, buffer, arcs)",
+   "verbatim_quote": "A transition system consists of a representation for describing configurations of the parser, and a set of transition actions, which manipulate the configuration.",
+   "page": "Section 11.3.1 (book p. 269); text lines 13013-13015; equations [11.16]-[11.18]",
+   "latex": "C_{\\mathrm{initial}} = ([\\mathrm{ROOT}], w, \\emptyset), \\qquad C_{\\mathrm{accept}} = ([\\mathrm{ROOT}], \\emptyset, A)",
+   "symbol_and_unit_ledger": {
+    "C = (sigma, beta, A)": "parser configuration: stack sigma, input buffer beta, arc set A",
+    "ROOT": "special root node that begins on the stack",
+    "A": "set of dependency arcs created so far"
+   },
+   "assumptions": [
+    "A projective parse can be reached by the allowed transitions (arc-standard or arc-eager) in a number of steps linear in input length",
+    "A learned scorer can rank the correct transition highly at each configuration"
+   ],
+   "breakdown_regime": "Greedy decoding propagates early mistakes with no recovery (error propagation), and multiple action sequences can yield the same tree (spurious ambiguity), which complicates training; non-projective structures need extended transition sets.",
+   "domain": "parsing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sequential construction under a state machine: represent partial work as an explicit configuration and learn to choose the next action; the engine's template for fast incremental assembly where an exact global search is too slow.",
+    "telemetry": "configuration traces and action sequences; per-step action scores and final structure quality",
+    "source_operator": "transition_based_dependency_parsing"
+   }
+  },
+  {
+   "primitive_id": "lambda_calculus_compositional_semantics",
+   "name": "Compositional semantics by lambda calculus: word meanings are functions, and a sentence meaning is built by function application (beta-reduction) along the syntax",
+   "verbatim_quote": "Equation 12.11 shows how to obtain the desired semantics for the sentence Alex likes Brit: by applying the lambda expression λx.LIKES(x, BRIT) to the logical constant ALEX.",
+   "page": "Section 12.3.1 (book p. 293); text lines 13972-13974; equations [12.10]-[12.11]",
+   "latex": "(\\lambda x.\\ \\mathrm{LIKES}(x, \\mathrm{BRIT}))\\ @\\ \\mathrm{ALEX} = \\mathrm{LIKES}(\\mathrm{ALEX}, \\mathrm{BRIT})",
+   "symbol_and_unit_ledger": {
+    "lambda x. LIKES(x, BRIT)": "anonymous function: the meaning of the verb phrase, awaiting a subject argument",
+    "@": "function application operator; applying it performs beta-reduction (substitution)",
+    "ALEX, BRIT": "logical constants denoting individuals"
+   },
+   "assumptions": [
+    "Meaning is compositional: the meaning of a constituent is a function of the meanings of its parts and the syntactic rule combining them",
+    "Each syntactic production is paired with a semantic operation"
+   ],
+   "breakdown_regime": "Idioms, metaphor, and context-dependent meaning violate strict compositionality; quantifier scope and intensional contexts need machinery beyond simple application, and learning such grammars from data is far harder than using hand-built ones.",
+   "domain": "semantics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Build claim-level meaning compositionally: represent partial statements as functions with open argument slots and fill them from the syntactic structure, so an extracted claim always shows which entity fills which role and what remains unfilled.",
+    "telemetry": "predicate-argument structures extracted per sentence; unfilled argument slots as explicit unknowns",
+    "source_operator": "lambda_calculus_compositional_semantics"
+   }
+  },
+  {
+   "primitive_id": "distributional_hypothesis",
+   "name": "Distributional hypothesis: word meaning is reflected in the contexts a word appears in, so context vectors measure semantic similarity",
+   "verbatim_quote": "Does vector similarity imply semantic similarity? This is the distributional hypothesis, stated by Firth (1957) as: \"You shall know a word by the company it keeps.",
+   "page": "Section 14.1 (book p. 326); text lines 15570-15573",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Words that appear in similar contexts have similar meanings (Firth, 1957)",
+    "A large unlabeled corpus provides enough contexts to estimate each word's distribution"
+   ],
+   "breakdown_regime": "Antonyms and co-hyponyms share contexts and so look similar (hot and cold pattern alike); rare words have too few contexts, and distributional similarity captures relatedness, not identity of meaning.",
+   "domain": "semantics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Representation by company: characterize any entity by the distribution of contexts it appears in, and treat context-profile similarity as a working proxy for functional similarity when no direct definition is available.",
+    "telemetry": "entity-by-context incidence matrices from large unlabeled corpora",
+    "source_operator": "distributional_hypothesis"
+   }
+  },
+  {
+   "primitive_id": "latent_semantic_analysis_svd",
+   "name": "Latent semantic analysis: factor the word-context count matrix with a truncated SVD so each word becomes a low-dimensional vector",
+   "verbatim_quote": "The objective is to minimize the sum of squared approximation errors. The orthonormality constraints U> U = V> V = I ensure that all pairs of dimensions in U and V are uncorrelated, so that each dimension conveys unique information.",
+   "page": "Section 14.3 (book p. 330); text lines 15740-15742; equations [14.2]-[14.6]",
+   "latex": "\\min_{U \\in \\mathbb{R}^{V \\times K},\\, S \\in \\mathbb{R}^{K \\times K},\\, V \\in \\mathbb{R}^{|C| \\times K}} \\|C - USV^{\\top}\\|_F \\quad \\mathrm{s.t.}\\ U^{\\top}U = I,\\ V^{\\top}V = I",
+   "symbol_and_unit_ledger": {
+    "C": "word-by-context count matrix (counts)",
+    "U, V": "orthonormal factor matrices; rows of U are the word embeddings",
+    "S": "diagonal matrix of singular values",
+    "K": "embedding dimension, far smaller than the vocabulary or context count",
+    "|| . ||_F": "Frobenius norm: root sum of squared approximation errors"
+   },
+   "assumptions": [
+    "A low-rank approximation preserves the semantically important structure of the count matrix",
+    "Squared error on (usually PMI-transformed) counts is the right approximation criterion"
+   ],
+   "breakdown_regime": "The factorization is linear, so it cannot capture interactions that a nonlinear model can; results are sensitive to the count transform (raw counts perform badly, PMI weighting is near-essential) and to the choice of K.",
+   "domain": "representation learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Compress a huge sparse co-occurrence matrix into dense low-dimensional entity vectors by truncated factorization; the engine's baseline for turning raw incidence data into comparable representations.",
+    "telemetry": "word-context or entity-context count matrices; singular value spectra to choose K",
+    "source_operator": "latent_semantic_analysis_svd"
+   }
+  },
+  {
+   "primitive_id": "skipgram_word_embeddings",
+   "name": "Skipgram: learn word embeddings by predicting each word's context words from the word itself, the inverse of CBOW",
+   "verbatim_quote": "In the CBOW model, words are predicted from their context. In the skipgram model, the context is predicted from the word, yielding the objective:",
+   "page": "Section 14.5.2 (book p. 335); text lines 15989-15990; equations [14.18]-[14.20]",
+   "latex": "\\log p(w) \\approx \\sum_{m=1}^{M} \\sum_{n=1}^{h_m} \\left[ \\log p(w_{m-n} \\mid w_m) + \\log p(w_{m+n} \\mid w_m) \\right]",
+   "symbol_and_unit_ledger": {
+    "w_m": "the token at position m, whose vector v_{w_m} is the input",
+    "u_j": "context (output) vector for vocabulary word j",
+    "h_m": "randomly sampled neighborhood half-width, uniform on {1, ..., h_max} with h_max = 10 in the cited work",
+    "p(w_{m+n} | w_m)": "softmax probability of a context word given the center word (probability)"
+   },
+   "assumptions": [
+    "Context words are predicted independently given the center word",
+    "A fixed window around each token defines its context; nearer neighbors are weighted more by the random window size"
+   ],
+   "breakdown_regime": "The full softmax over the vocabulary costs O(V x K) per update and must be approximated (hierarchical softmax or negative sampling); embeddings conflate a word's senses into one vector and inherit corpus biases, which the text flags in its fairness discussion.",
+   "domain": "representation learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Embedding by prediction: train entity vectors so that each entity predicts its observed neighbors; the resulting geometry supports similarity and analogy queries the engine can use for retrieval and clustering.",
+    "telemetry": "token streams with windowed co-occurrence pairs; embedding similarity distributions",
+    "source_operator": "skipgram_word_embeddings"
+   }
+  },
+  {
+   "primitive_id": "neural_attention_query_key_value",
+   "name": "Neural attention: use a query to take a differentiable, softmax-weighted selection over a memory of key-value pairs",
+   "verbatim_quote": "In general, attention can be thought of as using a query to select from a memory of key-value pairs.",
+   "page": "Section 18.3.1 (book p. 444); text lines 20982-20984; equation [18.36]",
+   "latex": "\\psi_{\\alpha}(m, n) = v_{\\alpha} \\cdot \\tanh\\left(\\Theta_{\\alpha}\\, [h^{(t)}_m ;\\, h^{(s)}_n]\\right)",
+   "symbol_and_unit_ledger": {
+    "psi_alpha(m, n)": "compatibility score between decoder step m (the query) and source position n (the key) (score units)",
+    "h^(t)_m": "decoder state at step m",
+    "h^(s)_n": "encoder state at source position n; encoder states serve as both keys and values",
+    "alpha_{m->n}": "softmax-normalized attention weight on position n (probability-like, sums to 1 over n)"
+   },
+   "assumptions": [
+    "Alignment between output steps and input positions can be soft and learned end to end rather than fixed in advance",
+    "A weighted average of value vectors is a sufficient summary of the selected memory"
+   ],
+   "breakdown_regime": "Attention weights are not guaranteed to be faithful explanations of the model's decision, and the soft average blurs when several positions are equally compatible; cost grows with the product of input and output lengths.",
+   "domain": "neural machine translation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Soft selection over evidence: score every stored item against the current query, normalize the scores, and read out the weighted mixture; the engine's template for focusing a reasoning step on the most relevant stored facts without discarding the rest.",
+    "telemetry": "query-key compatibility scores and attention weight distributions per decoding or reasoning step",
+    "source_operator": "neural_attention_query_key_value"
+   }
+  },
+  {
+   "primitive_id": "bleu_evaluation",
+   "name": "BLEU: score a generated translation by clipped n-gram precision against reference translations, combined as a geometric mean with a brevity penalty",
+   "verbatim_quote": "The most popular quantitative metric is BLEU (bilingual evaluation understudy; Papineni et al., 2002), which is based on n-gram precision: what fraction of n-grams in the system translation appear in the reference?",
+   "page": "Section 18.1.1 (book p. 433); text lines 20374-20377; equation [18.2]",
+   "latex": "\\mathrm{BLEU} = \\exp\\left(\\frac{1}{N} \\sum_{n=1}^{N} \\log p_n\\right)",
+   "symbol_and_unit_ledger": {
+    "p_n": "clipped precision of n-grams: fraction of hypothesis n-grams that appear in a reference, each reference n-gram usable at most once (ratio in [0, 1])",
+    "N": "maximum n-gram length considered",
+    "BLEU": "score in [0, 1]; the full metric multiplies by a brevity penalty for short hypotheses"
+   },
+   "assumptions": [
+    "Reference translations adequately cover the space of acceptable translations",
+    "N-gram overlap is a usable proxy for the adequacy and fluency criteria defined in the same section"
+   ],
+   "breakdown_regime": "Paraphrases with little surface overlap score badly despite being correct, and gaming the metric (short, safe outputs) is only partly blocked by clipping and the brevity penalty; scores are corpus-level and unstable on single sentences.",
+   "domain": "evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Overlap-based scoring of generated text against trusted references: count how much of the output's local phrasing is attested in references, with clipping so repetition cannot inflate the score; a cheap automatic check before human review.",
+    "telemetry": "n-gram overlap counts between generated text and reference sets; output length ratios",
+    "source_operator": "bleu_evaluation"
+   }
+  },
+  {
+   "primitive_id": "mention_ranking_coreference",
+   "name": "Mention-ranking coreference: choose each mention's antecedent by ranking all earlier mentions at once, with an explicit null option for non-anaphoric mentions",
+   "verbatim_quote": "Mention-ranking is similar to the mention-pair model, but all candidates are considered simultaneously, and at most a single antecedent is selected.",
+   "page": "Section 15.2.2 (book p. 360); text lines 17116-17118; equation [15.4]",
+   "latex": "\\hat{a}_i = \\arg\\max_{a \\in \\{\\emptyset, 1, 2, \\ldots, i-1\\}} \\psi_M(a, i)",
+   "symbol_and_unit_ledger": {
+    "a-hat_i": "chosen antecedent of mention i",
+    "psi_M(a, i)": "score of mention a as the antecedent of mention i (score units)",
+    "empty set symbol": "the null antecedent: choosing it declares mention i non-anaphoric (starts a new entity)"
+   },
+   "assumptions": [
+    "Each anaphoric mention has a single best antecedent among the earlier mentions",
+    "Gold antecedents for training are approximated heuristically, for example as the most recent mention in the same gold cluster"
+   ],
+   "breakdown_regime": "The antecedent variables relate many-to-one to gold clusters, so supervision is indirect; pairwise and ranking decisions can still chain into incoherent clusters under transitive closure, and the most recent antecedent is often not the most informative one.",
+   "domain": "reference resolution",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Entity resolution by ranking: when a new mention must be attached to an existing entity or start a new one, score all candidates jointly with an explicit start-new option instead of independent pairwise yes-no decisions.",
+    "telemetry": "mention streams with candidate antecedent scores; cluster coherence checks after closure",
+    "source_operator": "mention_ranking_coreference"
+   }
+  },
+  {
+   "primitive_id": "convolutional_text_filters",
+   "name": "Convolutional networks for text: learn local filter matrices that slide over adjacent word embeddings instead of hand-designing feature extractors",
+   "verbatim_quote": "But rather than designing these feature extractors by hand, a better approach is to learn them, using the magic of backpropagation. This is the idea behind convolutional neural networks.",
+   "page": "Section 3.4 (book p. 62); text lines 3527-3529; equations [3.52]-[3.53]",
+   "latex": "x^{(1)}_{k,m} = f\\left(b_k + \\sum_{k'} \\sum_{n=1}^{h} c^{(k)}_{k',n}\\, x^{(0)}_{k',\\, m+n-1}\\right)",
+   "symbol_and_unit_ledger": {
+    "X^(0)": "base layer matrix of word embeddings, one column per token",
+    "C^(k)": "k-th learned filter matrix spanning h adjacent tokens",
+    "f": "activation function such as tanh or ReLU",
+    "x^(1)_{k,m}": "filter k's response at position m (activation units)"
+   },
+   "assumptions": [
+    "Meaning-bearing patterns are local: a window of h adjacent words suffices for the features that matter",
+    "The same filter is useful at every position (weight sharing across positions)"
+   ],
+   "breakdown_regime": "Fixed filter width cannot capture dependencies longer than the window except by stacking layers; position information is largely discarded by pooling, so order-sensitive distinctions beyond the window are lost.",
+   "domain": "neural networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Learned local pattern detectors: slide trainable templates over a sequence representation so the system discovers which short local configurations matter, replacing hand-written pattern lists in text feature extraction.",
+    "telemetry": "per-position filter activations on text streams; filter response rates per pattern type",
+    "source_operator": "convolutional_text_filters"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "b4ca593148ee8317-t1",
+   "think": "Eisenstein's Introduction to Natural Language Processing is built on a single organizing claim, stated in the preface: a remarkable number of problems in natural language processing can be solved by a compact set of methods, split between search and learning. Search names the inference algorithms: Viterbi, CKY, minimum spanning tree, shift-reduce, integer linear programming, beam search. Learning names the estimation algorithms: maximum likelihood estimation, logistic regression, perceptron, expectation-maximization, matrix factorization, backpropagation. The whole book is an elaboration of that claim across four parts. Part I develops learning on the simplest possible task, text classification, and uses it to introduce generative and discriminative models, linear and nonlinear classifiers, unsupervised learning with latent variables, and domain adaptation. Part II lifts the same machinery to sequences and trees: language models, sequence labeling, formal language theory, context-free parsing, and dependency parsing. Part III turns to meaning: logical semantics with the lambda calculus, predicate-argument structure, distributional and distributed semantics, reference resolution, and discourse. Part IV applies everything to information extraction, machine translation, and text generation. The intellectual spine is the repeated pairing of a scoring function with a search procedure and an estimation procedure. A linear classifier scores a label by an inner product of weights and features; prediction is argmax search over labels; learning adjusts the weights, by counting in Naive Bayes, by mistake-driven updates in the perceptron, by margin maximization in the support vector machine, or by conditional likelihood in logistic regression. When the output is a sequence rather than a single label, the same pattern survives if the score decomposes into local parts: the Viterbi algorithm then finds the best sequence by dynamic programming, the hidden Markov model supplies the local scores from a generative story with a Markov assumption, and the conditional random field supplies them from a globally normalized conditional model. When the output is a tree, CKY plays the Viterbi role over spans, a probabilistic context-free grammar supplies local production probabilities, and graph-based dependency parsing reduces the search to a maximum spanning tree problem solved by the Chu-Liu-Edmonds algorithm. Transition-based parsing makes the opposite trade: it gives up exact search for a linear-time sequence of learned decisions. Seeing the same skeleton recur is the book's main lesson: change the structure of the output and you change the search algorithm, but the learning principles stay recognizable. Latent variables are the second recurring theme. Expectation-maximization appears first as soft clustering, then returns inside hidden Markov model training, grammar learning, and data-to-text alignment. The distributional hypothesis is the third theme: meaning is inferred from context, first with count vectors and pointwise mutual information, then with low-rank factorization in latent semantic analysis, then with learned embeddings in CBOW and skipgram, where the factorization view shows the embedding objective to be closely related to factorizing a shifted PMI matrix. Neural methods enter as generalizations of the classical ones rather than replacements: a feedforward network is logistic regression stacked through a learned hidden layer, backpropagation is the chain rule organized by a computation graph, a convolutional network is a set of learned local feature detectors, and attention is a differentiable soft alignment that lets an encoder-decoder model recover the compositionality that phrase-based translation had by construction. For a reasoning engine that consumes text, the book supplies the full ingestion stack and, just as important, its failure accounting. Tokenization, tagging, parsing, semantic role labeling, coreference, and discourse segmentation are the stages that turn raw text into structured claims about entities, events, and relations. The evaluation material supplies the discipline for trusting those stages: precision and recall separate the two directions of error, perplexity scores sequence models on held-out data, BLEU approximates translation quality by n-gram overlap, and the domain adaptation chapter warns that every one of these numbers is conditional on the distribution the model was trained on. Smoothing carries a general lesson that extends well beyond language modeling: an event that has never been observed must not be assigned probability zero, because a single zero vetoes everything downstream; reserved probability mass, set by a pseudocount or redistributed by continuation counts in Kneser-Ney smoothing, is the price of robustness under sparsity. Two appendices carry the mathematical prerequisites in the open: a probability appendix that fixes the notation for conditioning, independence, random variables, and expectation, and an optimization appendix on gradient descent and constrained optimization, which is where the margin derivations get their footing. The exercises matter to the design as well: nearly every chapter closes by asking the reader to re-derive or re-implement the central algorithm, which is why the pseudocode throughout is written to be transcribed rather than merely read. The book's limits are the limits of its moment. The draft is dated November 2018. It covers recurrent networks, LSTMs, and attention as components of translation and sequence labeling systems, but it predates the era of large pretrained transformer models, so there is no treatment of contextual embeddings from pretraining or of fine-tuning as the default workflow. Its independence assumptions are stated honestly and are often false: words are not conditionally independent given a label, tags are not truly first-order Markov, and production probabilities are not independent of context. Its examples and resources are centered on English and on news text, and the domain adaptation chapter is the main place where that narrowness is confronted directly. Several starred sections are sketches rather than full treatments, and the draft occasionally shows its unfinished state. None of this undermines the core contribution: the book isolates the reusable mathematical machinery of the field, states each method's assumptions next to the method, and shows exactly which assumption each successor method relaxes. That is the right shape for a reference that an engine builder consults when deciding what a text signal can and cannot support.",
+   "retrocausal_genealogy": "The book descends from two lineages that merged in the 1990s. From linguistics and theoretical computer science come formal language theory and the Chomsky hierarchy, the CKY and Viterbi dynamic programs of the 1960s, Montague's compositional semantics with the lambda calculus, and the finite-state tradition. From statistics and machine learning come Naive Bayes and maximum likelihood, Rosenblatt's perceptron with the Novikoff convergence proof, expectation-maximization as formalized by Dempster, Laird, and Rubin in 1977, hidden Markov models carried over from speech recognition, and conditional random fields from Lafferty, McCallum, and Pereira in 2001. The final layer is the neural revival: backpropagation through computation graphs, word2vec from Mikolov and colleagues in 2013, and attention from Bahdanau and colleagues in 2014, each presented as a descendant of an older method rather than a rupture with it.",
+   "theory_of_mind": "Eisenstein writes for a reader who already has probability, some linear algebra, and programming experience, and who learns a method best by seeing it as one point in a design space. His model of the field is that tasks differ mainly in the structure of their outputs, while the underlying estimation and search principles repeat, so the book is organized to make the repetitions visible. He trusts formalization: every method arrives with its generative story or its objective, its assumptions stated in the open, and its failure modes named soon after. He also assumes the reader will implement things, so algorithms appear as pseudocode with complexity stated. Linguistics is treated throughout as a source of structure to exploit, never as decoration.",
+   "cross_layer_veto": "Several results in the book act as vetoes on other layers of a system. The smoothing analysis vetoes any component that assigns probability zero to an unseen event, because one zero silently annihilates every downstream score that multiplies it; the molybdenum example shows a single rare word vetoing a label outright. The evaluation chapter vetoes accuracy as a sole metric whenever classes are imbalanced or error costs are asymmetric, which is most of the time in practice. The domain adaptation results veto the assumption that a model validated on one text distribution keeps its error rate on another. And the ambiguity results veto single-parse certainty: when a grammar licenses several derivations, downstream components must consume a distribution or a reranked list, not a silent arbitrary choice."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for turning any structured prediction problem into three separable questions: how candidate outputs are scored, how the best output is found, and how the scorer is estimated from data. That separation travels far beyond language: it organizes parsing, translation, tagging, and extraction here, and it organizes any system that must choose among exponentially many structured hypotheses using a learned local scoring function and an exact or approximate search.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book is the methods reference for text and language work: how document classifiers, sequence labelers, parsers, and embedding models are built, what each one assumes, and how each is evaluated. Its evaluation and domain adaptation chapters set the standard for when a language-derived result may be taught as reliable: measured on held-out data, with the two directions of error reported separately, and with the training distribution named.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the book supplies the machinery that converts unstructured text, such as injury reports, beat writing, and press conferences, into structured and scored evidence: classification for document triage, sequence labeling for entity and event extraction, parsing and semantic roles for who did what, coreference for tracking an entity across a document, and embeddings for similarity. Its smoothing and domain adaptation results govern how much confidence text-derived signals may carry when events are rare or the source distribution shifts."
+}

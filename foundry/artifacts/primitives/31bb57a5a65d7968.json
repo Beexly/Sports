@@ -1,0 +1,78 @@
+{
+  "book_id": "31bb57a5a65d7968",
+  "source_status": "COMPLETE",
+  "title": "KNOWN_WEAKNESSES",
+  "file_name": "KNOWN_WEAKNESSES.md",
+  "sha256": "31bb57a5a65d796807a45438e643beea386920369c3a8a2b3379bb4dd4906500",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Task persistence and worker coordination exhibit dual-mode operational regimes: database-backed CockpitTask payloads and in-memory stubs, with BullMQ facade managing async workflows conditionally on Redis availability. Universal Lens: Rooted in KNOWN_WEAKNESSES (31bb57a5a65d7968), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models task reliability through conditional probability distributions over payload storage modes, incorporating worker process activation states as latent variables in probabilistic task graphs. GSI Mapping: Rooted in KNOWN_WEAKNESSES (31bb57a5a65d7968), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates state transitions between task persistence layers using temporal logic constraints, where Redis presence triggers deterministic worker activation paths in the absence of which manual facades govern execution flow.",
+  "primitives": [
+    {
+      "primitive_id": "task_persistence_mode",
+      "name": "Task Persistence Regime Operator",
+      "verbatim_quote": "# Known Weaknesses - Task persistence uses existing `CockpitTask` payload storage when DB exists and in-memory fallback in stub mode; deeper first-class Prisma fields can be reviewed later.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'mode indicator {0,1} for DB vs in-memory', 'T': 'task identifier'}",
+      "assumptions": "Payload storage is binary and deterministic based on environment state.",
+      "breakdown_regime": "In stub mode, task integrity is not guaranteed due to ephemeral memory.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mode selection function M(T) mirrors a Boolean switch in GSI's probabilistic task graph, where each task T maps to a persistence kernel K(T) ∈ {DB, MEM}.",
+        "source_operator": "task_persistence_mode",
+        "telemetry": "Observable via task completion logs and memory footprint metrics."
+      }
+    },
+    {
+      "primitive_id": "worker_activation_state",
+      "name": "Worker Activation State Indicator",
+      "verbatim_quote": "- BullMQ facade is safe/manual when Redis is absent; no real worker process was started.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'activation state {0,1}', 'R': 'Redis availability boolean'}",
+      "assumptions": "Worker process lifecycle depends directly on Redis presence.",
+      "breakdown_regime": "When R=0, W remains inactive regardless of task queue content.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Activation kernel W(R) = 1 iff R=1; otherwise W=0. This defines a control-theoretic feedback loop in GSE’s task orchestration layer.",
+        "source_operator": "worker_activation_state",
+        "telemetry": "Process start time and resource allocation flags."
+      }
+    },
+    {
+      "primitive_id": "ui_rendering_status",
+      "name": "UI Rendering Status Kernel",
+      "verbatim_quote": "- Jarvis runtime is library-wired, not yet rendered into the cockpit UI.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U': 'rendering status {0,1}', 'J': 'Jarvis runtime state'}",
+      "assumptions": "Runtime integration is decoupled from UI rendering pipeline.",
+      "breakdown_regime": "U=0 implies J≠0 but no visual output.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Rendering kernel U(J) = 1 iff J is fully initialized and bound to cockpit context. Otherwise U=0.",
+        "source_operator": "ui_rendering_status",
+        "telemetry": "DOM element existence and event listener registration."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "31bb57a5a65d7968_t0",
+      "think": "Each primitive represents a distinct operational regime within the system architecture. The task persistence mode operator M(T) encodes a discrete dynamical system where task T evolves under two possible kernels: DB-based or in-memory. The worker activation state W(R) introduces a conditional dependency on infrastructure availability, forming a logical bifurcation point in task execution flow. The UI rendering status U(J) reflects a separate subsystem that operates independently of core logic, indicating a potential architectural decoupling. These operators form a composite state space S = {M(T), W(R), U(J)} that governs system behavior across multiple abstraction layers. Failure modes arise when transitions between these regimes are not properly synchronized, leading to data inconsistency or incomplete task resolution. The interplay between these primitives reveals a layered control structure where lower-level primitives define operational boundaries while higher-level ones dictate semantic coherence.\n\nDeep epistemic analysis for KNOWN_WEAKNESSES (31bb57a5a65d7968, domain=other, pages_read=1/1): Operator 'Task Persistence Regime Operator' (page 1, domain other) captures: # Known Weaknesses - Task persistence uses existing `CockpitTask` payload storage when DB exists and in-memory fallback in stub mode; deeper first-class Prisma fields can be reviewed later. Assumptions: Payload storage is binary and deterministic based on environment state. Breakdown regime: In stub mode, task integrity is not guaranteed due to ephemeral memory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The mode selection function M(T) mirrors a Boolean switch in GSI's probabilistic task graph, where each task T maps to a persistence kernel K(T) ∈ {DB, MEM}. Operator 'Worker Activation State Indicator' (page 1, domain other) captures: - BullMQ facade is safe/manual when Redis is absent; no real worker process was started. Assumptions: Worker process lifecycle depends directly on Redis presence. Breakdown regime: When R=0, W remains inactive regardless of task queue content. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Activation kernel W(R) = 1 iff R=1; otherwise W=0. This defines a control-theoretic feedback loop in GSE’s task orchestration layer. Operator 'UI Rendering Status Kernel' (page 1, domain other) captures: - Jarvis runtime is library-wired, not yet rendered into the cockpit UI. Assumptions: Runtime integration is decoupled from UI rendering pipeline. Breakdown regime: U=0 implies J≠0 but no visual output. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rendering kernel U(J) = 1 iff J is fully initialized and bound to cockpit context. Otherwise U=0. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for KNOWN_WEAKNESSES (31bb57a5a65d7968, domain=other, pages_read=1/1): Operator 'Task Persistence Regime Operator' (page 1, domain other) captures: # Known Weaknesses - Task persistence uses existing `CockpitTask` payload storage when DB exists and in-memory fallback in stub mode; deeper first-class Prisma fields can be reviewed later. Assumptions: Payload storage is binary and deterministic based on environment state. Breakdown regime: In stub mode, task integrity is not guaranteed due to ephemeral memory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The mode selection function M(T) mirrors a Boolean switch in GSI's probabilistic task graph, where each task T maps to a persistence kernel K(T) ∈ {DB, MEM}. Operator 'Worker Activation State Indicator' (page 1, domain other) captures: - BullMQ facade is safe/manual when Redis is absent; no real worker process was started. Assumptions: Worker process lifecycle depends directly on Redis presence. Breakdown regime: When R=0, W remains inactive regardless of task queue content. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Activation kernel W(R) = 1 iff R=1; otherwise W=0. This defines a control-theoretic feedback loop in GSE’s task orchestration layer. Operator 'UI Rendering Status Kernel' (page 1, domain other) captures: - Jarvis runtime is library-wired, not yet rendered into the cockpit UI. Assumptions: Runtime integration is decoupled from UI rendering pipeline. Breakdown regime: U=0 implies J≠0 but no visual output. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Rendering kernel U(J) = 1 iff J is fully initialized and bound to cockpit context. Otherwise U=0. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early-stage software engineering practices where modular design principles were applied to isolate concerns such as persistence, concurrency, and presentation. Influenced by actor model paradigms and microservices decomposition patterns common in distributed systems. Retrocausal Genealogy: Rooted in KNOWN_WEAKNESSES (31bb57a5a65d7968), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the system's internal consistency checker and external user expectations. The former ensures adherence to defined operational regimes, while the latter demands seamless integration across all components. Decision actors must balance performance optimization against maintainability trade-offs inherent in multi-layered architectures. Theory of Mind & Decision Maker Model: Rooted in KNOWN_WEAKNESSES (31bb57a5a65d7968), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that changes in one layer do not induce spurious dependencies in others. For example, modifying the UI rendering kernel should not affect task persistence or worker activation. Leakage vetoes prevent cross-contamination of state variables between layers, ensuring each primitive maintains its own domain of influence. Cross-Layer Veto & Anti-Leakage Check: Rooted in KNOWN_WEAKNESSES (31bb57a5a65d7968), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,434 @@
+{
+ "book_id": "5862404626d4c32a",
+ "title": "Hastie, Tibshirani & Friedman 2009 — The Elements of Statistical Learning",
+ "source_status": "READABLE",
+ "source_note": "Trevor Hastie, Robert Tibshirani, Jerome Friedman, The Elements of Statistical Learning: Data Mining, Inference, and Prediction, 2nd ed, Springer Series in Statistics, corrected 12th printing Jan 13 2017. 764 PDF pages, 1.87M chars extracted via pymupdf (pypdf timed out). Core read: bias-variance decomposition ch7.3, shrinkage/ridge ch3.4, cross-validation + one-SE rule ch3.3.4/7.10, optimal separating hyperplane/margin ch4.5. Printed-page provenance. Not retracted; title matches content. Zero sportsbook odds.",
+ "pages_total": 764,
+ "pages_read": 4,
+ "primitives": [
+  {
+   "primitive_id": "bias_variance_decomposition",
+   "name": "Bias-variance decomposition: error = irreducible + bias^2 + variance",
+   "verbatim_quote": "The first term is the variance of the target around its true mean",
+   "page": 223,
+   "latex": "\\mathrm{Err}(x_0)=\\sigma_\\varepsilon^2+\\mathrm{Bias}^2(\\hat f(x_0))+\\mathrm{Var}(\\hat f(x_0))=\\text{Irreducible Error}+\\text{Bias}^2+\\text{Variance}",
+   "symbol_and_unit_ledger": {
+    "Err(x0)": "expected prediction error [loss units]",
+    "sigma_eps^2": "irreducible noise variance [loss units]",
+    "Bias^2": "squared bias [loss units]",
+    "Var": "estimation variance [loss units]"
+   },
+   "assumptions": [
+    "Y=f(X)+eps with E(eps)=0, Var(eps)=sigma_eps^2",
+    "Squared-error loss"
+   ],
+   "breakdown_regime": "The irreducible term cannot be avoided no matter how well f is estimated unless sigma_eps^2=0.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the GSE engine's error budget: every prediction error decomposes into irreducible football noise (a tipped pass, a bad bounce), model bias (the ontology's approximation error), and estimation variance (finite-sample fit noise). The engine must not claim skill below the irreducible floor, and must trade bias against variance deliberately.",
+    "source_operator": "bias_variance_decomposition",
+    "telemetry": "GSE telemetry: decomposed error budget per model; irreducible variance estimate; verify claimed skill exceeds the noise floor."
+   }
+  },
+  {
+   "primitive_id": "squared_bias_term",
+   "name": "Squared bias: how far the average estimate is from the truth",
+   "verbatim_quote": "The second term is the squared bias, the amount by which the average of our estimate differs from the true mean",
+   "page": 223,
+   "latex": "\\mathrm{Bias}^2(\\hat f(x_0))=[\\mathbb{E}\\hat f(x_0)-f(x_0)]^2,\\quad \\mathrm{Var}(\\hat f(x_0))=\\mathbb{E}[\\hat f(x_0)-\\mathbb{E}\\hat f(x_0)]^2",
+   "symbol_and_unit_ledger": {
+    "E f_hat": "average estimate over training sets [units of f]",
+    "f(x0)": "true mean [units of f]"
+   },
+   "assumptions": [
+    "Bias is systematic error; variance is sensitivity to the training sample"
+   ],
+   "breakdown_regime": "A model can have low bias but high variance (overfit) or low variance but high bias (underfit).",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine separates systematic ontology bias (a wrong football assumption) from estimation variance (noise from a small sample of games). A persistent directional error is bias to fix in the ontology; a jumpy game-to-game error is variance to shrink with regularization.",
+    "source_operator": "squared_bias_term",
+    "telemetry": "GSE telemetry: directional bias vs game-to-game variance; route bias errors to ontology review, variance errors to shrinkage."
+   }
+  },
+  {
+   "primitive_id": "complexity_tradeoff",
+   "name": "More complexity lowers bias but raises variance",
+   "verbatim_quote": "Typically the more complex we make the model",
+   "page": 223,
+   "latex": "\\text{complexity}\\uparrow\\ \\Rightarrow\\ \\mathrm{Bias}^2\\downarrow,\\ \\mathrm{Var}\\uparrow",
+   "symbol_and_unit_ledger": {
+    "complexity": "model flexibility [degrees of freedom]"
+   },
+   "assumptions": [
+    "The tradeoff is generic across model families",
+    "Optimal complexity balances the two"
+   ],
+   "breakdown_regime": "Beyond the optimum, added complexity buys variance faster than it removes bias.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine must not add features indefinitely: each added football factor lowers bias but raises variance, and past the optimum the model overfits. This is the formal reason the ontology is parsimonious and the Occam/evidence gates exist.",
+    "source_operator": "complexity_tradeoff",
+    "telemetry": "GSE telemetry: error vs feature-count curve; verify the selected complexity sits at the bias-variance optimum."
+   }
+  },
+  {
+   "primitive_id": "knn_complexity",
+   "name": "k-nearest-neighbors: k is inverse complexity",
+   "verbatim_quote": "The number of neighbors k is inversely related to the model complexity.",
+   "page": 223,
+   "latex": "\\mathrm{Err}(x_0)=\\sigma_\\varepsilon^2+\\left[f(x_0)-\\frac{1}{k}\\sum_{\\ell=1}^{k}f(x_{(\\ell)})\\right]^2+\\frac{\\sigma_\\varepsilon^2}{k}",
+   "symbol_and_unit_ledger": {
+    "k": "number of neighbors [count]",
+    "sigma_eps^2/k": "variance term [loss units]"
+   },
+   "assumptions": [
+    "Small k adapts better (low bias, high variance)",
+    "Large k increases bias, decreases variance"
+   ],
+   "breakdown_regime": "k=1 memorizes the training noise; k=N averages to a constant.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE situation-similarity reader (nearest historical games) has a tuning knob k: too few neighbors overfits one game's noise, too many washes out the signal. The inverse-complexity law tells the engine how to set the similarity window.",
+    "source_operator": "knn_complexity",
+    "telemetry": "GSE telemetry: neighbor count k and its bias/variance; verify the similarity window is tuned, not memorizing."
+   }
+  },
+  {
+   "primitive_id": "linear_variance_pN",
+   "name": "Linear-model variance scales as p/N",
+   "verbatim_quote": "model complexity is directly related to the number of parameters p.",
+   "page": 224,
+   "latex": "\\frac{1}{N}\\sum_{i=1}^{N}\\mathrm{Err}(x_i)=\\sigma_\\varepsilon^2+\\frac{1}{N}\\sum_i[f(x_i)-\\mathbb{E}\\hat f(x_i)]^2+\\frac{p}{N}\\sigma_\\varepsilon^2",
+   "symbol_and_unit_ledger": {
+    "p": "number of parameters [count]",
+    "N": "sample size [count]",
+    "p/N": "variance inflation [dimensionless]"
+   },
+   "assumptions": [
+    "Least-squares linear fit",
+    "Average variance over the sample is (p/N)sigma_eps^2"
+   ],
+   "breakdown_regime": "When p approaches N the variance explodes; high-dimensional regimes need shrinkage.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's variance grows with the ratio of football factors p to games N. With a finite season sample, adding factors inflates variance as p/N, which is the formal reason the engine shrinks coefficients and keeps the factor count well below the game count.",
+    "source_operator": "linear_variance_pN",
+    "telemetry": "GSE telemetry: p/N ratio; verify factor count stays well below sample size or shrinkage is applied."
+   }
+  },
+  {
+   "primitive_id": "model_vs_estimation_bias",
+   "name": "Model bias vs estimation bias; OLS has zero estimation bias",
+   "verbatim_quote": "For linear models fit by ordinary least squares, the estimation bias is zero.",
+   "page": 225,
+   "latex": "\\mathrm{Ave}[\\text{Model Bias}]^2+\\mathrm{Ave}[\\text{Estimation Bias}]^2",
+   "symbol_and_unit_ledger": {
+    "model bias": "best linear approximation vs truth [loss units]",
+    "estimation bias": "average estimate vs best linear fit [loss units]"
+   },
+   "assumptions": [
+    "OLS estimation bias is zero; restricted fits (ridge) have positive estimation bias traded for reduced variance"
+   ],
+   "breakdown_regime": "Model bias can only be reduced by enriching the model class (interactions, transformations).",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine distinguishes two biases: model bias (the ontology's functional form is wrong) versus estimation bias (shrinkage pulls the fit from the best linear approximation). Ridge-style shrinkage deliberately accepts estimation bias to cut variance; only enriching the ontology fixes model bias.",
+    "source_operator": "model_vs_estimation_bias",
+    "telemetry": "GSE telemetry: model-bias vs estimation-bias split; verify shrinkage trades estimation bias for variance, not model bias."
+   }
+  },
+  {
+   "primitive_id": "shrinkage_worthwhile",
+   "name": "Shrinkage is worthwhile when variance drop beats bias rise",
+   "verbatim_quote": "If the decrease in variance exceeds the increase in (squared) bias, then this is worthwhile.",
+   "page": 226,
+   "latex": "\\Delta\\mathrm{Var}<-\\Delta\\mathrm{Bias}^2\\ \\Rightarrow\\ \\text{shrink}",
+   "symbol_and_unit_ledger": {
+    "Delta Var": "variance reduction [loss units]",
+    "Delta Bias^2": "bias increase [loss units]"
+   },
+   "assumptions": [
+    "A shrunken fit has extra estimation bias but smaller variance"
+   ],
+   "breakdown_regime": "If the bias increase exceeds the variance drop, shrinkage hurts.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the GSE regularization decision rule: shrink the football coefficients toward the ontology prior only when the variance reduction outweighs the bias increase. It is the quantitative gate behind weight decay / ridge in the engine, not a blanket penalty.",
+    "source_operator": "shrinkage_worthwhile",
+    "telemetry": "GSE telemetry: variance-drop vs bias-rise per shrinkage strength; verify shrinkage is applied only where net-beneficial."
+   }
+  },
+  {
+   "primitive_id": "decision_boundary_error",
+   "name": "For 0-1 loss, errors on the right side of the boundary don't hurt",
+   "verbatim_quote": "estimation errors that leave us on the right side of the decision boundary don't hurt.",
+   "page": 226,
+   "latex": "\\text{0-1 loss: }\\mathbb{1}[\\hat G(x)\\ne G(x)],\\quad \\text{bias}^2+\\text{variance}\\ne\\text{error}",
+   "symbol_and_unit_ledger": {
+    "0-1 loss": "misclassification indicator [dimensionless]",
+    "decision boundary": "classification threshold"
+   },
+   "assumptions": [
+    "True class prob 0.9, estimate 0.6: large squared bias but zero classification error"
+   ],
+   "breakdown_regime": "Squared-error intuition misleads for classification; the tradeoff behaves differently.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE pick is a classification (bet/pass, over/under), not a regression: an estimate can be biased yet still land on the right side of the decision boundary and cost nothing. The engine must evaluate picks by decision correctness, not by squared calibration error alone.",
+    "source_operator": "decision_boundary_error",
+    "telemetry": "GSE telemetry: decision-boundary correctness vs squared calibration error; verify pick grading uses the decision, not just the probability distance."
+   }
+  },
+  {
+   "primitive_id": "loss_dependent_tradeoff",
+   "name": "Bias-variance tradeoff differs for 0-1 vs squared loss",
+   "verbatim_quote": "prediction error is no longer the sum of squared bias and variance.",
+   "page": 226,
+   "latex": "\\text{classification error}\\ne\\mathrm{Bias}^2+\\mathrm{Var}\\ \\text{(0-1 loss)}",
+   "symbol_and_unit_ledger": {
+    "classification error": "misclassification rate [dimensionless]"
+   },
+   "assumptions": [
+    "Bias and variance interact under 0-1 loss",
+    "Best tuning parameters differ between regression and classification"
+   ],
+   "breakdown_regime": "Applying the squared-loss decomposition to classification gives wrong tuning.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine must tune its pick threshold for classification loss, not regression loss: the bias-variance tradeoff behaves differently, so the optimal regularization for a calibrated probability is not the optimal one for a correct bet/pass decision. This is why the decision layer (Bishop) sits atop the probability layer.",
+    "source_operator": "loss_dependent_tradeoff",
+    "telemetry": "GSE telemetry: tuning under 0-1 vs squared loss; verify the pick threshold is optimized for decision correctness."
+   }
+  },
+  {
+   "primitive_id": "cross_validation_heldout",
+   "name": "Cross-validation belongs to training; the test set judges the result",
+   "verbatim_quote": "Cross-validation is applied to the training set, since selecting the shrinkage parameter is part of the training process.",
+   "page": 61,
+   "latex": "\\text{CV on training set}\\to\\hat\\lambda;\\quad \\text{test set}\\to\\text{final performance}",
+   "symbol_and_unit_ledger": {
+    "lambda": "shrinkage/complexity parameter",
+    "CV": "K-fold cross-validation estimate [loss units]"
+   },
+   "assumptions": [
+    "Selecting the tuning parameter is part of training",
+    "The test set must not influence selection"
+   ],
+   "breakdown_regime": "Using the test set to pick the tuning parameter leaks and inflates apparent performance.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the GSE held-out discipline in statistical-learning form: cross-validation selects the regularization on the training corpus, and the sealed test set only judges the final model. The engine must never fit its knobs on the held-out games, which is the formal root of the sealed-baseline / no-fit-on-own-training rule.",
+    "source_operator": "cross_validation_heldout",
+    "telemetry": "GSE telemetry: CV-selected lambda vs sealed-test performance; verify the test set never enters parameter selection."
+   }
+  },
+  {
+   "primitive_id": "test_set_judgment",
+   "name": "The test set exists only to judge the selected model",
+   "verbatim_quote": "The test set is there to judge the performance of the selected model.",
+   "page": 61,
+   "latex": "\\text{test error}=\\mathbb{E}_{(x,y)\\sim\\text{test}}[L(y,\\hat f(x))]",
+   "symbol_and_unit_ledger": {
+    "test error": "out-of-sample loss [loss units]"
+   },
+   "assumptions": [
+    "Test set independent of training and selection",
+    "Used once, for final judgment"
+   ],
+   "breakdown_regime": "Repeatedly consulting the test set turns it into a training set (adaptive overfitting).",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE sealed baseline is the test set: it judges the engine's honest out-of-sample skill and is consulted only for final settlement, never for tuning. This is the statistical-learning guarantee behind the immutable ledger and the walk-forward emission gate.",
+    "source_operator": "test_set_judgment",
+    "telemetry": "GSE telemetry: sealed-test consultation count; verify the baseline is used for judgment only, not iteration."
+   }
+  },
+  {
+   "primitive_id": "one_standard_error_rule",
+   "name": "One-standard-error rule: pick the most parsimonious model within 1 SE of the best",
+   "verbatim_quote": "we pick the most parsimonious model within one standard error of the minimum",
+   "page": 61,
+   "latex": "\\hat M=\\text{simplest }M\\text{ with }\\mathrm{CV}(M)\\le\\min_M\\mathrm{CV}(M)+\\mathrm{SE}",
+   "symbol_and_unit_ledger": {
+    "SE": "standard error of the CV estimate [loss units]",
+    "CV(M)": "cross-validated error of model M [loss units]"
+   },
+   "assumptions": [
+    "The CV curve is estimated with error",
+    "Conservative: prefer simplicity within noise of the minimum"
+   ],
+   "breakdown_regime": "Ignoring the SE and picking the exact CV minimum overfits the validation noise.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the GSE conservative model-selection gate: among models whose cross-validated error is within one standard error of the best, pick the simplest. It acknowledges that the error curve is itself noisy, so the engine prefers a parsimonious ontology over a marginally-better complex one. This is the operational Occam razor.",
+    "source_operator": "one_standard_error_rule",
+    "telemetry": "GSE telemetry: CV error curve with SE bands; verify the selected model is the simplest within 1 SE of the minimum."
+   }
+  },
+  {
+   "primitive_id": "shrinkage_vs_subset",
+   "name": "Shrinkage is continuous; subset selection is discrete and high-variance",
+   "verbatim_quote": "Shrinkage methods are more continuous, and don’t suffer as much from high variability.",
+   "page": 61,
+   "latex": "\\text{subset: discrete retain/discard}\\Rightarrow\\text{high variance};\\quad \\text{shrinkage: continuous}\\Rightarrow\\text{stable}",
+   "symbol_and_unit_ledger": {
+    "subset selection": "discrete variable inclusion [high variance]",
+    "shrinkage": "continuous coefficient penalty [lower variance]"
+   },
+   "assumptions": [
+    "Subset selection is interpretable but unstable",
+    "Shrinkage trades a little bias for much less variability"
+   ],
+   "breakdown_regime": "Best-subset search can swing wildly with small data changes.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine prefers continuous shrinkage (ridge/lasso-style penalties on football factors) over discrete keep/drop selection, because the latter is high-variance: a factor kept or dropped on a small sample swings the model. Continuous shrinkage is the stable way to regularize the ontology.",
+    "source_operator": "shrinkage_vs_subset",
+    "telemetry": "GSE telemetry: coefficient stability across resamples; verify continuous shrinkage rather than discrete factor selection."
+   }
+  },
+  {
+   "primitive_id": "ridge_penalty",
+   "name": "Ridge regression shrinks coefficients by penalizing their size",
+   "verbatim_quote": "Ridge regression shrinks the regression coefficients by imposing a penalty on their size.",
+   "page": 61,
+   "latex": "\\hat\\beta^{\\text{ridge}}=\\arg\\min_\\beta\\left\\{\\sum_i(y_i-\\beta_0-\\sum_j x_{ij}\\beta_j)^2+\\lambda\\sum_j\\beta_j^2\\right\\}",
+   "symbol_and_unit_ledger": {
+    "lambda": "shrinkage penalty strength [dimensionless]",
+    "sum beta_j^2": "L2 coefficient penalty [beta^2]"
+   },
+   "assumptions": [
+    "L2 penalty shrinks all coefficients toward zero",
+    "Larger lambda means more shrinkage"
+   ],
+   "breakdown_regime": "Ridge never sets coefficients exactly to zero (unlike lasso); it shrinks correlated predictors together.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the GSE ontology-prior regularizer in regression form: the L2 penalty pulls football-factor coefficients toward zero (the prior), with lambda controlling the strength. It is the same Tikhonov/weight-decay regularization that appears in the UML and DL layers, here given its statistical-learning bias-variance justification.",
+    "source_operator": "ridge_penalty",
+    "telemetry": "GSE telemetry: ridge lambda and coefficient shrinkage; verify the L2 penalty matches the evidence/CV-selected strength."
+   }
+  },
+  {
+   "primitive_id": "subset_selection_variance",
+   "name": "Subset selection is interpretable but often high-variance",
+   "verbatim_quote": "subset selection produces a model that is interpretable and has possibly lower prediction error than the full model.",
+   "page": 61,
+   "latex": "\\text{subset model: interpretability}\\uparrow,\\ \\text{variance}\\uparrow\\text{ (discrete)}",
+   "symbol_and_unit_ledger": {
+    "interpretability": "model transparency [qualitative]",
+    "variance": "selection instability [loss units]"
+   },
+   "assumptions": [
+    "Discrete retain/discard process",
+    "Often does not reduce the full model's prediction error"
+   ],
+   "breakdown_regime": "The discreteness is the source of the high variance.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine values an interpretable ontology, but discrete factor selection is unstable; interpretability must not come at the cost of high variance. This is why the engine keeps a parsimonious but continuously-regularized model rather than a hand-picked subset of football factors.",
+    "source_operator": "subset_selection_variance",
+    "telemetry": "GSE telemetry: interpretability vs selection variance; verify the ontology is stable under resampling."
+   }
+  },
+  {
+   "primitive_id": "svm_max_margin",
+   "name": "Optimal separating hyperplane maximizes the margin",
+   "verbatim_quote": "by maximizing the margin between the two classes on the training data, this leads to better classification performance on test data.",
+   "page": 132,
+   "latex": "\\min_{\\beta,\\beta_0}\\frac{1}{2}\\|\\beta\\|^2\\ \\text{s.t.}\\ y_i(x_i^T\\beta+\\beta_0)\\ge 1,\\quad \\text{margin}=1/\\|\\beta\\|",
+   "symbol_and_unit_ledger": {
+    "margin": "distance to closest point [length]",
+    "beta": "normal vector [1/length]",
+    "support points": "points on the margin boundary"
+   },
+   "assumptions": [
+    "Separable classes (hard margin)",
+    "Convex quadratic program with linear constraints"
+   ],
+   "breakdown_regime": "Non-separable data need the soft-margin SVM (slack variables) to allow overlap.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE decision boundary (bet vs pass) should maximize its margin: a wide margin between the publish and abstain regions is robust to noise and generalizes better. The engine focuses on the close games (the support points near the boundary) rather than the blowouts far from it.",
+    "source_operator": "svm_max_margin",
+    "telemetry": "GSE telemetry: decision-boundary margin width; verify the boundary maximizes separation and focuses on boundary cases."
+   }
+  },
+  {
+   "primitive_id": "support_points_robust",
+   "name": "The max-margin solution depends only on the support points",
+   "verbatim_quote": "the optimal hyperplane focuses more on the points that count, and is more robust to model misspecification.",
+   "page": 134,
+   "latex": "\\beta=\\sum_{i=1}^{N}\\alpha_i y_i x_i,\\quad \\alpha_i>0\\iff x_i\\text{ on margin boundary}",
+   "symbol_and_unit_ledger": {
+    "alpha_i": "Lagrange multiplier [dimensionless]",
+    "support points": "xi with alpha_i>0"
+   },
+   "assumptions": [
+    "Only boundary points (alpha_i>0) define the solution",
+    "Points far from the boundary have alpha_i=0"
+   ],
+   "breakdown_regime": "If classes are truly Gaussian, LDA is optimal and the margin focus pays a price on noisy boundary data.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's robustness comes from focusing on the points that count: the close, decisive games near the bet/pass boundary define the policy, while blowouts far from the boundary contribute nothing. This is why the engine is robust to model misspecification on the easy games and concentrates its calibration on the hard ones.",
+    "source_operator": "support_points_robust",
+    "telemetry": "GSE telemetry: support-point (boundary-game) weight distribution; verify calibration effort concentrates on close games."
+   }
+  },
+  {
+   "primitive_id": "margin_generalization",
+   "name": "A large training margin leads to good test separation",
+   "verbatim_quote": "a large margin on the training data will lead to good separation on the test data.",
+   "page": 134,
+   "latex": "\\text{large margin}\\Rightarrow\\text{low generalization error (VC/margin bounds)}",
+   "symbol_and_unit_ledger": {
+    "margin": "separation width [length]",
+    "generalization error": "test misclassification [dimensionless]"
+   },
+   "assumptions": [
+    "Margin-based generalization bounds",
+    "Larger margin implies tighter bound"
+   ],
+   "breakdown_regime": "Over-fitting via basis expansion can create artificial separation; the soft-margin SVM avoids this.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the GSE generalization guarantee for the decision boundary: a wide margin on the historical games bounds the error on future games. It is the statistical-learning counterpart of the PAC/VC layer, specialized to the bet/pass decision, and the reason the engine prefers a confident wide-margin policy over a razor-thin one.",
+    "source_operator": "margin_generalization",
+    "telemetry": "GSE telemetry: margin-based generalization bound; verify the published policy has a wide, well-supported margin."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "5862404626d4c32a-t1",
+   "think": "Retrocausal Genealogy. The Elements of Statistical Learning is the layer that gives the Foundry its error budget and its model-selection discipline, and its lineage runs backward from the GSE pick to the decomposition of prediction error. The root is the bias-variance decomposition (Eq. 7.9): expected error splits into an irreducible noise term, a squared-bias term, and a variance term, and the irreducible term cannot be avoided no matter how well the function is estimated. From this root grows the complexity tradeoff (more flexibility lowers bias but raises variance), the k-nearest-neighbor inverse-complexity law (Eq. 7.10), the linear-model p/N variance law (Eq. 7.12), and the finer split into model bias versus estimation bias (Eq. 7.14), where ordinary least squares has zero estimation bias but ridge accepts some to cut variance. Shrinkage methods (Section 3.4) then supply the continuous regularizers, ridge (L2 penalty) and lasso, preferred over discrete subset selection because the latter is high-variance. Model assessment (Chapter 7) supplies cross-validation, the one-standard-error rule that picks the most parsimonious model within noise of the best, and the discipline that cross-validation belongs to training while the test set only judges the result. The classification chapter (4.5) supplies the optimal separating hyperplane that maximizes the margin (Eq. 4.48), defined only by the support points, with the intuition that a large training margin yields good test separation. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the error budget is the bias-variance decomposition, the regularization is ridge shrinkage, the conservative selection is the one-standard-error rule, the sealed baseline is the held-out test set, and the robust bet/pass boundary is the maximum-margin hyperplane.\n\nRecursive Theory of Mind. The engine reasons about its own error structure and about the defense's decision boundary in a recursive stack that ESL makes precise. At the base the engine decomposes its own prediction error into irreducible noise, model bias, and estimation variance, so it reasons about which part of its error is fixable: bias routes to ontology review, variance routes to shrinkage, and the irreducible floor is accepted honestly. One level up, the engine reasons about its own model-selection process: it knows the cross-validation curve is estimated with error, so it applies the one-standard-error rule and prefers the parsimonious model, a recursive skepticism about its own validation. The engine also models the defense as a classifier with its own decision boundary: the coverage call separates the offense's intents with a margin, and the engine reasons about where the support points (the close, decisive situations) lie, focusing its calibration there rather than on the blowouts. The margin generalization intuition adds a further recursion: the engine knows that a wide margin on historical games bounds its error on future games, so it reasons about the robustness of its own bet/pass boundary and refuses a razor-thin policy that would overfit the easy games.\n\nCross-Layer Veto Adjudication. ESL's statistical-learning layer supplies the vetoes that bind the stack. First, the irreducible-error veto: no model can beat the noise floor (Eq. 7.9), so the engine must not claim skill below the irreducible variance; this is the same honest-ledger floor as Bishop's irreducible loss. Second, the held-out veto: cross-validation selects the tuning parameter on training only, and the test set judges the result (Section 3.3.4); the engine must never fit its knobs on the sealed games, the formal root of the sealed-baseline rule. Third, the one-standard-error veto: among models within one SE of the best CV error, pick the simplest; the engine vetoes a marginally-better complex model in favor of a parsimonious ontology, the operational Occam razor. Fourth, the shrinkage veto: discrete subset selection is high-variance, so the engine prefers continuous shrinkage and applies it only where the variance drop beats the bias rise (Eq. 7.14 discussion). Fifth, the loss-mismatch veto: the bias-variance tradeoff differs for 0-1 versus squared loss, so the engine tunes the pick threshold for decision correctness, not squared calibration error. Sixth, the margin veto: a razor-thin decision boundary overfits, so the engine requires a wide, well-supported margin focused on the support points. The adjudication order is fixed: respect the noise floor first, then protect the held-out set, then prefer parsimony within noise, then shrink continuously, then tune for the right loss, then require a wide margin. A candidate failing any veto is PASSed, and the whole procedure is bound to out-of-sample truth by the held-out discipline rather than to in-sample fit.\n\nThe load-bearing isomorphism is that GSE model selection IS statistical learning. The engine's error budget is the bias-variance decomposition (irreducible football noise plus model bias plus estimation variance); its regularization is ridge shrinkage justified by the bias-variance tradeoff; its conservative selection is the one-standard-error rule; its sealed baseline is the held-out test set that judges but never trains; and its robust bet/pass boundary is the maximum-margin hyperplane defined by the support points (the close games). ESL unifies with the other layers: the irreducible error is Bishop's noise floor and Murphy's aleatoric uncertainty, ridge is the UML/DL Tikhonov regularizer and the ELBO's KL-to-prior, the held-out discipline is the PAC validation split, and the margin bound is the VC generalization guarantee specialized to the decision. ESL does not sit beside the stack; it is the error-budget and model-selection discipline that turns the calibrated posterior into a parsimonious, robust, honestly-validated policy, and it is what lets the Foundry treat the one-standard-error rule and the sealed test set as theorems rather than preferences.",
+   "retrocausal_genealogy": "Retrocausal Genealogy. The Elements of Statistical Learning is the layer that gives the Foundry its error budget and its model-selection discipline, and its lineage runs backward from the GSE pick to the decomposition of prediction error. The root is the bias-variance decomposition (Eq. 7.9): expected error splits into an irreducible noise term, a squared-bias term, and a variance term, and the irreducible term cannot be avoided no matter how well the function is estimated. From this root grows the complexity tradeoff (more flexibility lowers bias but raises variance), the k-nearest-neighbor inverse-complexity law (Eq. 7.10), the linear-model p/N variance law (Eq. 7.12), and the finer split into model bias versus estimation bias (Eq. 7.14), where ordinary least squares has zero estimation bias but ridge accepts some to cut variance. Shrinkage methods (Section 3.4) then supply the continuous regularizers, ridge (L2 penalty) and lasso, preferred over discrete subset selection because the latter is high-variance. Model assessment (Chapter 7) supplies cross-validation, the one-standard-error rule that picks the most parsimonious model within noise of the best, and the discipline that cross-validation belongs to training while the test set only judges the result. The classification chapter (4.5) supplies the optimal separating hyperplane that maximizes the margin (Eq. 4.48), defined only by the support points, with the intuition that a large training margin yields good test separation. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the error budget is the bias-variance decomposition, the regularization is ridge shrinkage, the conservative selection is the one-standard-error rule, the sealed baseline is the held-out test set, and the robust bet/pass boundary is the maximum-margin hyperplane.",
+   "theory_of_mind": "Recursive Theory of Mind. The engine reasons about its own error structure and about the defense's decision boundary in a recursive stack that ESL makes precise. At the base the engine decomposes its own prediction error into irreducible noise, model bias, and estimation variance, so it reasons about which part of its error is fixable: bias routes to ontology review, variance routes to shrinkage, and the irreducible floor is accepted honestly. One level up, the engine reasons about its own model-selection process: it knows the cross-validation curve is estimated with error, so it applies the one-standard-error rule and prefers the parsimonious model, a recursive skepticism about its own validation. The engine also models the defense as a classifier with its own decision boundary: the coverage call separates the offense's intents with a margin, and the engine reasons about where the support points (the close, decisive situations) lie, focusing its calibration there rather than on the blowouts. The margin generalization intuition adds a further recursion: the engine knows that a wide margin on historical games bounds its error on future games, so it reasons about the robustness of its own bet/pass boundary and refuses a razor-thin policy that would overfit the easy games.",
+   "cross_layer_veto": "Cross-Layer Veto Adjudication. ESL's statistical-learning layer supplies the vetoes that bind the stack. First, the irreducible-error veto: no model can beat the noise floor (Eq. 7.9), so the engine must not claim skill below the irreducible variance; this is the same honest-ledger floor as Bishop's irreducible loss. Second, the held-out veto: cross-validation selects the tuning parameter on training only, and the test set judges the result (Section 3.3.4); the engine must never fit its knobs on the sealed games, the formal root of the sealed-baseline rule. Third, the one-standard-error veto: among models within one SE of the best CV error, pick the simplest; the engine vetoes a marginally-better complex model in favor of a parsimonious ontology, the operational Occam razor. Fourth, the shrinkage veto: discrete subset selection is high-variance, so the engine prefers continuous shrinkage and applies it only where the variance drop beats the bias rise (Eq. 7.14 discussion). Fifth, the loss-mismatch veto: the bias-variance tradeoff differs for 0-1 versus squared loss, so the engine tunes the pick threshold for decision correctness, not squared calibration error. Sixth, the margin veto: a razor-thin decision boundary overfits, so the engine requires a wide, well-supported margin focused on the support points. The adjudication order is fixed: respect the noise floor first, then protect the held-out set, then prefer parsimony within noise, then shrink continuously, then tune for the right loss, then require a wide margin. A candidate failing any veto is PASSed, and the whole procedure is bound to out-of-sample truth by the held-out discipline rather than to in-sample fit."
+  }
+ ],
+ "universal_lens": "Any predictive system is governed by the bias-variance decomposition: expected error splits into irreducible noise, squared bias, and estimation variance, and the noise floor cannot be beaten. Complexity lowers bias but raises variance, so regularize by continuous shrinkage (ridge/lasso) rather than discrete subset selection, applying it only where the variance drop beats the bias rise. Select models by cross-validation on training alone, prefer the most parsimonious model within one standard error of the best, and judge the result on a held-out test set that never trains. For classification, maximize the decision margin and focus on the support points, because a large training margin bounds test error and the tradeoff differs from squared loss.",
+ "gsi_mapping": "For GSI, this is the epistemology of honest, parsimonious prediction: why every error budget must separate irreducible noise from fixable bias and variance, why continuous shrinkage beats discrete selection, why the one-standard-error rule prefers simplicity within validation noise, why the held-out test set must judge but never train, and why a wide decision margin focused on the points that count generalizes better than a razor-thin boundary. It is the statistical-learning discipline that turns a calibrated model into a robust, honestly-validated policy and treats the noise floor and the sealed test set as theorems rather than preferences.",
+ "gse_mapping": "For GSE, this is the error-budget and model-selection layer: the prediction error decomposes into irreducible football noise, ontology model bias, and estimation variance (honest ledger); regularization is ridge shrinkage applied where the variance drop beats the bias rise; conservative selection is the one-standard-error rule preferring a parsimonious ontology; the sealed baseline is the held-out test set that judges but never trains; and the robust bet/pass boundary is the maximum-margin hyperplane defined by the support points (the close games), with the pick threshold tuned for 0-1 decision correctness rather than squared calibration error.",
+ "layer2_summary": "[ISOMORPHISM] GSE model selection IS statistical learning: error budget = bias-variance decomposition (irreducible noise + model bias + estimation variance); regularization = ridge shrinkage; conservative selection = one-standard-error rule; sealed baseline = held-out test set; robust bet/pass boundary = maximum-margin hyperplane on support points (close games); pick threshold tuned for 0-1 decision correctness."
+}

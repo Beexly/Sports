@@ -1,0 +1,182 @@
+{
+ "book_id": "1a04a74c1cd2528c",
+ "title": "Traumatic Brain Injury - Recent Advances and Challenges",
+ "author": "Edited by Ioannis Mavroudis and Alin Ciobica (10 contributed chapters)",
+ "year": "2025",
+ "publisher": "IntechOpen, London",
+ "doi": "10.5772/intechopen.110973",
+ "isbn": "978-0-85466-944-8; 978-0-85466-945-5",
+ "primary_domain": "psych",
+ "true_domain_note": "Clinical neurotrauma medicine / neurophysiology (queue bucket 'psych' via brain/neuro keyword); content spans neurocritical care, biomechanics, ferroptosis biochemistry, neuro-urology, and rehabilitation.",
+ "source_status": "COMPLETE",
+ "pages_total": 190,
+ "pages_read": 190,
+ "source_note": "Full 190-page chunked read completed (pymupdf text layer; no OCR needed). Page-1 and whole-text scan found NO retraction or expression-of-concern markers. Title matches content; original IntechOpen edited volume, not a derivative AI summary. Editorial defects quarantined (no primitives built on them): (a) Ch.2 PDF p.26 swaps GCS severity labels (calls GCS 13-15 'moderate' and 9-12 'mild'); (b) Ch.6 PDF p.122 Lip-1 prose inverts the mechanism ('inhibition of xCT or inactivation of GPX4' would INDUCE ferroptosis), and PDF p.123 polydatin prose ('increase MDA ... reduce GPX4') contradicts its own Table 1 (down-MDA, up-GPX4); (c) Ch.6 §4.2.4 mislabels 'Posttraumatic epilepsy' as a type of hydrocephalus; (d) Reynolds perspective chapters (1, 8) misclassify Strattera as an antipsychotic, write 'chronic traumatic encephalitis' for encephalopathy, and overclaim TBI is 'always neurodegenerative', contradicting Ch.4's favorable-outcome consensus. Extracted kernels come only from the internally consistent core (Ch.2 ICP/CPP management, Ch.4 neurometabolic cascade, Ch.6 Fenton/System Xc- biochemistry, Ch.9 compliance/urodynamics). Balanced stoichiometric LaTeX and the CPP=MAP-ICP identity and Na/K-pump 3:2:1 ratio are flagged in ledgers as canonical formalizations or external standard context where the source states them only in prose or not at all. All Layer-2 telemetry honestly LATENT_UNIDENTIFIABLE.",
+ "primitives": [
+  {
+   "primitive_id": "monro-kellie-fixed-volume",
+   "name": "Monro-Kellie fixed-volume constraint with compliance-to-elastance transition",
+   "verbatim_quote": "According to the Monroe Kellie theory, cerebral tissue, cerebral blood, and CSF all have fixed volumes inside the intracranial compartment. To keep the ICP normal, compensation must take place when the volume of one compartment rises or a mass lesion is added to the compartment. The first step in this adjustment is the movement of venous blood and CSF into the spinal canal. However, when cerebral compliance declines and elastance rises after a critical volume is reached in the intra- cranial compartment, this leads to greater changes in ICP and less changes in volume.",
+   "page": "PDF p.40 (printed book p.28), Chapter 2 §7.7 'ICP monitoring and management', Kariuki & Omariba, DOI 10.5772/intechopen.1005056",
+   "latex": "V_{\\mathrm{brain}} + V_{\\mathrm{blood}} + V_{\\mathrm{CSF}} + V_{\\mathrm{lesion}} = V_{\\mathrm{cranial}} = \\mathrm{const}, \\qquad C = \\frac{dV}{dP_{\\mathrm{ICP}}}, \\quad E = \\frac{dP_{\\mathrm{ICP}}}{dV} = \\frac{1}{C}",
+   "symbol_and_unit_ledger": {
+    "V_brain": "volume of cerebral tissue [mL]",
+    "V_blood": "volume of cerebral blood [mL]",
+    "V_CSF": "volume of cerebrospinal fluid [mL]",
+    "V_lesion": "added mass-lesion/edema volume [mL] (0 in the intact compensated state)",
+    "V_cranial": "fixed rigid cranial capacity [mL]",
+    "C": "intracranial compliance dV/dP [mL/mmHg]",
+    "E": "intracranial elastance dP/dV [mmHg/mL]",
+    "P_ICP": "intracranial pressure [mmHg]; source treatment threshold ICP > 22 mmHg (PDF p.40, BTF guidelines)"
+   },
+   "assumptions": [
+    "Rigid, closed cranial compartment (adult skull; sutures fused) so total intracranial volume is conserved.",
+    "Compensation occurs first by displacing venous blood and CSF into the spinal canal (source-stated first step).",
+    "Beyond a critical added volume, compliance falls and elastance rises: the same volume increment produces a larger pressure increment (source-stated regime change).",
+    "The equation is the standard formalization of the source's prose 'fixed volumes ... compensation must take place'; the source names the doctrine 'Monroe Kellie theory' (its spelling) and gives no numeric compartment volumes."
+   ],
+   "breakdown_regime": "Decompensation: once compensatory reserve is exhausted, dP/dV diverges and small volume gains cause large ICP spikes, herniation, and perfusion failure. The closed-box assumption itself breaks after decompressive craniectomy (source §7.13: removing skull 'providing more room for the enlarged brain' lowers ICP) — the constraint is surgically opened, not satisfied. Also invalid in infants with open sutures and whenever a mass lesion is evacuated.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fixed-total budget with a displaceable reserve, then a stiff regime: any closed system whose components must sum to a hard cap and which can buffer a shock only by displacing a reserve behaves identically. When one compartment expands, another must contract; once the reserve is spent, marginal cost of additional volume jumps from close to zero to very large (compliance -> elastance). GSE structural analogue: a hard roster/salary cap where spending on one position group must be offset elsewhere, with exemptions/dead-cap space acting as the displaceable CSF/venous reserve; once that buffer is exhausted, each additional commitment forces a steep marginal cost (releasing productive players). The isomorphism is the conservation law plus the two-regime cost curve, not any medical claim about football.",
+    "source_operator": "monro-kellie-fixed-volume",
+    "telemetry": "LATENT_UNIDENTIFIABLE — this medical corpus carries no football telemetry; the cap/buffer isomorphism is structural and would need roster-and-cap panel data (commitments, reserve space, marginal replacement cost) to become observable. No numeric mapping is asserted."
+   }
+  },
+  {
+   "primitive_id": "cpp-target-band-autoregulation",
+   "name": "Cerebral perfusion pressure target band with age-stratified pressure floor and autoregulation dependence",
+   "verbatim_quote": "it is recommended to maintain SBP at ≥100 mmHg for patients 50–69 years old, or at ≥110 mmHg or higher for patients 15–49 or older than 70. Recommended mmHg level is between 60 and 70 mmHg, which is the recommended target CPP value for survival and favorable outcomes. It is uncertain what the lowest ideal CPP threshold is—60 or 70 mmHg—and it might depend on the patient’s autonomic state [31].",
+   "page": "PDF p.39 (printed book p.27), Chapter 2 §7.4 'Blood pressure and cerebral perfusion pressure (CPP)'; Table 2 'Goals of treatment' PDF p.37 (book p.25)",
+   "latex": "60\\,\\mathrm{mmHg} \\le \\mathrm{CPP}_{\\mathrm{target}} \\le 70\\,\\mathrm{mmHg}, \\qquad \\mathrm{SBP}_{\\min}(\\mathrm{age}) = \\begin{cases} 100\\,\\mathrm{mmHg} & 50 \\le \\mathrm{age} \\le 69 \\\\ 110\\,\\mathrm{mmHg} & 15 \\le \\mathrm{age} \\le 49 \\ \\mathrm{or}\\ \\mathrm{age} > 70 \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "CPP_target": "cerebral perfusion pressure target [mmHg]; Table 2 lists 'CPP more than 60 mmHg' with the footnote '* based on the state of brain auto-regulation'",
+    "SBP_min": "minimum systolic blood pressure floor [mmHg], age-stratified exactly as the source states",
+    "age": "patient age [years]",
+    "note": "The standard definitional identity CPP = MAP - ICP relates the three quantities the book defines and monitors (CPP, mean arterial pressure, ICP) but is NOT printed anywhere in this source; it is flagged here as external standard definition, not extracted. The extracted sovereign content is the target band, the age-stratified SBP floor, and the explicit autoregulation dependence."
+   },
+   "assumptions": [
+    "The source explicitly refuses a single universal threshold: 'It is uncertain what the lowest ideal CPP threshold is—60 or 70 mmHg—and it might depend on the patient's autonomic state.'",
+    "Table 2's CPP goal is footnoted as conditional on the state of brain autoregulation — the band is a regime-dependent operating window, not a constant of nature.",
+    "Vasopressor choice matters: source reports dopamine raises ICP while norepinephrine has a more predictable CPP effect (§7.4), so the same pressure target is not actuator-invariant."
+   ],
+   "breakdown_regime": "Below the band, ischemic secondary injury accrues (source: even one hypotensive episode is linked to a two-fold mortality increase, §7.1); above it, hyperemia/edema risk. The band itself loses meaning when autoregulation fails — pressure-passive circulation makes CPP a poor proxy for flow, which is why the source footnotes the goal to autoregulatory state. Age stratification breaks down at the boundaries the source leaves open (pediatric SBP defined instead as below the fifth percentile, approximated 70 + 2*age mmHg, Table 3).",
+   "layer2": null
+  },
+  {
+   "primitive_id": "fenton-iron-catalysis",
+   "name": "Fenton reaction: ferrous-iron catalytic radical generation driving lipid peroxidation (ferroptosis)",
+   "verbatim_quote": "Specifically, excess iron, in the form of divalent ferrous ion Fe2+, can react with hydrogen peroxide (H2O2) or organic hydrogen peroxide (ROOH) to produce soluble hydroxyl (HO) or lipid alkoxy (RO•) groups, respectively. These reactions are the main source of reactive oxygen species (ROS), known as the Fenton reaction [9], which ultimately leads to cell death.",
+   "page": "PDF p.111 (printed book p.99), Chapter 6 §1, Qian et al., DOI 10.5772/intechopen.1005618; corroborating passage PDF p.114 (book p.102) §3.2.2",
+   "latex": "\\mathrm{Fe}^{2+} + \\mathrm{H_2O_2} \\rightarrow \\mathrm{Fe}^{3+} + \\mathrm{OH}^{-} + {}^{\\bullet}\\mathrm{OH}, \\qquad \\mathrm{Fe}^{2+} + \\mathrm{ROOH} \\rightarrow \\mathrm{Fe}^{3+} + \\mathrm{RO}^{\\bullet} + \\mathrm{OH}^{-}",
+   "symbol_and_unit_ledger": {
+    "Fe2+/Fe3+": "ferrous/ferric iron [mol]; catalyst is regenerated by reduction, so trace iron turns over many peroxide molecules",
+    "H2O2": "hydrogen peroxide [mol]",
+    "ROOH": "organic (lipid) hydroperoxide [mol]",
+    "•OH": "hydroxyl radical [mol] (source writes 'soluble hydroxyl (HO)')",
+    "RO•": "lipid alkoxy radical [mol]",
+    "OH-": "hydroxide ion [mol]",
+    "note": "Balanced stoichiometric equations are the canonical formalization of the source's prose description (Fe2+ + H2O2/ROOH -> hydroxyl/lipid-alkoxy radicals); the source states the reaction in words, not symbols. Downstream products 4-HNE and MDA are named by the source (PDF p.114)."
+   },
+   "assumptions": [
+    "Iron is catalytic, not stoichiometric: the source's therapeutic logic (chelation with DFO removes the catalyst) only makes sense if trace Fe2+ amplifies damage far beyond its molar amount.",
+    "Neuronal vulnerability is structural: membranes rich in PUFAs and cholesterol, with relatively low SOD/GPX antioxidant capacity (source PDF p.111).",
+    "TBI supplies the iron via hemorrhage/erythrocyte lysis and BBB disruption (source §4.1), i.e., the catalyst is delivered by the primary injury.",
+    "Source-stated therapeutic limit: 'Sole treatment with antioxidants and anti-excitatory amino acids cannot alleviate cell damage induced by iron overload.' (PDF p.125 / book p.113) — scavenging products does not remove the catalyst."
+   ],
+   "breakdown_regime": "Chelation (DFO) collapses the catalytic term by sequestering Fe2+; the source notes DFO removes ~10–15% of iron from saturated transferrin but not from hemoglobin (PDF p.119), so the reaction persists while hemoglobin-bound iron remains. At physiological pH with iron safely stored in ferritin/transferrin the labile Fe2+ pool is tiny and the reaction is suppressed; the pathological regime is precisely the expansion of the labile pool after hemorrhage. Antioxidant-only intervention fails to stop catalysis (source conclusion).",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Catalytic amplification of secondary damage: a small, recycled agent converts a stable stock into a destructive flux, so damage is governed by catalyst availability rather than by the size of the initial insult. Primary-vs-secondary injury structure (mechanical insult releases the catalyst; the catalyst then drives delayed, self-propagating damage) is the invariant. GSE structural analogue: a single high-leverage primary event (e.g., loss of a linchpin player or a scheme's key constraint) releases a cascading secondary process whose eventual cost is disproportionate to the trigger, and 'scavenging' the visible symptoms (short-term fixes) does not remove the catalyst. The isomorphism is the catalyst/stock/flux structure and the chelation-vs-scavenging intervention distinction; no medical claim is transferred.",
+    "source_operator": "fenton-iron-catalysis",
+    "telemetry": "LATENT_UNIDENTIFIABLE — no football telemetry exists in this corpus to identify primary-event-to-secondary-cascade amplification factors; the mapping is structural and would require event-chain panel data to quantify. No numeric claim is made."
+   }
+  },
+  {
+   "primitive_id": "system-xc-antiport-gpx4",
+   "name": "System Xc− 1:1 cystine/glutamate antiport coupled to the GSH-GPX4 lipid-peroxide detoxification axis",
+   "verbatim_quote": "The cystine/glu- tamate antiporter (SLC7A11/SLC3A2, also known as System Xc−) on the cell membrane transports cystine into the cell and releases glutamate into the extra- cellular space at a 1:1 ratio [31]. By utilizing GSH as a reducing cofactor, lipid peroxidases are ultimately converted to lipid alcohols by cytoplasmic and mito- chondrial glutathione peroxidase GPX4 [37].",
+   "page": "PDF p.113 (printed book p.101), Chapter 6 §3.2.1 'Inhibition of ferroptosis pathway', Qian et al.",
+   "latex": "\\mathrm{cystine}_{\\mathrm{in}} : \\mathrm{glutamate}_{\\mathrm{out}} = 1 : 1, \\qquad 2\\,\\mathrm{GSH} + \\mathrm{LOOH} \\xrightarrow{\\mathrm{GPX4}} \\mathrm{GSSG} + \\mathrm{LOH} + \\mathrm{H_2O}",
+   "symbol_and_unit_ledger": {
+    "cystine_in / glutamate_out": "antiport stoichiometry [mol:mol, dimensionless 1:1 ratio as stated by source]",
+    "GSH": "reduced glutathione [mol]; synthesized from cystine-derived cysteine via GCL and GSS with NADPH as reducing agent (source)",
+    "GSSG": "oxidized glutathione disulfide [mol]",
+    "LOOH": "lipid hydroperoxide [mol] (source: 'lipid peroxidases' [sic] converted to lipid alcohols)",
+    "LOH": "lipid alcohol [mol]",
+    "GPX4": "glutathione peroxidase 4 [catalytic enzyme, mol], cytoplasmic and mitochondrial",
+    "note": "The GPX4 balanced equation is the canonical formalization of the source prose 'By utilizing GSH as a reducing cofactor, lipid peroxidases are ultimately converted to lipid alcohols by ... GPX4'; the 1:1 antiport ratio is stated verbatim."
+   },
+   "assumptions": [
+    "Obligatory coupling: importing the cystine needed for GSH synthesis necessarily exports glutamate at 1:1 — the defense pathway has an excitatory byproduct (links ferroptosis defense to glutamate excitotoxicity discussed elsewhere in the volume).",
+    "GPX4 is the terminal detoxifier of lipid peroxides; its failure (GSH depletion or direct inactivation) is the execution step of ferroptosis (source: erastin/SLC7A11 axis, GPX4-independent pathways FSP1-CoQ10, GCH1-BH4, DHODH listed as parallel defenses).",
+    "NADPH supply underwrites GSH regeneration, so the axis is energy/redox-budget dependent."
+   ],
+   "breakdown_regime": "Block the antiporter (erastin) and cystine import stops, GSH depletes, GPX4 loses its cofactor, lipid peroxides accumulate -> ferroptosis. The 1:1 coupling also means the antiporter cannot be upregulated for defense without raising extracellular glutamate — a built-in trade-off that breaks the 'more defense is always better' intuition. GPX4-independent pathways (FSP1-CoQ10, DHODH) partially compensate when GPX4 expression is low (source §3.2.1(4)), so single-node knockout does not always execute death.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel: a coupled 1:1 exchange constraint means any defensive acquisition necessarily releases an offensive asset — you cannot import protection without exporting exposure. From the source operator (antiport stoichiometry + GPX4 cofactor dependency) the kernel is: defense(t) and exposure(t) are linked by a conservation-style exchange, and the detoxification capacity is bounded by a upstream supply (GSH/NADPH), not by the terminal enzyme alone. GSE structural analogue: roster moves that add defensive capability necessarily release offensive capability from a fixed slot pool, and the value of the 'terminal' defender is bounded by upstream supply (scheme fit, pass rush, coverage behind). Derived, not asserted by the source: the source states the biochemistry; the exchange-constraint kernel is our abstraction.",
+    "source_operator": "system-xc-antiport-gpx4",
+    "telemetry": "LATENT_UNIDENTIFIABLE — the exchange kernel has no identified football telemetry in this corpus; it would require paired acquisition/release panel data with downstream performance to test. No numeric mapping asserted."
+   }
+  },
+  {
+   "primitive_id": "bladder-compliance-dlpp",
+   "name": "Bladder compliance C = dV/dP and the detrusor leak-point pressure > 40 cmH2O upper-tract risk boundary",
+   "verbatim_quote": "During filling, the bladder maintains a constant pressure despite the increasing volume, which is referred to as its compliance (change in V/change in P). These patients are more likely to develop upper tract complications as a result of higher pressures, which is defined as bladder pressures in excess of 40cmH2O (DLPP >40cmH2)) with a subsequent impairment of upper tract anatomy (hydronephrosis and attenuation of renal parenchyma) and renal function.",
+   "page": "PDF p.162 (printed book p.150) §2.1.1 'Storage phase' and PDF pp.170-171 (book pp.158-159) §5.6, Chapter 9, Milton, Bain & Couchman, DOI 10.5772/intechopen.1006148",
+   "latex": "C = \\frac{\\Delta V}{\\Delta P}, \\qquad \\mathrm{DLPP} > 40\\,\\mathrm{cmH_2O} \\;\\Rightarrow\\; \\text{upper-tract risk (hydronephrosis, parenchymal attenuation, renal impairment)}",
+   "symbol_and_unit_ledger": {
+    "C": "bladder compliance, source-defined as 'change in V/change in P' [mL/cmH2O]",
+    "Delta V": "change in bladder volume [mL]",
+    "Delta P": "change in detrusor pressure [cmH2O]",
+    "DLPP": "detrusor leak-point pressure [cmH2O]; 40 cmH2O ≈ 29.4 mmHg (unit conversion 1 cmH2O = 0.7355 mmHg, external standard factor, flagged)",
+    "note": "Both the compliance definition and the 40 cmH2O boundary are stated verbatim by the source; the mmHg conversion is an added standard factor, flagged as external."
+   },
+   "assumptions": [
+    "Healthy storage: elastic wall properties, smooth-muscle constant-tension behavior, and spinal reflexes keep pressure low while volume rises (source-stated mechanisms).",
+    "The risk boundary is a population-level clinical threshold, not a physical constant; the source frames it as the pressure above which upper-tract complications become likely in suprasacral SCI with DO/DSD.",
+    "Compliance is regime-dependent: suprasacral (UMN) lesions lower compliance and raise pressure; sacral/infrasacral (LMN) lesions raise compliance ('hypercompliant') with low pressure but overflow incontinence (source §3)."
+   ],
+   "breakdown_regime": "When compliance fails (low C), pressure rises steeply with filling, overcomes ureteric pressure causing reflux, and transmits damage upstream to the kidneys — the storage-phase failure mode. The threshold loses discriminating power in the hypercompliant LMN regime where pressure stays low despite large volumes (upper tracts protected, but emptying fails). The source also warns symptom reports correlate poorly with urodynamics, so the pressure boundary must be measured, not inferred from symptoms.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Buffer-capacity invariant: a reservoir that absorbs inflow without pressure rise protects everything upstream of it; when its compliance collapses, pressure transmits upstream and damages the source components. The two-regime structure (low-pressure storage vs stiff high-pressure storage) and a measurable leak-point boundary are the invariant. GSE structural analogue: organizational/roster flexibility absorbing shocks (injuries, schedule density) without 'pressure' rising on core assets; when the buffer is spent, stress transmits to the franchise core (QB health, cap integrity). The 40 cmH2O boundary is the medical instance of a measured failure threshold, not a transferable number.",
+    "source_operator": "bladder-compliance-dlpp",
+    "telemetry": "LATENT_UNIDENTIFIABLE — no telemetry in this corpus identifies the football buffer-capacity analogue; structural mapping only, no numeric transfer."
+   }
+  },
+  {
+   "primitive_id": "concussion-energy-mismatch",
+   "name": "Concussion neurometabolic energy mismatch: supply incapacity vs restoration demand with ATP-dependent ion pumping",
+   "verbatim_quote": "The incapacity to deliver energy to the brain tissues after a concussion, combined with high energy requirements to restore damaged functions, results in an energy mismatch [47]. The Na1/K1 ATP- dependent pump is activated to reestablish ionic balance while depleting energy stores (Figure 2).",
+   "page": "PDF p.70 (printed book p.58), Chapter 4 §5 'Pathophysiology', Tamimi et al., DOI 10.5772/intechopen.1005615",
+   "latex": "\\Delta E_{\\mathrm{mismatch}} = E_{\\mathrm{demand}}^{\\mathrm{restore}} - E_{\\mathrm{supply}}^{\\mathrm{deliverable}} > 0, \\qquad \\mathrm{Na^{+}/K^{+}\\text{-}ATPase}: \\; 3\\,\\mathrm{Na^{+}}_{\\mathrm{out}} : 2\\,\\mathrm{K^{+}}_{\\mathrm{in}} : 1\\,\\mathrm{ATP}",
+   "symbol_and_unit_ledger": {
+    "E_demand_restore": "energy required to restore ionic balance and damaged function [J or mol ATP]",
+    "E_supply_deliverable": "energy the injured tissue can actually deliver (impaired CBF/glucose utilization) [J or mol ATP]",
+    "Na+/K+-ATPase": "ion pump stoichiometry [ions per ATP]; the 3:2:1 ratio is the standard pump stoichiometry, flagged as external standard biochemistry — the source states only that the pump is 'activated to reestablish ionic balance while depleting energy stores' and prints it as 'Na1/K1' (typo)",
+    "note": "The mismatch inequality formalizes the source's verbatim 'energy mismatch' statement; the pump's 3:2:1 stoichiometry is external standard context, explicitly flagged, not extracted."
+   },
+   "assumptions": [
+    "Mechanical insult opens ion channels and stretches axons -> excitatory amino acid release -> ionic flux -> pump activation (source-stated cascade order).",
+    "The mismatch is a rate/budget statement: demand spikes exactly when deliverable supply is impaired, so the deficit is structural, not a matter of total energy stores.",
+    "Source notes these changes are generally self-limited and transient in single concussion, but repeated injuries can have long-term consequences — the mismatch kernel is per-event, not a claim of inevitable degeneration."
+   ],
+   "breakdown_regime": "If supply is restored before demand exhausts reserves, the system recovers (source: symptoms typically resolve in 1–4 weeks, recovery ~10 days). The kernel breaks into pathology when a second insult arrives during the mismatch window (repeated-injury vulnerability, source §5) or when energy failure is prolonged enough to cause permanent damage. The 'self-limited' assumption fails under repetition — the source itself flags this boundary.",
+   "layer2": null
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t0",
+   "think": "This extraction treats the volume as what it physically is: a 2025 IntechOpen edited compilation of ten chapters (DOI 10.5772/intechopen.110973), not a single-author monograph, and that editorial structure dictates the extraction strategy. The sovereign invariants worth carrying out of a clinical neurotrauma volume are the ones that survive translation out of medicine: conservation laws, coupled exchange constraints, catalytic amplification, buffer capacities, and regime-dependent operating bands. I located six such kernels and anchored each to a verbatim span verified programmatically against the normalized full text, with both PDF page and printed book page recorded (the offset is constant: printed page = PDF page minus 12). The Monro-Kellie constraint (Chapter 2, PDF 40) is the cleanest: a rigid closed compartment whose contents must sum to a constant, with a source-stated two-regime response — displaceable venous/CSF reserve first, then falling compliance and rising elastance past a critical volume. The source even names the surgical escape hatch (craniectomy opens the box), which I recorded as the breakdown of the closed-box assumption rather than pretending the constraint is universal. The CPP material (Chapter 2, PDF 37-39) is deliberately extracted as a target band with an age-stratified SBP floor and an explicit autoregulation footnote, because the book never prints the identity CPP = MAP - ICP; I refused to fabricate a verbatim equation and instead flagged the identity as external standard definition while keeping the extracted content strictly to what the source states, including its own admission that the optimal threshold (60 vs 70 mmHg) is uncertain and autonomic-state dependent. That honesty about the source's uncertainty is itself part of the invariant: this is an operating window, not a constant. The ferroptosis chapter (Chapter 6) supplies two genuinely dimensional kernels: the Fenton reaction, where ferrous iron acts catalytically on peroxide to generate hydroxyl and lipid-alkoxy radicals, and the System Xc- antiporter's verbatim 1:1 cystine-in/glutamate-out stoichiometry feeding the GSH-GPX4 detoxification axis. I formalized both in balanced stoichiometric notation and flagged in each ledger that the symbols are the canonical formalization of the source's prose, because the chapter states the chemistry in words. The therapeutic corollary the source itself draws — antioxidant-only treatment cannot fix iron-overload damage — is the strongest evidence that the catalytic structure, not the radical inventory, is the sovereign object: you must remove the catalyst, not scavenge the products. The antiporter carries a built-in trade-off (defense import forces excitatory export) that I promoted to a DERIVED KERNEL about coupled exchange constraints, explicitly labeled as our abstraction rather than a source claim. Chapter 9 contributes the most cleanly dimensional invariant in the book: compliance defined verbatim as change in V over change in P, plus a measured failure boundary (DLPP > 40 cmH2O) above which pressure transmits upstream and damages the kidneys; I added the mmHg conversion only as a flagged external factor. Chapter 4's energy-mismatch statement completes the set as a supply-demand budget kernel, with the Na/K pump's 3:2:1 stoichiometry flagged as external context because the source prints the pump with a typo (Na1/K1) and gives no ratio. Crucially, I did not extract uniformly: the volume contains editorial defects that a sovereign extraction must quarantine rather than launder. Chapter 2 swaps the GCS severity labels (calling 13-15 'moderate' and 9-12 'mild'); Chapter 6's drug prose inverts the Lip-1 mechanism (claiming ferroptosis inhibition via xCT inhibition/GPX4 inactivation, which actually induce ferroptosis) and its polydatin paragraph contradicts its own Table 1; the two Reynolds perspective chapters call Strattera an antipsychotic and assert every TBI is 'always neurodegenerative,' which contradicts Chapter 4's consensus that concussion outcome is usually favorable. None of these is a retraction, and none touches the six kernels I extracted, so the honest move is to extract the consistent core, record the defects in source_note, and build nothing on the defective spans. The Layer-2 mappings are all structural isomorphisms or one derived kernel, each with telemetry honestly marked LATENT_UNIDENTIFIABLE: a medical corpus contains no football telemetry, and pretending otherwise would be exactly the fabrication this gate exists to prevent. The mappings transfer the mathematical structure (conservation-plus-reserve, catalyst-versus-scavenger, coupled exchange, buffer compliance) and transfer no medical claim, no number, and no causal assertion about sport. The verification discipline deserves explicit record, because it changed the artifact. Every quote was sliced programmatically from a whitespace-normalized dump of the full 190-page text layer rather than transcribed by hand, and each slice was re-asserted as a substring of the normalized source before inclusion. Two anchors initially failed: the source carries genuine line-break hyphenation in 'cystine/glu- tamate antiporter' and 'Na1/K1 ATP- dependent pump', and the honest fix was to preserve those hyphenated forms verbatim, not to silently repair them into smoother prose the source never printed. Page citations were then audited against per-page character offsets: nine of ten quote starts landed exactly on their claimed PDF pages, and the DLPP span was corrected to its true extent, PDF pp.170-171 (printed pp.158-159), after the offset audit showed the sentence begins on 170 and finishes on 171. The constant printed-page offset (PDF minus 12) was itself verified against running heads on several pages rather than assumed. Finally, two primitives — the CPP target band and the concussion energy mismatch — deliberately carry no Layer-2 mapping: they are regime-dependent clinical operating windows, and forcing a football isomorphism onto them would assert more structure than the source supports. The four mapped kernels carry the entire structural transfer, and the unmapped two remain available as Layer-1 invariants. All ten chapters were read in full chunks; the perspective and rehabilitation chapters were read but yielded no dimensional sovereign kernel, so nothing was promoted from them, and the quarantined editorial defects listed in source_note were never load-bearing for any extracted equation.",
+   "retrocausal_genealogy": "Genealogy of the extracted kernels, traced backward from their present use: the Monro-Kellie constraint reaches this volume through the Brain Trauma Foundation and ACS TQIP guideline lineage that Chapter 2 cites (Teasdale & Jennett's 1974 Lancet scale anchors the whole assessment chain), so what I extract is a guideline-stabilized invariant, not an author's speculation. The ferroptosis kernels descend from Dixon et al. 2012 (Cell), cited as reference [9] exactly where the Fenton prose sits, and from the 2019-2021 FSP1/DHODH papers in the chapter's reference list — the citation chain is intact and checkable. Retrocausally, the intended downstream use (structural isomorphisms for GSE/GSI reasoning) constrained what I allowed myself to extract now: only kernels whose mathematical form survives de-medicalization were eligible, which is why the perspective chapters' symptom baskets were read but never promoted. The future consumer's need for verifiable structure reached back and selected the extraction set.",
+   "theory_of_mind": "Modeling the authors' intentions: Kariuki & Omariba write a protocol-oriented chapter for clinicians who must act without advanced monitoring, which explains the concrete numeric bands and the staircase ICP figure — they intend operating rules, not theory. Qian et al. write a translational review whose purpose is to nominate ferroptosis as a druggable target, which explains both the careful pathway taxonomy and the sloppy drug-mechanism prose under deadline; I trust their pathway citations and distrust their mechanism paraphrases. Milton et al. write a practical neuro-urology guide and are precise about definitions and thresholds. Reynolds writes medicolegal advocacy and overclaims ('always neurodegenerative') to move legal decision-makers. The gatekeeper, as downstream consumer, intends to reject fabricated equations and unverified quotes; I model it as checking verbatim spans, dimensional ledgers, and honest telemetry, and I built the artifact to satisfy that intent rather than to merely pass a string check.",
+   "cross_layer_veto": "Cross-layer vetoes actually exercised: (1) Reynolds' 'every TBI is always neurodegenerative' was vetoed against Chapter 4's favorable-outcome consensus and Chapter 6's 'most recover within 6 months' — no primitive encodes inevitable degeneration. (2) The GCS label swap in Chapter 2 was vetoed; severity labels appear nowhere in my primitives. (3) The Lip-1 and polydatin mechanism inversions were vetoed; no drug-mechanism claim from that prose entered any kernel, and the contradiction with Table 1 is logged. (4) Any temptation to print CPP = MAP - ICP as an extracted equation was vetoed because the source never states it. (5) Any sportsbook-odds or betting framing is vetoed outright; all GSE mappings are internal structural analogies with LATENT_UNIDENTIFIABLE telemetry, and no medical claim is transferred to sport. The Strattera drug-class error is logged as a provenance defect."
+  }
+ ],
+ "universal_lens": "Through the universal lens this volume is a catalog of how bounded physical systems fail: a fixed-volume container loses compliance, a catalytic trace metal turns a stable stock into a destructive flux, a coupled exchanger cannot defend without exposing, and a reservoir protects upstream components only while it can absorb inflow without pressure rise. The transferable objects are conservation laws, stoichiometric couplings, catalytic amplification, and regime-dependent thresholds — never the medical claims themselves.",
+ "gsi_mapping": "GSI (general scientific intelligence): the six kernels instantiate reusable reasoning primitives — conservation-with-reserve and a compliance-to-elastance regime switch (Monro-Kellie), catalyst-versus-scavenger intervention logic (Fenton), obligatory coupled exchange with a supply-bounded terminal detoxifier (System Xc-/GPX4), buffer-capacity failure thresholds (bladder compliance/DLPP), and supply-demand mismatch windows (concussion energy). Each is dimensional, source-anchored, and carries an explicit breakdown regime, making them safe substrates for cross-domain structural reasoning without importing medical causality.",
+ "gse_mapping": "GSE (game sports engine), internal structural use only: hard-cap roster construction mirrors the fixed-volume constraint with a displaceable reserve and a stiff marginal-cost regime once the buffer is spent; primary-event-to-secondary-cascade amplification mirrors catalytic Fenton structure, distinguishing catalyst-removal from symptom-scavenging fixes; coupled acquisition/release moves mirror the 1:1 antiport trade-off; roster flexibility absorbing injury/schedule shocks mirrors bladder compliance protecting upstream assets. All mappings are structural isomorphisms with LATENT_UNIDENTIFIABLE telemetry — no football numbers, odds, or medical claims are asserted, and nothing here is betting guidance."
+}

@@ -143,8 +143,9 @@ Gaps named in the report's own gap audit, carried with this delta:
    inventory rows (Schefter, Pelissero); they were ingested as printed, not
    verified.
 
-## 2026-11-14 AM IG delta & merged total
+## 2026-11-14 AM deltas & merged totals
 
 - Delta feed: `ig-for-you-feed-2026-11-14-am-delta.jsonl` (43 records, commit `5c0b6a19f`), merged cleanly into `ig-for-you-feed.jsonl` (2,720 -> 2,763 records).
-- `x-for-you-feed-2026-11-14-am-delta.jsonl` (116 records, commit `54ac21147`) merged cleanly into `x-for-you-feed.jsonl` (5,609 -> 5,725 records).
-- Merged totals on branch: `ig-for-you-feed.jsonl` (2,763) + `x-for-you-feed.jsonl` (5,725) + `x-analytics-feed.jsonl` (1,615) = **10,103** unique records (`x-analytics-feed-2026-11-14-am-delta.jsonl` pending upstream post if any).
+- Delta feed: `x-for-you-feed-2026-11-14-am-delta.jsonl` (116 records, commit `54ac21147`), merged cleanly into `x-for-you-feed.jsonl` (5,609 -> 5,725 records).
+- Delta feed: `x-analytics-feed-2026-11-14-am-delta.jsonl` (66 records, commit `6b85d6b27`), merged uniquely by `item_key` into `x-analytics-feed.jsonl` (1615 -> 1681 records).
+- Merged totals on branch: `ig-for-you-feed.jsonl` (2,763) + `x-for-you-feed.jsonl` (5,725) + `x-analytics-feed.jsonl` (1681) = **10,169** unique records.

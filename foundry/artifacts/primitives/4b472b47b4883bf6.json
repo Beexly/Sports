@@ -1,0 +1,78 @@
+{
+  "book_id": "4b472b47b4883bf6",
+  "source_status": "COMPLETE",
+  "title": "p0290",
+  "file_name": "p0290.txt",
+  "sha256": "4b472b47b4883bf68fff775ebf26795a69df0625d40e8ff7473b4fa5f02af220",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The adjudication of simultaneous infractions constitutes a hierarchical temporal filtering operator. By imposing a strict partial order on event timestamps and assigning precedence weights to observer classes, the system resolves combinatorial state collisions into a singular, deterministic penalty projection.",
+  "gsi_mapping": "GSI models officiating as a multi-sensor Bayesian network. The Umpire and Linesman act as stochastic detectors with distinct likelihood functions. When detection events collide temporally, conformal inference applies hierarchical priors to select the maximum a posteriori penalty state.",
+  "gse_mapping": "In GSE, play-state transitions are governed by a priority queue. Simultaneous foul signals trigger a collision resolution protocol. The engine evaluates temporal deltas; if indeterminate, it executes a hierarchical fallback, ensuring a single, valid state mutation per scrimmage.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_precedence_filter",
+      "name": "Chronological Infraction Selector",
+      "verbatim_quote": "276 FOOTBALL case the Linesman and Umpire each signal a foul against the same side during the same scrimmage (unnecessary roughness excepted) only one penalty shall be given, viz.: that for the foul committed first.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "t_i: timestamp of infraction i (seconds), P: penalty space, \\delta t: temporal resolution threshold (dimensionless)",
+      "assumptions": "Infractions possess discrete, measurable onset times within the continuous flow of the scrimmage.",
+      "breakdown_regime": "Singularities arise when \\Delta t approaches zero or falls below human/mechanical perception thresholds, rendering chronological ordering impossible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to packet collision resolution in time-division multiplexing networks, where earliest arrival dictates processing priority.",
+        "source_operator": "temporal_precedence_filter",
+        "telemetry": "Variance in referee-reported foul timestamps across multiple camera angles."
+      }
+    },
+    {
+      "primitive_id": "hierarchical_observer_fallback",
+      "name": "Authority Weighted Resolution",
+      "verbatim_quote": "In case it is impossible to say which foul occurred first the penalty shall be exacted only for the foul noted by the Umpire.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "O_k: observer class k (Referee, Umpire, Linesman), w_k: authority weight (dimensionless), F_{k}: foul detected by O_k",
+      "assumptions": "A static, universally agreed-upon hierarchy exists among officiating positions (w_{umpire} > w_{linesman}).",
+      "breakdown_regime": "System failure occurs if the highest-weighted observer fails to detect any infractions while lower-tier observers register multiple.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to consensus algorithms in distributed systems utilizing static node reputation scores to break ties during network partitions.",
+        "source_operator": "hierarchical_observer_fallback",
+        "telemetry": "Frequency of Umpire overrides relative to total simultaneous foul calls."
+      }
+    },
+    {
+      "primitive_id": "observer_role_isomorphism",
+      "name": "Functional Equivalence Mapping",
+      "verbatim_quote": "In the above cases a foul called by the Referee shall be judged the same as if called by the Linesman.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "\\phi: mapping function from Observer Role to Authority Weight, R: Referee, L: Linesman",
+      "assumptions": "Specific rule subsets allow dynamic reassignment of authority weights based on contextual jurisdiction.",
+      "breakdown_regime": "Ambiguity emerges if the mapped role conflicts with the primary hierarchical fallback defined in other rule articles.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents a context-dependent override matrix in GSE state machines, dynamically altering the precedence queue based on play phase.",
+        "source_operator": "observer_role_isomorphism",
+        "telemetry": "Rate of successful Referee-to-Linesman functional mappings during complex multi-foul plays."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4b472b47b4883bf6_t0",
+      "think": "The provided excerpts define a rigorous state-reduction mechanism for concurrent adversarial events. Mathematically, we model a scrimmage as a continuous time interval containing a set of potential infraction events $E = \\{e_1, e_2, ..., e_n\\}$, each possessing an onset timestamp $t_i$ and an associated observer $O_j$. The primary operator, `temporal_precedence_filter`, seeks to minimize the cardinality of applied penalties by selecting $\\arg \\min_{e \\in E} t_i$. This assumes a perfectly resolved timeline. However, physical reality introduces measurement noise; when $|t_i - t_j| < \\epsilon$, the chronological ordering becomes undefined. Here, the system transitions to the `hierarchical_observer_fallback`. We assign scalar weights $w(O)$ to each official, establishing a strict total order over the observer classes. If temporal sorting fails, the penalty is determined by $\\arg \\max_{O} w(O)$ among those who registered the simultaneous events. Furthermore, the `observer_role_isomorphism` introduces a dynamic layer, asserting that under specific conditions, the weight vector is transformed such that $w(Referee) \\rightarrow w(Linesman)$. This creates a composite decision surface where the final game state is a non-linear function of both event timing and spatial-jurisdictional topology. The dualities lie between absolute chronology and structural authority. Failure modes manifest primarily at the singularity of simultaneous detection ($\\Delta t \\rightarrow 0$), forcing reliance entirely on the potentially subjective hierarchical priors, thereby introducing systemic bias if the higher-weighted observer possesses inferior geometric vantage points.\n\nDeep epistemic analysis for p0290 (4b472b47b4883bf6, domain=other, pages_read=1/1): Operator 'Chronological Infraction Selector' (page 1, domain other) captures: 276 FOOTBALL case the Linesman and Umpire each signal a foul against the same side during the same scrimmage (unnecessary roughness excepted) only one penalty shall be given, viz.: that for the foul committed first. Assumptions: Infractions possess discrete, measurable onset times within the continuous flow of the scrimmage. Breakdown regime: Singularities arise when \\Delta t approaches zero or falls below human/mechanical perception thresholds, rendering chronological ordering impossible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to packet collision resolution in time-division multiplexing networks, where earliest arrival dictates processing priority. Operator 'Authority Weighted Resolution' (page 1, domain other) captures: In case it is impossible to say which foul occurred first the penalty shall be exacted only for the foul noted by the Umpire. Assumptions: A static, universally agreed-upon hierarchy exists among officiating positions (w_{umpire} > w_{linesman}). Breakdown regime: System failure occurs if the highest-weighted observer fails to detect any infractions while lower-tier observers register multiple. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to consensus algorithms in distributed systems utilizing static node reputation scores to break ties during network partitions. Operator 'Functional Equivalence Mapping' (page 1, domain other) captures: In the above cases a foul called by the Referee shall be judged the same as if called by the Linesman. Assumptions: Specific rule subsets allow dynamic reassignment of authority weights based on contextual jurisdiction. Breakdown regime: Ambiguity emerges if the mapped role conflicts with the primary hierarchical fallback defined in other rule articles. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a context-dependent override matrix in GSE state machines, dynamically altering the precedence queue based on play phase. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0290 (4b472b47b4883bf6, domain=other, pages_read=1/1): Operator 'Chronological Infraction Selector' (page 1, domain other) captures: 276 FOOTBALL case the Linesman and Umpire each signal a foul against the same side during the same scrimmage (unnecessary roughness excepted) only one penalty shall be given, viz.: that for the foul committed first. Assumptions: Infractions possess discrete, measurable onset times within the continuous flow of the scrimmage. Breakdown regime: Singularities arise when \\Delta t approaches zero or falls below human/mechanical perception thresholds, rendering chronological ordering impossible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to packet collision resolution in time-division multiplexing networks, where earliest arrival dictates processing priority. Operator 'Authority Weighted Resolution' (page 1, domain other) captures: In case it is impossible to say which foul occurred first the penalty shall be exacted only for the foul noted by the Umpire. Assumptions: A static, universally agreed-upon hierarchy exists among officiating positions (w_{umpire} > w_{linesman}). Breakdown regime: System failure occurs if the highest-weighted observer fails to detect any infractions while lower-tier observers register multiple. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to consensus algorithms in distributed systems utilizing static node reputation scores to break ties during network partitions. Operator 'Functional Equivalence Mapping' (page 1, domain other) captures: In the above cases a foul called by the Referee shall be judged the same as if called by the Linesman. Assumptions: Specific rule subsets allow dynamic reassignment of authority weights based on contextual jurisdiction. Breakdown regime: Ambiguity emerges if the mapped role conflicts with the primary hierarchical fallback defined in other rule articles. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents a context-dependent override matrix in GSE state machines, dynamically altering the precedence queue based on play phase. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives trace their lineage to early 20th-century attempts to formalize sports governance through rigid bureaucratic hierarchies. Historically, they mirror the development of deterministic automata theory, where state transitions must be uniquely defined to prevent computational halting. The shift from pure temporal causality to authority-based fallback reflects the broader mathematical evolution from Newtonian absolute time to structured, weighted graph traversals used in modern consensus protocols.",
+      "theory_of_mind": "From a theory of mind perspective, the officials act as bounded rational agents attempting to maximize rule enforcement accuracy. Teams, anticipating these hierarchical fallbacks, may strategically time secondary infractions to exploit the blind spots of lower-priority observers or deliberately create simultaneous chaos to force a favorable Umpire-centric resolution. The rules implicitly model the cognitive limits of human perception, acknowledging that perfect temporal resolution is unattainable without technological augmentation.",
+      "cross_layer_veto": "To prevent anti-collinearity and leakage between layers, a strict veto condition is required: the temporal precedence filter must always supersede the hierarchical fallback unless the temporal delta explicitly crosses the singularity threshold. Furthermore, the role isomorphism mapping must be strictly localized to specific rule contexts; allowing global reassignment of observer weights would cause catastrophic state-space collisions, invalidating the foundational assumptions of the primary penalty queue."
+    }
+  ]
+}

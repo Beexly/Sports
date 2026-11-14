@@ -1,0 +1,78 @@
+{
+  "book_id": "454f8b58e8242640",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "454f8b58e8242640ce1443bfb8cce892070d7bfd434e6ff501a0de5e8d23c714",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The Higgsfield architecture defines a categorical fibration where the canonical SDK acts as the base category of stateful observables, while React bindings and Quanta design tokens form fiber categories. The CLI synchronization enforces a strict pullback diagram, ensuring local workspace snapshots remain isomorphic to the global source-of-truth under continuous structural deformation.",
+  "gsi_mapping": "In GSI, the canonical packages represent the prior distribution over latent athletic features. The `sync` operation functions as a Bayesian update, projecting high-dimensional telemetry into a conformal prediction set. The ignored template snapshot acts as a localized posterior approximation, continuously calibrated against the global truth to minimize epistemic variance in sports intelligence inference.",
+  "gse_mapping": "For GSE, the repository root models the global game-state manifold. Scaffolding a new app corresponds to initializing a situational reasoning context. The `@higgsfield/fnf-react` controllers act as Hamiltonian flow operators, dictating valid state-transitions between tactical formations, while the landing blocks enforce boundary conditions on the generated playbooks.",
+  "primitives": [
+    {
+      "primitive_id": "canonical_source_fibration",
+      "name": "Canonical Source Fibration",
+      "verbatim_quote": "# Canonical Higgsfield packages This directory is the source of truth for the local workspaces composed into every scaffold.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Source-of-truth (dimensionless), W_i: Local workspace instances (dimensionless)",
+      "assumptions": "A unique, globally consistent mathematical structure exists that governs all derived local instances.",
+      "breakdown_regime": "Singularity occurs if multiple disjoint sources compete, causing non-resolvable topological conflicts in the workspace composition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the GSI global prior and GSE master game-state, serving as the invariant kernel from which all situational contexts are derived.",
+        "source_operator": "canonical_source_fibration",
+        "telemetry": "Workspace initialization success rate and schema validation pass ratio."
+      }
+    },
+    {
+      "primitive_id": "snapshot_pullback_sync",
+      "name": "Snapshot Pullback Sync",
+      "verbatim_quote": "After changing canonical packages, refresh each template's ignored workspace snapshot from the repository root: ```bash node cli/src/index.js sync ``` Then run the relevant package tests/typechecks through an installed template workspace.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "t: Discrete time steps (s), \\Delta S: Structural delta (dimensionless)",
+      "assumptions": "The synchronization operator is idempotent and preserves the algebraic integrity of the underlying type system.",
+      "breakdown_regime": "Fails when network latency or concurrent writes introduce race conditions, leading to divergent state manifolds across templates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to the GSI conformal calibration step and GSE real-time state reconciliation, ensuring local tactical boards reflect the latest global telemetry.",
+        "source_operator": "snapshot_pullback_sync",
+        "telemetry": "Typecheck failure rates post-sync and snapshot drift magnitude."
+      }
+    },
+    {
+      "primitive_id": "react_binding_controller",
+      "name": "React Binding Controller",
+      "verbatim_quote": "- `@higgsfield/fnf-react` — React provider, TanStack Query options, cache door, controllers.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "C: Controller state space (dimensionless), Q: Query cache (dimensionless)",
+      "assumptions": "UI state transitions can be cleanly decoupled from core business logic via reactive providers.",
+      "breakdown_regime": "Breaks down under extreme concurrency where cache invalidation cascades cause unbounded memory growth or stale reads.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents the GSE situational reasoning interface, translating raw probabilistic outputs from GSI into actionable UI state transitions for coaches.",
+        "source_operator": "react_binding_controller",
+        "telemetry": "Cache hit ratios and UI render latency under heavy query loads."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "454f8b58e8242640_t0",
+      "think": "The provided README outlines a monorepo architecture that naturally maps to a fiber bundle structure in differential geometry. The 'Canonical Higgsfield packages' serve as the base space $B$, containing the fundamental algebraic structures (SDK core, jobs, media). Each generated application template represents a point $x \\in B$, with its local `app/packages` snapshot acting as the fiber $F_x$. The strict instruction to 'never patch a generated template's ignored snapshot directly' establishes a vertical transport constraint; modifications must occur strictly within the base space. The `node cli/src/index.js sync` command functions as the horizontal lift, propagating changes from the base space down to the fibers, ensuring the entire bundle remains trivialized and structurally coherent. In this framework, `@higgsfield/fnf` provides the connection form, defining how state flows between modules, while `@higgsfield/quanta` dictates the metric tensor, enforcing visual and dimensional consistency across all fibers. The breakdown regime emerges if the horizontal lift fails—i.e., if the sync process cannot resolve conflicting updates, leading to torsion in the workspace graph. By treating the codebase as a geometric object, we derive robust primitives for state management that inherently prevent the fragmentation typical of distributed systems. The duality between the immutable canonical source and the mutable local scaffolds mirrors the relationship between a theoretical law and its empirical instantiation.\n\nDeep epistemic analysis for README (454f8b58e8242640, domain=other, pages_read=1/1): Operator 'Canonical Source Fibration' (page 1, domain other) captures: # Canonical Higgsfield packages This directory is the source of truth for the local workspaces composed into every scaffold. Assumptions: A unique, globally consistent mathematical structure exists that governs all derived local instances. Breakdown regime: Singularity occurs if multiple disjoint sources compete, causing non-resolvable topological conflicts in the workspace composition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSI global prior and GSE master game-state, serving as the invariant kernel from which all situational contexts are derived. Operator 'Snapshot Pullback Sync' (page 1, domain other) captures: After changing canonical packages, refresh each template's ignored workspace snapshot from the repository root: ```bash node cli/src/index.js sync ``` Then run the relevant package tests/typechecks through an installed template workspace. Assumptions: The synchronization operator is idempotent and preserves the algebraic integrity of the underlying type system. Breakdown regime: Fails when network latency or concurrent writes introduce race conditions, leading to divergent state manifolds across templates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to the GSI conformal calibration step and GSE real-time state reconciliation, ensuring local tactical boards reflect the latest global telemetry. Operator 'React Binding Controller' (page 1, domain other) captures: - `@higgsfield/fnf-react` — React provider, TanStack Query options, cache door, controllers. Assumptions: UI state transitions can be cleanly decoupled from core business logic via reactive providers. Breakdown regime: Breaks down under extreme concurrency where cache invalidation cascades cause unbounded memory growth or stale reads. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents the GSE situational reasoning interface, translating raw probabilistic outputs from GSI into actionable UI state transitions for coaches. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (454f8b58e8242640, domain=other, pages_read=1/1): Operator 'Canonical Source Fibration' (page 1, domain other) captures: # Canonical Higgsfield packages This directory is the source of truth for the local workspaces composed into every scaffold. Assumptions: A unique, globally consistent mathematical structure exists that governs all derived local instances. Breakdown regime: Singularity occurs if multiple disjoint sources compete, causing non-resolvable topological conflicts in the workspace composition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSI global prior and GSE master game-state, serving as the invariant kernel from which all situational contexts are derived. Operator 'Snapshot Pullback Sync' (page 1, domain other) captures: After changing canonical packages, refresh each template's ignored workspace snapshot from the repository root: ```bash node cli/src/index.js sync ``` Then run the relevant package tests/typechecks through an installed template workspace. Assumptions: The synchronization operator is idempotent and preserves the algebraic integrity of the underlying type system. Breakdown regime: Fails when network latency or concurrent writes introduce race conditions, leading to divergent state manifolds across templates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to the GSI conformal calibration step and GSE real-time state reconciliation, ensuring local tactical boards reflect the latest global telemetry. Operator 'React Binding Controller' (page 1, domain other) captures: - `@higgsfield/fnf-react` — React provider, TanStack Query options, cache door, controllers. Assumptions: UI state transitions can be cleanly decoupled from core business logic via reactive providers. Breakdown regime: Breaks down under extreme concurrency where cache invalidation cascades cause unbounded memory growth or stale reads. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents the GSE situational reasoning interface, translating raw probabilistic outputs from GSI into actionable UI state transitions for coaches. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architectural pattern descends from the Unix philosophy of separation of concerns, evolving through the modular monolith designs of the early 2000s. It heavily borrows from category theory, specifically the concept of adjoint functors used in modern dependency injection frameworks. The explicit prohibition against direct patching echoes the immutability principles introduced by functional programming languages like Haskell, ensuring referential transparency across the software lifecycle.",
+      "theory_of_mind": "We model two primary agents: the Core Architect and the Template Developer. The Core Architect operates at the base space level, optimizing for global consistency and API stability. They assume the Template Developer will inevitably attempt shortcuts. Conversely, the Template Developer seeks rapid iteration and assumes the sync mechanism is infallible. The `AGENTS.md` files act as a shared mental model, aligning these opposing incentives by explicitly documenting the boundaries of agency and the consequences of violating the fibration constraints.",
+      "cross_layer_veto": "A veto condition is triggered if a change in the `@higgsfield/fnf` core introduces a breaking API change that the `fnf-react` binding cannot transparently adapt to. This represents a leakage of complexity from the base layer into the fiber layer. To maintain anti-collinearity, any modification to the SDK core must be accompanied by a corresponding update to the React provider's type definitions before the `sync` command is permitted to execute, preventing the propagation of ill-typed states into the user-facing applications."
+    }
+  ]
+}

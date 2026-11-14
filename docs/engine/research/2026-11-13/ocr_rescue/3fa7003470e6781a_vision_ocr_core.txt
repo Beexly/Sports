@@ -1,0 +1,525 @@
+========== PAGE 1 ==========
+US007715982B2
+(12)
+United States Patent
+(10) Patent No.:
+Grenfell et al.
+(45) Date of Patent:
+US 7,715,982 B2
+*May 11, 2010
+(54) MONITORING SPORTS
+(75) Inventors: Ronald Grenfell, Melbourne (AU);
+Kefei Zhang, Melbourne (AU); Colin
+Mackintosh, Bruce (AU); Daniel
+James, Nathan (AU); Neil Davey,
+Nathan (AU)
+(73) Assignees: M.B.T.L. Limited, Hawthorn (AU);
+Sportzco Pty Ltd, Hawthorn (AU)
+(51) Int. Cl.
+G06F 7/00
+(52) U.S. Cl.
+(2006.01)
+701/213; 701/25; 701/207;
+(58) Field of Classification Search
+701/213, 214, 207, 25; 340/427, 432; 482/57;
+702/182, 188
+702/182
+701/211,
+(56)
+See application file for complete search history.
+References Cited
+U.S. PATENT DOCUMENTS
+( * ) Notice:
+Subject to any disclaimer, the term of this
+patent is extended or adjusted under 35
+U.S.C. 154(b) by 90 days.
+4.984,986 A
+5,099,589 A
+1/1991
+3/1992 Lai et al.
+Vohnout
+6,148,262 A
+11/2000 Fry
+6,308,649 B1
+10/2001
+This patent is subject to a terminal dis-
+claimer.
+7.272.499 B2* 9/2007
+Gedeon et al.
+Grenfell et al.
+701/213
+(21) Appl. No.: 11/843,077
+(22) Filed:
+(65)
+Aug. 22, 2007
+Prior Publication Data
+* cited by examiner
+Primary Examiner Gertrude Arthur Jeanglaud
+(74) Attorney, Agent, or Firm Connolly Bove Lodge & Hutz
+LLP
+US 2008/0046179 A1 Feb. 21, 2008
+Related U.S. Application Data
+(63) Continuation-in-part of application No. 10/531,263,
+filed on Apr. 13, 2005, now Pat. No. 7,272,499.
+Foreign Application Priority Data
+(30)
+Sep. 28, 2006
+(AU)
+Sep. 28, 2006
+(AU)
+و
+2006222730
+2006222732
+(57)
+ABSTRACT
+A data logger for a monitoring sports which includes an
+accelerometer, a GPS unit to sense position and velocity, a
+heart rate monitor, a controller programmed to manipulate the
+data and provide a display of the heart rate, speed, and other
+sport parameters. The data can be stored or transmitted to a
+remote computer for use by the coach. The device is useful in
+football codes, athletics, snow sports and cycling.
+8 Claims, 16 Drawing Sheets
+Power Signals
+Data Signals
+Regulate 9VDC to 5VDC
+Battery
+Voltage
+Regulator
+iPAQ
+Line Driver
+V2 + Accel
+Signal
+Filter
+Low Pass Filter
+Cut Off@ 300 Hz
+Impeller
+Pickup and
+Amplifier
+Amplify low voltage
+Output of Hall Effect
+Sensor
+Level
+Converter
+Convert signal to
+TTL Logic levels
+HR Pickup
+One pulse per heart beat
+
+========== PAGE 2 ==========
+Power Signals
+Data Signals
+Battery ☑
+Regulate 9VDC to 5VDC
+Voltage
+Regulator
+iPAQ
+Line Driver
+Signal
+Filter
+Low Pass Filter
+Cut Off@ 300Hz
+V2 + Accel
+Impeller
+Pickup and
+Amplifier
+Amplify low voltage
+Output of Hall Effect
+Sensor
+U.S. Patent
+May 11,
+2010
+Sheet 1 of 16
+US 7,715,982 B2
+Level
+Converter
+Convert signal to
+TTL Logic levels
+HR Pickup
+One pulse per heart beat
+FIG.1.
+
+========== PAGE 3 ==========
+U.S. Patent
+May 11,
+2010
+Sheet 2 of 16
+US 7,715,982 B2
+Software Output Flow Diagram
+IMPELLER
+Heart
+Timing
+Rate
+Clock
+Velocity,
+Distance
+Information
+GPS NMEA Data
+(1Hz)
+Video
+Synchronisation
+FIG.2.
+Velocity, Distance,
+Position & Timing
+Information
+3D Accelerometer
+DATA
+Stroke Rate
+Stroke Drive
+to Recovery
+Ratio
+Intra-Stroke
+Velocity (Min,
+Max, Velocity)
+Distance/
+Stroke
+Velocity/
+Stroke
+
+========== PAGE 4 ==========
+-8.0
+-6-0
+52:12.0+
+40
+の
+FINISH
+2.0
+Acceleration
+2.0
+- 4.0
+N
+DRIVE
+M
+52:13.0
+catch
+52:14.0]
+요...
+52:15.0-
+52:16.0-
+Time (mins: secs post 7am)
+FIG. 3.
+52:17.0:
+52.18.0
+52:19.0
+52:20.0
+U.S. Patent
+May 11, 2010
+Sheet 3 of 16
+US 7,715,982 B2
+
+========== PAGE 5 ==========
+Sport Options Out Help
+-File-
+Name
+Desc standing 1000m (simulating 0-1000m); running 500m (simulating last 500m)
+Date 06Aug 2003] Impeller revs/metre [15.0000
+Trial 06:33:52:07:58:09
+save changes
+File D:\HWT Men Mens Heavyweight 4X0308060633.dat.
+1106:33:
+Acc
+1
+50
+40
+30
+stroke 20
+10
+милици
+6
+4
+Vel(gpv)
+Vel(acc
+0
+6
+0
+0
+تر
+que marr
+м
+10.000 20.00.0 30.000 40.00.0 50.00.0 1:00.00 1:10,00 1:20.00
+Time 1:24:31
+TIME
+Vel(gps) 2.25(0.0.6.2) Dist 113960/
+SR 11.9 (0.0,59.3)
+FIG.4.
+Stk 11.7
+U.S. Patent
+May 11,
+2010
+Sheet 4 of 16
+US 7,715,982 B2
+
+========== PAGE 6 ==========
+vel(mis,)
+0.1
+0.09
+Mean variation = 0.012 m/s
+0.08 +
+"Standard Deviation =0·008 m/s
+0.07
+0.06
+0.05
+0.04
+0.03
+0.02
+0.01
+о
+70500
+80000
+80500
+81000
+81500
+UTC time (c)
+FIG. 5.
+82000
+U.S. Patent
+May 11, 2010
+Sheet 5 of 16
+US 7,715,982 B2
+
+========== PAGE 7 ==========
+Hh
+22
+23
+31
+-32
+36
+20
+FIG. 6.
+35
+U.S. Patent
+May 11, 2010
+Sheet 6 of 16
+US 7,715,982 B2
+
+========== PAGE 8 ==========
+U.S. Patent
+May 11, 2010
+Sheet 7 of 16
+US 7,715,982 B2
+کیا
+";
+H
+HHD
+THE
+HHD
+40
+H
+FIG. 7.
+
+========== PAGE 9 ==========
+43
+U.S. Patent
+May 11, 2010
+Sheet 8 of 16
+US 7,715,982 B2
+N
+41
+46
+ння
+FIG. 8.
+
+========== PAGE 10 ==========
+Фогородо
+30
+Right Leg push off
+may be stronger
+than left as seen
+1
+Sideways (m/s)
+-1
+-2
+3 Up(m/s)
+1
+-2
+by alternating high
+low vertical
+acceleration
+-3 AcFit(g)
+1
+-2
+-3 Vel (gps)
+4
+3
+W
+2
+1
+0
+0.5
+>
+0.0
+Secs.
+FIG.9.
+0.5
+U.S. Patent
+May 11,
+2010
+Sheet 9 of 16
+US 7,715,982 B2
+
+========== PAGE 11 ==========
+25
+15
+nonono o no
+227
+20
+10
+Sideways (m/s)
+Up (m/s)
+AcFiti(g).
+10
+Vel(gps)
+Mag
+5
+12
+100
+NUINONUN
+75
+150 Altitude
+25.
+505 50
+25
+252025
+U.S. Patent
+May 11,
+2010
+Sheet 10 of 16
+US 7,715,982 B2
+100
+OND20
+80
+60
+40
+1300
+2600
+3900
+5200
+6500
+7800
+9100
+10400
+FIG. 10.
+
+========== PAGE 12 ==========
+114)
+디
+15
+Forward Sideways
+10
+M
+5
+10
+5
+Vel(100hz) Vel (gps)
+14
+Up
+12
+10
+00
+Altitude
+3380
+3370
+3360
+ΙΣ
+<
+3350
+FIG.11.
+3340
+-2.0 -1.0
+O.O
+Secs.
+1.0
+2.0
+U.S. Patent
+May 11, 2010
+Sheet 11 of 16
+US 7,715,982 B2
+
+========== PAGE 13 ==========
+-)
+Π
+1
+C
+1
+-
+Forward
+-1
+-2
+Sideways
+-1
+-2
+ง
+뒤
+☑-1
+U.S. Patent
+May 11, 2010
+Sheet 12 of 16
+US 7,715,982 B2
+FIG.12.
+-2
+2.0
+1.0
+0.0
+1.0
+2.0
+Secs.
+
+========== PAGE 14 ==========
+U.S. Patent
+May 11, 2010
+Sheet 13 of 16
+US 7,715,982 B2
+мра
+1025
+1030
+METRES
+FIG.13.
+1035
+1030
+пр
+4
+2
+1020
+Vel(gps)
+лиш
+1
+Forward
+-0+Ņ♡ -0,Ņ♡ -0-ŅM NOTNO
+-2
+-3
+Sideways
+Up
+
+========== PAGE 15 ==========
+☑
+U
+FIG.14.
+590
+Altitude HOOP
+580
+570
+560
+JP
+2
+1
+-1
+HR Sideway HR
+0.4
+о
+0.2
+-0.2
+-0.4
+Vel(gps) AirAngle
+-5
+-10
+10
+5
+°
+☑
+- 4.0-2.0.0.0 2.0 4.0
+Secs
+U.S. Patent
+May 11,
+2010
+Sheet 14 of 16
+US 7,715,982 B2

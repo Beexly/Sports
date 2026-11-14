@@ -1,0 +1,95 @@
+{
+  "book_id": "6e9d5cc94df1c66b",
+  "source_status": "COMPLETE",
+  "title": "p0106",
+  "file_name": "p0106.txt",
+  "sha256": "6e9d5cc94df1c66b920ce08e1a3cc094de33f033f98316322e0c4f9081d412ca",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stature_division",
+      "name": "Stature Division Isomorphism",
+      "verbatim_quote": "dividing (scc Table 9) the male and female parents respectively into three nearly equal groups, of tall, medium, and short.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) Parents are categorized into three ordered groups based on measured statures; (2) Equal group sizes are approximated due to measurement discreteness; (3) Group assignments are nominal rather than precise thresholds.",
+      "breakdown_regime": "Discrete categorization fails when sample size approaches zero or measurement error dominates true variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian hierarchical modeling of parental trait distributions, conformal prediction intervals for group assignment uncertainty.",
+        "source_operator": "stature_division",
+        "telemetry": "Observed posterior variance of group means relative to measurement noise floor."
+      }
+    },
+    {
+      "primitive_id": "marriage_contrast_likelihood",
+      "name": "Marriage Contrast-Likelihood Ratio",
+      "verbatim_quote": "In other words, there were 32 cases of contrast in marriage, to 27 cases of likeness.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) Marriage choices are modeled as binary outcomes (contrast vs. likeness); (2) The ratio 32:27 represents empirical frequencies under the observed data.",
+      "breakdown_regime": "Ratio collapses to indeterminacy when either count approaches zero, indicating sparse sampling failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE state-transition kernel for mating pair formation, incorporating observed empirical odds ratios as prior knowledge.",
+        "source_operator": "marriage_contrast_likelihood",
+        "telemetry": "Deviation of observed contrast-likelihood ratio from baseline random mating expectation."
+      }
+    },
+    {
+      "primitive_id": "independence_assumption",
+      "name": "Stature-Independent Marriage Assumption",
+      "verbatim_quote": "I am therefore content to ignore it, and to regard the Statures of married folk just as if their choice in marriage had been wholly independent of stature.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) Marriage selection is statistically independent of parental statures; (2) This simplifies joint distribution factorization into marginals.",
+      "breakdown_regime": "Independence assumption breaks down when heritable traits exhibit assortative mating patterns, inducing covariance structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal inference framework for testing independence hypotheses in multivariate trait data, mapping to GSI null hypothesis tests.",
+        "source_operator": "independence_assumption",
+        "telemetry": "Mutual information between parental statures under empirical versus independent distributions."
+      }
+    },
+    {
+      "primitive_id": "calculation_facilitation",
+      "name": "Facilitated Combinatorial Calculation",
+      "verbatim_quote": "The importance of this supposition in facilitating calculation will be appreciated as we proceed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "(1) The independence assumption reduces high-dimensional integration to simple product forms; (2) Computational tractability is the primary justification.",
+      "breakdown_regime": "Calculation complexity explodes when dependencies are reintroduced, requiring Monte Carlo methods or variational approximations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE belief propagation algorithms leveraging conditional independence to reduce state-transition matrix dimensions.",
+        "source_operator": "calculation_facilitation",
+        "telemetry": "Wall-clock time reduction factor when independence is assumed versus when full covariance is inverted."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6e9d5cc94df1c66b_t0",
+      "think": "The four primitives form a coherent algebraic structure: categorization (primitive 1) yields empirical counts (primitive 2), which are compared against an independence model (primitive 3) to enable tractable combinatorial calculations (primitive 4). This mirrors modern probabilistic graphical models where discrete latent variables (stature groups) interact via conditional probability tables. The key insight is that treating marriage choice as independent of stature transforms a complex multivariate problem into a series of simpler univariate ones, allowing efficient inference. However, this simplification introduces bias when assortative mating exists, leading to misestimation of heritability and genetic correlation. Thus, these primitives serve as a foundational null model against which more sophisticated, dependent-choice models must be tested using likelihood-ratio statistics or information criteria.\n\nDeep epistemic analysis for p0106 (6e9d5cc94df1c66b, domain=other, pages_read=1/1): Operator 'Stature Division Isomorphism' (page 1, domain other) captures: dividing (scc Table 9) the male and female parents respectively into three nearly equal groups, of tall, medium, and short. Assumptions: (1) Parents are categorized into three ordered groups based on measured statures; (2) Equal group sizes are approximated due to measurement discreteness; (3) Group assignments are nominal rather than precise thresholds. Breakdown regime: Discrete categorization fails when sample size approaches zero or measurement error dominates true variance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian hierarchical modeling of parental trait distributions, conformal prediction intervals for group assignment uncertainty. Operator 'Marriage Contrast-Likelihood Ratio' (page 1, domain other) captures: In other words, there were 32 cases of contrast in marriage, to 27 cases of likeness. Assumptions: (1) Marriage choices are modeled as binary outcomes (contrast vs. likeness); (2) The ratio 32:27 represents empirical frequencies under the observed data. Breakdown regime: Ratio collapses to indeterminacy when either count approaches zero, indicating sparse sampling failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state-transition kernel for mating pair formation, incorporating observed empirical odds ratios as prior knowledge. Operator 'Stature-Independent Marriage Assumption' (page 1, domain other) captures: I am therefore content to ignore it, and to regard the Statures of married folk just as if their choice in marriage had been wholly independent of stature. Assumptions: (1) Marriage selection is statistically independent of parental statures; (2) This simplifies joint distribution factorization into marginals. Breakdown regime: Independence assumption breaks down when heritable traits exhibit assortative mating patterns, inducing covariance structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal inference framework for testing independence hypotheses in multivariate trait data, mapping to GSI null hypothesis tests. Operator 'Facilitated Combinatorial Calculation' (page 1, domain other) captures: The importance of this supposition in facilitating calculation will be appreciated as we proceed. Assumptions: (1) The independence assumption reduces high-dimensional integration to simple product forms; (2) Computational tractability is the primary justification. Breakdown regime: Calculation complexity explodes when dependencies are reintroduced, requiring Monte Carlo methods or variational approximations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE belief propagation algorithms leveraging conditional independence to reduce state-transition matrix dimensions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0106 (6e9d5cc94df1c66b, domain=other, pages_read=1/1): Operator 'Stature Division Isomorphism' (page 1, domain other) captures: dividing (scc Table 9) the male and female parents respectively into three nearly equal groups, of tall, medium, and short. Assumptions: (1) Parents are categorized into three ordered groups based on measured statures; (2) Equal group sizes are approximated due to measurement discreteness; (3) Group assignments are nominal rather than precise thresholds. Breakdown regime: Discrete categorization fails when sample size approaches zero or measurement error dominates true variance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian hierarchical modeling of parental trait distributions, conformal prediction intervals for group assignment uncertainty. Operator 'Marriage Contrast-Likelihood Ratio' (page 1, domain other) captures: In other words, there were 32 cases of contrast in marriage, to 27 cases of likeness. Assumptions: (1) Marriage choices are modeled as binary outcomes (contrast vs. likeness); (2) The ratio 32:27 represents empirical frequencies under the observed data. Breakdown regime: Ratio collapses to indeterminacy when either count approaches zero, indicating sparse sampling failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state-transition kernel for mating pair formation, incorporating observed empirical odds ratios as prior knowledge. Operator 'Stature-Independent Marriage Assumption' (page 1, domain other) captures: I am therefore content to ignore it, and to regard the Statures of married folk just as if their choice in marriage had been wholly independent of stature. Assumptions: (1) Marriage selection is statistically independent of parental statures; (2) This simplifies joint distribution factorization into marginals. Breakdown regime: Independence assumption breaks down when heritable traits exhibit assortative mating patterns, inducing covariance structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal inference framework for testing independence hypotheses in multivariate trait data, mapping to GSI null hypothesis tests. Operator 'Facilitated Combinatorial Calculation' (page 1, domain other) captures: The importance of this supposition in facilitating calculation will be appreciated as we proceed. Assumptions: (1) The independence assumption reduces high-dimensional integration to simple product forms; (2) Computational tractability is the primary justification. Breakdown regime: Calculation complexity explodes when dependencies are reintroduced, requiring Monte Carlo methods or variational approximations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE belief propagation algorithms leveraging conditional independence to reduce state-transition matrix dimensions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing researchers might argue that assuming independence oversimplifies human mate choice, which often involves active preferences for similar or dissimilar traits. Decision actors could exploit the tractability of this model for quick screening of genetic linkage, accepting its bias as a cost-effective heuristic. Critics would demand that any applied model relax independence to capture fitness trade-offs or social homogamy. Theory of Mind & Decision Maker Model: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks require verifying that the three stature categories are not perfectly collinear with other phenotypic covariates like age or socioeconomic status. Leakage occurs if environmental factors confound the apparent genetic signal, necessitating fixed-effects models or mixed-model ANOVA to isolate heritable variance. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0106 (6e9d5cc94df1c66b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

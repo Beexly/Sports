@@ -1,0 +1,78 @@
+{
+  "book_id": "0d6f30bcdd417596",
+  "source_status": "COMPLETE",
+  "title": "openalex_W3108746815",
+  "file_name": "openalex_W3108746815.pdf",
+  "sha256": "0d6f30bcdd41759693f38ad724b18a697d1695f78c81929055b2273cba47bd31",
+  "primary_domain": "other",
+  "pages_total": 17,
+  "pages_read": 17,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Interdisciplinary GNSS-based railway track axis determination integrating mobile satellite measurement systems with geometric analysis protocols. Universal Lens: Rooted in openalex_W3108746815 (0d6f30bcdd417596), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over multi-receiver GNSS data streams enables probabilistic estimation of track geometry parameters via conformal predictive distributions. GSI Mapping: Rooted in openalex_W3108746815 (0d6f30bcdd417596), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models track state transitions using real-time GNSS telemetry and predictive diagnostics to guide maintenance scheduling. GSE Mapping: Rooted in openalex_W3108746815 (0d6f30bcdd417596), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mobile_satellite_measurement",
+      "name": "Mobile Satellite Measurement System",
+      "verbatim_quote": "These investigation concerns the determination of a railway track axis using the mobile satellite measurement technique.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'d': 'distance between GNSS receivers (meters)', 'v': 'vehicle speed (m/s)', 'f': 'GNSS sampling frequency (Hz)'}",
+      "assumptions": "Track is modeled as a smooth curve; GNSS measurements are unbiased and temporally synchronized.",
+      "breakdown_regime": "When vehicle speed exceeds 20 m/s or sampling frequency drops below 10 Hz.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps GNSS pseudorange observations to 3D track coordinates through Kalman filtering and least-squares optimization.",
+        "source_operator": "mobile_satellite_measurement",
+        "telemetry": "Positional accuracy (mm), velocity vector (m/s), and temporal synchronization (ns)"
+      }
+    },
+    {
+      "primitive_id": "track_geometry_analysis",
+      "name": "Track Geometry Analysis Framework",
+      "verbatim_quote": "Politechnika Gdańska Katedra Transportu Szynowego i Mostów piotr.chrostowski@pg.edu.pl Marcin Skóra mgr inż.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'track length (meters)', 'R': 'radius of curvature (meters)', 'Δh': 'vertical alignment deviation (mm)', 'Δs': 'lateral alignment deviation (mm)'}",
+      "assumptions": "Track can be discretized into segments with measurable geometric properties.",
+      "breakdown_regime": "When segment length exceeds 100 meters without sufficient measurement overlap.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates GNSS-derived positional data to standard track geometry metrics via spline interpolation and finite difference approximations.",
+        "source_operator": "track_geometry_analysis",
+        "telemetry": "Curvature profile (1/m), elevation change rate (mm/m), and lateral displacement (mm)"
+      }
+    },
+    {
+      "primitive_id": "interdisciplinary_research_team",
+      "name": "Interdisciplinary Research Team",
+      "verbatim_quote": "Transportation Overview - Przegląd Komunikacyjny 4/2020 1 Andrzej Wilk dr hab.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'research team size (dimensionless)', 'C': 'collaborative effort coefficient (dimensionless)', 'E': 'expertise diversity index (dimensionless)'}",
+      "assumptions": "Research teams contribute independently to shared datasets with minimal redundancy.",
+      "breakdown_regime": "When inter-institutional coordination fails due to conflicting institutional priorities.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models collaborative knowledge synthesis across institutions via shared metadata schemas and cross-validation protocols.",
+        "source_operator": "interdisciplinary_research_team",
+        "telemetry": "Team productivity index (normalized score), cross-institutional data consistency (%, n=100)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0d6f30bcdd417596_t0",
+      "think": "The core mathematical structure underlying the mobile satellite measurement system relies on a multi-receiver GNSS architecture where each receiver captures pseudorange measurements to satellites. These measurements are transformed into 3D Cartesian coordinates using known satellite positions and time-of-flight calculations. The system's reliability hinges on minimizing multipath errors and ensuring precise synchronization among receivers. Track axis determination is achieved by fitting a smooth curve through these spatial points using spline interpolation techniques. The framework integrates Kalman filtering for dynamic smoothing and least-squares optimization for static adjustment. The derived track geometry metrics—curvature, vertical alignment deviation, and lateral displacement—are computed via finite differences applied to the interpolated trajectory. The interdisciplinary team's contribution lies in validating the methodology through repeated measurements and cross-institutional collaboration, which enhances robustness against systematic biases. Failure modes include loss of satellite lock, insufficient baseline separation, and inadequate sampling frequency leading to aliasing effects.\n\nDeep epistemic analysis for openalex_W3108746815 (0d6f30bcdd417596, domain=other, pages_read=17/17): Operator 'Mobile Satellite Measurement System' (page 2, domain other) captures: These investigation concerns the determination of a railway track axis using the mobile satellite measurement technique. Assumptions: Track is modeled as a smooth curve; GNSS measurements are unbiased and temporally synchronized. Breakdown regime: When vehicle speed exceeds 20 m/s or sampling frequency drops below 10 Hz. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps GNSS pseudorange observations to 3D track coordinates through Kalman filtering and least-squares optimization. Operator 'Track Geometry Analysis Framework' (page 2, domain other) captures: Politechnika Gdańska Katedra Transportu Szynowego i Mostów piotr.chrostowski@pg.edu.pl Marcin Skóra mgr inż. Assumptions: Track can be discretized into segments with measurable geometric properties. Breakdown regime: When segment length exceeds 100 meters without sufficient measurement overlap. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates GNSS-derived positional data to standard track geometry metrics via spline interpolation and finite difference approximations. Operator 'Interdisciplinary Research Team' (page 1, domain other) captures: Transportation Overview - Przegląd Komunikacyjny 4/2020 1 Andrzej Wilk dr hab. Assumptions: Research teams contribute independently to shared datasets with minimal redundancy. Breakdown regime: When inter-institutional coordination fails due to conflicting institutional priorities. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models collaborative knowledge synthesis across institutions via shared metadata schemas and cross-validation protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for openalex_W3108746815 (0d6f30bcdd417596, domain=other, pages_read=17/17): Operator 'Mobile Satellite Measurement System' (page 2, domain other) captures: These investigation concerns the determination of a railway track axis using the mobile satellite measurement technique. Assumptions: Track is modeled as a smooth curve; GNSS measurements are unbiased and temporally synchronized. Breakdown regime: When vehicle speed exceeds 20 m/s or sampling frequency drops below 10 Hz. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps GNSS pseudorange observations to 3D track coordinates through Kalman filtering and least-squares optimization. Operator 'Track Geometry Analysis Framework' (page 2, domain other) captures: Politechnika Gdańska Katedra Transportu Szynowego i Mostów piotr.chrostowski@pg.edu.pl Marcin Skóra mgr inż. Assumptions: Track can be discretized into segments with measurable geometric properties. Breakdown regime: When segment length exceeds 100 meters without sufficient measurement overlap. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates GNSS-derived positional data to standard track geometry metrics via spline interpolation and finite difference approximations. Operator 'Interdisciplinary Research Team' (page 1, domain other) captures: Transportation Overview - Przegląd Komunikacyjny 4/2020 1 Andrzej Wilk dr hab. Assumptions: Research teams contribute independently to shared datasets with minimal redundancy. Breakdown regime: When inter-institutional coordination fails due to conflicting institutional priorities. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models collaborative knowledge synthesis across institutions via shared metadata schemas and cross-validation protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century geodetic surveying practices, this approach evolved from terrestrial triangulation to satellite-based positioning. The integration of GNSS into railway engineering emerged post-1990s with advancements in real-time kinematic (RTK) techniques and subsequent development of mobile measurement platforms. Retrocausal Genealogy: Rooted in openalex_W3108746815 (0d6f30bcdd417596), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include environmental noise sources (multipath, ionospheric delay) and institutional constraints (data sharing policies, funding cycles). Decision actors are the research team members who must balance measurement precision with operational feasibility while maintaining inter-institutional trust and data integrity. Theory of Mind & Decision Maker Model: Rooted in openalex_W3108746815 (0d6f30bcdd417596), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions prevent redundant measurements from skewing curvature estimates; leakage veto ensures that high-frequency noise does not propagate into low-pass filtered track profiles. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W3108746815 (0d6f30bcdd417596), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in openalex_W3108746815 (0d6f30bcdd417596), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

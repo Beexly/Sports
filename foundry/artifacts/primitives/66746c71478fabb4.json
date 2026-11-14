@@ -1,0 +1,78 @@
+{
+  "book_id": "66746c71478fabb4",
+  "source_status": "COMPLETE",
+  "title": "statking-weak-spots",
+  "file_name": "statking-weak-spots.md",
+  "sha256": "66746c71478fabb41851a11bacd23fd40f69c4643b9aaeb8b542b9fff65fb00c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Data coverage gap \\( \\mathcal{C} \\subset \\mathcal{S} \\) quantifies legal usability vs. source universe disparity; trust \\( \\mathcal{T} \\) and conflict \\( \\mathcal{F} \\) metrics define integrity layers. Universal Lens: Rooted in statking-weak-spots (66746c71478fabb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on \\( \\mathcal{C}, \\mathcal{T}, \\mathcal{F} \\) inform probabilistic data confidence \\( P(D|\\mathcal{E}) \\) via conformal prediction. GSI Mapping: Rooted in statking-weak-spots (66746c71478fabb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions \\( \\sigma_{t} \\to \\sigma_{t+1} \\) in situational awareness depend on \\( \\mathcal{C}, \\mathcal{T}, \\mathcal{F} \\) to resolve tactical ambiguity and maintain \\( \\mathcal{K} \\)-standard coherence. GSE Mapping: Rooted in statking-weak-spots (66746c71478fabb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "coverage_gap",
+      "name": "Coverage Gap",
+      "verbatim_quote": "## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe.",
+      "page": 1,
+      "latex": "\\mathcal{C} = |\\mathcal{D}_{\\text{legal}}| / |\\mathcal{D}_{\\text{seeded}}|",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{C}': 'dimensionless ratio', '\\\\mathcal{D}_{\\\\text{legal}}': 'set of legally usable data points', '\\\\mathcal{D}_{\\\\text{seeded}}': 'set of all seeded data points'}",
+      "assumptions": "Legal data subset \\( \\mathcal{D}_{\\text{legal}} \\subseteq \\mathcal{D}_{\\text{seeded}} \\), \\( \\mathcal{C} \\in [0, 1] \\)",
+      "breakdown_regime": "\\( \\mathcal{C} \\to 0 \\implies data insufficiency \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes \\( P(\\mathcal{C} < \\epsilon) \\) using Bayesian inference on legal contract compliance.",
+        "source_operator": "coverage_gap",
+        "telemetry": "Percentage of legal data points vs. total seeded data"
+      }
+    },
+    {
+      "primitive_id": "trust_conflict_index",
+      "name": "Trust-Conflict Index",
+      "verbatim_quote": "- HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds.",
+      "page": 1,
+      "latex": "\\mathcal{T} \\cdot \\mathcal{F}^{-1}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{T}': 'trust score ∈ [0, 1]', '\\\\mathcal{F}': 'conflict density per data point'}",
+      "assumptions": "Trust is inversely correlated with conflict frequency; both are normalized.",
+      "breakdown_regime": "\\( \\mathcal{F} \\to \\infty \\implies \\mathcal{T} \\to 0 \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps \\( \\mathcal{T} \\cdot \\mathcal{F}^{-1} \\) to decision confidence \\( \\mathcal{D}_{\\text{conf}} \\) in tactical planning.",
+        "source_operator": "trust_conflict_index",
+        "telemetry": "Normalized trust vs. conflict ratio across data sources"
+      }
+    },
+    {
+      "primitive_id": "data_freshness_metric",
+      "name": "Data Freshness Metric",
+      "verbatim_quote": "- Coverage, source trust, conflict, freshness, proof, comps, archetypes, alerts, versioning, competitive, and king-standard foundations.",
+      "page": 1,
+      "latex": "\\mathcal{F}_{\\text{fresh}} = \\frac{1}{1 + e^{\\alpha(t - t_{\\text{last}})}}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{F}_{\\\\text{fresh}}': 'freshness score ∈ [0, 1]', 't': 'current timestamp', 't_{\\\\text{last}}': 'last update timestamp', '\\\\alpha': 'decay rate parameter'}",
+      "assumptions": "Exponential decay of relevance over time with fixed \\( \\alpha \\)",
+      "breakdown_regime": "\\( t \\to t_{\\text{last}} \\implies \\mathcal{F}_{\\text{fresh}} \\to 1 \\)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses \\( \\mathcal{F}_{\\text{fresh}} \\) as a prior weight in temporal Bayesian models.",
+        "source_operator": "data_freshness_metric",
+        "telemetry": "Time-weighted freshness index per data stream"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "66746c71478fabb4_t0",
+      "think": "The core duality in StatKing's architecture lies between legal usability and data richness. The coverage gap \\( \\mathcal{C} \\) defines the fundamental constraint: \\( \\mathcal{C} \\) is a ratio of legally usable data to total seeded data. As \\( \\mathcal{C} \\to 0 \\), the system enters a failure mode where actionable intelligence becomes sparse. Trust and conflict metrics \\( \\mathcal{T} \\) and \\( \\mathcal{F} \\) form a dual axis that determines data integrity. When \\( \\mathcal{F} \\to \\infty \\), trust collapses, leading to unreliable inferences. The freshness metric \\( \\mathcal{F}_{\\text{fresh}} \\) ensures that even high-quality data remains relevant over time. These primitives form a triadic kernel: \\( \\mathcal{C} \\times \\mathcal{T} \\cdot \\mathcal{F}^{-1} \\times \\mathcal{F}_{\\text{fresh}} \\) underpins the system’s epistemic robustness. Failure modes include data loss due to legal constraints, trust erosion from conflicting signals, and obsolescence from stale data.\n\nDeep epistemic analysis for statking-weak-spots (66746c71478fabb4, domain=other, pages_read=1/1): Operator 'Coverage Gap' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Legal data subset \\( \\mathcal{D}_{\\text{legal}} \\subseteq \\mathcal{D}_{\\text{seeded}} \\), \\( \\mathcal{C} \\in [0, 1] \\) Breakdown regime: \\( \\mathcal{C} \\to 0 \\implies data insufficiency \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes \\( P(\\mathcal{C} < \\epsilon) \\) using Bayesian inference on legal contract compliance. Operator 'Trust-Conflict Index' (page 1, domain other) captures: - HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds. Assumptions: Trust is inversely correlated with conflict frequency; both are normalized. Breakdown regime: \\( \\mathcal{F} \\to \\infty \\implies \\mathcal{T} \\to 0 \\) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps \\( \\mathcal{T} \\cdot \\mathcal{F}^{-1} \\) to decision confidence \\( \\mathcal{D}_{\\text{conf}} \\) in tactical planning. Operator 'Data Freshness Metric' (page 1, domain other) captures: - Coverage, source trust, conflict, freshness, proof, comps, archetypes, alerts, versioning, competitive, and king-standard foundations. Assumptions: Exponential decay of relevance over time with fixed \\( \\alpha \\) Breakdown regime: \\( t \\to t_{\\text{last}} \\implies \\mathcal{F}_{\\text{fresh}} \\to 1 \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses \\( \\mathcal{F}_{\\text{fresh}} \\) as a prior weight in temporal Bayesian models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for statking-weak-spots (66746c71478fabb4, domain=other, pages_read=1/1): Operator 'Coverage Gap' (page 1, domain other) captures: ## Brutal audit - CRITICAL: active, legally usable data coverage remains smaller than the seeded source universe. Assumptions: Legal data subset \\( \\mathcal{D}_{\\text{legal}} \\subseteq \\mathcal{D}_{\\text{seeded}} \\), \\( \\mathcal{C} \\in [0, 1] \\) Breakdown regime: \\( \\mathcal{C} \\to 0 \\implies data insufficiency \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes \\( P(\\mathcal{C} < \\epsilon) \\) using Bayesian inference on legal contract compliance. Operator 'Trust-Conflict Index' (page 1, domain other) captures: - HIGH: premium UX must explain trust, coverage, conflicts, and missing data in ten seconds. Assumptions: Trust is inversely correlated with conflict frequency; both are normalized. Breakdown regime: \\( \\mathcal{F} \\to \\infty \\implies \\mathcal{T} \\to 0 \\) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps \\( \\mathcal{T} \\cdot \\mathcal{F}^{-1} \\) to decision confidence \\( \\mathcal{D}_{\\text{conf}} \\) in tactical planning. Operator 'Data Freshness Metric' (page 1, domain other) captures: - Coverage, source trust, conflict, freshness, proof, comps, archetypes, alerts, versioning, competitive, and king-standard foundations. Assumptions: Exponential decay of relevance over time with fixed \\( \\alpha \\) Breakdown regime: \\( t \\to t_{\\text{last}} \\implies \\mathcal{F}_{\\text{fresh}} \\to 1 \\) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses \\( \\mathcal{F}_{\\text{fresh}} \\) as a prior weight in temporal Bayesian models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and Bayesian epistemology, these primitives echo Shannon's entropy and Jaynes' maximum entropy principle, extended into legal and temporal domains. Retrocausal Genealogy: Rooted in statking-weak-spots (66746c71478fabb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in statking-weak-spots (66746c71478fabb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors (seeking monetization), legal auditors (enforcing compliance), and end-users (demanding accuracy). Each agent influences \\( \\mathcal{C}, \\mathcal{T}, \\mathcal{F} \\) through their respective incentives. Theory of Mind & Decision Maker Model: Rooted in statking-weak-spots (66746c71478fabb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires \\( \\mathcal{C} \\) and \\( \\mathcal{F}_{\\text{fresh}} \\) not to be perfectly correlated with \\( \\mathcal{T} \\cdot \\mathcal{F}^{-1} \\). Leakage occurs when one layer's signal contaminates another, e.g., stale data inflating trust scores. Cross-Layer Veto & Anti-Leakage Check: Rooted in statking-weak-spots (66746c71478fabb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

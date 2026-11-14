@@ -1,0 +1,78 @@
+{
+  "book_id": "368b689e7bb50295",
+  "source_status": "COMPLETE",
+  "title": "2601.12132v1",
+  "file_name": "2601.12132v1.pdf",
+  "sha256": "368b689e7bb50295b5b6893ffc015a0c3fd7409bd9c5f0e58054652ba072a60f",
+  "primary_domain": "other",
+  "pages_total": 13,
+  "pages_read": 13,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bengali text classification via LLMs maps semantic embeddings to categorical labels using transformer kernels with probabilistic confidence thresholds. Universal Lens: Rooted in 2601.12132v1 (368b689e7bb50295), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework applies posterior distributions over LLM-generated logits to classify Bengali news; conformal prediction ensures coverage guarantees. GSI Mapping: Rooted in 2601.12132v1 (368b689e7bb50295), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states based on predicted category probabilities and contextual coherence scores from multi-model ensemble outputs. GSE Mapping: Rooted in 2601.12132v1 (368b689e7bb50295), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "text_classification_kernel",
+      "name": "Text Classification Kernel",
+      "verbatim_quote": "Bengali text classification is a Significant task in natural language processing (NLP), where text is categorized into predefined labels.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'text input (dimensionless)', 'C': 'category label (dimensionless)', 'K': 'kernel function (dimensionless)'}",
+      "assumptions": "Input text T is encoded via transformer embeddings; categories C are mutually exclusive and collectively exhaustive.",
+      "breakdown_regime": "When T lacks semantic structure or C is ill-defined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "LLM latent space projection maps T → embedding space, then K maps to discrete category distribution P(C|T).",
+        "source_operator": "text_classification_kernel",
+        "telemetry": "Accuracy metric on held-out test set"
+      }
+    },
+    {
+      "primitive_id": "llm_inference_engine",
+      "name": "LLM Inference Engine",
+      "verbatim_quote": "Three instruction-tuned LLMs—LLaMA 3.1 8B Instruct, LLaMA 3.2 3B Instruct, and Qwen 2.5 7B Instruct—were evaluated for this task under the same classification framework.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'language model (dimensionless)', 'X': 'input token sequence (dimensionless)', 'Y': 'output probability distribution (dimensionless)'}",
+      "assumptions": "Models are instruction-tuned and operate within zero-shot or few-shot paradigms; X is tokenized and embedded.",
+      "breakdown_regime": "When L lacks sufficient training on Bengali domain or X contains out-of-vocabulary tokens.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Each L maps input X to Y through attention-weighted context aggregation; final softmax yields P(Y|X).",
+        "source_operator": "llm_inference_engine",
+        "telemetry": "Perplexity and cross-entropy loss on validation set"
+      }
+    },
+    {
+      "primitive_id": "accuracy_benchmark",
+      "name": "Accuracy Benchmark",
+      "verbatim_quote": "Among the evaluated models, Qwen 2.5 achieved the highest classification accuracy of 72%, showing particular strength in the \"Sports\" category.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'classification accuracy (unitless)', 'S': 'sports category label (dimensionless)', 'M': 'model identifier (dimensionless)'}",
+      "assumptions": "A is computed over independent test samples; S is a subset of all categories C.",
+      "breakdown_regime": "When A drops below threshold due to class imbalance or misalignment between M and S.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A = Σᵢ I(yᵢ = ŷᵢ)/n, where yᵢ is true label, ŷᵢ is predicted, and n total samples.",
+        "source_operator": "accuracy_benchmark",
+        "telemetry": "F1-score per class and macro-average F1"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "368b689e7bb50295_t0",
+      "think": "The core operator 'Text Classification Kernel' operates on semantic embeddings derived from transformer architectures, mapping textual inputs T to categorical outputs C via kernel functions K. This kernel encodes the learned feature space of LLMs such as Qwen 2.5, which achieves 72% accuracy. The dual nature of this operation lies in its ability to generalize across unseen data while maintaining bounded uncertainty through probabilistic inference. Failure modes include catastrophic forgetting during fine-tuning or poor generalization when encountering rare categories like 'Sports'. The 'LLM Inference Engine' serves as the operational substrate, applying attention mechanisms to produce conditional probability distributions Y = P(C|X), where X represents tokenized input. Its performance varies significantly among models—Qwen 2.5 outperforming LLaMA variants due to superior multilingual alignment and instruction-following capabilities. The 'Accuracy Benchmark' quantifies success using empirical metrics like F1-score and macro-average F1, revealing that even with limited Bengali NLP resources, LLMs can achieve meaningful classification performance. These primitives form a coherent system where each layer contributes to robustness against domain shifts and resource scarcity.\n\nDeep epistemic analysis for 2601.12132v1 (368b689e7bb50295, domain=other, pages_read=13/13): Operator 'Text Classification Kernel' (page 1, domain other) captures: Bengali text classification is a Significant task in natural language processing (NLP), where text is categorized into predefined labels. Assumptions: Input text T is encoded via transformer embeddings; categories C are mutually exclusive and collectively exhaustive. Breakdown regime: When T lacks semantic structure or C is ill-defined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LLM latent space projection maps T → embedding space, then K maps to discrete category distribution P(C|T). Operator 'LLM Inference Engine' (page 1, domain other) captures: Three instruction-tuned LLMs—LLaMA 3.1 8B Instruct, LLaMA 3.2 3B Instruct, and Qwen 2.5 7B Instruct—were evaluated for this task under the same classification framework. Assumptions: Models are instruction-tuned and operate within zero-shot or few-shot paradigms; X is tokenized and embedded. Breakdown regime: When L lacks sufficient training on Bengali domain or X contains out-of-vocabulary tokens. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Each L maps input X to Y through attention-weighted context aggregation; final softmax yields P(Y|X). Operator 'Accuracy Benchmark' (page 1, domain other) captures: Among the evaluated models, Qwen 2.5 achieved the highest classification accuracy of 72%, showing particular strength in the \"Sports\" category. Assumptions: A is computed over independent test samples; S is a subset of all categories C. Breakdown regime: When A drops below threshold due to class imbalance or misalignment between M and S. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): A = Σᵢ I(yᵢ = ŷᵢ)/n, where yᵢ is true label, ŷᵢ is predicted, and n total samples. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2601.12132v1 (368b689e7bb50295, domain=other, pages_read=13/13): Operator 'Text Classification Kernel' (page 1, domain other) captures: Bengali text classification is a Significant task in natural language processing (NLP), where text is categorized into predefined labels. Assumptions: Input text T is encoded via transformer embeddings; categories C are mutually exclusive and collectively exhaustive. Breakdown regime: When T lacks semantic structure or C is ill-defined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LLM latent space projection maps T → embedding space, then K maps to discrete category distribution P(C|T). Operator 'LLM Inference Engine' (page 1, domain other) captures: Three instruction-tuned LLMs—LLaMA 3.1 8B Instruct, LLaMA 3.2 3B Instruct, and Qwen 2.5 7B Instruct—were evaluated for this task under the same classification framework. Assumptions: Models are instruction-tuned and operate within zero-shot or few-shot paradigms; X is tokenized and embedded. Breakdown regime: When L lacks sufficient training on Bengali domain or X contains out-of-vocabulary tokens. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Each L maps input X to Y through attention-weighted context aggregation; final softmax yields P(Y|X). Operator 'Accuracy Benchmark' (page 1, domain other) captures: Among the evaluated models, Qwen 2.5 achieved the highest classification accuracy of 72%, showing particular strength in the \"Sports\" category. Assumptions: A is computed over independent test samples; S is a subset of all categories C. Breakdown regime: When A drops below threshold due to class imbalance or misalignment between M and S. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): A = Σᵢ I(yᵢ = ŷᵢ)/n, where yᵢ is true label, ŷᵢ is predicted, and n total samples. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical NLP classification theory, this work extends earlier convolutional and embedding-based models (e.g., GloVe + VDCNN) into modern transformer paradigms, building upon prior research in hierarchical classification and minimal supervision. Retrocausal Genealogy: Rooted in 2601.12132v1 (368b689e7bb50295), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might include adversarial classifiers attempting to exploit linguistic ambiguities or imbalanced datasets. Decision actors could be stakeholders seeking reliable categorization for content moderation or recommendation systems, requiring both high precision and recall across diverse domains. Theory of Mind & Decision Maker Model: Rooted in 2601.12132v1 (368b689e7bb50295), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple models yield conflicting predictions without clear consensus; leakage occurs if model-specific biases propagate into shared classification spaces. Veto conditions enforce consistency checks across layers to prevent erroneous propagation. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2601.12132v1 (368b689e7bb50295), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

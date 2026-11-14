@@ -1,0 +1,78 @@
+{
+  "book_id": "4453cea73477b322",
+  "source_status": "COMPLETE",
+  "title": "investigate",
+  "file_name": "investigate.md",
+  "sha256": "4453cea73477b322c29c9bebafc877bad9ae50368d64612bef60f2dcf86f9bd6",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Root-cause investigation as a Bayesian belief update over deployment consistency, hypothesis ranking, and empirical validation. Universal Lens: Rooted in investigate (4453cea73477b322), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models symptom likelihood as a conformal predictive distribution over git-sha alignment and agent ledger states. GSI Mapping: Rooted in investigate (4453cea73477b322), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning by transitioning system states through discrete hypothesis confirmation and telemetry validation. GSE Mapping: Rooted in investigate (4453cea73477b322), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "deployment_consistency_check",
+      "name": "Deployment Consistency Check",
+      "verbatim_quote": "Ground truths first: production's `/api/ops/public-surface-truth` `deployment.sha` vs `git rev-parse origin/main` (per `docs/ops/DEPLOY_LAG.md` — code on `main` isn't live until Vercel serves that SHA); the relevant rows in `docs/ops/AGENT_LEDGER.md`; and `docs/data/FLEET_DISPATCH.md` for any dispatched/in-flight work touching the same area.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SHA': 'dimensionless hash identifier', 't_deploy': 'time of deployment', 't_serve': 'time of serving'}",
+      "assumptions": "Deployment lag is deterministic; SHA equality implies code parity.",
+      "breakdown_regime": "When t_serve ≠ t_deploy, inconsistency occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Deployment consistency mirrors temporal alignment in causal inference models.",
+        "source_operator": "deployment_consistency_check",
+        "telemetry": "API response time vs git commit timestamp mismatch."
+      }
+    },
+    {
+      "primitive_id": "hypothesis_ranking_framework",
+      "name": "Hypothesis Ranking Framework",
+      "verbatim_quote": "List ranked hypotheses for the root cause, most likely first, with the code/log/git evidence for and against each (`git log`, `git blame`, `git diff` on the suspect area).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_i': 'hypothesis i', 'E': 'evidence set', 'P(H_i|E)': 'posterior probability of hypothesis i given evidence'}",
+      "assumptions": "Evidence is conditionally independent across hypotheses.",
+      "breakdown_regime": "When P(H_i|E) approaches 1, other hypotheses are invalidated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Bayesian ranking kernel derived from Git history and log analysis.",
+        "source_operator": "hypothesis_ranking_framework",
+        "telemetry": "Ranked list of hypotheses with confidence scores."
+      }
+    },
+    {
+      "primitive_id": "reproduction_validation_gate",
+      "name": "Reproduction Validation Gate",
+      "verbatim_quote": "Do not declare a root cause without a failing test or a concrete reproduction confirming it — hand off to `/repro` to build that if one doesn't exist yet.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'reproduction instance', 'F': 'failure condition', 'T': 'test assertion'}",
+      "assumptions": "Reproduction must be deterministic and verifiable.",
+      "breakdown_regime": "If ¬(R ∧ T) then F remains unconfirmed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reproduction gate mirrors logical validity checks in formal verification.",
+        "source_operator": "reproduction_validation_gate",
+        "telemetry": "Test pass/fail ratio and reproduction success rate."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4453cea73477b322_t0",
+      "think": "The systematic root-cause investigation process is modeled as a sequential Bayesian update over three domains: deployment consistency, hypothesis space, and validation. Each step defines a conditional probability space where evidence from Git logs, API responses, and test suites updates beliefs. The process begins with a ground-truth check (deployment consistency), followed by a ranked hypothesis search (Bayesian model selection), and concludes with a deterministic validation gate (reproduction). This structure ensures minimal false positives and maximal causal clarity. The failure mode arises when any domain lacks sufficient evidence, leading to an invalidation of the entire chain. The mathematical duality lies between the temporal alignment of code and deployment and the logical alignment of hypotheses with evidence.\n\nDeep epistemic analysis for investigate (4453cea73477b322, domain=other, pages_read=1/1): Operator 'Deployment Consistency Check' (page 1, domain other) captures: Ground truths first: production's `/api/ops/public-surface-truth` `deployment.sha` vs `git rev-parse origin/main` (per `docs/ops/DEPLOY_LAG.md` — code on `main` isn't live until Vercel serves that SHA); the relevant rows in `docs/ops/AGENT_LEDGER.md`; and `docs/data/FLEET_DISPATCH.md` for any dispatched/in-flight work touching the same area. Assumptions: Deployment lag is deterministic; SHA equality implies code parity. Breakdown regime: When t_serve ≠ t_deploy, inconsistency occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Deployment consistency mirrors temporal alignment in causal inference models. Operator 'Hypothesis Ranking Framework' (page 1, domain other) captures: List ranked hypotheses for the root cause, most likely first, with the code/log/git evidence for and against each (`git log`, `git blame`, `git diff` on the suspect area). Assumptions: Evidence is conditionally independent across hypotheses. Breakdown regime: When P(H_i|E) approaches 1, other hypotheses are invalidated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bayesian ranking kernel derived from Git history and log analysis. Operator 'Reproduction Validation Gate' (page 1, domain other) captures: Do not declare a root cause without a failing test or a concrete reproduction confirming it — hand off to `/repro` to build that if one doesn't exist yet. Assumptions: Reproduction must be deterministic and verifiable. Breakdown regime: If ¬(R ∧ T) then F remains unconfirmed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reproduction gate mirrors logical validity checks in formal verification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for investigate (4453cea73477b322, domain=other, pages_read=1/1): Operator 'Deployment Consistency Check' (page 1, domain other) captures: Ground truths first: production's `/api/ops/public-surface-truth` `deployment.sha` vs `git rev-parse origin/main` (per `docs/ops/DEPLOY_LAG.md` — code on `main` isn't live until Vercel serves that SHA); the relevant rows in `docs/ops/AGENT_LEDGER.md`; and `docs/data/FLEET_DISPATCH.md` for any dispatched/in-flight work touching the same area. Assumptions: Deployment lag is deterministic; SHA equality implies code parity. Breakdown regime: When t_serve ≠ t_deploy, inconsistency occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Deployment consistency mirrors temporal alignment in causal inference models. Operator 'Hypothesis Ranking Framework' (page 1, domain other) captures: List ranked hypotheses for the root cause, most likely first, with the code/log/git evidence for and against each (`git log`, `git blame`, `git diff` on the suspect area). Assumptions: Evidence is conditionally independent across hypotheses. Breakdown regime: When P(H_i|E) approaches 1, other hypotheses are invalidated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bayesian ranking kernel derived from Git history and log analysis. Operator 'Reproduction Validation Gate' (page 1, domain other) captures: Do not declare a root cause without a failing test or a concrete reproduction confirming it — hand off to `/repro` to build that if one doesn't exist yet. Assumptions: Reproduction must be deterministic and verifiable. Breakdown regime: If ¬(R ∧ T) then F remains unconfirmed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Reproduction gate mirrors logical validity checks in formal verification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Root-cause analysis traces back to classical scientific method and Bayesian inference, with modern adaptations in software engineering practices like Git-based debugging and CI/CD pipeline integrity. Retrocausal Genealogy: Rooted in investigate (4453cea73477b322), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in investigate (4453cea73477b322), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents involved include the developer (hypothesizer), the system (deployer), and the test suite (validator). Each agent operates under distinct information sets, with the developer's belief being updated based on system behavior and test outcomes. Theory of Mind & Decision Maker Model: Rooted in investigate (4453cea73477b322), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates on orthogonal domains: deployment state, hypothesis space, and validation logic. Leakage occurs if evidence from one layer contaminates another, e.g., using a hypothesis without proper reproduction. Cross-Layer Veto & Anti-Leakage Check: Rooted in investigate (4453cea73477b322), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

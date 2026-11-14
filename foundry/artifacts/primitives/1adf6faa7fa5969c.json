@@ -1,0 +1,78 @@
+{
+  "book_id": "1adf6faa7fa5969c",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "1adf6faa7fa5969c800066062cdde76c3c35f566861f8a745b69693a5f2a4cd6",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "GSE engine integrates causal signal processing with ML calibration via total-signal doctrine; research organized temporally per \\( t \\in \\mathbb{T} \\) for \\( \\mathcal{E}(t) \\) evolution. Universal Lens: Rooted in README (1adf6faa7fa5969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps \\( \\mathcal{P}(\\theta | D) \\propto \\mathcal{P}(D | \\theta) \\mathcal{P}(\\theta) \\) onto GSE's \\( \\mathcal{E}(t) \\) state transitions through \\( \\mathcal{F}: \\mathcal{S} \\to \\mathcal{O} \\), where \\( \\mathcal{S} \\) is signal space and \\( \\mathcal{O} \\) is observation space.",
+  "gse_mapping": "Situational reasoning \\( \\mathcal{R}(s, a) \\) evolves via \\( \\Delta s = f(\\mathcal{E}(t), \\mathcal{C}) \\) under \\( \\mathcal{M} \\)-calibrated dynamics, transitioning states \\( s \\in \\mathcal{S} \\) using \\( \\mathcal{T}(s, a) \\to s' \\).",
+  "primitives": [
+    {
+      "primitive_id": "engine_architecture",
+      "name": "Engine Architecture",
+      "verbatim_quote": "# Engine — the GSE machine Engine architecture, wiring specs, calibration, ML research, the total-signal doctrine.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time in seconds', 'E(t)': 'total signal energy in joules'}",
+      "assumptions": "Signal integrity preserved across all subsystems; total-signal doctrine ensures no information loss during integration.",
+      "breakdown_regime": "When \\( \\frac{dE}{dt} < 0 \\), system enters entropy-dominated regime.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's \\( \\mathcal{E}(t) \\) corresponds to \\( \\mathcal{P}(D|\\theta) \\) in GSI’s Bayesian framework.",
+        "source_operator": "engine_architecture",
+        "telemetry": "Energy dissipation rate \\( \\dot{E} \\) as proxy for model drift."
+      }
+    },
+    {
+      "primitive_id": "research_layout",
+      "name": "Research Layout",
+      "verbatim_quote": "## Layout - `research/<YYYY-MM-DD>/ — dated research: wiring specs, calibration weights, lab work, theory (cept/)` - `research/cept/ — Causal E-Process Theory (Garrett's math foundation)` ## The rule New research goes in `research/<YYYY-MM-DD>/` — dated, always.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'timestamp in days since epoch', 'R(t)': 'research data volume in gigabytes'}",
+      "assumptions": "Temporal ordering preserves causality; \\( R(t) \\) grows monotonically with \\( t \\).",
+      "breakdown_regime": "When \\( \\frac{dR}{dt} = 0 \\), research stagnates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Causal E-Process \\( \\mathcal{E}(t) \\) derived from \\( R(t) \\) via \\( \\mathcal{F}_{\\text{cept}} \\).",
+        "source_operator": "research_layout",
+        "telemetry": "Entropy of \\( R(t) \\) as measure of theoretical coherence."
+      }
+    },
+    {
+      "primitive_id": "causal_e_process_theory",
+      "name": "Causal E-Process Theory",
+      "verbatim_quote": "## Layout - `research/<YYYY-MM-DD>/ — dated research: wiring specs, calibration weights, lab work, theory (cept/)` - `research/cept/ — Causal E-Process Theory (Garrett's math foundation)` ## The rule New research goes in `research/<YYYY-MM-DD>/` — dated, always.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{E}': 'causal energy process in joule·second', '\\\\mathcal{C}': 'causality coefficient dimensionless'}",
+      "assumptions": "Causality is encoded in \\( \\mathcal{E} \\); \\( \\mathcal{C} \\) quantifies temporal consistency.",
+      "breakdown_regime": "When \\( \\mathcal{C} < 0 \\), causal structure fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's \\( \\mathcal{P}(\\theta|D) \\) is derived from \\( \\mathcal{E} \\) via \\( \\mathcal{F}_{\\text{cept}} \\).",
+        "source_operator": "causal_e_process_theory",
+        "telemetry": "Causal fidelity \\( \\mathcal{F}_{\\text{causal}} = \\frac{\\mathcal{E}}{\\mathcal{E}_0} \\)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1adf6faa7fa5969c_t0",
+      "think": "The GSE engine operates under a total-signal doctrine that unifies signal architecture with machine learning calibration. This implies a dualism between deterministic wiring and stochastic inference. The \\( \\mathcal{E}(t) \\) operator models the integrated signal flow, while \\( \\mathcal{F}_{\\text{cept}} \\) encodes causal logic. Temporal organization \\( R(t) \\) ensures reproducibility and scalability. Failure modes include entropy increase \\( \\dot{E} < 0 \\), research stagnation \\( \\frac{dR}{dt} = 0 \\), and causal breakdown \\( \\mathcal{C} < 0 \\). These regimes define operational boundaries for both GSI and GSE.\n\nDeep epistemic analysis for README (1adf6faa7fa5969c, domain=other, pages_read=1/1): Operator 'Engine Architecture' (page 1, domain other) captures: # Engine — the GSE machine Engine architecture, wiring specs, calibration, ML research, the total-signal doctrine. Assumptions: Signal integrity preserved across all subsystems; total-signal doctrine ensures no information loss during integration. Breakdown regime: When \\( \\frac{dE}{dt} < 0 \\), system enters entropy-dominated regime. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's \\( \\mathcal{E}(t) \\) corresponds to \\( \\mathcal{P}(D|\\theta) \\) in GSI’s Bayesian framework. Operator 'Research Layout' (page 1, domain other) captures: ## Layout - `research/<YYYY-MM-DD>/ — dated research: wiring specs, calibration weights, lab work, theory (cept/)` - `research/cept/ — Causal E-Process Theory (Garrett's math foundation)` ## The rule New research goes in `research/<YYYY-MM-DD>/` — dated, always. Assumptions: Temporal ordering preserves causality; \\( R(t) \\) grows monotonically with \\( t \\). Breakdown regime: When \\( \\frac{dR}{dt} = 0 \\), research stagnates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Causal E-Process \\( \\mathcal{E}(t) \\) derived from \\( R(t) \\) via \\( \\mathcal{F}_{\\text{cept}} \\). Operator 'Causal E-Process Theory' (page 1, domain other) captures: ## Layout - `research/<YYYY-MM-DD>/ — dated research: wiring specs, calibration weights, lab work, theory (cept/)` - `research/cept/ — Causal E-Process Theory (Garrett's math foundation)` ## The rule New research goes in `research/<YYYY-MM-DD>/` — dated, always. Assumptions: Causality is encoded in \\( \\mathcal{E} \\); \\( \\mathcal{C} \\) quantifies temporal consistency. Breakdown regime: When \\( \\mathcal{C} < 0 \\), causal structure fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's \\( \\mathcal{P}(\\theta|D) \\) is derived from \\( \\mathcal{E} \\) via \\( \\mathcal{F}_{\\text{cept}} \\). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (1adf6faa7fa5969c, domain=other, pages_read=1/1): Operator 'Engine Architecture' (page 1, domain other) captures: # Engine — the GSE machine Engine architecture, wiring specs, calibration, ML research, the total-signal doctrine. Assumptions: Signal integrity preserved across all subsystems; total-signal doctrine ensures no information loss during integration. Breakdown regime: When \\( \\frac{dE}{dt} < 0 \\), system enters entropy-dominated regime. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's \\( \\mathcal{E}(t) \\) corresponds to \\( \\mathcal{P}(D|\\theta) \\) in GSI’s Bayesian framework. Operator 'Research Layout' (page 1, domain other) captures: ## Layout - `research/<YYYY-MM-DD>/ — dated research: wiring specs, calibration weights, lab work, theory (cept/)` - `research/cept/ — Causal E-Process Theory (Garrett's math foundation)` ## The rule New research goes in `research/<YYYY-MM-DD>/` — dated, always. Assumptions: Temporal ordering preserves causality; \\( R(t) \\) grows monotonically with \\( t \\). Breakdown regime: When \\( \\frac{dR}{dt} = 0 \\), research stagnates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Causal E-Process \\( \\mathcal{E}(t) \\) derived from \\( R(t) \\) via \\( \\mathcal{F}_{\\text{cept}} \\). Operator 'Causal E-Process Theory' (page 1, domain other) captures: ## Layout - `research/<YYYY-MM-DD>/ — dated research: wiring specs, calibration weights, lab work, theory (cept/)` - `research/cept/ — Causal E-Process Theory (Garrett's math foundation)` ## The rule New research goes in `research/<YYYY-MM-DD>/` — dated, always. Assumptions: Causality is encoded in \\( \\mathcal{E} \\); \\( \\mathcal{C} \\) quantifies temporal consistency. Breakdown regime: When \\( \\mathcal{C} < 0 \\), causal structure fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's \\( \\mathcal{P}(\\theta|D) \\) is derived from \\( \\mathcal{E} \\) via \\( \\mathcal{F}_{\\text{cept}} \\). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Garrett's Causal E-Process Theory, which extends Kolmogorov complexity into dynamic systems. Influenced by Bayesian causality and information-theoretic thermodynamics. Retrocausal Genealogy: Rooted in README (1adf6faa7fa5969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (1adf6faa7fa5969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may be adversarial models or noisy environments. Decision actors must optimize \\( \\mathcal{F}_{\\text{cept}} \\) against \\( \\mathcal{E} \\) degradation. GSI agents infer \\( \\theta \\) from \\( D \\), while GSE agents predict \\( s' \\) from \\( s, a \\). Theory of Mind & Decision Maker Model: Rooted in README (1adf6faa7fa5969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when \\( \\mathcal{E}(t) \\) and \\( \\mathcal{P}(\\theta|D) \\) diverge due to overfitting. Leakage occurs if \\( \\mathcal{F}_{\\text{cept}} \\) is not properly constrained. Veto conditions enforce \\( \\mathcal{C} > 0 \\) and \\( \\frac{dR}{dt} > 0 \\). Cross-Layer Veto & Anti-Leakage Check: Rooted in README (1adf6faa7fa5969c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

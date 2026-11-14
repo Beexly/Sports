@@ -1,0 +1,217 @@
+{
+ "book_id": "62af700cfd3180fa",
+ "source_status": "COMPLETE",
+ "pages_total": 17,
+ "pages_read": 17,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Pareto dominance / Pareto-efficiency criterion (eq. 1)",
+   "domain": "math",
+   "layer": 1,
+   "statement": "A payoff vector v=(v_1,...,v_k) dominates v-bar=(v-bar_1,...,v-bar_k) iff every component is at least as large and at least one is strictly larger; a strategy profile is Pareto efficient (PE) iff its valuation vector is not dominated by any other profile's valuation vector.",
+   "verbatim_quote": "Vector 𝑣𝑣⃗= (𝑣𝑣1, … , 𝑣𝑣𝑘𝑘) is said to dominate 𝑣𝑣̿ = (𝑣𝑣̅1, … , 𝑣𝑣̅𝑘𝑘) if and only if 𝑣𝑣⃗ is at least partially better off than 𝑣𝑣̿, formally in (1) [27]. ∀𝑗𝑗∈{1, . . . , 𝑘𝑘}, 𝑣𝑣𝑗𝑗≥𝑣𝑣̅𝑗𝑗 ∧∃𝑖𝑖∈{1, . . . , 𝑘𝑘}:𝑣𝑣𝑖𝑖> 𝑣𝑣̅𝑖𝑖 (1)",
+   "page": 3,
+   "latex": "\\forall j\\in\\{1,\\dots,k\\},\\ v_j\\ge \\bar v_j\\ \\wedge\\ \\exists i\\in\\{1,\\dots,k\\}: v_i>\\bar v_i",
+   "symbol_and_unit_ledger": {
+    "v_j": "component j of a payoff/valuation vector; dimensionless utility units (paper's payoff scale)",
+    "bar_v_j": "component j of the compared valuation vector; same dimensionless utility units",
+    "i,j": "player/objective indices ranging over {1,...,k}; integer counts",
+    "k": "number of players (objectives) in the profile; integer count",
+    "wedge": "logical AND; dimensionless",
+    "ge, gt": "componentwise >= and >; order relations on dimensionless utilities"
+   },
+   "assumptions": [
+    "Payoffs are real-valued and totally ordered per component so >= and > are meaningful.",
+    "All k components are commensurate within each vector (same utility scale per player).",
+    "The set of feasible strategy profiles is non-empty; PE is defined relative to that set.",
+    "Dominance is the standard weak Pareto improvement (all >=, one >), not strict Pareto (all >)."
+   ],
+   "breakdown_regime": "Silent on distributional fairness: a PE profile can be efficient yet highly unequal. PE is existence-relative to the feasible set and says nothing about execution plausibility; the paper itself notes PE profiles are 'unlikely to occur' in real games. If payoffs are non-comparable (partial orders) or the feasible set is empty/uncountable without compactness, the non-dominance selection may be empty or non-unique.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pareto dominance over k payoff components is isomorphic to dominance over the 22-agent per-player expected-value vector in GSE play evaluation: a candidate play/profile dominates another iff every agent's contribution (EPA/WPA delta) is >= and at least one is strictly >. The PE selector becomes the non-dominated frontier of 22-agent play profiles.",
+    "source_operator": "p1: Pareto dominance relation, eq. (1), Section 1.3, p. 357",
+    "telemetry": "Per-agent x,y,v tracking aggregated to play-level EPA/WPA deltas for each of the 22 agents; the profile value vector is the 22-tuple of agent contributions, and dominance is computed componentwise on that vector."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Nash equilibrium unilateral-deviation condition + existence (eq. 2)",
+   "domain": "math",
+   "layer": 1,
+   "statement": "A strategy profile (s_1*,...,s_n*) is a Nash equilibrium iff for every player i and every alternative strategy s_i in S_i, u_i(s_1*,...,s_i*,...,s_n*) >= u_i(s_1*,...,s_i,...,s_n*); i.e. no player gains by unilateral deviation. By Nash's theorem every finite normal-form game has at least one such profile.",
+   "verbatim_quote": "1.4 Nash Equilibrium Let 𝑠𝑠𝑖𝑖∗ be the answer from 𝑖𝑖 to the 𝑛𝑛−1 strategies of the other players, and let (𝑠𝑠1∗, … , 𝑠𝑠𝑖𝑖∗, … , 𝑠𝑠𝑛𝑛∗) be the n-tuple of players’ strategies that maximizes the payoff function in equation (2) as follows: 𝑢𝑢𝑖𝑖( 𝑠𝑠1∗, … , 𝒔𝒔𝒊𝒊∗, … , 𝑠𝑠𝑛𝑛∗) ≥ 𝑢𝑢𝑖𝑖( 𝑠𝑠1∗, … , 𝒔𝒔𝒊𝒊, … , 𝑠𝑠𝑛𝑛∗) ∀𝑖𝑖∈𝑃𝑃, 𝒔𝒔𝒊𝒊 ∈𝑆𝑆𝑖𝑖 (2). The strategy profile (𝑠𝑠1∗, … , 𝑠𝑠𝑛𝑛∗) fits the NE condition, which classic interpretation is that each player acts in a non-cooperative way and scenario, and the player uses a strategy that may be not the better for self but the less bad with respect to the other players’ strategies –in this senses the better. As a theorem, any game in normal form has at least one strategy profile that fits the NE [24].",
+   "page": 3,
+   "latex": "u_i(s_1^*,\\dots,s_i^*,\\dots,s_n^*)\\ \\ge\\ u_i(s_1^*,\\dots,s_i,\\dots,s_n^*)\\quad \\forall i\\in P,\\ s_i\\in S_i",
+   "symbol_and_unit_ledger": {
+    "u_i": "payoff (utility) function of player i; dimensionless utility units",
+    "s_i": "a strategy of player i drawn from finite set S_i; dimensionless label",
+    "s_i^*": "player i's equilibrium (best-response) strategy; dimensionless label",
+    "s_-i^*": "the (n-1)-tuple of other players' equilibrium strategies; dimensionless labels",
+    "P": "set of players {1,...,n}; integer-indexed",
+    "n": "number of players; integer count",
+    "ge": "unilateral-deviation inequality; order on dimensionless utilities"
+   },
+   "assumptions": [
+    "Finite normal-form game: each S_i is a finite non-empty strategy set (here the finite play sets of Tables 1-4).",
+    "Payoffs u_i are real-valued; mixed strategies allowed so Nash's 1951 existence theorem (ref [24]) applies.",
+    "Players are rational payoff-maximizers and the game is one-shot or stage-wise (no dynamic reputation).",
+    "The paper applies NE to a cooperative team setting, reinterpreting the non-cooperative fixed point as a team coordination device."
+   ],
+   "breakdown_regime": "Existence guarantee fails for infinite/continuous or unbounded strategy spaces without compactness/continuity; pure-strategy NE may not exist (only mixed). The fixed point can be non-unique and selection among equilibria is undetermined by the condition alone. In repeated/dynamic play, unilateral-deviation stability does not capture coalitional deviations or learning dynamics, which the paper's static rho-weighting ignores.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The NE condition is the fixed point of the 22-agent best-response operator: a GSE play-call profile is stable iff no single agent (QB, OL, receiver, defender, ...) can raise its expected value by unilaterally changing its action given the other 21 agents' actions. This is the same unilateral-deviation inequality lifted from n abstract players to 22 tracked agents.",
+    "source_operator": "p2: Nash equilibrium condition, eq. (2), Section 1.4, p. 357",
+    "telemetry": "Observed play-call and action frequencies conditioned on down/distance/field-position from NFL play-by-play, plus per-agent action labels from tracking; empirical best-response deviations are measured as the value gain from switching one agent's action while holding the other 21 fixed."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Frequency-weighted additive role payoff kernel u_i = sum V_j rho(x_j)",
+   "domain": "math",
+   "layer": 1,
+   "statement": "The payoff to role i over a strategy profile (x_1,...,x_n) is the additive sum over roles of the role's preference valuation V_j(x_j) of play x_j multiplied by rho(x_j), the empirical average occurrence frequency of that play: u_i(x_1,...,x_n) = V_1(x_1)rho(x_1) + ... + V_n(x_n)rho(x_n).",
+   "verbatim_quote": "Each role is qualified on the base of its performance on certain plays, and the statistics of the role resumes these qualifications. Let (𝑥𝑥1, … , 𝑥𝑥𝑖𝑖 , … , 𝑥𝑥𝑛𝑛) the strategy profile such that 𝑥𝑥𝑖𝑖 is one play of role 𝑖𝑖; let 𝑉𝑉𝑖𝑖(𝑥𝑥𝑖𝑖) be the role 𝑖𝑖’s preference on 𝑥𝑥𝑖𝑖, and 𝜌𝜌(𝑥𝑥𝑖𝑖) be the average statistics of occurrence of 𝑥𝑥𝑖𝑖 from role 𝑖𝑖 regarding the statistics (may be NFL). The payoff functions by the role 𝑖𝑖 is: 𝑢𝑢𝑖𝑖(𝑥𝑥1, … , 𝑥𝑥𝑖𝑖 , … , 𝑥𝑥𝑛𝑛) = 𝑉𝑉1(𝑥𝑥1) × 𝜌𝜌(𝑥𝑥1) + ⋯+ 𝑉𝑉𝑖𝑖(𝑥𝑥𝑖𝑖) × 𝜌𝜌(𝑥𝑥𝑖𝑖) + ⋯+ 𝑉𝑉𝑛𝑛(𝑥𝑥𝑛𝑛) × 𝜌𝜌(𝑥𝑥𝑛𝑛).",
+   "page": 7,
+   "latex": "u_i(x_1,\\dots,x_n)=V_1(x_1)\\times\\rho(x_1)+\\cdots+V_i(x_i)\\times\\rho(x_i)+\\cdots+V_n(x_n)\\times\\rho(x_n)",
+   "symbol_and_unit_ledger": {
+    "u_i": "payoff to role i; dimensionless valuation units",
+    "x_j": "the play chosen by role j in the profile; dimensionless play label (element of role j's play set)",
+    "V_j(x_j)": "role j's preference valuation of play x_j; dimensionless weight on the paper's valuation scale",
+    "rho(x_j)": "average empirical occurrence frequency of play x_j for role j (e.g. NFL statistics); dimensionless relative frequency in [0,1]",
+    "times": "scalar multiplication of weight by frequency; dimensionless",
+    "n": "number of roles in the profile; integer count"
+   },
+   "assumptions": [
+    "Additive separability across roles: total payoff is a sum of per-role terms with no interaction cross-terms (except where explicitly added, as in p4).",
+    "rho is a stationary empirical relative frequency estimated from historical statistics (NFL 2012 season in the experiments).",
+    "V_j is a fixed preference weight independent of the other roles' choices.",
+    "Frequency is used as a proxy for execution plausibility/probability of occurrence."
+   ],
+   "breakdown_regime": "Additivity fails under play complementarities (e.g. play-action value depends on run-history frequency, a dynamic the static rho cannot encode). Stationarity of rho breaks when opponents adapt, rosters change, or game state (score/clock) shifts play selection. Because rho down-weights rare plays, theoretically optimal but low-frequency plays (long touchdown passes) are suppressed — the paper's own explanation for why PE underperforms NE.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The frequency-weighted additive utility is a reusable GSE kernel: replace rho(x_j) with the empirical success rate of play x_j conditional on agent state, and V_j with a learned role-value weight, to score 22-agent play profiles. The derivation preserves the source's key design choice — weighting value by occurrence likelihood — so that plausible high-frequency plays dominate rare theoretical optima.",
+    "source_operator": "p3: role payoff function, Section 3.3, p. 361",
+    "telemetry": "Per-role play-success frequencies from play-by-play joined to tracking-derived agent state (separation, pressure, leverage); V_j weights fit to observed EPA contribution per role."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "QB-OL coupled payoff (minimal role-interaction instance)",
+   "domain": "math",
+   "layer": 1,
+   "statement": "The quarterback's payoff explicitly includes the offensive line's contribution: u_QB(w,x,y,z) = V_QB(w)rho(w) + V_OL(y)rho(y), where w is the QB play and y is the OL play. This encodes that pass value is contingent on pass protection, the minimal two-role interaction in the otherwise additive model.",
+   "verbatim_quote": "For the 𝑄𝑄𝐵𝐵 payoff function, the 𝑄𝑄𝐵𝐵 and the 𝑂𝑂𝐿𝐿 plays are considered, so the payoff function follows: 𝑢𝑢𝑄𝑄𝐵𝐵(𝑤𝑤, 𝑥𝑥, 𝑦𝑦, 𝑧𝑧) = 𝑉𝑉𝑄𝑄𝐵𝐵(𝑤𝑤) × 𝜌𝜌(𝑤𝑤) + 𝑉𝑉𝑂𝑂𝐿𝐿(𝑦𝑦) × 𝜌𝜌(𝑦𝑦). •",
+   "page": 7,
+   "latex": "u_{QB}(w,x,y,z)=V_{QB}(w)\\times\\rho(w)+V_{OL}(y)\\times\\rho(y)",
+   "symbol_and_unit_ledger": {
+    "u_QB": "quarterback payoff; dimensionless valuation units",
+    "w": "QB play, element of QBplays={rb,pb,fd,td,re,tb}; dimensionless play label",
+    "x": "receiver play in RCplays; dimensionless label (enters u_RC, not u_QB)",
+    "y": "offensive-line play in OLplays={tl,yb}; dimensionless play label",
+    "z": "backfield play in BFplays; dimensionless label (enters u_BF, not u_QB)",
+    "V_QB(w)": "QB preference valuation of play w; dimensionless weight",
+    "V_OL(y)": "OL preference valuation of blocking play y; dimensionless weight",
+    "rho(w),rho(y)": "empirical occurrence frequencies of w and y; dimensionless relative frequencies in [0,1]"
+   },
+   "assumptions": [
+    "QB payoff depends only on its own play w and the OL play y; receiver x and backfield z are excluded from u_QB.",
+    "The OL contribution enters additively (V_OL(y)rho(y)), not as a multiplicative gate on QB success.",
+    "Frequencies rho are stationary empirical estimates.",
+    "The coupling is one-directional in the model: OL affects QB, but QB's payoff does not feed back into OL's own payoff u_OL=V_OL(y)rho(y)."
+   ],
+   "breakdown_regime": "The additive coupling understates protection dependence: in reality QB success is multiplicatively gated by pressure (a sacked QB gains ~0 regardless of V_QB), so an additive term overvalues passes when OL play is poor. The model omits the defense's pass-rush interaction entirely. Breaks precisely in high-pressure regimes where the OL term should dominate or zero-out the QB term rather than merely add to it.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Generalize the QB-OL additive coupling to a pressure-gated interaction kernel u_QB(w,y)=V_QB(w)rho(w)*g(pressure(y)) where g is a protection-success gate derived from the source's insight that QB value is contingent on OL play. This converts the paper's additive two-role term into a multiplicative interaction suited to GSE pass-protection modeling.",
+    "source_operator": "p4: QB payoff function, Section 3.3, p. 361",
+    "telemetry": "OL pressure rate allowed and QB completion/EPA under pressure vs clean pocket, from tracking-derived pocket collapse time and play-by-play pressure flags."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Same-survey (multinomial) confidence interval for difference of win proportions (eq. 3)",
+   "domain": "math",
+   "layer": 1,
+   "statement": "For two win proportions estimated from the SAME n games (each game a T1 win, T2 win, or tie), the 95% CI for p_T1 - p_T2 is (p-hat_T1 - p-hat_T2) +/- 1.96*sqrt([p-hat_T1 + p-hat_T2 - (p-hat_T1 - p-hat_T2)^2]/n). The radical is the multinomial variance of the difference, including the +2 p1 p2 covariance term, NOT the independent-samples variance.",
+   "verbatim_quote": "We use the confidence interval at 95% regarding the difference of probability that each team wins in each scenario following the formula in (3) [30]: 𝑝𝑝𝑇𝑇1 −𝑝𝑝𝑇𝑇2 ∈𝑝𝑝̂𝑇𝑇1 −𝑝𝑝̂𝑇𝑇2 ± 1.96ට𝑝𝑝ො𝑇𝑇1+𝑝𝑝ො𝑇𝑇2−൫𝑝𝑝ො𝑇𝑇1−𝑝𝑝ො𝑇𝑇2൯ 2 𝑛𝑛 (3) with 𝑝𝑝̂𝑇𝑇𝑥𝑥= Number of Winnings for 𝑇𝑇𝑥𝑥 𝑛𝑛 , 𝑥𝑥∈{1, 2} and 𝑛𝑛 the number of played games.",
+   "page": 9,
+   "latex": "p_{T1}-p_{T2}\\ \\in\\ \\hat p_{T1}-\\hat p_{T2}\\ \\pm\\ 1.96\\sqrt{\\frac{\\hat p_{T1}+\\hat p_{T2}-(\\hat p_{T1}-\\hat p_{T2})^2}{n}}",
+   "symbol_and_unit_ledger": {
+    "p_Tx": "true win probability of team Tx; dimensionless in [0,1]",
+    "hat_p_Tx": "estimated win proportion = (number of winnings for Tx)/n; dimensionless in [0,1]",
+    "n": "number of played (simulated) games; integer count (1000 per scenario in the paper)",
+    "1.96": "standard normal 0.975 quantile z_{0.975} for a 95% two-sided interval; dimensionless",
+    "sqrt(...)/n": "multinomial standard error of the difference; dimensionless",
+    "p_T1-p_T2": "difference of win probabilities; dimensionless in [-1,1]"
+   },
+   "assumptions": [
+    "Both proportions come from the SAME n matched games (multinomial counts: T1 win / T2 win / tie), per ref [30] Scott & Seber 1983 'Difference of Proportions from the Same Survey'.",
+    "n large enough for the normal approximation (paper uses n=1000).",
+    "Games are i.i.d. draws from a fixed trinomial distribution within a scenario.",
+    "Verified numerically: reproduces printed Table 5 CIs for rows 1,3,4,5,6,7,9 at 2-decimal rounding; rows 2 and 8 differ by 0.01 (author endpoint rounding). Independent-samples variance does NOT match."
+   ],
+   "breakdown_regime": "Normal approximation fails for small n or extreme proportions (p near 0/1); the paper notes few observations yield intervals containing 0 and no conclusion. The multinomial covariance assumes the two outcomes are mutually exclusive within a game (win/loss/tie); if the same 'game' could count for both teams independently the covariance term is wrong. Ties are absorbed into n but not into either numerator, which is correct for the trinomial but must be preserved when porting.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Directly reusable GSE significance kernel for A/B strategy comparisons run on the SAME matched simulation population: when two strategies are evaluated on identical game seeds, the win-count difference is multinomial and must use the +2 p1 p2 covariance, otherwise significance is overstated. The source operator is the same-survey variance; the derivation is the covariance expansion Var(p1-p2)=[p1(1-p1)+p2(1-p2)+2 p1 p2]/n.",
+    "source_operator": "p5: confidence interval eq. (3), Section 5.1, p. 363; ref [30]",
+    "telemetry": "Win/loss/tie counts per scenario from matched-seed simulations (the paper's 1000-game DEN vs OAK design); the trinomial counts are the sufficient statistics for the interval."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Context-free grammar of legal American-football play sequences",
+   "domain": "cs",
+   "layer": 1,
+   "statement": "Legal AF play sequences are generated by a context-free grammar G-hat=(Sigma, V-Sigma, R, B) where Sigma is the terminal alphabet of atomic plays, V-Sigma the non-terminals encoding game state, R subset (V-Sigma) x V* the production rules, and B in V-Sigma the start symbol; a companion push-down automaton reads the generated strings to halt states.",
+   "verbatim_quote": "The CFG is given by 𝐺𝐺෠= (𝛴𝛴, 𝑉𝑉−𝛴𝛴, 𝑅𝑅, 𝐵𝐵), where: • 𝑉𝑉 is the alphabet of terminals and non-terminals, • Ó ⊆𝑉𝑉 is the set of terminals, • 𝑉𝑉−Ó is the set of non-terminal elements, • 𝑅𝑅⊆(𝑉𝑉−Ó) × 𝑉𝑉∗ is the set of rules, and • 𝐵𝐵∈𝑉𝑉−Σ is the initial symbol.",
+   "page": 4,
+   "latex": "\\hat G=(\\Sigma,\\ V-\\Sigma,\\ R,\\ B),\\quad R\\subseteq(V-\\Sigma)\\times V^{*},\\quad B\\in V-\\Sigma",
+   "symbol_and_unit_ledger": {
+    "Sigma": "terminal alphabet = atomic plays (kick, catch, run, pass, tackle, touchdown, punt, field goal, ...; Table 1); set of dimensionless symbols",
+    "V": "full vocabulary of terminals and non-terminals; set of dimensionless symbols",
+    "V-Sigma": "non-terminal symbols encoding game state (downs Dy_oi, possession change P, conversions, yard count Ax; Table 2); set of dimensionless symbols",
+    "R": "production rules, subset of (V-Sigma) x V*; dimensionless combinatorial relation",
+    "B": "initial/start symbol, element of V-Sigma; dimensionless symbol",
+    "V^*": "Kleene closure of V (finite strings); dimensionless",
+    "Ax": "yard-count non-terminal; carries the only numeric state, updated by +/-x yards (integer yard count)"
+   },
+   "assumptions": [
+    "Legal play concatenation is context-free: rule application depends only on the current non-terminal, not on broader game context.",
+    "The terminal alphabet (Table 1) and rule set (Table 3) are sufficiently complete to generate the plays of interest; rare plays may be absent by missing rules (author's stated exception).",
+    "The push-down automaton's stack handles nested structures (conversions, possession changes); halt states {M1', M', B'} terminate a game string.",
+    "Play frequencies are later attached as probabilities (Section 2.3) to turn the language generator into a stochastic simulator."
+   ],
+   "breakdown_regime": "Context-free grammars cannot express context-sensitive dependencies: clock management, score-dependent fourth-down decisions, or penalty enforcement keyed to prior-down history beyond the encoded state. The rule set is incomplete by the authors' admission. The frequency-to-probability mapping assumes stationary play distributions, breaking under opponent adaptation. The yard-count Ax is the only metric state; spatial player positions are not represented.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The CFG/FSM play-language is isomorphic to GSE's legal-play sequence generator: a state machine over down/distance/possession whose transitions are the allowed next plays. The grammar's guarantee of 'no absurd concatenation' maps to GSE's constraint that generated play sequences respect football rules; non-terminals map to game-state nodes (down, possession, conversion).",
+    "source_operator": "p6: CFG tuple, Section 2.1, p. 358; push-down automaton Section 2.2, p. 359",
+    "telemetry": "Play-by-play sequence logs used to validate grammar coverage (fraction of real NFL play strings parseable by the rule set) and to estimate transition probabilities between game-state nodes."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t0",
+   "think": "This paper (Yee, Campiran and Alvarado, International Journal of Mathematical and Computational Methods, Vol. 1, 2016, pp. 355-371) is a genuine football game-theory source, so the Layer-1 invariants are the game-theoretic and statistical conditions themselves, and the football context is the source's own application domain rather than a fabricated origin. I extracted four sovereign primitives from the strategic core. The Pareto dominance criterion (eq. 1, Section 1.3, p. 357) is the standard non-dominance condition: a valuation vector v dominates v-bar iff every component is at least as large and at least one is strictly larger. This is invariant under any monotone re-representation of individual payoffs and is the foundation of the paper's PE strategy selector. The Nash equilibrium condition (eq. 2, Section 1.4, p. 357) is the unilateral-deviation fixed point: no player i can improve u_i by switching s_i while the other n-1 strategies stay at their equilibrium values. The paper invokes Nash's 1951 existence theorem (ref [24]) to guarantee at least one such profile in any finite normal-form game, which is what makes the NE selector well-defined over the finite play sets of Tables 1-4. The role payoff function (Section 3.3, p. 361) is the paper's distinctive modeling choice: u_i(x_1,...,x_n) = sum_j V_j(x_j) rho(x_j), a frequency-weighted additive utility where V_j is the role's preference valuation of play x_j and rho(x_j) is the empirical occurrence frequency of that play drawn from NFL statistics. The QB-OL coupled payoff u_QB(w,x,y,z) = V_QB(w)rho(w) + V_OL(y)rho(y) is the minimal interaction instance: the quarterback's payoff explicitly includes the offensive line's blocking contribution, encoding that pass value is contingent on protection. The sovereign insight is the rho-weighting. Because payoffs are multiplied by empirical occurrence frequencies, theoretically optimal but rare plays such as long touchdown passes are down-weighted relative to frequent, plausible plays such as step-by-step ball carrying. This is exactly why the simulations show NE-selected profiles beating PE-selected profiles: PE optimizes the theoretical payoff vector while ignoring execution plausibility, whereas NE's stability condition, evaluated on the rho-weighted matrices, lands on high-frequency cooperative profiles. The paper's Table 5 quantifies this: NE versus PE on equal statistics gives 681-259 wins (row 7, CI 0.36-0.47), and NE versus statistics-only gives 812-166 (row 4, CI 0.59-0.69). The abstract's headline advantages (about 60 percent for NE, about 35 percent for PE) are scenario averages, not single-matchup constants. Dimensionally, V is a dimensionless valuation weight, rho is a dimensionless relative frequency in [0,1], so u is in valuation units; no physical units enter, and the toy-equation gate is irrelevant because these are genuine game-theoretic definitions, not force-over-fatigue ratios. Breakdown regimes: additive separability fails when plays have non-additive complementarities such as play-action success depending on run-frequency history, a dynamic the static rho cannot capture; NE existence requires finite strategy sets and fails for continuous or unbounded play spaces; PE non-dominance is silent on distributional fairness and can select profiles that are efficient but implausible, which the paper itself flags as PE's practical weakness. I kept Layer 1 as the abstract invariant and pushed all football specificity into Layer 2 with explicit telemetry, satisfying the doctrine against fabricated football origins for pure mathematics.",
+   "retrocausal_genealogy": "The strategic core descends from two lineages the paper cites explicitly. Nash's 1951 'Non-Cooperative Games' (ref [24]) supplies the unilateral-deviation fixed point and the existence theorem; Pareto's 1896 Cours d'economie politique (ref [25]) and Miettinen's 1998 Nonlinear Multiobjective Optimization (ref [27]) supply the dominance and non-dominance criteria. The authors' own prior baseball and football modeling (Alvarado and Yee 2012, 2014; refs [3],[26],[32]) supplies the CFG/FSM simulation scaffold. These conditions survived because they are the minimal invariants any finite strategic interaction must respect: a stability fixed point and an efficiency frontier. The frequency-weighting rho is the authors' novel graft of empirical statistics onto that classical skeleton.",
+   "theory_of_mind": "The authors intend to persuade a coach that formal strategic reasoning beats raw statistics. Modeling the coach as a selector between NE and PE profiles is a theory of the coach's mind: they assume a coach who reasons about opponents' best responses (NE) or about the team's collective optimum (PE) will outperform one who merely replays historical frequencies. The rho-weighting encodes the authors' deeper belief that plausibility beats theoretical optimality, and their conclusion that NE beats PE is a claim about which mental model of cooperation actually wins games. I read the PE-versus-NE result as the authors arguing that realistic coordination dominates idealized planning.",
+   "cross_layer_veto": "The Layer-2 isomorphisms are falsifiable. If GSE tracking shows play values are non-separable across the 22 agents (strong complementarities), the additive kernel p3 is vetoed and must become an interaction model. If the 22-agent best-response dynamics exhibit cycles with no fixed point, the NE isomorphism p2 fails for that regime. If per-agent contributions cannot be measured as a commensurate value vector, the Pareto dominance mapping p1 collapses because componentwise comparison is undefined. Each veto is tied to a specific telemetry failure, so the mapping is not assumed but contingent on observable structure."
+  },
+  {
+   "trace_id": "t1",
+   "think": "The statistical primitive (eq. 3, Section 5.1, p. 363) is the most technically interesting extraction. The printed confidence interval for the difference of win proportions p_T1 - p_T2 uses the radical sqrt([p-hat_T1 + p-hat_T2 - (p-hat_T1 - p-hat_T2)^2]/n). At first glance this looks garbled or non-standard, because the textbook independent-samples standard error is sqrt([p-hat1(1-p-hat1) + p-hat2(1-p-hat2)]/n). I resolved the ambiguity two ways. First, the paper cites Scott and Seber (1983), 'Difference of Proportions from the Same Survey' (ref [30]), which is precisely the paired multinomial setting. Second, I verified numerically against all nine rows of Table 5. Because both win proportions are estimated from the SAME n simulated games (each game yields a T1 win, a T2 win, or a tie), the counts are multinomial, not independent binomials. The multinomial covariance Cov(p-hat1,p-hat2) = -p1 p2/n flips sign in the variance of the difference, giving Var(p-hat1-p-hat2) = [p1(1-p1) + p2(1-p2) + 2 p1 p2]/n = [p1 + p2 - (p1-p2)^2]/n, exactly the printed radical. Recomputing 1.96 times this standard error reproduces the printed intervals for rows 1,3,4,5,6,7,9 at two-decimal rounding; rows 2 and 8 differ by 0.01, consistent with endpoint rounding by the authors. The independent-samples formula is systematically narrower and does NOT match, confirming the same-survey reading. This is a sovereign, reusable kernel: any GSE A/B comparison of two strategies evaluated on the same matched simulation population must use the multinomial covariance, or it will overstate significance. The CFG primitive (Section 2.1, p. 358) defines G-hat = (Sigma, V-Sigma, R, B) with R subset (V-Sigma) x V* and B in V-Sigma, a context-free grammar whose terminal alphabet Sigma is the set of atomic plays (kick, catch, run, pass, tackle, touchdown, and so on, Table 1) and whose non-terminals encode game state (downs, possession changes, conversions). The companion push-down automaton (Section 2.2, p. 359) reads the generated play strings, with halt states {M1', M', B'}. The sovereignty here is the claim that legal football play sequences form a context-free language: the grammar guarantees no absurd concatenations, and rare complex plays are excluded only by missing rules. Dimensionally these are combinatorial objects (sets of symbols, production rules), all dimensionless; the yard-count non-terminal Ax carries the only numeric state (yards, an integer count updated by plus or minus x). Breakdown regimes: the CFG cannot express context-sensitive dependencies such as clock management, score-dependent fourth-down decisions, or penalty enforcement that depends on prior-down history beyond the encoded state; the push-down automaton's stack handles nested conversions but the paper's rule set is incomplete by its own admission. The frequency-to-probability mapping (Section 2.3) assumes stationarity of play frequencies across games, which breaks when opponents adapt or when roster changes shift the empirical distribution. I report the two-decimal rounding discrepancies honestly rather than forcing an exact match, and I note that the paper's forecasting claim (plus or minus 1.21 points, Table 7) rests on only two real 2012 DEN-OAK games, a tiny validation sample that limits the strength of the exact-score forecasting conclusion.",
+   "retrocausal_genealogy": "The statistical kernel descends from Scott and Seber's 1983 'Difference of Proportions from the Same Survey' (ref [30]), the paired-multinomial result, and from the frequentist confidence-interval tradition the paper cites via Young and Lewis (ref [29]). The Bayesian credible-interval companion (Section 5.2, Appendix A) draws on Price and Bonett (ref [31]) for ratios of binomial proportions. The CFG lineage runs through Sipser's Introduction to the Theory of Computation (ref [28]) and the authors' baseball automaton (ref [26]). The same-survey variance survived because it is the correct covariance structure whenever two proportions share a sample, a condition routinely violated by naive independent-samples tests.",
+   "theory_of_mind": "The authors want their simulation conclusions to be statistically unimpeachable, so they layer both frequentist confidence intervals and Bayesian credible intervals over the same 1000-game simulations. This double reporting is a theory of the skeptical reader's mind: they anticipate a reviewer who distrusts a single inferential framework and pre-empt that distrust by showing the win-ratio conclusions hold under both. The choice of non-informative priors signals a desire to let the simulation data, not subjective belief, drive the credible intervals. I read this as defensive rigor aimed at a methodologically hostile audience.",
+   "cross_layer_veto": "The same-survey kernel p5 is vetoed if GSE's A/B strategies are evaluated on independent rather than matched simulation populations, because then the multinomial covariance term is wrong and the independent-samples variance applies instead. The CFG isomorphism p6 is vetoed if real NFL play sequences require context-sensitive constraints (clock, score-dependent decisions) that no context-free rule set can parse, measurable as a low parse-coverage fraction on play-by-play logs. The stationarity assumption behind rho is vetoed if observed play frequencies drift significantly across seasons or opponent types, detectable as a distribution-shift test on the telemetry."
+  }
+ ],
+ "universal_lens": "Across domains the invariant is the same: a finite set of interacting agents selects actions under a value function, and two selectors compete — a stability fixed point (no unilateral gain) and an efficiency frontier (no dominance). Weighting value by empirical occurrence frequency turns idealized optima into plausible coordination, and any comparison of two strategies on a shared sample must respect the sample's covariance structure. These are domain-free principles of strategic interaction and paired inference.",
+ "gsi_mapping": "For GSI's collective-intelligence compilation, the frequency-weighted role payoff and the NE/PE selectors model how a group of specialized agents coordinates: individual preference weights V_j aggregated through shared occurrence statistics rho yield a collective value, and the Nash fixed point identifies stable cooperation while the Pareto frontier identifies idealized optima. The same-survey variance gives GSI a correct significance test when comparing coordination protocols on matched trial populations, and the CFG supplies a formal language of legal collective action sequences.",
+ "gse_mapping": "For GSE's 22-agent football engine, the primitives map directly: Pareto dominance and Nash stability become per-agent value-vector comparisons and best-response fixed points over tracked agents; the rho-weighted additive kernel scores play profiles by empirical success frequency; the QB-OL coupling becomes a pressure-gated pass-protection interaction; the same-survey CI is the significance test for matched-seed strategy A/B simulations; and the CFG/FSM is the legal-play sequence generator constrained by down, distance and possession state."
+}

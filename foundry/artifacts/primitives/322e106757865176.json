@@ -1,0 +1,78 @@
+{
+  "book_id": "322e106757865176",
+  "source_status": "COMPLETE",
+  "title": "Amazon-US6266649-ItemToItemCF",
+  "file_name": "Amazon-US6266649-ItemToItemCF.pdf",
+  "sha256": "322e10675786517617e9a1aadae126dc6621152d1dd7eab5934518870352cfd9",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": true,
+  "universal_lens": "Item-to-item similarity mappings encode collective user behavior as probabilistic adjacency in a recommendation graph. Universal Lens: Rooted in Amazon-US6266649-ItemToItemCF (322e106757865176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on item affinity scores via user purchase histories and collaborative filtering priors. GSI Mapping: Rooted in Amazon-US6266649-ItemToItemCF (322e106757865176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in user preference space guided by temporal shopping cart and item rating dynamics. GSE Mapping: Rooted in Amazon-US6266649-ItemToItemCF (322e106757865176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "item_to_item_similarity_mapping",
+      "name": "Item-to-Item Similarity Mapping",
+      "verbatim_quote": "The service generates the recommendations using a previously-generated table which maps items to lists of \"similar\" items.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_i': 'Item identifier (dimensionless)', 'S_{ij}': 'Similarity score between items i and j (unitless)', 'U': 'Set of users (dimensionless)'}",
+      "assumptions": "Users' purchasing decisions reflect latent preferences; similarity is transitive across user interactions.",
+      "breakdown_regime": "When user base is insufficient or sparse, similarity scores become unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The item-to-item mapping mirrors a weighted adjacency matrix in a bipartite graph connecting users and items, enabling probabilistic inference over user preferences.",
+        "source_operator": "item_to_item_similarity_mapping",
+        "telemetry": "Precision-recall metrics on recommendation accuracy"
+      }
+    },
+    {
+      "primitive_id": "collaborative_filtering_inference",
+      "name": "Collaborative Filtering Inference",
+      "verbatim_quote": "The similarities reflected by the table are based on the collective interests of the community of users.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{ui}': 'Rating or purchase indicator of user u for item i (binary)', 'C_u': 'Set of items rated by user u (dimensionless)', 'S_{ij}': 'Similarity between items i and j (unitless)'}",
+      "assumptions": "User preferences are consistent and transferable across similar items.",
+      "breakdown_regime": "Cold start problem when new users/items lack sufficient interaction data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Inference kernel derived from co-occurrence statistics of item purchases across users, forming a posterior distribution over item preferences.",
+        "source_operator": "collaborative_filtering_inference",
+        "telemetry": "Mean squared error between predicted and actual user ratings"
+      }
+    },
+    {
+      "primitive_id": "shopping_cart_based_recommendation",
+      "name": "Shopping Cart Based Recommendation",
+      "verbatim_quote": "Also disclosed are various methods for using the current and/or past contents of a user's electronic shopping cart to generate recommendations.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_u': \"User's shopping cart content (set of items)\", 'R_{ui}': 'Relevance score of item i to user u (unitless)', 'T': 'Time window for recent activity (time)'}",
+      "assumptions": "Recent cart contents reflect immediate intent and future interest.",
+      "breakdown_regime": "When cart is empty or contains only outliers, recommendation quality degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Temporal weighting kernel applied to item similarity scores based on recent cart inclusion, optimizing relevance over time.",
+        "source_operator": "shopping_cart_based_recommendation",
+        "telemetry": "Click-through rate on recommended items within T"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "322e106757865176_t0",
+      "think": "The core mechanism operates through a two-stage process: first, an offline generation of item-to-item similarity mappings based on collective user behavior (purchases, ratings), encoding latent preferences into a structured adjacency graph. This graph is then queried during online inference to retrieve similar items for each known interest of a user. The retrieved lists are aggregated, scored, and ranked to produce a final recommendation set. The method assumes that users who interact with similar items share common preferences, enabling scalable personalization without explicit user profiling. Failure modes include sparsity in user-item interactions leading to unreliable similarity estimates, and cold-start scenarios where new users or items lack sufficient data for meaningful recommendations.\n\nDeep epistemic analysis for Amazon-US6266649-ItemToItemCF (322e106757865176, domain=other, pages_read=15/15): Operator 'Item-to-Item Similarity Mapping' (page 1, domain other) captures: The service generates the recommendations using a previously-generated table which maps items to lists of \"similar\" items. Assumptions: Users' purchasing decisions reflect latent preferences; similarity is transitive across user interactions. Breakdown regime: When user base is insufficient or sparse, similarity scores become unreliable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The item-to-item mapping mirrors a weighted adjacency matrix in a bipartite graph connecting users and items, enabling probabilistic inference over user preferences. Operator 'Collaborative Filtering Inference' (page 1, domain other) captures: The similarities reflected by the table are based on the collective interests of the community of users. Assumptions: User preferences are consistent and transferable across similar items. Breakdown regime: Cold start problem when new users/items lack sufficient interaction data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Inference kernel derived from co-occurrence statistics of item purchases across users, forming a posterior distribution over item preferences. Operator 'Shopping Cart Based Recommendation' (page 1, domain other) captures: Also disclosed are various methods for using the current and/or past contents of a user's electronic shopping cart to generate recommendations. Assumptions: Recent cart contents reflect immediate intent and future interest. Breakdown regime: When cart is empty or contains only outliers, recommendation quality degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal weighting kernel applied to item similarity scores based on recent cart inclusion, optimizing relevance over time. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Amazon-US6266649-ItemToItemCF (322e106757865176, domain=other, pages_read=15/15): Operator 'Item-to-Item Similarity Mapping' (page 1, domain other) captures: The service generates the recommendations using a previously-generated table which maps items to lists of \"similar\" items. Assumptions: Users' purchasing decisions reflect latent preferences; similarity is transitive across user interactions. Breakdown regime: When user base is insufficient or sparse, similarity scores become unreliable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The item-to-item mapping mirrors a weighted adjacency matrix in a bipartite graph connecting users and items, enabling probabilistic inference over user preferences. Operator 'Collaborative Filtering Inference' (page 1, domain other) captures: The similarities reflected by the table are based on the collective interests of the community of users. Assumptions: User preferences are consistent and transferable across similar items. Breakdown regime: Cold start problem when new users/items lack sufficient interaction data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Inference kernel derived from co-occurrence statistics of item purchases across users, forming a posterior distribution over item preferences. Operator 'Shopping Cart Based Recommendation' (page 1, domain other) captures: Also disclosed are various methods for using the current and/or past contents of a user's electronic shopping cart to generate recommendations. Assumptions: Recent cart contents reflect immediate intent and future interest. Breakdown regime: When cart is empty or contains only outliers, recommendation quality degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal weighting kernel applied to item similarity scores based on recent cart inclusion, optimizing relevance over time. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early collaborative filtering models of the 1990s, particularly those by Goldberg et al. and Resnick et al., this primitive builds upon the foundational idea of leveraging group behavior to infer individual preferences, later refined by systems such as GroupLens and Netflix Prize algorithms. Retrocausal Genealogy: Rooted in Amazon-US6266649-ItemToItemCF (322e106757865176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents modeled include both the recommendation engine (which infers user preferences) and the user (who may have evolving or inconsistent tastes). The system assumes rationality in user behavior but must account for bounded rationality and potential strategic misrepresentation of preferences. Theory of Mind & Decision Maker Model: Rooted in Amazon-US6266649-ItemToItemCF (322e106757865176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that item similarity scores do not over-rely on shared user overlap alone, preventing echo chamber effects. Leakage is mitigated by restricting the use of future data (e.g., post-purchase behavior) in generating recommendations. Cross-Layer Veto & Anti-Leakage Check: Rooted in Amazon-US6266649-ItemToItemCF (322e106757865176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,552 @@
+{
+  "book_id": "3789b1db7ff3cab8",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_SPORTS_ML_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Lee, 'Analysis of Success Probabilities in Field Hockey with Machine Learning', Wharton Sports Analytics Journal 2024 (Jethro R. Lee, Northeastern University), 19 pages. Mixed-effects logistic regression of goal-scoring probability on Northeastern's 2023 field hockey season (18 matches/19 players/270 shots/117 penalty corners/50 goals), fit in glmer (Laplace) and RStan (Bayesian hierarchical); player random effects interacted with penalty-corner indicator to capture strategic intentional misses (coaching insight); small-sample shrinkage; glmer-vs-RStan Score.Difference sign discrepancy; future nested bivariate binomial model + simulation validation + overfitting guard. Extracted faithfully (not a derivative summary). Equations 1 (Bayes), 2/4 (logit link), 3 (home odds ratio) are printed in a shifted/custom font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Math-italic Greek (beta/theta) interspersed in prose; quotes selected from clean spans. Domain math (sports ML) matches catalog; field hockey, not football. The hierarchical player-ability random effects, difficulty-contextualized credit, intent-vs-outcome attribution, small-sample shrinkage, and cross-estimator sign-discrepancy veto are sport-agnostic and directly isomorphic to GSE's player-valuation and credit-attribution layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "field_hockey_understudied",
+      "name": "Field hockey is an understudied sport-analytics application",
+      "verbatim_quote": "Field hockey is a sport that has thus far been understudied",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Field hockey is a relatively unexplored application of sports analytics; the project uses play-by-play data to inform on-field decisions, evaluate factors leading teams/players to perform better or worse, and assess the on-field value of events (penalty corners, goals) especially on a player basis, drawing on nested success-probability work in baseball and ice hockey."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The understudied-sport gap is the same novel-application opportunity GSE identifies for transferring analytics methods.",
+        "source_operator": "field_hockey_understudied",
+        "telemetry": "field hockey understudied; PBP -> player value; nested success prob (baseball/ice hockey precedent)"
+      }
+    },
+    {
+      "primitive_id": "goal_scoring_prediction_model",
+      "name": "Goal: predict players' ability to score under different conditions",
+      "verbatim_quote": "building a model to predict players' ability to score under different conditions",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The main goal is to use modern machine learning to analyze field hockey player performance, building a model to predict players' ability to score under different conditions (match location, score difference, penalty-corner situation) and estimate random effects capturing individual players' likelihood to score."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Condition-dependent scoring prediction is the same situational player-value model GSE builds.",
+        "source_operator": "goal_scoring_prediction_model",
+        "telemetry": "predict goal-scoring under conditions (location/score diff/PC); player random effects"
+      }
+    },
+    {
+      "primitive_id": "mixed_effects_glmer_rstan",
+      "name": "Prototype mixed-effects logistic regression in glmer (Laplace) and RStan (Bayesian)",
+      "verbatim_quote": "implemented a prototype mixed effects logistic regression model with both glmer",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A prototype mixed-effects logistic regression model is implemented in both glmer (lme4, Laplace approximation) and RStan (Bayesian hierarchical), with outputs compared; the model investigates match location, score difference, and penalty-corner situational effects plus player random effects interacted with the penalty-corner indicator."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The dual-implementation mixed-effects model is the same cross-check GSE runs between frequentist and Bayesian fits.",
+        "source_operator": "mixed_effects_glmer_rstan",
+        "telemetry": "mixed-effects logistic; glmer (Laplace) + RStan (Bayesian); compared"
+      }
+    },
+    {
+      "primitive_id": "data_18_matches_270_shots",
+      "name": "Northeastern 2023: 18 matches, 19 players, 270 shots, 117 penalty corners, 50 goals",
+      "verbatim_quote": "the model was able to use data from 18 field hockey matches and 19 hockey players, which included 270 shots, 117 penalty corners, and 50 goals",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Play-by-play data scraped from Northeastern's field hockey website with Python Pandas, mapping game time to events (goal, penalty corner, assist), with home/away, score difference, and penalty-corner-to-shot manually recorded; one season yields 18 matches, 19 players, 270 shots, 117 penalty corners, and 50 goals."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The scraped single-season dataset is the same small-sample event-data construction GSE uses for player models.",
+        "source_operator": "data_18_matches_270_shots",
+        "telemetry": "Northeastern 2023; Pandas scrape; 18 matches/19 players/270 shots/117 PC/50 goals"
+      }
+    },
+    {
+      "primitive_id": "one_season_homogeneous",
+      "name": "One season/team kept homogeneous so random effects measure within-season average",
+      "verbatim_quote": "Only one season and one team (Northeastern University) were investigated due to time constraints",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Only one season and one team (Northeastern) were investigated due to time constraints and to eliminate the need to account for a player's scoring aptitude varying between seasons; keeping data homogeneous ensures the random effects best measure each player's average performance within a season."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The homogeneity-for-random-effects design is the same variance-control GSE applies to isolate player ability.",
+        "source_operator": "one_season_homogeneous",
+        "telemetry": "1 season/1 team; homogeneous -> random effects = within-season average ability"
+      }
+    },
+    {
+      "primitive_id": "model0_equal_proficiency_drawback",
+      "name": "Model 0 drawback: assumes all players equally proficient except noise",
+      "verbatim_quote": "it assumes all players in the data set are equally proficient at goal scoring except for random noise",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Model 0 is a baseline fixed-effects logistic regression where logit(p_lt) is the goal probability, each z term a parameter (score difference, home/away, location, assists, blocks) and each beta its effect, with an intercept bias term; its drawback is assuming all players are equally proficient at goal scoring except for random noise."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fixed-effects-only baseline is the same no-player-heterogeneity model GSE upgrades with random effects.",
+        "source_operator": "model0_equal_proficiency_drawback",
+        "telemetry": "Model 0: logit(p)=intercept+sum beta*z; assumes equal player proficiency"
+      }
+    },
+    {
+      "primitive_id": "random_effects_player_ability",
+      "name": "Model 1: player random effects adjust for ability differences",
+      "verbatim_quote": "we can adjust for the likely differences in player ability by including random effects for players",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Model 1 adds player random effects (a terms) that alter how parameter values affect each individual's goal-scoring logit; players who miss shots the model classifies as more difficult receive less harsh negative impacts than players who miss easier shots, contextualizing missed-shot credit by shot difficulty."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Difficulty-contextualized random effects are the same shot-quality-adjusted player credit GSE assigns.",
+        "source_operator": "random_effects_player_ability",
+        "telemetry": "Model 1: player random effects a; miss difficult shot -> less penalty than miss easy shot"
+      }
+    },
+    {
+      "primitive_id": "strategic_miss_rebound",
+      "name": "Coaching insight: some players intentionally miss PC shots to force rebounds",
+      "verbatim_quote": "certain players take shots directly after penalty corners not intending to score, but rather to force the ball to rebound to a player in a better position",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A discussion with the Northeastern coaching staff revealed that certain players take shots directly after penalty corners not intending to score but to force the ball to rebound to a player in a better position, so some players perform better from the field of play than immediately following penalty corners; the player-by-penalty-corner interaction captures this strategic intent."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Strategic-intent-vs-outcome is literally GSE's credit-attribution problem: a missed shot may be a deliberate play, not a failure.",
+        "source_operator": "strategic_miss_rebound",
+        "telemetry": "intentional PC miss -> rebound to better position; intent != outcome; interaction captures"
+      }
+    },
+    {
+      "primitive_id": "two_random_effects_per_player",
+      "name": "Two random effects per player: PC set-play vs all other shots",
+      "verbatim_quote": "there are now two per player; one which estimates the player's goal-scoring performance on penalty corner set plays, and one which estimates their goal-scoring performance on all other shots",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The player-by-Shot.after.PC interaction adds a second set of random effects, giving two per player: one estimating goal-scoring on penalty-corner set plays and one on all other shots; implemented in glmer as (1 | Player:Shot.after.PC) and in RStan as a two-column matrix per player (Shot.after.PC FALSE/TRUE)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The situation-split random effects are the same context-conditioned player valuation GSE uses.",
+        "source_operator": "two_random_effects_per_player",
+        "telemetry": "2 random effects/player: PC vs non-PC; glmer (1|Player:Shot.after.PC); RStan 2-col matrix"
+      }
+    },
+    {
+      "primitive_id": "glmer_laplace_approximation",
+      "name": "glmer (lme4) uses Laplace approximation for betas + random effects",
+      "verbatim_quote": "The first package is lme4, to employ the glmer function, which uses a numerical approximation technique (i.e., Laplace approximation)",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The first implementation uses lme4's glmer function, which employs a numerical approximation technique (Laplace approximation) to obtain beta values and random effects; the author's intuition is that Laplace approximation would be more beneficially complex to implement for the intended final bivariate binomial model than Bayesian RStan."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Laplace-approximation fit is the same fast frequentist mixed-model estimator GSE compares against MCMC.",
+        "source_operator": "glmer_laplace_approximation",
+        "telemetry": "glmer/lme4; Laplace approximation for beta + random effects"
+      }
+    },
+    {
+      "primitive_id": "rstan_normal_prior",
+      "name": "RStan: player scoring prior normal(mean 0, variance sigma^2)",
+      "verbatim_quote": "the prior distribution on each player's scoring probability is normal with a mean of 0 and variance",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In RStan the prior on each player's scoring probability is normal with mean 0 and variance sigma-squared, initially assigning every player average goal-scoring propensity; the model then adjusts each player's probability according to the data (time, penalty corner, home advantage, player random effects) to produce a posterior."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The shrinkage-to-average prior is the same hierarchical regularization GSE uses for player effects.",
+        "source_operator": "rstan_normal_prior",
+        "telemetry": "RStan prior: player scoring ~ N(0, sigma^2); start average, update to posterior"
+      }
+    },
+    {
+      "primitive_id": "hyperprior_uniform_0_10",
+      "name": "Variance hyperprior uniform(0, 10)",
+      "verbatim_quote": "a hyperprior distribution that is uniform from 0 to 10",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The variance sigma-squared of the player prior is given a hyperprior distribution uniform from 0 to 10, a weakly-informative bound on the between-player variance in the Bayesian hierarchical model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The variance hyperprior is the same hierarchical variance regularization GSE specifies.",
+        "source_operator": "hyperprior_uniform_0_10",
+        "telemetry": "sigma^2 ~ Uniform(0, 10) hyperprior; weakly-informative between-player variance"
+      }
+    },
+    {
+      "primitive_id": "bayes_theorem_likelihood",
+      "name": "Bayes' theorem yields P(Y|theta): goal probability given a parameter",
+      "verbatim_quote": "the model can use Bayes' theorem to find the probability",
+      "page": 4,
+      "latex": "P(Y\\mid\\theta) = \\frac{P(\\theta\\mid Y)\\,P(Y)}{P(\\theta)}",
+      "symbol_and_unit_ledger": {
+        "Y": "observed event/data (e.g., goal, home, score diff)",
+        "theta": "player scoring-ability parameter",
+        "P(theta)": "prior on player ability",
+        "P(theta|Y)": "posterior of ability given data",
+        "P(Y|theta)": "likelihood of outcome given ability"
+      },
+      "assumptions": [
+        "The posterior P(theta|Y) defines the probability of an event (shooting off a penalty corner, home match, score difference +3) given a player; with the prior P(theta) and posterior P(theta|Y), Bayes' theorem gives the likelihood P(Y|theta), the probability a player scores given a parameter value (home/away, score difference, penalty corner). Equation 1 is printed in a shifted font and reconstructed here.",
+        "Equation 1 (Bayes' theorem) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Equation 1 reconstructed from shifted-font display; standard Bayes identity",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Bayesian likelihood inversion is the same posterior-to-likelihood reasoning GSE uses for conditional scoring.",
+        "source_operator": "bayes_theorem_likelihood",
+        "telemetry": "P(Y|theta)=P(theta|Y)P(Y)/P(theta); posterior event|player -> likelihood goal|parameter"
+      }
+    },
+    {
+      "primitive_id": "time_bins_score_more",
+      "name": "Time-bin coefficients increase: Northeastern scores more as time passes",
+      "verbatim_quote": "The coefficients generally increase as match_seconds_bin holds larger values, meaning the Northeastern team tends to score more goals as time passes",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The match_seconds_bin coefficients generally increase with larger time bins (glmer 0.3425 to 1.0188; RStan 6.61 to 7.14), meaning Northeastern tends to score more goals as time passes, except for overtime; time is binned into sixths of a match to capture non-linear time effects and interacted with score difference."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The rising time-bin scoring is the same within-match temporal trend GSE models.",
+        "source_operator": "time_bins_score_more",
+        "telemetry": "time-bin coeffs increase (glmer .3425-1.0188; RStan 6.61-7.14); score more late; binned sixths"
+      }
+    },
+    {
+      "primitive_id": "overtime_outlier_disregarded",
+      "name": "Overtime coefficient disregarded as outlier (huge SE, p~1)",
+      "verbatim_quote": "we can disregard the overtime data as outlier data",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The overtime coefficient (3600-4360 seconds) is -14.2380 in glmer with a very large standard error and p-value 0.99196, and -77.38 in RStan with extreme standard deviation 65.97, so the overtime data are disregarded as outliers."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The high-variance overtime exclusion is the same outlier-veto GSE applies to unreliable estimates.",
+        "source_operator": "overtime_outlier_disregarded",
+        "telemetry": "overtime glmer -14.238 (p=.99196, huge SE); RStan -77.38 (SD 65.97); disregarded"
+      }
+    },
+    {
+      "primitive_id": "home_2_5pct_more",
+      "name": "Home advantage: ~2.5% more shots scored at home than away",
+      "verbatim_quote": "The team does indeed score about 2.5% more of its shots into the net when at home rather than away",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The home-vs-away coefficient is positive (glmer 0.5611, RStan 0.72), indicating home-field advantage boosts goal proficiency; Northeastern scores about 2.5% more of its shots at home than away."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The home-field scoring boost is the same venue effect GSE quantifies.",
+        "source_operator": "home_2_5pct_more",
+        "telemetry": "Home coeff glmer .5611/RStan .72; ~2.5% more shots scored at home"
+      }
+    },
+    {
+      "primitive_id": "home_twice_likely_odds",
+      "name": "Home odds ratio e^0.72 = 2.054: ~twice as likely to score at home",
+      "verbatim_quote": "Northeastern was about twice as likely to score a goal at home turf vs. away throughout the season",
+      "page": 12,
+      "latex": "\\frac{p}{1-p} = e^{\\beta_{Home}\\cdot X} = e^{0.72\\cdot 1} = 2.05443",
+      "symbol_and_unit_ledger": {
+        "beta_Home": "RStan home coefficient [log-odds] = 0.72",
+        "X": "home indicator (1 home, 0 away)",
+        "p/(1-p)": "odds of scoring vs not scoring [dimensionless]"
+      },
+      "assumptions": [
+        "Isolating the home effect by disregarding the intercept, p/(1-p) = e^(0.72*1) = 2.05443, a 105.443% increase ((2.05443-1)*100), so Northeastern was about twice as likely to score at home versus away; Equation 3 is printed shifted-font and reconstructed here.",
+        "Equation 3 (home odds ratio) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Equation 3 reconstructed from shifted-font display; intercept dropped to isolate home effect",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The exponentiated-coefficient odds ratio is the same multiplicative-effect interpretation GSE uses.",
+        "source_operator": "home_twice_likely_odds",
+        "telemetry": "p/(1-p)=e^(0.72)=2.05443; +105.443%; ~2x home scoring odds"
+      }
+    },
+    {
+      "primitive_id": "score_difference_model_discrepancy",
+      "name": "glmer vs RStan Score.Difference sign discrepancy (+1.1885 vs -1.45)",
+      "verbatim_quote": "In the RStan model, the Score.Difference parameter is negative (-1.45) while the Shot.after.PC coefficient is also negative (-0.19), indicating a discrepancy between the two models",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The glmer Score.Difference coefficient is positive (1.1885) while RStan's is negative (-1.45), a discrepancy needing address; both agree Shot.after.PC is negative (glmer -0.2258, RStan -0.19) and that Score.Difference matters more than Shot.after.PC; the glmer sign better aligns with the data except when Northeastern is very behind (3-4 points) where goal proportion peaked, possibly explaining the inconsistency."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The cross-estimator sign discrepancy is literally GSE's model-disagreement veto: when two fits disagree on a sign, the effect is not robust.",
+        "source_operator": "score_difference_model_discrepancy",
+        "telemetry": "Score.Difference glmer +1.1885 vs RStan -1.45 (sign flip); Shot.after.PC both neg; trailing-3/4 peak explains"
+      }
+    },
+    {
+      "primitive_id": "pc_conversion_20_vs_15",
+      "name": "Shot conversion: 20.468% non-PC vs 15.152% PC (1 goal per 6.667 PC shots)",
+      "verbatim_quote": "the Northeastern team scored about 20.468% of its shots not after penalty corners. In comparison, it only scored about 15.152% of its shots after penalty corners",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Northeastern scored about 20.468% of shots not after penalty corners versus only 15.152% after penalty corners, so 1/0.152 = 6.667 penalty-corner shots per goal; both models agree players have a better chance scoring not off a penalty corner."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The penalty-corner conversion gap is the same set-play efficiency metric GSE tracks.",
+        "source_operator": "pc_conversion_20_vs_15",
+        "telemetry": "non-PC 20.468% vs PC 15.152%; 1/0.152 = 6.667 PC shots/goal"
+      }
+    },
+    {
+      "primitive_id": "world_class_1_per_3_pc",
+      "name": "Coach benchmark: world-class teams score 1 goal per 3 penalty corners",
+      "verbatim_quote": "The Northeastern hockey coach reported that world-class teams score 1 goal for every 3 penalty corners",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Northeastern hockey coach reported that world-class teams score 1 goal for every 3 penalty corners, versus Northeastern's 1 per 6.667; the player random-effect insights are hoped to help improve penalty-corner performance toward world-class standards."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The world-class benchmark is the same external performance target GSE uses to grade a unit.",
+        "source_operator": "world_class_1_per_3_pc",
+        "telemetry": "world-class 1 goal/3 PC vs Northeastern 1/6.667; improvement target"
+      }
+    },
+    {
+      "primitive_id": "small_sample_shrinkage_player1_4",
+      "name": "Random effects correctly shrink 1.000 proportions from 1-shot players",
+      "verbatim_quote": "both the glmer and RStan models were able to correctly discern that Player 1 and Player 4's goal proportions of 1.000 for shots not off penalty corners are not comparable due to a lack of data",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Players 1 and 4 each made only 1 non-penalty-corner shot which happened to be a goal, giving a 1.000 proportion; both glmer and RStan correctly discerned these proportions are not comparable due to lack of data, with random effects near 0 representing average ability and/or minimal data — the hierarchical shrinkage prevents small-sample overrating."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Small-sample shrinkage is literally GSE's defense against overrating a player on tiny samples.",
+        "source_operator": "small_sample_shrinkage_player1_4",
+        "telemetry": "Player 1/4: 1 shot each, 1.000 proportion; random effects ~0 (shrink to average); not comparable"
+      }
+    },
+    {
+      "primitive_id": "strategic_miss_closer_to_average",
+      "name": "Strategic missers (6, 13) poor on PC but near-average on other shots",
+      "verbatim_quote": "while due to strategic reasons they are considered poor scorers after penalty corners, on all other shots, they are much closer to average in ability",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Players 6 and 13 occasionally take bad shots after penalty corners for strategic purposes; Player 6's PC random effect is -0.676 (glmer)/-0.79 (RStan) versus non-PC -0.059/0.15, and Player 13's PC -0.377/-0.23 versus non-PC -0.195/-0.02, showing that while strategic reasons make them poor PC scorers, on all other shots they are much closer to average."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The intent-adjusted ability split is the same strategic-context credit GSE separates from raw conversion.",
+        "source_operator": "strategic_miss_closer_to_average",
+        "telemetry": "Player 6 PC -.676/-.79 vs non-PC -.059/.15; Player 13 PC -.377/-.23 vs non-PC -.195/-.02"
+      }
+    },
+    {
+      "primitive_id": "nested_bivariate_binomial_future",
+      "name": "Future: bivariate binomial nested model (PC success -> goal)",
+      "verbatim_quote": "we hope to move to a bivariate binomial model for accounting for the nested structure of some of the success probabilities",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Future work moves to a bivariate binomial model accounting for nested success probabilities: goals scored from penalty corners are directly nested in the success of the penalty corner itself; a preliminary model first uses logistic regression for the likelihood of shooting off a penalty corner, then the likelihood of that shot leading to a goal, with random effects at both levels."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The nested success-probability model is the same conditional-event chain GSE uses for set-play value.",
+        "source_operator": "nested_bivariate_binomial_future",
+        "telemetry": "bivariate binomial nested: PC success -> goal; two-level logistic + random effects"
+      }
+    },
+    {
+      "primitive_id": "nested_not_all_misses_detrimental",
+      "name": "Nested model must not treat all PC misses as detrimental (strategic deflections)",
+      "verbatim_quote": "the nested probability model should not classify all missed shots off penalty corners as detrimental to a player's goal-scoring probability",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A shot off a penalty corner can lead to a deflection that some coaches believe better enables scoring than a direct attempt, so the nested probability model should not classify all missed penalty-corner shots as detrimental to a player's goal-scoring probability, and should account for players missing penalty shots for specific strategic reasons."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The non-detrimental-miss rule is the same intent-aware credit GSE enforces in set-play attribution.",
+        "source_operator": "nested_not_all_misses_detrimental",
+        "telemetry": "PC miss -> deflection opportunity; NOT all misses detrimental; account for strategic reasons"
+      }
+    },
+    {
+      "primitive_id": "simulation_parameter_recovery",
+      "name": "Simulation validation: pre-defined parameters recovered by the model",
+      "verbatim_quote": "we simulated data on fake values and observed whether pre-defined fixed parameter and random effect values aligned with those recovered by the model",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "To ensure the bivariate binomial model ran as expected, the author simulated data on fake values and observed whether pre-defined fixed parameter and random effect values aligned with those recovered by the model; current simulation studies have been successful, with more advanced simulations planned to verify validity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The parameter-recovery simulation is the same synthetic-ground-truth validation GSE runs before trusting a model.",
+        "source_operator": "simulation_parameter_recovery",
+        "telemetry": "simulate fake data; check pre-defined fixed/random effects recovered; successful so far"
+      }
+    },
+    {
+      "primitive_id": "overfitting_too_many_params",
+      "name": "Overfitting risk: too many parameters (player x location) given little data",
+      "verbatim_quote": "The main concern of this aspiration is overfitting the model with too many parameters, especially given a relative lack of data",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Adding field-location data (6 zones) and a player-by-location interaction would output more random effects, but the main concern is overfitting the model with too many parameters given a relative lack of data, restricting generalized predictions and risking focus on irrelevant details of players' situations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The parameter-count-vs-data overfitting veto is the same complexity guard GSE applies to random-effects expansion.",
+        "source_operator": "overfitting_too_many_params",
+        "telemetry": "player x location -> more random effects; overfitting risk w/ little data; restrict generalization"
+      }
+    },
+    {
+      "primitive_id": "logit_link_equation",
+      "name": "Logit link: log(p/(1-p)) = a + sum beta_i X_i; odds = e^(a+beta X)",
+      "verbatim_quote": "Equation 2 calculates the probability of scoring a goal over the probability of not scoring a goal under certain conditions",
+      "page": 11,
+      "latex": "\\log\\!\\frac{p}{1-p} = a + \\sum_{i=0}^{n}\\beta_i X_i, \\qquad \\frac{p}{1-p} = e^{\\,a + \\sum_i \\beta_i X_i}",
+      "symbol_and_unit_ledger": {
+        "p": "probability of scoring a goal [0,1]",
+        "a": "intercept (RStan -9.35) [log-odds]",
+        "beta_i": "coefficient for parameter i [log-odds per unit]",
+        "X_i": "value of parameter i (indicator or numeric)"
+      },
+      "assumptions": [
+        "Equation 2 gives log(p/(1-p)) = a + beta*X for one condition (a intercept, beta coefficient, X parameter value), and Equation 4 generalizes to log(p/(1-p)) = a + beta0*X0 + beta1*X1 + ... + betan*Xn for n conditions; exponentiating gives the odds p/(1-p); the RStan intercept is -9.35 and Home coefficient 0.72. Equations 2 and 4 are printed shifted-font and reconstructed here.",
+        "Equations 2 and 4 (logit link) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Equations 2/4 reconstructed from shifted-font display; standard logistic link",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The logit link is the same linear-predictor-to-probability mapping GSE uses in logistic player models.",
+        "source_operator": "logit_link_equation",
+        "telemetry": "log(p/(1-p))=a+sum beta_i X_i; odds=e^(a+beta X); intercept -9.35, Home .72"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fieldhockey2024_trace",
+      "think": "The retrocausal genealogy of this paper is the transfer of nested success-probability modeling into a sport that analytics has barely touched. Jethro Lee, writing at Northeastern University for the Wharton Sports Analytics Journal in 2024, observes that field hockey is understudied, and that success probabilities have been modeled extensively in baseball, where a bivariate binomial nests extra-base-hit percentage within batting average, and in ice hockey, where a clean face-off win is more valuable than a mere win. The project scrapes play-by-play data from Northeastern's 2023 field hockey season with Python Pandas, manually recording home versus away, score difference, and whether a penalty corner led to an immediate shot, yielding 18 matches, 19 players, 270 shots, 117 penalty corners, and 50 goals. Only one season and one team are used to keep the data homogeneous so that player random effects measure within-season average ability rather than cross-season variation. The recursive theory of mind is the mixed-effects logistic model and its dual implementation. Model 0 is a fixed-effects logistic regression whose drawback is assuming all players are equally proficient except for noise; Model 1 adds player random effects so that missing a difficult shot penalizes a player less than missing an easy one. Crucially, a discussion with the coaching staff revealed that some players intentionally miss shots directly after penalty corners to force a rebound to a better-positioned teammate, so the model interacts the player random effect with the penalty-corner indicator, producing two random effects per player, one for penalty-corner set plays and one for all other shots. The model is fit both with glmer using Laplace approximation and with RStan using a Bayesian hierarchical model whose player prior is normal with mean zero and a variance given a uniform zero-to-ten hyperprior, run for five chains of three thousand iterations, and Bayes' theorem converts the posterior into the likelihood of scoring given a parameter. Cross-layer veto adjudication is the comparison of the two fits and the handling of unreliable estimates. The time-bin coefficients rise across the match, indicating Northeastern scores more as time passes, but the overtime coefficient is discarded as an outlier given its enormous standard error and p-value near one. The home coefficient is positive in both fits, about 0.56 in glmer and 0.72 in RStan, translating to roughly 2.5 percent more shots scored at home and, via the exponentiated coefficient e to the 0.72 equals 2.054, about twice the scoring odds at home. The most important disagreement is the score-difference coefficient, positive 1.1885 in glmer but negative 1.45 in RStan, a sign flip the author attributes to Northeastern's goal proportion peaking when very far behind; both fits agree the penalty-corner coefficient is negative and that score difference matters more than the penalty-corner indicator. The implementation invariants map directly onto GSE. The player random effects are GSE's hierarchical player-ability estimates; the difficulty-contextualized miss penalty is GSE's shot-quality-adjusted credit; the intentional-miss interaction is GSE's intent-versus-outcome attribution; the small-sample shrinkage that correctly refuses to rate Players 1 and 4 highly on a single made shot each is GSE's defense against tiny-sample overrating; and the glmer-versus-RStan sign discrepancy is GSE's model-disagreement veto. The outputs are goal-scoring probabilities and player random effects from play-by-play data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The conversion gap is concrete: Northeastern scores 20.468 percent of non-penalty-corner shots versus 15.152 percent of penalty-corner shots, one goal per 6.667 penalty-corner shots against the coach's world-class benchmark of one per three. The caveats close the account with the strategic-miss nuance and the overfitting guard. Players 6 and 13 have markedly negative penalty-corner random effects but near-average non-penalty-corner effects, confirming they are strategic missers rather than poor scorers, so the future nested bivariate binomial model must not classify all penalty-corner misses as detrimental, since a miss can create a deflection opportunity. That nested model, which chains the probability of shooting off a penalty corner into the probability of scoring from it, has been validated by simulating fake data and checking that pre-defined parameters are recovered, and the planned addition of field-location random effects is explicitly constrained by the risk of overfitting too many parameters to too little data. The invariant for GSE is to carry the mixed-effects player-valuation pipeline, the intent-aware credit attribution, and the small-sample shrinkage while recording the cross-estimator sign discrepancy, the overtime outlier exclusion, and the overfitting guard before any quantitative reuse, treating a deliberate missed shot as a play to be understood rather than a failure to be penalized. Two further details sharpen the GSE transfer. The time-by-score-difference interaction itself flips sign between the fits, negative in glmer, meaning that within each sixth of a match Northeastern scores fewer goals as it gets further ahead, but positive in RStan, another instance of the cross-estimator disagreement that bars a confident directional claim; and the blocked-or-goal-after-block coefficient is negative in both fits, about minus 1.39 in glmer and minus 1.84 in RStan, indicating Northeastern is better at scoring from unblocked shots. The planned field-location extension would divide the field into six zones and add a player-by-location interaction to locate each player's most and least efficient scoring areas, but the author explicitly flags the overfitting danger of multiplying random effects against a small dataset. The RStan appendix also shows weak convergence for some parameters, with large standard deviations and low effective sample sizes, an honest caveat that the Bayesian fit is not uniformly well-mixed. For GSE these reinforce the same discipline: treat cross-estimator sign flips as vetoes, prefer the simpler model when data are thin, and report convergence quality rather than presenting a posterior as settled.",
+      "retrocausal_genealogy": "Transfer nested success-prob modeling to understudied field hockey. Jethro Lee, Northeastern, Wharton Sports Analytics Journal 2024. Precedent: baseball bivariate binomial (extra-base hit nested in batting avg, Han 2022 Entropy); ice hockey clean face-off win (Czuzoj-Shulman 2019). Scraped Northeastern 2023 PBP (Pandas) + manual home/away/score-diff/PC-to-shot; 18 matches/19 players/270 shots/117 PC/50 goals. One season/team for homogeneity (random effects = within-season avg). Mixed-effects logistic: Model 0 fixed (equal-proficiency drawback), Model 1 + player random effects interacted w/ Shot.after.PC (2 per player). glmer (Laplace) + RStan (Bayesian, N(0,sigma^2) prior, sigma^2~U(0,10), 5 chains x 3000).",
+      "theory_of_mind": "Covariates: Home/Shot.after.PC/Blocked.or.goal.after.block (indicators), match_seconds_bin (binned sixths 0-4360), Score.Difference (numeric), time x score-diff interaction. glmer (1|Player:Shot.after.PC); RStan 2-col matrix. Bayes Eq1 P(Y|theta)=P(theta|Y)P(Y)/P(theta); logit Eq2/4 log(p/(1-p))=a+sum beta_i X_i; odds Eq3 e^0.72=2.05443. Time-bin coeffs rise (glmer .3425-1.0188/RStan 6.61-7.14); overtime outlier (glmer -14.238 p=.99196/RStan -77.38 SD 65.97) discarded. Home glmer .5611/RStan .72 (~2.5% more, ~2x odds). Equations shifted-font reconstructed. Blocked.or.goal.after.block negative both fits (glmer -1.3918/RStan -1.84): better at unblocked goals.",
+      "cross_layer_veto": "glmer vs RStan Score.Difference SIGN FLIP (+1.1885 vs -1.45); Shot.after.PC both neg (-.2258/-.19); trailing-3/4 goal-proportion peak explains. Conversion non-PC 20.468% vs PC 15.152% (1/6.667); world-class 1/3 (coach). Small-sample shrinkage: Player 1/4 1-shot 1.000 not comparable (random effects ~0). Strategic missers Player 6 (PC -.676/-.79 vs non-PC -.059/.15) & 13 (PC -.377/-.23 vs non-PC -.195/-.02) near-average off-PC. Future nested bivariate binomial (PC->goal) must NOT treat all PC misses detrimental (deflection); simulation parameter-recovery validated; player x location overfitting guard (little data). Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A mixed-effects logistic regression fit in both glmer (Laplace) and RStan (Bayesian) models field-hockey goal-scoring probability from match location, score difference, time, and penalty-corner situation, with two player random effects per athlete (penalty-corner vs other shots) that capture strategic intentional misses and shrink tiny-sample proportions toward average; the two fits agree on most effects but flip the score-difference sign, and the conversion gap (20.5% non-penalty-corner vs 15.2% penalty-corner) is benchmarked against a world-class one-goal-per-three-penalty-corners standard.",
+  "gsi_mapping": "GSI treats Model 0 fixed logistic (equal-proficiency drawback) -> Model 1 player random effects x Shot.after.PC (2/player; glmer (1|Player:Shot.after.PC), RStan 2-col); Northeastern 2023 18 matches/19 players/270 shots/117 PC/50 goals; covariates Home/Shot.after.PC/Blocked.or.goal.after.block + binned time + Score.Difference + time x score-diff; RStan N(0,sigma^2) prior, sigma^2~U(0,10), 5x3000; Bayes Eq1, logit Eq2/4, odds Eq3 e^0.72=2.05443 (shifted-font reconstructed); time-bin rise, overtime outlier discarded; Home ~2.5%/~2x; Score.Difference glmer +1.1885 vs RStan -1.45 sign flip; conversion 20.468%/15.152% (1/6.667) vs world-class 1/3; Player 1/4 shrinkage; strategic missers 6/13; nested bivariate binomial future + simulation recovery + overfitting guard.",
+  "gse_mapping": "GSE lifts the hierarchical player-ability random effects, the difficulty-contextualized missed-shot credit, the intent-vs-outcome attribution (strategic penalty-corner misses are plays not failures), the small-sample shrinkage that refuses to overrate single-shot players, and the glmer-vs-RStan sign-discrepancy veto as its player-valuation and credit-attribution layer; records the overtime outlier exclusion, the cross-estimator score-difference sign flip, the nested-model non-detrimental-miss rule, and the parameter-count-vs-data overfitting guard as honest limits; all outputs are goal-scoring probabilities and player random effects from play-by-play data, never sportsbook lines, and a deliberate missed shot is a play to be understood rather than a failure to be penalized."
+}

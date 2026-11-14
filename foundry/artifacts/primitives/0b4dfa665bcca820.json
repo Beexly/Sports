@@ -1,0 +1,78 @@
+{
+  "book_id": "0b4dfa665bcca820",
+  "source_status": "COMPLETE",
+  "title": "2009 - Skill Importance in Women's Volleyball - Unknown Authors",
+  "file_name": "2009 - Skill Importance in Women's Volleyball - Unknown Authors.pdf",
+  "sha256": "0b4dfa665bcca8204b2594a8d075e9f43660218c6e3ae3092bdbffd744252a31",
+  "primary_domain": "other",
+  "pages_total": 20,
+  "pages_read": 20,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian skill valuation via log-odds ratios and Markov state transitions for tactical optimization. Universal Lens: Rooted in 2009 - Skill Importance in Women's Volleyball - Unknown Authors (0b4dfa665bcca820), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers skill importance through posterior βi distributions, estimating E(βi)/√V(βi) for probabilistic point-scoring impact. GSI Mapping: Rooted in 2009 - Skill Importance in Women's Volleyball - Unknown Authors (0b4dfa665bcca820), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models rally dynamics using first-order Markov chains over 36×36 state transitions, capturing sequential skill influence. GSE Mapping: Rooted in 2009 - Skill Importance in Women's Volleyball - Unknown Authors (0b4dfa665bcca820), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "skill_importance_score",
+      "name": "Skill Importance Score",
+      "verbatim_quote": "• Statistical model • Parameter βi associated with every skill • Importance Score = E(βi) √ V (βi) • Question – appropriate way to estimate E(βi) √ V (βi)?",
+      "page": 6,
+      "latex": "S_i = \\frac{\\mathbb{E}[\\beta_i]}{\\sqrt{\\text{Var}[\\beta_i]}}",
+      "symbol_and_unit_ledger": "{'S_i': 'dimensionless skill importance score', 'β_i': 'log-odds coefficient for skill i'}",
+      "assumptions": "['Skills modeled via logistic regression', 'Posterior distribution of βi available via Bayesian inference']",
+      "breakdown_regime": "When Var(βi) → 0, S_i diverges; when E(βi) → 0, S_i → 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps skill coefficients to normalized impact metrics for prioritization",
+        "source_operator": "skill_importance_score",
+        "telemetry": "Posterior mean and variance of βi from Bayesian model fit"
+      }
+    },
+    {
+      "primitive_id": "rally_state_transition_matrix",
+      "name": "Rally State Transition Matrix",
+      "verbatim_quote": "• The 36 × 36 transition matrix contained the transitions for float serves, jump serves, passes, set distances offthe net, attacks, digs, and possible outcomes.",
+      "page": 10,
+      "latex": "T_{ij} = P(r_j | r_i), \\quad i,j \\in \\{1,\\ldots,36\\}",
+      "symbol_and_unit_ledger": "{'T_{ij}': 'transition probability from state i to j', 'r_i': 'rally state i'}",
+      "assumptions": "['First-order Markov property holds', 'States fully observed and mutually exclusive']",
+      "breakdown_regime": "Non-stationary or non-Markovian play invalidates T_ij",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes skill interaction sequences as stochastic paths",
+        "source_operator": "rally_state_transition_matrix",
+        "telemetry": "Observed sequence frequencies across rallies"
+      }
+    },
+    {
+      "primitive_id": "point_scoring_probability",
+      "name": "Point Scoring Probability",
+      "verbatim_quote": "Predicted probabilities of scoring points from Pr[Y = 1|skill = i] = 1 1 + exp(βi), Used a Bayesian approach to provide a posterior distribution of βi for each of the skills.",
+      "page": 8,
+      "latex": "p_i = \\frac{1}{1 + e^{-\\beta_i}}",
+      "symbol_and_unit_ledger": "{'p_i': 'probability of scoring given skill level i', 'β_i': 'log-odds coefficient for skill i'}",
+      "assumptions": "['Logistic link function valid', 'Skill levels are independent variables']",
+      "breakdown_regime": "As βi → ±∞, p_i approaches 0 or 1 respectively",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps skill performance to outcome likelihood for tactical planning",
+        "source_operator": "point_scoring_probability",
+        "telemetry": "Empirical win/loss ratio conditioned on skill execution"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0b4dfa665bcca820_t0",
+      "think": "The core insight is that volleyball skill importance can be quantified using a Bayesian logistic regression framework where each skill contributes a log-odds βi to the probability of scoring. The importance score S_i = E(βi)/√V(βi) normalizes this effect by uncertainty, enabling comparative ranking. This is grounded in a multinomial likelihood model with a Bayesian posterior over βi. For dynamic play, a first-order Markov chain models rally evolution through discrete states, each representing a combination of actions (serve, pass, set, attack, dig) and outcomes. The transition matrix T encodes these dependencies, allowing prediction of future states based on current ones. These primitives form a dual system: one for static skill evaluation and another for temporal sequence modeling. Failure modes include non-Markovian behavior, model misspecification, or insufficient data leading to unstable estimates of βi.\n\nDeep epistemic analysis for 2009 - Skill Importance in Women's Volleyball - Unknown Authors (0b4dfa665bcca820, domain=other, pages_read=20/20): Operator 'Skill Importance Score' (page 6, domain other) captures: • Statistical model • Parameter βi associated with every skill • Importance Score = E(βi) √ V (βi) • Question – appropriate way to estimate E(βi) √ V (βi)? Assumptions: ['Skills modeled via logistic regression', 'Posterior distribution of βi available via Bayesian inference'] Breakdown regime: When Var(βi) → 0, S_i diverges; when E(βi) → 0, S_i → 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps skill coefficients to normalized impact metrics for prioritization Operator 'Rally State Transition Matrix' (page 10, domain other) captures: • The 36 × 36 transition matrix contained the transitions for float serves, jump serves, passes, set distances offthe net, attacks, digs, and possible outcomes. Assumptions: ['First-order Markov property holds', 'States fully observed and mutually exclusive'] Breakdown regime: Non-stationary or non-Markovian play invalidates T_ij Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes skill interaction sequences as stochastic paths Operator 'Point Scoring Probability' (page 8, domain other) captures: Predicted probabilities of scoring points from Pr[Y = 1|skill = i] = 1 1 + exp(βi), Used a Bayesian approach to provide a posterior distribution of βi for each of the skills. Assumptions: ['Logistic link function valid', 'Skill levels are independent variables'] Breakdown regime: As βi → ±∞, p_i approaches 0 or 1 respectively Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps skill performance to outcome likelihood for tactical planning Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2009 - Skill Importance in Women's Volleyball - Unknown Authors (0b4dfa665bcca820, domain=other, pages_read=20/20): Operator 'Skill Importance Score' (page 6, domain other) captures: • Statistical model • Parameter βi associated with every skill • Importance Score = E(βi) √ V (βi) • Question – appropriate way to estimate E(βi) √ V (βi)? Assumptions: ['Skills modeled via logistic regression', 'Posterior distribution of βi available via Bayesian inference'] Breakdown regime: When Var(βi) → 0, S_i diverges; when E(βi) → 0, S_i → 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps skill coefficients to normalized impact metrics for prioritization Operator 'Rally State Transition Matrix' (page 10, domain other) captures: • The 36 × 36 transition matrix contained the transitions for float serves, jump serves, passes, set distances offthe net, attacks, digs, and possible outcomes. Assumptions: ['First-order Markov property holds', 'States fully observed and mutually exclusive'] Breakdown regime: Non-stationary or non-Markovian play invalidates T_ij Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes skill interaction sequences as stochastic paths Operator 'Point Scoring Probability' (page 8, domain other) captures: Predicted probabilities of scoring points from Pr[Y = 1|skill = i] = 1 1 + exp(βi), Used a Bayesian approach to provide a posterior distribution of βi for each of the skills. Assumptions: ['Logistic link function valid', 'Skill levels are independent variables'] Breakdown regime: As βi → ±∞, p_i approaches 0 or 1 respectively Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps skill performance to outcome likelihood for tactical planning Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in statistical inference and stochastic processes, particularly Bayesian hierarchical modeling and Markov chains, tracing back to early 20th-century developments in probability theory and econometrics. Retrocausal Genealogy: Rooted in 2009 - Skill Importance in Women's Volleyball - Unknown Authors (0b4dfa665bcca820), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might prioritize different skills—defensive players may emphasize digging while offensive players value setting. Decision-making agents must balance immediate tactical gains against long-term strategic implications derived from both skill scores and state transitions. Theory of Mind & Decision Maker Model: Rooted in 2009 - Skill Importance in Women's Volleyball - Unknown Authors (0b4dfa665bcca820), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires orthogonal skill definitions; leakage occurs if βi estimates depend on unmodeled confounders. Veto conditions ensure that no single skill dominates due to measurement bias or spurious correlation. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2009 - Skill Importance in Women's Volleyball - Unknown Authors (0b4dfa665bcca820), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

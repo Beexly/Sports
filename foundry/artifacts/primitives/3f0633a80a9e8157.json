@@ -1,0 +1,9 @@
+{
+  "book_id": "3f0633a80a9e8157",
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Provenance failure: registered work not present in file. Queue entry is titled 'Machine_Learning_Player_Performance_and_Fantasy_Points_Projection' (file 2205.12462_Machine_Learning_Player_Performance_and_Fantasy_Points_Projection.pdf, corpus dfs_fantasy), but all 5 pages of the PDF contain a different paper: 'Improving CTC-based ASR Models with Gated Interlayer Collaboration' by Yuting Yang, Yuke Li, Binbin Du (NetEase Yidun AI Lab, ICASSP 2023). Verified: (1) full 5-page read shows speech-recognition content throughout (CTC, GIC blocks, AISHELL-1/TEDLIUM2/AIDATATANG CER results); zero occurrences of 'fantasy', 'football', 'NFL', 'player performance', or 'projection' anywhere in the text; (2) arxiv.org/abs/2205.12462 confirms the arXiv ID in the filename actually belongs to the ASR paper, so the filename's title slug is a mislabel and the registered fantasy-projection work was never in this file. No retraction markers found. Extracting primitives from the ASR content under the registered fantasy-projection title would misattribute the work and corrupt corpus provenance; the registered source is inaccessible from this file. Honest refusal per doctrine. Recommend re-scan/re-bind of the correct PDF for the registered title, and cataloging the ASR paper under its true title if desired.",
+  "pages_total": 5,
+  "pages_read": 5,
+  "primitives": [],
+  "reasoning_traces": []
+}

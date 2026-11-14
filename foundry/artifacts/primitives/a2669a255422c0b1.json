@@ -1,0 +1,844 @@
+{
+  "book_id": "a2669a255422c0b1",
+  "source_status": "COMPLETE",
+  "source_note": "Michael Nielsen, Neural Networks and Deep Learning (first published online 2015 at neuralnetworksanddeeplearning.com; CC BY-NC 3.0). The local file is the LibreTexts compiled PDF of the work (front matter: compiled 10/02/2026; PDF producer Prince 16.2), held at library/books-d-models/Nielsen-2015-NeuralNetworksAndDeepLearning.pdf, size 5147370 bytes, sha256 a2669a255422c0b106cb502a78e0c1b5c7d13c7196085baa7174293fec96c5b1 (digest over str(size) + file bytes; book_id is its first 16 hex chars). Catalog correction: this compile's title pages spell the author surname 'Nielson'; the correct spelling is Nielsen, as in the task assignment and the original work. Text quality: prose extraction is clean and complete across all seven chapters plus appendix, but in this compile every equation and most inline math symbols are image rendered and are dropped by text extraction; verbatim quotes are therefore prose only (gaps where math glyphs dropped collapse under whitespace normalization), and each LaTeX field transcribes the work's own printed equation for that primitive, not an invented formula. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "perceptron_rule_and_bias",
+      "name": "Perceptron: binary output is 1 exactly when the weighted sum of inputs plus bias exceeds zero; bias replaces the threshold",
+      "verbatim_quote": "Rosenblatt proposed a simple rule to compute the output. He introduced weights, real numbers expressing the importance of the respective inputs to the output.",
+      "page": "Section 1.2 (Perceptrons); extracted text line 250",
+      "latex": "\\mathrm{output} = \\begin{cases} 0, & w \\cdot x + b \\leq 0 \\\\ 1, & w \\cdot x + b > 0 \\end{cases}",
+      "symbol_and_unit_ledger": {
+        "w . x": "weighted sum of the binary inputs, a dimensionless evidence score",
+        "b": "bias, the negative of the threshold, in the same units as the weighted sum",
+        "output": "binary decision in {0, 1}"
+      },
+      "assumptions": [
+        "Inputs are binary (0 or 1) in the basic model",
+        "Weights are real numbers expressing the importance of each input",
+        "A single unit can only separate its input space with one hyperplane"
+      ],
+      "breakdown_regime": "The output flips discontinuously at the threshold, so no local improvement signal exists; a lone perceptron cannot represent non linearly separable functions such as XOR",
+      "domain": "neural computation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any single evidence gate in the reasoning engine that fires only when a weighted sum of input signals crosses a learned threshold is this unit; the bias is the gate's prior reluctance to fire and is learned on the same footing as the weights.",
+        "source_operator": "perceptron_rule_and_bias",
+        "telemetry": "The stream of binary and graded input features feeding each gate, plus the gate's firing rate over time."
+      }
+    },
+    {
+      "primitive_id": "perceptron_nand_universality",
+      "name": "Networks of perceptrons are universal for computation because the NAND gate is universal and a perceptron can implement NAND",
+      "verbatim_quote": "The NAND example shows that we can use perceptrons to compute simple logical functions. In fact, we can use networks of perceptrons to compute any logical function at all. The reason is that the NAND gate is universal for computation, that is, we can build any computation up out of NAND gates.",
+      "page": "Section 1.2 (Perceptrons); extracted text line 339",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A two input perceptron with suitably chosen weights and bias implements NAND; the book verifies the output for each input combination",
+        "Any logical function can be built from NAND gates alone"
+      ],
+      "breakdown_regime": "Universality by circuit construction says nothing about learnability: hand wired perceptron circuits do not generalize from examples, which is why the book abandons perceptrons for smooth neurons",
+      "domain": "neural computation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from the perceptron rule by fixing its parameters to the NAND configuration; in engine terms it is the guarantee that a layered network of simple gates has no expressivity ceiling at the level of boolean composition, so representational failures must be blamed on training or data, not on the unit class.",
+        "source_operator": "perceptron_rule_and_bias",
+        "telemetry": "None directly; it is a structural guarantee checked at design time."
+      }
+    },
+    {
+      "primitive_id": "sigmoid_neuron",
+      "name": "Sigmoid neuron: output is the logistic function of the weighted input, sigma(z) = 1 / (1 + e^{-z}) with z = w . x + b, giving a smooth output in (0, 1)",
+      "verbatim_quote": "We can overcome this problem by introducing a new type of artificial neuron called a sigmoid neuron. Sigmoid neurons are similar to perceptrons, but modified so that small changes in their weights and bias cause only a small change in their output. That's the crucial fact which will allow a network of sigmoid neurons to learn.",
+      "page": "Section 1.3 (Sigmoid neurons); extracted text line 434",
+      "latex": "\\sigma(z) = \\frac{1}{1 + e^{-z}}, \\qquad z = w \\cdot x + b",
+      "symbol_and_unit_ledger": {
+        "sigma(z)": "neuron output activation, in (0, 1)",
+        "z": "weighted input to the neuron, dimensionless",
+        "w . x": "weighted sum of inputs, which may be any real values in [0, 1] or beyond",
+        "b": "bias of the neuron"
+      },
+      "assumptions": [
+        "Inputs may take any values between 0 and 1, not just binary values",
+        "The same weights and bias structure as the perceptron is kept; only the output function changes"
+      ],
+      "breakdown_regime": "As z grows large positive or negative the output saturates at 1 or 0 and the derivative sigma'(z) tends to zero, so learning through the unit stalls (developed in the saturation and vanishing gradient primitives)",
+      "domain": "neural computation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every graded scoring unit in the engine whose output must stay a calibrated strength in (0, 1) while remaining differentiable is a sigmoid unit: a weighted evidence sum passed through the logistic squash, so upstream reasoning can adjust it smoothly.",
+        "source_operator": "sigmoid_neuron",
+        "telemetry": "The unit's input feature values and its output activation distribution on live data."
+      }
+    },
+    {
+      "primitive_id": "smoothness_linear_response",
+      "name": "Smoothness gives a linear response law: small weight and bias changes produce a small output change approximated by the sum of partial derivative terms",
+      "verbatim_quote": "By using the actual function we get, as already implied above, a smoothed out perceptron. Indeed, it's the smoothness of the function that is the crucial fact, not its detailed form.",
+      "page": "Section 1.3 (Sigmoid neurons); extracted text line 483",
+      "latex": "\\Delta \\mathrm{output} \\approx \\sum_j \\frac{\\partial \\, \\mathrm{output}}{\\partial w_j} \\Delta w_j + \\frac{\\partial \\, \\mathrm{output}}{\\partial b} \\Delta b",
+      "symbol_and_unit_ledger": {
+        "Delta output": "resulting small change in the neuron output",
+        "partial output / partial w_j": "sensitivity of the output to weight j",
+        "Delta w_j": "small change in weight j",
+        "Delta b": "small change in the bias"
+      },
+      "assumptions": [
+        "Changes in weights and bias are small enough that the first order (linear) approximation holds",
+        "The activation function is smooth, which the step function of a perceptron is not"
+      ],
+      "breakdown_regime": "For large parameter changes the linear approximation fails and the output change is no longer predictable from the partial derivatives; this is the same limit that forces a small learning rate in gradient descent",
+      "domain": "neural computation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from the sigmoid unit by differentiating it; it is the engine's local sensitivity kernel: the effect of nudging any internal weight on any downstream score is, to first order, the partial derivative times the nudge, which is what makes credit assignment computable at all.",
+        "source_operator": "sigmoid_neuron",
+        "telemetry": "Finite difference checks comparing predicted output changes against actual output changes after small parameter perturbations."
+      }
+    },
+    {
+      "primitive_id": "feedforward_architecture",
+      "name": "Feedforward network: layers of neurons (input, hidden, output) with information flowing one way and no loops; networks with feedback are recurrent networks",
+      "verbatim_quote": "Up to now, we've been discussing neural networks where the output from one layer is used as input to the next layer. Such networks are called feed forward neural networks. This means there are no loops in the network - information is always fed forward, never fed back.",
+      "page": "Section 1.4 (The architecture of neural networks); extracted text line 577",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The output of one layer is the input of the next",
+        "Hidden layers are neither inputs nor outputs; their design is a heuristic art, not settled by simple rules"
+      ],
+      "breakdown_regime": "Pure feedforward structure has no memory of earlier inputs; problems needing temporal state require recurrent structure, which this book sets aside because its learning algorithms are less powerful",
+      "domain": "neural computation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's reasoning stack is a feedforward composition: raw observations enter at the input layer, intermediate layers compute progressively more abstract features, and a final layer emits the assessment; keeping the graph acyclic keeps every score reproducible from its inputs.",
+        "source_operator": "feedforward_architecture",
+        "telemetry": "The activation of every layer on each processed case, logged so any output can be traced back through the layers that produced it."
+      }
+    },
+    {
+      "primitive_id": "hidden_feature_detector_heuristic",
+      "name": "Design heuristic: hidden neurons act as component feature detectors and the output layer should use a one hot encoding (10 outputs for 10 digits) rather than a compact binary code",
+      "verbatim_quote": "It can do this by heavily weighting input pixels which overlap with the image, and only lightly weighting the other inputs.",
+      "page": "Section 1.5 (A simple network to classify handwritten digits); extracted text line 676",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The heuristic picture is that hidden units detect component shapes by weighting overlapping inputs heavily",
+        "The justification for one hot outputs is empirical: the book reports the 10 output design learns better than the 4 output binary design on this problem"
+      ],
+      "breakdown_regime": "It is explicitly only a heuristic: nothing forces hidden units to learn human interpretable components, and a clever learning algorithm might find representations that violate the picture entirely",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Output encodings in the engine should match the granularity of the decisions being scored, one output unit per distinct outcome class, and intermediate layers should be free to form component detectors over local input structure rather than being forced to encode compact codes.",
+        "source_operator": "hidden_feature_detector_heuristic",
+        "telemetry": "Per class output activations and the input patterns that maximally activate each hidden unit."
+      }
+    },
+    {
+      "primitive_id": "quadratic_cost",
+      "name": "Quadratic cost (mean squared error): average over training inputs of half the squared distance between desired output and network output; learning means minimizing this smooth cost",
+      "verbatim_quote": "If we instead use a smooth cost function like the quadratic cost it turns out to be easy to figure out how to make small changes in the weights and biases so as to get an improvement in the cost.",
+      "page": "Section 1.6 (Learning with gradient descent); extracted text line 781",
+      "latex": "C(w, b) = \\frac{1}{2n} \\sum_x \\lVert y(x) - a \\rVert^2",
+      "symbol_and_unit_ledger": {
+        "C(w, b)": "cost as a function of all weights w and biases b, in squared activation units",
+        "n": "total number of training inputs",
+        "y(x)": "desired output vector for training input x",
+        "a": "vector of outputs from the network when x is input",
+        "|| . ||": "ordinary Euclidean length of a vector"
+      },
+      "assumptions": [
+        "The cost is non negative and near zero exactly when the network output approximates the desired output for all training inputs",
+        "A smooth proxy cost is minimized instead of classification accuracy, because accuracy is not a smooth function of the weights and biases"
+      ],
+      "breakdown_regime": "With sigmoid outputs the quadratic cost causes learning slowdown when a neuron saturates, because the sigma'(z) factor shrinks the gradient; the book replaces it with cross-entropy in Chapter 3",
+      "domain": "supervised learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's training objective is a smooth scalar distance between its emitted assessment and the realized outcome, averaged over historical cases; optimizing the smooth surrogate, not the raw hit count, is what makes incremental improvement of internal weights well defined.",
+        "source_operator": "quadratic_cost",
+        "telemetry": "Per case squared error between predicted and realized outcomes, aggregated over rolling windows."
+      }
+    },
+    {
+      "primitive_id": "gradient_descent",
+      "name": "Gradient descent: repeatedly update each weight and bias by a step proportional to the negative partial derivative of the cost, w -> w - eta dC/dw and b -> b - eta dC/db",
+      "verbatim_quote": "By repeatedly applying this update rule we can \"roll down the hill\", and hopefully find a minimum of the cost function. In other words, this is a rule which can be used to learn in a neural network.",
+      "page": "Section 1.6 (Learning with gradient descent); extracted text line 974",
+      "latex": "w_k \\rightarrow w_k - \\eta \\frac{\\partial C}{\\partial w_k}, \\qquad b_l \\rightarrow b_l - \\eta \\frac{\\partial C}{\\partial b_l}",
+      "symbol_and_unit_ledger": {
+        "w_k": "the k-th weight in the network",
+        "b_l": "the l-th bias in the network",
+        "eta": "learning rate, a small positive parameter",
+        "partial C / partial w_k": "rate of change of the cost with respect to weight k"
+      },
+      "assumptions": [
+        "The cost is a smooth function of the parameters so the gradient exists",
+        "Steps are small enough that the first order approximation behind the update stays valid"
+      ],
+      "breakdown_regime": "The rule can stall at local minima or saddle structure and does not reproduce physical motion (no momentum); computing the exact gradient over a huge training set is slow, which motivates stochastic gradient descent",
+      "domain": "optimization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived by applying the linear response law to the cost: the engine recalibrates every internal weight by stepping against its measured contribution to recent error, in proportion to that contribution, rather than by hand tuning the weights that look wrong.",
+        "source_operator": "smoothness_linear_response",
+        "telemetry": "The full gradient vector per training batch and the resulting per weight update magnitudes."
+      }
+    },
+    {
+      "primitive_id": "learning_rate",
+      "name": "Learning rate eta: the small positive step scale in gradient descent; too large breaks the approximation behind the update, too small makes learning crawl",
+      "verbatim_quote": "where is a small, positive parameter (known as the learning rate).",
+      "page": "Section 1.6 (Learning with gradient descent); extracted text line 875",
+      "latex": "\\Delta v = -\\eta \\nabla C",
+      "symbol_and_unit_ledger": {
+        "Delta v": "change in the parameter vector v (weights and biases)",
+        "eta": "learning rate, a small positive parameter",
+        "nabla C": "gradient vector of the cost function"
+      },
+      "assumptions": [
+        "Eta is small enough that the linearized change in cost is a good approximation",
+        "Eta is a hyper parameter set from outside the learning rule itself, tuned on held out data"
+      ],
+      "breakdown_regime": "If eta is too large the cost can increase or oscillate instead of decreasing; if too small, changes are tiny and training takes impractically long",
+      "domain": "optimization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's recalibration step size is a governed hyper parameter: after any structural change to features or data volume, the step size must be revalidated, because a step that was stable at one scale overshoots at another.",
+        "source_operator": "gradient_descent",
+        "telemetry": "Cost trajectory per epoch at candidate step sizes, watched for oscillation or divergence."
+      }
+    },
+    {
+      "primitive_id": "sgd_minibatch_and_epoch",
+      "name": "Stochastic gradient descent: estimate the full gradient from a random mini-batch of training examples, update, repeat; one full pass through the training set is an epoch",
+      "verbatim_quote": "We can think of stochastic gradient descent as being like political polling: it's much easier to sample a small mini-batch than it is to apply gradient descent to the full batch, just as carrying out a poll is easier than running a full election.",
+      "page": "Section 1.6 (Learning with gradient descent); extracted text line 1022",
+      "latex": "\\nabla C \\approx \\frac{1}{m} \\sum_{j=1}^{m} \\nabla C_{X_j}",
+      "symbol_and_unit_ledger": {
+        "nabla C": "gradient of the cost over the full training set",
+        "m": "mini-batch size, the number of randomly chosen training inputs",
+        "nabla C_{X_j}": "gradient of the cost for the single mini-batch example X_j"
+      },
+      "assumptions": [
+        "The mini-batch is large enough that its average gradient is close to the full average",
+        "Training examples are sampled randomly; the training set is reshuffled each epoch in the book's implementation"
+      ],
+      "breakdown_regime": "The gradient estimate carries statistical fluctuations, so the cost does not decrease monotonically; with mini-batch size 1 (online learning) the noise is maximal, and scaling conventions for the update vary between authors",
+      "domain": "optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine recalibration runs on sampled batches of recent cases rather than the full history: the batch gradient is an unbiased poll of the full error surface, which keeps update latency bounded as the case archive grows.",
+        "source_operator": "sgd_minibatch_and_epoch",
+        "telemetry": "Batch level gradient norms and cost estimates, plus the sampling seed and batch composition for reproducibility."
+      }
+    },
+    {
+      "primitive_id": "matrix_forward_pass",
+      "name": "Matrix form of the forward pass: the activation vector of each layer is a' = sigma(w a + b), so a whole network evaluates with fast matrix operations",
+      "verbatim_quote": "Before discussing backpropagation, let's warm up with a fast matrix-based algorithm to compute the output from a neural network.",
+      "page": "Section 2.2 (Warm up: a fast matrix-based approach); extracted text line 1835",
+      "latex": "\\mathbf{a}' = \\sigma(w \\, \\mathbf{a} + \\mathbf{b})",
+      "symbol_and_unit_ledger": {
+        "a'": "vector of activations in the next layer",
+        "w": "weight matrix for the layer, entry (j, k) the weight from neuron k to neuron j",
+        "a": "vector of activations in the current layer",
+        "b": "bias vector for the layer",
+        "sigma": "sigmoid applied elementwise"
+      },
+      "assumptions": [
+        "Weights for a layer are collected into a single matrix and biases into a vector",
+        "The activation function acts elementwise on the weighted input vector"
+      ],
+      "breakdown_regime": "The compact form hides per neuron structure; it is exact only for feedforward layers where each neuron's input is the full previous layer (convolutional layers need the shared weight form instead)",
+      "domain": "neural computation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each engine layer is evaluated as one matrix operation over the previous layer's feature vector, which makes scoring a new case a single deterministic pass whose intermediate vectors can be cached for audit.",
+        "source_operator": "matrix_forward_pass",
+        "telemetry": "Layer by layer activation vectors for each scored case, retained for post hoc explanation."
+      }
+    },
+    {
+      "primitive_id": "backprop_assumptions",
+      "name": "Backpropagation applies when the cost is an average over per example costs and is a function of the network outputs; then per example gradients average to the full gradient",
+      "verbatim_quote": "The goal of backpropagation is to compute the partial derivatives and of the cost function with respect to any weight or bias in the network.",
+      "page": "Section 2.2 (The two assumptions we need about the cost function); extracted text line 1909",
+      "latex": "C = \\frac{1}{n} \\sum_x C_x",
+      "symbol_and_unit_ledger": {
+        "C": "total cost over the training set",
+        "C_x": "cost for the single training example x",
+        "n": "total number of training examples"
+      },
+      "assumptions": [
+        "Assumption 1: the cost can be written as an average over cost functions for individual training examples",
+        "Assumption 2: the cost can be written as a function of the outputs from the neural network, with the desired output treated as a fixed parameter"
+      ],
+      "breakdown_regime": "Costs that couple examples together (so no per example decomposition exists) or that depend on parameters other than through the outputs fall outside the algorithm as presented",
+      "domain": "credit assignment",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine may only attach gradient based credit assignment to objectives that decompose per case and depend on parameters through the emitted score; objectives violating either condition are flagged at design time instead of silently producing wrong gradients.",
+        "source_operator": "backprop_assumptions",
+        "telemetry": "A registry of active objectives, each checked for per case decomposability and output dependence."
+      }
+    },
+    {
+      "primitive_id": "error_delta",
+      "name": "Neuron error delta: the intermediate quantity delta_j^l = dC/dz_j^l, the rate of change of the cost with respect to a neuron's weighted input, is the carrier of credit and blame",
+      "verbatim_quote": "But to compute those, we first introduce an intermediate quantity, , which we call the error in the neuron in the layer.",
+      "page": "Section 2.2 (The four fundamental equations behind backpropagation); extracted text line 1969",
+      "latex": "\\delta_j^l \\equiv \\frac{\\partial C}{\\partial z_j^l}",
+      "symbol_and_unit_ledger": {
+        "delta_j^l": "error of neuron j in layer l",
+        "z_j^l": "weighted input to neuron j in layer l",
+        "partial C / partial z_j^l": "rate of change of the cost with respect to that weighted input"
+      },
+      "assumptions": [
+        "The error is defined on the weighted input rather than the activation, which the book notes keeps the algebra of the four equations simple",
+        "A heuristic reading: delta measures how much the cost would improve if the weighted input were perturbed, as in the book's demon story"
+      ],
+      "breakdown_regime": "Delta is a local linear measure; for large perturbations it does not predict the actual cost change, and in classification contexts the word error must not be confused with the classification failure rate",
+      "domain": "credit assignment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every internal node of the engine carries an error signal defined exactly this way, the sensitivity of final case error to that node's pre activation value, so blame for a bad assessment lands on the nodes whose adjustment would have helped most.",
+        "source_operator": "error_delta",
+        "telemetry": "Per node delta values on scored cases, aggregated to find chronically high error components."
+      }
+    },
+    {
+      "primitive_id": "bp1_output_error",
+      "name": "BP1, error at the output layer: delta^L = grad_a C Hadamard sigma'(z^L), the cost sensitivity to outputs modulated by the activation derivative",
+      "verbatim_quote": "Equation (BP1) is a componentwise expression for . It's a perfectly good expression, but not the matrix-based form we want for backpropagation.",
+      "page": "Section 2.2 (The four fundamental equations behind backpropagation); extracted text line 2045",
+      "latex": "\\delta^L = \\nabla_a C \\odot \\sigma'(z^L)",
+      "symbol_and_unit_ledger": {
+        "delta^L": "error vector of the output layer L",
+        "nabla_a C": "vector of partial derivatives of the cost with respect to the output activations",
+        "sigma'(z^L)": "derivative of the sigmoid evaluated at the output layer weighted inputs",
+        "odot": "Hadamard product, elementwise multiplication of two vectors"
+      },
+      "assumptions": [
+        "Everything in BP1 is computed during the forward pass except grad_a C, which follows from the chosen cost (for the quadratic cost, grad_a C = a - y)"
+      ],
+      "breakdown_regime": "When an output neuron saturates, sigma'(z^L) is near zero and the output error collapses even if the classification is badly wrong; this is the seed of the learning slowdown that cross-entropy removes",
+      "domain": "credit assignment",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's output layer error is computed by this factorization: how wrong the score is, times how responsive the output unit still is; a saturated output unit reports near zero error and is treated as a stuck unit, not as a correct one.",
+        "source_operator": "error_delta",
+        "telemetry": "Output layer delta magnitudes alongside raw output error, to detect saturation masking real error."
+      }
+    },
+    {
+      "primitive_id": "bp2_error_recursion",
+      "name": "BP2, error recursion: delta^l = ((w^{l+1})^T delta^{l+1}) Hadamard sigma'(z^l), moving the error backward through the transpose weights and the activation function",
+      "verbatim_quote": "When we apply the transpose weight matrix, , we can think intuitively of this as moving the error backward through the network, giving us some sort of measure of the error at the output of the layer.",
+      "page": "Section 2.2 (The four fundamental equations behind backpropagation); extracted text line 2064",
+      "latex": "\\delta^l = \\left( (w^{l+1})^T \\delta^{l+1} \\right) \\odot \\sigma'(z^l)",
+      "symbol_and_unit_ledger": {
+        "delta^l": "error vector of layer l",
+        "(w^{l+1})^T": "transpose of the weight matrix connecting layer l to layer l+1",
+        "delta^{l+1}": "error vector of the next layer",
+        "sigma'(z^l)": "sigmoid derivative at the weighted inputs of layer l",
+        "odot": "Hadamard product (elementwise product, also called the Schur product)"
+      },
+      "assumptions": [
+        "Errors are computed layer by layer from the output back to the first hidden layer by repeated application of BP2 after BP1",
+        "The Hadamard product is the elementwise operation used throughout; fast library implementations exist"
+      ],
+      "breakdown_regime": "Each backward step multiplies by sigma'(z), whose maximum is 1/4 for the sigmoid, so in deep stacks the recursion shrinks (or, with large weights, grows) the error geometrically: the vanishing gradient mechanism of Chapter 5",
+      "domain": "credit assignment",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from BP1 by the chain rule; in the engine, blame travels backward through the same weights that carried the evidence forward, transposed, so a feature layer is charged in proportion to how strongly it fed the layers that erred.",
+        "source_operator": "bp1_output_error",
+        "telemetry": "Per layer delta norms during scoring reviews, watched for geometric decay or growth with depth."
+      }
+    },
+    {
+      "primitive_id": "bp3_bp4_gradients",
+      "name": "BP3 and BP4, gradients from errors: dC/db_j^l = delta_j^l exactly, and dC/dw_{jk}^l = a_k^{l-1} delta_j^l, an outer product of input activation and output error",
+      "verbatim_quote": "This tells us how to compute the partial derivatives in terms of the quantities and , which we already know how to compute.",
+      "page": "Section 2.2 (The four fundamental equations behind backpropagation); extracted text line 2091",
+      "latex": "\\frac{\\partial C}{\\partial b_j^l} = \\delta_j^l, \\qquad \\frac{\\partial C}{\\partial w_{jk}^l} = a_k^{l-1} \\, \\delta_j^l",
+      "symbol_and_unit_ledger": {
+        "partial C / partial b_j^l": "rate of change of the cost with respect to the bias of neuron j in layer l",
+        "delta_j^l": "error of that same neuron",
+        "partial C / partial w_{jk}^l": "rate of change of the cost with respect to the weight from neuron k in layer l-1 to neuron j in layer l",
+        "a_k^{l-1}": "activation of the neuron input to that weight"
+      },
+      "assumptions": [
+        "The deltas for all layers have already been computed by BP1 and BP2",
+        "The four equations hold for any activation function, not just the sigmoid, because the proofs use no special property of sigma"
+      ],
+      "breakdown_regime": "BP4 implies a weight learns slowly whenever its input activation is small, regardless of the error downstream; near zero activations effectively disconnect a weight from training",
+      "domain": "credit assignment",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A connection in the engine earns an update proportional to how active its input was times how wrong its output node was; silent features do not get recalibrated by cases they did not participate in, which keeps credit assignment honest.",
+        "source_operator": "bp2_error_recursion",
+        "telemetry": "Per connection update magnitudes joined with input activation rates, to find dead or dominant connections."
+      }
+    },
+    {
+      "primitive_id": "backprop_algorithm",
+      "name": "The backpropagation algorithm: input, feedforward, output error via BP1, backpropagate the error via BP2, then read off all gradients from BP3 and BP4; it is the chain rule applied systematically",
+      "verbatim_quote": "Examining the algorithm you can see why it's called backpropagation. We compute the error vectors backward, starting from the final layer.",
+      "page": "Section 2.3 (The backpropagation algorithm); extracted text line 2243",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The algorithm as stated computes the gradient for a single training example; in practice it is combined with stochastic gradient descent over mini-batches",
+        "All four fundamental equations are consequences of the chain rule from multivariable calculus"
+      ],
+      "breakdown_regime": "The backward pass is forced by the cost being a function of the outputs; the algorithm gives exact gradients of the chosen cost, so any mismatch between the cost and the true objective is inherited untouched",
+      "domain": "credit assignment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's review loop is this five step pass: score the case forward, measure output error, propagate blame backward through the reasoning layers, and convert the blame into parameter updates; no layer is adjusted by intuition when the pass can compute its share.",
+        "source_operator": "backprop_algorithm",
+        "telemetry": "Timing and gradient norms for the forward and backward passes on each training batch."
+      }
+    },
+    {
+      "primitive_id": "saturation_slowdown",
+      "name": "Saturation slowdown: a weight learns slowly if its input neuron is low activation or its output neuron has saturated (activation near 0 or 1), because sigma'(z) multiplies the gradient",
+      "verbatim_quote": "Summing up, we've learnt that a weight will learn slowly if either the input neuron is low-activation, or if the output neuron has saturated, i.e., is either high- or low-activation.",
+      "page": "Section 2.2 (insights from the four equations); extracted text line 2120",
+      "latex": "\\frac{\\partial C}{\\partial w} = (a - y) \\, \\sigma'(z) \\, x",
+      "symbol_and_unit_ledger": {
+        "partial C / partial w": "rate of change of the quadratic cost with respect to a weight into a single output neuron",
+        "a": "output activation of the neuron",
+        "y": "desired output",
+        "sigma'(z)": "sigmoid derivative at the weighted input z, near zero when the neuron is saturated",
+        "x": "input activation to the weight"
+      },
+      "assumptions": [
+        "The displayed equation is the single neuron quadratic cost case the book uses to expose the mechanism",
+        "The same sigma' factor appears in BP1 and BP2, so the effect applies in earlier layers as well, subject to compensation by large weights"
+      ],
+      "breakdown_regime": "This is a failure mode, not a tool: it is worst exactly when the neuron is most wrong (saturated on the wrong side), and it motivates both cross-entropy costs and non saturating activations",
+      "domain": "training dynamics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine diagnostics treat a confident but wrong internal unit as a saturated unit: its self reported gradient understates its error, so monitoring keys on the product of output error and unit responsiveness rather than on raw update size.",
+        "source_operator": "saturation_slowdown",
+        "telemetry": "Joint distribution of unit activations and update magnitudes, flagging units pinned near 0 or 1 with large outcome error."
+      }
+    },
+    {
+      "primitive_id": "cross_entropy_cost",
+      "name": "Cross-entropy cost: C = -(1/n) sum_x [ y ln a + (1-y) ln (1-a) ], a cost that is non negative and tends to zero as outputs match desired outputs",
+      "verbatim_quote": "Summing up, the cross-entropy is positive, and tends toward zero as the neuron gets better at computing the desired output",
+      "page": "Section 3.1 (The cross-entropy cost function); extracted text line 2726",
+      "latex": "C = -\\frac{1}{n} \\sum_x \\left[ y \\ln a + (1-y) \\ln (1-a) \\right]",
+      "symbol_and_unit_ledger": {
+        "C": "cross-entropy cost averaged over training inputs, in nats",
+        "n": "number of training inputs",
+        "y": "desired output, in [0, 1]",
+        "a": "actual output activation of the neuron",
+        "ln": "natural logarithm"
+      },
+      "assumptions": [
+        "Outputs are interpreted as probabilities or near probabilities in (0, 1), as sigmoid outputs are",
+        "The two cost properties the book requires are non negativity and tending to zero as the neuron computes the desired output for all inputs"
+      ],
+      "breakdown_regime": "The logarithm diverges as a approaches the wrong extreme (a near 0 when y is 1), which is the desired pressure here but requires numerical care in implementation; the definition as printed is for a single output neuron and is generalized per output in the full network form",
+      "domain": "supervised learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "For probability shaped engine outputs the training objective is cross-entropy against realized outcomes: confident wrong assessments are penalized without bound, which matches how a forecasting system should be scored.",
+        "source_operator": "cross_entropy_cost",
+        "telemetry": "Per case log loss between emitted probabilities and realized outcomes."
+      }
+    },
+    {
+      "primitive_id": "cross_entropy_gradient_cancellation",
+      "name": "With cross-entropy and sigmoid output, sigma'(z) cancels in the gradient: dC/dw_j = (1/n) sum_x x_j (sigma(z) - y), so learning speed is proportional to the output error",
+      "verbatim_quote": "It tells us that the rate at which the weight learns is controlled by , i.e., by the error in the output. The larger the error, the faster the neuron will learn.",
+      "page": "Section 3.1 (The cross-entropy cost function); extracted text line 2747",
+      "latex": "\\frac{\\partial C}{\\partial w_j} = \\frac{1}{n} \\sum_x x_j \\left( \\sigma(z) - y \\right)",
+      "symbol_and_unit_ledger": {
+        "partial C / partial w_j": "rate of change of the cross-entropy cost with respect to weight j",
+        "x_j": "the j-th input to the neuron",
+        "sigma(z)": "output of the neuron",
+        "y": "desired output",
+        "n": "number of training inputs"
+      },
+      "assumptions": [
+        "The cancellation uses the sigmoid identity sigma'(z) = sigma(z)(1 - sigma(z)); the book notes the cross-entropy was specially chosen to have this property",
+        "The analogous result for the bias is dC/db = (1/n) sum_x (sigma(z) - y)"
+      ],
+      "breakdown_regime": "The cancellation is specific to pairing this cost with the sigmoid (or softmax) output; with a mismatched cost and activation pair the saturating derivative returns to the gradient",
+      "domain": "training dynamics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived by differentiating the cross-entropy cost through the sigmoid; the engine pairs each output type with the loss whose gradient is proportional to raw error, so the largest mistakes drive the largest corrections instead of being throttled by saturation.",
+        "source_operator": "cross_entropy_cost",
+        "telemetry": "Correlation between per case output error and per case update magnitude; a weakening correlation signals a loss and activation mismatch."
+      }
+    },
+    {
+      "primitive_id": "softmax_loglikelihood",
+      "name": "Softmax output layer: a_j = e^{z_j} / sum_k e^{z_k} turns weighted inputs into a probability distribution, paired with the log-likelihood cost C = -(1/n) sum_x ln a_y",
+      "verbatim_quote": "You can think of softmax as a way of rescaling the , and then squishing them together to form a probability distribution.",
+      "page": "Section 3.1 (softmax and log-likelihood); extracted text line 3095",
+      "latex": "a_j = \\frac{e^{z_j}}{\\sum_k e^{z_k}}, \\qquad C = -\\frac{1}{n} \\sum_x \\ln a_y^{(x)}",
+      "symbol_and_unit_ledger": {
+        "a_j": "output activation of neuron j, interpretable as the estimated probability of class j",
+        "z_j": "weighted input of output neuron j",
+        "sum_k e^{z_k}": "normalization over all output neurons, guaranteeing the outputs sum to 1",
+        "C": "log-likelihood cost",
+        "a_y^{(x)}": "activation assigned to the correct class y for training example x"
+      },
+      "assumptions": [
+        "Outputs are positive and sum to 1, so they form a probability distribution, unlike sigmoid outputs",
+        "Increasing one z_j increases a_j and decreases all other output activations by a compensating total"
+      ],
+      "breakdown_regime": "Softmax forces a single distribution over mutually exclusive classes; it is the wrong output model when several labels can hold at once, where independent sigmoid outputs fit better",
+      "domain": "probability outputs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When the engine scores mutually exclusive outcomes for an event, the output layer is a softmax: outcome strengths are normalized into a probability distribution whose entries trade off against each other exactly as probabilities must.",
+        "source_operator": "softmax_loglikelihood",
+        "telemetry": "The full output distribution per event and its log loss against the realized outcome."
+      }
+    },
+    {
+      "primitive_id": "overfitting_generalization_gap",
+      "name": "Overfitting: with many free parameters a network keeps reducing training cost while held out accuracy stalls, so the extra learning is memorization that does not generalize",
+      "verbatim_quote": "But the test accuracy results show the improvement is an illusion. Just like the model that Fermi disliked, what our network learns after epoch 280 no longer generalizes to the test data.",
+      "page": "Section 3.2 (Overfitting and regularization); extracted text line 3242",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The book's demonstration: a 23,860 parameter network trained on only 1,000 MNIST images, where test accuracy stops improving around epoch 280 while training cost keeps dropping",
+        "The true test of a model is its ability to make predictions in situations it has not been exposed to before"
+      ],
+      "breakdown_regime": "This is the central failure mode of high capacity models; it cannot be detected from training data alone, which is why every remedy in the book routes through held out data or capacity pressure",
+      "domain": "generalization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine quality is judged only on cases the model never trained on; a widening gap between archive fit and held out performance is the overfitting alarm, and it vetoes promotion of any recalibration no matter how good the training numbers look.",
+        "source_operator": "overfitting_generalization_gap",
+        "telemetry": "Training versus held out error curves per epoch, with the divergence point marked."
+      }
+    },
+    {
+      "primitive_id": "early_stopping_validation",
+      "name": "Early stopping on validation data: monitor classification accuracy on a held out validation set each epoch and stop when it saturates; the test set is reserved and validation also tunes hyper parameters",
+      "verbatim_quote": "That is, we'll compute the classification accuracy on the validation_data at the end of each epoch. Once the classification accuracy on the validation_data has saturated, we stop training. This strategy is called early stopping.",
+      "page": "Section 3.2 (Overfitting and regularization); extracted text line 3299",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Three disjoint data roles: training data fits parameters, validation data detects saturation and selects hyper parameters, test data is kept for final evaluation",
+        "Saturation requires judgment: performance can plateau and later improve, so stopping aggressiveness is itself a choice"
+      ],
+      "breakdown_regime": "Repeatedly tuning against the same validation set slowly overfits to it; and stopping at the first plateau can abandon later gains, the trade off the book flags in its footnote on stopping judgment",
+      "domain": "generalization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from the overfitting demonstration: the engine trains in epochs against a frozen validation slice and halts recalibration when held out performance saturates, so training length is decided by evidence rather than by a fixed schedule.",
+        "source_operator": "overfitting_generalization_gap",
+        "telemetry": "Validation accuracy per epoch and the stopping epoch chosen for each model version."
+      }
+    },
+    {
+      "primitive_id": "l2_weight_decay",
+      "name": "L2 regularization (weight decay): add (lambda / 2n) sum_w w^2 to the cost, so each gradient step first rescales every weight by (1 - eta lambda / n); biases are not regularized",
+      "verbatim_quote": "The idea of L2 regularization is to add an extra term to the cost function, a term called the regularization term.",
+      "page": "Section 3.2 (Overfitting and regularization); extracted text line 3360",
+      "latex": "C = C_0 + \\frac{\\lambda}{2n} \\sum_w w^2",
+      "symbol_and_unit_ledger": {
+        "C": "regularized cost",
+        "C_0": "original unregularized cost",
+        "lambda": "regularization parameter, trading small weights against fit",
+        "n": "size of the training set",
+        "sum_w w^2": "sum of the squares of all weights in the network; biases are excluded from the term"
+      },
+      "assumptions": [
+        "Large weights are allowed only if they considerably improve the unregularized cost term",
+        "The sibling L1 variant adds the sum of absolute values of the weights instead, pushing weights toward exactly zero with a constant force"
+      ],
+      "breakdown_regime": "Too large a lambda starves the fit and the network underfits; the shrinkage is multiplicative, so weights are driven toward zero but the data term can still grow them when the evidence demands it",
+      "domain": "regularization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine weight carries a standing decay pressure: a feature keeps a large weight only while recent evidence keeps re earning it, which prevents stale strong opinions from persisting after the conditions that justified them change.",
+        "source_operator": "l2_weight_decay",
+        "telemetry": "Weight magnitude distribution over time and the chosen lambda per model version, tuned on validation data."
+      }
+    },
+    {
+      "primitive_id": "dropout",
+      "name": "Dropout: temporarily delete a random half of the hidden neurons for each mini-batch, train the thinned network, and at run time halve the outgoing weights to compensate; it trains an implicit ensemble",
+      "verbatim_quote": "Dropout is a radically different technique for regularization. Unlike L1 and L2 regularization, dropout doesn't rely on modifying the cost function. Instead, in dropout we modify the network itself.",
+      "page": "Section 3.2 (Overfitting and regularization); extracted text line 3744",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Input and output neurons are never dropped; only hidden neurons, half of them in the book's description",
+        "The heuristic justification given is ensemble averaging: different dropped sets behave like different networks that overfit in different ways, and the co-adaptation argument quoted from Krizhevsky, Sutskever and Hinton (2012)"
+      ],
+      "breakdown_regime": "Dropout modifies the network rather than the cost, so training and run time networks differ and the weight halving compensation must be applied exactly; it also interacts with other regularizers and needs its own validation",
+      "domain": "regularization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Robustness training for the engine randomly suppresses subsets of internal features during recalibration, so no single feature becomes a load bearing crutch; the full model is then run with compensated weights.",
+        "source_operator": "dropout",
+        "telemetry": "Performance of the full model versus randomly thinned variants on held out cases, measuring dependence on individual features."
+      }
+    },
+    {
+      "primitive_id": "data_expansion",
+      "name": "Artificial expansion of the training data: generate new examples by applying transformations that reflect real world variation (rotations, translations, skews, elastic distortions for handwriting)",
+      "verbatim_quote": "The general principle is to expand the training data by applying operations that reflect real-world variation.",
+      "page": "Section 3.2 (Overfitting and regularization); extracted text line 3872",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The transformation must preserve the label: a slightly rotated 5 is still a 5",
+        "The cited Simard, Steinkraus and Platt (2003) results show accuracy rising with each richer family of distortions, elastic distortions best"
+      ],
+      "breakdown_regime": "Transformations that do not match the real variation of the domain manufacture misleading examples; the book also notes it can be more efficient to handle some variations, such as background noise, by other means",
+      "domain": "generalization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine expands its case archive with label preserving transformations of real cases, encoding known invariances of the domain as extra training evidence instead of hoping the model discovers them from scarce raw cases.",
+        "source_operator": "data_expansion",
+        "telemetry": "Counts and performance deltas for each transformation family on held out data, so useless or harmful transforms are dropped."
+      }
+    },
+    {
+      "primitive_id": "scaled_initialization",
+      "name": "Scaled weight initialization: draw weights from a Gaussian with mean 0 and standard deviation 1 / sqrt(n_in), so wide layers do not saturate their sigmoids before training starts",
+      "verbatim_quote": "Suppose we have a neuron with input weights. Then we shall initialize those weights as Gaussian random variables with mean and standard deviation . That is, we'll squash the Gaussians down, making it less likely that our neuron will saturate.",
+      "page": "Section 3.3 (Weight initialization); extracted text line 4007",
+      "latex": "w \\sim \\mathcal{N}\\left(0, \\frac{1}{\\sqrt{n_{in}}}\\right)",
+      "symbol_and_unit_ledger": {
+        "w": "an initial weight into a neuron",
+        "N(0, 1/sqrt(n_in))": "Gaussian distribution with mean 0 and standard deviation 1/sqrt(n_in), as the book states it",
+        "n_in": "number of input weights (fan-in) of the neuron"
+      },
+      "assumptions": [
+        "Biases are still initialized as Gaussians with mean 0 and standard deviation 1 in the book's prescription",
+        "The argument: with unit variance weights the weighted sum into a wide layer has a broad Gaussian distribution, so hidden units start saturated and learn very slowly"
+      ],
+      "breakdown_regime": "The prescription is derived for sigmoid style saturation; other activation families need their own variance budgeting, and no initialization removes the need to monitor early training for saturation",
+      "domain": "training dynamics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from the saturation analysis: engine layers are initialized with weight scales inversely proportional to the square root of their input count, so no layer starts life pinned at an extreme before it has seen any evidence.",
+        "source_operator": "saturation_slowdown",
+        "telemetry": "Activation histograms per layer at initialization and after the first epochs, checking for mass at the extremes."
+      }
+    },
+    {
+      "primitive_id": "hyperparameter_strategy",
+      "name": "Hyper parameter search strategy: get a network that learns anything at all with fast feedback, then adjust one hyper parameter at a time, evaluating on held out validation data, revisiting earlier choices as architecture grows",
+      "verbatim_quote": "And so we can continue, individually adjusting each hyper-parameter, gradually improving performance.",
+      "page": "Section 3.5 (How to choose a neural network's hyper-parameters?); extracted text line 4830",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Hyper parameters (learning rate, regularization parameter, mini-batch size, architecture) are set by validation performance, never by test performance",
+        "Early experiments should simplify the problem and architecture to get a meaningful signal quickly; the book stresses debugging neural networks is an art learned through such heuristics"
+      ],
+      "breakdown_regime": "The search is open ended and can consume days with no signal if the initial configuration learns nothing; single variable changes also miss interactions between hyper parameters",
+      "domain": "training dynamics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine tuning follows the same discipline: one knob at a time, every candidate judged on the same frozen validation slice, and a change is kept only when held out performance improves, with the full search history logged.",
+        "source_operator": "hyperparameter_strategy",
+        "telemetry": "The experiment log of hyper parameter values tried and their validation results."
+      }
+    },
+    {
+      "primitive_id": "momentum",
+      "name": "Momentum based gradient descent: keep a velocity per parameter, v -> mu v - eta grad C, then step by the velocity; the gradient changes velocity, and friction mu damps it",
+      "verbatim_quote": "First, it introduces a notion of \"velocity\" for the parameters we're trying to optimize. The gradient acts to change the velocity, not (directly) the \"position\", in much the same way as physical forces change the velocity, and only indirectly affect position.",
+      "page": "Section 3.6 (Other techniques); extracted text line 5223",
+      "latex": "v \\rightarrow \\mu v - \\eta \\nabla C, \\qquad w \\rightarrow w + v",
+      "symbol_and_unit_ledger": {
+        "v": "velocity variable associated to a parameter (weight or bias)",
+        "mu": "momentum coefficient, a hyper parameter between 0 and 1; the book warns the name is badly chosen, since the quantity is closely related to friction, not to physical momentum",
+        "eta": "learning rate",
+        "nabla C": "gradient of the cost",
+        "w": "the parameter being updated"
+      },
+      "assumptions": [
+        "The momentum coefficient is a hyper parameter chosen on held out validation data, like eta and lambda",
+        "The book analyzes the limiting cases: with no friction the velocity is completely driven by the gradient, while with so much friction that the velocity cannot build up, the equations reduce to the usual gradient descent update; intermediate values build speed along consistent gradient directions"
+      ],
+      "breakdown_regime": "Built up velocity overshoots at the bottom of a valley or when the gradient direction changes rapidly; the method inherits the cost of computing gradients and adds a state variable per parameter",
+      "domain": "optimization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from gradient descent by adding state: the engine's recalibration can accumulate update velocity across batches so persistent error patterns move weights faster, while one off noisy batches are damped by friction.",
+        "source_operator": "gradient_descent",
+        "telemetry": "Velocity norms per layer and the overshoot rate measured as cost increases immediately after large updates."
+      }
+    },
+    {
+      "primitive_id": "relu",
+      "name": "Rectified linear unit: output is max(0, w . x + b); it never saturates for increasing input, but a negative weighted input gives zero gradient and the unit stops learning entirely",
+      "verbatim_quote": "By contrast, increasing the weighted input to a rectified linear unit will never cause it to saturate, and so there is no corresponding learning slowdown. On the other hand, when the weighted input to a rectified linear unit is negative, the gradient vanishes, and so the neuron stops learning entirely.",
+      "page": "Section 3.6 (Other techniques); extracted text line 5399",
+      "latex": "\\mathrm{output} = \\max(0, \\, w \\cdot x + b)",
+      "symbol_and_unit_ledger": {
+        "output": "activation of the rectified linear unit, in [0, infinity)",
+        "max(0, .)": "the rectifying function",
+        "w . x + b": "weighted input to the unit"
+      },
+      "assumptions": [
+        "ReLU networks remain universal function approximators and train with the same backpropagation and stochastic gradient descent machinery",
+        "The book pairs this discussion with the tanh neuron, whose zero centered outputs avoid the sigmoid problem that all weights into a neuron must move in the same direction"
+      ],
+      "breakdown_regime": "A unit whose weighted input stays negative is dead: zero output and zero gradient, so it never recovers through gradient learning; the book is explicit that when ReLUs beat sigmoids was not deeply understood at the time of writing",
+      "domain": "neural computation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine feature units that must not saturate under strong evidence use rectification: response grows linearly with evidence strength, at the price of a dead zone that monitoring must catch when a unit never fires.",
+        "source_operator": "relu",
+        "telemetry": "Per unit firing rates; units with zero activations over long windows are flagged as dead."
+      }
+    },
+    {
+      "primitive_id": "universality",
+      "name": "Universality theorem: a neural network with a single hidden layer can approximate any continuous function to any desired precision, by driving sigmoids into step functions and combining them into bumps",
+      "verbatim_quote": "Summing up, a more precise statement of the universality theorem is that neural networks with a single hidden layer can be used to approximate any continuous function to any desired precision.",
+      "page": "Section 4.1 (Two caveats); extracted text line 5611",
+      "latex": "|g(x) - f(x)| < \\epsilon \\quad \\text{for all inputs } x",
+      "symbol_and_unit_ledger": {
+        "g(x)": "function computed by the neural network",
+        "f(x)": "target continuous function",
+        "epsilon": "desired accuracy of the approximation",
+        "x": "input, one variable in the book's core proof"
+      },
+      "assumptions": [
+        "First caveat: the guarantee is approximation to a chosen accuracy, not exact computation",
+        "Second caveat: the target must be continuous; discontinuous functions can only be handled through a continuous approximation",
+        "The book proves a slightly weaker version with two hidden layers and sketches the adaptation to one"
+      ],
+      "breakdown_regime": "Universality is an existence statement: it says nothing about whether gradient based learning will find the approximating weights, nor about generalization from finite data, which is why Chapters 3 and 5 carry the practical weight",
+      "domain": "representation learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The theorem sets the engine's design posture: representational capacity is not the scarce resource, so effort goes to training signal quality, credit assignment, and held out validation rather than to exotic unit types.",
+        "source_operator": "universality",
+        "telemetry": "None directly; it is a boundary theorem consulted when a model class is blamed for a failure."
+      }
+    },
+    {
+      "primitive_id": "vanishing_gradient",
+      "name": "Vanishing and exploding gradients: in deep networks the gradient at early layers is a product of per layer terms w sigma'(z), each typically below 1 in magnitude, so gradients shrink or grow exponentially with depth and early layers learn far more slowly",
+      "verbatim_quote": "We have here an important observation: in at least some deep neural networks, the gradient tends to get smaller as we move backward through the hidden layers. This means that neurons in the earlier layers learn much more slowly than neurons in later layers.",
+      "page": "Section 5.1 (The vanishing gradient problem); extracted text line 6529",
+      "latex": "\\frac{\\partial C}{\\partial b_1} = \\sigma'(z_1) \\, w_2 \\sigma'(z_2) \\, w_3 \\sigma'(z_3) \\, w_4 \\sigma'(z_4) \\, \\frac{\\partial C}{\\partial a_4}",
+      "symbol_and_unit_ledger": {
+        "partial C / partial b_1": "gradient with respect to the bias of the first hidden neuron, in the book's single neuron per layer chain",
+        "sigma'(z_j)": "sigmoid derivative at layer j, which reaches its maximum of 1/4 at z = 0 as plotted in the book",
+        "w_j": "weight on the connection into layer j",
+        "partial C / partial a_4": "rate of change of the cost with respect to the final activation"
+      },
+      "assumptions": [
+        "With standard initialization the weights are usually below 1 in magnitude, so the terms w sigma'(z) usually satisfy |w sigma'(z)| < 1 and the product decays exponentially",
+        "The book's measurement: in a network with four hidden layers the first hidden layer learns roughly 100 times more slowly than the final hidden layer"
+      ],
+      "breakdown_regime": "This is the fundamental instability of gradient based learning in deep networks: the alternative regime, large weights, gives exploding gradients instead, which is no better; depth must therefore be paired with structural or initialization remedies",
+      "domain": "training dynamics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine audits learning speed per layer, not just final accuracy: if early feature layers barely move while output layers churn, the stack has a gradient flow problem and depth is hurting rather than helping.",
+        "source_operator": "vanishing_gradient",
+        "telemetry": "Per layer gradient norms and per layer parameter change per epoch, compared across depth."
+      }
+    },
+    {
+      "primitive_id": "conv_local_receptive_fields",
+      "name": "Local receptive fields: each hidden neuron in a convolutional layer connects only to a small local window (5 by 5 in the book's example) of the input, slid across the image with a stride",
+      "verbatim_quote": "That region in the input image is called the local receptive field for the hidden neuron. It's a little window on the input pixels.",
+      "page": "Section 6.1 (Introducing convolutional networks); extracted text line 6951",
+      "latex": "a^1_{x,y} = \\sigma\\left( b + \\sum_{l=0}^{4} \\sum_{m=0}^{4} w_{l,m} \\, a^0_{x+l, \\, y+m} \\right)",
+      "symbol_and_unit_ledger": {
+        "a^1_{x,y}": "activation of the hidden neuron at position (x, y) of the feature map",
+        "a^0": "input activations (pixels)",
+        "w_{l,m}": "shared weights of the 5 by 5 local receptive field",
+        "b": "shared bias for the feature map",
+        "sigma": "sigmoid function"
+      },
+      "assumptions": [
+        "A 28 by 28 input with 5 by 5 fields and stride 1 gives a 24 by 24 hidden layer, as computed in the text",
+        "Stride length and field size are design choices; larger fields suit problems with larger scale structure"
+      ],
+      "breakdown_regime": "Hard wired locality cannot directly express long range dependencies within one layer; they must be built up over several layers or supplied by fully connected layers on top",
+      "domain": "deep learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Local pattern features in the engine read only a bounded window of the input stream at a time, a fixed number of consecutive plays, possessions, or time steps, so detectors specialize in local structure before any global reasoning layer sees them.",
+        "source_operator": "conv_local_receptive_fields",
+        "telemetry": "The windowed input slices each local detector consumes and its activation map over a case."
+      }
+    },
+    {
+      "primitive_id": "conv_shared_weights",
+      "name": "Shared weights and feature maps: the same set of shared weights and a single shared bias define a feature detector at every position, greatly reducing the number of parameters involved compared with a fully connected layer",
+      "verbatim_quote": "For this reason, we sometimes call the map from the input layer to the hidden layer a feature map. We call the weights defining the feature map the shared weights.",
+      "page": "Section 6.1 (Introducing convolutional networks); extracted text line 7006",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A feature useful at one position is likely useful at others, the translation invariance the sharing exploits",
+        "A complete convolutional layer uses several different feature maps in parallel, each defined by its own set of shared weights and a single shared bias"
+      ],
+      "breakdown_regime": "Sharing assumes the statistics of the input are stationary across positions; where position itself carries meaning, shared detectors must be supplemented with position sensitive layers",
+      "domain": "deep learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from local receptive fields by tying the weights across positions: one detector definition serves every window of the input, which is how the engine keeps local pattern features few, shared, and trainable on limited data.",
+        "source_operator": "conv_local_receptive_fields",
+        "telemetry": "Parameter counts per layer and per position activation consistency checks for each shared detector."
+      }
+    },
+    {
+      "primitive_id": "pooling",
+      "name": "Pooling layers: condense each feature map by summarizing small regions, with max-pooling outputting the maximum activation in each input region, simplifying the convolutional output and reducing sensitivity to exact position",
+      "verbatim_quote": "As a concrete example, one common procedure for pooling is known as max-pooling. In max-pooling, a pooling unit simply outputs the maximum activation in the input region",
+      "page": "Section 6.1 (Introducing convolutional networks); extracted text line 7081",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pooling is applied to each feature map separately and usually immediately after a convolutional layer",
+        "The result is a condensed feature map: fewer neurons carrying summarized information into the next layer"
+      ],
+      "breakdown_regime": "Pooling deliberately discards exact positional information; tasks that need precise localization of a feature lose signal at every pooling step",
+      "domain": "deep learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "After local detection, the engine condenses each detector's map by regional maxima, keeping the strongest evidence that a pattern occurred nearby while dropping its exact coordinates, which is the right summary when presence matters more than position.",
+        "source_operator": "pooling",
+        "telemetry": "Pre and post pooling activation maps, verifying the pooled value equals the regional maximum."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a2669a255422c0b1-t1",
+      "think": "This book is a complete, self contained construction of the modern neural network learning stack, built upward from a single decision unit to deep convolutional systems, with every layer of the stack derived rather than asserted. Its spine is one idea repeated at increasing scale: a model made of smooth, differentiable parts can be improved by measuring how a scalar cost changes when each parameter moves, and then moving every parameter a small step against that change. The perceptron supplies the atomic decision, a weighted sum of evidence compared against a threshold, recast with a bias so the comparison becomes a sign test on an affine form. The perceptron also supplies the first warning: because its output flips discontinuously, no local signal exists to guide small improvements, and learning in the modern sense is impossible. The sigmoid neuron repairs exactly that defect. By replacing the step with a smooth squashing function, the book obtains a linear response law: small changes in weights and bias produce small, predictable changes in output, with partial derivatives as the exchange rates. Everything else in the book is bookkeeping for those exchange rates at scale. The cost function converts a global desire, classify correctly, into a smooth scalar field over parameter space. The quadratic cost is chosen first not because it is best but because it is smooth and legible; the book is explicit that raw accuracy cannot be optimized directly because it is flat almost everywhere in parameter space. Gradient descent is then the generic solver: compute the gradient, step opposite to it, repeat, with the learning rate controlling how far the first order approximation is trusted. Because the cost is an average over examples, stochastic gradient descent estimates the gradient from random mini-batches, trading exactness for speed by a polling argument, and an epoch is one full pass through the data. Chapter 2 answers the only remaining computational question, how to get the gradient of a deep composition cheaply. Backpropagation defines an error signal at each neuron, the derivative of the cost with respect to that neuron's weighted input, and shows it obeys a backward recursion: the output layer error factors into a cost term and an activation derivative, earlier errors are the transpose weighted sum of later errors modulated by the local derivative, and the parameter gradients fall out as products of activations and errors. The four equations are the chain rule organized so that each quantity is computed once and reused, which is why the algorithm costs roughly one forward and one backward pass instead of one pass per parameter. Chapter 3 is where the book stops being a derivation and becomes an engineering discipline, and its lessons are mostly about failure. The quadratic cost makes saturated neurons learn slowly because the activation derivative multiplies the error; cross-entropy is engineered so that derivative cancels, leaving a gradient proportional to the output error itself. Softmax plus log-likelihood does the same job for multi class outputs while yielding a genuine probability distribution. Overfitting is demonstrated, not just defined: a 23,860 parameter network trained on only 1,000 images keeps reducing training cost after epoch 280 while test accuracy stalls, so held out data, early stopping, and validation based hyper parameter search become mandatory instruments rather than good practice. Regularization is then a family of pressures toward robustness: L2 weight decay shrinks weights multiplicatively each step, L1 pushes them toward sparsity with a constant force, dropout trains an implicit ensemble by deleting half the hidden units per mini-batch and halving outgoing weights at run time, and data expansion encodes known invariances by manufacturing transformed examples. Weight initialization is treated as a variance budgeting problem: unit variance weights into a wide layer saturate sigmoids at initialization, so weights are drawn with standard deviation one over the square root of the fan-in. Momentum reintroduces the physical picture plain gradient descent discarded, accumulating a velocity so consistent gradient directions compound. Chapter 4 proves the representational ceiling is not the binding constraint: one hidden layer of sigmoid units, driven into step functions by large weights and combined into bumps, approximates any continuous function, so failure to fit is an optimization or generalization failure, never an expressivity failure. Chapter 5 then shows the real binding constraint: in deep sigmoid stacks the gradient is a long product of terms each typically below one in magnitude, so it vanishes, or with large weights explodes, exponentially with depth, and early layers learn orders of magnitude more slowly. Chapter 6 closes the loop with structure: convolutional networks hard wire locality and translation equivariance through local receptive fields, shared weights, and pooling, cutting parameter counts by orders of magnitude and making depth trainable for images. For a reasoning engine the transferable core is the discipline, not the digit recognizer. Any layered scoring system whose components are smooth can be audited the way this book audits a network: define the scalar you actually care about, verify it is smooth in the parameters, propagate credit and blame backward through the composition instead of hand tuning the front end, instrument held out performance to detect when continued fitting has stopped generalizing, and treat initialization, step size, and regularization as variance and robustness budgets. The book also teaches the negative results an engine must respect: depth multiplies gradient pathologies, saturated units stop learning exactly when they are most wrong, and a flexible model with many parameters will fit noise unless held out evidence vetoes it. Read this way, the book is less a tutorial about handwriting than a complete operating manual for any system that learns layered representations from examples, which is why its primitives transfer intact to forecasting engines whose inputs are not pixels but structured observations of competitive events.",
+      "retrocausal_genealogy": "The lineage runs from McCulloch and Pitts through Rosenblatt's perceptrons of the 1950s and 1960s, into the smooth sigmoid units that made gradient learning possible. Backpropagation itself was introduced in the 1970s but only widely appreciated after a famous paper of the following decade, as the book recounts. The regularization material descends from the ImageNet work of Krizhevsky, Sutskever and Hinton (2012) for dropout and from Simard, Steinkraus and Platt (2003) for elastic distortions, while the overfitting chapter opens with the Fermi and von Neumann anecdote transmitted by Freeman Dyson: with four parameters one can fit an elephant.",
+      "theory_of_mind": "Nielsen writes for a reader he treats as a future practitioner, not a spectator. His model of that reader is someone who will have to debug real networks, so he builds intuition before formalism, shows working code early (a 74 line program that already exceeds 96 percent accuracy), and repeatedly explains why each design choice is made rather than merely how it works. He assumes the reader's obstacle is not intelligence but misleading mental pictures, and he corrects those pictures one at a time: that accuracy can be optimized directly, that more training is always better, that depth is free.",
+      "cross_layer_veto": "Several results in this book veto moves elsewhere in any learning system. Smoothness is a hard gate: any non differentiable component inserted into the stack breaks the linear response law and with it gradient based credit assignment. Held out performance vetoes training metrics: once validation accuracy saturates, further fitting is declared non learning no matter how far the training cost falls. Saturation vetoes depth for free: any layer whose units saturate blocks error flow to every earlier layer. And the universality theorem vetoes expressivity excuses: if a continuous target is not being fit, the fault lies in optimization, data, or generalization, never in the unit class."
+    }
+  ],
+  "universal_lens": "Strip away the handwriting and the book is a general template for building any system that improves from examples: compose simple smooth units into layers, define one scalar that honestly measures failure, compute exactly how every internal parameter contributes to that failure, update all parameters a governed step against their contribution, and audit the whole loop on data the system was never trained on. The same template describes calibrating a forecasting engine, tuning a control system, or running a disciplined research program: representation, objective, credit assignment, step control, and held out judgment, in that order, with failure modes named at each stage.",
+  "gsi_mapping": "The Galaxy Sports Institute takes this book as foundational curriculum and as a methods reference. Its four backpropagation equations are the canonical statement of credit assignment that every later technique in the corpus is compared against; its overfitting demonstration, early stopping protocol, and validation discipline define the Institute's evidentiary standard for any claimed improvement; and its boundary results, universality on one side and vanishing gradients on the other, mark what learned systems can and cannot be expected to do. Any researcher working on learned models for sport should be able to reproduce its derivations and recite its failure modes.",
+  "gse_mapping": "The Galaxy Sports Edge engine takes the operating discipline wholesale. Feature weights are recalibrated by gradient steps against a smooth per case loss, with cross-entropy style objectives so the largest errors drive the largest corrections. Layered reasoning modules carry explicit error signals backward, so a bad final assessment is charged to the intermediate judgments that produced it. Held out slates govern promotion of every recalibration, weight decay keeps stale feature opinions from persisting, initialization and per layer learning speed are monitored as first class diagnostics, and local window detectors over play sequences follow the convolutional pattern of locality, sharing, and pooling."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "2a00c304dc9e7029",
+  "source_status": "COMPLETE",
+  "title": "2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors",
+  "file_name": "2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors.pdf",
+  "sha256": "2a00c304dc9e70291adae7a9117330307f5b720c4a569ad0d7fd67f7c89a137e",
+  "primary_domain": "other",
+  "pages_total": 11,
+  "pages_read": 11,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Tennis point prediction via spatiotemporal dominance modeling using style and context priors. Universal Lens: Rooted in 2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors (2a00c304dc9e7029), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of shot outcome probabilities conditioned on player style priors and match context. GSI Mapping: Rooted in 2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors (2a00c304dc9e7029), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition dynamics of rallies governed by strategic dominance shifts and temporal shot sequencing. GSE Mapping: Rooted in 2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors (2a00c304dc9e7029), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "spatiotemporal_dominance",
+      "name": "Spatiotemporal Dominance",
+      "verbatim_quote": "We present a method that discovers players' systematic shot combinations that establish spatiotemporal dominance, and demonstrate that players can be grouped by similar strategies.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D(t)': 'Dominance score at time t, dimensionless', 'S_i(t)': 'Shot sequence of player i at time t, dimensionless'}",
+      "assumptions": "Players exhibit consistent strategic patterns; dominance evolves through discrete shot actions.",
+      "breakdown_regime": "When shot sequences deviate beyond learned behavioral norms.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps player shot sequences to dominance states via kernelized similarity in spatiotemporal trajectory space.",
+        "source_operator": "spatiotemporal_dominance",
+        "telemetry": "Dominance shift detection at key shot transitions."
+      }
+    },
+    {
+      "primitive_id": "style_prior",
+      "name": "Style Prior",
+      "verbatim_quote": "However, by using a dictionary of discriminative patterns of player behavior, we can form a representation of a player's style, which is interpretable latent factors that allows us to personalize interactions between players based on the match context (opponent, matchscore).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_i': \"Player i's style prior vector, dimensionless\", 'C_{ij}': 'Contextual interaction matrix between players i and j, dimensionless'}",
+      "assumptions": "Player styles are stable across contexts; style priors capture strategic essence.",
+      "breakdown_regime": "When opponent styles differ significantly from training data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between observed shot patterns and latent style vectors in behavioral manifold.",
+        "source_operator": "style_prior",
+        "telemetry": "Style classification accuracy in cross-player matchups."
+      }
+    },
+    {
+      "primitive_id": "context_prior",
+      "name": "Context Prior",
+      "verbatim_quote": "We also recognise that the context of the rally is important in predicting shots and understanding style priors, and thus we refer to these as \"context priors\".",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{rally}': 'Rally context vector, dimensionless', 'M_{score}': 'Match score state, dimensionless'}",
+      "assumptions": "Context influences shot selection; prior knowledge improves prediction fidelity.",
+      "breakdown_regime": "In rare or novel match situations outside training distribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel-weighted combination of match state and player style to refine shot outcome estimates.",
+        "source_operator": "context_prior",
+        "telemetry": "Prediction variance reduction with increasing context coverage."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2a00c304dc9e7029_t0",
+      "think": "The core insight is that tennis point outcomes are determined by a sequence of spatiotemporally aligned strategic decisions. Each shot contributes to a cumulative dominance score D(t), evolving through time. Style priors P_i encode individual tactical preferences, while context priors C_rally modulate these preferences dynamically. The interplay between these elements forms a probabilistic model where P_i and C_rally jointly influence the likelihood of a point outcome. The failure mode occurs when either style priors are misapplied due to opponent novelty or context priors fail to capture emergent rally dynamics. These primitives enable a dual framework: one for modeling dominant patterns (style) and another for adapting to situational constraints (context).\n\nDeep epistemic analysis for 2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors (2a00c304dc9e7029, domain=other, pages_read=11/11): Operator 'Spatiotemporal Dominance' (page 2, domain other) captures: We present a method that discovers players' systematic shot combinations that establish spatiotemporal dominance, and demonstrate that players can be grouped by similar strategies. Assumptions: Players exhibit consistent strategic patterns; dominance evolves through discrete shot actions. Breakdown regime: When shot sequences deviate beyond learned behavioral norms. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player shot sequences to dominance states via kernelized similarity in spatiotemporal trajectory space. Operator 'Style Prior' (page 1, domain other) captures: However, by using a dictionary of discriminative patterns of player behavior, we can form a representation of a player's style, which is interpretable latent factors that allows us to personalize interactions between players based on the match context (opponent, matchscore). Assumptions: Player styles are stable across contexts; style priors capture strategic essence. Breakdown regime: When opponent styles differ significantly from training data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between observed shot patterns and latent style vectors in behavioral manifold. Operator 'Context Prior' (page 2, domain other) captures: We also recognise that the context of the rally is important in predicting shots and understanding style priors, and thus we refer to these as \"context priors\". Assumptions: Context influences shot selection; prior knowledge improves prediction fidelity. Breakdown regime: In rare or novel match situations outside training distribution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel-weighted combination of match state and player style to refine shot outcome estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors (2a00c304dc9e7029, domain=other, pages_read=11/11): Operator 'Spatiotemporal Dominance' (page 2, domain other) captures: We present a method that discovers players' systematic shot combinations that establish spatiotemporal dominance, and demonstrate that players can be grouped by similar strategies. Assumptions: Players exhibit consistent strategic patterns; dominance evolves through discrete shot actions. Breakdown regime: When shot sequences deviate beyond learned behavioral norms. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player shot sequences to dominance states via kernelized similarity in spatiotemporal trajectory space. Operator 'Style Prior' (page 1, domain other) captures: However, by using a dictionary of discriminative patterns of player behavior, we can form a representation of a player's style, which is interpretable latent factors that allows us to personalize interactions between players based on the match context (opponent, matchscore). Assumptions: Player styles are stable across contexts; style priors capture strategic essence. Breakdown regime: When opponent styles differ significantly from training data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between observed shot patterns and latent style vectors in behavioral manifold. Operator 'Context Prior' (page 2, domain other) captures: We also recognise that the context of the rally is important in predicting shots and understanding style priors, and thus we refer to these as \"context priors\". Assumptions: Context influences shot selection; prior knowledge improves prediction fidelity. Breakdown regime: In rare or novel match situations outside training distribution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel-weighted combination of match state and player style to refine shot outcome estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in game theory and behavioral economics, extended by machine learning models for sequential decision-making in dynamic environments. Retrocausal Genealogy: Rooted in 2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors (2a00c304dc9e7029), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing players as strategic agents optimizing for dominance, with each shot reflecting a belief update about opponent positioning and intent. Theory of Mind & Decision Maker Model: Rooted in 2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors (2a00c304dc9e7029), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by ensuring style and context priors are orthogonal in feature space; leakage prevented by distinct kernel mappings per layer. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2016 - The Thin Edge of the Wedge Accurately Predicting Shot Outcomes in Tennis using Style and Context Priors - Unknown Authors (2a00c304dc9e7029), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

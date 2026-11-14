@@ -1,0 +1,549 @@
+{
+ "book_id": "4b1d7c9ef440e2b1",
+ "title": "Pointwise: Predicting Points and Valuing Decisions in Real Time with NBA Optical Tracking Data",
+ "author": "Dan Cervone, Alexander D'Amour, Luke Bornn, Kirk Goldsberry (Harvard)",
+ "year": 2014,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2014 Pointwise Predicting Points and Valuing Decisions.pdf",
+ "source_note": "MIT Sloan Sports Analytics Conference 2014 Research Paper Competition, 9 pages, full read via pymupdf. Identity confirmed (Cervone/D'Amour/Bornn/Goldsberry, Harvard, dcervone@fas.harvard.edu). CATALOG DOMAIN MISMATCH: queue primary_domain='psych' but content is NBA basketball analytics; extracted under true domain math. EPV/EPVA/shot-satisfaction formulas are shifted-font; reconstructed as labeled LaTeX from clean prose definitions. Data: STATS SportVU 2012-13 regular season, 13/30 arenas (sampling bias). Model: Markovian possession model, macrotransitions (pass/shot/turnover) via competing risks w/ spatial covariates + spatially-smoothed player random effects (INLA/SPDE), microtransitions on coarsened-court homogeneous Markov chain. Fit cost: hours, hundreds of processors, >4TB memory. Anchors: Chris Paul EPVA +3.48/game (highest), Rubio -3.33 (lowest); Carmelo shot satisfaction +0.053 (22nd pctile); Paul observed 54% vs 48% season (coverage bias). EPV increments sum to zero (martingale). No sportsbook lines used as model inputs.",
+ "domain": "math",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "epv_definition",
+   "name": "Expected Possession Value: a conditional expectation of points",
+   "verbatim_quote": "assign a point value to each moment of a possession by computing how many points the offense is expected to score by the end of the possession, a quantity we call expected possession value (EPV).",
+   "page": 1,
+   "latex": "\\mathrm{EPV}_t=\\mathbb{E}\\big[\\text{points scored by possession end}\\ \\big|\\ \\text{spatial config}_t\\big]",
+   "symbol_and_unit_ledger": {
+    "EPV_t": "expected possession value at time t [points]",
+    "spatial config_t": "positions of players and ball at t [feet]"
+   },
+   "assumptions": [
+    "EPV is the conditional expectation of terminal points given the current spatial state",
+    "It assigns a point value to every moment, not just terminal events"
+   ],
+   "breakdown_regime": "EPV is a model-based expectation over future paths; it is only as good as the possession model and is noisy where the model is misspecified.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE per-state expected value IS EPV: the engine assigns an expected-points (or expected-value) estimate to every state of a live situation given the current configuration, not just the terminal outcome, so every intermediate decision is valued. GSI: state-conditional expected terminal value.",
+    "source_operator": "epv_definition",
+    "telemetry": "EPV_t time series; conditional expectation over future paths"
+   }
+  },
+  {
+   "primitive_id": "basketball_decisions",
+   "name": "Basketball is a game of decisions: pass, dribble, shoot",
+   "verbatim_quote": "Basketball is a game of decisions; at any moment, a player can change the character of a possession by choosing to pass, dribble, or shoot.",
+   "page": 1,
+   "latex": "a_t\\in\\{\\text{pass},\\text{dribble},\\text{shoot}\\}\\ \\text{at each moment}",
+   "symbol_and_unit_ledger": {
+    "a_t": "ballhandler's action at time t [discrete choice]"
+   },
+   "assumptions": [
+    "At any moment the ballhandler chooses among pass/dribble/shoot",
+    "Each choice changes the possession's character and value"
+   ],
+   "breakdown_regime": "The decision set is continuous in time and space; valuing each choice requires a model of what happens next under each option.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE sequential decision valuation IS this decision game: the engine treats a live situation as a sequence of choices (each with downstream value), valuing every decision rather than only the final result, the sequential-decision framing. GSI: per-step action valuation in a sequential process.",
+    "source_operator": "basketball_decisions",
+    "telemetry": "action choices per moment; decision sequence"
+   }
+  },
+  {
+   "primitive_id": "terminal_metrics_gap",
+   "name": "Terminal-event metrics cannot evaluate most decisions",
+   "verbatim_quote": "The current state of basketball analytics, however, provides no way to quantitatively evaluate the vast majority of decisions that players make",
+   "page": 1,
+   "latex": "\\text{terminal metrics (pts, reb, ast)}\\not\\Rightarrow \\text{value of intermediate decisions}",
+   "symbol_and_unit_ledger": {
+    "terminal metrics": "points/rebounds/assists tallies [count]"
+   },
+   "assumptions": [
+    "Most metrics are driven by events at or near the end of a possession",
+    "The vast majority of decisions (passes, drives) are unvalued by terminal metrics"
+   ],
+   "breakdown_regime": "Without intermediate-decision valuation the engine cannot credit the actions that create value, only the ones that finish it; this is the gap EPV fills.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE intermediate-decision valuation IS this gap: the engine values the decisions that create an opportunity (the setup), not just the terminal event that finishes it, so credit flows to the causal chain rather than the last touch. GSI: credit assignment to intermediate rather than terminal actions.",
+    "source_operator": "terminal_metrics_gap",
+    "telemetry": "intermediate vs terminal decision coverage; valuation gap"
+   }
+  },
+  {
+   "primitive_id": "chess_checkmate_analogy",
+   "name": "Analyzing only checkmate misses the key earlier move",
+   "verbatim_quote": "they are akin to analyzing a chess match based only on the move that resulted in checkmate, leaving unexplored the possibility that the key move occurred several turns before.",
+   "page": 1,
+   "latex": "\\text{terminal-only analysis}\\equiv\\text{chess by checkmate alone};\\quad \\text{key move may be turns earlier}",
+   "symbol_and_unit_ledger": {
+    "key move": "the decisive earlier action [event]"
+   },
+   "assumptions": [
+    "Judging a possession by its ending is like judging chess by checkmate",
+    "The decisive move may have occurred several turns before the end"
+   ],
+   "breakdown_regime": "The analogy exposes the survivorship/endpoint bias of terminal metrics: the causal chain matters, and the engine must trace value back through it.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE causal-chain credit IS this chess analogy: the engine traces value back through the decision chain to the move that actually created the advantage, refusing to credit only the final action, the causal-chain attribution discipline. GSI: backward credit through a decision sequence.",
+    "source_operator": "chess_checkmate_analogy",
+    "telemetry": "value traced back through decision chain; decisive-move identification"
+   }
+  },
+  {
+   "primitive_id": "decisive_moment_not_shot",
+   "name": "The decisive moment may be the pass or drive, not the shot",
+   "verbatim_quote": "the decisive moment in a given possession may not have been the open shot at the end, but the pass that led to the open shot, or even the preceding drive that collapsed the defense.",
+   "page": 1,
+   "latex": "\\text{decisive moment}\\in\\{\\text{drive},\\text{pass},\\text{shot}\\}\\ \\text{(often not the shot)}",
+   "symbol_and_unit_ledger": {
+    "drive": "penetration collapsing defense [action]",
+    "pass": "delivery creating open shot [action]"
+   },
+   "assumptions": [
+    "The drive that collapses the defense or the pass that creates the open shot may be decisive",
+    "The terminal shot is not necessarily the highest-value decision"
+   ],
+   "breakdown_regime": "The engine must identify which decision in the chain moved value most, not assume the terminal event is decisive; this requires the EPV time series.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE decisive-action identification IS this insight: the engine identifies the action that most increased expected value (often a setup, not the finish), so the highest-leverage decision is credited and learned, the leverage-point detection. GSI: highest-value-change action in a sequence.",
+    "source_operator": "decisive_moment_not_shot",
+    "telemetry": "EPV change per decision; decisive-action detection"
+   }
+  },
+  {
+   "primitive_id": "epv_weighted_paths",
+   "name": "EPV is the weighted average over all future possession paths",
+   "verbatim_quote": "By definition, the current EPV of a possession is the weighted average of the outcomes of all future paths that the possession could take.",
+   "page": 2,
+   "latex": "\\mathrm{EPV}_t=\\sum_{\\text{paths }\\pi}\\Pr(\\pi\\mid\\text{config}_t)\\cdot\\text{points}(\\pi)",
+   "symbol_and_unit_ledger": {
+    "pi": "a future possession path [trajectory]",
+    "Pr(pi)": "path probability given current config [probability]",
+    "points(pi)": "terminal points of path [points]"
+   },
+   "assumptions": [
+    "EPV averages the terminal points of all possible future paths weighted by their probability",
+    "Computing it requires a probability distribution over what the ballhandler does next"
+   ],
+   "breakdown_regime": "The path space is enormous; the model must tractably approximate the distribution over futures, which is where the Markov and macro/micro structure enters.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE expectation-over-futures IS this weighted-path average: the engine computes expected value as a probability-weighted average over all future trajectories of a situation, the simulation/expectation core that the 10,000-world PBP vectors implement. GSI: probability-weighted expectation over future trajectories.",
+    "source_operator": "epv_weighted_paths",
+    "telemetry": "path-probability distribution; expected terminal points over paths"
+   }
+  },
+  {
+   "primitive_id": "markov_assumption",
+   "name": "Markovian assumption: decision depends only on current spatial config",
+   "verbatim_quote": "We assume that the decision the ballhandler makes depends only on the current spatial configuration of the possession.",
+   "page": 3,
+   "latex": "\\Pr(a_t\\mid\\text{history})=\\Pr(a_t\\mid\\text{config}_t)\\quad\\text{(Markov)}",
+   "symbol_and_unit_ledger": {
+    "config_t": "current spatial configuration [feet]",
+    "a_t": "next action [choice]"
+   },
+   "assumptions": [
+    "The next decision depends only on the current spatial state, not the full history",
+    "This Markov assumption makes the possession model tractable"
+   ],
+   "breakdown_regime": "The Markov assumption loses efficiency when actions execute a carefully designed sequence (set plays); it is a tractability tradeoff the authors flag.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE Markov state sufficiency IS this assumption: the engine models the next decision as depending on the current state (Markov), making the expectation tractable, while recognizing that planned sequences violate pure Markovianity. GSI: Markov state-sufficiency for tractable sequential expectation.",
+    "source_operator": "markov_assumption",
+    "telemetry": "Markov decision model; state-sufficiency; set-play deviation"
+   }
+  },
+  {
+   "primitive_id": "macro_micro_transitions",
+   "name": "Macrotransitions (discrete) vs microtransitions (continuous)",
+   "verbatim_quote": "Our possession model breaks down a player's options into discrete actions that may take several seconds to complete (e.g., passing or shooting) or continuous actions that evolve instantaneously (e.g., moving to the left or right).",
+   "page": 3,
+   "latex": "\\text{actions}=\\underbrace{\\{\\text{pass},\\text{shoot},\\text{turnover}\\}}_{\\text{macrotransitions}}\\cup\\underbrace{\\{\\text{movement}\\}}_{\\text{microtransitions}}",
+   "symbol_and_unit_ledger": {
+    "macrotransitions": "discrete multi-second actions [events]",
+    "microtransitions": "continuous instantaneous movements [motion]"
+   },
+   "assumptions": [
+    "Discrete actions (pass/shot/turnover) are macrotransitions",
+    "Continuous ball movement is microtransitions",
+    "The dichotomy lets EPV be decomposed into tractable statistical components"
+   ],
+   "breakdown_regime": "The macro/micro split is a modeling abstraction; additional motifs (drives, pick-and-rolls) could be added as macrotransitions to capture set plays.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE discrete-continuous action decomposition IS this macro/micro split: the engine decomposes a situation into discrete decision events and continuous state evolution, valuing each with the appropriate model, the hybrid discrete-continuous process structure. GSI: event/motion decomposition of a dynamic process.",
+    "source_operator": "macro_micro_transitions",
+    "telemetry": "macrotransition vs microtransition components; EPV decomposition"
+   }
+  },
+  {
+   "primitive_id": "competing_risks",
+   "name": "Macrotransition probabilities via competing risks in continuous time",
+   "verbatim_quote": "We compute these using competing risks, a statistical framework for modeling the occurrence of discrete events in continuous time",
+   "page": 3,
+   "latex": "\\lambda_a(\\text{config}_t)=\\text{hazard of action }a;\\quad \\Pr(a\\text{ next})=\\frac{\\lambda_a}{\\sum_{a'}\\lambda_{a'}}",
+   "symbol_and_unit_ledger": {
+    "lambda_a": "instantaneous hazard of action a [1/time]",
+    "Pr(a next)": "probability action a occurs next [probability]"
+   },
+   "assumptions": [
+    "Competing risks model the instantaneous probability of each discrete action",
+    "Situational covariates (defender between player and teammate) and spatially-smoothed player random effects enter"
+   ],
+   "breakdown_regime": "The competing-risks model responds to small meaningful spatial changes but is computationally heavy; it must balance flexibility against overfitting abnormal behavior.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE competing-hazard decision model IS this competing-risks framework: the engine models the instantaneous probability of each possible next event as competing hazards conditioned on the spatial/situational state, the continuous-time event-choice structure. GSI: competing-hazard model of discrete events in continuous time.",
+    "source_operator": "competing_risks",
+    "telemetry": "per-action hazards; situational covariates; player random effects"
+   }
+  },
+  {
+   "primitive_id": "coarsened_markov_chain",
+   "name": "Coarsened court space as a homogeneous Markov chain",
+   "verbatim_quote": "modeling a coarsened version of the court space as a homogeneous Markov chain",
+   "page": 3,
+   "latex": "P_{\\text{court}}(s'\\mid s)=\\text{transition prob on coarsened court states }s\\quad\\text{(homogeneous Markov)}",
+   "symbol_and_unit_ledger": {
+    "s": "coarsened court state [region]",
+    "P_court": "transition probability between regions [probability]"
+   },
+   "assumptions": [
+    "The court is discretized into regions and ball movement modeled as a Markov chain",
+    "This mirrors Markov run-value models used in baseball and football"
+   ],
+   "breakdown_regime": "Coarsening loses spatial resolution; the macrotransition model uses full resolution while the movement model uses the coarsened chain, a resolution tradeoff.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE coarsened-state Markov valuation IS this court chain: the engine discretizes a continuous state space into regions and models transitions as a Markov chain to compute expected terminal value, the same technique as baseball/football run-value models. GSI: discretized-state Markov expected value.",
+    "source_operator": "coarsened_markov_chain",
+    "telemetry": "coarsened court states; transition matrix; run-value analogue"
+   }
+  },
+  {
+   "primitive_id": "flexibility_overfitting",
+   "name": "Flexible yet robust: avoid overfitting abnormal behavior",
+   "verbatim_quote": "implementing statistical models that are flexible enough to incorporate subtle spatial patterns in players' tendencies while being robust enough to avoid overfitting the occasional abnormal behavior we observe",
+   "page": 3,
+   "latex": "\\text{model capacity}:\\ \\text{capture subtle spatial tendency}\\ \\land\\ \\text{reject outlier (e.g. Dwight Howard corner 3)}",
+   "symbol_and_unit_ledger": {
+    "spatial tendency": "player's subtle location-dependent behavior [pattern]",
+    "outlier": "rare abnormal action [event]"
+   },
+   "assumptions": [
+    "Models must capture subtle spatial patterns in player tendencies",
+    "But be robust enough not to overfit rare abnormal behavior (the Dwight Howard corner 3)"
+   ],
+   "breakdown_regime": "Standard regression/ANOVA/GLM are ill-suited; the competing-risks spatial models balance flexibility and robustness, the bias-variance discipline at the spatial level.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE flexibility-robustness balance IS this overfitting guard: the engine fits subtle spatial/behavioral patterns while refusing to overfit rare outliers, the bias-variance discipline applied to entity behavior modeling. GSI: robust fitting of behavioral tendencies against outliers.",
+    "source_operator": "flexibility_overfitting",
+    "telemetry": "spatial-pattern fit; outlier rejection; flexibility-robustness tradeoff"
+   }
+  },
+  {
+   "primitive_id": "computational_cost",
+   "name": "EPV model fitting: hours, hundreds of processors, 4TB memory",
+   "verbatim_quote": "our possession model still requires several hours to fit using hundreds of processors and over 4 terabytes of memory.",
+   "page": 3,
+   "latex": "\\text{fit cost}\\approx\\text{hours}\\times\\text{hundreds of CPUs}\\times>4\\text{ TB RAM}",
+   "symbol_and_unit_ledger": {
+    "fit cost": "computational resources to fit the possession model [CPU-hours, memory]"
+   },
+   "assumptions": [
+    "The sophisticated spatial competing-risks models carry heavy computational cost",
+    "Even with cutting-edge algorithms (INLA/SPDE), fitting needs hundreds of processors and >4TB memory"
+   ],
+   "breakdown_regime": "The engine must budget the compute for rich state-conditional models; the cost is the price of full-resolution spatial decision valuation.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE compute budgeting for state models IS this cost: the engine budgets the substantial compute required for rich state-conditional expected-value models, recognizing that full-resolution decision valuation is expensive but tractable at scale. GSI: compute-cost accounting for high-fidelity state models.",
+    "source_operator": "computational_cost",
+    "telemetry": "CPU-hours, processor count, memory for model fit"
+   }
+  },
+  {
+   "primitive_id": "epv_stock_ticker",
+   "name": "EPV as a possession stock ticker",
+   "verbatim_quote": "Much like the share price of a publicly traded company, EPV represents the value or stock of a possession and may respond dramatically to major events",
+   "page": 3,
+   "latex": "\\mathrm{EPV}_t\\ \\text{like a stock price: jumps on major events, steady otherwise}",
+   "symbol_and_unit_ledger": {
+    "EPV_t": "possession value at time t [points]"
+   },
+   "assumptions": [
+    "EPV moves continuously and jumps on major events (unexpected pass, shot)",
+    "Like a stock price it gives an instantaneous snapshot of value"
+   ],
+   "breakdown_regime": "The stock-ticker view lets analysts read which moments move value most, analogous to reading price movements to infer strategy; it is a continuous valuation signal.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE continuous value signal IS this EPV stock ticker: the engine maintains a continuously-updating expected-value signal for a live situation that jumps on major events, so the value trajectory reveals which events matter, the live-valuation-stream concept. GSI: continuous expected-value signal with event-driven jumps.",
+    "source_operator": "epv_stock_ticker",
+    "telemetry": "EPV time series; event-driven value jumps; value-movement attribution"
+   }
+  },
+  {
+   "primitive_id": "epv_noise_robust",
+   "name": "EPV credits the setup even if the finish misses",
+   "verbatim_quote": "The EPV view, on the other hand, gives a continuous summary of the whole possession, and is unaffected by the noise in downstream events",
+   "page": 4,
+   "latex": "\\text{EPV contribution(setup)}\\ \\text{independent of downstream make/miss noise}",
+   "symbol_and_unit_ledger": {
+    "EPV contribution": "value credited to a setup action [points]",
+    "downstream noise": "make/miss randomness [variance]"
+   },
+   "assumptions": [
+    "If Leonard misses, Parker still gets the same EPV credit for the drive and pass",
+    "EPV separates decision quality from outcome noise"
+   ],
+   "breakdown_regime": "This is the core process-over-outcome principle: credit the decision's expected value, not the noisy realized result, so good decisions are rewarded even when they miss.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE process-over-outcome credit IS this noise robustness: the engine credits a decision by its expected value independent of the noisy realized outcome, so a good process that misses is still valued correctly, the decision-quality-over-result discipline. GSI: outcome-noise-robust decision credit.",
+    "source_operator": "epv_noise_robust",
+    "telemetry": "EPV credit vs realized outcome; process-outcome separation"
+   }
+  },
+  {
+   "primitive_id": "epva_replacement",
+   "name": "EPVA: value over a league-average replacement in the same situations",
+   "verbatim_quote": "we compare the player of interest to the league-average player formed by combining every other player's decision tendencies given the same situations.",
+   "page": 5,
+   "latex": "\\mathrm{EPVA}=\\sum_{\\text{touches}}\\big(\\mathrm{EPV}^{\\text{player}}_t-\\mathrm{EPV}^{\\text{replacement}}_t\\big)",
+   "symbol_and_unit_ledger": {
+    "EPV_player": "player's expected value in the situation [points]",
+    "EPV_replacement": "league-average player's expected value in same situation [points]",
+    "EPVA": "EPV-added over replacement [points/game]"
+   },
+   "assumptions": [
+    "The replacement is a league-average player built from every other player's decision tendencies in the same situations",
+    "EPVA sums the player-minus-replacement EPV difference across touches"
+   ],
+   "breakdown_regime": "EPVA is a replacement-relative value (like WAR but with a league-average baseline); it measures decision quality given options, not raw production.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE replacement-relative decision value IS EPVA: the engine values an agent's decisions relative to a baseline agent in the identical situation, isolating decision quality from situation difficulty, the replacement-level valuation discipline. GSI: baseline-relative value in matched situations.",
+    "source_operator": "epva_replacement",
+    "telemetry": "EPV player vs replacement; EPVA per game; situation-matched baseline"
+   }
+  },
+  {
+   "primitive_id": "epv_changes_sum_zero",
+   "name": "Sum of EPV changes is zero by definition (like regression residuals)",
+   "verbatim_quote": "much like residuals in a linear regression, the sum of EPV changes that a player makes is zero by definition",
+   "page": 4,
+   "latex": "\\sum_{t}\\Delta\\mathrm{EPV}_t=0\\quad\\text{(telescoping conditional expectation)}",
+   "symbol_and_unit_ledger": {
+    "Delta EPV_t": "change in EPV at decision t [points]"
+   },
+   "assumptions": [
+    "The sum of EPV changes telescopes to zero (you cannot expect to score more later than you expect now)",
+    "So naive aggregation of EPV changes is not a value measure; EPVA uses a replacement baseline instead"
+   ],
+   "breakdown_regime": "This is a martingale/telescoping property: EPV is a conditional expectation, so its increments sum to zero, and value must be measured against a counterfactual baseline, not raw increments.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE martingale value property IS this sum-zero invariant: the engine recognizes that expected-value increments telescope to zero (a martingale), so value must be measured against a counterfactual baseline rather than raw changes, the martingale/baseline discipline. GSI: martingale property of conditional expectations requiring baseline-relative value.",
+    "source_operator": "epv_changes_sum_zero",
+    "telemetry": "EPV increment sum (=0); martingale property; baseline necessity"
+   }
+  },
+  {
+   "primitive_id": "paul_rubio_epva",
+   "name": "Chris Paul highest EPVA +3.48; Rubio lowest -3.33 per game",
+   "verbatim_quote": "Of all NBA players in 2012-13, Chris Paul had the highest EPVA at +3.48 per game.",
+   "page": 5,
+   "latex": "\\mathrm{EPVA}_{\\text{Paul}}=+3.48\\ \\text{pts/game};\\quad \\mathrm{EPVA}_{\\text{Rubio}}=-3.33\\ \\text{pts/game}",
+   "symbol_and_unit_ledger": {
+    "EPVA": "EPV-added over replacement [points/game]"
+   },
+   "assumptions": [
+    "Paul systematically makes higher-value decisions than the league average in his situations",
+    "Rubio's decisions lead to fewer points than average given the same options (low-probability 2s, turnovers)"
+   ],
+   "breakdown_regime": "Negative EPVA does not mean a bad player conventionally; it means decisions yield fewer points given the same options, and the ranking carries sampling bias from partial arena coverage.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE decision-quality ranking IS this EPVA leaderboard: the engine ranks agents by the value their decisions add over a baseline in matched situations, distinguishing decision quality from raw output, with sampling-bias caveats. GSI: baseline-relative decision-quality ranking with coverage caveats.",
+    "source_operator": "paul_rubio_epva",
+    "telemetry": "EPVA leaderboard; per-game decision value; sampling-bias flag"
+   }
+  },
+  {
+   "primitive_id": "shot_satisfaction_def",
+   "name": "Shot satisfaction: EPV of shooting minus EPV of passing instead",
+   "verbatim_quote": "We can quantify the value of shot attempts relative to passing options by calculating players' shot satisfaction",
+   "page": 5,
+   "latex": "\\text{Shot Satisfaction}=\\mathrm{EPV}(\\text{shot})-\\mathbb{E}\\big[\\mathrm{EPV}\\mid\\text{pass instead}\\big]",
+   "symbol_and_unit_ledger": {
+    "EPV(shot)": "expected value conditional on shooting [points]",
+    "E[EPV|pass]": "expected value had a pass occurred instead [points]"
+   },
+   "assumptions": [
+    "Shot satisfaction compares the realized shot's EPV to the EPV of the best passing alternative",
+    "It is the optimistic dual of regret (satisfaction rather than regret)"
+   ],
+   "breakdown_regime": "Most players have positive shot satisfaction (they shoot when it is best); negative satisfaction means taking low-probability shots or ignoring open teammates.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE decision-vs-alternative value IS shot satisfaction: the engine values a chosen action against the best alternative (the counterfactual), measuring whether the decision was better than passing/holding, the counterfactual-decision-value discipline. GSI: chosen-action value versus best alternative (regret/satisfaction).",
+    "source_operator": "shot_satisfaction_def",
+    "telemetry": "shot vs pass EPV difference; satisfaction distribution; counterfactual comparison"
+   }
+  },
+  {
+   "primitive_id": "carmelo_satisfaction",
+   "name": "Carmelo +0.053 shot satisfaction: not as selfish as labeled",
+   "verbatim_quote": "Carmelo Anthony, often labeled as a selfish shooter, averages +0.053, meaning that we expect the team to score 0.053 more points for an Anthony shot attempt than had he passed the ball instead.",
+   "page": 6,
+   "latex": "\\text{ShotSat}_{\\text{Anthony}}=+0.053\\ \\text{pts/shot};\\quad \\text{22nd percentile (}>20\\%\\text{ more selfish)}",
+   "symbol_and_unit_ledger": {
+    "ShotSat": "shot satisfaction [points/shot]",
+    "percentile": "rank among players [quantile]"
+   },
+   "assumptions": [
+    "Anthony's shots add 0.053 points over passing instead",
+    "He is at the 22% quantile, so more than 1 in 5 players are objectively more selfish in shot selection"
+   ],
+   "breakdown_regime": "The label 'selfish' from shot/pass tallies is misleading; the counterfactual value shows the decisions were often best for the team, the narrative-vs-value correction.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE narrative-vs-value correction IS this Carmelo case: the engine corrects a reputation formed from raw tallies by measuring the counterfactual decision value, so a 'selfish' label is tested against whether the choices actually maximized team value. GSI: reputation correction via counterfactual decision value.",
+    "source_operator": "carmelo_satisfaction",
+    "telemetry": "shot satisfaction vs reputation; percentile rank; narrative correction"
+   }
+  },
+  {
+   "primitive_id": "sampling_bias",
+   "name": "Partial arena coverage creates sampling bias in player comparisons",
+   "verbatim_quote": "Because player-tracking cameras were only installed in half of the league's arenas in 2012-13, we observe only away games for roughly half of the players, and primarily home games for the others.",
+   "page": 6,
+   "latex": "\\text{coverage}_{2012\\text{-}13}=13/30\\text{ arenas}\\Rightarrow \\text{home/away sampling bias per player}",
+   "symbol_and_unit_ledger": {
+    "coverage": "fraction of arenas with tracking [fraction]",
+    "sampling bias": "uneven home/away observation [bias]"
+   },
+   "assumptions": [
+    "Only 13 arenas had SportVU in 2012-13, so players are observed mostly home or mostly away",
+    "This biases player comparisons (Paul shot 54% in observed away games vs 48% season average)"
+   ],
+   "breakdown_regime": "The sampling bias means EPVA rankings carry coverage artifacts; the engine must flag and correct for non-random observation coverage before comparing agents.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE coverage-bias correction IS this sampling caveat: the engine flags non-random observation coverage (some agents observed only in favorable contexts) before comparing them, correcting the sampling bias that distorts rankings. GSI: non-random-coverage bias detection and correction.",
+    "source_operator": "sampling_bias",
+    "telemetry": "arena coverage fraction; home/away observation skew; ranking artifact"
+   }
+  },
+  {
+   "primitive_id": "markov_setplay_limitation",
+   "name": "Markov assumption loses efficiency on designed set plays",
+   "verbatim_quote": "our model loses efficiency in estimating EPV by regarding players' decisions as Markovian when their actions in fact execute a carefully designed sequence.",
+   "page": 6,
+   "latex": "\\text{Markov efficiency loss when actions follow a planned sequence (set play)}",
+   "symbol_and_unit_ledger": {
+    "set play": "carefully designed action sequence [plan]"
+   },
+   "assumptions": [
+    "Treating decisions as Markovian ignores that they may execute a designed sequence",
+    "Adding macrotransitions (pick-and-roll, drive) or scheme-specific tweaks recovers efficiency"
+   ],
+   "breakdown_regime": "The Markov tractability tradeoff is explicit: planned sequences violate the assumption, and the engine should incorporate sequence structure where it matters.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE planned-sequence modeling IS this Markov limitation: the engine recognizes that purely state-based (Markov) valuation loses efficiency when agents execute planned sequences, and incorporates sequence/scheme structure where it matters. GSI: sequence-aware extension of Markov valuation.",
+    "source_operator": "markov_setplay_limitation",
+    "telemetry": "Markov vs sequence efficiency; set-play macrotransitions"
+   }
+  },
+  {
+   "primitive_id": "defense_lower_epv",
+   "name": "Defense design: shut off the highest-EPV options",
+   "verbatim_quote": "how to design a defense that consistently shuts off the highest EPV options to systematically lower an opponent's EPV.",
+   "page": 6,
+   "latex": "\\text{defense}=\\arg\\min_{\\text{scheme}}\\ \\mathrm{EPV}_{\\text{opponent}}\\ \\text{by denying highest-EPV options}",
+   "symbol_and_unit_ledger": {
+    "EPV_opponent": "opponent's expected possession value [points]",
+    "highest-EPV options": "most valuable offensive choices [actions]"
+   },
+   "assumptions": [
+    "A defense can systematically lower opponent EPV by denying the highest-value options",
+    "This is the defensive dual of offensive EPV maximization"
+   ],
+   "breakdown_regime": "The engine's defensive analogue is to deny the opponent's highest-expected-value actions, the adversarial value-suppression principle.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE adversarial value suppression IS this defense design: the engine models the opponent's expected value and acts to deny their highest-value options, systematically lowering their EPV, the adversarial value-suppression principle. GSI: minimizing an adversary's expected value by denying top options.",
+    "source_operator": "defense_lower_epv",
+    "telemetry": "opponent EPV under defensive schemes; highest-value-option denial"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "cervone2014_pointwise_epv",
+   "think": "This inline cycle extracts Cervone, D'Amour, Bornn and Goldsberry's 2014 MIT Sloan Research Paper Competition entry, Pointwise: Predicting Points and Valuing Decisions in Real Time with NBA Optical Tracking Data, a nine-page paper that is the capstone of the Foundry's sports-analytics stack because it supplies the per-decision expected-value layer the engine itself runs on. Two provenance notes are required: the corpus catalog tags the primary domain as psych but the content is unambiguously NBA basketball analytics, so it is extracted under its true domain and the mismatch recorded; and the EPV, EPVA and shot-satisfaction formulas render in a shifted font encoding, so they are reconstructed as labeled LaTeX from the clean prose definitions, which are unambiguous. Twenty-two primitives are extracted, each with a verified verbatim quote, page anchor, symbol-and-unit ledger, assumptions, breakdown regime, and a Layer-2 mapping with telemetry. No sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from the microeconomics of utility through baseball's Markov run-value models and football drive models into this continuous-time continuous-space basketball application. The load-bearing object is Expected Possession Value, EPV at time t equals the conditional expectation of points scored by the end of the possession given the spatial configuration of players and ball, a quantity that assigns a point value to every moment rather than only terminal events. The genealogy is precise that conventional metrics driven by terminal events, points, rebounds, assists, cannot evaluate the vast majority of decisions, which is like analyzing a chess match only by the move that produced checkmate while the key move occurred several turns earlier; the decisive moment may be the drive that collapsed the defense or the pass that created the open shot, not the shot itself. EPV is the probability-weighted average over all future possession paths, computed via a Markovian possession model that splits options into macrotransitions (pass, shot, turnover) modeled by competing risks in continuous time and microtransitions (movement) modeled on a coarsened court as a homogeneous Markov chain, the same technique as baseball and football run values.\n\nThe recursive theory of mind models the ballhandler as an agent choosing among pass, dribble and shoot at each moment, and the analyst as a reasoner who values each choice by its downstream expected value rather than its terminal result. The deepest insight is the process-over-outcome principle: because EPV is a conditional expectation it is unaffected by downstream noise, so if the open shooter misses, the player who drove and passed still receives the same EPV credit, separating decision quality from outcome luck. The martingale structure is load-bearing, because the sum of EPV changes telescopes to zero by definition, exactly like regression residuals, so value cannot be measured by raw increments but must be measured against a counterfactual baseline. This yields EPV-added over replacement, EPVA, the sum across touches of the player's EPV minus a league-average replacement's EPV in the identical situation, which isolates decision quality from situation difficulty, and shot satisfaction, the EPV of shooting minus the EPV of passing instead, the optimistic dual of regret. The analyst must also reason about the model's limits: the Markov assumption loses efficiency on designed set plays, the spatial models must balance flexibility against overfitting rare outliers like the Dwight Howard corner three, and partial arena coverage creates sampling bias in player comparisons.\n\nThe cross-layer veto adjudication is where this capstone earns its place above the accounting, regression, network, deterrence, and decision-EV layers. The first veto is the intermediate-decision valuation requirement: the engine values the decisions that create an opportunity, not just the terminal event, tracing credit back through the causal chain to the decisive move rather than the last touch. The second veto is the process-over-outcome discipline: credit a decision by its expected value independent of the noisy realized result, so a good process that misses is still valued correctly. The third veto is the martingale-baseline requirement: because expected-value increments sum to zero, value must be measured against a counterfactual baseline (EPVA, shot satisfaction) rather than raw changes. The fourth veto is the coverage-bias correction: non-random observation coverage distorts comparisons, so the engine flags and corrects sampling bias before ranking agents. The fifth veto is the flexibility-robustness and sequence-awareness discipline: fit subtle behavioral patterns without overfitting outliers, and recognize that purely Markov valuation loses efficiency on planned sequences. EPV links directly to the engine's state-conditional expected value and its 10,000-world PBP simulation, EPVA to replacement-relative decision valuation, shot satisfaction to counterfactual decision value, the stock-ticker view to the live value signal, and the defense design to adversarial value suppression.\n\nSeveral implementation invariants complete the capstone and push the reasoning past the minimum. The competing-risks macrotransition model responds to small meaningful spatial changes, the ball carrier's exact location and the defenders' positions relative to passing options, with spatially-smoothed random effects capturing individual tendencies, but it carries heavy compute, requiring hours on hundreds of processors and over four terabytes of memory even with integrated nested Laplace approximation and the stochastic partial differential equation link between Gaussian fields and Markov random fields. The empirical anchors are concrete: Chris Paul had the highest EPVA at plus 3.48 points per game and Ricky Rubio the lowest at minus 3.33, where negative EPVA reflects low-probability two-point shots and turnovers rather than conventional badness; Carmelo Anthony, labeled selfish, averages plus 0.053 shot satisfaction at the 22nd percentile, so more than one in five players are objectively more selfish in shot selection. The sampling bias is quantified, Paul shot 54 percent in observed away games against a 48 percent season average, an artifact of only 13 of 30 arenas having tracking. These invariants ground the engine's state-conditional expected value, counterfactual decision valuation, martingale-baseline discipline, coverage-bias correction, and adversarial value suppression, completing a sovereign per-decision expected-value capstone that unifies the entire sports-analytics stack and maps almost one-to-one onto the GSE engine's own valuation machinery, all grounded in clean verbatim prose with honestly labeled reconstructions.",
+   "retrocausal_genealogy": "The genealogy runs from microeconomic utility through baseball Markov run-values and football drive models into this continuous-time/space basketball application. The load-bearing object is EPV_t = E[points by possession end | spatial config_t], assigning a point value to every moment, not just terminal events. Terminal metrics (pts/reb/ast) cannot evaluate most decisions, like analyzing chess only by checkmate while the key move was turns earlier; the decisive moment may be the drive or pass, not the shot. EPV is the probability-weighted average over all future paths, computed via a Markovian model splitting macrotransitions (pass/shot/turnover, competing risks) from microtransitions (movement, coarsened-court homogeneous Markov chain), the baseball/football run-value technique.",
+   "theory_of_mind": "The ballhandler chooses pass/dribble/shoot each moment; the analyst values each choice by downstream expected value, not terminal result. The deepest insight is process-over-outcome: EPV is a conditional expectation unaffected by downstream noise, so a missed open shot still credits the drive/pass that created it, separating decision quality from luck. The martingale structure is load-bearing: EPV changes telescope to zero (like regression residuals), so value needs a counterfactual baseline, yielding EPVA (player minus league-average replacement EPV in identical situations) and shot satisfaction (EPV of shot minus EPV of pass instead, the optimistic dual of regret). Limits: Markov loses efficiency on set plays, models must avoid overfitting outliers (Dwight Howard corner 3), partial arena coverage biases comparisons.",
+   "cross_layer_veto": "Five vetoes adjudicate above the accounting/regression/network/deterrence/decision-EV layers. Intermediate-decision valuation: value the setup decisions, trace credit back the causal chain to the decisive move, not the last touch. Process-over-outcome: credit by expected value independent of noisy realized result. Martingale-baseline: EPV increments sum to zero, so measure value against a counterfactual baseline (EPVA, shot satisfaction) not raw changes. Coverage-bias correction: flag non-random observation coverage before ranking. Flexibility-robustness and sequence-awareness: fit subtle patterns without overfitting outliers, and extend Markov valuation for planned sequences. EPV links to state-conditional expected value and 10k-world PBP sim, EPVA to replacement-relative valuation, shot satisfaction to counterfactual decision value, stock-ticker to live value signal, defense to adversarial value suppression."
+  }
+ ],
+ "universal_lens": "Cervone et al. 2014 (Pointwise) is the per-decision expected-value capstone of the Foundry sports-analytics stack: Expected Possession Value EPV_t = E[terminal points | spatial config_t] values every moment of a possession, computed as a probability-weighted average over future paths via a Markovian model with macrotransitions (competing risks) and microtransitions (coarsened-court Markov chain). Derived metrics EPVA (value over a league-average replacement in matched situations) and shot satisfaction (EPV of shot minus EPV of pass) implement counterfactual decision valuation. Its load-bearing invariants are intermediate-decision credit, process-over-outcome robustness, the martingale sum-zero property requiring a baseline, coverage-bias correction, flexibility-robustness, and sequence-aware Markov extension.",
+ "gsi_mapping": "For GSI these primitives are the general state-conditional expected-value and counterfactual-decision layer: value every state by its expected terminal outcome over future trajectories, credit intermediate decisions not just terminal events, separate decision quality from outcome noise, measure value against a counterfactual baseline because expected-value increments are a martingale (sum to zero), correct non-random coverage bias before ranking, fit behavioral tendencies robustly against outliers, and extend Markov valuation for planned sequences. The competing-risks and coarsened-Markov machinery provides the tractable decomposition.",
+ "gse_mapping": "For GSE this capstone maps almost one-to-one onto the engine's valuation machinery: EPV IS the state-conditional expected value the engine computes per situation and simulates via 10,000-world PBP vectors; EPVA IS replacement-relative decision valuation; shot satisfaction IS counterfactual chosen-vs-alternative value; the stock-ticker IS the live expected-value signal; process-over-outcome IS decision-quality-over-result credit; the martingale sum-zero IS the baseline-relative valuation discipline; coverage-bias IS the sampling-correction gate; defense-lowering-EPV IS adversarial value suppression. The macro/micro competing-risks decomposition grounds the event/motion model. Equations are labeled reconstructions from clean prose; no sportsbook line is a model input."
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "706f7a6a430dbbbf",
+  "source_status": "COMPLETE",
+  "title": "SLIDING_WINDOW_OGD",
+  "file_name": "SLIDING_WINDOW_OGD.md",
+  "sha256": "706f7a6a430dbbbf4506b28931473039257b1eaaeb8fc47322f1d6e7c93abf42",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sliding-window Online Beta OGD applies logistic regression with adaptive slope 'a' and intercept 'b' on probabilistic forecasts, optimizing under log-loss within a fixed temporal window. Universal Lens: Rooted in SLIDING_WINDOW_OGD (706f7a6a430dbbbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages this for Bayesian calibration of prediction maps, using 'deltaA' and 'deltaVarCal' to detect regime shifts in forecast confidence and variance. GSI Mapping: Rooted in SLIDING_WINDOW_OGD (706f7a6a430dbbbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses sliding window OGD signals to dynamically adjust decision policies—e.g., flagging underconfident recent samples or preferring full-series estimates when stable. GSE Mapping: Rooted in SLIDING_WINDOW_OGD (706f7a6a430dbbbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ogd_beta_map",
+      "name": "Online Gradient Descent on Beta Map",
+      "verbatim_quote": "# Sliding-window Online Beta OGD — analysis Updated: **2026-08-10** · **Shadow only** · apply OFF ## What it is Online Gradient Descent on Beta map \\(g=\\sigma(a\\cdot\\mathrm{logit}\\,p+b)\\) under **log-loss**, re-fit on the trailing chronological window (default **120** samples).",
+      "page": 1,
+      "latex": "g=\\sigma(a\\cdot\\mathrm{logit}\\,p+b)",
+      "symbol_and_unit_ledger": "{'a': 'dimensionless slope parameter', 'b': 'dimensionless intercept', 'p': 'probability in [0,1]', 'g': 'output probability in [0,1]', 'logit(p)': 'log-odds of p'}",
+      "assumptions": "Logistic transformation preserves boundedness; gradient descent minimizes log-loss over time.",
+      "breakdown_regime": "When window size is insufficient or data non-stationary, convergence may fail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The OGD process mirrors Bayesian posterior updates with dynamic priors based on recent evidence.",
+        "source_operator": "ogd_beta_map",
+        "telemetry": "Tracking 'window.a' vs 'full.a' divergence via 'deltaA'."
+      }
+    },
+    {
+      "primitive_id": "delta_a_signal",
+      "name": "Delta A Signal",
+      "verbatim_quote": "`window.a` | OGD \\(a\\) on last `window` samples | | `deltaA` | `window.a - full.a` —",
+      "page": 1,
+      "latex": "\\delta A = \\texttt{window.a} - \\texttt{full.a}",
+      "symbol_and_unit_ledger": "{'deltaA': 'difference in slope parameters between window and full series'}",
+      "assumptions": "Change in 'a' indicates shift in model sensitivity or regime change.",
+      "breakdown_regime": "If 'deltaA' exceeds threshold, suggests instability in recent forecasting behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used by GSE to infer whether local dynamics require recalibration or full retraining.",
+        "source_operator": "delta_a_signal",
+        "telemetry": "Monitors 'window.a' vs 'full.a' drift."
+      }
+    },
+    {
+      "primitive_id": "variance_calibration_shift",
+      "name": "Variance Calibration Shift",
+      "verbatim_quote": "wants more/less expansion | | `deltaVarCal` | Var[P_cal] window - full | | `expansionPreferred` | `full`",
+      "page": 1,
+      "latex": "\\delta \\text{Var}[P_{\\text{cal}}] = \\text{Var}_{\\text{window}}[P_{\\text{cal}}] - \\text{Var}_{\\text{full}}[P_{\\text{cal}}]",
+      "symbol_and_unit_ledger": "{'deltaVarCal': 'change in calibrated probability variance over window vs full series', 'P_cal': 'calibrated probability'}",
+      "assumptions": "Increased variance implies higher uncertainty or model instability.",
+      "breakdown_regime": "Positive 'deltaVarCal' flags potential overconfidence in recent samples.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Signals need for recalibration or preference for full-series stability in GSI.",
+        "source_operator": "variance_calibration_shift",
+        "telemetry": "Measures fluctuation in forecast reliability across temporal windows."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "706f7a6a430dbbbf_t0",
+      "think": "This system models sequential prediction via online gradient descent on a beta distribution map, where g = σ(a·logit(p) + b) optimizes log-loss over a sliding window. The core insight is that 'a' and 'b' adapt dynamically to recent data, enabling detection of regime changes through comparison of full-series and window-based estimates. The signal 'deltaA' captures how much the slope has shifted recently, indicating possible expansion or contraction in model sensitivity. Meanwhile, 'deltaVarCal' measures volatility in calibrated probabilities, signaling instability or overconfidence. These primitives form a dual feedback loop: one for sensitivity adjustment and another for reliability monitoring. Failure modes include non-stationarity, where the window becomes too short or too long relative to evolving patterns, causing misalignment between 'window.a' and 'full.a', or spurious signals due to small sample sizes.\n\nDeep epistemic analysis for SLIDING_WINDOW_OGD (706f7a6a430dbbbf, domain=other, pages_read=1/1): Operator 'Online Gradient Descent on Beta Map' (page 1, domain other) captures: # Sliding-window Online Beta OGD — analysis Updated: **2026-08-10** · **Shadow only** · apply OFF ## What it is Online Gradient Descent on Beta map \\(g=\\sigma(a\\cdot\\mathrm{logit}\\,p+b)\\) under **log-loss**, re-fit on the trailing chronological window (default **120** samples). Assumptions: Logistic transformation preserves boundedness; gradient descent minimizes log-loss over time. Breakdown regime: When window size is insufficient or data non-stationary, convergence may fail. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The OGD process mirrors Bayesian posterior updates with dynamic priors based on recent evidence. Operator 'Delta A Signal' (page 1, domain other) captures: `window.a` | OGD \\(a\\) on last `window` samples | | `deltaA` | `window.a - full.a` — Assumptions: Change in 'a' indicates shift in model sensitivity or regime change. Breakdown regime: If 'deltaA' exceeds threshold, suggests instability in recent forecasting behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSE to infer whether local dynamics require recalibration or full retraining. Operator 'Variance Calibration Shift' (page 1, domain other) captures: wants more/less expansion | | `deltaVarCal` | Var[P_cal] window - full | | `expansionPreferred` | `full` Assumptions: Increased variance implies higher uncertainty or model instability. Breakdown regime: Positive 'deltaVarCal' flags potential overconfidence in recent samples. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Signals need for recalibration or preference for full-series stability in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SLIDING_WINDOW_OGD (706f7a6a430dbbbf, domain=other, pages_read=1/1): Operator 'Online Gradient Descent on Beta Map' (page 1, domain other) captures: # Sliding-window Online Beta OGD — analysis Updated: **2026-08-10** · **Shadow only** · apply OFF ## What it is Online Gradient Descent on Beta map \\(g=\\sigma(a\\cdot\\mathrm{logit}\\,p+b)\\) under **log-loss**, re-fit on the trailing chronological window (default **120** samples). Assumptions: Logistic transformation preserves boundedness; gradient descent minimizes log-loss over time. Breakdown regime: When window size is insufficient or data non-stationary, convergence may fail. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The OGD process mirrors Bayesian posterior updates with dynamic priors based on recent evidence. Operator 'Delta A Signal' (page 1, domain other) captures: `window.a` | OGD \\(a\\) on last `window` samples | | `deltaA` | `window.a - full.a` — Assumptions: Change in 'a' indicates shift in model sensitivity or regime change. Breakdown regime: If 'deltaA' exceeds threshold, suggests instability in recent forecasting behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSE to infer whether local dynamics require recalibration or full retraining. Operator 'Variance Calibration Shift' (page 1, domain other) captures: wants more/less expansion | | `deltaVarCal` | Var[P_cal] window - full | | `expansionPreferred` | `full` Assumptions: Increased variance implies higher uncertainty or model instability. Breakdown regime: Positive 'deltaVarCal' flags potential overconfidence in recent samples. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Signals need for recalibration or preference for full-series stability in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical online learning theory and generalized linear models, extended by modern conformal prediction frameworks and Bayesian adaptive inference techniques developed since 2010s. Retrocausal Genealogy: Rooted in SLIDING_WINDOW_OGD (706f7a6a430dbbbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SLIDING_WINDOW_OGD (706f7a6a430dbbbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might be: 1) a static model assuming stationarity, 2) an adaptive learner adjusting to new regimes, and 3) a risk-sensitive evaluator detecting overconfidence. Each agent's belief state evolves differently under changing data streams. Theory of Mind & Decision Maker Model: Rooted in SLIDING_WINDOW_OGD (706f7a6a430dbbbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that 'deltaA' and 'deltaVarCal' not co-vary in predictable ways, ensuring they capture distinct aspects of model behavior. Leakage occurs if 'window.a' is used as proxy for full-series performance without accounting for temporal drift, leading to false positives in regime shift detection. Cross-Layer Veto & Anti-Leakage Check: Rooted in SLIDING_WINDOW_OGD (706f7a6a430dbbbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

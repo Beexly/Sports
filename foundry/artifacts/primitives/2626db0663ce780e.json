@@ -1,0 +1,218 @@
+{
+ "book_id": "2626db0663ce780e",
+ "title": "X (Twitter) — community, distribution and revenue (GSE internal strategy + build plan)",
+ "author": "GSE internal (requested by owner, 2026-09-15)",
+ "year": "2026",
+ "source_status": "COMPLETE",
+ "pages_total": 8,
+ "pages_read": 8,
+ "primitives": [
+  {
+   "primitive_id": "xs-witness-loss-completeness",
+   "name": "Public-record witness: post every settlement, losses above all (settlement:publication ~ 1:1)",
+   "layer": 1,
+   "domain": "strategy",
+   "verbatim_quote": "Post every settled free-tier pick, wins and losses alike, with no filter. A bot that posts 73% of its wins and 100% of its losses is a bot nobody can accuse of anything, which is the point.",
+   "page": 2,
+   "section": "2 (Job 1) + 7 (Metrics)",
+   "latex": "N_{\\mathrm{posted}} = N_{\\mathrm{settled}}^{\\mathrm{free}}; \\quad R = \\frac{N_{\\mathrm{settlement\\ posts}}}{N_{\\mathrm{publications}}} \\approx 1 \\ \\text{over a season}",
+   "symbol_and_unit_ledger": {
+    "N_posted": "count of settled free-tier picks posted to X [count]",
+    "N_settled_free": "count of all settled free-tier picks, wins and losses [count]",
+    "R": "settlement-post-to-publication ratio, the feed-health metric [dimensionless]; ~1:1 over a season is healthy"
+   },
+   "explanation": "The highest-value job of the account is to act as a third-party witness to the product's own record: a settlement posted at the moment it settles is timestamped publicly by the platform before the outcome can be curated out. The policy is no filter — wins and losses alike. The document's rhetorical lower bound ('a bot that posts 73% of its wins and 100% of its losses is a bot nobody can accuse of anything') identifies loss-completeness as the binding constraint: suppressing losses is the unforgivable act, and the 1:1 settlement:publication ratio in §7 is the audit metric that detects it ('a feed that is mostly wins means losses are being suppressed'). The 73% figure is quoted as written and read as an illustrative bound, not as the policy (the policy is 100% of both).",
+   "assumptions": [
+    "The platform's public timestamp is trustworthy, durable, and third-party (not curatable by the product)",
+    "Scope is settled free-tier picks; the witness claim does not extend to gated or unpublished picks",
+    "The 73%-of-wins sentence is a rhetorical lower bound; the operative policy is 'no filter'",
+    "Publication count in R includes the account's posts generally, so non-pick content dilutes R"
+   ],
+   "breakdown_regime": "Platform deletion, API loss, or account suspension destroys the witness; a protected/private account voids the public-timestamp property; if publication volume is dominated by non-settlement content the 1:1 ratio loses diagnostic power; the witness only covers what is posted at settlement time — retroactive edits break the 'before the outcome can be curated out' guarantee.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "xs-metric-admissibility",
+    "mapping": "External attestation / public transparency log: posting a settlement to a third-party platform at settlement time is structurally an append-only public commitment — the platform's timestamp plays the role of a notarization or transparency-log entry that the committer cannot retroactively alter. The loss-completeness rule is the completeness property of the log; R ~ 1 is its audit statistic. Structural isomorphism only; the mechanism is a product-native trust design.",
+    "telemetry": "GSE settlement-witness audit: reconcile settled free-tier picks against posted settlements (target 100%, losses first); monitor R = settlement posts / publications per season with alert on R drift; flag any loss absent from the feed as a trust incident."
+   }
+  },
+  {
+   "primitive_id": "xs-lexicographic-job-order",
+   "name": "Strict priority order of channel jobs: witness > distribution > community > research",
+   "layer": 1,
+   "domain": "strategy",
+   "verbatim_quote": "Four jobs, and they are not equal. Getting the order wrong is how a trust product becomes a content farm.",
+   "page": 1,
+   "section": "2 (four jobs) + 6 (build order)",
+   "latex": "\\max_{a}\\ \\big(J_1(a),\\, J_2(a),\\, J_3(a),\\, J_4(a)\\big)\\ \\text{lexicographically}; \\quad J_1 \\succ J_2 \\succ J_3 \\succ J_4",
+   "symbol_and_unit_ledger": {
+    "a": "candidate channel action or build item [decision variable]",
+    "J_1": "witness value (public-record attestation) [job-value functional, rank 1]",
+    "J_2": "distribution value (direct links converting to first repeat visit) [rank 2]",
+    "J_3": "community value (methodology audience) [rank 3]",
+    "J_4": "research-input value (injury/lineup signals) [rank 4, deliberately last]",
+    "succ": "strict priority: no trade-off across ranks [ordering relation]"
+   },
+   "explanation": "The four jobs are explicitly unequal and ordered: witness (highest), distribution (medium, real), community (the owner's ask, 'the one to be most careful with'), research input (real but gated, deliberately last). The stated failure mode of misordering is categorical: 'Getting the order wrong is how a trust product becomes a content farm.' The build order in §6 mirrors the priority and adds a risk rationale for the last item: the research lane is last 'because it is the only item that can damage the model rather than the account.'",
+   "assumptions": [
+    "Strict (lexicographic) priority, not weighted-sum trade-offs",
+    "The ordering is a trust-preservation constraint, not a revenue ranking",
+    "Research lane ranked last by blast radius (model damage vs account damage)",
+    "Community pressure is a named force that pushes toward priority inversion"
+   ],
+   "breakdown_regime": "Lexicographic order can starve lower-ranked jobs when the top job consumes all capacity; if settlement volume is zero the order gives no operative guidance; the order is a governance rule and can be overridden only by the owner — the document itself flags the owner's community ask as the inversion risk it must resist.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "xs-witness-loss-completeness",
+    "mapping": "Lexicographic multi-objective optimization / strict-priority scheduling: objectives are ranked so that no gain in a lower objective can compensate a loss in a higher one, exactly the structure of lexicographic ordering in multi-objective decision theory and of preemptive priority queues. The trust-product framing makes the top objective a constraint-like invariant rather than a maximand. Structural isomorphism only.",
+    "telemetry": "GSE channel-governance guard: encode J1..J4 rank in triage; reject any build or content item that trades witness completeness for community/distribution gain; log priority-inversion attempts (engagement bait, reply-guy behavior) as policy events."
+   }
+  },
+  {
+   "primitive_id": "xs-score-not-probability",
+   "name": "Confidence is a factor-sum score, never a rendered probability (0.8663 claimed vs 0.5191 realized, z=-10.7)",
+   "layer": 1,
+   "domain": "strategy",
+   "verbatim_quote": "confidence is a weighted factor sum whose 80+ band claims 0.8663 and realizes 0.5191 (z = −10.7). A percent on the widest-reach surface the product owns asserts a win probability the number demonstrably is not — and unlike the app, a tweet cannot be recalled.",
+   "page": 3,
+   "section": "3 (Conflict 1)",
+   "latex": "s = \\textstyle\\sum_i w_i f_i \\in [0,100]; \\quad \\mathrm{render}(s) = \\text{``}s/100\\ \\text{score''} \\neq P(\\mathrm{win}); \\quad \\hat{p}_{80+} = 0.8663,\\ p_{80+} = 0.5191,\\ z = -10.7",
+   "symbol_and_unit_ledger": {
+    "s": "confidence score = weighted factor sum [points on a 0-100 scale]",
+    "w_i, f_i": "factor weights [dimensionless] and factor values [dimensionless]",
+    "P(win)": "win probability [dimensionless, 0-1] — a different quantity from s",
+    "p_hat_80+": "claimed win probability of the 80+ score band, 0.8663 [probability]",
+    "p_80+": "realized win rate of the 80+ band, 0.5191 [probability]",
+    "z": "standardized calibration discrepancy, -10.7 [standard deviations]"
+   },
+   "explanation": "A live defect caught in reconnaissance: the publication template renders confidence as a percent, but the 2026-09-13 measurement (cited to AGENTS.md) shows the confidence number is a weighted factor sum whose 80+ band claims 0.8663 and realizes 0.5191 (z = -10.7). Rendering it as a percent on the widest-reach, non-recallable surface asserts a win probability the number demonstrably is not. The fix is a type-correct rendering — '72/100' and the word 'score' — applied to spec and template together with an eval. The underlying invariant is that a score and a probability are different quantities and must never be conflated in public output.",
+   "assumptions": [
+    "The 0.8663/0.5191/z=-10.7 figures are the document's cited 2026-09-13 measurement (not re-verified in this extraction)",
+    "Confidence is a weighted factor sum, not a calibrated probability",
+    "The public surface is irreversible ('a tweet cannot be recalled'), raising the cost of a type error",
+    "The score scale is 0-100; rendering divides by 100 and labels 'score'"
+   ],
+   "breakdown_regime": "If the score is later calibrated into a genuine probability the rendering rule may be revisited, but only against a fresh measurement of the same kind; the rule is surface-specific (widest reach, non-recallable) — internal surfaces have different error costs; a percent rendering could be legitimate for a truly calibrated quantity, which is exactly what the z-test denies here.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "xs-metric-admissibility",
+    "mapping": "Type/unit discipline: a factor sum and a probability are distinct quantities, and rendering one as the other is a category error structurally analogous to a dimensional mismatch in physics (equating quantities of different units). The z-statistic is the empirical certificate that the two quantities differ; the rendering rule is the type-correct projection. Derived from the document's measurement, not asserted.",
+    "telemetry": "GSE trust-gate eval: assert no public template renders confidence as a percent probability; assert 'N/100 score' form; monitor band-level claimed-vs-realized calibration with z-test and alert on |z| beyond threshold; the 80+ band (0.8663 vs 0.5191) is the canonical regression case."
+   }
+  },
+  {
+   "primitive_id": "xs-fail-closed-idempotent-transport",
+   "name": "Fail-closed, idempotent send: record key before send, check mute at send time",
+   "layer": 1,
+   "domain": "strategy",
+   "verbatim_quote": "The transport records it BEFORE sending and checks it before sending, because the failure mode is “posted twice after a timeout”, not “posted never”.",
+   "page": 7,
+   "section": "6 (Transport specification)",
+   "latex": "\\mathrm{post}(p) \\iff G(p) \\land R(p) \\land \\neg\\,\\mathrm{seen}(k_p); \\quad \\mathrm{record}(k_p) \\prec \\mathrm{send}(p); \\quad \\mathrm{mute\\ checked\\ at\\ send\\ time}",
+   "symbol_and_unit_ledger": {
+    "p": "candidate post [object]",
+    "G(p)": "compliance gate predicate (the pick cleared the gate) [boolean]",
+    "R(p)": "operator review predicate [boolean]",
+    "k_p": "idempotencyKey emitted by the planner [key]",
+    "seen(k)": "key already recorded in the transport store [boolean]",
+    "prec": "temporal precedence: record BEFORE send [ordering]",
+    "MUTE_BOT": "mute flag evaluated at send time, not schedule time [boolean]"
+   },
+   "explanation": "The transport is specified as a fail-closed, exactly-once side-effect pipeline: a post goes out only if it cleared the compliance gate and operator review and its idempotency key is unseen; the key is recorded BEFORE sending and checked before sending, because the named failure mode is 'posted twice after a timeout', not 'posted never'. MUTE_BOT is checked at send time, not schedule time ('a mute that only takes effect on the next cycle is not a mute'). Account hygiene is enforced by construction: the bot follows/likes/retweets nothing and a test asserts the transport exposes no such call. The gate is also content-side: replying to a pick request is forbidden because it would publish a pick that did not clear the gate.",
+   "assumptions": [
+    "The planner already emits an idempotencyKey (existing component)",
+    "Network is at-least-once with timeout ambiguity (a timeout may mean posted or not)",
+    "Mute state can change between schedule and send",
+    "One row per attempt is logged so AgentRunLog answers 'what did it post'"
+   ],
+   "breakdown_regime": "If the key store fails or is bypassed, duplicate posts become possible; the write-before-send ordering only protects against the timeout-ambiguity class, not against a corrupted store; a gate bypass via replies is the named content-side failure; rate limits must be read from response headers (x-rate-limit-remaining/reset) rather than a stale constant, or the platform mutes the bot.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "xs-rumor-quarantine-admission",
+    "mapping": "Exactly-once side effects via idempotent receiver with write-ahead key recording, plus fail-closed admission control: structurally the standard distributed-systems pattern of deduplicating at the effect boundary and defaulting to refusal when any predicate is unknown. Send-time (not schedule-time) mute evaluation is the same principle as evaluating authorization at the moment of effect rather than at enqueue. Structural isomorphism only.",
+    "telemetry": "GSE outbox transport tests: duplicate-post-after-timeout regression (key recorded before send); send-time mute test; no-follow/like/retweet API-surface test; attempt log completeness (one row per attempt); header-driven rate-limit honoring."
+   }
+  },
+  {
+   "primitive_id": "xs-rumor-quarantine-admission",
+   "name": "Rumor-quarantine admission: >=2 independent sources OR official; timestamp is the signal; category not text",
+   "layer": 1,
+   "domain": "strategy",
+   "verbatim_quote": "No X-sourced signal may be the sole basis for a published pick. Corroboration is required.",
+   "page": 6,
+   "section": "5 (research lane)",
+   "latex": "\\mathrm{admit}(x) \\iff Q(x) \\land \\mathrm{Rights}(x) \\land \\big(n_{\\mathrm{indep}}(x) \\ge 2 \\lor \\mathrm{official}(x)\\big); \\quad \\mathrm{engine\\ input} = \\mathrm{category}(x) \\neq \\mathrm{text}(x)",
+   "symbol_and_unit_ledger": {
+    "x": "X-sourced claim (beat reporter, injury news) [object]",
+    "Q(x)": "passes rumor-quarantine (existing decision-genome component) [boolean]",
+    "Rights(x)": "source-rights registry permits reading/use [boolean]",
+    "n_indep(x)": "count of independent corroborating sources [count]; threshold 2",
+    "official(x)": "an official team statement exists [boolean]",
+    "category(x)": "signal category consumed by the engine [class label]; raw text is never consumed or quoted"
+   },
+   "explanation": "The research lane is safe only as a strict pipeline, and 'the pipeline is the deliverable': X post -> rumor-quarantine -> source-rights registry -> corroboration (>=2 independent sources OR an official team statement) -> then and only then a signal category for the engine. Three rules make it safe: (1) no X-sourced signal may be the sole basis for a published pick — a single reporter's claim moves a line, and moving lines are what the model reads, so an uncorroborated rumor would become a self-fulfilling input; (2) the timestamp is the signal, not the claim ('reported 40 minutes before the line moved' is measurable; 'this report is true' is not something X can tell us); (3) nothing X-sourced is ever quoted — the engine consumes a category, never text, for rights reasons and because a rumor rendered as prose is a rumor the product appears to endorse.",
+   "assumptions": [
+    "Source independence is assessable (correlated sources do not count as independent)",
+    "Official team statements are treated as authoritative for admission",
+    "Timestamp metadata is reliable and precedes line movement measurably",
+    "The existing rumor-quarantine and source-rights registry components are operational"
+   ],
+   "breakdown_regime": "Correlated sources masquerading as independent defeats the >=2 rule; official statements can themselves be strategic; the self-fulfilling loop (rumor -> line move -> model reads line) is the named systemic failure if corroboration is skipped; consuming text instead of category would create both a rights exposure and an endorsement exposure.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "xs-fail-closed-idempotent-transport",
+    "mapping": "Provenance-gated evidence admission with event-time semantics: the admission predicate is a conjunctive provenance check (quarantine, rights, corroboration) defaulting to refusal, and rule 2 ('the timestamp is the signal, not the claim') separates event-time metadata from payload truth — structurally the event-time vs value distinction in stream processing and the provenance gating of evidence pipelines. Structural isomorphism only.",
+    "telemetry": "GSE decision-genome research lane: enforce admit predicate with corroboration counter (>=2 independent OR official); ingest category-only (test asserts no raw text reaches the engine); log event-time delta to line movement; never sole-basis a published pick on an X signal."
+   }
+  },
+  {
+   "primitive_id": "xs-metric-admissibility",
+   "name": "Metric admissibility: a metric you may not optimise for is not a metric",
+   "layer": 1,
+   "domain": "strategy",
+   "verbatim_quote": "A metric you are not allowed to optimise for is not a metric.",
+   "page": 8,
+   "section": "7 (Metrics that matter)",
+   "latex": "m \\in \\mathcal{M}_{\\mathrm{admissible}} \\iff \\text{optimizing } m \\text{ cannot be achieved via forbidden engagement bait}; \\quad \\{\\text{followers, impressions, likes}\\} \\cap \\mathcal{M}_{\\mathrm{admissible}} = \\varnothing",
+   "symbol_and_unit_ledger": {
+    "m": "candidate channel metric [measure]",
+    "M_admissible": "set of metrics the account is permitted to optimise [set]",
+    "followers, impressions, likes": "engagement counts, excluded because trivially gameable by forbidden bait [counts]",
+    "admitted examples": "referral clicks to /room/*, attributable store page views, trials started, first repeat visit rate, settlement:publication ratio R [mixed units]"
+   },
+   "explanation": "The document draws a hard line between metrics that matter (referral clicks to /room/*, store page views attributable to X, trials started, first repeat visit rate, and the settlement:publication ratio) and metrics that do not (follower count, impressions, likes), with the governing rule: 'A metric you are not allowed to optimise for is not a metric.' The rationale is gameability — each excluded metric is trivially inflated by engagement bait, which the voice spec forbids outright. Admissibility is therefore defined relative to the forbidden-action set, not to the metric's correlation with success.",
+   "assumptions": [
+    "Engagement bait is forbidden by the voice spec (the forbidden-action set is fixed)",
+    "Gameability is judged against that forbidden set",
+    "The settlement:publication ratio R ~ 1 is admitted as a feed-health metric",
+    "Attribution (post -> store page -> trial) is measurable; without it 'did X work' is a feeling"
+   ],
+   "breakdown_regime": "An admitted metric can become gameable by new means (e.g., bot-driven referral clicks), so the admissible set must be re-audited; proxy drift can decouple an admitted metric from the underlying goal; the rule excludes vanity metrics but does not by itself guarantee the admitted ones are causal — attribution infrastructure is a separate build item (§6 item 5).",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "xs-lexicographic-job-order",
+    "mapping": "Goodhart's law formalized as an objective-admissibility constraint: when a measure becomes a target it ceases to be a good measure, so any metric whose optimization can be achieved through forbidden actions is removed from the objective set entirely. This is robust objective selection under strategic manipulation — structurally the same move as excluding gameable proxies in mechanism design and incentive-compatible measurement. Structural isomorphism only.",
+    "telemetry": "GSE channel-metrics whitelist: only admitted metrics enter dashboards and optimization loops; alert on any attempt to optimize followers/impressions/likes; re-audit admissibility when new manipulation vectors appear; keep R ~ 1 as the trust-health metric."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t0-trust-asset-architecture",
+   "think": "05-x-strategy.pdf is an internal GSE strategy and build plan (requested by the owner 2026-09-15) for the @GalaxySportsAI X account, and its load-bearing invariant is a single asset-protection rule stated in the revenue section: X is a distribution and trust channel, not a revenue channel, and any viable X revenue model is one where the account's credibility is the asset — 'the model must never be the thing that spends it.' Every other rule in the document is a mechanism for enforcing that constraint. The witness job (Job 1) makes the record externally checkable: post every settled free-tier pick, wins and losses alike, so a third-party timestamp fixes the outcome before it can be curated out; the binding constraint is loss-completeness, audited by the settlement:publication ratio (~1:1 over a season), because a feed that is mostly wins means losses are being suppressed. The confidence-rendering conflict is the same asset-protection logic applied to units: the confidence number is a weighted factor sum whose 80+ band claims 0.8663 and realizes 0.5191 (z = -10.7), so rendering it as a percent on a non-recallable public surface would assert a win probability the number demonstrably is not — the fix is the type-correct '72/100 score'. The metric-admissibility rule generalizes the move: a metric you are not allowed to optimise for is not a metric, so followers, impressions, and likes are excluded because they are trivially gameable by the engagement bait the voice spec forbids. The revenue table then rejects, one by one, every model that would spend the asset: sportsbook affiliate links (rejected as turning the product into a tout funnel), sponsored posts (rejected because sponsorship prices the account's reason-not-to-lie), and platform revenue share (not a business at realistic scale); the admitted path is app subscriptions with X as top-of-funnel, measured as clicks -> store views -> trials. Two further options are deferred rather than rejected: the multi-contributor creator programme is founder-gated and phase-appropriate, requiring a solo creator layer that has run six-plus months and a revenue-split decision, so building its tooling now would be building for a decision not yet made; and B2B data-licensing visibility is real but second-order — the same posts that demonstrate methodological rigour are the ones an institutional buyer reads, so the instruction is simply 'do not hide the record.' Read together these form a coherent trust-preservation architecture: witness the record, never conflate score with probability, never optimise a gameable metric, and never monetize in a way that consumes credibility. The document is explicit that this is a strategy plus build plan, not an empirical study; its one quantitative anchor (0.8663 vs 0.5191, z = -10.7) is cited to a prior measurement and is treated here as the document's reported evidence.",
+   "retrocausal_genealogy": "The document is a reconnaissance-then-plan artifact that explicitly situates itself in a lineage: it supersedes nothing, defers to docs/product/twitter-bot-voice-spec.md as the voice authority, inherits the public-methodology rule from docs/positioning.md, the sportsbook rejection from platform-gaps-triage.md, and the confidence measurement from the 2026-09-13 AGENTS.md entry. Its invariants descend from those sources and anticipate the transport build: the two template conflicts are live defects that must be fixed before the first post, and the build order is sequenced so that the trust-critical fixes land with the transport. The genealogy is internal and documented; no external physics or mathematics origin is claimed for any rule, and the distributed-systems and decision-theory analogies are declared structural.",
+   "theory_of_mind": "The author models three agents and writes rules against their predicted pressure. The owner wants community (Job 3 is 'the owner's ask — and the one to be most careful with'), so the document grants the ask but fences it with four hard refusals that community-building pressure pushes toward: engagement bait, reply-guy behavior, giving picks in replies, and follower-milestone posts. The audience is modeled as an underserved methodology community that wants calibration, closing line value, sample size, and variance rather than locks. And the bot itself is modeled as a future agent that must be constrained by construction — it has no ability to publish a pick that did not clear the gate, and a test asserts the transport exposes no follow/like/retweet call. The strategy is thus a set of precommitments against predictable future temptation, not a description of current behavior.",
+   "cross_layer_veto": "Vetoes applied. First, no sportsbook odds are extracted: the template example line containing a point spread is deliberately not quoted, and the sportsbook-affiliate material enters only as a rejected revenue option, consistent with the contract's no-odds rule. Second, the '73% of its wins' sentence is quoted verbatim and interpreted as a rhetorical lower bound whose binding constraint is 100% loss-completeness; it is not silently corrected to 100%. Third, the calibration figures (0.8663, 0.5191, z = -10.7) are the document's cited measurement, not re-verified here, and are flagged as such in assumptions. Fourth, this is internal strategy, not empirical science: its rules are governance invariants, and every Layer-2 analogy (transparency log, lexicographic order, Goodhart) is declared structural, never a historical origin."
+  },
+  {
+   "trace_id": "t1-fail-closed-pipeline",
+   "think": "The second spine of the document is a fail-closed pipeline architecture, and its motto is stated in the research lane: 'the pipeline is the deliverable.' The transport specification is a study in placing checks at the moment of effect rather than at enqueue. Idempotency: the planner emits an idempotencyKey, and the transport records it BEFORE sending and checks it before sending, because the failure mode that matters is 'posted twice after a timeout', not 'posted never' — a write-ahead deduplication at the effect boundary. Mute: MUTE_BOT is checked at send time, not schedule time, because 'a mute that only takes effect on the next cycle is not a mute' — authorization evaluated at the moment of effect. Rate limits: honour x-rate-limit-remaining and x-rate-limit-reset from response headers rather than a hardcoded ceiling, because the account's tier determines the real limit and a stale constant is how a bot gets muted by the platform. Hygiene: the bot follows nothing, likes nothing, retweets nothing, and a test asserts the transport exposes no such call — a capability constraint enforced by construction. Even the auth layer is specified for verifiability: OAuth 1.0a user context with HMAC-SHA256, whose signer is pure, deterministic, and unit-testable on any host against RFC 5849 test vectors with no network needed, and the send path is POST /2/tweets with reply.in_reply_to_tweet_id for threads, logging one row per attempt so AgentRunLog answers 'what did it post.' The research lane applies the same fail-closed shape to evidence: X post -> rumor-quarantine -> source-rights registry -> corroboration (>=2 independent sources OR an official team statement) -> then and only then a signal category for the engine. Its three rules close the obvious bypasses: no X-sourced signal may be the sole basis for a published pick (a single reporter moves a line, and the model reads lines, so an uncorroborated rumor would be a self-fulfilling input); the timestamp is the signal, not the claim ('reported 40 minutes before the line moved' is measurable, 'this report is true' is not); and nothing X-sourced is ever quoted — the engine consumes a category, never text, for rights and endorsement reasons. The build order in §6 encodes the risk ranking: transport first (without it everything is theory), the two template fixes with it (or the first post ships the error), then the scheduler, community cadence, measurement, and the research lane last 'because it is the only item that can damage the model rather than the account.' The architecture's unifying principle is that every dangerous capability is gated at its boundary, defaults to refusal, and is verified by a test rather than by intention.",
+   "retrocausal_genealogy": "The pipeline is assembled from existing components rather than invented: the planner already emits idempotency keys, the decision-genome already has rumor-quarantine.ts, the source-rights registry already exists, and the repo already runs 22 schedules the outbox can join. The document's contribution is to specify the missing transport and to wire the existing gates into a fail-closed whole, sequencing the build so trust-critical fixes land before the first post. Its patterns descend from standard distributed-systems practice (idempotent receivers, write-ahead dedup, send-time authorization) and from the repo's own compliance-gate doctrine; the analogies are structural and the lineage is internal and documented.",
+   "theory_of_mind": "The author writes against a future failure agent — the bot itself under timeout, mute, and social pressure. The idempotency rule anticipates the timeout-ambiguity agent that would post twice; the send-time mute rule anticipates the operator who mutes mid-cycle and expects immediate effect; the header-driven rate-limit rule anticipates the platform that mutes bots with stale constants; the no-follow/like/retweet test anticipates a future developer who would add engagement calls. The research-lane rules anticipate the rumor that would become a self-fulfilling input. Each rule is a precommitment against a predictable future agent, and each is paired with a test so the constraint survives contact with implementation.",
+   "cross_layer_veto": "Vetoes: the document is a build plan, so its predicates (gate, review, idempotency, corroboration) are specified requirements, not measured behaviors — they are recorded as design invariants with the assumption that the named existing components are operational. The corroboration threshold (>=2 independent OR official) is a policy choice, flagged as vulnerable to correlated sources; it is not presented as a proven safety guarantee. No odds are quoted; the research lane is extracted as an admission pipeline, not as a source of betting signals. The Layer-2 mappings (exactly-once side effects, event-time semantics, provenance gating) are declared structural isomorphisms, and no physics or mathematics origin is fabricated for any rule."
+  }
+ ],
+ "universal_lens": "A trust-preservation architecture for a public-facing autonomous agent: protect a single credibility asset by witnessing the record externally, never conflating a score with a probability, excluding gameable metrics from the objective set, ranking jobs lexicographically so trust outranks growth, and gating every dangerous capability fail-closed at its effect boundary with a test. The template generalizes to any agent whose value depends on being believed.",
+ "gsi_mapping": "GSI compiles the governance and measurement doctrine: loss-complete public witnessing with a settlement:publication audit ratio, type-correct rendering of scores versus probabilities backed by a calibration z-test, metric admissibility defined against a forbidden-action set (Goodhart guard), lexicographic job priority, and precommitments against predictable future pressure. These become GSI's trust-gate evals and narrative-audit checks for any corpus-derived agent specification.",
+ "gse_mapping": "GSE receives named operational hooks: settlement-witness completeness audit (losses first, R ~ 1); trust-gate eval banning percent-confidence rendering with the 80+ band (0.8663 vs 0.5191, z = -10.7) as regression case; outbox transport tests (record idempotency key before send, send-time mute, header-driven rate limits, no follow/like/retweet surface); decision-genome research-lane admission predicate (quarantine AND rights AND (>=2 independent OR official), category-only ingest, timestamp-as-signal); and a channel-metrics whitelist excluding followers/impressions/likes."
+}

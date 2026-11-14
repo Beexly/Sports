@@ -1,0 +1,78 @@
+{
+  "book_id": "1bd2696f83390125",
+  "source_status": "COMPLETE",
+  "title": "gse-sub-mimo-tonight",
+  "file_name": "gse-sub-mimo-tonight.md",
+  "sha256": "1bd2696f83390125395e362df4e26f02fdf277c4fdfa2a83db1af5cd00b03f76",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The extraction of kinematic states from broadcast frames is mathematically formalized as a constrained inverse problem. We seek to map a low-dimensional pixel space onto a high-dimensional physical manifold, subject to strict geometric priors (e.g., fixed surface topology and roof constraints).",
+  "gsi_mapping": "Within the GSI framework, pre-calibrated environmental parameters act as rigid hyperpriors in a hierarchical Bayesian model. The computer-vision module provides the likelihood function, updating the posterior distribution over player trajectories while strictly avoiding re-derivation of established boundary conditions.",
+  "gse_mapping": "For GSE situational reasoning, the read-only worktree represents an immutable state-transition graph. The system transitions from a 'calibration' node to a 'live-tracking' node only upon verifying that a functional measurement operator exists, preventing invalid state mutations during live Pittsburgh-Cleveland execution.",
+  "primitives": [
+    {
+      "primitive_id": "immutable_geometric_prior",
+      "name": "Immutable Geometric Prior Operator",
+      "verbatim_quote": "not print secrets. Worktree: C:/Users/Garrett/Sports/.worktrees/calib-boundary Tonight is Pittsburgh at Cleveland. Surface, roof, and elevation are already",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Surface topology (dimensionless), R: Roof configuration (dimensionless), E: Elevation profile (meters)",
+      "assumptions": "Stadium geometry remains static throughout the duration of the event; prior calibration is exact.",
+      "breakdown_regime": "Fails if dynamic structural changes occur (e.g., retractable roof mid-game) or if initial survey data contains systematic bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the fixed constraint manifold in the GSE state machine, ensuring all trajectory predictions remain bounded by physical reality.",
+        "source_operator": "immutable_geometric_prior",
+        "telemetry": "Variance between predicted boundary collisions and actual broadcast frame occlusions."
+      }
+    },
+    {
+      "primitive_id": "functional_measurement_kernel",
+      "name": "Functional Measurement Kernel",
+      "verbatim_quote": "Search this worktree for a computer-vision, tracking, or broadcast-frame module that already returns a measurement (not a TODO).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "M: Measurement vector (meters), f: Vision function mapping pixels to M, T: TODO placeholder (null)",
+      "assumptions": "A deterministic, non-stochastic mapping from 2D broadcast pixels to 3D spatial coordinates exists within the codebase.",
+      "breakdown_regime": "Singularity occurs if the vision module relies on unimplemented placeholders (TODOs) or suffers from severe perspective distortion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as the primary observation operator in the GSI Kalman filter, providing the necessary innovation vector to update latent player states.",
+        "source_operator": "functional_measurement_kernel",
+        "telemetry": "Module latency (ms) and coordinate reconstruction error against known ground truth markers."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "gse-sub-mimo-tonight Grounded Principle 3",
+      "verbatim_quote": "not print secrets. Worktree: C:/Users/Garrett/Sports/.worktrees/calib-boundary Tonight is Pittsburgh at Cleveland. Surface, roof, and elevation are already",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1bd2696f83390125_t0",
+      "think": "The provided directives establish a rigorous mathematical boundary condition for real-time sports intelligence. By explicitly forbidding the re-derivation of stadium geometry ('Surface, roof, and elevation are already wired'), the system enforces a reduction in the degrees of freedom for the underlying optimization problem. This transforms the task from a general 3D reconstruction challenge into a constrained projection problem, where the camera intrinsics and extrinsics are treated as fixed, read-only tensors. The core operator sought is a functional measurement kernel—a computer-vision module capable of returning a concrete measurement vector rather than a symbolic placeholder (a 'TODO'). Mathematically, this requires locating a function $f: \\mathbb{R}^{H \\times W \\times 3} \\rightarrow \\mathbb{R}^N$ within the existing worktree, where the output corresponds to valid kinematic states. The prohibition against editing the repository or pushing commits introduces a topological constraint on the software evolution graph; the current state is a leaf node in the version control tree, enforcing a purely observational paradigm. If such a module does not exist, the protocol dictates a hard failure state ('say none'), preventing the hallucination of data. This ensures that the epistemic state of the Galaxy Sports Engine remains grounded in verified computational assets, maintaining the integrity of the Pittsburgh-Cleveland situational analysis without introducing synthetic noise or unverified geometric assumptions.\n\nDeep epistemic analysis for gse-sub-mimo-tonight (1bd2696f83390125, domain=other, pages_read=1/1): Operator 'Immutable Geometric Prior Operator' (page 1, domain other) captures: not print secrets. Worktree: C:/Users/Garrett/Sports/.worktrees/calib-boundary Tonight is Pittsburgh at Cleveland. Surface, roof, and elevation are already Assumptions: Stadium geometry remains static throughout the duration of the event; prior calibration is exact. Breakdown regime: Fails if dynamic structural changes occur (e.g., retractable roof mid-game) or if initial survey data contains systematic bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the fixed constraint manifold in the GSE state machine, ensuring all trajectory predictions remain bounded by physical reality. Operator 'Functional Measurement Kernel' (page 1, domain other) captures: Search this worktree for a computer-vision, tracking, or broadcast-frame module that already returns a measurement (not a TODO). Assumptions: A deterministic, non-stochastic mapping from 2D broadcast pixels to 3D spatial coordinates exists within the codebase. Breakdown regime: Singularity occurs if the vision module relies on unimplemented placeholders (TODOs) or suffers from severe perspective distortion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as the primary observation operator in the GSI Kalman filter, providing the necessary innovation vector to update latent player states. Operator 'gse-sub-mimo-tonight Grounded Principle 3' (page 1, domain other) captures: not print secrets. Worktree: C:/Users/Garrett/Sports/.worktrees/calib-boundary Tonight is Pittsburgh at Cleveland. Surface, roof, and elevation are already Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gse-sub-mimo-tonight (1bd2696f83390125, domain=other, pages_read=1/1): Operator 'Immutable Geometric Prior Operator' (page 1, domain other) captures: not print secrets. Worktree: C:/Users/Garrett/Sports/.worktrees/calib-boundary Tonight is Pittsburgh at Cleveland. Surface, roof, and elevation are already Assumptions: Stadium geometry remains static throughout the duration of the event; prior calibration is exact. Breakdown regime: Fails if dynamic structural changes occur (e.g., retractable roof mid-game) or if initial survey data contains systematic bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the fixed constraint manifold in the GSE state machine, ensuring all trajectory predictions remain bounded by physical reality. Operator 'Functional Measurement Kernel' (page 1, domain other) captures: Search this worktree for a computer-vision, tracking, or broadcast-frame module that already returns a measurement (not a TODO). Assumptions: A deterministic, non-stochastic mapping from 2D broadcast pixels to 3D spatial coordinates exists within the codebase. Breakdown regime: Singularity occurs if the vision module relies on unimplemented placeholders (TODOs) or suffers from severe perspective distortion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as the primary observation operator in the GSI Kalman filter, providing the necessary innovation vector to update latent player states. Operator 'gse-sub-mimo-tonight Grounded Principle 3' (page 1, domain other) captures: not print secrets. Worktree: C:/Users/Garrett/Sports/.worktrees/calib-boundary Tonight is Pittsburgh at Cleveland. Surface, roof, and elevation are already Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces its lineage to the foundational principles of photogrammetry and the epistemic rigor of early 20th-century operationalism. Historically, the separation of invariant environmental priors (stadium geometry) from dynamic observational kernels (player tracking) mirrors the development of celestial mechanics, where fixed orbital parameters were separated from transient perturbations. The explicit rejection of 'TODO' placeholders reflects a modern software engineering evolution of Karl Popper's falsifiability criterion—only implemented, testable functions constitute valid scientific instruments within the GSE ecosystem.",
+      "theory_of_mind": "From a theory-of-mind perspective, the directive models a highly disciplined quantitative analyst operating under strict compliance constraints. The agent recognizes that inventing a vision reading constitutes a catastrophic epistemic failure, akin to fabricating experimental data. The opposing actor—the temptation to hallucinate a solution—is neutralized by the hard-coded 'read-only' mandate. The decision architecture prioritizes verification over completion, understanding that a missing measurement is infinitely preferable to a spurious one when calculating high-stakes probabilistic outcomes for the Pittsburgh-Cleveland matchup.",
+      "cross_layer_veto": "The cross-layer veto mechanism here is the absolute prohibition against modifying the base repository ('Do not git commit or push'). This acts as an anti-collinearity filter, ensuring that the observational layer (computer vision) does not leak back into and corrupt the foundational geometric layer (wired surface/roof). If the search for a functional measurement kernel yields only incomplete stubs, the veto triggers a mandatory cessation of inference, preventing the GSE from entering a degenerate state where downstream Bayesian updates are driven by undefined variables."
+    }
+  ]
+}

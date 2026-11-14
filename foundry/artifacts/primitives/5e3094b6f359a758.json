@@ -1,0 +1,211 @@
+{
+  "book_id": "5e3094b6f359a758",
+  "source_status": "COMPLETE",
+  "pages_total": 8,
+  "pages_read": 8,
+  "primitives": [
+    {
+      "primitive_id": "p1",
+      "name": "Classification accuracy as ratio of correct predictions to evaluated cases",
+      "verbatim_quote": "Among them, accuracy is one of the most widely used indicators and considered as a key metric, it measures the ratio of correct predictions to the total number of cases evaluated.",
+      "page": 3,
+      "latex": "\\mathrm{Acc} = \\frac{N_{\\mathrm{correct}}}{N_{\\mathrm{total}}}",
+      "symbol_and_unit_ledger": "Acc: classification accuracy, dimensionless probability measure in [0,1]. N_correct: count of correctly predicted cases, dimensionless non-negative integer. N_total: total number of evaluated cases, dimensionless strictly positive integer. The LaTeX is an explicit formalization of the printed verbal definition (the source prints no equation); a ratio of two counts is dimensionally homogeneous. Reported instances in the source: 63% (BLOG) and 64% (MLN) on the 2006-2007 NBA season (p3); 75% (Kahn 2003, 208 NFL matches, p6).",
+      "assumptions": "As printed: accuracy is the judgment metric for supervised classification of match results into classes (win, lose, draw) (p1, p3). Implicit: evaluated cases are exchangeable draws from the same distribution the model was trained on, and class labels are ground-truth settled outcomes. The paper itself flags that imbalanced-classification methods focus on normal-sized datasets rather than Big Data reality (p1), i.e. the metric is used without base-rate correction.",
+      "breakdown_regime": "Fails under class imbalance (a trivial majority-class predictor scores high accuracy), under distribution shift across seasons/leagues (the review pools javelin, swimming, horse racing, NFL, EPL with incompatible base rates), and when N_total is small (Purucker 1996 used only 8 NFL rounds, p5). Accuracy also cannot rank regression studies whose loss is absolute error in meters (javelin row, p4). No confidence intervals are reported anywhere in Table 2.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binds to the GSE settlement grader's scoring kernel: predicted class (win/lose/draw) vs settled outcome over held-out games. The kernel must be base-rate-normalized per league and era before any cross-study comparison; tau_1 = single match (hours), tau_2 = season (months), tau_3 = multi-season roster/coaching era (years). Doctrine constraint: feature channels from the review's odds-based rows (Purucker 1996 'beeting line odds' p5; Tax & Joustra 2015 'Betting odds' p6) are excluded from GSE model inputs regardless of reported accuracy.",
+        "source_operator": "p1",
+        "telemetry": "Settled final outcomes per game, predicted class probabilities at kickoff, league-season base rates; calibration measured on time-split holdouts only (never on training rows)."
+      }
+    },
+    {
+      "primitive_id": "p2",
+      "name": "Decision boundary: classification as partition of feature space vs regression as trend function",
+      "verbatim_quote": "However, in classification, the machine learning model comes up with a generalized function that approximately divides the data into different classes that exists. This is known as decision boundary.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: regression outputs are generally numbers while classification outputs are class labels (p3); sport prediction is usually treated as a classification problem with one class (win, lose, draw) to be predicted (p1). Implicit: a separating surface exists in the chosen feature space and the feature set is sufficient to make classes approximately separable; the source's exemplar feature sets are box-score aggregates (Kahn 2003: total yardage differential, rushing yardage differential, turnover differential, away/home indicators, p6).",
+      "breakdown_regime": "The boundary is only as good as the feature sigma-algebra: McCabe & Trevathan 2008 explicitly note 'outside influences not included in the feature set' (p6). Classes overlap irreducibly when roster/availability shocks are unobserved; the review concedes score prediction remains harder than win/lose prediction (p7), i.e. the coarse class partition discards margin information that the finer regression target needs.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 22-player football dynamical system is projected at kickoff into a feature vector (yardage/turnover differentials, venue, ranking, availability windows); the win/lose/draw decision boundary is the separating surface in that space. Isomorphic structure: coarse-graining the continuous score-margin dynamics into a 3-class partition is a quotient map — the boundary inherits all feature-space degeneracies. tau_0 = possession-level state (seconds) is integrated out before the boundary is evaluated at tau_1 = match scale.",
+        "source_operator": "p2",
+        "telemetry": "Settled win/lose/draw labels, kickoff feature vectors, rolling n-game performance windows and player-availability flags (feature schema of McCabe & Trevathan 2008 as reported p6); boundary stability audited across season splits."
+      }
+    },
+    {
+      "primitive_id": "p3",
+      "name": "C4.5/C5.0 decision-tree induction via information entropy (ID3 lineage)",
+      "verbatim_quote": "C4.5 and updated C5.0 version build decision trees from a set of training data using the concept of information entropy. They are based on ID3 (Iterative Dichotomiser 3).",
+      "page": 3,
+      "latex": "H(S) = -\\sum_{i=1}^{k} p_i \\log_2 p_i",
+      "symbol_and_unit_ledger": "H(S): Shannon entropy of the empirical class distribution of training set S, units bits (log base 2). p_i: empirical probability of class i in S, dimensionless in [0,1] with sum_i p_i = 1. k: number of classes, dimensionless positive integer. Convention 0*log2(0) := 0 by continuity. The LaTeX is the standard formalization of the printed 'information entropy' concept (the source prints no equation and attributes the algorithms to Quinlan [26]); entropy in bits is dimensionally homogeneous as an information measure.",
+      "assumptions": "As printed: trees are built from a set of training data using information entropy, based on ID3, both algorithms proposed by Quinlan [26] (p3). Implicit: empirical class frequencies estimate the split distributions; greedy top-down induction assumes locally optimal splits compose into a globally useful tree; the Mezyk & Unold 2011 row compares C4.5/C5.0 against fuzzy rules on swimmer data with paired t-test P < 0.05 (p5).",
+      "breakdown_regime": "Greedy entropy splits overfit small samples (the review's NFL rows use 8 rounds and 208 matches); entropy is undefined for empty nodes and degenerate when a class has zero empirical mass but nonzero true mass (unseen roster states). The swimmer comparison reports the compared methods' accuracy significantly lower than fuzzy rules (p5) — tree induction is not sovereign across domains.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Entropy-reduction split selection becomes the GSE feature-threshold discovery kernel: candidate splits on football features (e.g. the DOE-reported ranking-difference > 4 threshold, p8) are ranked by information gain about the settled outcome on training seasons only, then frozen and scored on held-out seasons. Derived, not isomorphic: the football application adds time-split constraints absent from the source's static formulation.",
+        "source_operator": "p3",
+        "telemetry": "Per-split information gain on training seasons, held-out accuracy/calibration of the frozen tree, split-threshold stability across eras; no split may be re-fit on its own evaluation rows."
+      }
+    },
+    {
+      "primitive_id": "p4",
+      "name": "KStar instance-based classification with entropic distance and missing-value handling",
+      "verbatim_quote": "KStar is an instance-based classifier using an Entropic Distance Measure. It provides a consistent approach to handling of symbolic attributes, real valued attributes, and missing values [27].",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: instance-based classification using an entropic distance measure, consistent handling of symbolic attributes, real-valued attributes, and missing values, attributed to Cleary & Trigg [27] (p3). Implicit: historical instances are representative analogs of the query instance; the entropic transformation complexity defines a meaningful similarity over mixed attribute types.",
+      "breakdown_regime": "Instance-based retrieval fails when the query lies outside the support of historical instances (novel rule regimes, expansion-team roster construction) and when missingness is informative rather than random — in sport, availability of key players is structurally correlated with schedule strength and injury history, so 'consistent handling of missing values' does not remove selection bias. The review lists KStar among methods beaten by fuzzy rules on the swimmer task (p5).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matchup-analog retrieval for Coach-Mind: a query game state (venue, ranking differential, availability vector, fatigue proxy) is matched to historical games by entropic distance over mixed symbolic/real attributes, with explicit missing-value semantics for incomplete injury reports. Isomorphic because the attribute-type mixture and missingness pattern are exactly the football telemetry regime; the retrieved analog distribution supplies an empirical prior over outcomes.",
+        "source_operator": "p4",
+        "telemetry": "Historical game feature vectors with per-field completeness flags, retrieved-analog outcome distributions, analog-support coverage diagnostics; missingness indicators logged as first-class features."
+      }
+    },
+    {
+      "primitive_id": "p5",
+      "name": "Meta END meta-classification: re-classifying classifier judgments in a new feature space",
+      "verbatim_quote": "The main idea of meta-classification is to represent the judgment of each classifier (SVM based) for each class as a feature vector, and then to re-classify again in the new feature space.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: each base classifier's per-class judgment is represented as a feature vector and re-classified in the new feature space; the final decision is made by the meta-classifiers instead of just linearly combining each classifier judgment, attributed to Lin, Jin & Hauptmann [28] (p3). Implicit: base classifiers are diverse enough that their judgment vectors carry complementary information; the meta-level training labels are the same settled outcomes.",
+      "breakdown_regime": "Meta-classification inherits every base model's leakage: if base judgments were fit on the evaluation rows, the meta-feature space is contaminated. It also breaks when base errors are perfectly correlated (judgment vectors collapse to a ray) — then re-classification adds nothing over a single model. The source gives no meta-level sample-size analysis; with small sports samples the meta-learner can overfit the judgment space.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE ensemble adjudication kernel: heterogeneous models (logistic, tree, ANN, analog-retrieval) emit per-class judgment vectors for win/lose/draw; a meta-classifier re-reads those judgments — including disagreement structure — as features and issues the final queued prediction. Derived kernel: the football instantiation adds out-of-fold judgment generation (base models never see their own evaluation rows) which the source does not specify.",
+        "source_operator": "p5",
+        "telemetry": "Out-of-fold per-model class votes, inter-model disagreement entropy, meta-decision vs settled outcome on time-split holdouts; base-model training windows logged to prove no self-scoring."
+      }
+    },
+    {
+      "primitive_id": "p6",
+      "name": "Multi-agent learning-space growth with agent count",
+      "verbatim_quote": "Compared with a single agent, the learning space of multiple agents increases sharply as the number of agents increases, so the learning difficulty increases.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed: sports is a system in which multiple agents work together; the learning space of multiple agents increases sharply as the number of agents increases (p1). Implicit: each agent contributes independent degrees of freedom to the joint policy/state space and the learner must cover their interactions; no factorization or hierarchy is assumed to tame the growth.",
+      "breakdown_regime": "The claim is qualitative — the source gives no growth law, no sample-complexity bound, and no identifiability analysis. It breaks as a design argument when strong hierarchical structure (play calls, formations, roles) factorizes the joint space, which is precisely how football compresses 22-agent complexity; treating the full joint space as the learning target is computationally infeasible and statistically unidentifiable from box-score data alone.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Direct isomorphism to the 22-player football dynamical system: 22 players plus coaching staffs form a multi-agent system whose joint policy space grows combinatorially, exactly the source's claim. The engineering consequence binds GSE architecture: learn hierarchical kernels (formation -> play -> player-role execution) and coarse outcome classes instead of the full joint space; tau_0 = per-play execution (seconds) nests inside tau_1 = match (hours).",
+        "source_operator": "p6",
+        "telemetry": "LATENT_UNIDENTIFIABLE for the full joint policy space from public data; observable proxies are per-player participation counts, formation/snap distributions, and settled team-level outcomes that calibrate the compressed kernels."
+      }
+    },
+    {
+      "primitive_id": "p7",
+      "name": "Score prediction harder than win/lose prediction (review conclusion)",
+      "verbatim_quote": "However, predicting the score is still difficult compared to Win or Lose prediction.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed in the conclusion: traditionally mathematical and statistical models were used to predict match results; predicting the score is still difficult compared to Win or Lose prediction (p7). Implicit: the win/lose target is a coarsening of the score target, so it has lower effective dimension and lower variance; the claim is a qualitative synthesis across Table 2, not a theorem with a proof.",
+      "breakdown_regime": "The difficulty ordering can invert when the outcome classes are nearly balanced and the margin distribution is tight (e.g. low-scoring sports with frequent draws), and it says nothing about calibration: a win/lose classifier can be well-ranked yet badly calibrated. The review's own evidence is heterogeneous (classification accuracies vs regression errors in meters), so the conclusion is a directional prior, not a measured effect size.",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE task hierarchy kernel: queue win/lose/draw classification as the primary settled target and treat point-margin regression as a higher-variance sibling task whose errors must be bounded before it influences any decision. Derived from the source's conclusion plus the sigma-algebra argument (sign of margin is a quotient of margin); DFS/portfolio tail-risk handling consumes the margin distribution only with explicit variance caps.",
+        "source_operator": "p7",
+        "telemetry": "Settled final scores and margins per game, predicted class probabilities and margin distributions, held-out Brier/log-loss for classification and MAE for margin, tracked separately per sport."
+      }
+    },
+    {
+      "primitive_id": "p8",
+      "name": "DOE finding: ranking-difference threshold (>4) dominates home advantage (Liu, Shi & Najjar 2017, as reported)",
+      "verbatim_quote": "ranking score difference is greater than four, then this factor has a higher impact than the second factor (home game or not) on team’s win results.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": null,
+      "assumptions": "As printed in Table 2 (review reporting Liu, Shi & Najjar 2017): design of experiments (DOE/DOX) on data of 30 NBA teams of the 2015-2016 season; only two factors (Home and Ranking) have a significant impact on basketball results; the more ranking difference, the bigger effect; when ranking score difference is greater than four, that factor has higher impact than home game or not (p5). Attribution: this is a cited empirical finding, not a result proved by the review itself.",
+      "breakdown_regime": "Single-season NBA sample (2015-2016, 30 teams); the threshold 'four' is scale-dependent on the particular ranking score used and is not dimensionless across ranking systems. DOE significance does not establish out-of-sample predictive causality, and transfer to other sports/eras is unverified. The same row reports the method is low at predicting winning score differences — it predicts which team will win, not the margin (p5).",
+      "domain": "cs",
+      "timescales": [
+        "tau_0",
+        "tau_1",
+        "tau_2",
+        "tau_3"
+      ],
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feature-interaction prior for football outcome kernels: a talent/ranking differential above a league-calibrated threshold dominates venue effect, so GSE models must include the differential-x-venue interaction rather than additive main effects only. Isomorphic structure (two-factor dominance with a threshold), but the numeric threshold must be re-estimated per league and era — the NBA 'four' is not imported as a football constant.",
+        "source_operator": "p8",
+        "telemetry": "Settled outcomes with pre-game ranking differentials and venue flags; interaction-effect estimates on time-split holdouts per league; threshold re-estimation logged with the ranking scale definition."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t1",
+      "think": "Audit of the review's benchmark culture. Lotfi and Rebbouj rank a decade of sport-prediction studies almost entirely by raw classification accuracy: 63% for Bayesian Logic and 64% for Markov Logic Networks on the 2006-2007 NBA season (p3), 75% for Kahn's back-propagation network on 208 NFL matches from 2003 (p6), 61% for Purucker's 1996 eight-round NFL study (p5), and 54.7-56.1% for the Tax and Joustra Dutch-football comparison (p6). The first sovereign question is whether these numbers are comparable at all. They are not, and the review itself supplies the scar tissue: on page 1 it admits that imbalanced-classification methods focus on normal-sized datasets rather than the reality of Big Data. Accuracy without a base rate is not a measure of learning. In NFL home-win prediction, a constant home-team predictor already scores in the mid-fifties percent range across eras; a 61% model on eight rounds may contain almost no information beyond the venue base rate, while a 56% model on thirteen years of Dutch football may contain substantial skill because the draw class absorbs probability mass. The correct audit move is to demand, for every reported accuracy, the class prior, the evaluation protocol, and a base-rate-normalized skill score before any cross-study ranking is admitted into the foundry. Second, Table 2 mixes loss geometries: the javelin row reports absolute error in meters (16.77 m neural versus 29.45 m regression, p4), the swimmer row reports classification accuracy on physiological states (p5), and the horse-racing row reports winner prediction from finishing-time features (p6). A league table of 'best accuracy' across these rows is dimensionally illegitimate; each domain needs its own loss and its own breakdown regime. Third, the feature channels themselves must pass doctrine. Two rows use sportsbook information: Purucker 1996 lists 'beeting line odds' among its features (p5) and Tax and Joustra 2015 lists 'Betting odds' and concludes that betting odds alone can be a reasonable predictor of match outcome (p6). The foundry doctrine forbids sportsbook odds as model inputs, full stop. That veto is unconditional: it does not matter that the odds channel is reported as predictive, because the purpose of the GSE lane is independent signal, and importing the market's aggregated opinion would collapse the very edge the engine is built to measure. The Fialho review row's framing about making profit in betting industries (p4) is likewise flagged as out-of-doctrine motivation; we extract only its methodological content (Ranked Probability Score as a probabilistic loss, RPS = 0.208256 reported) and discard the betting framing. Finally, every accuracy in Table 2 is a historical report with no stated time-split protocol. The held-out discipline requires that no fit be scored on its own training rows and that post-cutoff data never leak backward. So the foundry re-estimates each candidate kernel on temporal holdouts and treats the review's numbers as existence proofs that a signal was once detectable, never as calibrated effect sizes. The review's own quoted Kahn verdict is the honest anchor: improved prediction data would lead to more accurate predictions, and some fallibility exists in the network because the classification rate is not 100% (p6). Irreducible error is admitted; our job is to bound it, not to advertise it away.",
+      "retrocausal_genealogy": "The hidden state of this literature was created by two lineages. First, the process lineage: CRISP-DM, cited as Shearer 2000 (reference [20], p8), industrialized the prepare-model-evaluate-deploy loop out of 1990s data-mining practice, and the review explicitly organizes sport prediction around it (p2-p3). Second, the algorithmic lineage: Quinlan's ID3 became C4.5 (1993, reference [26]) and then C5.0, carrying information-entropy split selection into every WEKA-era comparison, including the swimmer study's eight-method bake-off (p5). The deeper scar is data scarcity: the 2006-2007 NBA probabilistic models (Orendorff and Johnson 2008, reference [23]) predate player-tracking feeds, so their feature sets were box-score aggregates. That scarcity froze coarse features into the literature's defaults, and modern models still inherit them as the path of least resistance.",
+      "theory_of_mind": "Recursive belief clash under pressure: the coach's comfort call on third-and-short is a run up the middle, chosen because it minimizes his own regret budget. The defensive coordinator has watched the same tendency on film and models the coach's comfort zone, stacking the box to trap it. The quarterback simultaneously runs an internal clock, auditing the protection scheme and the safety's leverage, and his pre-snap belief about what the defense believes about the run tendency changes his throw timing. Each agent holds a model of the others' models, which is exactly the multi-agent learning-space explosion the review states on page 1. Meta END (p5) is institutionalized theory of mind: it re-reads other classifiers' judgments as features instead of trusting any single judgment.",
+      "cross_layer_veto": "Physiology vetoes the high-EV call. The Mezyk and Unold swimmer row shows that sleep amount, pulse before and after effort, and subjective feeling in water carry predictive signal about performance state (p5), and the Tax and Joustra feature list includes fatigue and travel distance (p6). Transposed to football: when physiological telemetry — heart-rate variability, sleep debt, cumulative load — indicates degraded execution capacity in the offensive line, an aggressive fourth-down call with positive expected value under full capacity must be vetoed or down-weighted, because EV is conditional on execution, and execution is a physiological state variable. Doctrine adds a second veto: odds-derived features are barred regardless of their reported predictive power."
+    },
+    {
+      "trace_id": "t2",
+      "think": "Feature-set sovereignty and the task hierarchy. The review's most concrete NFL evidence is Kahn 2003: five features — total yardage differential, rushing yardage differential, turnover differential, away team indicator, home team indicator — trained a back-propagation multi-layer perceptron to 75% accuracy on 208 matches of the 2003 season (p6). McCabe and Trevathan 2008 then widened the schema to points for and against, home and away splits, rolling windows of the previous n games, team ranking, location, and player availability, reaching 67.5% across NFL, AFL, Super Rugby and the English Premier League (p6). The accuracy dropped while the schema grew; that is not a contradiction, it is the variance cost of a richer feature space estimated on finite samples, and it warns against reading feature count as model quality. The review's conclusion supplies the structural reason to prefer the coarse task: predicting the score is still difficult compared to Win or Lose prediction (p7). Information-theoretically, the win/lose label is a quotient of the score pair — the sign of the margin is a coarsening of the margin itself. Coarsening discards information but also discards variance: the classifier's target has lower effective dimension, so with the same sample budget it is estimable to tighter tolerance. This is why the GSE queue should settle win/lose/draw classification first and treat margin regression as a sibling task with explicit variance caps, especially for portfolio tail risk where a fat-tailed margin error dominates a small classification error. The DOE row adds the interaction structure: on 2015-2016 NBA data, only Home and Ranking were significant, and once the ranking score difference exceeded four, ranking dominated venue (p5). Two lessons bind. First, effects are non-additive: a threshold interaction means an additive main-effects model is structurally misspecified in exactly the region where games are most lopsided. Second, the threshold is scale-bound to that ranking system and that season; importing the number four into football would be fabrication, so the foundry re-estimates the threshold per league and era and logs the ranking scale definition. Missingness is the third structural issue. KStar's advertised consistent handling of missing values (p3) is necessary but not sufficient for sport, because player availability is missing-not-at-random: a star's absence correlates with injury history, schedule density, and opponent strength. The foundry must log missingness indicators as first-class features rather than impute them away. Finally, the meta-classification kernel (Meta END, p5) is the right adjudication structure for heterogeneous models, but only under out-of-fold discipline: base judgments fed to the meta-learner must never have been fit on the meta-learner's evaluation rows, otherwise the judgment space is contaminated and the meta-accuracy is a mirror, not a measurement. Every kernel extracted from this review therefore enters the foundry with three bindings: temporal holdout evaluation, base-rate-normalized scoring, and doctrine-filtered feature channels. The review is a map of what was tried; the foundry's job is to re-derive what survives.",
+      "retrocausal_genealogy": "The feature-schema lineage runs from Purucker 1996, who used only eight NFL rounds with yards gained, rushing yards, turnover margin and time of possession (p5), through Kahn 2003's five-differential schema (p6), to McCabe and Trevathan 2008's rolling-window availability-aware schema (p6). Each step was created by a data-availability scar: early studies used what box scores gave them, and small samples forced parsimony. The horse-racing row (Davoodi and Khanteymoori 2010, p6) carries the optimization lineage — gradient descent with momentum 0.7 over 400 epochs — showing how hyperparameter practice migrated across sports. The hidden state is that schema choices were frozen by data access, not by theory, and must be re-justified per era.",
+      "theory_of_mind": "The Tax and Joustra feature list includes managerial change (p6), which is organizational theory of mind made into a variable: players and staff model the front office's patience, the new manager models the squad's belief about his tenure, and opponents model the disruption window. On the field the recursive stack is the same: the offensive coordinator self-scouts his own tendencies because he knows the defensive coordinator watches his film; the defense models that self-scout and disguises coverage to exploit the counter-adjustment. A prediction kernel that ignores this belief recursion treats agents as independent feature rows, which is precisely the single-agent simplification the review warns against on page 1.",
+      "cross_layer_veto": "Physics vetoes extrapolation. The javelin row is the cleanest example: neural models achieved 16.77 m absolute error versus 29.45 m for nonlinear regression (p4), but any predicted throw distance beyond the biomechanical envelope of release velocity, release angle and athlete power output is physically impossible regardless of model confidence. The same veto structure binds football: a play-call EV computed from historical success rates must be gated by the current roster's physical execution envelope — line mass, speed differentials, fatigue state — because a call that the present eleven cannot physically execute has zero realizable EV no matter what the training rows say. The cross-layer rule: physical feasibility is a hard constraint, expected value is a soft objective, and the hard constraint always wins."
+    }
+  ],
+  "universal_lens": "Polymath audit lens: before trusting any reported accuracy, demand metric sovereignty (which loss, which class prior, which holdout), feature provenance, and dimensional homogeneity. The classification-versus-regression quotient structure and the threshold-interaction finding transfer across javelin biomechanics, swimmer physiology, horse racing and football only after each domain's base rate and breakdown regime are stated explicitly.",
+  "gsi_mapping": "The swimmer row (sleep amount, pulse before/after effort, feelings in water; p5) is a direct template for GSI bioenergetic and clinical telemetry: heart-rate variability, sleep debt and cumulative axonal/shear load history condition execution capacity. The ANN weight-adaptation loop (p2) maps to adaptive rehabilitation load prescription, where model confidence is gated by physiological state rather than by training-set accuracy alone.",
+  "gse_mapping": "Coach-Mind sim consumes the decision-boundary, entropy-split, analog-retrieval and meta-classification kernels as out-of-fold ensemble judgments over win/lose/draw. DFS and portfolio tail risk are handled by treating margin regression as a higher-variance sibling task with variance caps, and by gating every high-EV call on physiological execution capacity. Sportsbook odds are excluded from all feature channels by doctrine."
+}

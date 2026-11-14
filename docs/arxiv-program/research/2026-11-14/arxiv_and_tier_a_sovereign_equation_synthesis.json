@@ -1,17 +1,17 @@
 {
   "schema": "gse.arxiv_and_sovereign_equation_synthesis.v1",
-  "generated_at_utc": "2026-11-14T17:24:58Z",
+  "generated_at_utc": "2026-11-14T18:31:39Z",
   "counts": {
-    "complete_sovereign_books": 1545,
-    "refused_stub_books_fail_closed": 271,
+    "complete_sovereign_books": 2465,
+    "refused_stub_books_fail_closed": 465,
     "gatekeeper_validation_failures": 0,
-    "total_sovereign_primitives": 16681,
-    "total_sovereign_reasoning_traces": 3889,
-    "total_pages_inspected": 58750,
-    "trainer_feed_records_emitted": 20570,
+    "total_sovereign_primitives": 20099,
+    "total_sovereign_reasoning_traces": 4809,
+    "total_pages_inspected": 67482,
+    "trainer_feed_records_emitted": 24908,
     "active_router_mask_bits": 276,
     "arxiv_program_unique_ids_indexed": 6183,
-    "sovereign_books_with_explicit_arxiv_id": 211
+    "sovereign_books_with_explicit_arxiv_id": 321
   },
   "context_mask_uint32_words_9": [
     4294967295,
@@ -25,42 +25,42 @@
     1048575
   ],
   "track_counts": {
-    "arxiv_and_preprints": 212,
-    "football_coaching_rules_and_scouting": 11,
-    "graduate_math_stats_physics_textbooks": 1259,
-    "mit_sloan_jqas_nessis_conferences": 1,
+    "arxiv_and_preprints": 322,
+    "football_coaching_rules_and_scouting": 12,
+    "graduate_math_stats_physics_textbooks": 2048,
+    "mit_sloan_jqas_nessis_conferences": 2,
     "nfl_war_and_fourth_down_decision": 6,
-    "sports_psychology_and_cognition": 56
+    "sports_psychology_and_cognition": 75
   },
   "six_situational_family_weights": {
     "pressure": {
-      "sovereign_primitives_count": 580,
-      "bounded_james_stein_weight": 0.176351,
+      "sovereign_primitives_count": 707,
+      "bounded_james_stein_weight": 0.176996,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_count": 778,
-      "bounded_james_stein_weight": 0.177266,
+      "sovereign_primitives_count": 925,
+      "bounded_james_stein_weight": 0.177695,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_count": 1479,
-      "bounded_james_stein_weight": 0.178551,
+      "sovereign_primitives_count": 1723,
+      "bounded_james_stein_weight": 0.178755,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_count": 1022,
-      "bounded_james_stein_weight": 0.177911,
+      "sovereign_primitives_count": 1235,
+      "bounded_james_stein_weight": 0.178268,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_count": 11227,
-      "bounded_james_stein_weight": 0.179808,
+      "sovereign_primitives_count": 13619,
+      "bounded_james_stein_weight": 0.179842,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_count": 1595,
-      "bounded_james_stein_weight": 0.178656,
+      "sovereign_primitives_count": 1890,
+      "bounded_james_stein_weight": 0.178864,
       "all_finite_non_nan": true
     }
   },
@@ -130,14 +130,15 @@
       },
       "0..3|tier_B": {
         "total": 835,
-        "pending_unextracted": 583,
-        "pending_with_local_file": 583,
-        "completed_or_extracted": 252
+        "completed_or_extracted": 815,
+        "pending_unextracted": 20,
+        "pending_with_local_file": 20
       },
       "0..3|tier_C": {
         "total": 3349,
-        "pending_unextracted": 3325,
-        "pending_with_local_file": 3325
+        "completed_or_extracted": 217,
+        "pending_unextracted": 3108,
+        "pending_with_local_file": 3108
       },
       "4..7|tier_A": {
         "total": 129,
@@ -149,17 +150,17 @@
       },
       "4..7|tier_C": {
         "total": 3347,
-        "completed_or_extracted": 509,
-        "pending_unextracted": 2795,
-        "pending_with_local_file": 2795
+        "completed_or_extracted": 826,
+        "pending_unextracted": 2478,
+        "pending_with_local_file": 2478
       },
       "8..f|tier_A": {
         "total": 226,
-        "completed_or_extracted": 11
+        "completed_or_extracted": 13
       },
       "8..f|tier_B": {
         "total": 1606,
-        "completed_or_extracted": 2
+        "completed_or_extracted": 3
       },
       "8..f|tier_C": {
         "total": 6841,
@@ -173,8 +174,498 @@
   },
   "refused_stubs": [
     {
+      "book_id": "001b5c64761aae24",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "00dc55c1d2f000d1",
+      "title": "p0015",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0119c0df17e6a8c0",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_0119c0df17e6a8c0",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "011a43f6d8857ebe",
+      "title": "prompt-arch-inv-nemo",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "011d20ee571313bf",
+      "title": "p0098",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0136f67dda704a07",
+      "title": "p0238",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "01a29dfc5205ac65",
+      "title": "audit-types",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "01d166d38f50d3a9",
+      "title": "p0002",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "01de8f10aa68aec3",
+      "title": "p0011",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "01f45ea6349a1521",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_01f45ea6349a1521",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "02511d43c70cccda",
+      "title": "trace",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "02570bac0012274c",
+      "title": "claude-launch-verification-checklist",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "028fdb3f5c569e62",
+      "title": "spankodds.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "02b413489e3d9c23",
+      "title": "README",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "02ffa28552968c43",
+      "title": "p0007",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "03b93452fc670d1d",
+      "title": "p0015",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "03bedcd1ef7b6a0e",
+      "title": "p0256",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "04ca74227a555a81",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_04ca74227a555a81",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "04d99ece1e52a977",
+      "title": "footballoutsiders.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "04fec6883d3b3e31",
+      "title": "pointsbet.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0502dcc7746c6eee",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0504649bd6b7df4c",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_0504649bd6b7df4c",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "053b27b376ea451b",
+      "title": "nflsavant_com_api_search_to_tring_",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "05cb1423236c6203",
+      "title": "init",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "05eef9eaf7d05654",
+      "title": "p0198",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0617afcfa8c0186a",
+      "title": "p0032",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "063ee581b072ce45",
+      "title": "p0009",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0651cd8401a1a8a1",
+      "title": "topic-training-full",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0670ff1809220125",
+      "title": "19-opportunity-graph",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0698912b28fbdda5",
+      "title": "czr_cookies",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "069b9d7dbdf22503",
+      "title": "2503_21251_pure_logic",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "06b06d7fc25a71a0",
+      "title": "README",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "06cc401eebde6ca1",
+      "title": "p0013",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "06fbddfafbfa48bd",
+      "title": "tipico.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "07195fb307391cdc",
+      "title": "p0213",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0725aff8e6c52126",
+      "title": "p0004",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0730cab9a97319ec",
+      "title": "2023Estimating Positional Plus-Minus in the NBA",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "07736db6201b345c",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_07736db6201b345c",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "089efa557341e996",
+      "title": "p0008",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "08cbf38b68866624",
+      "title": "2014 Quantifying Shot Quality in the NBA - Second Spectrum",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "08d2173b3165163b",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0934df27c23ee264",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0993867f0907ec37",
+      "title": "p0017",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0a09262ef444daee",
+      "title": "p0221",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0a70796426314835",
+      "title": "feed",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0a872e029cf705a9",
+      "title": "p0005",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0a909e1b60d596a6",
+      "title": "p0123",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0ab3f468f111d656",
+      "title": "reddit_post_metadata.json.summary",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0affbf790b70a537",
+      "title": "p0272",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0b37fa87ad85f9a4",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_0b37fa87ad85f9a4",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0ba91109d6720ac6",
+      "title": "pull_request_template",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0c095725c10ab482",
+      "title": "oddsjam.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0c1467c450491c61",
+      "title": "p0271",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0c1bf76155b4cca0",
+      "title": "init",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0ca98fa8ba4ca570",
+      "title": "CLAUDE_REVIEW_PROMPT",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0cffcaec5fd97f4b",
+      "title": "search",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0d921a03661b677b",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_0d921a03661b677b",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0dbf8db25a6f5fcc",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0de09666b7c592a9",
+      "title": "index",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0e0e73cdd083caf1",
+      "title": "p0127",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0e649115d9f7b3c1",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_0e649115d9f7b3c1",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0e70cb0cd8f86c3c",
+      "title": "p0005",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0ee0970d28952903",
+      "title": "rss",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0f1b9d473a9d56e9",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0f301ad78a91625c",
+      "title": "p0226",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0f4d3b925a8b9314",
+      "title": "p0176",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0fac209f716f8f1f",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_0fac209f716f8f1f",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "0fd209181762fd56",
+      "title": "requirements",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "101c71979fa6ee41",
+      "title": "README",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "103008d21fd60f18",
+      "title": "init",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1041d7961d85c40e",
+      "title": "p0005",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "104b9da9a50ef928",
+      "title": "p0032",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "106f8ca6f528af70",
+      "title": "numberfire.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1125937eecca6b28",
+      "title": "myfantasyleague.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "11397ea664d1830e",
+      "title": "p0011",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "11e6065c201c2673",
+      "title": "FINAL_AUDIT",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "120785b61e326e46",
+      "title": "p0267",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "121f71428f7df8b5",
+      "title": "README",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1279d69fb9effd51",
+      "title": "p0097",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "127f7a4dd3bf131e",
+      "title": "branches",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1283feb2258bf5b2",
+      "title": "p0011",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "12c67dada5363976",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_12c67dada5363976",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "12dbbff679438625",
+      "title": "p0053",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "12ed1480080bbe80",
+      "title": "metric_ontology.yaml.summary",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "13a63d12f015f91b",
+      "title": "p0201",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "13d2d047d3fdd3e0",
+      "title": "metric_reliability.json.summary",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "13f36e99f454d6a4",
+      "title": "p0008",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "13fb51dbe443c001",
+      "title": "DISPATCH",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "13ff35f5cf0f39ae",
+      "title": "p0047",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "14120362f3370301",
+      "title": "p0009",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "14b8657c53d415df",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "14bb739a71621e5d",
+      "title": "p0125",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "14e187a426ec8661",
+      "title": "p0099",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1584c048411e82a2",
+      "title": "p0008",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1589e5ace2946fcb",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_1589e5ace2946fcb",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "15992f6df772973d",
+      "title": "p0018",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "15b61f435a86fcd2",
       "title": "QUARANTINED_NON_CORPUS_ITEM_15b61f435a86fcd2",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "15c98cb8fa991725",
+      "title": "p0100",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "15e57ccc9657202f",
+      "title": "claude-copy-polish-checklist",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -183,8 +674,83 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "160ddfaafe6583e4",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_160ddfaafe6583e4",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "163193a20ff2e696",
+      "title": "p0223",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1655428a29bf8972",
+      "title": "env",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "16746e2e9bd55464",
       "title": "QUARANTINED_NON_CORPUS_ITEM_16746e2e9bd55464",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "167e677cf928ead3",
+      "title": "mysportsfeeds.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1712e8e5818fa5a9",
+      "title": "papers",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1742ed324c89b7f2",
+      "title": "dynastyprocess.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "174d926911b3e808",
+      "title": "p0015",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1757a85ba331f538",
+      "title": "p0007",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "17592c0d8c1aa4c8",
+      "title": "env (5)",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1775efea0b7490bb",
+      "title": "p0016",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "17c5e43085dc00d0",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "186d546e3b2de538",
+      "title": "myfantasyleague.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "187336715f119d79",
+      "title": "p0015",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "19285b5e75788ce7",
+      "title": "916066318600",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "199ca006f08b91ff",
+      "title": "wpa2_std_result",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -193,8 +759,93 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "1a54216170d5c456",
+      "title": "search-roots",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1a8012c5c91fac11",
+      "title": "p0014",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1ac39c2aa772eba7",
+      "title": "p0007",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1ad4c20af6171f08",
+      "title": "p0188",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1b3ffdfd364813fe",
+      "title": "requirements",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1b7953594dd7a63e",
+      "title": "README",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1be3f5e28090b31d",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1c8d01732a1bec56",
+      "title": "mysportsfeeds.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1cd5a11779819d68",
+      "title": "p0002",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "1d16023dfb5cb925",
       "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1d4b5ac78938536c",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_1d4b5ac78938536c",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1d7e94f7998a3187",
+      "title": "p0013",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1d98063ed4afdd1f",
+      "title": "p0181",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1de0b371c9440012",
+      "title": "p0231",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1e1c15bdb7519463",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1ea4f760cd9df264",
+      "title": "p0004",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1ec6f5039c4ec5da",
+      "title": "p0014",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1f8b821cd363bfd0",
+      "title": "p0062",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -203,8 +854,168 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "276a51db361a0dbe",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_276a51db361a0dbe",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3030d17512e52980",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_3030d17512e52980",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "31a841832980cc73",
       "title": "footballoutsiders.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "31f741ea9aa10020",
+      "title": "init",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "323ee722427fa5ac",
+      "title": "p0053",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "32573963b3438520",
+      "title": "03-10-second-teachability-system",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "329473dca390ce4e",
+      "title": "00-READ-CANONICAL",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "32dfb8d1d5e0a991",
+      "title": "p0007",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3354f913179b32ef",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_3354f913179b32ef",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3413f76905244419",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3442cd69a0a335ad",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3459e832d4f8aa8d",
+      "title": "robots",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3467b454910b89e0",
+      "title": "players.json.summary",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "34ea003b178530c5",
+      "title": "prompt-impl-verify-pickle",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "352e78ba06e600d2",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_352e78ba06e600d2",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3566bf4dda28bf11",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_3566bf4dda28bf11",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "35a6dda77e5e9a59",
+      "title": "1701_06081_summary",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "35aa61b62b2eedfc",
+      "title": "1601_03641_summary",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3656a13ada53544b",
+      "title": "p0006",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "36e3f8389969cc3d",
+      "title": "source_discovery_queries.yaml.summary",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "36e6a72c026c7744",
+      "title": "p0070",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3745cf98cd7dc24c",
+      "title": "p0016",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "37894891462f6fdd",
+      "title": "DP_CLUSTERING_OFFLINE_ONLY",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "37c3f9bf98a65752",
+      "title": "p0007",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3837b43d61f8b085",
+      "title": "countries",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "38a3883f43c5e88b",
+      "title": "p0004",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "38ddd83ef881d26e",
+      "title": "p0059",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "39c47b27cad7f073",
+      "title": "1905_03222_pure_logic",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3a034a411c6f115c",
+      "title": "p0129",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3a6d5da7bf043511",
+      "title": "p0002",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3ab5fe9a5812d087",
+      "title": "README",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3ab6ea31fec69557",
+      "title": "p0015",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3b06cbd6dfbbd4d8",
+      "title": "p0003",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -213,13 +1024,103 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "3b0ed4a62d1c4e62",
+      "title": "sporttrade.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3b79759b197b2263",
+      "title": "README",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3bfb1821302efd81",
+      "title": "p0010",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3c90a1eff09935ca",
+      "title": "p0012",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "3cb23b03af0c6759",
       "title": "QUARANTINED_NON_CORPUS_ITEM_3cb23b03af0c6759",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "3cc0699d94d08a5f",
+      "title": "6ceb0476021c",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3cd4004265b3dfca",
+      "title": "p0003",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3ce21b6657df3f69",
+      "title": "p0178",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3ce6752a361b96ea",
+      "title": "p0004",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3da3d7717e2f01d7",
+      "title": "f8befcacee3a",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3dc885ebc03ab12a",
+      "title": "p0015",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3de4839fe9a92909",
+      "title": "p0313",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3e86aa4c76117051",
+      "title": "p0008",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3ed2679078bd61ca",
+      "title": "TEAM_AND_GAME_IDENTITY_SPINE",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3ef12a95f1744b1c",
+      "title": "MEMORY_CANDIDATE_RUNTIME",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "3f0633a80a9e8157",
       "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3f1128633af92bdc",
+      "title": "env (4)",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3f3610a1d3ab5e88",
+      "title": "tune-thresholds",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3f36f66f3fc01e3c",
+      "title": "16-performance-accessibility-gates",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3fac57be0f66738d",
+      "title": "perf",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -773,6 +1674,11 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "59411199dae17455",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_59411199dae17455",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "59730b42277345a3",
       "title": "README",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
@@ -780,6 +1686,11 @@
     {
       "book_id": "59d9c04f55c7ce6c",
       "title": "real_vs_stubbed_audit.json.summary",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5a851c40678acd00",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_5a851c40678acd00",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -795,6 +1706,11 @@
     {
       "book_id": "5b2c7b574f419931",
       "title": "18-visual-qa-screenshot-review",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5b537d95b3fac7c2",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_5b537d95b3fac7c2",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -825,6 +1741,11 @@
     {
       "book_id": "5c78fe982b378c09",
       "title": "06-motion-interaction-system",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5cb169d68c29e78a",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_5cb169d68c29e78a",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -883,6 +1804,11 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "5f6a8504dd334ca3",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_5f6a8504dd334ca3",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "5f86257381a8212a",
       "title": "sisportsbook.com",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
@@ -910,6 +1836,11 @@
     {
       "book_id": "60013010a89454bb",
       "title": "architecture",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "601c9de33d7a060e",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_601c9de33d7a060e",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -950,6 +1881,11 @@
     {
       "book_id": "61b8f421d7cd2d4d",
       "title": "CONCRETE_SNIPPETS",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "626538395e1e2d03",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_626538395e1e2d03",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -1068,6 +2004,11 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "67211ffb3ab96d86",
+      "title": "index",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "6780fd8dc228b7da",
       "title": "1701_06081_pure_logic",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
@@ -1105,6 +2046,11 @@
     {
       "book_id": "682a8b3f7129b92b",
       "title": "44dc085bb345",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6896e8fd630e9193",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_6896e8fd630e9193",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -1183,8 +2129,18 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "6c666a250774a04a",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_6c666a250774a04a",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "6c82c73ff462c2bd",
       "title": "p0010",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "6d8ed230d0ecb341",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_6d8ed230d0ecb341",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -1348,6 +2304,11 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "76ae45188227e8d5",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_76ae45188227e8d5",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "76bc4b466620644d",
       "title": "ToutComparison.prompt",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
@@ -1375,6 +2336,11 @@
     {
       "book_id": "78acb15d7a87c4d5",
       "title": "fantasy.nfl.com",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "78f634415401d75c",
+      "title": "pointsbet.com",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -1473,6 +2439,11 @@
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
+      "book_id": "7d327a9a25d6b7e0",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_7d327a9a25d6b7e0",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
       "book_id": "7ddcd2a837f34e89",
       "title": "EDGE_EXPERIMENT_TEMPLATE",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
@@ -1531,8 +2502,47 @@
   "tracks_sample": {
     "arxiv_and_preprints": [
       {
-        "book_id": "101a6bff8f66e54d",
-        "title": "arxiv_2112.08345v2",
+        "book_id": "0053d4a2842cc986",
+        "title": "2512.16961",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 30,
+        "pages_total": 33,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2512.16961"
+        ]
+      },
+      {
+        "book_id": "00b6bd8129a1e048",
+        "title": "arxiv_2105.02460v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 6,
+        "pages_total": 6,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2105.02460"
+        ]
+      },
+      {
+        "book_id": "00e098606fee61c4",
+        "title": "2207.13747",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 13,
+        "pages_total": 13,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2207.13747"
+        ]
+      },
+      {
+        "book_id": "00eea09ec909056c",
+        "title": "arxiv_1408.3304v2",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
         "pages_read": 12,
@@ -1540,38 +2550,12 @@
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "2112.08345"
+          "1408.3304"
         ]
       },
       {
-        "book_id": "10bdf578558b884a",
-        "title": "arxiv_2509.14000v5",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 18,
-        "pages_total": 18,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2509.14000"
-        ]
-      },
-      {
-        "book_id": "1116f559a48d6931",
-        "title": "arxiv_2503.18282v2",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 11,
-        "pages_total": 11,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2503.18282"
-        ]
-      },
-      {
-        "book_id": "114702a67dca5992",
-        "title": "arxiv_2506.22503v1",
+        "book_id": "028afd508b4f5d53",
+        "title": "arxiv_2403.10512v1",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
         "pages_read": 15,
@@ -1579,25 +2563,103 @@
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "2506.22503"
+          "2403.10512"
         ]
       },
       {
-        "book_id": "114d659013a95e6e",
-        "title": "arxiv_2606.20542v1",
+        "book_id": "02dc5baa93c475be",
+        "title": "2608.01260v1",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
-        "pages_read": 23,
-        "pages_total": 23,
+        "pages_read": 10,
+        "pages_total": 10,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2608.01260"
+        ]
+      },
+      {
+        "book_id": "031337bc725074e5",
+        "title": "arxiv_1602.04676v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 22,
+        "pages_total": 22,
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "2606.20542"
+          "1602.04676"
         ]
       },
       {
-        "book_id": "11c3357b0685c834",
-        "title": "2301.13052",
+        "book_id": "03992c836519563d",
+        "title": "2212.05223v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 9,
+        "pages_total": 9,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2212.05223"
+        ]
+      },
+      {
+        "book_id": "0431008a66bfa25c",
+        "title": "arxiv_2101.12159v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 13,
+        "pages_total": 13,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2101.12159"
+        ]
+      },
+      {
+        "book_id": "04ac3fd424cd6428",
+        "title": "2303.10895v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 11,
+        "pages_total": 11,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2303.10895"
+        ]
+      },
+      {
+        "book_id": "04bd035257db20c6",
+        "title": "2101.00400",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 12,
+        "pages_total": 12,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2101.00400"
+        ]
+      },
+      {
+        "book_id": "04cb107d0f14941d",
+        "title": "2011.02122",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 5,
+        "pages_total": 5,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2011.02122"
+        ]
+      },
+      {
+        "book_id": "05353e0053de9ac8",
+        "title": "arxiv_2506.12716v1",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
         "pages_read": 16,
@@ -1605,90 +2667,51 @@
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "2301.13052"
+          "2506.12716"
         ]
       },
       {
-        "book_id": "11d5fa1a5f7ee663",
-        "title": "arxiv_2502.04931v2",
+        "book_id": "053fb7bb9c6cc75e",
+        "title": "arxiv_2311.06818v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 29,
+        "pages_total": 30,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2311.06818"
+        ]
+      },
+      {
+        "book_id": "05979072a108527a",
+        "title": "arxiv_2310.04360v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 10,
+        "pages_total": 10,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2310.04360"
+        ]
+      },
+      {
+        "book_id": "05d170c7263b059a",
+        "title": "arxiv_1504.04796v2",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
         "pages_read": 32,
-        "pages_total": 41,
+        "pages_total": 36,
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "2502.04931"
+          "1504.04796"
         ]
       },
       {
-        "book_id": "12892e1b2b8d8b5e",
-        "title": "arxiv_2203.02281v2",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 32,
-        "pages_total": 68,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2203.02281"
-        ]
-      },
-      {
-        "book_id": "12aba667b88a3b32",
-        "title": "arxiv_2105.07468v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 7,
-        "pages_total": 7,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2105.07468"
-        ]
-      },
-      {
-        "book_id": "12ac1bd60fc0585f",
-        "title": "arxiv_2505.16199v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 24,
-        "pages_total": 24,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2505.16199"
-        ]
-      },
-      {
-        "book_id": "12f11d3f8801d46e",
-        "title": "arxiv_2604.11786v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 32,
-        "pages_total": 40,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2604.11786"
-        ]
-      },
-      {
-        "book_id": "12f725b48aa9952a",
-        "title": "arxiv_2607.07320v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 32,
-        "pages_total": 40,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2607.07320"
-        ]
-      },
-      {
-        "book_id": "149496b86e68d685",
-        "title": "arxiv_1709.03399v1",
+        "book_id": "06d607e7e4b944d4",
+        "title": "2110.01395",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
         "pages_read": 8,
@@ -1696,12 +2719,51 @@
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "1709.03399"
+          "2110.01395"
         ]
       },
       {
-        "book_id": "155c7ab77447312e",
-        "title": "2504.12021",
+        "book_id": "06e1d5330047cedb",
+        "title": "2607.07498v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 7,
+        "pages_total": 7,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2607.07498"
+        ]
+      },
+      {
+        "book_id": "070a04468fc2efc8",
+        "title": "2609.11935v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 14,
+        "pages_total": 14,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2609.11935"
+        ]
+      },
+      {
+        "book_id": "07ce8621a9b70d55",
+        "title": "2504.07291",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 14,
+        "pages_total": 14,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": [
+          "2504.07291"
+        ]
+      },
+      {
+        "book_id": "0824ef9ea0167e2d",
+        "title": "2605.12799v1",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
         "pages_read": 15,
@@ -1709,51 +2771,12 @@
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "2504.12021"
+          "2605.12799"
         ]
       },
       {
-        "book_id": "15787da105deeac1",
-        "title": "arxiv_2109.04720v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 12,
-        "pages_total": 12,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2109.04720"
-        ]
-      },
-      {
-        "book_id": "15986cc81ad100a8",
-        "title": "arxiv_2505.18111v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 11,
-        "pages_total": 11,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2505.18111"
-        ]
-      },
-      {
-        "book_id": "163f06778c7fbe39",
-        "title": "arxiv_2109.01305v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 19,
-        "pages_total": 19,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2109.01305"
-        ]
-      },
-      {
-        "book_id": "166f9fdea8664fbb",
-        "title": "arxiv_2504.02019v2",
+        "book_id": "085069bbabd91802",
+        "title": "arxiv_1801.01565v2",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
         "pages_read": 20,
@@ -1761,102 +2784,61 @@
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "2504.02019"
+          "1801.01565"
         ]
       },
       {
-        "book_id": "1713fa6ef796e32f",
-        "title": "arxiv_2207.11709v2",
+        "book_id": "089c639cf70f110d",
+        "title": "1906.04066v1",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
-        "pages_read": 12,
-        "pages_total": 12,
+        "pages_read": 32,
+        "pages_total": 47,
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "2207.11709"
+          "1906.04066"
         ]
       },
       {
-        "book_id": "171c1bfcd49afd75",
-        "title": "arxiv_2205.09878v1",
+        "book_id": "08b84168cf5b046c",
+        "title": "arxiv_2109.08051v1",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
-        "pages_read": 18,
-        "pages_total": 18,
+        "pages_read": 26,
+        "pages_total": 26,
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "2205.09878"
+          "2109.08051"
         ]
       },
       {
-        "book_id": "172b3e37e753a667",
-        "title": "1704.00197v3 (1)",
+        "book_id": "08d62279ed2ef7ad",
+        "title": "arxiv_2609.23450v1",
         "primary_domain": "other",
         "track": "arxiv_and_preprints",
-        "pages_read": 7,
-        "pages_total": 7,
-        "primitives_count": 4,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "1704.00197"
-        ]
-      },
-      {
-        "book_id": "17888ff4106bb520",
-        "title": "arxiv_1505.06918v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 7,
-        "pages_total": 7,
+        "pages_read": 5,
+        "pages_total": 5,
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": [
-          "1505.06918"
-        ]
-      },
-      {
-        "book_id": "17e87fc28939b46a",
-        "title": "arxiv_2107.00500v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 8,
-        "pages_total": 8,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2107.00500"
-        ]
-      },
-      {
-        "book_id": "185e295b164c2544",
-        "title": "2512.21877v3",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 15,
-        "pages_total": 15,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2512.21877"
-        ]
-      },
-      {
-        "book_id": "1b78140ead80625f",
-        "title": "arxiv_2609.24403v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 31,
-        "pages_total": 35,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": [
-          "2609.24403"
+          "2609.23450"
         ]
       }
     ],
     "football_coaching_rules_and_scouting": [
+      {
+        "book_id": "05f0aa84d6f0de22",
+        "title": "XAI_EXHAUSTIVE_TRENCH_DEFENSE_COACHING_AND_SITUATIONAL_BIBLE",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 18,
+        "pages_total": 56,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
       {
         "book_id": "2b993f18a6c6a83d",
         "title": "USA Today Sports NFL Draft Guide 2026",
@@ -1981,6 +2963,28 @@
     ],
     "graduate_math_stats_physics_textbooks": [
       {
+        "book_id": "00144be2951a887e",
+        "title": "Garrett Baxley 3.19.25",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 1,
+        "pages_total": 1,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0073e029547ffb49",
+        "title": "1889-continual-learning-in-the-presence-of-repetition",
+        "primary_domain": "cs",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 4,
+        "pages_total": 4,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "0096d79a376f6863",
         "title": "Evaluating Basketball Player Performance via Statistical Network Modeling",
         "primary_domain": "other",
@@ -1988,6 +2992,127 @@
         "pages_read": 0,
         "pages_total": 0,
         "primitives_count": 18,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "00c492cd517b9723",
+        "title": "Rao-Blackwellizing Field Goal Percentage",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 20,
+        "pages_total": 20,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "00cd3341ae5fd3e8",
+        "title": "2007 - In search of the advantage to batting last in baseball - Unknown Authors",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 4,
+        "pages_total": 11,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "00da0b57e375cf56",
+        "title": "1669-quantile-super-learning",
+        "primary_domain": "cs",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 5,
+        "pages_total": 5,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "00f768b0d149f340",
+        "title": "2017 Hockey Passing Defensive Ability",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 7,
+        "pages_total": 7,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0109ed10d0e60405",
+        "title": "2026 - A Bayesian bivariate conditional Poisson regression for goal dependence in the English Premier League - Nolan et al",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 17,
+        "pages_total": 17,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0111e29c5f45f8ea",
+        "title": "openalex_W3035690777",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 12,
+        "pages_total": 12,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0141a8becad21018",
+        "title": "Explanations_for_the_United_States_of_Am",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 7,
+        "pages_total": 7,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "014da15fbeec0222",
+        "title": "2025 - Using Injury-Risk Forecasting to Quantify Financial Impact in the NBA - Wang",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 30,
+        "pages_total": 32,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "015837a59a7a3cf5",
+        "title": "OriginalDocument_",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 3,
+        "pages_total": 3,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "01657073acc39173",
+        "title": "2018 - How to Play Strategically in Fantasy Sports (and Win) - Unknown Authors",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 18,
+        "pages_total": 25,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0181fc8605227700",
+        "title": "0257-hyperparameter-optimization-as-a-service-on",
+        "primary_domain": "cs",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": []
       },
@@ -2003,6 +3128,61 @@
         "arxiv_ids": []
       },
       {
+        "book_id": "01da44156ef90131",
+        "title": "2020 Modeling Player and Team Performance in Basketball",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 25,
+        "pages_total": 25,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "01db0103b350b959",
+        "title": "2015 Predicting Sports Scoring Dynamics UC Boulder",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 18,
+        "pages_total": 21,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0200137be2595902",
+        "title": "p0299",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 1,
+        "pages_total": 1,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "021a859ec05c216c",
+        "title": "DavisEd-2023-CombatMedicSpecialistFieldcraft-II-Borden",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 32,
+        "pages_total": 172,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "023939543cfde889",
+        "title": "2026 - ELASTIC Trajectory-Based Synchronization of Event and Tracking Data in Soccer - Kim et al",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 11,
+        "pages_total": 11,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "0245bb24406822d6",
         "title": "0245bb24406822d6",
         "primary_domain": "other",
@@ -2010,6 +3190,28 @@
         "pages_read": 0,
         "pages_total": 0,
         "primitives_count": 31,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "025180947ca26bde",
+        "title": "2025 - EPI over Time in English Football Tureen Chen - Unknown Authors",
+        "primary_domain": "football",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 18,
+        "pages_total": 30,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "02592dbbea7d8758",
+        "title": "openalex_W4407045670",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 9,
+        "pages_total": 9,
+        "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": []
       },
@@ -2025,238 +3227,29 @@
         "arxiv_ids": []
       },
       {
-        "book_id": "0414b2bd02f58929",
-        "title": "0414b2bd02f58929",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 842,
-        "pages_total": 842,
-        "primitives_count": 6,
-        "traces_count": 3,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "04f950c125db1a46",
-        "title": "To Crash or Not To Crash: A quantitative look at the relationship between offensive rebounding and transition defense in the NBA",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 0,
-        "pages_total": 0,
-        "primitives_count": 19,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "07089dec6f73619e",
-        "title": "07089dec6f73619e",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 276,
-        "pages_total": 276,
-        "primitives_count": 8,
-        "traces_count": 2,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "08518cdeed8dfc2d",
-        "title": "08518cdeed8dfc2d",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 0,
-        "pages_total": 0,
-        "primitives_count": 35,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "090cfc0da55b02cd",
-        "title": "090cfc0da55b02cd",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 11,
-        "pages_total": 11,
-        "primitives_count": 5,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "091ae3a3e6609106",
-        "title": "091ae3a3e6609106",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 0,
-        "pages_total": 0,
-        "primitives_count": 35,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "09fe4b789dbfcaff",
-        "title": "09fe4b789dbfcaff",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 0,
-        "pages_total": 0,
-        "primitives_count": 35,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "0a31ef31857e287d",
-        "title": "0a31ef31857e287d",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 23,
-        "pages_total": 23,
-        "primitives_count": 6,
-        "traces_count": 2,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "0c444afcd300d1c3",
-        "title": "0c444afcd300d1c3",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 3,
-        "pages_total": 3,
-        "primitives_count": 4,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "0cf53b76efe80564",
-        "title": "Recognizing and Analyzing Ball Screen Defense in the NBA",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 0,
-        "pages_total": 0,
-        "primitives_count": 22,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "101ef8d81b4b17e9",
-        "title": "openalex_W4412406203",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 2,
-        "pages_total": 2,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "101f2c6f2815125c",
-        "title": "openalex_W2950789770",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 19,
-        "pages_total": 19,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "101f648d04b77265",
-        "title": "BAZEL_MONOREPO_BUILD_OPTIMIZATION_ARCHITECTURE",
-        "primary_domain": "cs",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 2,
-        "pages_total": 2,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "102e0c5576d052a9",
-        "title": "PetersJanzingScholkopf-2017-ElementsOfCausalInference",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 23,
-        "pages_total": 289,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "102f952911d380f9",
-        "title": "102f952911d380f9",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 118,
-        "pages_total": 118,
-        "primitives_count": 6,
-        "traces_count": 2,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "1031c9c2338f2eb6",
-        "title": "openalex_W2152372004",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 10,
-        "pages_total": 10,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "104ec73e31bad4aa",
-        "title": "openalex_W2267106939",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 5,
-        "pages_total": 5,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "105d963865f04763",
-        "title": "Roper-1920-Winning-Football",
-        "primary_domain": "football",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 18,
-        "pages_total": 88,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "1067d08226243b5a",
-        "title": "TR_2008_07",
+        "book_id": "02750962728389f1",
+        "title": "buildingaiagentsandagentharnessesfromscratch-sample",
         "primary_domain": "other",
         "track": "graduate_math_stats_physics_textbooks",
         "pages_read": 31,
-        "pages_total": 34,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "109e4bb85b206c81",
-        "title": "openalex_W4392773685",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 12,
-        "pages_total": 12,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "10a64d6ef9869079",
-        "title": "openalex_W4317933942",
-        "primary_domain": "other",
-        "track": "graduate_math_stats_physics_textbooks",
-        "pages_read": 7,
-        "pages_total": 8,
+        "pages_total": 74,
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": []
       }
     ],
     "mit_sloan_jqas_nessis_conferences": [
+      {
+        "book_id": "031ad624fe1961af",
+        "title": "2012 - Looking Ahead - a Bright Future for JQAS - Unknown Authors",
+        "primary_domain": "other",
+        "track": "mit_sloan_jqas_nessis_conferences",
+        "pages_read": 3,
+        "pages_total": 3,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
       {
         "book_id": "4aff948b6e732bdf",
         "title": "2019 Rao-Blackwellizing field goal percentage - dalygrafstein_jqas_2019",
@@ -2338,6 +3331,94 @@
       }
     ],
     "sports_psychology_and_cognition": [
+      {
+        "book_id": "017faf671ccb2a40",
+        "title": "COGNITIVE-INGEST-2026-10-13",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 7,
+        "pages_total": 7,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "01be173e3a625297",
+        "title": "1540-space-time-von-cramm-evaluating-decision",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 3,
+        "pages_total": 3,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "01c55f82946dd384",
+        "title": "2026-10-25_180500-gse-unified-coach-brain-and-tuesday-lock-pipeline",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 16,
+        "pages_total": 16,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "03a78e2f738517ff",
+        "title": "mind_corpus_gradeability",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 6,
+        "pages_total": 6,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0831b0a6eaf2d32b",
+        "title": "OWNER_DECISION_PACKET_2026-07-22",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "09e63da1f9554d42",
+        "title": "22-final-decision-matrix",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0ac3dc7a8e4a7fd6",
+        "title": "OWNER_DECISION_PACKET_2026-07-21",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0de5cc765dc16ba0",
+        "title": "gse-coach-brain-llm-engine",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 18,
+        "pages_total": 27,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
       {
         "book_id": "11f8991e3b35d286",
         "title": "2024 - No More Throwing Darts at the Wall Developing Fair Handicaps for Darts using a Markov Decision Process - Unknown Authors",
@@ -2438,6 +3519,17 @@
         "arxiv_ids": []
       },
       {
+        "book_id": "1801989296b47fad",
+        "title": "0218-gridmind-a-multiagent-nlp-framework-for",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 4,
+        "pages_total": 4,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "1826c95610cf35ec",
         "title": "ESPN_ODDS_RIGHTS_DECISION",
         "primary_domain": "psych",
@@ -2460,8 +3552,8 @@
         "arxiv_ids": []
       },
       {
-        "book_id": "314fd70f3797f8b5",
-        "title": "1103-probabilistic-neuro-symbolic-historical-data",
+        "book_id": "1fc20b8bb2ba648e",
+        "title": "2026 - HoopMind A Real-Time Neural Game-Tree System for Opponent-Aware Possession Planning - Gong et al",
         "primary_domain": "psych",
         "track": "sports_psychology_and_cognition",
         "pages_read": 1,
@@ -2471,18 +3563,40 @@
         "arxiv_ids": []
       },
       {
-        "book_id": "328a16c88ce26e06",
-        "title": "2012 Multi-Agent Team Behavior from Partial Team Tracings",
+        "book_id": "213f2037d04efc54",
+        "title": "1784-one-score-two-decisions-selective-prediction",
         "primary_domain": "psych",
         "track": "sports_psychology_and_cognition",
-        "pages_read": 12,
-        "pages_total": 12,
+        "pages_read": 3,
+        "pages_total": 3,
         "primitives_count": 3,
         "traces_count": 1,
         "arxiv_ids": []
       },
       {
-        "book_id": "3b7739284333bd93",
+        "book_id": "234bca0bf7b4a1bf",
+        "title": "canonical-source-decision",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 1,
+        "pages_total": 1,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "253370a2210281d5",
+        "title": "2026 - Comparative Efficacy of Different Aquatic Exercise Modalities on Cognitive Function in The Elderly A Systematic Review and Network Meta-Anal - Song et al",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 18,
+        "pages_total": 23,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "287cc64723123541",
         "title": "ask-the-brain",
         "primary_domain": "psych",
         "track": "sports_psychology_and_cognition",
@@ -2490,127 +3604,6 @@
         "pages_total": 3,
         "primitives_count": 3,
         "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "3c099fc230d6328a",
-        "title": "2020 - Player Benchmarking and Outcomes A Behavioral Science Approach - Unknown Authors",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 18,
-        "pages_total": 19,
-        "primitives_count": 4,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "3c38f8441a11c8e9",
-        "title": "EDGE-040-edgeball-founder-decision-memo",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 1,
-        "pages_total": 1,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "3ce946092bda55e7",
-        "title": "2014 - Win at Home and Draw Away Automatic Formation Analysis Highlighting the Differences in Home and Away Team Behaviors - Unknown Authors",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 9,
-        "pages_total": 9,
-        "primitives_count": 3,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "402b868507628221",
-        "title": "CFB_MODEL_DECISION",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 1,
-        "pages_total": 1,
-        "primitives_count": 4,
-        "traces_count": 1,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "43e9e1cbac6b1cfe",
-        "title": "2020 - A Puck Above the Rest Exploring the Effects of New Data on 2020 NHL Draft Decisions - Unknown Authors",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 2,
-        "pages_total": 2,
-        "primitives_count": 8,
-        "traces_count": 2,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "47652b52a7ece538",
-        "title": "GSE_MIND_ARCHITECTURE_SYNTHESIS",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 7,
-        "pages_total": 7,
-        "primitives_count": 16,
-        "traces_count": 4,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "49bac7408c4c443d",
-        "title": "GSE Coach-Brain LLM & Engine - Copy",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 27,
-        "pages_total": 27,
-        "primitives_count": 16,
-        "traces_count": 4,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "4f750a0c8577fe9a",
-        "title": "The Mental Game of Football - Brian Cain & Sean McDonnell",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 70,
-        "pages_total": 70,
-        "primitives_count": 18,
-        "traces_count": 5,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "4f85ec3be28b0f28",
-        "title": "0003-gsi-cross-domain-sports-medicine-and-decision-intelligence-expansion",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 2,
-        "pages_total": 2,
-        "primitives_count": 7,
-        "traces_count": 2,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "53c00239b496d051",
-        "title": "1545-markov-decision-processes-with-dynamic-transition",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 4,
-        "pages_total": 4,
-        "primitives_count": 15,
-        "traces_count": 4,
-        "arxiv_ids": []
-      },
-      {
-        "book_id": "53e2c24aff3a9b3d",
-        "title": "1946-planning-with-diffusion-for-flexible-behavior",
-        "primary_domain": "psych",
-        "track": "sports_psychology_and_cognition",
-        "pages_read": 3,
-        "pages_total": 3,
-        "primitives_count": 12,
-        "traces_count": 3,
         "arxiv_ids": []
       }
     ]

@@ -1,0 +1,273 @@
+{
+ "book_id": "7b8723df5531a5a9",
+ "source_status": "COMPLETE",
+ "pages_total": 333,
+ "pages_read": 333,
+ "primitives": [
+  {
+   "primitive_id": "p1_uat_nonpolynomial_iff",
+   "name": "Universal approximation iff non-polynomial activation (Leshno-Lin-Pinkus-Schocken, book Thm 3.9)",
+   "verbatim_quote": "Theorem 3.9. Let d ∈N and σ ∈M. Then N 1 d (σ; 1) is a universal approximator of C0(Rd) if and only if σ is not a polynomial.",
+   "page": 29,
+   "latex": "N^1_d(\\sigma;1)\\ \\text{is a universal approximator of}\\ C^0(\\mathbb{R}^d)\\ \\Longleftrightarrow\\ \\sigma\\ \\text{is not a polynomial},\\qquad \\sigma\\in M",
+   "symbol_and_unit_ledger": {
+    "d": "input dimension, positive integer count (dimensionless)",
+    "sigma": "activation function R->R, dimensionless map; must lie in M",
+    "M": "set of piecewise continuous, locally bounded functions with finitely many discontinuities on intervals of positive Lebesgue measure (Eq 3.1.1, p28); excludes 1/x (not locally bounded)",
+    "N^1_d(sigma;1)": "set of realized scalar-output networks, input dim d, depth <= 1 hidden layer, arbitrary finite width (Def 3.7, p28); a set of functions, dimensionless indexing",
+    "C^0(R^d)": "continuous real-valued functions on R^d; topology = uniform convergence on every compact K (compact convergence, Def 3.1 p26)",
+    "polynomial": "finite-degree algebraic polynomial in one variable; the exact obstruction class",
+    "units": "all objects are function spaces; approximation error |f-Phi| carries the output units U of the target f, uniform on compact K; no physical dimension enters the iff statement itself"
+   },
+   "assumptions": [
+    "sigma in M: piecewise continuous, locally bounded, discontinuities only at finitely many points, partition intervals of positive Lebesgue measure",
+    "approximation is compact-open: for every eps>0, every compact K subset R^d, every f in C0(R^d) some network achieves sup_K |f-Phi| < eps",
+    "width is unbounded (existential); depth fixed at one hidden layer",
+    "target f is continuous; no rate, no constructivity, no trainability claim"
+   ],
+   "breakdown_regime": "Fails exactly when sigma is a polynomial (realized functions stay polynomial, cannot be dense). Fails outside M, e.g. sigma(x)=1/x is not locally bounded and is excluded. The theorem is purely existential: required width may be astronomically large, nothing is said about finding weights by training, and uniform approximation on non-compact domains is not claimed. Corollary 3.19 extends to Lp(K) targets; discontinuous targets need the Lp route, not C0.",
+   "domain": [
+    "math",
+    "deep-learning-theory",
+    "approximation-theory"
+   ],
+   "timescales": [
+    "tau_0: single forward evaluation (one snap read)",
+    "tau_1: one play / one hypothesis-class query",
+    "tau_2: a game-plan installation cycle (width growth)",
+    "tau_3: season-long expansion of the playbook class"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "p1_uat_nonpolynomial_iff",
+    "mapping": "Synthesis (not a source claim): the coach's playbook is a hypothesis class of state-feedback policies over the compact game-state region (down, distance, field position, personnel, clock). The iff says the class is dense in continuous reactive policies exactly when its generating primitive is non-polynomial, i.e. genuinely non-degenerate: a purely linear tendency rule (polynomial primitive) can never approximate an arbitrary continuous defensive reaction, no matter how many plays are installed. Width = number of installed plays; density is an existence statement about the class, not about weekly preparation finding the right play.",
+    "telemetry": "LATENT_UNIDENTIFIABLE for literal density of a playbook class. Calibratable proxy: sup-norm gap between empirical play-call frequency surface over the compact state region and a smoothed target tendency surface, estimated from tracking + play-by-play; coverage of the state region by installed calls (fraction of eps-balls hit)."
+   }
+  },
+  {
+   "primitive_id": "p2_piece_upper_bound_depth_exponential",
+   "name": "Affine-piece upper bound (p*width)^L: depth multiplies, width adds (book Thm 6.3)",
+   "verbatim_quote": "Theorem 6.3. Let L ∈N. Let σ be cpwl with p pieces. Then, every neural network with architecture (σ; 1, d1, . . . , dL, 1) has at most (p · width(Φ))L pieces.",
+   "page": 74,
+   "latex": "\\mathrm{Pieces}(\\Phi) \\le \\bigl(p\\cdot \\mathrm{width}(\\Phi)\\bigr)^{L}",
+   "symbol_and_unit_ledger": {
+    "Pieces(Phi)": "number of maximal connected open regions on which the realized function is affine (Def 6.1, p72); dimensionless integer count",
+    "p": "number of affine pieces of the cpwl activation sigma; dimensionless count; ReLU has p=2 (p74)",
+    "width(Phi)": "max hidden-layer width max_l d_l; dimensionless neuron count",
+    "L": "number of hidden layers; dimensionless count",
+    "architecture (sigma;1,d1,...,dL,1)": "scalar input, scalar output feedforward net (Def 2.1)",
+    "units": "pure counting inequality, all quantities dimensionless integers; derived from summation rule Pieces(f1+f2)<=Pieces(f1)+Pieces(f2)-1 (6.1.1) and composition rule Pieces(f1 o f2)<=Pieces(f1)*Pieces(f2) (6.1.2), p73"
+   },
+   "assumptions": [
+    "sigma continuous piecewise linear (cpwl) with p pieces",
+    "univariate input/output architecture (sigma;1,d1,...,dL,1)",
+    "feedforward composition and summation only; induction over depth L",
+    "worst-case bound over all weight choices"
+   ],
+   "breakdown_regime": "The bound is worst-case and generically far from attained: Theorem 6.9 (p79) shows random-bias networks have only O(L*N) pieces in expectation, not exponential. For piecewise smooth activations the analogous statement with smooth pieces fails for L>1 (Exercise 6.13, p83). The univariate restriction matters: multivariate linear-region counts follow different combinatorics. Saturating the bound requires adversarially coordinated weights (hat-function constructions, Lemma 6.5).",
+   "domain": [
+    "math",
+    "deep-learning-theory",
+    "ReLU-geometry"
+   ],
+   "timescales": [
+    "tau_0: one affine-region evaluation",
+    "tau_1: one play as one region switch",
+    "tau_2: drive-level sequence of regime switches",
+    "tau_3: architecture search over depth L"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p2_piece_upper_bound_depth_exponential",
+    "mapping": "Synthesis: each hierarchical decision layer of the 22-player system (personnel -> formation -> motion -> snap read -> post-snap branch) composes like a network layer, so the number of distinct local affine response regimes of the play-state transition kernel is bounded by (p*W)^L. The kernel is the piecewise-affine transition operator of the hybrid play-state machine; depth L is the number of stacked decision stages, width W the branching factor per stage. This converts an architecture bound into a bound on the number of distinct coverage/pressure regimes a defense can present.",
+    "telemetry": "Count of distinct play-type / route-tree branches per game from play-by-play; effective number of trajectory regimes estimated by clustering 22-player tracking windows; ratio of observed regime switches to the (p*W)^L ceiling gives an expressivity-utilization fraction."
+   }
+  },
+  {
+   "primitive_id": "p3_depth_lower_bound_curvature",
+   "name": "Curvature-driven depth lower bound: error >= C*(2 width)^(-2L) (book Thm 6.4)",
+   "verbatim_quote": "Theorem 6.4. Let d0 ∈N and f ∈C3([0, 1]d0). Assume there exists a line segment s ⊆[0, 1]d0 of positive length such that 0 < c := R s p |f′′(x)| dx. Then, there exists C > 0 solely depending on c, such that for all ReLU neural networks Φ : Rd0 →R with L hidden layers ∥f −Φ∥L∞([0,1]d0) ≥C · (2width(Φ))−2L.",
+   "page": 74,
+   "latex": "\\|f-\\Phi\\|_{L^\\infty([0,1]^{d_0})} \\ge C\\cdot\\bigl(2\\,\\mathrm{width}(\\Phi)\\bigr)^{-2L},\\qquad c:=\\int_s \\sqrt{|f''(x)|}\\,dx>0",
+   "symbol_and_unit_ledger": {
+    "f": "target function in C^3([0,1]^{d0}); output units U",
+    "Phi": "ReLU network R^{d0}->R with L hidden layers; output units U (must match f)",
+    "d0": "input dimension, dimensionless count",
+    "L": "hidden-layer count, dimensionless",
+    "width(Phi)": "max hidden width, dimensionless count",
+    "s": "line segment of positive length inside [0,1]^{d0}; length in input units",
+    "c": "curvature functional integral_s sqrt(|f''|) dx; f'' has units U/length^2, sqrt gives U^{1/2}/length, times dx (length) => units U^{1/2}*length^{1/2}; on the unit cube lengths are normalized dimensionless, so c ~ U^{1/2}",
+    "C": "positive constant depending only on c; carries units U so both sides of the inequality are U",
+    "LHS": "uniform approximation error, units U; RHS C*(dimensionless)^{-2L}, units U: dimensionally homogeneous"
+   },
+   "assumptions": [
+    "f in C^3([0,1]^{d0})",
+    "non-vanishing curvature along at least one line segment: c = integral_s sqrt(|f''|) dx > 0 (f not affine there)",
+    "ReLU activation, arbitrary weights, exactly L hidden layers",
+    "error measured in sup norm over the whole unit cube"
+   ],
+   "breakdown_regime": "Vacuous for affine targets (c=0): they are represented exactly. At fixed width the lower bound decays only exponentially in depth L, so additional smoothness of f cannot be exploited without adding depth (p74 discussion). It is a lower bound only: actual error can be larger, and the constant C is non-explicit beyond dependence on c. The C3 requirement and the single-segment curvature condition mean highly oscillatory but locally flat targets may evade the bound.",
+   "domain": [
+    "math",
+    "deep-learning-theory",
+    "approximation-lower-bounds"
+   ],
+   "timescales": [
+    "tau_0: one read of the value surface",
+    "tau_1: one play decision",
+    "tau_2: series-level adaptation of read depth",
+    "tau_3: off-season installation of deeper progressions"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p3_depth_lower_bound_curvature",
+    "mapping": "Synthesis: the expected-points surface over continuous game state is a curved target f. A shallow fixed-width read (small L, small width) has a certified floor on its uniform identification error wherever the surface has non-zero curvature along a slice (e.g. safety rotation changing leverage continuously). The derived kernel is the read-resolution operator: to push error below eps along a curved slice, depth must grow at least like log(1/eps)/(2 log(2 width)). Comfort calls that flatten the read to one layer pay this floor exactly when the defense bends the surface.",
+    "telemetry": "Empirical curvature of the EP surface along 1-D slices (second differences of binned tracking-derived EP); held-out sup-norm error of shallow vs deep policy models on those slices; estimated c per slice from sqrt(|f''|) integration."
+   }
+  },
+  {
+   "primitive_id": "p4_expected_pieces_random_bias",
+   "name": "Random-bias expected piece count O(L*N), not exponential (book Thm 6.9, Eq 6.3.1)",
+   "verbatim_quote": "E[Pieces(Φ, s)] ≤1 + d1 + Cν δ (1 + (L −1) ln(2width(Φ))) L X j=2 dj. (6.3.1)",
+   "page": 79,
+   "latex": "\\mathbb{E}[\\mathrm{Pieces}(\\Phi,s)] \\le 1 + d_1 + \\frac{C_\\nu}{\\delta}\\Bigl(1+(L-1)\\ln\\bigl(2\\,\\mathrm{width}(\\Phi)\\bigr)\\Bigr)\\sum_{j=2}^{L} d_j",
+   "symbol_and_unit_ledger": {
+    "E": "expectation over independent uniform random biases b^(l) in [-delta/2, delta/2]^{d_{l+1}}; probability measure, dimensionless",
+    "Pieces(Phi,s)": "affine pieces of the network restricted to a unit-length line segment s in input space; dimensionless count",
+    "d1, d_j": "layer widths, dimensionless neuron counts; sum_{j=2}^L d_j = N - d1 part of total neuron count N",
+    "L": "hidden-layer count, dimensionless",
+    "delta": "bias randomization range, in (0,1]; units of pre-activation (dimensionless when inputs normalized)",
+    "C_nu": "upper bound on the maximal internal derivative nu (Def 6.8, p78-79): max L2 norm of pre-activation derivatives over bias draws; dimensionless slope bound",
+    "nu": "maximal internal derivative of Phi; dimensionless (output/input slope)",
+    "units": "every term is a dimensionless count; C_nu/delta is dimensionless; ln term dimensionless; inequality is a pure expectation bound"
+   },
+   "assumptions": [
+    "fixed weights W^(l) with maximal internal derivative nu <= C_nu (Def 6.8)",
+    "biases i.i.d. uniform on [-delta/2, delta/2], delta in (0,1]",
+    "restriction to a line segment s of length 1",
+    "ReLU activation; Remark 6.10: He-style init std sqrt(2/d_l) keeps nu bounded with high probability independent of width"
+   ],
+   "breakdown_regime": "Expectation only: individual draws can still realize exponentially many pieces. Requires bounded internal derivative; adversarial or poorly scaled weights violate nu <= C_nu and the bound collapses. Applies to initialization, not to trained weights, which may concentrate break points and approach the exponential ceiling of Thm 6.3. The ln(2 width) factor means very wide layers still add logarithmic regime growth per layer.",
+   "domain": [
+    "math",
+    "deep-learning-theory",
+    "random-initialization"
+   ],
+   "timescales": [
+    "tau_0: one initialization draw",
+    "tau_1: first forward pass / first snap",
+    "tau_2: early-training regime growth",
+    "tau_3: trained-network regime census"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "p4_expected_pieces_random_bias",
+    "mapping": "Synthesis: a freshly installed (randomly initialized) deep game plan starts with only linearly many effective decision regimes, O(L*N), not the exponential worst case. The depth advantage of a scheme is therefore a trained property, not an initialization property: a complex playbook on day one behaves like a shallow one. Under stress, if the quarterback's effective read re-randomizes (bounded internal derivative regime), his usable regime count collapses toward this linear bound exactly when the defense expands its disguise.",
+    "telemetry": "Count of activation-pattern / linear-region switches along tracking trajectories at initialization vs after training; number of distinct post-snap response regimes per layer; ratio of observed regimes to the O(L*N) expectation vs the (2 width)^L ceiling."
+   }
+  },
+  {
+   "primitive_id": "p5_curse_of_dimensionality_any_architecture",
+   "name": "Curse of dimensionality for any continuously parametrized approximator (book Cor 8.6, Thm 8.4)",
+   "verbatim_quote": "Then there exists Ck such that for all d, N ∈N, and any continuous weight selection W : C0([0, 1]d) →RN sup f∈Bk,d 1 ∥f −Φ(·, W(f))∥∞≥CkN−k/d.",
+   "page": 103,
+   "latex": "\\sup_{f\\in B^{k,d}_1}\\|f-\\Phi(\\cdot,W(f))\\|_\\infty \\ge C_k\\,N^{-k/d},\\qquad N\\ge\\Bigl(\\frac{C_k}{\\varepsilon}\\Bigr)^{d/k}\\ \\text{for accuracy }\\varepsilon\\ \\text{(8.1.5)}",
+   "symbol_and_unit_ledger": {
+    "B^{k,d}_1": "unit ball {f in C^k([0,1]^d): ||f||_{C^k} <= 1} (8.1.1, p100); outputs normalized so U=1",
+    "N": "number of real parameters / size of the network; dimensionless count",
+    "d": "input dimension; dimensionless count; appears in the exponent",
+    "k": "smoothness order of the target class; dimensionless count",
+    "C_k": "positive constant depending only on k; units of f (=1 in normalized ball)",
+    "W": "continuous weight-selection map C0([0,1]^d)->R^N; continuity is essential (Borsuk-Ulam argument, Thm 8.8 p104)",
+    "Phi(.,w)": "any feedforward architecture of size N, any activation, width, depth, sparsity",
+    "varepsilon": "target uniform accuracy, units of f",
+    "units": "both sides of the error inequality carry units of f (normalized to 1); N^{-k/d} dimensionless; parameter requirement (C_k/eps)^{d/k} dimensionless count"
+   },
+   "assumptions": [
+    "prior knowledge on f is only f in the C^k unit ball B^{k,d}_1",
+    "weight selection W is continuous in f",
+    "error measured uniformly (sup norm) over [0,1]^d",
+    "any architecture and activation; lower bound via continuous nonlinear N-widths gamma_{k,d,N} (8.1.4) and Borsuk-Ulam"
+   ],
+   "breakdown_regime": "Escapes only through structure, all treated in Ch 8: Barron class Gamma_C gives dimension-free O(c/N) L2 rate (Thm 8.12); compositionality F_k(m,d,M) reduces effective dimension to m (Prop 8.16); manifold-supported targets reduce to intrinsic dimension m (Prop 8.18). Discontinuous weight selection evades the topological argument. Even k=infinity does not rescue: Thm 8.10 gives gamma_{infinity,d,2 floor(d/2)} >= 1. Lp instead of sup norms changes the statement.",
+   "domain": [
+    "math",
+    "deep-learning-theory",
+    "information-based-complexity"
+   ],
+   "timescales": [
+    "tau_0: one parameter evaluation",
+    "tau_1: one film-study query (one function value)",
+    "tau_2: weekly game-plan fitting (N parameters)",
+    "tau_3: league-wide convergence of scheme complexity"
+   ],
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "source_operator": "p5_curse_of_dimensionality_any_architecture",
+    "mapping": "Synthesis: no continuous game-planning process (film -> weights) can uniformly approximate arbitrary smooth game-value functions over the full 22-player joint state with polynomially many parameters; the ambient state dimension d is the obstruction. The three escape clauses map to real football regularities: low Fourier-moment tendency fields (Barron), hierarchical play calling where each call depends on few variables (compositionality), and the fact that actual alignments live on a low-dimensional manifold of the nominal state space. A game plan is feasible only to the extent it certifies one of these structures.",
+    "telemetry": "Effective dimension of the tracking-state cloud (PCA participation ratio); empirical approximation error vs parameter-count scaling on held-out games; estimated smoothness k of tendency surfaces; fraction of state-space volume actually visited (manifold support evidence)."
+   }
+  },
+  {
+   "primitive_id": "p6_barron_dimension_free_rate",
+   "name": "Barron-class dimension-free O(c/N) mean-square approximation (book Thm 8.12, Eq 8.2.1)",
+   "verbatim_quote": "Then, for every c > 4C2 and every N ∈N there exists a neural network Φf with architecture (σ; d, N, 1) such that 1 |Bd 1| Z Bd 1 f(x) −Φf(x) 2 dx ≤c N , (8.2.1)",
+   "page": 108,
+   "latex": "\\frac{1}{|B^d_1|}\\int_{B^d_1}\\bigl|f(x)-\\Phi_f(x)\\bigr|^2\\,dx \\le \\frac{c}{N},\\qquad c>4C^2,\\quad f\\in\\Gamma_C,\\quad \\Phi_f\\ \\text{architecture}\\ (\\sigma;d,N,1)",
+   "symbol_and_unit_ledger": {
+    "Gamma_C": "Barron class {f in C(R^d): exists g in L1(R^d), f = inverse Fourier transform of g, integral_{R^d} |xi| |g(xi)| dxi <= C} (p107); finite first Fourier moment",
+    "C": "bound on the first Fourier moment; with coordinates normalized to the unit ball (length=1 dimensionless) C carries output units U; in physical coordinates C ~ U/length",
+    "c": "constant with c > 4 C^2; units U^2 in normalized coordinates; matches LHS mean-square error units U^2",
+    "N": "hidden-layer width / neuron count; dimensionless",
+    "B^d_1": "unit ball {x: ||x||<=1}; |B^d_1| its Lebesgue measure (dimensionless in normalized coordinates)",
+    "sigma": "sigmoidal activation: continuous, lim_{x->inf} sigma=1, lim_{x->-inf} sigma=0 (Def 3.12, p30)",
+    "Phi_f": "single-hidden-layer network (sigma; d, N, 1); output units U",
+    "units": "LHS is normalized mean-square error, units U^2; RHS c/N units U^2; dimension d does not appear on the RHS (Remark 8.13), though C may implicitly depend on d (Exercise 8.21)"
+   },
+   "assumptions": [
+    "sigma sigmoidal (Def 3.12)",
+    "f in Gamma_C: finite first Fourier moment bounded by C",
+    "error measured in normalized L2 over the unit ball, not sup norm",
+    "single hidden layer of width N; c > 4 C^2; proof via approximate Caratheodory (Lemma 8.14) in Hilbert space L2"
+   ],
+   "breakdown_regime": "The rate is L2-average, not uniform; localized high-frequency bumps have large Fourier moment C and fall outside Gamma_C, reverting to the N^{-k/d} curse. C may carry implicit d-dependence (Exercise 8.21, Remark 8.13), so 'dimension-free' is conditional on C being controlled independently of d. The proof is existential (approximate Caratheodory sampling); gradient training need not find the constructed weights. Powers of ReLU can slightly improve the rate (Remark 8.13, [288]).",
+   "domain": [
+    "math",
+    "deep-learning-theory",
+    "Barron-space",
+    "harmonic-analysis"
+   ],
+   "timescales": [
+    "tau_0: one neuron evaluation",
+    "tau_1: one tendency-surface query",
+    "tau_2: weekly width-N fit of the tendency model",
+    "tau_3: seasonal refinement of the Fourier-moment budget"
+   ],
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "source_operator": "p6_barron_dimension_free_rate",
+    "mapping": "Synthesis: a defensive tendency field with bounded first Fourier moment (smooth, low-frequency, predictable tendencies) is learnable at O(c/N) mean-square rate independent of the nominal state dimension. The derived kernel is the tendency-estimation operator: a shallow width-N model certifiably tracks such a field, which justifies low-complexity tendency models over full-state deep nets whenever the Fourier-moment budget C is empirically small. Disguise-heavy defenses inject high-frequency components that blow up C and silently void the guarantee.",
+    "telemetry": "Empirical Fourier spectrum of play-frequency fields over normalized state coordinates; estimate of C from spectral decay (integral |xi||g(xi)|); held-out normalized L2 error vs width N scaling; pre/post-snap spectral shift as a disguise detector."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t1_expressivity_learnability_gap",
+   "think": "The central invariant this book hands a football systems engineer is the separation of three things that practice constantly conflates: expressivity, learnability, and initialization. Theorem 3.9 says a single-hidden-layer class with any non-polynomial activation is dense in the continuous functions on every compact set. Read alone, that sounds like a license: install enough plays and you can approximate any defensive reaction. Corollary 8.6 immediately revokes the license. For the class of all C^k-smooth value functions on the d-dimensional unit cube, no continuously parametrized family of N parameters, of any architecture, any activation, any sparsity pattern, can beat worst-case uniform error C_k N^{-k/d}. To reach accuracy epsilon you need N >= (C_k/epsilon)^{d/k} parameters, exponential in the ambient dimension. The proof is topological, via Borsuk-Ulam, which is why continuity of the weight-selection map is the load-bearing assumption: the process that turns film study into weights must be continuous for the bound to bite. Weekly game planning is exactly such a continuous map from observed opponent tendencies to installed parameters, so the bound applies to it literally, not metaphorically. The joint state of twenty-two players has enormous nominal dimension; therefore no game plan can uniformly cover arbitrary smooth opponent value functions. The only escapes are structural, and the book names all three: Barron regularity (finite first Fourier moment), compositionality (each component depends on few variables), and manifold support (the data live on a low-dimensional subset). Each escape corresponds to a real football regularity. Smooth low-frequency team tendencies are Barron-like. Hierarchical play calling, where a call depends on down-distance-personnel rather than all twenty-two coordinates, is compositional. Actual alignments occupy a tiny manifold of the nominal configuration space. A game plan is feasible exactly to the extent it certifies one of these structures, and the telemetry for each is concrete: spectral decay of tendency fields, variable-dependence graphs of calls, and participation ratio of the tracking-state cloud. Theorem 6.4 adds the depth dimension of the same obstruction: wherever the value surface has non-zero curvature along a slice, a fixed-width ReLU read of depth L has uniform error at least C (2 width)^{-2L}. Smoothness of the target cannot be exploited without depth. This is the formal reason a shallow comfort read fails against a defense that bends the coverage surface continuously, and why installing deeper progressions is not optional polish but a requirement dictated by the curvature of the expected-points surface. Finally Theorem 6.9 separates initialization from trained capacity: at random bias initialization the expected number of affine pieces along a line is only O(L N), linear in depth and neuron count, versus the exponential worst-case ceiling (p width)^L of Theorem 6.3. A complex scheme on installation day behaves like a shallow one; the depth advantage is earned by training, not granted by architecture. The retrocausal lesson is that the hidden state of a defense is manufactured by its history: a blown coverage leaves a tendency scar, a localized high-frequency bump in the tendency field, which is precisely the kind of component that exits the Barron class and forces exponential sample complexity to identify from film. The genealogy of the mathematics mirrors the genealogy of coaching knowledge: Kolmogorov's 1957 superposition theorem (book p40) showed existence with pathological inner functions; the Leshno-Lin-Pinkus-Schocken non-polynomial iff (book p29, ref [180]) made the condition sharp; Barron's Fourier-moment class (book p107-108, ref [17]) bought dimension-free rates by paying a regularity price; and the piece-counting line from Montufar-style upper bounds (book p74, ref [305]) to random-initialization lower expectations (book p82, refs [121],[157]) separated worst-case geometry from typical behavior. Each generation tamed the previous generation's impossibility by adding a structural assumption, which is exactly how coaching generations tame the curse of dimensionality: not by covering more state, but by certifying more structure.",
+   "retrocausal_genealogy": "The hidden state of a defense is created backwards from its scars: a blown coverage in an earlier game installs a localized tendency bump that today's film study must identify. That bump is high-frequency, exits the Barron class, and forces exponential sample complexity, which is why coordinator lineage and past trauma are load-bearing variables in any tendency model. The mathematics itself has the same retrocausal shape: Kolmogorov 1957 existence (book p40) preceded the sharp non-polynomial iff (p29, ref [180]), which preceded Barron's regularity-priced rates (p107-108, ref [17]); each later theorem exists to repair an earlier impossibility, just as each coaching generation exists to repair the previous generation's exposed tendency.",
+   "theory_of_mind": "The quarterback models the defense; the defensive coordinator models the quarterback's model of the defense; the offensive coordinator models both. Theorem 6.4 makes this recursive stack concrete: each level is a bounded-depth approximator of the level below, and the curvature floor guarantees that a shallow model of a curved opponent is wrong by a certified amount. The coordinator's optimal deception is therefore not random noise but a targeted injection of curvature and Fourier moment into exactly the slices the quarterback's shallow read must resolve, exploiting the gap between the quarterback's confidence and his approximation floor.",
+   "cross_layer_veto": "A high-EV deep shot is vetoed when any of three gates fires: the curvature telemetry shows the shallow-read error floor exceeds the window tolerance (Thm 6.4); the Fourier-moment estimate of the disguise field voids the Barron guarantee (Thm 8.12); or the regime census shows collapse toward the random-init O(L N) expectation (Thm 6.9). Physics vetoes independently when ball-flight time exceeds the coverage window. The veto is the product of information and physical gates, so a call that is merely marginal on either axis is rejected, not averaged into acceptance."
+  },
+  {
+   "trace_id": "t2_veto_mechanics_telemetry",
+   "think": "The second trace binds the approximation bounds to the live decision loop of the quarterback and the adversarial loop of the defensive coordinator, and then runs the veto. Model the quarterback's pre-snap identification as a bounded-depth, bounded-width approximator of the defensive coverage surface. Theorem 6.4 supplies a certified floor on his uniform identification error wherever that surface curves along a slice, for instance a safety rotation that changes leverage continuously with the ball's hash position. A shallow read, small L and small width, cannot push error below C (2 width)^{-2L} on that slice no matter how confident it feels. The defensive coordinator's theory of mind is to model the quarterback's model of the defense and to present a pre-snap look whose visible surface is low-complexity, Barron-like, with small Fourier moment, while the post-snap truth is a localized high-frequency bump. The quarterback's dimension-free O(c/N) Barron guarantee, Theorem 8.12, silently voids because the constant C of the true field is large, and he reverts to the N^{-k/d} curse exactly at the moment of decision. Theorem 6.9 sharpens the stress case: under pressure, if the quarterback's effective read re-randomizes into a bounded-internal-derivative regime, his usable number of decision regimes collapses toward the linear O(L N) expectation rather than the exponential trained ceiling. The defense expands its disguise at precisely the instant the offense's effective hypothesis class shrinks. This is the formal core of why pressure and disguise are multiplicative rather than additive. The cross-layer veto now has three independent telemetry gates. Gate one, curvature: estimate c along the safety-rotation slice from second differences of binned tracking-derived expected points; if the shallow-read resolution floor exceeds the window tolerance, veto the deep shot regardless of its nominal expected value. Gate two, Fourier budget: estimate the first Fourier moment C of the disguise field from the pre/post-snap spectral shift; if C exceeds the budget that makes c=4C^2 compatible with the available width N, the Barron guarantee is void and the fast-progression call is vetoed. Gate three, regime census: count activation-pattern switches along recent trajectories; if the effective regime count has collapsed toward the random-init expectation, the read is operating shallow and the high-EV call is vetoed. Physics adds a fourth, independent veto: even a correct read must release within the ball-flight and window timescale tau_0; the approximation-error floor compounds with the physical window, so a call that is information-theoretically marginal and physically tight is vetoed by the product, not by either factor alone. The same structure transfers honestly to the sister institute's domain as a mapping, not a source claim: a linearized lazy-regime physiological model is a shallow approximator of a curved bioenergetic response surface, high-frequency axonal shear transients are the bumps that exit the Barron class, and the clinical veto on a load prescription is the analogue of the coverage veto. The discipline that makes all of this non-fabricated is that every gate is tied to a named theorem with a page, a verbatim quote, a dimensional ledger, and an explicit breakdown regime, and every football binding is labeled synthesis rather than attributed to the authors. Where a quantity is not identifiable from available telemetry, the artifact says LATENT_UNIDENTIFIABLE instead of inventing a number.",
+   "retrocausal_genealogy": "The veto gates are themselves artifacts of history: the curvature threshold is calibrated from past blown reads, the Fourier budget from past disguise successes, the regime-collapse threshold from past pressure collapses. Each gate is a scar turned into a constraint, so the present decision is causally downstream of earlier failures. This mirrors the book's own genealogy, where the random-init piece bound (p79-82, refs [121],[157]) exists because the worst-case exponential ceiling (p74, ref [305]) was found to be empirically misleading; the correction was born from the failure of the earlier bound to describe practice.",
+   "theory_of_mind": "The defensive coordinator chooses a pre-snap look that is a low-complexity Barron surface to the quarterback's eye while hiding a high-Fourier-moment post-snap truth. This is a deliberate attack on the quarterback's approximation guarantee: keep the visible C small so the O(c/N) rate appears to hold, then realize a field whose true C is large. The quarterback's counter-theory-of-mind is to distrust any look whose spectral shift between pre and post snap exceeds the budget, treating apparent simplicity as evidence of deception rather than of safety.",
+   "cross_layer_veto": "The clinical analogue veto is identical in form: a linearized physiological model is a shallow approximator of a curved bioenergetic surface; a high-frequency shear transient exits the Barron class and voids the dimension-free guarantee; the load prescription is vetoed when the curvature floor, the spectral budget, or the regime-collapse census fires, and independently when the physical recovery window is exceeded. The veto never averages a marginal information gate against a marginal physical gate; it requires both to pass, which is the fail-closed discipline the gatekeeper itself enforces on this artifact."
+  }
+ ],
+ "universal_lens": "A polymath audit lens for any learned surrogate: every continuously parametrized approximator is governed by the ambient dimension unless a structural regularity is certified. Audit a model by asking which escape clause it invokes, Barron Fourier moment, compositionality, or manifold support, and whether telemetry actually supports that clause, rather than trusting expressivity theorems that say nothing about learnability or initialization.",
+ "gsi_mapping": "Mapping (synthesis, not a source claim) to the sister institute: a linearized lazy-regime physiological model is a shallow approximator of a curved bioenergetic response surface; high-frequency axonal shear transients are localized bumps that exit the Barron class and void dimension-free guarantees; covering-number generalization bounds map to bounding the complexity of clinical telemetry response surfaces; the clinical load veto mirrors the coverage veto, requiring both information and physical gates to pass.",
+ "gse_mapping": "Mapping (synthesis) to GSE: the Coach-Mind simulator's policy class is dense only with non-polynomial primitives (Thm 3.9), but weekly game-planning as continuous weight selection cannot beat the N^{-k/d} curse over full 22-player state (Cor 8.6), so deception and DFS tail-risk models must certify Barron, compositional, or manifold structure; pressure collapses usable decision regimes toward O(L N) (Thm 6.9), which is the formal core of deception timing and portfolio tail exposure."
+}

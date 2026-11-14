@@ -1,0 +1,221 @@
+{
+ "book_id": "54c95039290a80fb",
+ "source_status": "COMPLETE",
+ "pages_total": 135,
+ "pages_read": 135,
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Q-learning temporal-difference update (Bellman optimality backup)",
+   "domain": "cs",
+   "layer": 1,
+   "statement": "The Q-value for a state-action pair is updated by an exponential moving average toward a temporal-difference target: Q(state,action) = (1-learning_rate)*Q(state,action) + learning_rate*Q_target, where Q_target = reward + discount_factor*max_{action'} Q(state',action'). This is the Bellman optimality backup combined with a stochastic-approximation step.",
+   "verbatim_quote": "Q(state, action) = (1 - learning_rate) * Q(state, action) + learning_rate * Q_target Q_target = reward + discount_factor * max_{action'} Q(state', action')",
+   "page": 74,
+   "latex": "Q(s,a)\\leftarrow (1-\\alpha)\\,Q(s,a)+\\alpha\\,Q_{\\text{target}},\\qquad Q_{\\text{target}}=r+\\gamma\\,\\max_{a'}Q(s',a')",
+   "symbol_and_unit_ledger": {
+    "Q(s,a)": "expected cumulative discounted reward from state s taking action a; reward units (dimensionless game score)",
+    "alpha": "learning_rate in source; step size in [0,1]; dimensionless",
+    "gamma": "discount_factor in source; reward decay per step in [0,1]; dimensionless",
+    "r": "reward (source 'reward') for the current transition; reward units (dimensionless score)",
+    "s,a": "current state and action; dimensionless labels",
+    "s',a'": "next state and candidate next action; dimensionless labels",
+    "max_{a'}": "maximization over next actions (greedy backup); returns reward units",
+    "Q_target": "TD target = immediate reward + discounted best next value; reward units"
+   },
+   "assumptions": [
+    "Markov decision process: next state and reward depend only on current (s,a).",
+    "learning_rate alpha in (0,1] satisfying stochastic-approximation conditions for convergence.",
+    "discount_factor gamma in [0,1) for infinite-horizon problems (paper uses 0.85-0.9).",
+    "The max backup targets the optimal (greedy) policy, i.e. Q-learning is off-policy.",
+    "Source names: learning_rate=alpha, discount_factor=gamma, reward=r."
+   ],
+   "breakdown_regime": "Convergence fails if alpha is held constant (persistent oscillation) or gamma=1 in continuing tasks (unbounded returns). The max operator overestimates values under function approximation/noise (maximization bias). Breaks when the Markov assumption fails (partial observability, as in raw Atari pixels) — the paper's deep Q-network addresses this with frame stacking. Non-stationary environments invalidate the fixed-point assumption.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Q-learning TD update is isomorphic to learning play-call values in GSE: state = (down, distance, field position, possession, score, clock), action = play call, reward = expected points added (EPA). The same Bellman backup propagates delayed scoring reward back to the earlier play that caused it, exactly as the source propagates the alien-explosion reward back to the shoot action.",
+    "source_operator": "p1: Q-learning update equations, p. 74",
+    "telemetry": "Play-by-play sequences parsed as (s,a,r,s') transitions; EPA per play as the reward signal; down/distance/field-position as the state encoding."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Greedy policy as argmax over the Q-function",
+   "domain": "cs",
+   "layer": 1,
+   "statement": "The decision-making policy maps a state to the action with the highest expected value: policy(state) = argmax_{action} Q(state, action). Given a learned Q-function, the agent acts greedily with respect to it.",
+   "verbatim_quote": "Reformulating the earlier policy more formally, we have: policy: state -> argmax_{action} Q(state, action)",
+   "page": 74,
+   "latex": "\\pi(s)=\\arg\\max_{a}\\,Q(s,a)",
+   "symbol_and_unit_ledger": {
+    "pi(s)": "policy: deterministic map from state to action; dimensionless label output",
+    "s": "state; dimensionless label",
+    "a": "candidate action; dimensionless label",
+    "Q(s,a)": "action-value (expected cumulative reward); reward units (dimensionless score)",
+    "argmax": "operator returning the action achieving the maximum Q; dimensionless label"
+   },
+   "assumptions": [
+    "A Q-function is available for every (state,action) pair (table) or via a function approximator.",
+    "The action set is finite so the argmax exists.",
+    "Pure exploitation: no exploration term; the paper separately trades off exploration vs exploitation.",
+    "Ties in argmax are resolved arbitrarily (implementation-defined)."
+   ],
+   "breakdown_regime": "Pure greedy action selection collapses exploration, so the agent can lock onto a suboptimal policy if Q-estimates are inaccurate early. With function approximation, argmax over a noisy Q-surface selects overestimated actions (maximization bias). Undefined if the action set is empty or Q is undefined for some actions.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The greedy policy is isomorphic to optimal play selection in GSE: given a learned play-value function Q(state, play), choose the play maximizing expected points added in the current game state. This is the same argmax decision rule lifted from game actions to football play calls.",
+    "source_operator": "p2: greedy policy, p. 74",
+    "telemetry": "Per-play EPA estimates conditioned on game state from play-by-play; the selected play is the argmax over the candidate play set for that down/distance/field-position."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Deep Q-network least-squares Bellman-residual loss",
+   "domain": "cs",
+   "layer": 1,
+   "statement": "The deep Q-network is trained by minimizing the squared temporal-difference error: error = sum (q_target_sa - q_current_sa)^2, where q_target_sa = reward + discount_factor*max_{action'} Q(state',action') and q_current_sa = Q(state,action). This is the least-squares Bellman residual, optimized by gradient descent.",
+   "verbatim_quote": "q_target_sa = rew_ph + discount_factor * q_target_max q_current_sa = q_current[0, act_ph] error = tf.reduce_sum(tf.square(q_target_sa - q_current_sa))",
+   "page": 98,
+   "latex": "\\mathcal{L}=\\sum_i\\bigl(r_i+\\gamma\\,\\max_{a'}Q(s'_i,a')-Q(s_i,a_i)\\bigr)^2",
+   "symbol_and_unit_ledger": {
+    "L": "loss = summed squared TD error (source 'error'); reward units squared",
+    "q_target_sa": "TD target r + gamma*max Q(s',a') (source rew_ph + discount_factor*q_target_max); reward units",
+    "q_current_sa": "current Q-value Q(s,a) for the taken action (source q_current[0,act_ph]); reward units",
+    "r_i": "reward for transition i (source rew_ph); reward units (dimensionless score)",
+    "gamma": "discount_factor; dimensionless in [0,1)",
+    "Q(s,a)": "neural-network action-value approximator with weights W; reward units",
+    "sum_i": "sum over the batch of transitions; dimensionless count aggregation"
+   },
+   "assumptions": [
+    "Q is parameterized by a neural network (linear map Q = X.dot(W) in the paper's least-squares variant).",
+    "The TD target is treated as a fixed regression label per update (semi-gradient method).",
+    "Squared error implies Gaussian-like noise on the Bellman residual.",
+    "Optimized with GradientDescentOptimizer(learning_rate) in the source."
+   ],
+   "breakdown_regime": "The semi-gradient TD target is a moving target (bootstrapping), so training can diverge without target-network stabilization or experience replay (the deadly triad: function approximation + bootstrapping + off-policy). Squared loss is sensitive to outlier rewards. The max inside the target propagates overestimation bias. Breaks under non-stationary targets or large reward scale.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derive a GSE play-value network trained on the least-squares Bellman residual: regress Q(state, play) toward r + gamma*max Q(next_state, play'), where r is realized EPA and the bootstrap propagates scoring value backward through a drive. The source operator is the squared TD-error loss; the derivation adapts it from Atari reward to football EPA.",
+    "source_operator": "p3: DQN squared TD-error loss, p. 98",
+    "telemetry": "Predicted play-value Q vs realized EPA per play; TD targets built from the subsequent game state's best play value; drive sequences as the transition batches."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Ridge regression closed-form (regularized least squares) with EMA model update",
+   "domain": "math",
+   "layer": 1,
+   "statement": "The ridge-regression weight vector is computed in closed form as newW = (X^T X + lambda*I)^{-1} X^T y with lambda = 10e-4, then the model is interpolated toward the new solution: W = w_lr*newW + (1-w_lr)*W. This is Tikhonov-regularized least squares used as a linear Q-function approximator.",
+   "verbatim_quote": "I = np.eye(X.shape[1]) newW = np.linalg.inv(X.T.dot(X) + 10e-4 * I).dot(X.T.dot(y)) W = w_lr * newW + (1 - w_lr) * W",
+   "page": 119,
+   "latex": "W_{\\text{new}}=(X^{T}X+\\lambda I)^{-1}X^{T}y,\\quad \\lambda=10\\text{e-}4=10^{-3},\\qquad W\\leftarrow w_{lr}\\,W_{\\text{new}}+(1-w_{lr})\\,W",
+   "symbol_and_unit_ledger": {
+    "X": "design/feature matrix (one-hot states in source); units per feature (dimensionless one-hot here)",
+    "y": "target vector (Q-value labels); reward units (dimensionless score)",
+    "X^T X": "Gram matrix of features; feature-units squared",
+    "lambda": "ridge penalty = 10e-4 = 0.001 (source '10e-4'); same units as X^T X diagonal; dimensionless for one-hot X",
+    "I": "identity matrix of size X.shape[1]; dimensionless",
+    "W_new": "closed-form ridge solution; units y per feature-unit",
+    "w_lr": "interpolation learning rate for the model (source w_lr=0.5); dimensionless in [0,1]",
+    "W": "current model weights, updated by exponential moving average toward W_new; units y per feature-unit"
+   },
+   "assumptions": [
+    "X^T X + lambda*I is invertible (guaranteed for lambda>0 since X^T X is positive semidefinite).",
+    "lambda>0 regularizes the otherwise possibly singular normal equations.",
+    "The linear model Q(s)=s.dot(W) is the Q-function approximator (source makeQ).",
+    "The EMA update W = w_lr*W_new + (1-w_lr)*W stabilizes successive closed-form fits across episodes."
+   ],
+   "breakdown_regime": "As lambda->0 the solution approaches ordinary least squares and becomes ill-conditioned/singular when X^T X is rank-deficient (collinear or one-hot features with unseen states). Large lambda overshrinks weights toward zero (high bias). The closed form is O(d^3) in feature dimension and impractical for very high-dimensional inputs. The linear Q-function cannot represent nonlinear value surfaces.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derive GSE's regularized linear EPA/win-probability models via the ridge normal equation: fit W=(X^T X+lambda I)^{-1}X^T y on team/player feature matrices X with EPA or points as y, choosing lambda by cross-validation. The source operator is the Tikhonov closed form; the derivation ports it from a FrozenLake Q-function to football prediction, retaining the EMA stabilization for online updates.",
+    "source_operator": "p4: ridge regression closed-form + EMA update, p. 119 (also p. 113)",
+    "telemetry": "Feature matrix X of team/player season statistics; target y of EPA or points; cross-validated lambda; condition number of X^T X monitored for collinearity."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Bias-variance decomposition of mean squared error",
+   "domain": "math",
+   "layer": 1,
+   "statement": "The expected prediction error (mean squared error) decomposes into bias squared plus variance (plus irreducible noise): MSE = Bias^2 + Variance + sigma^2. The source frames 'true error' as MSE, the expected difference between predicted and true labels, broken into bias and variance components; increasing model complexity raises variance and lowers bias, and sample complexity grows with model complexity.",
+   "verbatim_quote": "At a high level, the bias-variance decomposition is a breakdown of “true error” into two components: bias and variance. We refer to “true error” as mean squared error (MSE), which is the expected difference between our predicted labels and the true labels.",
+   "page": 108,
+   "latex": "\\mathbb{E}\\bigl[(y-\\hat f(x))^2\\bigr]=\\bigl(\\mathrm{Bias}[\\hat f(x)]\\bigr)^2+\\mathrm{Var}[\\hat f(x)]+\\sigma^2",
+   "symbol_and_unit_ledger": {
+    "y": "true label/target; label units",
+    "hat_f(x)": "model prediction at input x; label units",
+    "E[(y-hat_f)^2]": "mean squared error ('true error' in source); label units squared",
+    "Bias[hat_f]": "E[hat_f(x)] - E[y|x]; systematic error; label units",
+    "Var[hat_f]": "E[(hat_f(x)-E[hat_f(x)])^2]; estimation variability across training samples; label units squared",
+    "sigma^2": "irreducible noise variance Var[y|x]; label units squared",
+    "x": "input features; dimensionless or feature units"
+   },
+   "assumptions": [
+    "Squared-error loss; the decomposition is specific to MSE (not general loss).",
+    "Expectation is over training-set draws (and noise), with x fixed.",
+    "The source emphasizes two components (bias, variance); sigma^2 is the irreducible noise term completing the identity.",
+    "Model complexity trades bias against variance; the paper notes complex models need exponentially more samples."
+   ],
+   "breakdown_regime": "The clean additive decomposition holds only for squared loss; for classification/0-1 loss or cross-entropy there is no exact bias-variance identity. The 'exponentially more samples' claim is a heuristic, not a theorem with a universal exponent. With modern over-parameterized models the classical U-shaped variance curve can break (double descent), which the source does not address.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The bias-variance tradeoff is isomorphic to GSE's model-complexity vs sample-complexity tradeoff: a simple linear EPA model (high bias, low variance) needs few games, while a complex 22-agent nonlinear model (low bias, high variance) needs exponentially more tracking data to reach the same error. The source's FrozenLake observation (adding a layer quadruples episodes) maps to GSE learning curves.",
+    "source_operator": "p5: bias-variance decomposition of MSE, p. 108",
+    "telemetry": "Learning curves (prediction error vs training-set size) for GSE predictors of differing complexity; measured bias and variance across bootstrap resamples of the play-by-play corpus."
+   }
+  },
+  {
+   "primitive_id": "p6",
+   "name": "Cross-entropy (log-loss) and gradient descent optimization",
+   "domain": "cs",
+   "layer": 1,
+   "statement": "Cross-entropy (log-loss) quantifies the difference between two probability distributions (predictions and labels); a perfect classification gives cross-entropy 0. The loss is minimized by gradient descent, taking iterative steps along the gradient in the negative (descending) direction; the source uses the Adam optimizer, which adds momentum via an exponentially weighted average of gradients.",
+   "verbatim_quote": "A popular choice of loss function in TensorFlow programs is cross-entropy, also known as log-loss, which quantiﬁes the difference between two probability distributions (the predictions and the labels). A perfect classiﬁcation would result in a cross-entropy of 0, with the loss completely minimized. We also need to choose the optimization algorithm which will be used to minimize the loss function. A process named gradient descent optimization is a common method for ﬁnding the (local) minimum of a function by taking iterative steps along the gradient in a negative (descending) direction.",
+   "page": 49,
+   "latex": "H(p,q)=-\\sum_{c}p(c)\\log q(c),\\qquad \\theta\\leftarrow\\theta-\\eta\\,\\nabla_{\\theta}\\mathcal{L}",
+   "symbol_and_unit_ledger": {
+    "H(p,q)": "cross-entropy between true distribution p and predicted q; information units (nats if ln, bits if log2); dimensionless",
+    "p(c)": "true label probability of class c (one-hot in classification); dimensionless in [0,1]",
+    "q(c)": "predicted probability of class c (softmax output); dimensionless in [0,1]",
+    "sum_c": "sum over classes; dimensionless aggregation",
+    "theta": "model parameters (weights/biases); parameter units",
+    "eta": "learning rate (step size); dimensionless",
+    "nabla_theta L": "gradient of the loss w.r.t. parameters; loss units per parameter unit",
+    "L": "loss (cross-entropy); information units (dimensionless)"
+   },
+   "assumptions": [
+    "Predictions q form a valid probability distribution (softmax-normalized).",
+    "Labels p are one-hot for single-label classification (source uses softmax_cross_entropy_with_logits).",
+    "Gradient descent converges to a local minimum for non-convex losses; Adam adds momentum via exponentially weighted gradient averages.",
+    "Perfect classification (q=p) yields H=0; H>=0 with equality iff q=p (Gibbs' inequality)."
+   ],
+   "breakdown_regime": "Cross-entropy diverges (->infinity) as q(c)->0 for a class with p(c)>0 (overconfident wrong predictions), causing exploding gradients. Gradient descent stalls at saddle points/plateaus in high dimensions and only guarantees local minima for non-convex networks. Adam's momentum can overshoot near minima. The loss is undefined for q outside (0,1].",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derive GSE classification losses (win/loss, play-type, coverage scheme) as categorical cross-entropy optimized by gradient descent: p is the observed outcome label, q the model's softmax probability. The source operator is cross-entropy + negative-gradient steps; the derivation ports it from digit recognition to football outcome prediction, with Adam-style momentum for stable training.",
+    "source_operator": "p6: cross-entropy loss + gradient descent, p. 49",
+    "telemetry": "Predicted outcome probabilities q vs observed labels p from play-by-play; gradient norms and loss curves monitored for the overconfidence divergence regime."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t0",
+   "think": "This book (Python Machine Learning Projects, DigitalOcean, Tagliaferri, Morales, Birbeck and Wan, ISBN 978-0-9997730-2-4, CC BY-NC-SA 4.0) is a tutorial collection rather than a research monograph, so its sovereign mathematics appears as prose descriptions and executable code rather than typeset equations. I treated the code and the defining prose as the source notation and formalized them faithfully into LaTeX, keeping Layer 1 as the pure machine-learning and reinforcement-learning invariants and pushing all football specificity into Layer 2. The reinforcement-learning chapter (Alvin Wan) is the richest source. On page 74 the Q-learning update is printed explicitly: Q(state, action) = (1 - learning_rate) * Q(state, action) + learning_rate * Q_target, with Q_target = reward + discount_factor * max_{action'} Q(state', action'). This is the Bellman optimality backup combined with a stochastic-approximation (exponential moving average) step. I identified learning_rate with alpha and discount_factor with gamma, and noted that the max backup makes Q-learning off-policy: it targets the greedy policy regardless of the behavior policy. The greedy policy itself, policy: state -> argmax_{action} Q(state, action), is the decision rule that turns the learned value function into action. On page 98 the deep Q-network loss is given in code: q_target_sa = rew_ph + discount_factor * q_target_max and error = tf.reduce_sum(tf.square(q_target_sa - q_current_sa)). This is the least-squares Bellman residual, the squared temporal-difference error, minimized by gradient descent. The crucial subtlety is that the target is bootstrapped from the network's own estimates, making this a semi-gradient method subject to the deadly triad of function approximation, bootstrapping and off-policy learning, which can diverge without target networks or experience replay. The sovereign insight connecting these three is delayed reward assignment: the source repeatedly uses Space Invaders, where the player is rewarded when an alien explodes rather than when the player shoots, yet the shoot action is the true cause. The Bellman backup propagates reward backward through time so the earlier action receives credit. Dimensionally, Q-values and rewards are in dimensionless game-score units, alpha and gamma are dimensionless in [0,1], and the squared TD loss is in score-units squared. Breakdown regimes: constant alpha prevents convergence, gamma=1 in continuing tasks gives unbounded returns, the max operator induces overestimation bias under noise, and partial observability (raw pixels) breaks the Markov assumption — which is why the source stacks frames. I mapped all three to GSE play-calling as a Markov decision process with EPA as reward, with play-by-play telemetry supplying the (state, action, reward, next-state) transitions. The source also makes the exploration-exploitation tradeoff explicit: exploration means the agent acts randomly, exploitation means it uses its Q-values to choose the action it believes optimal, and the agent must balance the two to avoid premature convergence on a suboptimal policy. This is the same exploration burden GSE faces when evaluating novel play calls against an adapting defense rather than always exploiting the highest-EPA call, and it is why a purely greedy policy is insufficient in a non-stationary strategic environment.",
+   "retrocausal_genealogy": "The reinforcement-learning kernels descend from Bellman's dynamic programming and the Bellman optimality equation, via Watkins' Q-learning and the stochastic-approximation tradition of Robbins and Monro. The temporal-difference update is the marriage of Bellman's backup with Robbins-Monro averaging; the deep Q-network loss descends from least-squares temporal-difference learning and the Sutton-Barto reinforcement-learning lineage. The greedy argmax policy is the classical optimal-control decision rule. These survived because they are the minimal fixed-point and decision invariants for sequential decision-making under delayed reward, independent of the Atari or FrozenLake instantiation the tutorial uses.",
+   "theory_of_mind": "The author (Alvin Wan) intends to teach a developer to build increasingly capable game bots, so the pedagogy moves from a random baseline to a Q-table to a deep Q-network to a least-squares agent. The repeated Space Invaders delayed-reward example is a theory of the learner's mind: the author anticipates the reader's confusion about credit assignment and pre-empts it by insisting the shoot action, not the explosion, is the true cause of reward. The bias-variance framing is aimed at a practitioner who must choose model complexity under limited compute, modeling the reader as a resource-constrained decision-maker.",
+   "cross_layer_veto": "The Layer-2 MDP isomorphism is vetoed if football play sequences violate the Markov property in ways frame-stacking cannot fix (e.g. long-horizon strategic dependencies on opponent tendencies not captured in the state). The greedy-policy mapping fails if GSE must explore rather than exploit (play-calling against an adapting defense is not a stationary greedy problem). The DQN loss mapping is vetoed if EPA rewards are too sparse or heavy-tailed for the squared Bellman residual to converge, detectable as diverging TD-error on play-by-play telemetry. Each veto is tied to an observable failure."
+  },
+  {
+   "trace_id": "t1",
+   "think": "The statistical-learning primitives come from two chapters. On page 119 (repeated on page 113) the least-squares agent computes the ridge-regression closed form in code: newW = np.linalg.inv(X.T.dot(X) + 10e-4 * I).dot(X.T.dot(y)), then interpolates W = w_lr * newW + (1 - w_lr) * W. This is Tikhonov-regularized least squares, W = (X^T X + lambda I)^{-1} X^T y with lambda = 10e-4 = 0.001, used as a linear Q-function approximator Q(s) = s.dot(W). The lambda I term guarantees invertibility even when X^T X is rank-deficient, which matters for one-hot state features where unseen states make the Gram matrix singular. The exponential-moving-average interpolation stabilizes successive closed-form fits across episodes. On page 108 the bias-variance decomposition is stated in prose: the decomposition is a breakdown of true error into bias and variance, where true error is mean squared error, the expected difference between predicted and true labels. I formalized this as E[(y - f-hat)^2] = Bias^2 + Variance + sigma^2, noting honestly that the source emphasizes two components while the irreducible noise term completes the identity. The accompanying claim that increasing model complexity increases sample complexity exponentially is a heuristic illustrated by the FrozenLake observation that adding a network layer quadruples the required episodes, not a theorem with a universal exponent. On page 49 cross-entropy (log-loss) is described as quantifying the difference between two probability distributions, zero for perfect classification, minimized by gradient descent taking steps along the negative gradient, with Adam adding momentum via an exponentially weighted average of gradients. I formalized categorical cross-entropy H(p,q) = -sum p(c) log q(c) and the gradient-descent update. Dimensionally, ridge weights carry target-units per feature-unit, lambda matches the Gram-matrix diagonal units (dimensionless for one-hot features), MSE is in label-units squared, and cross-entropy is in dimensionless information units. Breakdown regimes: ridge becomes ill-conditioned as lambda approaches zero with collinear features and overshrinks for large lambda; the bias-variance identity is specific to squared loss and the classical U-shaped curve can break under double descent; cross-entropy diverges for overconfident wrong predictions and gradient descent only guarantees local minima. The classifier chapter's Naive Bayes and the intro chapter's discussion of bias are conceptual and social respectively, so I did not extract them as mathematical primitives — the intro's bias is human bias, not statistical bias. I mapped ridge to GSE's regularized linear EPA models, bias-variance to GSE's complexity-versus-data tradeoff, and cross-entropy to GSE outcome classification, each with concrete telemetry. The unifying thesis of the chapter is that the least-squares agent, being a simpler linear model, should solve FrozenLake with fewer training episodes than the deep Q-network, directly instantiating the bias-variance tradeoff: lower model complexity reduces sample complexity at the cost of higher bias. This is precisely the lever GSE pulls when choosing between a parsimonious linear EPA model and a data-hungry nonlinear alternative, and the source's closing question — whether a high-performing agent can be trained with far fewer samples — is the same sample-efficiency question that governs model selection under a limited tracking-data budget.",
+   "retrocausal_genealogy": "Ridge regression descends from Tikhonov regularization and the Hoerl-Kennard ridge estimator, itself a stabilization of Gauss-Legendre least squares; the closed form (X^T X + lambda I)^{-1} X^T y is the regularized normal equation. The bias-variance decomposition descends from Geman-Bienenstock-Doursat's neural-network bias-variance analysis and the classical decomposition of expected squared error. Cross-entropy descends from Shannon's information theory and Gibbs' inequality, and gradient descent from Cauchy's steepest-descent method, with Adam from Kingma-Ba's adaptive-moment optimization. These survived as the canonical regularized-estimation, error-decomposition and information-theoretic-loss invariants.",
+   "theory_of_mind": "The authors intend to equip developers with practical, reproducible projects, so they favor closed-form and library solutions over derivations. The least-squares agent is presented as a deliberate simplification to reduce sample complexity, modeling the reader as someone who wants a working bot with less compute. The bias-variance discussion is a theory of the practitioner's judgment: the author wants the reader to internalize that more complex models are not free, and to choose complexity consciously. The social-bias section models the reader as an ethical actor who must audit data and teams, not just algorithms.",
+   "cross_layer_veto": "The ridge mapping is vetoed if GSE's feature matrix is so high-dimensional or collinear that the closed form is numerically unstable or computationally prohibitive, requiring iterative solvers instead. The bias-variance mapping is vetoed if GSE's over-parameterized models exhibit double descent, breaking the classical monotone complexity-error story. The cross-entropy mapping is vetoed if GSE outcomes are not probabilistic labels (e.g. deterministic rule-based grading) so that a distributional loss is inappropriate. The EMA-stabilization assumption fails if successive fits are not correlated across episodes. Each veto is grounded in a measurable condition."
+  }
+ ],
+ "universal_lens": "Across domains the invariants are: sequential decisions under delayed reward are solved by a Bellman fixed point plus a greedy decision rule; estimation under limited data is stabilized by regularization and governed by a bias-variance tradeoff; and learning is driven by an information-theoretic loss minimized along the negative gradient. These are domain-free principles of control, estimation and optimization that recur wherever an agent must act, predict and learn from samples.",
+ "gsi_mapping": "For GSI's collective-intelligence compilation, the Q-learning and greedy-policy kernels model how a group of agents learns coordinated sequential behavior from delayed collective reward, the bias-variance decomposition governs how much collective data is needed for a given model complexity, and ridge regression provides a stabilized linear aggregator of individual contributions. Cross-entropy supplies the loss for learning collective outcome distributions. Together they formalize how a collective learns to act and predict under sample and compute constraints.",
+ "gse_mapping": "For GSE's 22-agent football engine, the primitives map directly: play-calling is a Markov decision process with state = down/distance/field-position/score/clock, action = play call, reward = EPA, learned by the Q-learning Bellman backup and selected by the greedy argmax policy; a deep Q-network trained on the squared Bellman residual approximates drive-level play value; ridge regression gives regularized linear EPA and win-probability models; the bias-variance tradeoff sets the model-complexity versus tracking-data budget; and cross-entropy with gradient descent trains outcome and play-type classifiers."
+}

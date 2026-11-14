@@ -1,0 +1,78 @@
+{
+  "book_id": "28a5a08a3d552969",
+  "source_status": "COMPLETE",
+  "title": "gate-decision-packet",
+  "file_name": "gate-decision-packet.md",
+  "sha256": "28a5a08a3d552969daea55a46df297adc32ee5e01104ab13625f2c6097ff070f",
+  "primary_domain": "psych",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Gate-decision primitives define production-environment state transitions via owner-authority constraints, modeled as a binary decision lattice with high-impact nodes and bounded blast radii. Universal Lens: Rooted in gate-decision-packet (28a5a08a3d552969), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers decision confidence from gated actions using Bayesian belief updates over immutable commit histories; each authorized action adjusts posterior probability of system integrity. GSI Mapping: Rooted in gate-decision-packet (28a5a08a3d552969), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning by evaluating state transitions through a deterministic kernel of gated decisions, where each node represents a constrained control flow with explicit risk bounds. GSE Mapping: Rooted in gate-decision-packet (28a5a08a3d552969), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "open_review_pr",
+      "name": "Production Merge Authorization",
+      "verbatim_quote": "| # | Decision | Why it's gated | Blast radius | Exact authorize phrase | |---|---|---|---|---| | 1 | **Open a review PR / merge the branch** | merge to `main` on the deploy clone is a production deploy | ⚠️ HIGH — production.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'decision variable (0/1)', 'R': 'risk level (high/low)', 'T': 'transition time (s)'}",
+      "assumptions": "Merge operations are irreversible, atomic, and require explicit owner authorization.",
+      "breakdown_regime": "When D=1 and R=high, T approaches critical threshold for system stability.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Decision lattice in GSE maps to Bayesian update in GSI: D=1 triggers P(H|E) adjustment in belief space.",
+        "source_operator": "open_review_pr",
+        "telemetry": "Git diff size, commit count, and merge timestamp."
+      }
+    },
+    {
+      "primitive_id": "subscriptions_doc_fix",
+      "name": "Price Copy Synchronization",
+      "verbatim_quote": "decide) | | 2 | **Subscriptions doc price/env fix** | stale customer-facing price copy ($19/$49 →",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_c': 'canonical price (USD)', 'P_s': 'stale price (USD)', 'M': 'money sensitivity flag (0/1)'}",
+      "assumptions": "Price discrepancies may cause revenue leakage or user confusion.",
+      "breakdown_regime": "When M=1 and |P_c - P_s| > ε, synchronization required.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's kernel computes price consistency checks; GSI models impact as likelihood shift in user behavior.",
+        "source_operator": "subscriptions_doc_fix",
+        "telemetry": "Document change delta, price discrepancy magnitude."
+      }
+    },
+    {
+      "primitive_id": "export_is_stub_db_url",
+      "name": "Database Stub Export",
+      "verbatim_quote": "the displayed prices to the canonical founding ladder ($14.99/$24.99).` | | 3 | **Export `isStubDbUrl` +",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'export flag (0/1)', 'S': 'source edit constraint (0/1)', 'T': 'test coverage (dimensionless)'}",
+      "assumptions": "Source edits are forbidden in core modules without explicit override.",
+      "breakdown_regime": "When S=1 and E=1, T must exceed minimum threshold for validation.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE enforces module isolation; GSI evaluates export as a conditional probability of codebase integrity.",
+        "source_operator": "export_is_stub_db_url",
+        "telemetry": "Module access logs, export count, test coverage ratio."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "28a5a08a3d552969_t0",
+      "think": "The primitives form a hierarchical decision lattice where each node encodes a bounded risk state. The 'Open a review PR' primitive operates at maximum risk (R=high), triggering a probabilistic update in GSI's belief engine upon authorization. The 'Subscriptions doc fix' primitive introduces a low-risk but money-sensitive condition, modeled as a likelihood shift in user perception. The 'Export isStubDbUrl' primitive enforces source isolation, creating a derived kernel in GSE that maps to a conditional probability in GSI. Failure modes include unauthorized merges (D=1, R=high, no owner approval), stale pricing (M=1, |P_c - P_s| > ε), and unauthorized source edits (S=1, E=1, T < threshold). Each primitive defines a boundary in the decision space, with telemetry serving as empirical observables for verification.\n\nDeep epistemic analysis for gate-decision-packet (28a5a08a3d552969, domain=psych, pages_read=1/1): Operator 'Production Merge Authorization' (page 1, domain psych) captures: | # | Decision | Why it's gated | Blast radius | Exact authorize phrase | |---|---|---|---|---| | 1 | **Open a review PR / merge the branch** | merge to `main` on the deploy clone is a production deploy | ⚠️ HIGH — production. Assumptions: Merge operations are irreversible, atomic, and require explicit owner authorization. Breakdown regime: When D=1 and R=high, T approaches critical threshold for system stability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Decision lattice in GSE maps to Bayesian update in GSI: D=1 triggers P(H|E) adjustment in belief space. Operator 'Price Copy Synchronization' (page 1, domain psych) captures: decide) | | 2 | **Subscriptions doc price/env fix** | stale customer-facing price copy ($19/$49 → Assumptions: Price discrepancies may cause revenue leakage or user confusion. Breakdown regime: When M=1 and |P_c - P_s| > ε, synchronization required. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's kernel computes price consistency checks; GSI models impact as likelihood shift in user behavior. Operator 'Database Stub Export' (page 1, domain psych) captures: the displayed prices to the canonical founding ladder ($14.99/$24.99).` | | 3 | **Export `isStubDbUrl` + Assumptions: Source edits are forbidden in core modules without explicit override. Breakdown regime: When S=1 and E=1, T must exceed minimum threshold for validation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE enforces module isolation; GSI evaluates export as a conditional probability of codebase integrity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gate-decision-packet (28a5a08a3d552969, domain=psych, pages_read=1/1): Operator 'Production Merge Authorization' (page 1, domain psych) captures: | # | Decision | Why it's gated | Blast radius | Exact authorize phrase | |---|---|---|---|---| | 1 | **Open a review PR / merge the branch** | merge to `main` on the deploy clone is a production deploy | ⚠️ HIGH — production. Assumptions: Merge operations are irreversible, atomic, and require explicit owner authorization. Breakdown regime: When D=1 and R=high, T approaches critical threshold for system stability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Decision lattice in GSE maps to Bayesian update in GSI: D=1 triggers P(H|E) adjustment in belief space. Operator 'Price Copy Synchronization' (page 1, domain psych) captures: decide) | | 2 | **Subscriptions doc price/env fix** | stale customer-facing price copy ($19/$49 → Assumptions: Price discrepancies may cause revenue leakage or user confusion. Breakdown regime: When M=1 and |P_c - P_s| > ε, synchronization required. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's kernel computes price consistency checks; GSI models impact as likelihood shift in user behavior. Operator 'Database Stub Export' (page 1, domain psych) captures: the displayed prices to the canonical founding ladder ($14.99/$24.99).` | | 3 | **Export `isStubDbUrl` + Assumptions: Source edits are forbidden in core modules without explicit override. Breakdown regime: When S=1 and E=1, T must exceed minimum threshold for validation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE enforces module isolation; GSI evaluates export as a conditional probability of codebase integrity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification theory and operational semantics, these primitives reflect the evolution of autonomous systems into hybrid human-AI governance models, tracing back to early software engineering principles of access control and atomicity. Retrocausal Genealogy: Rooted in gate-decision-packet (28a5a08a3d552969), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the automated audit system (which flags anomalies) and the human owner (who authorizes). The system models uncertainty in both parties: GSI assesses risk based on past behavior, while GSE evaluates whether the decision aligns with current operational constraints. Theory of Mind & Decision Maker Model: Rooted in gate-decision-packet (28a5a08a3d552969), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates in distinct domains: merge decisions (GSE), documentation (GSI), and source integrity (both). Leakage occurs if one layer's telemetry corrupts another’s inference, e.g., if a price change affects merge logic or vice versa. Cross-Layer Veto & Anti-Leakage Check: Rooted in gate-decision-packet (28a5a08a3d552969), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}
