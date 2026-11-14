@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import {
   STEALTH_SKELETON_MODELS,
   STEALTH_SKELETON_MODELS_V2_4,
-} from "../../../../../../workers/stealth-skeleton-provider/src/index";
+} from "@sports/stealth-skeleton-provider";
 
 /**
  * Live OpenRouter Provider Integration v2.4 Models Endpoint (`GET /api/openrouter-provider/models`).

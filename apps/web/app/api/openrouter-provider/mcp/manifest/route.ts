@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getStealthSkeletonMcpManifest } from "../../../../../../../workers/stealth-skeleton-provider/src/index";
+import { getStealthSkeletonMcpManifest } from "@sports/stealth-skeleton-provider";
 
 /**
  * Live MCP Server Manifest Endpoint (`GET /api/openrouter-provider/mcp/manifest`)
