@@ -1,0 +1,549 @@
+{
+ "book_id": "3db272c80f5e185e",
+ "title": "Position importance in NCAA football",
+ "author": "Zachary Knowlton (Oracle Data Cloud), Gilbert W. Fellingham (BYU Statistics)",
+ "year": 2017,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2017 Position importance in NCAA football - Zachary Knowlton and Gilbert W. Fellingham.pdf",
+ "source_note": "Journal of Sports Analytics 3 (2017) 119-127, DOI 10.3233/JSA-170130, IOS Press, open access CC BY-NC 4.0, 9 pages, full read via pymupdf. Identity confirmed (Knowlton/Fellingham, zacharyknowlton21@gmail.com). Domain football (catalog correct). Model equations print with stacked fractions/Greek; reconstructed as labeled LaTeX from clean prose; 22 pure-prose quotes verified. Data: 2015 BYU season; coaches' per-play grades (defense minus/plus -> 0/1 assignment-sound; offense 0/1/2 failed/average/exceptional); expected points E(Pts) via White-Berry (2002) tiered polychotomous regression on FBS 2005-2013 (down/distance/field position); ΔE(Pts) per play (Kovash-Levitt 2009), example 0.22->1.49=1.27. Model: y_i=ΔE(Pts)~N(μ_i,σ²_y); μ_i=β0k+Σβ_jk x_ij; β_jk~N(θ_z,ξ_z) (player borrows from position); θ_z~N(0,2) common prior; ξ_z,σ²_y~Gamma(4,2) (mean 2 var 1); β0k~N(-1,2); MCMC/JAGS. Importance IS=mean/sd (Miskin 2010). Results: offense QB IS 0.19 highest (E θ 0.26, sd 1.34, variability from teammate dependence), RB/WR next; defense BoundCB 2.70 > Mike 1.96 > RE 1.61; Mike play-calling communication externality; BoundCB big-play tail risk; β0o Boise +0.56 vs Mizzou -2.06; β0d win -1.86 vs loss -2.65; win = more grouped (consistent) position effects. 13 defensive positions (2 empty/play modeled for formation); multi-position players separate β; defensive ΔE sign-flipped (positive coeff = value for BYU). Limitations: not all games graded (missing Nebraska/UCLA/Wagner/Utah State/Utah offense, Wagner/Utah defense); coach grades not well calibrated. Proprietary player data -> only position estimates published. Applications: recruiting focus, player tie-breaks, skill importance. No sportsbook lines used as model inputs.",
+ "domain": "football",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "expected_points_model",
+   "name": "Expected points E(Pts) from down, distance, field position (White-Berry)",
+   "verbatim_quote": "we first used the model developed by White and Berry (2002) to find the average eventual points or expected points, denoted by E(Pts), a team should score based on the starting position of each play relative to down, distance, and field position.",
+   "page": 3,
+   "latex": "E(\\text{Pts})=f(\\text{down},\\ \\text{distance},\\ \\text{field position})\\quad\\text{(tiered polychotomous regression, FBS 2005-2013)}",
+   "symbol_and_unit_ledger": {
+    "E(Pts)": "expected eventual points from a play state [points]",
+    "down": "current down [ordinal]",
+    "distance": "yards to first down [yards]",
+    "field position": "field location [yards]"
+   },
+   "assumptions": [
+    "Expected points is the average eventual points a team should score from a play's starting state",
+    "It is estimated by the White-Berry tiered polychotomous regression on FBS 2005-2013 play-by-play"
+   ],
+   "breakdown_regime": "E(Pts) ranges roughly -2 to +5; it is a state-value function over down/distance/field-position, the foundation the per-play delta is built on.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE expected-points state value IS this E(Pts) model: the engine computes a state-value function over down/distance/field-position giving expected eventual points, the expected-points foundation that every play's value is measured against. GSI: state-value function over game state giving expected terminal points.",
+    "source_operator": "expected_points_model",
+    "telemetry": "E(Pts) surface by down/field position; FBS calibration sample"
+   }
+  },
+  {
+   "primitive_id": "delta_eps_play_value",
+   "name": "Per-play value = change in expected points (ΔE(Pts))",
+   "verbatim_quote": "to measure effectiveness of each play. We implemented the same procedure.",
+   "page": 3,
+   "latex": "\\Delta E(\\text{Pts})_i=E(\\text{Pts})_{\\text{after},i}-E(\\text{Pts})_{\\text{before},i}\\quad\\text{(Kovash-Levitt)}",
+   "symbol_and_unit_ledger": {
+    "Delta E(Pts)": "change in expected points across play i [points]",
+    "E(Pts)_before/after": "expected points before/after the play [points]"
+   },
+   "assumptions": [
+    "Play effectiveness is the change in expected points (Kovash & Levitt 2009)",
+    "Example: 1st&10 own 20 (E=0.22) to 1st&10 own 35 (E=1.49) gives ΔE=1.27"
+   ],
+   "breakdown_regime": "ΔE(Pts) is the per-play point value used as the response; it credits a play by how much it moved expected points, not by raw yards, the expected-points-added valuation.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE expected-points-added IS this ΔE(Pts): the engine values each play by the change in expected points it produces (EPA), the per-play valuation that credits field-position movement rather than raw yardage, the engine's core play-value metric. GSI: per-action value as change in state expected value.",
+    "source_operator": "delta_eps_play_value",
+    "telemetry": "ΔE(Pts) per play; before/after E(Pts); example 0.22->1.49=1.27"
+   }
+  },
+  {
+   "primitive_id": "defensive_grades",
+   "name": "Defensive grades: assignment-sound plus/minus (binary)",
+   "verbatim_quote": "The defensive coaches graded each of their players on a minus or plus scale, with players receiving a minus if they were not assignment-sound on the particular play and a plus otherwise.",
+   "page": 4,
+   "latex": "x_{ij}^{\\text{def}}\\in\\{0,1\\}:\\ 1\\text{ if assignment-sound},\\ 0\\text{ otherwise}",
+   "symbol_and_unit_ledger": {
+    "x_ij": "coach grade of player j on play i [binary]",
+    "assignment-sound": "executed the positional assignment [binary]"
+   },
+   "assumptions": [
+    "Defensive coaches grade each player plus/minus per play",
+    "Minus (0) if not assignment-sound, plus (1) otherwise; converted to 0/1"
+   ],
+   "breakdown_regime": "The grade measures assignment execution, not outcome; a player can be assignment-sound on a play that still loses points, so the grade is a process signal separated from the result.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE assignment-execution grade IS this defensive plus/minus: the engine uses a per-play assignment-sound binary grade as the explanatory signal, measuring process execution independent of the play's point outcome, the process-grade input to attribution. GSI: per-action assignment-execution binary grade as attribution input.",
+    "source_operator": "defensive_grades",
+    "telemetry": "defensive 0/1 grade; assignment-sound criterion; per-play per-player"
+   }
+  },
+  {
+   "primitive_id": "offensive_grades",
+   "name": "Offensive grades: 0/1/2 execution scale",
+   "verbatim_quote": "The offensive coaches graded each of their players on a three-point scale (0, 1, or 2)",
+   "page": 4,
+   "latex": "x_{ij}^{\\text{off}}\\in\\{0,1,2\\}:\\ 0\\text{ failed},\\ 1\\text{ average},\\ 2\\text{ exceptional execution}",
+   "symbol_and_unit_ledger": {
+    "x_ij": "coach grade of player j on play i [ordinal 0/1/2]"
+   },
+   "assumptions": [
+    "Offensive coaches grade 0 (clearly failed assignment), 1 (average), 2 (exceptional)",
+    "The offense uses a three-point scale vs the defense's two-point scale"
+   ],
+   "breakdown_regime": "The differing scales (offense 0/1/2, defense 0/1) mean coefficients are not directly comparable across sides; the engine must account for the grading-scale difference when comparing importance.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE graded-execution scale IS this offensive 0/1/2: the engine uses a graded execution scale (failed/average/exceptional) as the attribution input, with the scale difference across units requiring normalization before cross-unit comparison. GSI: ordinal execution-grade scale with cross-unit normalization.",
+    "source_operator": "offensive_grades",
+    "telemetry": "offensive 0/1/2 grade; execution levels; scale difference vs defense"
+   }
+  },
+  {
+   "primitive_id": "hierarchical_model",
+   "name": "Bayesian hierarchical model: player nested in position",
+   "verbatim_quote": "we also wanted to model the position performance. To do this, a Bayesian hierarchical model was implemented.",
+   "page": 4,
+   "latex": "y_i\\sim N(\\mu_i,\\sigma_y^2);\\quad \\mu_i=\\beta_{0k}+\\sum_{j}\\beta_{jk}x_{ij};\\quad \\beta_{jk}\\sim N(\\theta_z,\\xi_z)",
+   "symbol_and_unit_ledger": {
+    "y_i": "ΔE(Pts) on play i [points]",
+    "beta_jk": "player j's effect (side k) [points/grade]",
+    "theta_z": "position z mean effect [points/grade]",
+    "xi_z": "position z effect variance [points^2/grade^2]",
+    "x_ij": "coach grade [0/1/2 or 0/1]"
+   },
+   "assumptions": [
+    "The response ΔE(Pts) uses a normal likelihood (it is an expected value)",
+    "Player effects β_jk are nested in position effects θ_z with variance ξ_z, a two-level hierarchy"
+   ],
+   "breakdown_regime": "The hierarchy lets player estimates borrow strength from their position (partial pooling), stabilizing estimates for players with few plays; it is the core attribution structure.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE hierarchical player-position attribution IS this Bayesian hierarchy: the engine nests player effects within position effects (partial pooling), so player value borrows strength from the position prior, stabilizing sparse-player estimates, the hierarchical attribution structure. GSI: two-level hierarchical model nesting entity effects within group effects.",
+    "source_operator": "hierarchical_model",
+    "telemetry": "player β nested in position θ; normal likelihood; partial pooling"
+   }
+  },
+  {
+   "primitive_id": "partial_pooling_prior",
+   "name": "Player effects borrow from position mean and variance",
+   "verbatim_quote": "While we had some ideas of which positions might be more important than others, we decided to use the same prior for each position",
+   "page": 5,
+   "latex": "\\beta_{jk}\\sim N(\\theta_z,\\xi_z);\\quad \\theta_z\\sim N(0,2);\\quad \\xi_z\\sim\\mathrm{Gamma}(4,2)",
+   "symbol_and_unit_ledger": {
+    "theta_z": "position mean effect [points/grade]",
+    "xi_z": "position effect variance [points^2/grade^2]"
+   },
+   "assumptions": [
+    "Each player's β borrows from its position's mean θ_z and variance ξ_z",
+    "The same prior (θ_z~N(0,2)) is used for every position to avoid prejudging importance"
+   ],
+   "breakdown_regime": "Using a common prior lets the data, not preconception, determine position importance; the partial pooling shrinks sparse players toward the position mean, the empirical-Bayes discipline.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE common-prior partial pooling IS this prior choice: the engine uses a common position prior so importance is data-driven rather than prejudged, and shrinks sparse-player estimates toward the position mean (partial pooling), the empirical-Bayes stabilization discipline. GSI: common group prior with partial pooling for sparse entities.",
+    "source_operator": "partial_pooling_prior",
+    "telemetry": "common position prior N(0,2); Gamma(4,2) variance; shrinkage"
+   }
+  },
+  {
+   "primitive_id": "importance_score",
+   "name": "Importance score = mean / standard deviation (signal-to-noise)",
+   "verbatim_quote": "we feel the importance score can differentiate the impact of different positions reasonably well",
+   "page": 5,
+   "latex": "\\mathrm{IS}_z=\\frac{E(\\theta_z)}{\\mathrm{sd}(\\theta_z)}\\quad\\text{(Miskin et al. 2010)}",
+   "symbol_and_unit_ledger": {
+    "IS_z": "importance score for position z [dimensionless]",
+    "E(theta_z)": "posterior mean position effect [points/grade]",
+    "sd(theta_z)": "posterior SD of position effect [points/grade]"
+   },
+   "assumptions": [
+    "The importance score is the posterior mean divided by the posterior SD (Miskin 2010)",
+    "It differentiates positions by effect size relative to variability, not mean alone"
+   ],
+   "breakdown_regime": "The mean/sd ratio is a signal-to-noise importance measure: a position with a large but highly variable effect ranks below a consistent moderate one, the consistency-weighted ranking.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE signal-to-noise importance IS this mean/sd score: the engine ranks position importance by effect size relative to its variability (mean/sd), so consistent contributors rank above high-variance ones, the consistency-weighted importance measure. GSI: signal-to-noise (mean/sd) ranking of entity importance.",
+    "source_operator": "importance_score",
+    "telemetry": "IS = mean/sd per position; QB IS 0.19; BoundCB IS 2.70"
+   }
+  },
+  {
+   "primitive_id": "mcmc_posterior",
+   "name": "Posterior estimated by MCMC (JAGS)",
+   "verbatim_quote": "To estimate the posterior distribution of each of the parameters for the offense and defense we used Markov chain Monte Carlo methods",
+   "page": 5,
+   "latex": "p(\\beta,\\theta,\\xi,\\sigma^2\\mid y)\\ \\text{sampled via MCMC (JAGS)}",
+   "symbol_and_unit_ledger": {
+    "posterior": "joint posterior of player/position/variance parameters [distribution]"
+   },
+   "assumptions": [
+    "The posterior is estimated by Markov chain Monte Carlo using JAGS",
+    "Full posterior distributions (not point estimates) capture uncertainty in each position effect"
+   ],
+   "breakdown_regime": "MCMC gives the full posterior so importance carries uncertainty (SD); the engine must propagate this uncertainty rather than treat position effects as fixed numbers.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE posterior-uncertainty propagation IS this MCMC estimation: the engine estimates full posteriors (via MCMC) for attribution parameters so importance carries uncertainty, propagating it rather than using point estimates, the Bayesian-uncertainty discipline. GSI: full-posterior estimation with uncertainty propagation.",
+    "source_operator": "mcmc_posterior",
+    "telemetry": "MCMC/JAGS posterior; position effect SD; uncertainty propagation"
+   }
+  },
+  {
+   "primitive_id": "qb_most_important",
+   "name": "QB is the most important offensive position",
+   "verbatim_quote": "Our result matched the intuition of other experts in that the QB was the \"most important\" position for the offense.",
+   "page": 6,
+   "latex": "\\mathrm{IS}_{\\text{QB}}=0.19\\ \\text{(highest offense)};\\quad E(\\theta_{\\text{QB}})=0.26,\\ \\mathrm{sd}=1.34",
+   "symbol_and_unit_ledger": {
+    "IS_QB": "QB importance score [dimensionless]",
+    "theta_QB": "QB mean effect [points/grade]"
+   },
+   "assumptions": [
+    "The QB has the highest offensive importance score (0.19)",
+    "When the QB executes his assignment it has the largest positive effect on ΔE(Pts)"
+   ],
+   "breakdown_regime": "The QB's high importance confirms the conventional view but is earned from the data, not assumed; the engine validates the 'QB is most important' intuition quantitatively.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE data-validated position importance IS this QB result: the engine quantitatively confirms (or refutes) the conventional 'QB most important' view from the attribution model rather than assuming it, the data-validated importance discipline. GSI: empirically validated entity-importance ranking.",
+    "source_operator": "qb_most_important",
+    "telemetry": "QB importance 0.19; mean effect 0.26; offensive ranking"
+   }
+  },
+  {
+   "primitive_id": "qb_variance_dependence",
+   "name": "QB's high variability reflects dependence on other positions",
+   "verbatim_quote": "The large variability associated with the QB position may be explained by the QB's dependence on other positions.",
+   "page": 6,
+   "latex": "\\mathrm{sd}(\\theta_{\\text{QB}})=1.34\\ \\text{(large)};\\quad \\text{QB outcome confounded by teammates' execution}",
+   "symbol_and_unit_ledger": {
+    "sd(theta_QB)": "variability of QB effect [points/grade]"
+   },
+   "assumptions": [
+    "The QB effect has large variability (SD 1.34)",
+    "This is attributed to the QB's dependence on other positions (e.g. a perfect pass dropped)"
+   ],
+   "breakdown_regime": "The QB's effect is confounded by teammate execution, so its high variance is an attribution-confounding signal: the engine must recognize that a high-touch position's measured effect mixes its own skill with others'.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE attribution-confounding variance IS this QB dependence: the engine recognizes that a high-touch position's measured effect is confounded by teammates' execution (perfect pass dropped), so its high variance signals attribution confounding rather than pure inconsistency. GSI: confounding-driven variance in a high-touch entity's effect.",
+    "source_operator": "qb_variance_dependence",
+    "telemetry": "QB effect SD 1.34; teammate-dependence confounding"
+   }
+  },
+  {
+   "primitive_id": "perfect_pass_dropped",
+   "name": "A perfect pass dropped yields negative ΔE(Pts) (execution vs outcome)",
+   "verbatim_quote": "a perfect pass (rated highly by the coach) is dropped by the receiver, resulting in a negative change in E(Pts).",
+   "page": 6,
+   "latex": "x_{\\text{QB}}=2\\ (\\text{perfect})\\ \\land\\ \\Delta E(\\text{Pts})<0\\ (\\text{dropped})\\Rightarrow \\text{grade}\\perp\\!\\!\\!\\!\\!\\diagup\\ \\text{outcome}",
+   "symbol_and_unit_ledger": {
+    "x_QB": "QB coach grade [0/1/2]",
+    "Delta E(Pts)": "play point value [points]"
+   },
+   "assumptions": [
+    "A highly-graded QB pass can still produce negative ΔE(Pts) if dropped",
+    "The grade (process) and the outcome (points) are separable"
+   ],
+   "breakdown_regime": "This is the process-over-outcome separation: the engine credits the QB's good execution even when the receiver's drop produces a bad outcome, so attribution must use the grade, not the result.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE process-outcome separation IS this dropped-pass case: the engine credits good execution (high grade) even when a teammate's failure produces a bad outcome, separating process from result in attribution, the process-over-outcome discipline. GSI: execution-grade credit independent of teammate-driven outcome.",
+    "source_operator": "perfect_pass_dropped",
+    "telemetry": "high grade + negative ΔE(Pts); process-outcome separation"
+   }
+  },
+  {
+   "primitive_id": "skill_positions_playmaking",
+   "name": "Skill positions (QB/WR/RB) have the largest, most variable effects",
+   "verbatim_quote": "These results were generally expected as the skill positions were most widely regarded as the play-making positions",
+   "page": 6,
+   "latex": "\\text{skill positions }\\{QB,WR,RB\\}:\\ \\text{largest }E(\\theta_z)\\ \\land\\ \\text{largest sd}(\\theta_z)",
+   "symbol_and_unit_ledger": {
+    "skill positions": "QB/WR/RB play-making positions [group]"
+   },
+   "assumptions": [
+    "The skill positions (QB, WR, RB) had the largest effect on ΔE(Pts)",
+    "They also show the highest variability, important for judging consistency"
+   ],
+   "breakdown_regime": "The skill positions are high-impact high-variance; the engine must weigh their large expected effect against their inconsistency, the impact-variance tradeoff in roster value.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE impact-variance tradeoff IS this skill-position result: the engine recognizes play-making positions carry the largest expected effect but also the highest variance, so roster value must weigh impact against consistency, the impact-variance tradeoff. GSI: high-impact high-variance entity valuation.",
+    "source_operator": "skill_positions_playmaking",
+    "telemetry": "skill-position effect size and variance; impact-variance tradeoff"
+   }
+  },
+  {
+   "primitive_id": "defense_top_three",
+   "name": "BoundCB, Mike, RE are the top three defensive positions",
+   "verbatim_quote": "From the importance score estimates it is clear that the BoundCB, Mike and RE were the top three most important defensive positions in that order.",
+   "page": 7,
+   "latex": "\\mathrm{IS}_{\\text{BoundCB}}=2.70>\\mathrm{IS}_{\\text{Mike}}=1.96>\\mathrm{IS}_{\\text{RE}}=1.61",
+   "symbol_and_unit_ledger": {
+    "IS_BoundCB/Mike/RE": "importance scores [dimensionless]"
+   },
+   "assumptions": [
+    "The boundary corner, Mike linebacker, and right end are the top three defensive positions by importance",
+    "The ranking is by importance score (mean/sd), not raw mean effect"
+   ],
+   "breakdown_regime": "The defensive importance ranking is data-driven and surprises the play-calling intuition (Mike anticipated highest but is second); the engine ranks by signal-to-noise, not reputation.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE data-driven defensive ranking IS this top-three result: the engine ranks defensive position importance by signal-to-noise importance score, surfacing data-driven rankings (BoundCB first) that can override reputation-based expectations (Mike), the empirical ranking discipline. GSI: signal-to-noise importance ranking overriding reputation.",
+    "source_operator": "defense_top_three",
+    "telemetry": "BoundCB 2.70, Mike 1.96, RE 1.61; defensive ranking"
+   }
+  },
+  {
+   "primitive_id": "mike_playcalling",
+   "name": "Mike importance reflects play-calling/communication to the defense",
+   "verbatim_quote": "We believed this showed the importance of the Mike position in calling the play, as often the Mike's grade reflected the way the play was communicated to the rest of the defense.",
+   "page": 8,
+   "latex": "\\text{Mike effect}\\approx \\text{play-calling}+\\text{communication quality to other positions}",
+   "symbol_and_unit_ledger": {
+    "Mike": "inside linebacker calling the defense [agent]"
+   },
+   "assumptions": [
+    "The Mike's importance is linked to his play-calling responsibility",
+    "His grade often reflects how the play was communicated to the rest of the defense"
+   ],
+   "breakdown_regime": "The Mike's effect includes a coordination/communication externality on teammates, so his value is partly a network effect (enabling others' assignments), not just individual execution.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE coordination-externality value IS this Mike play-calling: the engine recognizes a position's value includes a communication/coordination externality that enables teammates' assignments (the Mike calling the defense), so attribution must capture network-enabling value, not just individual execution. GSI: coordination/communication externality in entity value.",
+    "source_operator": "mike_playcalling",
+    "telemetry": "Mike play-calling effect; communication externality; network-enabling value"
+   }
+  },
+  {
+   "primitive_id": "boundcb_bigplay",
+   "name": "BoundCB importance reflects big-play susceptibility",
+   "verbatim_quote": "This specific rating may be reflective of the big plays the BoundCB can be susceptible to giving up.",
+   "page": 8,
+   "latex": "\\mathrm{IS}_{\\text{BoundCB}}\\ \\text{high}\\Leftarrow \\text{tail risk of surrendering big plays}",
+   "symbol_and_unit_ledger": {
+    "BoundCB": "boundary cornerback [agent]",
+    "big plays": "high-yardage opponent plays [tail events]"
+   },
+   "assumptions": [
+    "The BoundCB's high importance may reflect susceptibility to giving up big plays",
+    "BYU historically struggled at corner, so consistent BoundCB execution is critical"
+   ],
+   "breakdown_regime": "The BoundCB's importance is a tail-risk phenomenon: a single failure can surrender a big play, so the engine values the position by its worst-case exposure, the tail-risk valuation.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE tail-risk position value IS this BoundCB result: the engine values a position by its tail-risk exposure (a single failure surrenders a big play), so high-importance reflects worst-case downside rather than average contribution, the tail-risk valuation discipline. GSI: tail-risk-driven entity importance.",
+    "source_operator": "boundcb_bigplay",
+    "telemetry": "BoundCB big-play susceptibility; tail-risk importance"
+   }
+  },
+  {
+   "primitive_id": "win_consistency",
+   "name": "Wins show more consistent (grouped) position effects than losses",
+   "verbatim_quote": "the positions were more grouped together in the win (vs Boise State) compared to the loss (vs Mizzou).",
+   "page": 8,
+   "latex": "\\text{win}:\\ \\mathrm{Var}(\\theta_z)\\ \\text{across positions small (grouped)};\\quad \\text{loss}:\\ \\text{larger (inconsistent)}",
+   "symbol_and_unit_ledger": {
+    "theta_z": "position effects [points/grade]"
+   },
+   "assumptions": [
+    "In the win, position effects were more grouped (consistent) than in the loss",
+    "The loss showed less consistent across-defense performance"
+   ],
+   "breakdown_regime": "Team consistency (tight position-effect distribution) distinguishes wins from losses; the engine recognizes that balanced execution across positions, not one star, characterizes winning performance.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE consistency-as-win-signal IS this grouped-effects finding: the engine recognizes that wins show tighter (more consistent) position-effect distributions than losses, so balanced execution across units is a win signal, the consistency-over-star discipline. GSI: cross-entity consistency as a performance-quality signal.",
+    "source_operator": "win_consistency",
+    "telemetry": "position-effect spread win vs loss; β0d win -1.86 vs loss -2.65"
+   }
+  },
+  {
+   "primitive_id": "grades_uncalibrated",
+   "name": "Limitation: coach grades were not well calibrated",
+   "verbatim_quote": "the grades supplied by the position coaches were not well calibrated.",
+   "page": 8,
+   "latex": "\\text{grade}_{\\text{coach }A}\\not\\equiv \\text{grade}_{\\text{coach }B}\\Rightarrow \\text{measurement error in }x_{ij}",
+   "symbol_and_unit_ledger": {
+    "x_ij": "coach grade (uncalibrated across coaches) [ordinal]"
+   },
+   "assumptions": [
+    "The position coaches' grades were not well calibrated",
+    "For precision, coaches must work closely to provide consistent grades"
+   ],
+   "breakdown_regime": "Uncalibrated grades are measurement error in the explanatory variable, biasing attribution; the engine must treat coach grades as noisy and calibrate them across graders before trusting coefficients.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE grader-calibration discipline IS this uncalibrated-grade limitation: the engine recognizes that subjective grades from different graders are uncalibrated measurement error, so it must calibrate across graders before trusting attribution coefficients, the grader-calibration discipline. GSI: cross-grader calibration of subjective measurement inputs.",
+    "source_operator": "grades_uncalibrated",
+    "telemetry": "inter-coach grade inconsistency; measurement error; calibration need"
+   }
+  },
+  {
+   "primitive_id": "missing_games",
+   "name": "Limitation: not all games were graded (missing data)",
+   "verbatim_quote": "we are missing the Nebraska, UCLA, Wagner, Utah State and Utah games for the offense",
+   "page": 8,
+   "latex": "\\text{sample}=\\text{graded games}\\subset\\text{all games}\\Rightarrow \\text{missing-data caveat}",
+   "symbol_and_unit_ledger": {
+    "graded games": "subset of games with coach grades [set]"
+   },
+   "assumptions": [
+    "Several games were not graded (Nebraska, UCLA, Wagner, Utah State, Utah offense; Wagner, Utah defense)",
+    "The analysis is hampered by this missing data"
+   ],
+   "breakdown_regime": "The missing games mean the estimates are based on a non-random subset; the engine must recognize the sample is incomplete and avoid over-generalizing from the graded games.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE missing-data caveat IS this ungraded-games limitation: the engine recognizes the attribution sample is an incomplete (non-random) subset of games, so it flags the missing-data caveat and avoids over-generalizing, the incomplete-sample discipline. GSI: incomplete-sample caveat on attribution estimates.",
+    "source_operator": "missing_games",
+    "telemetry": "missing games list; non-random subset; generalization caveat"
+   }
+  },
+  {
+   "primitive_id": "theta_conditional_assignment",
+   "name": "Position effect is conditional on coach-judged assignment execution",
+   "verbatim_quote": "when they are judged by the coaches to have executed their specific positional assignment.",
+   "page": 5,
+   "latex": "\\theta_z=\\mathbb{E}\\big[\\Delta E(\\text{Pts})\\mid \\text{position }z\\text{ executes assignment (coach-judged)}\\big]",
+   "symbol_and_unit_ledger": {
+    "theta_z": "position effect conditional on assignment execution [points/grade]"
+   },
+   "assumptions": [
+    "θ_z is the effect a position has on ΔE(Pts) when judged to have executed its assignment",
+    "The effect is conditional on the coach's judgment of execution, not unconditional"
+   ],
+   "breakdown_regime": "The conditioning on coach-judged execution means θ_z measures the value of doing the job right, not the position's average value; the engine must interpret the effect as execution-conditional.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE execution-conditional effect IS this θ_z conditioning: the engine interprets the position effect as conditional on assignment execution (the value of doing the job right), not the unconditional average, so attribution measures execution value, the conditional-effect interpretation. GSI: execution-conditional entity effect interpretation.",
+    "source_operator": "theta_conditional_assignment",
+    "telemetry": "θ_z conditional on execution; coach-judged; execution-value interpretation"
+   }
+  },
+  {
+   "primitive_id": "recruiting_application",
+   "name": "Position importance guides recruiting and personnel decisions",
+   "verbatim_quote": "We find specific value in using these ratings to focus recruiting efforts in the more important positions.",
+   "page": 8,
+   "latex": "\\text{recruiting priority}\\propto \\mathrm{IS}_z;\\quad \\text{tie-break equal players via }\\beta_j",
+   "symbol_and_unit_ledger": {
+    "IS_z": "position importance score [dimensionless]",
+    "beta_j": "individual player effect [points/grade]"
+   },
+   "assumptions": [
+    "The ratings focus recruiting on the more important positions",
+    "They also provide quantitative tie-breaks between players a coach feels are equal"
+   ],
+   "breakdown_regime": "The importance scores translate directly to roster-construction decisions (recruiting priority, player tie-breaks); the engine connects attribution to resource allocation, the valuation-to-decision link.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE valuation-to-roster-decision IS this recruiting application: the engine translates position importance into recruiting priority and player tie-breaks, connecting attribution to resource-allocation decisions, the valuation-to-decision link central to roster construction. GSI: importance-driven resource allocation and entity tie-breaking.",
+    "source_operator": "recruiting_application",
+    "telemetry": "recruiting priority by IS; player tie-break; valuation-to-decision"
+   }
+  },
+  {
+   "primitive_id": "normal_likelihood",
+   "name": "Normal likelihood because the response is an expected value",
+   "verbatim_quote": "we used a normal likelihood for our data.",
+   "page": 4,
+   "latex": "y_i=\\Delta E(\\text{Pts})_i\\sim N(\\mu_i,\\sigma_y^2);\\quad \\sigma_y^2\\sim\\mathrm{Gamma}(4,2)",
+   "symbol_and_unit_ledger": {
+    "y_i": "ΔE(Pts) response [points]",
+    "sigma_y^2": "response variance [points^2]"
+   },
+   "assumptions": [
+    "Because ΔE(Pts) is an expected value, a normal likelihood is used",
+    "The variance prior Gamma(4,2) gives mean 2, variance 1, matching the E(Pts) range (-2 to +5)"
+   ],
+   "breakdown_regime": "The normal likelihood is justified because the response is itself an expectation (smoothed), not a discrete count; the prior is calibrated to the response's plausible range.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE expectation-response likelihood IS this normal-likelihood choice: the engine uses a normal likelihood when the response is an expected value (smoothed), with the variance prior calibrated to the response range, the likelihood-matching discipline. GSI: likelihood choice matched to an expectation-valued response.",
+    "source_operator": "normal_likelihood",
+    "telemetry": "normal likelihood; Gamma(4,2) variance prior; E(Pts) range -2 to +5"
+   }
+  },
+  {
+   "primitive_id": "defensive_signflip",
+   "name": "Defensive ΔE(Pts) sign-flipped so positive coefficient = value for BYU",
+   "verbatim_quote": "This was done so that a more positive coefficient for offense or defense indicates creating E(Pts) for BYU.",
+   "page": 4,
+   "latex": "\\Delta E(\\text{Pts})^{\\text{def}}=-\\Delta E(\\text{Pts})^{\\text{opponent}};\\quad \\beta>0\\Rightarrow \\text{value for BYU (both sides)}",
+   "symbol_and_unit_ledger": {
+    "Delta E(Pts)_def": "defensive point value (sign-flipped) [points]"
+   },
+   "assumptions": [
+    "The defensive ΔE(Pts) is positive when the opposing offense had negative ΔE(Pts)",
+    "This sign convention makes a positive coefficient mean creating value for BYU on both sides"
+   ],
+   "breakdown_regime": "The sign flip aligns offense and defense coefficients to a common 'value for team' direction; the engine must normalize sign conventions before comparing effects across units.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE sign-convention alignment IS this defensive sign flip: the engine aligns offense and defense effects to a common 'value for team' direction via sign normalization, so coefficients are comparable across units, the sign-convention discipline. GSI: sign normalization for cross-unit effect comparability.",
+    "source_operator": "defensive_signflip",
+    "telemetry": "defensive sign flip; common value direction; cross-unit comparability"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "knowlton2017_position_importance",
+   "think": "This inline cycle extracts Knowlton and Fellingham's 2017 Journal of Sports Analytics paper, Position importance in NCAA football, a nine-page open-access study from Oracle Data Cloud and Brigham Young University that adds a Bayesian hierarchical position-value attribution layer to the Foundry's football stack and connects directly to the GSE engine's expected-points and player-valuation machinery. The provenance is clean: the catalog domain football is correct, the paper carries DOI 10.3233/JSA-170130 under a Creative Commons license, and the only encoding issue is the model equations, which print with stacked fractions and Greek symbols, so they are reconstructed as labeled LaTeX from the unambiguous prose while twenty-two pure-prose quotes are verified verbatim. Twenty-two primitives are extracted, each with a verified verbatim quote, page anchor, symbol-and-unit ledger, assumptions, breakdown regime, and a Layer-2 mapping with telemetry. No sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from White and Berry's tiered polychotomous regression ranking NFL quarterbacks through Kovash and Levitt's expected-points-added and the skill-importance literature into this Bayesian hierarchical application on the 2015 BYU team. The load-bearing object is a two-level model: the response is the per-play change in expected points, ΔE(Pts), where expected points E(Pts) is a state-value function over down, distance, and field position estimated on FBS play-by-play from 2005 through 2013, and the explanatory variables are the coaches' per-play grades, binary assignment-sound plus/minus on defense and a zero-one-two execution scale on offense. The sampling model is normal because the response is itself an expectation, with the mean a sum of player effects times grades, and the player effects β_jk are nested in position effects θ_z with variance ξ_z, so each player borrows strength from his position via partial pooling, with a common N(0,2) position prior chosen deliberately so the data rather than preconception determines importance, and the posterior is sampled by MCMC in JAGS.\n\nThe recursive theory of mind models the coach as a reasoner asking which players and positions give the best chance to win, and the analyst as a reasoner who ranks importance by signal-to-noise rather than raw effect. The importance score is the posterior mean divided by the posterior standard deviation, the Miskin measure, so a consistent moderate contributor outranks a high-variance star, and the results confirm the QB as the most important offensive position with importance 0.19 but also the largest variability, SD 1.34, which the authors attribute to the QB's dependence on other positions, a perfect pass dropped by the receiver yielding negative ΔE(Pts) despite a high grade. This is the process-over-outcome separation and an attribution-confounding signal at once: the QB's measured effect mixes his own skill with his teammates' execution. On defense the top three by importance are the boundary corner at 2.70, the Mike linebacker at 1.96, and the right end at 1.61, surprising the play-calling intuition that the Mike would be highest; the Mike's value carries a communication externality because his grade reflects how the play was called to the rest of the defense, and the boundary corner's importance is a tail-risk phenomenon, the big plays he can surrender.\n\nThe cross-layer veto adjudication is where this paper earns its place beside the accounting, regression, network, deterrence, decision-EV, EPV, risk, geospatial, and tactical-recognition layers. The first veto is the expected-points-added valuation: a play is valued by the change in expected points it produces, not raw yards, the EPA core the engine runs on. The second veto is the hierarchical partial-pooling discipline: player effects borrow from a common position prior so sparse players are stabilized and importance is data-driven rather than prejudged. The third veto is the signal-to-noise importance ranking: positions are ranked by mean over SD, so consistency weighs against raw impact, and the high-variance skill positions are valued with their inconsistency in view. The fourth veto is the attribution-confounding and process-over-outcome discipline: a high-touch position's effect is confounded by teammates (the dropped perfect pass), so the engine credits the execution grade independent of the outcome and recognizes the variance as confounding. The fifth veto is the measurement-calibration and sign-convention discipline: coach grades are uncalibrated across graders and must be calibrated before trusting coefficients, the sample is an incomplete non-random subset of graded games, the effect is conditional on coach-judged execution, and the defensive sign flip aligns both sides to a common value-for-team direction. The win-versus-loss consistency finding, position effects more grouped in the win, adds a balanced-execution win signal.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The variance priors are Gamma(4,2), giving mean two and variance one, calibrated to the E(Pts) range of roughly negative two to positive five, and the intercept prior is slightly negative because many player effects are expected positive; the intercept β0k is interpretable as the expected ΔE(Pts) if every position failed its assignment, ranging from plus 0.56 in the Boise State win to minus 2.06 in the Mizzou loss on offense and minus 1.86 to minus 2.65 on defense, a team-baseline performance signal. The defense rotates thirteen positions with two empty each play, and the missing positions are modeled by their own coefficient to capture formation effectiveness, while players who play multiple positions get separate coefficients, so the design matrix encodes formation and versatility. The defensive line result, the right end most important, may indicate the left tackle is more important than the right on offense, though the offensive line was not discriminated at that level. The applications are concrete, focusing recruiting on the more important positions and providing quantitative tie-breaks between players a coach feels are equal, with future work extending to skill importance, tackling versus coverage in the linebacker and secondary groups. These invariants ground the engine's expected-points valuation, hierarchical player-position attribution, signal-to-noise importance, confounding-aware process credit, grader calibration, formation-aware design, and valuation-to-roster-decision link, completing a sovereign Bayesian position-value layer that sits beside the EPV capstone and connects directly to the engine's player and position valuation, all grounded in clean verbatim prose with honestly labeled reconstructions.",
+   "retrocausal_genealogy": "The genealogy runs from White-Berry tiered polychotomous regression (NFL QB ranking) through Kovash-Levitt expected-points-added and the skill-importance literature into this Bayesian hierarchical application on 2015 BYU. The load-bearing object is a two-level model: response = per-play ΔE(Pts), where E(Pts) is a state-value over down/distance/field-position (FBS 2005-2013), explanatory = coaches' per-play grades (defense binary assignment-sound, offense 0/1/2). Normal likelihood (response is an expectation), mean = sum of player effects x grades, player β_jk nested in position θ_z (variance ξ_z) via partial pooling, common N(0,2) position prior (data not preconception determines importance), MCMC/JAGS posterior.",
+   "theory_of_mind": "The coach asks which players/positions give the best chance to win; the analyst ranks by signal-to-noise (importance = posterior mean/SD, Miskin), so a consistent moderate contributor outranks a high-variance star. QB confirmed most important offense (IS 0.19) but largest variability (SD 1.34), attributed to dependence on other positions (perfect pass dropped -> negative ΔE(Pts) despite high grade): process-over-outcome separation AND attribution-confounding. Defense top three by IS: BoundCB 2.70, Mike 1.96, RE 1.61 (surprises play-calling intuition). Mike value carries a communication externality (grade reflects play-calling to the defense); BoundCB importance is tail-risk (big plays surrendered).",
+   "cross_layer_veto": "Five vetoes adjudicate beside the accounting/regression/network/deterrence/decision-EV/EPV/risk/geospatial/tactical layers. EPA valuation: value a play by change in expected points, not raw yards. Hierarchical partial pooling: player effects borrow from a common position prior, stabilize sparse players, data-driven importance. Signal-to-noise ranking: rank by mean/SD, consistency vs raw impact, value high-variance skill positions with inconsistency in view. Attribution-confounding and process-over-outcome: high-touch position effect confounded by teammates (dropped perfect pass), credit execution grade independent of outcome. Measurement-calibration and sign-convention: calibrate uncalibrated coach grades, incomplete non-random graded-game sample, execution-conditional effect, defensive sign flip to common value direction. Win-vs-loss consistency (grouped effects in win) adds a balanced-execution win signal."
+  }
+ ],
+ "universal_lens": "Knowlton & Fellingham 2017 contributes the Bayesian hierarchical position-value attribution layer to the Foundry football stack: per-play expected-points-added (ΔE(Pts) from a White-Berry down/distance/field-position state-value) is regressed on coaches' execution grades via a two-level normal model where player effects β_jk are nested in position effects θ_z (partial pooling, common N(0,2) prior), posterior by MCMC/JAGS, and importance ranked by mean/sd (Miskin). Its load-bearing invariants are EPA valuation, hierarchical partial pooling, signal-to-noise importance, attribution-confounding and process-over-outcome credit, grader calibration, execution-conditional effects, sign-convention alignment, formation-aware design, and the win-consistency signal.",
+ "gsi_mapping": "For GSI these primitives are the general hierarchical entity-value attribution layer: value each action by its change in state expected value (EPA), regress on execution grades via a two-level model nesting entity effects within group effects (partial pooling with a common group prior so importance is data-driven), rank importance by signal-to-noise (mean/sd), recognize high-touch entities' effects are confounded by teammates (credit execution independent of outcome), calibrate subjective grades across graders, interpret effects as execution-conditional, align sign conventions across units, encode formation/versatility in the design, and read cross-entity consistency as a performance-quality signal. The posterior uncertainty is propagated, not collapsed to points.",
+ "gse_mapping": "For GSE this maps directly onto the engine's expected-points and player/position valuation: ΔE(Pts) IS the engine's EPA play-value metric; the White-Berry E(Pts) IS the down/distance/field-position state-value; the hierarchical β_jk-in-θ_z IS player-value partial pooling within position; importance=mean/sd IS signal-to-noise position ranking for roster construction; the QB-dependence variance IS attribution confounding (perfect pass dropped); the coach grade IS process-over-outcome execution credit; the Mike communication externality IS network-enabling value; the BoundCB tail risk IS worst-case position value; the uncalibrated grades IS the grader-calibration gate; and the recruiting/tie-break applications IS valuation-to-roster-decision. Equations are labeled reconstructions from clean prose; no sportsbook line is a model input."
+}

@@ -500,3 +500,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 22:33:07 | COMPLETE | 5a81486aa9ceb741 | primitives=22 think_words=1042
 - 2026-11-13 22:34:01 | CLAIMED | 0cf53b76efe80564 | worker=hermes-inline file=2016 Recognizing and Analyzing Ball Screen Defense NBA.pdf
 - 2026-11-13 22:40:30 | COMPLETE | 0cf53b76efe80564 | primitives=22 think_words=1011
+- 2026-11-13 22:44:20 | CLAIMED | 3db272c80f5e185e | worker=hermes-inline file=2017 Position importance in NCAA football - Zachary Knowlton and Gilbert W. Fellingham.pdf
+- 2026-11-13 22:49:20 | COMPLETE | 3db272c80f5e185e | primitives=22 think_words=989
