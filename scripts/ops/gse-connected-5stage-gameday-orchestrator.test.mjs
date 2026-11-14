@@ -12,6 +12,8 @@ test("SCHED-4B: gse-connected-5stage-gameday-orchestrator.yml declares all requi
   const wfText = readFileSync(wfPath, "utf8");
 
   const requiredCrons = [
+    "0 15 * * 2",
+    "0 21 * * 3,4,5",
     "35 16 * * 0",
     "40 19 * * 0",
     "50 23 * * 0,1,4",
@@ -25,18 +27,20 @@ test("SCHED-4B: gse-connected-5stage-gameday-orchestrator.yml declares all requi
   }
 
   for (const modeOpt of [
+    "tuesday_roster_baseline",
+    "wed_fri_practice_delta",
     "full_slate_pregame_t85m",
     "halftime_live_2h",
     "overnight_corpus_mind_consolidation",
   ]) {
     assert.ok(wfText.includes(modeOpt), `Missing workflow_dispatch mode '${modeOpt}'`);
   }
-  assert.match(wfText, /week:\s*\r?\n[\s\S]*?default:\s*["']9["']/);
+  assert.match(wfText, /week:\s*\r?\n[\s\S]*?default:\s*["']auto["']/);
 
   // Job 1: pregame-t85m-connected-5stage-workflow
   assert.match(wfText, /^\s*pregame-t85m-connected-5stage-workflow:/m);
   assert.ok(wfText.includes("python scripts/ops/consolidate_mind_staging_and_corpus.py"));
-  assert.ok(wfText.includes("python scripts/ops/run_week9_full_slate_connected_workflow.py"));
+  assert.ok(wfText.includes("python scripts/ops/run_permanent_sequenced_weekly_pipeline.py"));
   assert.ok(wfText.includes("python scripts/guardrails/connected-workflow-dossier-guard.py"));
   assert.ok(wfText.includes("node scripts/guardrails/trust-gate.mjs"));
 

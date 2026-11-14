@@ -1,0 +1,3823 @@
+{
+  "entity": "Galaxy Sports Network LLC",
+  "dba": "Galaxy Sports Edge",
+  "domain": "galaxysportsedge.com",
+  "public_ledger_disclosure": "Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration",
+  "generated_date": "2026-11-13",
+  "season": 2026,
+  "week": 10,
+  "w10_fixtures_sha256_canonical": "77608f2999f2de9fb799582bc6694daa53fd0d191a26db06a8bbfe30c5ab746b",
+  "tnf_settled_excluded": "WSH@NYG (401873052, Final WSH 24 - NYG 21 on 2026-11-12)",
+  "remaining_games_simulated": 13,
+  "n_sims_per_game": 10000,
+  "total_monte_carlo_games_simulated": 130000,
+  "base_seed": 20261113,
+  "slate_pure_seal_merkle_sha256": "757479c9db1f025b1c589cab8437154e446b76e23be291e4af1ba62c846374d6",
+  "named_coaches_modeled_14": [
+    "Kyle Shanahan",
+    "Sean McVay",
+    "Andy Reid",
+    "Steve Spagnuolo",
+    "Vic Fangio",
+    "Mike Macdonald",
+    "Brian Flores",
+    "Todd Monken",
+    "Jim Harbaugh",
+    "Jesse Minter",
+    "Dan Campbell",
+    "Kevin O'Connell",
+    "Jeff Hafley",
+    "DeMeco Ryans"
+  ],
+  "truth_file_governance": {
+    "conviction_format": "integer XX/100 only (zero % confidence badges)",
+    "retired_records_purged": true,
+    "public_ngs_metrics_used": 0,
+    "sportsbook_affiliate_links": 0
+  },
+  "games": [
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "NE@DET",
+        "espn_id": "401873053",
+        "kickoff_utc": "2026-11-15T14:30Z",
+        "away_team": "NE",
+        "home_team": "DET",
+        "venue": "FC Bayern Munich Stadium",
+        "is_neutral_site": true,
+        "n_sims": 10000,
+        "seed": 20262122,
+        "coaches": {
+          "away_off_coach": "Mike Vrabel",
+          "away_def_coach": "Mike Vrabel",
+          "home_off_coach": "Dan Campbell",
+          "home_def_coach": "Dan Campbell"
+        },
+        "starters": {
+          "away_qb": "Drake Maye",
+          "home_qb": "Jared Goff",
+          "away_skill": {
+            "RB1": "Corey Kiner (TreVeyon Henderson OUT)",
+            "WR1": "A.J. Brown (LP)",
+            "TE1": "Hunter Henry"
+          },
+          "home_skill": {
+            "RB1": "Jahmyr Gibbs",
+            "WR1": "Amon-Ra St. Brown",
+            "TE1": "Sam LaPorta"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.57738534312913e-10,
+          "home_sinkhorn_l1_err": 9.69288149743619e-10
+        },
+        "away_mean_score": 20.904,
+        "home_mean_score": 27.906,
+        "away_median_score": 21.0,
+        "home_median_score": 28.0,
+        "mean_margin": 7.0015,
+        "median_margin": 6.0,
+        "margin_sd": 12.6406,
+        "margin_quantiles": {
+          "p05": -13.0,
+          "p10": -9.0,
+          "p25": -2.0,
+          "p50": 6.0,
+          "p75": 15.0,
+          "p90": 24.0,
+          "p95": 28.0
+        },
+        "away_win_prob_pure": 0.2835,
+        "home_win_prob_pure": 0.7138,
+        "tie_prob_pure": 0.0027,
+        "key_number_mass": {
+          "0": 0.0027,
+          "+3": 0.0617,
+          "-3": 0.0509,
+          "abs_3": 0.1126,
+          "+7": 0.0412,
+          "-7": 0.0202,
+          "abs_7": 0.061399999999999996,
+          "+6": 0.0407,
+          "-6": 0.0301,
+          "abs_6": 0.0708,
+          "+10": 0.0209,
+          "-10": 0.0129,
+          "abs_10": 0.0338,
+          "+14": 0.0333,
+          "-14": 0.0101,
+          "abs_14": 0.0434
+        },
+        "total_quantiles": {
+          "mean_total": 48.8101,
+          "median_total": 48.0,
+          "total_sd": 12.431735115823535,
+          "p05": 29.0,
+          "p10": 33.0,
+          "p25": 40.0,
+          "p50": 48.0,
+          "p75": 57.0,
+          "p90": 65.0,
+          "p95": 70.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 0.4962,
+          "home_epa_per_drive": 1.384,
+          "away_epa_per_play": 0.0723,
+          "home_epa_per_play": 0.1913,
+          "away_points_per_drive": 2.0508,
+          "home_points_per_drive": 2.679
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.024,
+          "away_proe_trailing": 0.1607,
+          "away_realized_script_elasticity": 0.1367,
+          "home_proe_neutral": 0.0025,
+          "home_proe_trailing": 0.0987,
+          "home_realized_script_elasticity": 0.0962
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 137.54,
+          "away_personnel_rates": {
+            "11": 0.5575,
+            "12": 0.2767,
+            "21": 0.0892,
+            "13": 0.0767
+          },
+          "home_personnel_rates": {
+            "11": 0.5558,
+            "12": 0.2525,
+            "21": 0.1106,
+            "13": 0.0811
+          },
+          "away_motion_rate_realized": 0.551,
+          "home_motion_rate_realized": 0.6801,
+          "away_condensed_rate_realized": 0.5205,
+          "home_condensed_rate_realized": 0.6705,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.2389,
+            "split_safety_quarters_cover6": 0.3591,
+            "single_high_cover1_cover3": 0.402
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.2498,
+            "split_safety_quarters_cover6": 0.3128,
+            "single_high_cover1_cover3": 0.4374
+          },
+          "away_4th_down_go_rate": 0.2021,
+          "home_4th_down_go_rate": 0.3569,
+          "two_minute_warning_snaps_per_game": 19.39,
+          "victory_formation_kneel_game_rate": 0.5458,
+          "victory_formation_kneel_snaps_mean": 1.218,
+          "edge2_overtime_rate": 0.0365
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Drake Maye",
+            "pass_yds": {
+              "mean": 249.46,
+              "median": 248.0,
+              "p10": 174.0,
+              "p90": 327.0
+            },
+            "pass_tds_mean": 1.649,
+            "ints_mean": 0.924,
+            "sacks_mean": 2.871
+          },
+          "home_qb": {
+            "player": "Jared Goff",
+            "pass_yds": {
+              "mean": 265.86,
+              "median": 263.0,
+              "p10": 196.0,
+              "p90": 339.0
+            },
+            "pass_tds_mean": 2.151,
+            "ints_mean": 0.807,
+            "sacks_mean": 1.927
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Corey Kiner (TreVeyon Henderson OUT)",
+              "rush_yds": {
+                "mean": 51.59,
+                "median": 49.0,
+                "p10": 22.0,
+                "p90": 85.0
+              },
+              "rec_yds": {
+                "mean": 26.19,
+                "median": 26.0,
+                "p10": 18.0,
+                "p90": 34.0
+              }
+            },
+            "wr1": {
+              "player": "A.J. Brown (LP)",
+              "rec_yds": {
+                "mean": 98.27,
+                "median": 98.0,
+                "p10": 69.0,
+                "p90": 129.0
+              },
+              "active_lead_wr_share": 0.3939
+            },
+            "te1": {
+              "player": "Hunter Henry",
+              "rec_yds": {
+                "mean": 75.59,
+                "median": 75.0,
+                "p10": 53.0,
+                "p90": 99.0
+              },
+              "active_lead_te_share": 0.303
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.3939,
+              "WR2": 0.0227,
+              "WR3": 0.2576,
+              "TE1": 0.303,
+              "RB1": 0.0227
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Jahmyr Gibbs",
+              "rush_yds": {
+                "mean": 99.62,
+                "median": 99.0,
+                "p10": 58.0,
+                "p90": 142.0
+              },
+              "rec_yds": {
+                "mean": 42.54,
+                "median": 42.0,
+                "p10": 31.0,
+                "p90": 54.0
+              }
+            },
+            "wr1": {
+              "player": "Amon-Ra St. Brown",
+              "rec_yds": {
+                "mean": 69.13,
+                "median": 68.0,
+                "p10": 51.0,
+                "p90": 88.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "Sam LaPorta",
+              "rec_yds": {
+                "mean": 53.17,
+                "median": 53.0,
+                "p10": 39.0,
+                "p90": 68.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          }
+        },
+        "seal_sha256": "387893a6b4d40e511c7f3c4a6e3a8b09583c1f48eed2b15cb85fec591ea94e36"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "NE@DET",
+        "verified_seal_sha256": "387893a6b4d40e511c7f3c4a6e3a8b09583c1f48eed2b15cb85fec591ea94e36",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": -2.5,
+        "model_fair_home_spread": -7.0,
+        "spread_discrepancy_pts": 4.5,
+        "p_home_cover_empirical": 0.6632,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.3368,
+        "side_lean": "DET -2.5",
+        "side_oof_calibrated_win_prob": 0.5765,
+        "side_three_class_ev": 0.1006,
+        "side_conviction_score": "88/100",
+        "side_gate_status": "DIAGNOSTIC_CANDIDATE",
+        "listed_total": 51.5,
+        "model_mean_total": 48.81,
+        "model_median_total": 48.0,
+        "total_discrepancy_pts": 2.69,
+        "p_over_empirical": 0.4012,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.5988,
+        "total_lean": "UNDER 51.5",
+        "total_oof_calibrated_win_prob": 0.5231,
+        "total_three_class_ev": -0.0014,
+        "total_conviction_score": "70/100",
+        "total_gate_status": "PASS_WITHHELD",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "NE@DET: Pure Coach-Mind fair line DET -7.00 (total 48.81) evaluated post-seal vs market DET -2.5 (total 51.5). Side conviction 88/100 (DIAGNOSTIC_CANDIDATE); Total conviction 70/100 (PASS_WITHHELD). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "KC@ATL",
+        "espn_id": "401873058",
+        "kickoff_utc": "2026-11-15T18:00Z",
+        "away_team": "KC",
+        "home_team": "ATL",
+        "venue": "Mercedes-Benz Stadium",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20263131,
+        "coaches": {
+          "away_off_coach": "Andy Reid",
+          "away_def_coach": "Steve Spagnuolo",
+          "home_off_coach": "Kevin Stefanski",
+          "home_def_coach": "Kevin Stefanski"
+        },
+        "starters": {
+          "away_qb": "Patrick Mahomes",
+          "home_qb": "Michael Penix Jr.",
+          "away_skill": {
+            "RB1": "Kenneth Walker III",
+            "WR1": "Xavier Worthy / Josh Downs",
+            "TE1": "Travis Kelce"
+          },
+          "home_skill": {
+            "RB1": "Bijan Robinson",
+            "WR1": "Drake London",
+            "TE1": "Kyle Pitts"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 8.791540273556109e-10,
+          "home_sinkhorn_l1_err": 9.69288149743619e-10
+        },
+        "away_mean_score": 27.332,
+        "home_mean_score": 21.368,
+        "away_median_score": 27.0,
+        "home_median_score": 21.0,
+        "mean_margin": -5.9639,
+        "median_margin": -6.0,
+        "margin_sd": 12.4537,
+        "margin_quantiles": {
+          "p05": -27.0,
+          "p10": -22.0,
+          "p25": -14.0,
+          "p50": -6.0,
+          "p75": 3.0,
+          "p90": 9.0,
+          "p95": 14.0
+        },
+        "away_win_prob_pure": 0.6911,
+        "home_win_prob_pure": 0.3059,
+        "tie_prob_pure": 0.003,
+        "key_number_mass": {
+          "0": 0.003,
+          "+3": 0.0509,
+          "-3": 0.0675,
+          "abs_3": 0.1184,
+          "+7": 0.0265,
+          "-7": 0.0451,
+          "abs_7": 0.0716,
+          "+6": 0.03,
+          "-6": 0.0437,
+          "abs_6": 0.0737,
+          "+10": 0.0111,
+          "-10": 0.0245,
+          "abs_10": 0.0356,
+          "+14": 0.0127,
+          "-14": 0.0382,
+          "abs_14": 0.0509
+        },
+        "total_quantiles": {
+          "mean_total": 48.7005,
+          "median_total": 48.0,
+          "total_sd": 12.795296000874696,
+          "p05": 27.0,
+          "p10": 33.0,
+          "p25": 40.0,
+          "p50": 48.0,
+          "p75": 57.0,
+          "p90": 65.0,
+          "p95": 70.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 1.3364,
+          "home_epa_per_drive": 0.5599,
+          "away_epa_per_play": 0.1917,
+          "home_epa_per_play": 0.0808,
+          "away_points_per_drive": 2.6119,
+          "home_points_per_drive": 2.0779
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.049,
+          "away_proe_trailing": 0.1806,
+          "away_realized_script_elasticity": 0.1315,
+          "home_proe_neutral": 0.0166,
+          "home_proe_trailing": 0.16,
+          "home_realized_script_elasticity": 0.1434
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 137.05,
+          "away_personnel_rates": {
+            "11": 0.5715,
+            "12": 0.2905,
+            "21": 0.0557,
+            "13": 0.0823
+          },
+          "home_personnel_rates": {
+            "11": 0.5364,
+            "12": 0.3246,
+            "21": 0.0713,
+            "13": 0.0677
+          },
+          "away_motion_rate_realized": 0.6895,
+          "home_motion_rate_realized": 0.651,
+          "away_condensed_rate_realized": 0.6104,
+          "home_condensed_rate_realized": 0.619,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.3565,
+            "split_safety_quarters_cover6": 0.2738,
+            "single_high_cover1_cover3": 0.3697
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.211,
+            "split_safety_quarters_cover6": 0.4046,
+            "single_high_cover1_cover3": 0.3844
+          },
+          "away_4th_down_go_rate": 0.2477,
+          "home_4th_down_go_rate": 0.2485,
+          "two_minute_warning_snaps_per_game": 19.48,
+          "victory_formation_kneel_game_rate": 0.5429,
+          "victory_formation_kneel_snaps_mean": 1.204,
+          "edge2_overtime_rate": 0.0388
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Patrick Mahomes",
+            "pass_yds": {
+              "mean": 277.33,
+              "median": 275.0,
+              "p10": 204.0,
+              "p90": 354.0
+            },
+            "pass_tds_mean": 2.198,
+            "ints_mean": 0.849,
+            "sacks_mean": 1.629
+          },
+          "home_qb": {
+            "player": "Michael Penix Jr.",
+            "pass_yds": {
+              "mean": 254.72,
+              "median": 252.0,
+              "p10": 180.0,
+              "p90": 333.0
+            },
+            "pass_tds_mean": 1.738,
+            "ints_mean": 0.938,
+            "sacks_mean": 2.777
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Kenneth Walker III",
+              "rush_yds": {
+                "mean": 85.1,
+                "median": 84.0,
+                "p10": 42.0,
+                "p90": 130.0
+              },
+              "rec_yds": {
+                "mean": 55.12,
+                "median": 55.0,
+                "p10": 41.0,
+                "p90": 70.0
+              }
+            },
+            "wr1": {
+              "player": "Xavier Worthy / Josh Downs",
+              "rec_yds": {
+                "mean": 89.57,
+                "median": 89.0,
+                "p10": 66.0,
+                "p90": 114.0
+              },
+              "active_lead_wr_share": 0.323
+            },
+            "te1": {
+              "player": "Travis Kelce",
+              "rec_yds": {
+                "mean": 68.91,
+                "median": 68.0,
+                "p10": 51.0,
+                "p90": 88.0
+              },
+              "active_lead_te_share": 0.2484
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.323,
+              "WR2": 0.0186,
+              "WR3": 0.2112,
+              "TE1": 0.2484,
+              "RB1": 0.1988
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Bijan Robinson",
+              "rush_yds": {
+                "mean": 66.37,
+                "median": 63.0,
+                "p10": 29.0,
+                "p90": 109.0
+              },
+              "rec_yds": {
+                "mean": 40.75,
+                "median": 40.0,
+                "p10": 29.0,
+                "p90": 53.0
+              }
+            },
+            "wr1": {
+              "player": "Drake London",
+              "rec_yds": {
+                "mean": 66.22,
+                "median": 66.0,
+                "p10": 47.0,
+                "p90": 87.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "Kyle Pitts",
+              "rec_yds": {
+                "mean": 50.94,
+                "median": 50.0,
+                "p10": 36.0,
+                "p90": 67.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          }
+        },
+        "seal_sha256": "9332f8657e22e37232faf16cedcca06308594758f9cd8e66faa303100f6eccf0"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "KC@ATL",
+        "verified_seal_sha256": "9332f8657e22e37232faf16cedcca06308594758f9cd8e66faa303100f6eccf0",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": 3.5,
+        "model_fair_home_spread": 5.96,
+        "spread_discrepancy_pts": 2.46,
+        "p_home_cover_empirical": 0.4249,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.5751,
+        "side_lean": "KC -3.5",
+        "side_oof_calibrated_win_prob": 0.504,
+        "side_three_class_ev": -0.0378,
+        "side_conviction_score": "73/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 45.5,
+        "model_mean_total": 48.7,
+        "model_median_total": 48.0,
+        "total_discrepancy_pts": 3.2,
+        "p_over_empirical": 0.5841,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.4159,
+        "total_lean": "OVER 45.5",
+        "total_oof_calibrated_win_prob": 0.5112,
+        "total_three_class_ev": -0.024,
+        "total_conviction_score": "74/100",
+        "total_gate_status": "PASS_WITHHELD",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "KC@ATL: Pure Coach-Mind fair line ATL +5.96 (total 48.70) evaluated post-seal vs market ATL +3.5 (total 45.5). Side conviction 73/100 (PASS_WITHHELD); Total conviction 74/100 (PASS_WITHHELD). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "HOU@CLE",
+        "espn_id": "401873056",
+        "kickoff_utc": "2026-11-15T18:00Z",
+        "away_team": "HOU",
+        "home_team": "CLE",
+        "venue": "Huntington Bank Field",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20264140,
+        "coaches": {
+          "away_off_coach": "DeMeco Ryans",
+          "away_def_coach": "DeMeco Ryans",
+          "home_off_coach": "Todd Monken",
+          "home_def_coach": "Todd Monken"
+        },
+        "starters": {
+          "away_qb": "C.J. Stroud",
+          "home_qb": "Deshaun Watson",
+          "away_skill": {
+            "RB1": "Woody Marks (David Montgomery OUT)",
+            "WR1": "Nico Collins / Xavier Hutchinson",
+            "TE1": "Dalton Schultz"
+          },
+          "home_skill": {
+            "RB1": "Quinshon Judkins",
+            "WR1": "Jerry Jeudy",
+            "TE1": "Harold Fannin Jr."
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.853372874568667e-10,
+          "home_sinkhorn_l1_err": 8.791540273556109e-10
+        },
+        "away_mean_score": 20.359,
+        "home_mean_score": 14.598,
+        "away_median_score": 20.0,
+        "home_median_score": 14.0,
+        "mean_margin": -5.7608,
+        "median_margin": -6.0,
+        "margin_sd": 11.7529,
+        "margin_quantiles": {
+          "p05": -25.0,
+          "p10": -21.0,
+          "p25": -14.0,
+          "p50": -6.0,
+          "p75": 3.0,
+          "p90": 9.0,
+          "p95": 14.0
+        },
+        "away_win_prob_pure": 0.6915,
+        "home_win_prob_pure": 0.3041,
+        "tie_prob_pure": 0.0044,
+        "key_number_mass": {
+          "0": 0.0044,
+          "+3": 0.0469,
+          "-3": 0.0637,
+          "abs_3": 0.1106,
+          "+7": 0.0266,
+          "-7": 0.0448,
+          "abs_7": 0.07139999999999999,
+          "+6": 0.0285,
+          "-6": 0.0477,
+          "abs_6": 0.0762,
+          "+10": 0.0119,
+          "-10": 0.0347,
+          "abs_10": 0.0466,
+          "+14": 0.0114,
+          "-14": 0.0352,
+          "abs_14": 0.0466
+        },
+        "total_quantiles": {
+          "mean_total": 34.9564,
+          "median_total": 35.0,
+          "total_sd": 11.137266228298577,
+          "p05": 17.0,
+          "p10": 21.0,
+          "p25": 27.0,
+          "p50": 35.0,
+          "p75": 42.0,
+          "p90": 49.0,
+          "p95": 54.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 0.2992,
+          "home_epa_per_drive": -0.4084,
+          "away_epa_per_play": 0.0406,
+          "home_epa_per_play": -0.0757,
+          "away_points_per_drive": 1.7687,
+          "home_points_per_drive": 1.2868
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.015,
+          "away_proe_trailing": 0.1536,
+          "away_realized_script_elasticity": 0.1386,
+          "home_proe_neutral": 0.0378,
+          "home_proe_trailing": 0.2019,
+          "home_realized_script_elasticity": 0.164
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 137.86,
+          "away_personnel_rates": {
+            "11": 0.5938,
+            "12": 0.239,
+            "21": 0.1085,
+            "13": 0.0587
+          },
+          "home_personnel_rates": {
+            "11": 0.5815,
+            "12": 0.2921,
+            "21": 0.0611,
+            "13": 0.0653
+          },
+          "away_motion_rate_realized": 0.6196,
+          "home_motion_rate_realized": 0.6094,
+          "away_condensed_rate_realized": 0.5802,
+          "home_condensed_rate_realized": 0.5393,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.2014,
+            "split_safety_quarters_cover6": 0.4426,
+            "single_high_cover1_cover3": 0.356
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.2035,
+            "split_safety_quarters_cover6": 0.3864,
+            "single_high_cover1_cover3": 0.4102
+          },
+          "away_4th_down_go_rate": 0.1601,
+          "home_4th_down_go_rate": 0.1974,
+          "two_minute_warning_snaps_per_game": 19.61,
+          "victory_formation_kneel_game_rate": 0.5655,
+          "victory_formation_kneel_snaps_mean": 1.24,
+          "edge2_overtime_rate": 0.0393
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "C.J. Stroud",
+            "pass_yds": {
+              "mean": 232.06,
+              "median": 230.0,
+              "p10": 165.0,
+              "p90": 302.0
+            },
+            "pass_tds_mean": 1.406,
+            "ints_mean": 0.905,
+            "sacks_mean": 2.675
+          },
+          "home_qb": {
+            "player": "Deshaun Watson",
+            "pass_yds": {
+              "mean": 219.43,
+              "median": 218.0,
+              "p10": 150.0,
+              "p90": 291.0
+            },
+            "pass_tds_mean": 1.055,
+            "ints_mean": 1.067,
+            "sacks_mean": 3.484
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Woody Marks (David Montgomery OUT)",
+              "rush_yds": {
+                "mean": 64.53,
+                "median": 63.0,
+                "p10": 32.0,
+                "p90": 98.0
+              },
+              "rec_yds": {
+                "mean": 24.37,
+                "median": 24.0,
+                "p10": 17.0,
+                "p90": 32.0
+              }
+            },
+            "wr1": {
+              "player": "Nico Collins / Xavier Hutchinson",
+              "rec_yds": {
+                "mean": 70.57,
+                "median": 70.0,
+                "p10": 50.0,
+                "p90": 92.0
+              },
+              "active_lead_wr_share": 0.3041
+            },
+            "te1": {
+              "player": "Dalton Schultz",
+              "rec_yds": {
+                "mean": 54.28,
+                "median": 54.0,
+                "p10": 39.0,
+                "p90": 71.0
+              },
+              "active_lead_te_share": 0.2339
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.3041,
+              "WR2": 0.2456,
+              "WR3": 0.1988,
+              "TE1": 0.2339,
+              "RB1": 0.0175
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Quinshon Judkins",
+              "rush_yds": {
+                "mean": 51.08,
+                "median": 48.0,
+                "p10": 19.0,
+                "p90": 88.0
+              },
+              "rec_yds": {
+                "mean": 43.62,
+                "median": 43.0,
+                "p10": 30.0,
+                "p90": 58.0
+              }
+            },
+            "wr1": {
+              "player": "Jerry Jeudy",
+              "rec_yds": {
+                "mean": 70.87,
+                "median": 70.0,
+                "p10": 48.0,
+                "p90": 94.0
+              },
+              "active_lead_wr_share": 0.323
+            },
+            "te1": {
+              "player": "Harold Fannin Jr.",
+              "rec_yds": {
+                "mean": 54.51,
+                "median": 54.0,
+                "p10": 37.0,
+                "p90": 72.0
+              },
+              "active_lead_te_share": 0.2484
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.323,
+              "WR2": 0.0186,
+              "WR3": 0.2112,
+              "TE1": 0.2484,
+              "RB1": 0.1988
+            }
+          }
+        },
+        "seal_sha256": "c0918b22cd2dec7500c8a768130e0cad0c4e4791f2302fca1ea021544de68511"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "HOU@CLE",
+        "verified_seal_sha256": "c0918b22cd2dec7500c8a768130e0cad0c4e4791f2302fca1ea021544de68511",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": 4.5,
+        "model_fair_home_spread": 5.76,
+        "spread_discrepancy_pts": 1.26,
+        "p_home_cover_empirical": 0.4526,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.5474,
+        "side_lean": "HOU -4.5",
+        "side_oof_calibrated_win_prob": 0.4821,
+        "side_three_class_ev": -0.0796,
+        "side_conviction_score": "62/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 39.5,
+        "model_mean_total": 34.96,
+        "model_median_total": 35.0,
+        "total_discrepancy_pts": 4.54,
+        "p_over_empirical": 0.3361,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.6639,
+        "total_lean": "UNDER 39.5",
+        "total_oof_calibrated_win_prob": 0.5771,
+        "total_three_class_ev": 0.1018,
+        "total_conviction_score": "84/100",
+        "total_gate_status": "DIAGNOSTIC_CANDIDATE",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "HOU@CLE: Pure Coach-Mind fair line CLE +5.76 (total 34.96) evaluated post-seal vs market CLE +4.5 (total 39.5). Side conviction 62/100 (PASS_WITHHELD); Total conviction 84/100 (DIAGNOSTIC_CANDIDATE). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "MIN@GB",
+        "espn_id": "401873060",
+        "kickoff_utc": "2026-11-15T18:00Z",
+        "away_team": "MIN",
+        "home_team": "GB",
+        "venue": "Lambeau Field",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20265149,
+        "coaches": {
+          "away_off_coach": "Kevin O'Connell",
+          "away_def_coach": "Brian Flores",
+          "home_off_coach": "Matt LaFleur",
+          "home_def_coach": "Jonathan Gannon"
+        },
+        "starters": {
+          "away_qb": "Kirk Cousins",
+          "home_qb": "Jordan Love",
+          "away_skill": {
+            "RB1": "Aaron Jones",
+            "WR1": "Justin Jefferson",
+            "TE1": "Josh Oliver (T.J. Hockenson DNP)"
+          },
+          "home_skill": {
+            "RB1": "Kaleb Johnson / Pierre Strong (Josh Jacobs OUT)",
+            "WR1": "Christian Watson",
+            "TE1": "Tucker Kraft"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.49815542189425e-10,
+          "home_sinkhorn_l1_err": 9.57738534312913e-10
+        },
+        "away_mean_score": 20.856,
+        "home_mean_score": 21.699,
+        "away_median_score": 20.0,
+        "home_median_score": 21.0,
+        "mean_margin": 0.843,
+        "median_margin": 2.0,
+        "margin_sd": 12.2252,
+        "margin_quantiles": {
+          "p05": -20.0,
+          "p10": -15.0,
+          "p25": -7.0,
+          "p50": 2.0,
+          "p75": 9.0,
+          "p90": 17.0,
+          "p95": 21.0
+        },
+        "away_win_prob_pure": 0.4689,
+        "home_win_prob_pure": 0.5265,
+        "tie_prob_pure": 0.0046,
+        "key_number_mass": {
+          "0": 0.0046,
+          "+3": 0.0614,
+          "-3": 0.064,
+          "abs_3": 0.1254,
+          "+7": 0.0369,
+          "-7": 0.0363,
+          "abs_7": 0.0732,
+          "+6": 0.042,
+          "-6": 0.0356,
+          "abs_6": 0.0776,
+          "+10": 0.0247,
+          "-10": 0.0201,
+          "abs_10": 0.0448,
+          "+14": 0.0276,
+          "-14": 0.0236,
+          "abs_14": 0.051199999999999996
+        },
+        "total_quantiles": {
+          "mean_total": 42.555,
+          "median_total": 42.0,
+          "total_sd": 12.293346777830681,
+          "p05": 23.0,
+          "p10": 27.0,
+          "p25": 34.0,
+          "p50": 42.0,
+          "p75": 51.0,
+          "p90": 58.0,
+          "p95": 64.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 0.3855,
+          "home_epa_per_drive": 0.4741,
+          "away_epa_per_play": 0.0537,
+          "home_epa_per_play": 0.0687,
+          "away_points_per_drive": 1.8861,
+          "home_points_per_drive": 1.9619
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.0616,
+          "away_proe_trailing": 0.211,
+          "away_realized_script_elasticity": 0.1494,
+          "home_proe_neutral": 0.0292,
+          "home_proe_trailing": 0.1704,
+          "home_realized_script_elasticity": 0.1412
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 139.97,
+          "away_personnel_rates": {
+            "11": 0.7167,
+            "12": 0.1854,
+            "21": 0.0561,
+            "13": 0.0417
+          },
+          "home_personnel_rates": {
+            "11": 0.6262,
+            "12": 0.2591,
+            "21": 0.0545,
+            "13": 0.0601
+          },
+          "away_motion_rate_realized": 0.6711,
+          "home_motion_rate_realized": 0.7089,
+          "away_condensed_rate_realized": 0.7291,
+          "home_condensed_rate_realized": 0.6607,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.4533,
+            "split_safety_quarters_cover6": 0.2441,
+            "single_high_cover1_cover3": 0.3026
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.2056,
+            "split_safety_quarters_cover6": 0.5273,
+            "single_high_cover1_cover3": 0.2671
+          },
+          "away_4th_down_go_rate": 0.2175,
+          "home_4th_down_go_rate": 0.1989,
+          "two_minute_warning_snaps_per_game": 19.9,
+          "victory_formation_kneel_game_rate": 0.56,
+          "victory_formation_kneel_snaps_mean": 1.241,
+          "edge2_overtime_rate": 0.0403
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Kirk Cousins",
+            "pass_yds": {
+              "mean": 258.28,
+              "median": 256.0,
+              "p10": 186.0,
+              "p90": 334.0
+            },
+            "pass_tds_mean": 1.647,
+            "ints_mean": 1.026,
+            "sacks_mean": 1.846
+          },
+          "home_qb": {
+            "player": "Jordan Love",
+            "pass_yds": {
+              "mean": 254.84,
+              "median": 252.0,
+              "p10": 182.0,
+              "p90": 331.0
+            },
+            "pass_tds_mean": 1.692,
+            "ints_mean": 0.995,
+            "sacks_mean": 2.449
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Aaron Jones",
+              "rush_yds": {
+                "mean": 62.69,
+                "median": 60.0,
+                "p10": 25.0,
+                "p90": 104.0
+              },
+              "rec_yds": {
+                "mean": 66.65,
+                "median": 66.0,
+                "p10": 48.0,
+                "p90": 86.0
+              }
+            },
+            "wr1": {
+              "player": "Justin Jefferson",
+              "rec_yds": {
+                "mean": 108.31,
+                "median": 107.0,
+                "p10": 78.0,
+                "p90": 140.0
+              },
+              "active_lead_wr_share": 0.4194
+            },
+            "te1": {
+              "player": "Josh Oliver (T.J. Hockenson DNP)",
+              "rec_yds": {
+                "mean": 34.87,
+                "median": 35.0,
+                "p10": 25.0,
+                "p90": 45.0
+              },
+              "active_lead_te_share": 0.135
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.4194,
+              "WR2": 0.0242,
+              "WR3": 0.2742,
+              "TE1": 0.0242,
+              "RB1": 0.2581
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Kaleb Johnson / Pierre Strong (Josh Jacobs OUT)",
+              "rush_yds": {
+                "mean": 58.95,
+                "median": 57.0,
+                "p10": 26.0,
+                "p90": 93.0
+              },
+              "rec_yds": {
+                "mean": 26.76,
+                "median": 26.0,
+                "p10": 19.0,
+                "p90": 35.0
+              }
+            },
+            "wr1": {
+              "player": "Christian Watson",
+              "rec_yds": {
+                "mean": 100.39,
+                "median": 99.0,
+                "p10": 72.0,
+                "p90": 130.0
+              },
+              "active_lead_wr_share": 0.3939
+            },
+            "te1": {
+              "player": "Tucker Kraft",
+              "rec_yds": {
+                "mean": 77.22,
+                "median": 76.0,
+                "p10": 55.0,
+                "p90": 100.0
+              },
+              "active_lead_te_share": 0.303
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.3939,
+              "WR2": 0.0227,
+              "WR3": 0.2576,
+              "TE1": 0.303,
+              "RB1": 0.0227
+            }
+          }
+        },
+        "seal_sha256": "25b96b8f5cc01738d708fe596dc7c6737ad3a26247e78e0aadeb703e2f3da1b1"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "MIN@GB",
+        "verified_seal_sha256": "25b96b8f5cc01738d708fe596dc7c6737ad3a26247e78e0aadeb703e2f3da1b1",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": -3.5,
+        "model_fair_home_spread": -0.84,
+        "spread_discrepancy_pts": 2.66,
+        "p_home_cover_empirical": 0.4169,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.5831,
+        "side_lean": "MIN +3.5",
+        "side_oof_calibrated_win_prob": 0.5104,
+        "side_three_class_ev": -0.0256,
+        "side_conviction_score": "75/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 42.5,
+        "model_mean_total": 42.55,
+        "model_median_total": 42.0,
+        "total_discrepancy_pts": 0.05,
+        "p_over_empirical": 0.4983,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.5017,
+        "total_lean": "UNDER 42.5",
+        "total_oof_calibrated_win_prob": 0.4465,
+        "total_three_class_ev": -0.1475,
+        "total_conviction_score": "50/100",
+        "total_gate_status": "PASS_WITHHELD",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "MIN@GB: Pure Coach-Mind fair line GB -0.84 (total 42.55) evaluated post-seal vs market GB -3.5 (total 42.5). Side conviction 75/100 (PASS_WITHHELD); Total conviction 50/100 (PASS_WITHHELD). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "JAX@TEN",
+        "espn_id": "401873057",
+        "kickoff_utc": "2026-11-15T18:00Z",
+        "away_team": "JAX",
+        "home_team": "TEN",
+        "venue": "Nissan Stadium",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20266158,
+        "coaches": {
+          "away_off_coach": "Liam Coen",
+          "away_def_coach": "Liam Coen",
+          "home_off_coach": "Robert Saleh",
+          "home_def_coach": "Robert Saleh"
+        },
+        "starters": {
+          "away_qb": "Trevor Lawrence",
+          "home_qb": "Cam Ward",
+          "away_skill": {
+            "RB1": "Chris Rodriguez Jr. / LeQuint Allen Jr. (Bhayshul Tuten DNP)",
+            "WR1": "Brian Thomas Jr. / Parker Washington",
+            "TE1": "Brenton Strange"
+          },
+          "home_skill": {
+            "RB1": "Tony Pollard",
+            "WR1": "Calvin Ridley",
+            "TE1": "Daniel Bellinger / Gunnar Helm"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.853372874568667e-10,
+          "home_sinkhorn_l1_err": 9.69288149743619e-10
+        },
+        "away_mean_score": 28.63,
+        "home_mean_score": 16.131,
+        "away_median_score": 28.0,
+        "home_median_score": 16.0,
+        "mean_margin": -12.4992,
+        "median_margin": -12.0,
+        "margin_sd": 12.3516,
+        "margin_quantiles": {
+          "p05": -33.049999999999955,
+          "p10": -28.0,
+          "p25": -21.0,
+          "p50": -12.0,
+          "p75": -4.0,
+          "p90": 3.0,
+          "p95": 7.0
+        },
+        "away_win_prob_pure": 0.8507,
+        "home_win_prob_pure": 0.1473,
+        "tie_prob_pure": 0.002,
+        "key_number_mass": {
+          "0": 0.002,
+          "+3": 0.0285,
+          "-3": 0.0443,
+          "abs_3": 0.0728,
+          "+7": 0.0135,
+          "-7": 0.0421,
+          "abs_7": 0.0556,
+          "+6": 0.0172,
+          "-6": 0.0347,
+          "abs_6": 0.0519,
+          "+10": 0.006,
+          "-10": 0.0264,
+          "abs_10": 0.0324,
+          "+14": 0.0032,
+          "-14": 0.045,
+          "abs_14": 0.0482
+        },
+        "total_quantiles": {
+          "mean_total": 44.7606,
+          "median_total": 44.0,
+          "total_sd": 11.809965607062537,
+          "p05": 26.0,
+          "p10": 30.0,
+          "p25": 37.0,
+          "p50": 44.0,
+          "p75": 53.0,
+          "p90": 60.0,
+          "p95": 64.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 1.4851,
+          "home_epa_per_drive": -0.0952,
+          "away_epa_per_play": 0.2102,
+          "home_epa_per_play": -0.0221,
+          "away_points_per_drive": 2.6953,
+          "home_points_per_drive": 1.5735
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.0273,
+          "away_proe_trailing": 0.1434,
+          "away_realized_script_elasticity": 0.1161,
+          "home_proe_neutral": 0.0273,
+          "home_proe_trailing": 0.1655,
+          "home_realized_script_elasticity": 0.1382
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 135.44,
+          "away_personnel_rates": {
+            "11": 0.6585,
+            "12": 0.2275,
+            "21": 0.0485,
+            "13": 0.0654
+          },
+          "home_personnel_rates": {
+            "11": 0.6249,
+            "12": 0.2378,
+            "21": 0.0794,
+            "13": 0.0579
+          },
+          "away_motion_rate_realized": 0.7196,
+          "home_motion_rate_realized": 0.5397,
+          "away_condensed_rate_realized": 0.7212,
+          "home_condensed_rate_realized": 0.5115,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.2246,
+            "split_safety_quarters_cover6": 0.4086,
+            "single_high_cover1_cover3": 0.3668
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.1678,
+            "split_safety_quarters_cover6": 0.4436,
+            "single_high_cover1_cover3": 0.3886
+          },
+          "away_4th_down_go_rate": 0.2404,
+          "home_4th_down_go_rate": 0.1936,
+          "two_minute_warning_snaps_per_game": 18.71,
+          "victory_formation_kneel_game_rate": 0.5148,
+          "victory_formation_kneel_snaps_mean": 1.14,
+          "edge2_overtime_rate": 0.0244
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Trevor Lawrence",
+            "pass_yds": {
+              "mean": 262.97,
+              "median": 260.0,
+              "p10": 196.0,
+              "p90": 332.1
+            },
+            "pass_tds_mean": 2.111,
+            "ints_mean": 0.752,
+            "sacks_mean": 1.819
+          },
+          "home_qb": {
+            "player": "Cam Ward",
+            "pass_yds": {
+              "mean": 228.2,
+              "median": 226.0,
+              "p10": 156.0,
+              "p90": 302.0
+            },
+            "pass_tds_mean": 1.214,
+            "ints_mean": 0.998,
+            "sacks_mean": 3.377
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Chris Rodriguez Jr. / LeQuint Allen Jr. (Bhayshul Tuten DNP)",
+              "rush_yds": {
+                "mean": 86.31,
+                "median": 86.0,
+                "p10": 50.0,
+                "p90": 124.0
+              },
+              "rec_yds": {
+                "mean": 27.62,
+                "median": 27.0,
+                "p10": 21.0,
+                "p90": 35.0
+              }
+            },
+            "wr1": {
+              "player": "Brian Thomas Jr. / Parker Washington",
+              "rec_yds": {
+                "mean": 79.97,
+                "median": 79.0,
+                "p10": 60.0,
+                "p90": 101.0
+              },
+              "active_lead_wr_share": 0.3041
+            },
+            "te1": {
+              "player": "Brenton Strange",
+              "rec_yds": {
+                "mean": 61.52,
+                "median": 61.0,
+                "p10": 46.0,
+                "p90": 78.0
+              },
+              "active_lead_te_share": 0.2339
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.3041,
+              "WR2": 0.2456,
+              "WR3": 0.1988,
+              "TE1": 0.2339,
+              "RB1": 0.0175
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Tony Pollard",
+              "rush_yds": {
+                "mean": 49.27,
+                "median": 45.0,
+                "p10": 20.0,
+                "p90": 84.0
+              },
+              "rec_yds": {
+                "mean": 36.51,
+                "median": 36.0,
+                "p10": 25.0,
+                "p90": 48.0
+              }
+            },
+            "wr1": {
+              "player": "Calvin Ridley",
+              "rec_yds": {
+                "mean": 59.33,
+                "median": 59.0,
+                "p10": 41.0,
+                "p90": 79.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "Daniel Bellinger / Gunnar Helm",
+              "rec_yds": {
+                "mean": 45.64,
+                "median": 45.0,
+                "p10": 31.0,
+                "p90": 60.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          }
+        },
+        "seal_sha256": "b3ec06d77d3a272e1b2213f100c6b2204fc7e6563e906f4d7d0c4033b41cacc2"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "JAX@TEN",
+        "verified_seal_sha256": "b3ec06d77d3a272e1b2213f100c6b2204fc7e6563e906f4d7d0c4033b41cacc2",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": 10.5,
+        "model_fair_home_spread": 12.5,
+        "spread_discrepancy_pts": 2.0,
+        "p_home_cover_empirical": 0.4428,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.5572,
+        "side_lean": "JAX -10.5",
+        "side_oof_calibrated_win_prob": 0.4898,
+        "side_three_class_ev": -0.0649,
+        "side_conviction_score": "69/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 47.5,
+        "model_mean_total": 44.76,
+        "model_median_total": 44.0,
+        "total_discrepancy_pts": 2.74,
+        "p_over_empirical": 0.4024,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.5976,
+        "total_lean": "UNDER 47.5",
+        "total_oof_calibrated_win_prob": 0.5221,
+        "total_three_class_ev": -0.0033,
+        "total_conviction_score": "71/100",
+        "total_gate_status": "PASS_WITHHELD",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "JAX@TEN: Pure Coach-Mind fair line TEN +12.50 (total 44.76) evaluated post-seal vs market TEN +10.5 (total 47.5). Side conviction 69/100 (PASS_WITHHELD); Total conviction 71/100 (PASS_WITHHELD). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "MIA@IND",
+        "espn_id": "401873059",
+        "kickoff_utc": "2026-11-15T18:00Z",
+        "away_team": "MIA",
+        "home_team": "IND",
+        "venue": "Lucas Oil Stadium",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20267167,
+        "coaches": {
+          "away_off_coach": "Bobby Slowik",
+          "away_def_coach": "Jeff Hafley",
+          "home_off_coach": "Shane Steichen",
+          "home_def_coach": "Shane Steichen"
+        },
+        "starters": {
+          "away_qb": "Kyle McCord",
+          "home_qb": "Daniel Jones",
+          "away_skill": {
+            "RB1": "Ollie Gordon II / Kaytron Allen (De'Von Achane IR)",
+            "WR1": "Malik Washington",
+            "TE1": "Greg Dulcich"
+          },
+          "home_skill": {
+            "RB1": "Jonathan Taylor",
+            "WR1": "Ashton Dulin / Anthony Gould",
+            "TE1": "Tyler Warren"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.69288149743619e-10,
+          "home_sinkhorn_l1_err": 6.874934579959024e-10
+        },
+        "away_mean_score": 15.878,
+        "home_mean_score": 21.273,
+        "away_median_score": 16.0,
+        "home_median_score": 21.0,
+        "mean_margin": 5.395,
+        "median_margin": 6.0,
+        "margin_sd": 12.2795,
+        "margin_quantiles": {
+          "p05": -15.0,
+          "p10": -10.0,
+          "p25": -3.0,
+          "p50": 6.0,
+          "p75": 14.0,
+          "p90": 21.0,
+          "p95": 26.0
+        },
+        "away_win_prob_pure": 0.3162,
+        "home_win_prob_pure": 0.6798,
+        "tie_prob_pure": 0.004,
+        "key_number_mass": {
+          "0": 0.004,
+          "+3": 0.0594,
+          "-3": 0.0483,
+          "abs_3": 0.1077,
+          "+7": 0.0475,
+          "-7": 0.0217,
+          "abs_7": 0.0692,
+          "+6": 0.0439,
+          "-6": 0.0295,
+          "abs_6": 0.07339999999999999,
+          "+10": 0.029,
+          "-10": 0.0156,
+          "abs_10": 0.0446,
+          "+14": 0.0343,
+          "-14": 0.0117,
+          "abs_14": 0.046
+        },
+        "total_quantiles": {
+          "mean_total": 37.1502,
+          "median_total": 37.0,
+          "total_sd": 11.267716714578867,
+          "p05": 20.0,
+          "p10": 23.0,
+          "p25": 29.0,
+          "p50": 37.0,
+          "p75": 44.0,
+          "p90": 52.0,
+          "p95": 57.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": -0.309,
+          "home_epa_per_drive": 0.3446,
+          "away_epa_per_play": -0.0586,
+          "home_epa_per_play": 0.0475,
+          "away_points_per_drive": 1.4141,
+          "home_points_per_drive": 1.8693
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.0006,
+          "away_proe_trailing": 0.1382,
+          "away_realized_script_elasticity": 0.1376,
+          "home_proe_neutral": -0.0048,
+          "home_proe_trailing": 0.1468,
+          "home_realized_script_elasticity": 0.1517
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 137.5,
+          "away_personnel_rates": {
+            "11": 0.5928,
+            "12": 0.2276,
+            "21": 0.1233,
+            "13": 0.0563
+          },
+          "home_personnel_rates": {
+            "11": 0.4928,
+            "12": 0.3036,
+            "21": 0.0711,
+            "13": 0.1325
+          },
+          "away_motion_rate_realized": 0.6899,
+          "home_motion_rate_realized": 0.5808,
+          "away_condensed_rate_realized": 0.6003,
+          "home_condensed_rate_realized": 0.5499,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.2598,
+            "split_safety_quarters_cover6": 0.2643,
+            "single_high_cover1_cover3": 0.4759
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.1872,
+            "split_safety_quarters_cover6": 0.4107,
+            "single_high_cover1_cover3": 0.4021
+          },
+          "away_4th_down_go_rate": 0.1683,
+          "home_4th_down_go_rate": 0.2137,
+          "two_minute_warning_snaps_per_game": 19.55,
+          "victory_formation_kneel_game_rate": 0.5611,
+          "victory_formation_kneel_snaps_mean": 1.232,
+          "edge2_overtime_rate": 0.0348
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Kyle McCord",
+            "pass_yds": {
+              "mean": 210.23,
+              "median": 207.0,
+              "p10": 142.0,
+              "p90": 282.0
+            },
+            "pass_tds_mean": 1.012,
+            "ints_mean": 1.218,
+            "sacks_mean": 3.406
+          },
+          "home_qb": {
+            "player": "Daniel Jones",
+            "pass_yds": {
+              "mean": 224.76,
+              "median": 222.0,
+              "p10": 157.0,
+              "p90": 296.0
+            },
+            "pass_tds_mean": 1.438,
+            "ints_mean": 0.891,
+            "sacks_mean": 2.49
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Ollie Gordon II / Kaytron Allen (De'Von Achane IR)",
+              "rush_yds": {
+                "mean": 60.86,
+                "median": 58.0,
+                "p10": 27.0,
+                "p90": 99.0
+              },
+              "rec_yds": {
+                "mean": 33.64,
+                "median": 33.0,
+                "p10": 23.0,
+                "p90": 45.0
+              }
+            },
+            "wr1": {
+              "player": "Malik Washington",
+              "rec_yds": {
+                "mean": 54.66,
+                "median": 54.0,
+                "p10": 37.0,
+                "p90": 73.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "Greg Dulcich",
+              "rec_yds": {
+                "mean": 42.05,
+                "median": 41.0,
+                "p10": 28.0,
+                "p90": 56.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Jonathan Taylor",
+              "rush_yds": {
+                "mean": 82.21,
+                "median": 81.0,
+                "p10": 40.0,
+                "p90": 125.0
+              },
+              "rec_yds": {
+                "mean": 64.22,
+                "median": 63.0,
+                "p10": 45.0,
+                "p90": 85.0
+              }
+            },
+            "wr1": {
+              "player": "Ashton Dulin / Anthony Gould",
+              "rec_yds": {
+                "mean": 68.24,
+                "median": 67.0,
+                "p10": 48.0,
+                "p90": 90.0
+              },
+              "active_lead_wr_share": 0.3036
+            },
+            "te1": {
+              "player": "Tyler Warren",
+              "rec_yds": {
+                "mean": 80.27,
+                "median": 79.0,
+                "p10": 56.0,
+                "p90": 106.0
+              },
+              "active_lead_te_share": 0.3571
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.0268,
+              "WR2": 0.0268,
+              "WR3": 0.3036,
+              "TE1": 0.3571,
+              "RB1": 0.2857
+            }
+          }
+        },
+        "seal_sha256": "cb17ed2ff97b4f9e2639e282afccd94e26dc565206516147d4bf2f9aa59c6bb0"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "MIA@IND",
+        "verified_seal_sha256": "cb17ed2ff97b4f9e2639e282afccd94e26dc565206516147d4bf2f9aa59c6bb0",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": -3.5,
+        "model_fair_home_spread": -5.39,
+        "spread_discrepancy_pts": 1.89,
+        "p_home_cover_empirical": 0.572,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.428,
+        "side_lean": "IND -3.5",
+        "side_oof_calibrated_win_prob": 0.5016,
+        "side_three_class_ev": -0.0425,
+        "side_conviction_score": "68/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 40.5,
+        "model_mean_total": 37.15,
+        "model_median_total": 37.0,
+        "total_discrepancy_pts": 3.35,
+        "p_over_empirical": 0.3674,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.6326,
+        "total_lean": "UNDER 40.5",
+        "total_oof_calibrated_win_prob": 0.5508,
+        "total_three_class_ev": 0.0515,
+        "total_conviction_score": "75/100",
+        "total_gate_status": "DIAGNOSTIC_CANDIDATE",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "MIA@IND: Pure Coach-Mind fair line IND -5.39 (total 37.15) evaluated post-seal vs market IND -3.5 (total 40.5). Side conviction 68/100 (PASS_WITHHELD); Total conviction 75/100 (DIAGNOSTIC_CANDIDATE). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "CAR@NO",
+        "espn_id": "401873055",
+        "kickoff_utc": "2026-11-15T18:00Z",
+        "away_team": "CAR",
+        "home_team": "NO",
+        "venue": "Caesars Superdome",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20268176,
+        "coaches": {
+          "away_off_coach": "Dave Canales",
+          "away_def_coach": "Ejiro Evero",
+          "home_off_coach": "Kellen Moore",
+          "home_def_coach": "Brandon Staley"
+        },
+        "starters": {
+          "away_qb": "Bryce Young",
+          "home_qb": "Tyler Shough",
+          "away_skill": {
+            "RB1": "Chuba Hubbard",
+            "WR1": "Tetairoa McMillan / Jalen Coker",
+            "TE1": "Ja'Tavion Sanders"
+          },
+          "home_skill": {
+            "RB1": "Alvin Kamara",
+            "WR1": "Chris Olave",
+            "TE1": "Noah Fant"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.69288149743619e-10,
+          "home_sinkhorn_l1_err": 9.69288149743619e-10
+        },
+        "away_mean_score": 20.675,
+        "home_mean_score": 23.211,
+        "away_median_score": 20.0,
+        "home_median_score": 23.0,
+        "mean_margin": 2.5359,
+        "median_margin": 3.0,
+        "margin_sd": 12.4007,
+        "margin_quantiles": {
+          "p05": -18.0,
+          "p10": -13.0,
+          "p25": -6.0,
+          "p50": 3.0,
+          "p75": 11.0,
+          "p90": 18.0,
+          "p95": 23.0
+        },
+        "away_win_prob_pure": 0.4152,
+        "home_win_prob_pure": 0.5811,
+        "tie_prob_pure": 0.0037,
+        "key_number_mass": {
+          "0": 0.0037,
+          "+3": 0.06,
+          "-3": 0.0558,
+          "abs_3": 0.1158,
+          "+7": 0.0423,
+          "-7": 0.0323,
+          "abs_7": 0.0746,
+          "+6": 0.0427,
+          "-6": 0.04,
+          "abs_6": 0.0827,
+          "+10": 0.0216,
+          "-10": 0.0181,
+          "abs_10": 0.0397,
+          "+14": 0.0263,
+          "-14": 0.0176,
+          "abs_14": 0.0439
+        },
+        "total_quantiles": {
+          "mean_total": 43.8861,
+          "median_total": 44.0,
+          "total_sd": 11.969884159422765,
+          "p05": 25.0,
+          "p10": 29.0,
+          "p25": 36.0,
+          "p50": 44.0,
+          "p75": 52.0,
+          "p90": 59.0,
+          "p95": 64.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 0.4492,
+          "home_epa_per_drive": 0.7652,
+          "away_epa_per_play": 0.0636,
+          "home_epa_per_play": 0.1101,
+          "away_points_per_drive": 1.9509,
+          "home_points_per_drive": 2.1764
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.0235,
+          "away_proe_trailing": 0.1686,
+          "away_realized_script_elasticity": 0.145,
+          "home_proe_neutral": 0.0358,
+          "home_proe_trailing": 0.1856,
+          "home_realized_script_elasticity": 0.1498
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 138.14,
+          "away_personnel_rates": {
+            "11": 0.6347,
+            "12": 0.2498,
+            "21": 0.0551,
+            "13": 0.0605
+          },
+          "home_personnel_rates": {
+            "11": 0.6587,
+            "12": 0.2236,
+            "21": 0.0556,
+            "13": 0.062
+          },
+          "away_motion_rate_realized": 0.6092,
+          "home_motion_rate_realized": 0.6999,
+          "away_condensed_rate_realized": 0.5807,
+          "home_condensed_rate_realized": 0.5702,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.2228,
+            "split_safety_quarters_cover6": 0.5214,
+            "single_high_cover1_cover3": 0.2558
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.1592,
+            "split_safety_quarters_cover6": 0.5882,
+            "single_high_cover1_cover3": 0.2525
+          },
+          "away_4th_down_go_rate": 0.1957,
+          "home_4th_down_go_rate": 0.2133,
+          "two_minute_warning_snaps_per_game": 19.67,
+          "victory_formation_kneel_game_rate": 0.551,
+          "victory_formation_kneel_snaps_mean": 1.214,
+          "edge2_overtime_rate": 0.0394
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Bryce Young",
+            "pass_yds": {
+              "mean": 240.32,
+              "median": 238.0,
+              "p10": 170.0,
+              "p90": 313.0
+            },
+            "pass_tds_mean": 1.514,
+            "ints_mean": 0.922,
+            "sacks_mean": 2.58
+          },
+          "home_qb": {
+            "player": "Tyler Shough",
+            "pass_yds": {
+              "mean": 254.29,
+              "median": 252.0,
+              "p10": 183.0,
+              "p90": 329.0
+            },
+            "pass_tds_mean": 1.752,
+            "ints_mean": 0.902,
+            "sacks_mean": 2.446
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Chuba Hubbard",
+              "rush_yds": {
+                "mean": 69.42,
+                "median": 67.0,
+                "p10": 31.0,
+                "p90": 112.0
+              },
+              "rec_yds": {
+                "mean": 38.45,
+                "median": 38.0,
+                "p10": 27.0,
+                "p90": 50.0
+              }
+            },
+            "wr1": {
+              "player": "Tetairoa McMillan / Jalen Coker",
+              "rec_yds": {
+                "mean": 62.48,
+                "median": 62.0,
+                "p10": 44.0,
+                "p90": 81.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "Ja'Tavion Sanders",
+              "rec_yds": {
+                "mean": 48.06,
+                "median": 48.0,
+                "p10": 34.0,
+                "p90": 63.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Alvin Kamara",
+              "rush_yds": {
+                "mean": 77.51,
+                "median": 76.0,
+                "p10": 35.0,
+                "p90": 122.0
+              },
+              "rec_yds": {
+                "mean": 40.68,
+                "median": 40.0,
+                "p10": 29.0,
+                "p90": 53.0
+              }
+            },
+            "wr1": {
+              "player": "Chris Olave",
+              "rec_yds": {
+                "mean": 66.11,
+                "median": 66.0,
+                "p10": 48.0,
+                "p90": 86.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "Noah Fant",
+              "rec_yds": {
+                "mean": 50.86,
+                "median": 50.0,
+                "p10": 37.0,
+                "p90": 66.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          }
+        },
+        "seal_sha256": "f42bb839cf306e2c835e3c5c3db0429fb94bd05e7d8d6b28d2db10092bee64b7"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "CAR@NO",
+        "verified_seal_sha256": "f42bb839cf306e2c835e3c5c3db0429fb94bd05e7d8d6b28d2db10092bee64b7",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": -2.5,
+        "model_fair_home_spread": -2.54,
+        "spread_discrepancy_pts": 0.04,
+        "p_home_cover_empirical": 0.5348,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.4652,
+        "side_lean": "NO -2.5",
+        "side_oof_calibrated_win_prob": 0.4722,
+        "side_three_class_ev": -0.0985,
+        "side_conviction_score": "50/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 47.5,
+        "model_mean_total": 43.89,
+        "model_median_total": 44.0,
+        "total_discrepancy_pts": 3.61,
+        "p_over_empirical": 0.3718,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.6282,
+        "total_lean": "UNDER 47.5",
+        "total_oof_calibrated_win_prob": 0.5471,
+        "total_three_class_ev": 0.0445,
+        "total_conviction_score": "77/100",
+        "total_gate_status": "DIAGNOSTIC_CANDIDATE",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "CAR@NO: Pure Coach-Mind fair line NO -2.54 (total 43.89) evaluated post-seal vs market NO -2.5 (total 47.5). Side conviction 50/100 (PASS_WITHHELD); Total conviction 77/100 (DIAGNOSTIC_CANDIDATE). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "BUF@NYJ",
+        "espn_id": "401873054",
+        "kickoff_utc": "2026-11-15T18:00Z",
+        "away_team": "BUF",
+        "home_team": "NYJ",
+        "venue": "MetLife Stadium",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20269185,
+        "coaches": {
+          "away_off_coach": "Joe Brady",
+          "away_def_coach": "Joe Brady",
+          "home_off_coach": "Aaron Glenn",
+          "home_def_coach": "Aaron Glenn"
+        },
+        "starters": {
+          "away_qb": "Josh Allen",
+          "home_qb": "Geno Smith",
+          "away_skill": {
+            "RB1": "James Cook",
+            "WR1": "Keon Coleman / Khalil Shakir / Greg Dortch",
+            "TE1": "Dalton Kincaid (LP)"
+          },
+          "home_skill": {
+            "RB1": "Breece Hall / Braelon Allen",
+            "WR1": "Garrett Wilson (Questionable)",
+            "TE1": "Mason Taylor / Jeremy Ruckert"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.69288149743619e-10,
+          "home_sinkhorn_l1_err": 8.791540273556109e-10
+        },
+        "away_mean_score": 27.223,
+        "home_mean_score": 17.504,
+        "away_median_score": 27.0,
+        "home_median_score": 17.0,
+        "mean_margin": -9.7184,
+        "median_margin": -9.0,
+        "margin_sd": 12.4246,
+        "margin_quantiles": {
+          "p05": -31.0,
+          "p10": -26.0,
+          "p25": -18.0,
+          "p50": -9.0,
+          "p75": -3.0,
+          "p90": 6.0,
+          "p95": 10.0
+        },
+        "away_win_prob_pure": 0.7891,
+        "home_win_prob_pure": 0.2078,
+        "tie_prob_pure": 0.0031,
+        "key_number_mass": {
+          "0": 0.0031,
+          "+3": 0.038,
+          "-3": 0.0542,
+          "abs_3": 0.0922,
+          "+7": 0.0153,
+          "-7": 0.0445,
+          "abs_7": 0.0598,
+          "+6": 0.0201,
+          "-6": 0.0398,
+          "abs_6": 0.0599,
+          "+10": 0.008,
+          "-10": 0.0271,
+          "abs_10": 0.0351,
+          "+14": 0.0061,
+          "-14": 0.0402,
+          "abs_14": 0.0463
+        },
+        "total_quantiles": {
+          "mean_total": 44.727,
+          "median_total": 44.0,
+          "total_sd": 12.056544737195644,
+          "p05": 26.0,
+          "p10": 30.0,
+          "p25": 37.0,
+          "p50": 44.0,
+          "p75": 52.25,
+          "p90": 61.0,
+          "p95": 65.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 1.2944,
+          "home_epa_per_drive": 0.0714,
+          "away_epa_per_play": 0.1858,
+          "home_epa_per_play": 0.0054,
+          "away_points_per_drive": 2.5463,
+          "home_points_per_drive": 1.6792
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.0082,
+          "away_proe_trailing": 0.1194,
+          "away_realized_script_elasticity": 0.1112,
+          "home_proe_neutral": 0.035,
+          "home_proe_trailing": 0.176,
+          "home_realized_script_elasticity": 0.141
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 136.76,
+          "away_personnel_rates": {
+            "11": 0.5725,
+            "12": 0.2421,
+            "21": 0.0833,
+            "13": 0.1021
+          },
+          "home_personnel_rates": {
+            "11": 0.6234,
+            "12": 0.2379,
+            "21": 0.08,
+            "13": 0.0587
+          },
+          "away_motion_rate_realized": 0.6302,
+          "home_motion_rate_realized": 0.53,
+          "away_condensed_rate_realized": 0.5898,
+          "home_condensed_rate_realized": 0.5092,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.1981,
+            "split_safety_quarters_cover6": 0.4828,
+            "single_high_cover1_cover3": 0.3191
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.2942,
+            "split_safety_quarters_cover6": 0.2667,
+            "single_high_cover1_cover3": 0.4391
+          },
+          "away_4th_down_go_rate": 0.235,
+          "home_4th_down_go_rate": 0.2056,
+          "two_minute_warning_snaps_per_game": 19.16,
+          "victory_formation_kneel_game_rate": 0.5368,
+          "victory_formation_kneel_snaps_mean": 1.195,
+          "edge2_overtime_rate": 0.0327
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Josh Allen",
+            "pass_yds": {
+              "mean": 257.99,
+              "median": 255.0,
+              "p10": 189.0,
+              "p90": 330.0
+            },
+            "pass_tds_mean": 2.009,
+            "ints_mean": 0.795,
+            "sacks_mean": 1.79
+          },
+          "home_qb": {
+            "player": "Geno Smith",
+            "pass_yds": {
+              "mean": 237.01,
+              "median": 235.0,
+              "p10": 165.0,
+              "p90": 312.0
+            },
+            "pass_tds_mean": 1.37,
+            "ints_mean": 1.014,
+            "sacks_mean": 2.964
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "James Cook",
+              "rush_yds": {
+                "mean": 98.45,
+                "median": 98.0,
+                "p10": 56.0,
+                "p90": 141.0
+              },
+              "rec_yds": {
+                "mean": 41.28,
+                "median": 41.0,
+                "p10": 30.0,
+                "p90": 53.0
+              }
+            },
+            "wr1": {
+              "player": "Keon Coleman / Khalil Shakir / Greg Dortch",
+              "rec_yds": {
+                "mean": 67.07,
+                "median": 66.0,
+                "p10": 49.0,
+                "p90": 86.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "Dalton Kincaid (LP)",
+              "rec_yds": {
+                "mean": 51.6,
+                "median": 51.0,
+                "p10": 38.0,
+                "p90": 66.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Breece Hall / Braelon Allen",
+              "rush_yds": {
+                "mean": 53.97,
+                "median": 50.0,
+                "p10": 22.0,
+                "p90": 92.0
+              },
+              "rec_yds": {
+                "mean": 47.11,
+                "median": 47.0,
+                "p10": 33.0,
+                "p90": 62.0
+              }
+            },
+            "wr1": {
+              "player": "Garrett Wilson (Questionable)",
+              "rec_yds": {
+                "mean": 76.55,
+                "median": 76.0,
+                "p10": 53.0,
+                "p90": 101.0
+              },
+              "active_lead_wr_share": 0.323
+            },
+            "te1": {
+              "player": "Mason Taylor / Jeremy Ruckert",
+              "rec_yds": {
+                "mean": 58.88,
+                "median": 58.0,
+                "p10": 41.0,
+                "p90": 78.0
+              },
+              "active_lead_te_share": 0.2484
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.323,
+              "WR2": 0.0186,
+              "WR3": 0.2112,
+              "TE1": 0.2484,
+              "RB1": 0.1988
+            }
+          }
+        },
+        "seal_sha256": "b6af190fe06a54aa5be141d853e45fbc20a4b0d40d925b093b09385e93dd8408"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "BUF@NYJ",
+        "verified_seal_sha256": "b6af190fe06a54aa5be141d853e45fbc20a4b0d40d925b093b09385e93dd8408",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": 8.5,
+        "model_fair_home_spread": 9.72,
+        "spread_discrepancy_pts": 1.22,
+        "p_home_cover_empirical": 0.4745,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.5255,
+        "side_lean": "BUF -8.5",
+        "side_oof_calibrated_win_prob": 0.465,
+        "side_three_class_ev": -0.1123,
+        "side_conviction_score": "62/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 51.5,
+        "model_mean_total": 44.73,
+        "model_median_total": 44.0,
+        "total_discrepancy_pts": 6.77,
+        "p_over_empirical": 0.2761,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.7239,
+        "total_lean": "UNDER 51.5",
+        "total_oof_calibrated_win_prob": 0.6299,
+        "total_three_class_ev": 0.2026,
+        "total_conviction_score": "88/100",
+        "total_gate_status": "DIAGNOSTIC_CANDIDATE",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "BUF@NYJ: Pure Coach-Mind fair line NYJ +9.72 (total 44.73) evaluated post-seal vs market NYJ +8.5 (total 51.5). Side conviction 62/100 (PASS_WITHHELD); Total conviction 88/100 (DIAGNOSTIC_CANDIDATE). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "SEA@LV",
+        "espn_id": "401873062",
+        "kickoff_utc": "2026-11-15T21:05Z",
+        "away_team": "SEA",
+        "home_team": "LV",
+        "venue": "Allegiant Stadium",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20270194,
+        "coaches": {
+          "away_off_coach": "Mike Macdonald",
+          "away_def_coach": "Mike Macdonald",
+          "home_off_coach": "Klint Kubiak",
+          "home_def_coach": "Klint Kubiak"
+        },
+        "starters": {
+          "away_qb": "Drew Lock",
+          "home_qb": "Fernando Mendoza",
+          "away_skill": {
+            "RB1": "Zach Charbonnet",
+            "WR1": "Jaxon Smith-Njigba / Tory Horton",
+            "TE1": "AJ Barner"
+          },
+          "home_skill": {
+            "RB1": "Ashton Jeanty",
+            "WR1": "Jalen Nailor / Tre Tucker",
+            "TE1": "Brock Bowers"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.69288149743619e-10,
+          "home_sinkhorn_l1_err": 9.269009206003265e-10
+        },
+        "away_mean_score": 20.182,
+        "home_mean_score": 13.249,
+        "away_median_score": 20.0,
+        "home_median_score": 13.0,
+        "mean_margin": -6.9332,
+        "median_margin": -7.0,
+        "margin_sd": 11.9186,
+        "margin_quantiles": {
+          "p05": -27.0,
+          "p10": -22.0,
+          "p25": -15.0,
+          "p50": -7.0,
+          "p75": 2.0,
+          "p90": 8.0,
+          "p95": 13.0
+        },
+        "away_win_prob_pure": 0.7256,
+        "home_win_prob_pure": 0.2712,
+        "tie_prob_pure": 0.0032,
+        "key_number_mass": {
+          "0": 0.0032,
+          "+3": 0.0411,
+          "-3": 0.059,
+          "abs_3": 0.1001,
+          "+7": 0.0215,
+          "-7": 0.0457,
+          "abs_7": 0.0672,
+          "+6": 0.0239,
+          "-6": 0.0466,
+          "abs_6": 0.07050000000000001,
+          "+10": 0.0135,
+          "-10": 0.033,
+          "abs_10": 0.0465,
+          "+14": 0.0096,
+          "-14": 0.0373,
+          "abs_14": 0.0469
+        },
+        "total_quantiles": {
+          "mean_total": 33.431,
+          "median_total": 33.0,
+          "total_sd": 10.624652417844079,
+          "p05": 16.0,
+          "p10": 20.0,
+          "p25": 26.0,
+          "p50": 33.0,
+          "p75": 40.0,
+          "p90": 47.0,
+          "p95": 52.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 0.0804,
+          "home_epa_per_drive": -0.7383,
+          "away_epa_per_play": 0.0053,
+          "home_epa_per_play": -0.1391,
+          "away_points_per_drive": 1.6883,
+          "home_points_per_drive": 1.1313
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.0172,
+          "away_proe_trailing": 0.1501,
+          "away_realized_script_elasticity": 0.133,
+          "home_proe_neutral": 0.0006,
+          "home_proe_trailing": 0.1384,
+          "home_realized_script_elasticity": 0.1379
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 137.55,
+          "away_personnel_rates": {
+            "11": 0.6201,
+            "12": 0.2485,
+            "21": 0.072,
+            "13": 0.0593
+          },
+          "home_personnel_rates": {
+            "11": 0.5414,
+            "12": 0.2831,
+            "21": 0.1115,
+            "13": 0.064
+          },
+          "away_motion_rate_realized": 0.5599,
+          "home_motion_rate_realized": 0.6994,
+          "away_condensed_rate_realized": 0.5399,
+          "home_condensed_rate_realized": 0.611,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.323,
+            "split_safety_quarters_cover6": 0.4408,
+            "single_high_cover1_cover3": 0.2362
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.2048,
+            "split_safety_quarters_cover6": 0.3942,
+            "single_high_cover1_cover3": 0.4011
+          },
+          "away_4th_down_go_rate": 0.1804,
+          "home_4th_down_go_rate": 0.1698,
+          "two_minute_warning_snaps_per_game": 19.47,
+          "victory_formation_kneel_game_rate": 0.5689,
+          "victory_formation_kneel_snaps_mean": 1.244,
+          "edge2_overtime_rate": 0.0336
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Drew Lock",
+            "pass_yds": {
+              "mean": 221.64,
+              "median": 219.0,
+              "p10": 156.0,
+              "p90": 291.0
+            },
+            "pass_tds_mean": 1.317,
+            "ints_mean": 0.939,
+            "sacks_mean": 2.872
+          },
+          "home_qb": {
+            "player": "Fernando Mendoza",
+            "pass_yds": {
+              "mean": 193.36,
+              "median": 190.0,
+              "p10": 127.0,
+              "p90": 263.0
+            },
+            "pass_tds_mean": 0.819,
+            "ints_mean": 1.405,
+            "sacks_mean": 3.866
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Zach Charbonnet",
+              "rush_yds": {
+                "mean": 73.94,
+                "median": 73.0,
+                "p10": 38.0,
+                "p90": 112.0
+              },
+              "rec_yds": {
+                "mean": 35.47,
+                "median": 35.0,
+                "p10": 25.0,
+                "p90": 47.0
+              }
+            },
+            "wr1": {
+              "player": "Jaxon Smith-Njigba / Tory Horton",
+              "rec_yds": {
+                "mean": 57.62,
+                "median": 57.0,
+                "p10": 41.0,
+                "p90": 76.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "AJ Barner",
+              "rec_yds": {
+                "mean": 44.33,
+                "median": 44.0,
+                "p10": 31.0,
+                "p90": 58.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Ashton Jeanty",
+              "rush_yds": {
+                "mean": 54.16,
+                "median": 51.0,
+                "p10": 24.0,
+                "p90": 90.0
+              },
+              "rec_yds": {
+                "mean": 40.97,
+                "median": 40.0,
+                "p10": 27.0,
+                "p90": 56.0
+              }
+            },
+            "wr1": {
+              "player": "Jalen Nailor / Tre Tucker",
+              "rec_yds": {
+                "mean": 53.78,
+                "median": 53.0,
+                "p10": 35.0,
+                "p90": 73.0
+              },
+              "active_lead_wr_share": 0.2781
+            },
+            "te1": {
+              "player": "Brock Bowers",
+              "rec_yds": {
+                "mean": 51.23,
+                "median": 50.0,
+                "p10": 34.0,
+                "p90": 70.0
+              },
+              "active_lead_te_share": 0.2649
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.0199,
+              "WR2": 0.2781,
+              "WR3": 0.2252,
+              "TE1": 0.2649,
+              "RB1": 0.2119
+            }
+          }
+        },
+        "seal_sha256": "490db5322340121f93f67542e455447801b3bf2c3c2fc3bad52433f34de0295c"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "SEA@LV",
+        "verified_seal_sha256": "490db5322340121f93f67542e455447801b3bf2c3c2fc3bad52433f34de0295c",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": 6.5,
+        "model_fair_home_spread": 6.93,
+        "spread_discrepancy_pts": 0.43,
+        "p_home_cover_empirical": 0.4873,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.5127,
+        "side_lean": "SEA -6.5",
+        "side_oof_calibrated_win_prob": 0.455,
+        "side_three_class_ev": -0.1313,
+        "side_conviction_score": "54/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 43.5,
+        "model_mean_total": 33.43,
+        "model_median_total": 33.0,
+        "total_discrepancy_pts": 10.07,
+        "p_over_empirical": 0.1735,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.8265,
+        "total_lean": "UNDER 43.5",
+        "total_oof_calibrated_win_prob": 0.7306,
+        "total_three_class_ev": 0.3948,
+        "total_conviction_score": "88/100",
+        "total_gate_status": "DIAGNOSTIC_CANDIDATE",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "SEA@LV: Pure Coach-Mind fair line LV +6.93 (total 33.43) evaluated post-seal vs market LV +6.5 (total 43.5). Side conviction 54/100 (PASS_WITHHELD); Total conviction 88/100 (DIAGNOSTIC_CANDIDATE). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "LAR@ARI",
+        "espn_id": "401873061",
+        "kickoff_utc": "2026-11-15T21:05Z",
+        "away_team": "LAR",
+        "home_team": "ARI",
+        "venue": "State Farm Stadium",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20271203,
+        "coaches": {
+          "away_off_coach": "Sean McVay",
+          "away_def_coach": "Sean McVay",
+          "home_off_coach": "Mike LaFleur",
+          "home_def_coach": "Nick Rallis"
+        },
+        "starters": {
+          "away_qb": "Matthew Stafford",
+          "home_qb": "Carson Beck",
+          "away_skill": {
+            "RB1": "Kyren Williams",
+            "WR1": "Tutu Atwell / Konata Mumpfield (Nacua & Adams IR)",
+            "TE1": "Colby Parkinson / Tyler Higbee"
+          },
+          "home_skill": {
+            "RB1": "Tyler Allgeier / Bam Knight (Conner & Benson IR)",
+            "WR1": "Kendrick Bourne / Devin Duvernay (MHJ traded, Wilson IR)",
+            "TE1": "Trey McBride"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 6.874934579959024e-10,
+          "home_sinkhorn_l1_err": 8.633348480557856e-10
+        },
+        "away_mean_score": 27.279,
+        "home_mean_score": 12.161,
+        "away_median_score": 27.0,
+        "home_median_score": 11.0,
+        "mean_margin": -15.1185,
+        "median_margin": -15.0,
+        "margin_sd": 12.3109,
+        "margin_quantiles": {
+          "p05": -35.0,
+          "p10": -31.0,
+          "p25": -24.0,
+          "p50": -15.0,
+          "p75": -7.0,
+          "p90": -1.0,
+          "p95": 5.0
+        },
+        "away_win_prob_pure": 0.9007,
+        "home_win_prob_pure": 0.097,
+        "tie_prob_pure": 0.0023,
+        "key_number_mass": {
+          "0": 0.0023,
+          "+3": 0.0186,
+          "-3": 0.0354,
+          "abs_3": 0.054,
+          "+7": 0.0076,
+          "-7": 0.0355,
+          "abs_7": 0.0431,
+          "+6": 0.0086,
+          "-6": 0.0321,
+          "abs_6": 0.0407,
+          "+10": 0.0039,
+          "-10": 0.0301,
+          "abs_10": 0.033999999999999996,
+          "+14": 0.0028,
+          "-14": 0.0456,
+          "abs_14": 0.0484
+        },
+        "total_quantiles": {
+          "mean_total": 39.4401,
+          "median_total": 39.0,
+          "total_sd": 11.065424166745709,
+          "p05": 22.0,
+          "p10": 26.0,
+          "p25": 32.0,
+          "p50": 39.0,
+          "p75": 47.0,
+          "p90": 54.0,
+          "p95": 59.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 1.0897,
+          "home_epa_per_drive": -0.7766,
+          "away_epa_per_play": 0.1564,
+          "home_epa_per_play": -0.1445,
+          "away_points_per_drive": 2.4342,
+          "home_points_per_drive": 1.1265
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.0062,
+          "away_proe_trailing": 0.1478,
+          "away_realized_script_elasticity": 0.1415,
+          "home_proe_neutral": 0.0286,
+          "home_proe_trailing": 0.1637,
+          "home_realized_script_elasticity": 0.1351
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 134.91,
+          "away_personnel_rates": {
+            "11": 0.481,
+            "12": 0.3081,
+            "21": 0.0726,
+            "13": 0.1383
+          },
+          "home_personnel_rates": {
+            "11": 0.6058,
+            "12": 0.2614,
+            "21": 0.069,
+            "13": 0.0638
+          },
+          "away_motion_rate_realized": 0.7701,
+          "home_motion_rate_realized": 0.6797,
+          "away_condensed_rate_realized": 0.7897,
+          "home_condensed_rate_realized": 0.6498,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.2127,
+            "split_safety_quarters_cover6": 0.4315,
+            "single_high_cover1_cover3": 0.3558
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.2848,
+            "split_safety_quarters_cover6": 0.4188,
+            "single_high_cover1_cover3": 0.2965
+          },
+          "away_4th_down_go_rate": 0.195,
+          "home_4th_down_go_rate": 0.1929,
+          "two_minute_warning_snaps_per_game": 18.26,
+          "victory_formation_kneel_game_rate": 0.5103,
+          "victory_formation_kneel_snaps_mean": 1.138,
+          "edge2_overtime_rate": 0.0173
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Matthew Stafford",
+            "pass_yds": {
+              "mean": 233.75,
+              "median": 231.0,
+              "p10": 168.0,
+              "p90": 302.0
+            },
+            "pass_tds_mean": 1.75,
+            "ints_mean": 0.776,
+            "sacks_mean": 1.803
+          },
+          "home_qb": {
+            "player": "Carson Beck",
+            "pass_yds": {
+              "mean": 196.16,
+              "median": 194.0,
+              "p10": 129.0,
+              "p90": 268.0
+            },
+            "pass_tds_mean": 0.834,
+            "ints_mean": 1.322,
+            "sacks_mean": 3.662
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Kyren Williams",
+              "rush_yds": {
+                "mean": 108.43,
+                "median": 108.0,
+                "p10": 63.0,
+                "p90": 153.0
+              },
+              "rec_yds": {
+                "mean": 66.79,
+                "median": 66.0,
+                "p10": 48.0,
+                "p90": 86.0
+              }
+            },
+            "wr1": {
+              "player": "Tutu Atwell / Konata Mumpfield (Nacua & Adams IR)",
+              "rec_yds": {
+                "mean": 70.97,
+                "median": 70.0,
+                "p10": 51.0,
+                "p90": 92.0
+              },
+              "active_lead_wr_share": 0.3036
+            },
+            "te1": {
+              "player": "Colby Parkinson / Tyler Higbee",
+              "rec_yds": {
+                "mean": 83.48,
+                "median": 82.0,
+                "p10": 60.0,
+                "p90": 108.0
+              },
+              "active_lead_te_share": 0.3571
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.0268,
+              "WR2": 0.0268,
+              "WR3": 0.3036,
+              "TE1": 0.3571,
+              "RB1": 0.2857
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Tyler Allgeier / Bam Knight (Conner & Benson IR)",
+              "rush_yds": {
+                "mean": 34.63,
+                "median": 32.0,
+                "p10": 13.0,
+                "p90": 60.0
+              },
+              "rec_yds": {
+                "mean": 20.59,
+                "median": 20.0,
+                "p10": 14.0,
+                "p90": 28.0
+              }
+            },
+            "wr1": {
+              "player": "Kendrick Bourne / Devin Duvernay (MHJ traded, Wilson IR)",
+              "rec_yds": {
+                "mean": 67.53,
+                "median": 67.0,
+                "p10": 44.0,
+                "p90": 92.0
+              },
+              "active_lead_wr_share": 0.3443
+            },
+            "te1": {
+              "player": "Trey McBride",
+              "rec_yds": {
+                "mean": 64.32,
+                "median": 64.0,
+                "p10": 42.0,
+                "p90": 88.0
+              },
+              "active_lead_te_share": 0.3279
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.0246,
+              "WR2": 0.3443,
+              "WR3": 0.2787,
+              "TE1": 0.3279,
+              "RB1": 0.0246
+            }
+          }
+        },
+        "seal_sha256": "3bfe932e01d5755ca15241e669c5f57cb7d281df141e46b2a3290db8d3866e7d"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "LAR@ARI",
+        "verified_seal_sha256": "3bfe932e01d5755ca15241e669c5f57cb7d281df141e46b2a3290db8d3866e7d",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": 9.5,
+        "model_fair_home_spread": 15.12,
+        "spread_discrepancy_pts": 5.62,
+        "p_home_cover_empirical": 0.327,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.673,
+        "side_lean": "LAR -9.5",
+        "side_oof_calibrated_win_prob": 0.5849,
+        "side_three_class_ev": 0.1167,
+        "side_conviction_score": "88/100",
+        "side_gate_status": "DIAGNOSTIC_CANDIDATE",
+        "listed_total": 44.5,
+        "model_mean_total": 39.44,
+        "model_median_total": 39.0,
+        "total_discrepancy_pts": 5.06,
+        "p_over_empirical": 0.3053,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.6947,
+        "total_lean": "UNDER 44.5",
+        "total_oof_calibrated_win_prob": 0.6038,
+        "total_three_class_ev": 0.1527,
+        "total_conviction_score": "88/100",
+        "total_gate_status": "DIAGNOSTIC_CANDIDATE",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "LAR@ARI: Pure Coach-Mind fair line ARI +15.12 (total 39.44) evaluated post-seal vs market ARI +9.5 (total 44.5). Side conviction 88/100 (DIAGNOSTIC_CANDIDATE); Total conviction 88/100 (DIAGNOSTIC_CANDIDATE). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "SF@DAL",
+        "espn_id": "401873063",
+        "kickoff_utc": "2026-11-15T21:25Z",
+        "away_team": "SF",
+        "home_team": "DAL",
+        "venue": "AT&T Stadium",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20272212,
+        "coaches": {
+          "away_off_coach": "Kyle Shanahan",
+          "away_def_coach": "Kyle Shanahan",
+          "home_off_coach": "Brian Schottenheimer",
+          "home_def_coach": "Brian Schottenheimer"
+        },
+        "starters": {
+          "away_qb": "Brock Purdy",
+          "home_qb": "Dak Prescott",
+          "away_skill": {
+            "RB1": "Christian McCaffrey",
+            "WR1": "Deebo Samuel Sr. / Keenan Allen / Brandin Cooks",
+            "TE1": "George Kittle"
+          },
+          "home_skill": {
+            "RB1": "Javonte Williams",
+            "WR1": "CeeDee Lamb / George Pickens (Q)",
+            "TE1": "Brevyn Spann-Ford (Jake Ferguson & Schoonmaker OUT)"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.269009206003265e-10,
+          "home_sinkhorn_l1_err": 9.266606926239263e-10
+        },
+        "away_mean_score": 27.345,
+        "home_mean_score": 22.54,
+        "away_median_score": 27.0,
+        "home_median_score": 23.0,
+        "mean_margin": -4.8058,
+        "median_margin": -5.0,
+        "margin_sd": 12.7141,
+        "margin_quantiles": {
+          "p05": -26.0,
+          "p10": -21.0,
+          "p25": -13.0,
+          "p50": -5.0,
+          "p75": 4.0,
+          "p90": 11.0,
+          "p95": 16.0
+        },
+        "away_win_prob_pure": 0.65,
+        "home_win_prob_pure": 0.3466,
+        "tie_prob_pure": 0.0034,
+        "key_number_mass": {
+          "0": 0.0034,
+          "+3": 0.0578,
+          "-3": 0.0655,
+          "abs_3": 0.12329999999999999,
+          "+7": 0.0295,
+          "-7": 0.0428,
+          "abs_7": 0.0723,
+          "+6": 0.0295,
+          "-6": 0.0461,
+          "abs_6": 0.0756,
+          "+10": 0.0148,
+          "-10": 0.024,
+          "abs_10": 0.0388,
+          "+14": 0.0134,
+          "-14": 0.0332,
+          "abs_14": 0.0466
+        },
+        "total_quantiles": {
+          "mean_total": 49.885,
+          "median_total": 50.0,
+          "total_sd": 12.694777469495083,
+          "p05": 29.0,
+          "p10": 34.0,
+          "p25": 41.0,
+          "p50": 50.0,
+          "p75": 58.0,
+          "p90": 66.0,
+          "p95": 72.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 1.3763,
+          "home_epa_per_drive": 0.744,
+          "away_epa_per_play": 0.1966,
+          "home_epa_per_play": 0.1085,
+          "away_points_per_drive": 2.6474,
+          "home_points_per_drive": 2.2158
+        },
+        "script_elasticity": {
+          "away_proe_neutral": -0.0011,
+          "away_proe_trailing": 0.1151,
+          "away_realized_script_elasticity": 0.1162,
+          "home_proe_neutral": 0.0525,
+          "home_proe_trailing": 0.2038,
+          "home_realized_script_elasticity": 0.1512
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 136.52,
+          "away_personnel_rates": {
+            "11": 0.471,
+            "12": 0.2334,
+            "21": 0.2467,
+            "13": 0.0489
+          },
+          "home_personnel_rates": {
+            "11": 0.6611,
+            "12": 0.222,
+            "21": 0.0551,
+            "13": 0.0617
+          },
+          "away_motion_rate_realized": 0.7505,
+          "home_motion_rate_realized": 0.5908,
+          "away_condensed_rate_realized": 0.6398,
+          "home_condensed_rate_realized": 0.5298,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.1921,
+            "split_safety_quarters_cover6": 0.409,
+            "single_high_cover1_cover3": 0.3989
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.23,
+            "split_safety_quarters_cover6": 0.4065,
+            "single_high_cover1_cover3": 0.3635
+          },
+          "away_4th_down_go_rate": 0.2198,
+          "home_4th_down_go_rate": 0.2315,
+          "two_minute_warning_snaps_per_game": 19.55,
+          "victory_formation_kneel_game_rate": 0.5432,
+          "victory_formation_kneel_snaps_mean": 1.208,
+          "edge2_overtime_rate": 0.0417
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Brock Purdy",
+            "pass_yds": {
+              "mean": 256.87,
+              "median": 254.0,
+              "p10": 187.0,
+              "p90": 329.0
+            },
+            "pass_tds_mean": 2.003,
+            "ints_mean": 0.777,
+            "sacks_mean": 2.034
+          },
+          "home_qb": {
+            "player": "Dak Prescott",
+            "pass_yds": {
+              "mean": 266.11,
+              "median": 265.0,
+              "p10": 189.0,
+              "p90": 344.1
+            },
+            "pass_tds_mean": 1.882,
+            "ints_mean": 0.925,
+            "sacks_mean": 2.358
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Christian McCaffrey",
+              "rush_yds": {
+                "mean": 97.39,
+                "median": 97.0,
+                "p10": 53.0,
+                "p90": 143.0
+              },
+              "rec_yds": {
+                "mean": 54.44,
+                "median": 54.0,
+                "p10": 40.0,
+                "p90": 70.0
+              }
+            },
+            "wr1": {
+              "player": "Deebo Samuel Sr. / Keenan Allen / Brandin Cooks",
+              "rec_yds": {
+                "mean": 71.45,
+                "median": 71.0,
+                "p10": 52.0,
+                "p90": 92.0
+              },
+              "active_lead_wr_share": 0.2781
+            },
+            "te1": {
+              "player": "George Kittle",
+              "rec_yds": {
+                "mean": 68.04,
+                "median": 67.0,
+                "p10": 50.0,
+                "p90": 87.0
+              },
+              "active_lead_te_share": 0.2649
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.0199,
+              "WR2": 0.2781,
+              "WR3": 0.2252,
+              "TE1": 0.2649,
+              "RB1": 0.2119
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Javonte Williams",
+              "rush_yds": {
+                "mean": 62.24,
+                "median": 58.0,
+                "p10": 24.0,
+                "p90": 106.0
+              },
+              "rec_yds": {
+                "mean": 52.24,
+                "median": 52.0,
+                "p10": 37.0,
+                "p90": 68.0
+              }
+            },
+            "wr1": {
+              "player": "CeeDee Lamb / George Pickens (Q)",
+              "rec_yds": {
+                "mean": 84.9,
+                "median": 85.0,
+                "p10": 60.0,
+                "p90": 110.0
+              },
+              "active_lead_wr_share": 0.319
+            },
+            "te1": {
+              "player": "Brevyn Spann-Ford (Jake Ferguson & Schoonmaker OUT)",
+              "rec_yds": {
+                "mean": 35.92,
+                "median": 36.0,
+                "p10": 26.0,
+                "p90": 46.1
+              },
+              "active_lead_te_share": 0.135
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.319,
+              "WR2": 0.2577,
+              "WR3": 0.2086,
+              "TE1": 0.0184,
+              "RB1": 0.1963
+            }
+          }
+        },
+        "seal_sha256": "b6980481de9a77c192d0e2ca5338ee300822bb71925db9c49f5a385f99fe5388"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "SF@DAL",
+        "verified_seal_sha256": "b6980481de9a77c192d0e2ca5338ee300822bb71925db9c49f5a385f99fe5388",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": 3.5,
+        "model_fair_home_spread": 4.81,
+        "spread_discrepancy_pts": 1.31,
+        "p_home_cover_empirical": 0.4577,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.5423,
+        "side_lean": "SF -3.5",
+        "side_oof_calibrated_win_prob": 0.4781,
+        "side_three_class_ev": -0.0873,
+        "side_conviction_score": "62/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 55.5,
+        "model_mean_total": 49.88,
+        "model_median_total": 50.0,
+        "total_discrepancy_pts": 5.62,
+        "p_over_empirical": 0.3174,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.6826,
+        "total_lean": "UNDER 55.5",
+        "total_oof_calibrated_win_prob": 0.5932,
+        "total_three_class_ev": 0.1325,
+        "total_conviction_score": "88/100",
+        "total_gate_status": "DIAGNOSTIC_CANDIDATE",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "SF@DAL: Pure Coach-Mind fair line DAL +4.81 (total 49.88) evaluated post-seal vs market DAL +3.5 (total 55.5). Side conviction 62/100 (PASS_WITHHELD); Total conviction 88/100 (DIAGNOSTIC_CANDIDATE). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "PIT@CIN",
+        "espn_id": "401873064",
+        "kickoff_utc": "2026-11-16T01:20Z",
+        "away_team": "PIT",
+        "home_team": "CIN",
+        "venue": "Paycor Stadium",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20273221,
+        "coaches": {
+          "away_off_coach": "Mike McCarthy",
+          "away_def_coach": "Mike McCarthy",
+          "home_off_coach": "Zac Taylor",
+          "home_def_coach": "Zac Taylor"
+        },
+        "starters": {
+          "away_qb": "Aaron Rodgers",
+          "home_qb": "Joe Burrow",
+          "away_skill": {
+            "RB1": "Jaylen Warren / Rico Dowdle",
+            "WR1": "Calvin Austin III (Michael Pittman Jr. IR)",
+            "TE1": "Pat Freiermuth"
+          },
+          "home_skill": {
+            "RB1": "Chase Brown",
+            "WR1": "Ja'Marr Chase / Tee Higgins",
+            "TE1": "Mike Gesicki"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.269009206003265e-10,
+          "home_sinkhorn_l1_err": 9.69288149743619e-10
+        },
+        "away_mean_score": 24.193,
+        "home_mean_score": 25.043,
+        "away_median_score": 24.0,
+        "home_median_score": 24.0,
+        "mean_margin": 0.8506,
+        "median_margin": 2.0,
+        "margin_sd": 12.6445,
+        "margin_quantiles": {
+          "p05": -20.0,
+          "p10": -15.0,
+          "p25": -7.0,
+          "p50": 2.0,
+          "p75": 9.0,
+          "p90": 17.0,
+          "p95": 22.0
+        },
+        "away_win_prob_pure": 0.4731,
+        "home_win_prob_pure": 0.5243,
+        "tie_prob_pure": 0.0026,
+        "key_number_mass": {
+          "0": 0.0026,
+          "+3": 0.0625,
+          "-3": 0.0612,
+          "abs_3": 0.1237,
+          "+7": 0.0379,
+          "-7": 0.0366,
+          "abs_7": 0.07450000000000001,
+          "+6": 0.0414,
+          "-6": 0.044,
+          "abs_6": 0.0854,
+          "+10": 0.0209,
+          "-10": 0.019,
+          "abs_10": 0.0399,
+          "+14": 0.0277,
+          "-14": 0.0206,
+          "abs_14": 0.048299999999999996
+        },
+        "total_quantiles": {
+          "mean_total": 49.236,
+          "median_total": 49.0,
+          "total_sd": 12.886609484266993,
+          "p05": 29.0,
+          "p10": 33.0,
+          "p25": 40.0,
+          "p50": 49.0,
+          "p75": 58.0,
+          "p90": 66.0,
+          "p95": 71.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": 0.8906,
+          "home_epa_per_drive": 0.9865,
+          "away_epa_per_play": 0.1293,
+          "home_epa_per_play": 0.1444,
+          "away_points_per_drive": 2.2911,
+          "home_points_per_drive": 2.3665
+        },
+        "script_elasticity": {
+          "away_proe_neutral": 0.0316,
+          "away_proe_trailing": 0.1724,
+          "away_realized_script_elasticity": 0.1409,
+          "home_proe_neutral": 0.0775,
+          "home_proe_trailing": 0.2236,
+          "home_realized_script_elasticity": 0.1461
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 139.0,
+          "away_personnel_rates": {
+            "11": 0.6227,
+            "12": 0.2504,
+            "21": 0.0557,
+            "13": 0.0712
+          },
+          "home_personnel_rates": {
+            "11": 0.7412,
+            "12": 0.1755,
+            "21": 0.0289,
+            "13": 0.0543
+          },
+          "away_motion_rate_realized": 0.5413,
+          "home_motion_rate_realized": 0.5815,
+          "away_condensed_rate_realized": 0.5101,
+          "home_condensed_rate_realized": 0.6308,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.2251,
+            "split_safety_quarters_cover6": 0.3634,
+            "single_high_cover1_cover3": 0.4115
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.1963,
+            "split_safety_quarters_cover6": 0.4373,
+            "single_high_cover1_cover3": 0.3664
+          },
+          "away_4th_down_go_rate": 0.1971,
+          "home_4th_down_go_rate": 0.2391,
+          "two_minute_warning_snaps_per_game": 19.81,
+          "victory_formation_kneel_game_rate": 0.549,
+          "victory_formation_kneel_snaps_mean": 1.214,
+          "edge2_overtime_rate": 0.038
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Aaron Rodgers",
+            "pass_yds": {
+              "mean": 264.5,
+              "median": 262.0,
+              "p10": 190.0,
+              "p90": 342.0
+            },
+            "pass_tds_mean": 1.879,
+            "ints_mean": 0.899,
+            "sacks_mean": 2.084
+          },
+          "home_qb": {
+            "player": "Joe Burrow",
+            "pass_yds": {
+              "mean": 287.7,
+              "median": 285.0,
+              "p10": 211.0,
+              "p90": 367.0
+            },
+            "pass_tds_mean": 2.133,
+            "ints_mean": 0.922,
+            "sacks_mean": 2.708
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Jaylen Warren / Rico Dowdle",
+              "rush_yds": {
+                "mean": 75.6,
+                "median": 73.0,
+                "p10": 33.0,
+                "p90": 121.0
+              },
+              "rec_yds": {
+                "mean": 56.05,
+                "median": 56.0,
+                "p10": 40.0,
+                "p90": 72.0
+              }
+            },
+            "wr1": {
+              "player": "Calvin Austin III (Michael Pittman Jr. IR)",
+              "rec_yds": {
+                "mean": 73.57,
+                "median": 73.0,
+                "p10": 53.0,
+                "p90": 95.0
+              },
+              "active_lead_wr_share": 0.2781
+            },
+            "te1": {
+              "player": "Pat Freiermuth",
+              "rec_yds": {
+                "mean": 70.07,
+                "median": 69.0,
+                "p10": 50.0,
+                "p90": 91.0
+              },
+              "active_lead_te_share": 0.2649
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.0199,
+              "WR2": 0.2781,
+              "WR3": 0.2252,
+              "TE1": 0.2649,
+              "RB1": 0.2119
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Chase Brown",
+              "rush_yds": {
+                "mean": 69.21,
+                "median": 67.0,
+                "p10": 28.0,
+                "p90": 115.0
+              },
+              "rec_yds": {
+                "mean": 46.04,
+                "median": 46.0,
+                "p10": 34.0,
+                "p90": 59.0
+              }
+            },
+            "wr1": {
+              "player": "Ja'Marr Chase / Tee Higgins",
+              "rec_yds": {
+                "mean": 74.8,
+                "median": 74.0,
+                "p10": 55.0,
+                "p90": 95.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "Mike Gesicki",
+              "rec_yds": {
+                "mean": 57.54,
+                "median": 57.0,
+                "p10": 42.0,
+                "p90": 73.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          }
+        },
+        "seal_sha256": "e713a4cf2d7af04f5326801ae4c58df5dd81c040a339e364693999ab8083055d"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "PIT@CIN",
+        "verified_seal_sha256": "e713a4cf2d7af04f5326801ae4c58df5dd81c040a339e364693999ab8083055d",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": -3.5,
+        "model_fair_home_spread": -0.85,
+        "spread_discrepancy_pts": 2.65,
+        "p_home_cover_empirical": 0.4185,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.5815,
+        "side_lean": "PIT +3.5",
+        "side_oof_calibrated_win_prob": 0.5091,
+        "side_three_class_ev": -0.028,
+        "side_conviction_score": "75/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 47.5,
+        "model_mean_total": 49.24,
+        "model_median_total": 49.0,
+        "total_discrepancy_pts": 1.74,
+        "p_over_empirical": 0.5339,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.4661,
+        "total_lean": "OVER 47.5",
+        "total_oof_calibrated_win_prob": 0.4715,
+        "total_three_class_ev": -0.0998,
+        "total_conviction_score": "63/100",
+        "total_gate_status": "PASS_WITHHELD",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "PIT@CIN: Pure Coach-Mind fair line CIN -0.85 (total 49.24) evaluated post-seal vs market CIN -3.5 (total 47.5). Side conviction 75/100 (PASS_WITHHELD); Total conviction 63/100 (PASS_WITHHELD). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    },
+    {
+      "pure_coach_mind_sealed": {
+        "matchup_id": "LAC@BAL",
+        "espn_id": "401873065",
+        "kickoff_utc": "2026-11-17T01:15Z",
+        "away_team": "LAC",
+        "home_team": "BAL",
+        "venue": "M&T Bank Stadium",
+        "is_neutral_site": false,
+        "n_sims": 10000,
+        "seed": 20274230,
+        "coaches": {
+          "away_off_coach": "Jim Harbaugh",
+          "away_def_coach": "Jim Harbaugh",
+          "home_off_coach": "Declan Doyle",
+          "home_def_coach": "Jesse Minter"
+        },
+        "starters": {
+          "away_qb": "Justin Herbert",
+          "home_qb": "Jacoby Brissett",
+          "away_skill": {
+            "RB1": "Omarion Hampton / Keaton Mitchell",
+            "WR1": "Quentin Johnston (Ladd McConkey DNP)",
+            "TE1": "Oronde Gadsden II / Charlie Kolar"
+          },
+          "home_skill": {
+            "RB1": "Derrick Henry",
+            "WR1": "Zay Flowers",
+            "TE1": "Mark Andrews"
+          }
+        },
+        "sealed_constants": {
+          "version": "v1.0",
+          "fourth_down_baseline_tau": 0.42,
+          "qb_questionable_epa_dropoff": 0.0947,
+          "away_sinkhorn_l1_err": 9.269009206003265e-10,
+          "home_sinkhorn_l1_err": 9.69288149743619e-10
+        },
+        "away_mean_score": 14.771,
+        "home_mean_score": 21.603,
+        "away_median_score": 14.0,
+        "home_median_score": 21.0,
+        "mean_margin": 6.8313,
+        "median_margin": 7.0,
+        "margin_sd": 11.5803,
+        "margin_quantiles": {
+          "p05": -12.0,
+          "p10": -7.0,
+          "p25": -1.0,
+          "p50": 7.0,
+          "p75": 14.0,
+          "p90": 21.0,
+          "p95": 26.0
+        },
+        "away_win_prob_pure": 0.2674,
+        "home_win_prob_pure": 0.729,
+        "tie_prob_pure": 0.0036,
+        "key_number_mass": {
+          "0": 0.0036,
+          "+3": 0.0663,
+          "-3": 0.0472,
+          "abs_3": 0.11349999999999999,
+          "+7": 0.042,
+          "-7": 0.022,
+          "abs_7": 0.064,
+          "+6": 0.0438,
+          "-6": 0.0283,
+          "abs_6": 0.0721,
+          "+10": 0.0324,
+          "-10": 0.0117,
+          "abs_10": 0.0441,
+          "+14": 0.0407,
+          "-14": 0.0091,
+          "abs_14": 0.0498
+        },
+        "total_quantiles": {
+          "mean_total": 36.3739,
+          "median_total": 36.0,
+          "total_sd": 11.007483762876964,
+          "p05": 19.0,
+          "p10": 23.0,
+          "p25": 29.0,
+          "p50": 36.0,
+          "p75": 44.0,
+          "p90": 51.0,
+          "p95": 55.0
+        },
+        "drive_epa": {
+          "away_epa_per_drive": -0.2145,
+          "home_epa_per_drive": 0.6953,
+          "away_epa_per_play": -0.0415,
+          "home_epa_per_play": 0.0984,
+          "away_points_per_drive": 1.4323,
+          "home_points_per_drive": 2.0555
+        },
+        "script_elasticity": {
+          "away_proe_neutral": -0.0357,
+          "away_proe_trailing": 0.089,
+          "away_realized_script_elasticity": 0.1248,
+          "home_proe_neutral": -0.0183,
+          "home_proe_trailing": 0.1045,
+          "home_realized_script_elasticity": 0.1228
+        },
+        "state_machine_telemetry": {
+          "mean_scrimmage_plays_combined": 131.38,
+          "away_personnel_rates": {
+            "11": 0.4606,
+            "12": 0.2595,
+            "21": 0.1716,
+            "13": 0.1082
+          },
+          "home_personnel_rates": {
+            "11": 0.5038,
+            "12": 0.3278,
+            "21": 0.099,
+            "13": 0.0694
+          },
+          "away_motion_rate_realized": 0.5705,
+          "home_motion_rate_realized": 0.6201,
+          "away_condensed_rate_realized": 0.5799,
+          "home_condensed_rate_realized": 0.5803,
+          "away_def_shell_rates": {
+            "cover0_sim_pressure": 0.2117,
+            "split_safety_quarters_cover6": 0.4405,
+            "single_high_cover1_cover3": 0.3478
+          },
+          "home_def_shell_rates": {
+            "cover0_sim_pressure": 0.2925,
+            "split_safety_quarters_cover6": 0.4504,
+            "single_high_cover1_cover3": 0.257
+          },
+          "away_4th_down_go_rate": 0.1854,
+          "home_4th_down_go_rate": 0.2006,
+          "two_minute_warning_snaps_per_game": 19.29,
+          "victory_formation_kneel_game_rate": 0.5636,
+          "victory_formation_kneel_snaps_mean": 1.246,
+          "edge2_overtime_rate": 0.0375
+        },
+        "player_stat_distributions": {
+          "away_qb": {
+            "player": "Justin Herbert",
+            "pass_yds": {
+              "mean": 190.55,
+              "median": 188.0,
+              "p10": 125.0,
+              "p90": 257.1
+            },
+            "pass_tds_mean": 0.934,
+            "ints_mean": 0.914,
+            "sacks_mean": 2.456
+          },
+          "home_qb": {
+            "player": "Jacoby Brissett",
+            "pass_yds": {
+              "mean": 214.83,
+              "median": 213.0,
+              "p10": 150.0,
+              "p90": 282.0
+            },
+            "pass_tds_mean": 1.436,
+            "ints_mean": 0.78,
+            "sacks_mean": 2.113
+          },
+          "away_skill_projections": {
+            "rb1": {
+              "player": "Omarion Hampton / Keaton Mitchell",
+              "rush_yds": {
+                "mean": 62.22,
+                "median": 60.0,
+                "p10": 29.0,
+                "p90": 99.0
+              },
+              "rec_yds": {
+                "mean": 40.38,
+                "median": 40.0,
+                "p10": 26.0,
+                "p90": 54.1
+              }
+            },
+            "wr1": {
+              "player": "Quentin Johnston (Ladd McConkey DNP)",
+              "rec_yds": {
+                "mean": 53.0,
+                "median": 52.0,
+                "p10": 35.0,
+                "p90": 71.1
+              },
+              "active_lead_wr_share": 0.2781
+            },
+            "te1": {
+              "player": "Oronde Gadsden II / Charlie Kolar",
+              "rec_yds": {
+                "mean": 50.47,
+                "median": 50.0,
+                "p10": 33.0,
+                "p90": 68.0
+              },
+              "active_lead_te_share": 0.2649
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.0199,
+              "WR2": 0.2781,
+              "WR3": 0.2252,
+              "TE1": 0.2649,
+              "RB1": 0.2119
+            }
+          },
+          "home_skill_projections": {
+            "rb1": {
+              "player": "Derrick Henry",
+              "rush_yds": {
+                "mean": 90.08,
+                "median": 89.0,
+                "p10": 51.0,
+                "p90": 131.0
+              },
+              "rec_yds": {
+                "mean": 34.37,
+                "median": 34.0,
+                "p10": 24.0,
+                "p90": 45.0
+              }
+            },
+            "wr1": {
+              "player": "Zay Flowers",
+              "rec_yds": {
+                "mean": 55.86,
+                "median": 55.0,
+                "p10": 39.0,
+                "p90": 73.0
+              },
+              "active_lead_wr_share": 0.26
+            },
+            "te1": {
+              "player": "Mark Andrews",
+              "rec_yds": {
+                "mean": 42.97,
+                "median": 43.0,
+                "p10": 30.0,
+                "p90": 56.0
+              },
+              "active_lead_te_share": 0.2
+            },
+            "sinkhorn_role_vector": {
+              "WR1": 0.26,
+              "WR2": 0.21,
+              "WR3": 0.17,
+              "TE1": 0.2,
+              "RB1": 0.16
+            }
+          }
+        },
+        "seal_sha256": "661e2b84cbf9903f5c2184d88997d75102dbd011b3ed126331a8e1629d4bb68d"
+      },
+      "post_seal_market_comparison": {
+        "matchup_id": "LAC@BAL",
+        "verified_seal_sha256": "661e2b84cbf9903f5c2184d88997d75102dbd011b3ed126331a8e1629d4bb68d",
+        "seal_preserved_unchanged": true,
+        "listed_home_spread": -4.5,
+        "model_fair_home_spread": -6.83,
+        "spread_discrepancy_pts": 2.33,
+        "p_home_cover_empirical": 0.5787,
+        "p_spread_push_empirical": 0.0,
+        "p_away_cover_empirical": 0.4213,
+        "side_lean": "BAL -4.5",
+        "side_oof_calibrated_win_prob": 0.5069,
+        "side_three_class_ev": -0.0323,
+        "side_conviction_score": "72/100",
+        "side_gate_status": "PASS_WITHHELD",
+        "listed_total": 38.5,
+        "model_mean_total": 36.37,
+        "model_median_total": 36.0,
+        "total_discrepancy_pts": 2.13,
+        "p_over_empirical": 0.4043,
+        "p_total_push_empirical": 0.0,
+        "p_under_empirical": 0.5957,
+        "total_lean": "UNDER 38.5",
+        "total_oof_calibrated_win_prob": 0.5206,
+        "total_three_class_ev": -0.0062,
+        "total_conviction_score": "66/100",
+        "total_gate_status": "PASS_WITHHELD",
+        "sources": {
+          "spread_source_label": "Fantasy Alarm (DraftKings Nov 11)",
+          "spread_source_url": "https://www.fantasyalarm.com/articles/nfl/predictions/2026-nfl-week-10-picks-against-the-spread-week-10-schedule-predictions/198637",
+          "total_source_label": "Sportsbook Review (bet365)",
+          "total_source_url": "https://www.sportsbookreview.com/picks/nfl/week-10-odds-betting-lines-2026/",
+          "public_ledger_url": "https://galaxysportsedge.com/calibration"
+        },
+        "truth_file_compliant_summary": "LAC@BAL: Pure Coach-Mind fair line BAL -6.83 (total 36.37) evaluated post-seal vs market BAL -4.5 (total 38.5). Side conviction 72/100 (PASS_WITHHELD); Total conviction 66/100 (PASS_WITHHELD). Every pick is on the public ledger, wins and losses: https://galaxysportsedge.com/calibration"
+      }
+    }
+  ]
+}

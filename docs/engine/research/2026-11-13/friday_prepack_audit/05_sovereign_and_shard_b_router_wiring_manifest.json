@@ -1,0 +1,113 @@
+{
+  "schema": "gse.sovereign_to_cognitive_router_wiring.v1",
+  "generated_at_utc": "2026-11-14T02:58:09.314731+00:00",
+  "mission_doctrine": "MIND-FIRST + WIRE-FIRST SEQUENCING (feeding intelligence & reasoning and wiring all signals; zero book-beating shortcuts)",
+  "router_constants": {
+    "MASK_BITS": 288,
+    "MASK_WORDS": 9,
+    "SIGNAL_FAMILIES": 279,
+    "MAX_ABS_DELTA_LOG_ODDS": 0.35
+  },
+  "counts": {
+    "sovereign_books_loaded": 91,
+    "sovereign_primitives_routed": 730,
+    "sovereign_reasoning_traces_routed": 159,
+    "gcp_shard_b_docs_routed": 2940,
+    "rules_rlvr_lessons_routed": 117,
+    "week10_entity_truth_rows": 34,
+    "total_routed_intelligence_units": 3946,
+    "distinct_domains_seen": 28,
+    "active_mask_bits_set": 267
+  },
+  "domain_counts": {
+    "['cs', 'information-theory', 'channel-coding']": 2,
+    "['cs', 'information-theory', 'ergodic-theory']": 1,
+    "['cs', 'information-theory', 'source-coding']": 1,
+    "['cs', 'information-theory', 'statistics']": 1,
+    "['math', 'deep-learning-theory', 'Barron-space', 'harmonic-analysis']": 1,
+    "['math', 'deep-learning-theory', 'ReLU-geometry']": 1,
+    "['math', 'deep-learning-theory', 'approximation-lower-bounds']": 1,
+    "['math', 'deep-learning-theory', 'approximation-theory']": 1,
+    "['math', 'deep-learning-theory', 'information-based-complexity']": 1,
+    "['math', 'deep-learning-theory', 'random-initialization']": 1,
+    "['psych', 'attention', 'cognitive-load', 'executive-control']": 1,
+    "['psych', 'consciousness', 'attention', 'cognition']": 1,
+    "['psych', 'habit', 'motor-learning', 'neuroplasticity']": 1,
+    "['psych', 'memory', 'learning', 'association']": 1,
+    "['psych', 'psychophysics', 'discrimination', 'measurement']": 1,
+    "cs": 252,
+    "football": 124,
+    "football/history": 3,
+    "general": 140,
+    "history": 6,
+    "history/football": 1,
+    "math": 105,
+    "medicine": 5,
+    "other": 1,
+    "physics": 22,
+    "physiology": 38,
+    "psych": 11,
+    "strategy": 6
+  },
+  "context_mask_uint32_words_9": [
+    4294875999,
+    4294965243,
+    4294967295,
+    4294967295,
+    4294967295,
+    4294967295,
+    4294967295,
+    4294967295,
+    1032191
+  ],
+  "six_situational_families": {
+    "pressure": {
+      "sovereign_primitives_routed": 30,
+      "gcp_shard_b_docs_routed": 35,
+      "combined_evidence_count": 65,
+      "active_router_bits_count": 37,
+      "bounded_james_stein_log_odds_weight": 0.048659,
+      "all_finite_non_nan": true
+    },
+    "weather": {
+      "sovereign_primitives_routed": 136,
+      "gcp_shard_b_docs_routed": 1033,
+      "combined_evidence_count": 1169,
+      "active_router_bits_count": 46,
+      "bounded_james_stein_log_odds_weight": 0.172211,
+      "all_finite_non_nan": true
+    },
+    "restFatigue": {
+      "sovereign_primitives_routed": 98,
+      "gcp_shard_b_docs_routed": 710,
+      "combined_evidence_count": 808,
+      "active_router_bits_count": 46,
+      "bounded_james_stein_log_odds_weight": 0.155468,
+      "all_finite_non_nan": true
+    },
+    "coveragePersonnel": {
+      "sovereign_primitives_routed": 85,
+      "gcp_shard_b_docs_routed": 587,
+      "combined_evidence_count": 672,
+      "active_router_bits_count": 46,
+      "bounded_james_stein_log_odds_weight": 0.147129,
+      "all_finite_non_nan": true
+    },
+    "qbSkillScript": {
+      "sovereign_primitives_routed": 347,
+      "gcp_shard_b_docs_routed": 452,
+      "combined_evidence_count": 799,
+      "active_router_bits_count": 46,
+      "bounded_james_stein_log_odds_weight": 0.154961,
+      "all_finite_non_nan": true
+    },
+    "marketMicrostructure": {
+      "sovereign_primitives_routed": 34,
+      "gcp_shard_b_docs_routed": 123,
+      "combined_evidence_count": 157,
+      "active_router_bits_count": 43,
+      "bounded_james_stein_log_odds_weight": 0.082988,
+      "all_finite_non_nan": true
+    }
+  }
+}

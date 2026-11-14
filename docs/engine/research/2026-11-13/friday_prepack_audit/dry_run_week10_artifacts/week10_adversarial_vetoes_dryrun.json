@@ -1,0 +1,92 @@
+{
+  "generated_at_utc": "2026-11-14T03:17:20.718030+00:00",
+  "vetoes": [
+    {
+      "id": 1,
+      "name": "IR_PLAYER_PUKA_NACUA",
+      "blocked": true,
+      "rlvr_bridge_result": {
+        "approved": false,
+        "veto_codes": [
+          "RLVR_VETO_STAGE0_ROSTER_CONTAMINATION"
+        ],
+        "reasons": [
+          "Puka Nacua is OUT/IR/PUP/EXEMPT for Week 10"
+        ],
+        "matchup": "LAR@ARI",
+        "player": "Puka Nacua"
+      },
+      "dfs_hygiene_blocked": true
+    },
+    {
+      "id": 2,
+      "name": "WRONG_TEAM_GREG_DORTCH_AND_BOURNE",
+      "blocked": true,
+      "dortch_ari_result": {
+        "approved": false,
+        "veto_codes": [
+          "RLVR_VETO_STAGE0_ROSTER_CONTAMINATION"
+        ],
+        "reasons": [
+          "Greg Dortch active Week 10 team is BUF, got ARI"
+        ],
+        "matchup": "BUF@NYJ",
+        "player": "Greg Dortch"
+      },
+      "bourne_sf_result": {
+        "approved": false,
+        "veto_codes": [
+          "RLVR_VETO_STAGE0_ROSTER_CONTAMINATION"
+        ],
+        "reasons": [
+          "Kendrick Bourne active Week 10 team is ARI, got SF"
+        ],
+        "matchup": "LAR@ARI",
+        "player": "Kendrick Bourne"
+      }
+    },
+    {
+      "id": 3,
+      "name": "INDEPENDENT_EDGE_PASS_STEELERS_ML_MINUS285",
+      "blocked": true,
+      "detail": {
+        "overlayPublishAllowed": false,
+        "parlayGatePublishAllowed": false,
+        "parlayGateReason": "PARLAY_CONTAINS_PASS_LEG",
+        "blocked": true
+      }
+    },
+    {
+      "id": 4,
+      "name": "RLVR_SATURATED_CONFIDENCE_ABS_Z_6_2",
+      "blocked": true,
+      "detail": {
+        "approved": false,
+        "veto_codes": [
+          "RLVR_VETO_SATURATED_CONFIDENCE"
+        ],
+        "reasons": [
+          "raw_logit_z=6.2 sits in saturated tail (|z|>=5.0)"
+        ],
+        "matchup": "SF@DAL",
+        "player": "Brock Purdy"
+      }
+    },
+    {
+      "id": 5,
+      "name": "TOXIC_NEGATIVE_CORR_SGP_TRAP",
+      "blocked": true,
+      "detail": {
+        "structuralGatePublishAllowed": false,
+        "structuralGateReason": "SGP_STRUCTURAL_CONTRADICTION",
+        "wilsonLower90": 0.188566,
+        "mriGradeSeverity": "EXTREME_SGP_TRAP",
+        "mriHiddenCorrelationHoldPct": 87.91,
+        "mriCorrelationMultiplierPct": -64.25,
+        "mriStudentT4CopulaProb": 0.016675,
+        "blocked": true
+      }
+    }
+  ],
+  "all_5_blocked": true
+}

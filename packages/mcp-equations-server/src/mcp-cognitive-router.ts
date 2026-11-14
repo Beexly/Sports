@@ -916,8 +916,8 @@ export function routePreProjectionWithUniversalAndOmnisciencePriors(
 // ============================================================================
 
 export {
-  QuadEngineSource,
-  QuadEngineCrosswalkNode,
+  type QuadEngineSource,
+  type QuadEngineCrosswalkNode,
   buildQuadEngineCrosswalk,
   queryQuadEngineByContext,
   loadLiveQuadEngineCrosswalk,

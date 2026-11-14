@@ -11,9 +11,10 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from datetime import date, datetime
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Mapping
 
 try:
     import pandas as pd
@@ -85,7 +86,8 @@ def apply_gate(
             drop(i, f"config exclusion: {excl[n]['reason']}")
             continue
         if n in traded and team == traded[n]["from"]:
-            drop(i, f"traded {traded[n]['from']}->{traded[n]['to']} on {traded[n]['date']}")
+            t_date = traded[n].get("date") or cfg.get("as_of") or "unknown"
+            drop(i, f"traded {traded[n]['from']}->{traded[n]['to']} on {t_date}")
             continue
 
     clean = df[keep].copy()
@@ -119,14 +121,38 @@ def apply_gate(
     return clean, log
 
 
-def assert_lineup_clean(players: Iterable[str], cfg: dict) -> None:
+def assert_lineup_clean(
+    players: Iterable[str],
+    cfg: dict,
+    player_teams: Mapping[str, str] | None = None,
+) -> None:
     bad = []
     confirmed_starters = {_norm(v) for v in cfg.get("confirmed_qb1", {}).values()}
     names = {_norm(p["name"]) for p in cfg["excluded_players"]}
-    names |= ({_norm(p["name"]) for p in cfg["traded_players"]} - confirmed_starters)
+    traded_list = cfg.get("traded_players", [])
+    if int(cfg.get("week", 9)) <= 9:
+        names |= ({_norm(p["name"]) for p in traded_list} - confirmed_starters)
+    else:
+        for tp in traded_list:
+            tp_norm = _norm(tp["name"])
+            if tp.get("dfs_slate_ineligible") is True and tp_norm not in confirmed_starters:
+                names.add(tp_norm)
+    norm_player_teams = (
+        {_norm(k): str(v).strip().upper() for k, v in player_teams.items()}
+        if player_teams
+        else {}
+    )
+    traded_from_by_name = {
+        _norm(tp["name"]): str(tp.get("from") or "").strip().upper()
+        for tp in traded_list
+    }
     for n in players:
-        if _norm(n) in names:
+        nn = _norm(n)
+        if nn in names:
             bad.append(n)
+        elif nn in traded_from_by_name and nn in norm_player_teams:
+            if norm_player_teams[nn] == traded_from_by_name[nn]:
+                bad.append(n)
     if bad:
         raise PreflightRosterGateError(f"lineup contains Stage-0-blocked players: {bad}")
 
@@ -142,12 +168,41 @@ def assert_lineup_rules(salary: int, teams: list[str], classic: bool = True,
         raise PreflightRosterGateError(f"classic lineup has {worst} players from one team (max {max_per_team})")
 
 
-def _week_config_path(week: int) -> Path:
+def _week_config_path(week: int, season: int = 2026) -> Path:
     """Canonical per-week roster/transaction config naming convention."""
-    return ROOT / "data" / "nflverse" / f"week{week}_live_roster_transactions_and_starters_2026.json"
+    return ROOT / "data" / "nflverse" / f"week{week}_live_roster_transactions_and_starters_{season}.json"
 
 
-def require_week(week: int, config_path: str | Path = DEFAULT_CONFIG) -> dict:
+def resolve_active_week(season: int = 2026, today: date | None = None) -> int:
+    """Resolve current NFL week dynamically from repo scoreboard / Stage-0 files (never pinned to Week 9)."""
+    _ = today  # reserved for calendar refinement
+    candidates: list[int] = []
+    for p in (ROOT / "data" / "nflverse").glob(f"week*_live_roster_transactions_and_starters_{season}.json"):
+        m = re.search(rf"week(\d+)_live_roster_transactions_and_starters_{season}\.json$", p.name)
+        if m:
+            candidates.append(int(m.group(1)))
+    for p in (ROOT / "data" / "engine").glob(f"espn_{season}_week*_scoreboard.json"):
+        m = re.search(rf"espn_{season}_week(\d+)_scoreboard\.json$", p.name)
+        if m:
+            candidates.append(int(m.group(1)))
+    if candidates:
+        return max(candidates)
+    raise PreflightRosterGateError(f"Unable to auto-resolve active NFL week for season {season}")
+
+
+def discover_latest_stage0_config(season: int = 2026, week: int | str = "auto") -> tuple[int, Path]:
+    """Return `(resolved_week, config_path)` for `week='auto'` or an explicit week number."""
+    if str(week).strip().lower() == "auto":
+        resolved_wk = resolve_active_week(season=season)
+    else:
+        resolved_wk = int(week)
+    cfg_path = _week_config_path(resolved_wk, season=season)
+    if not cfg_path.is_file():
+        raise PreflightRosterGateError(f"Missing Stage-0 config for week {resolved_wk}: {cfg_path}")
+    return resolved_wk, cfg_path
+
+
+def require_week(week: int | str, config_path: str | Path = DEFAULT_CONFIG) -> dict:
     """Hard gate for any simulation/pick entry point: a roster config for `week` must exist and be fresh.
 
     Explicit, logged retrospective path: STAGE0_RETROSPECTIVE=1 (returns {} - never for publishable output).
@@ -155,10 +210,14 @@ def require_week(week: int, config_path: str | Path = DEFAULT_CONFIG) -> dict:
     if os.environ.get("STAGE0_RETROSPECTIVE") == "1":
         print("[STAGE 0] RETROSPECTIVE mode - output is NOT publishable")
         return {}
+    if str(week).strip().lower() == "auto":
+        week, auto_path = discover_latest_stage0_config(week="auto")
+        if Path(config_path) == DEFAULT_CONFIG:
+            config_path = auto_path
     # Week-aware default (2026-11-13): when the caller did not pin a config,
     # prefer the config named for the requested week. Fail-closed: if it does
     # not exist, load_config below still raises on stale/mismatched defaults.
-    if Path(config_path) == DEFAULT_CONFIG:
+    elif Path(config_path) == DEFAULT_CONFIG:
         week_specific = _week_config_path(int(week))
         if week_specific.is_file():
             config_path = week_specific

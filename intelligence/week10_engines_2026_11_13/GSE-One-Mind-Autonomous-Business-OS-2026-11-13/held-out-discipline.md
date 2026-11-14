@@ -1,0 +1,25 @@
+# Doctrine 04: Held-Out Temporal Discipline & Seal Invariance (`held-out-discipline`)
+
+**Status:** Controlling Fleet & Engine Doctrine (`CODEOWNERS` Enforced)  
+**Repositories:** [Beexly/Sports](https://github.com/Beexly/Sports) · [Beexly/agent-bus](https://github.com/Beexly/agent-bus)  
+**Governing Blueprints:** [Autonomous Architecture, Cross-Domain Flywheel, and Sovereign Grant Blueprint](https://docs.google.com/document/d/1sHvDyLn7DkVF4Vcxu8mlYtHEkRZ0kTZQ8-Lct_6vOAA/edit?usp=drivesdk&ouid=117370885799080207136) · [GSE Continuous Learning Architecture Plan](https://docs.google.com/document/d/1cO6VC1DguIJsF0z9aKZWEEy2STSv974TdcNsZQhi4s8/edit?usp=drivesdk&ouid=117370885799080207136) · [Autonomous High-Leverage Algorithmic Trading Architecture](https://docs.google.com/document/d/1tze48YnS1sCHJG4xcRq4FBmGyhIbqUjwD8Og5rpQ1Xk/edit?usp=drivesdk&ouid=117370885799080207136)
+
+## 1. Core Mandate
+
+All parametric estimation, isotonic calibration knot fitting, cognitive-router weight updates, and conformal quantile calculations must execute under **strict chronological purged Out-of-Fold (OOF) separation with zero in-sample or lookahead leakage**. Once the weekly baseline is sealed at **Tuesday `04:00 CT`** into `coachMindsetHash`, **zero mid-week resealing or parameter mutation is permitted** until the following Tuesday rollover after official Monday Night Football settlement.
+
+Formally, for any training fold $\mathcal{D}_{\text{train}}$, calibration fold $\mathcal{D}_{\text{cal}}$, and live evaluation slate $\mathcal{D}_{\text{eval}}$ with purge embargo $\Delta_{\text{embargo}} > 0$:
+
+$$\max_{(x,y) \in \mathcal{D}_{\text{train}}} t_{\text{settle}}(x, y) + \Delta_{\text{embargo}} \le \min_{(x,y) \in \mathcal{D}_{\text{cal}}} t_{\text{kickoff}}(x, y) \quad \land \quad \max_{(x,y) \in \mathcal{D}_{\text{cal}}} t_{\text{settle}}(x, y) < \min_{x \in \mathcal{D}_{\text{eval}}} t_{\text{cutoff}}(x)$$
+
+Any overlapping game ID, overlapping player-week row, or post-cutoff timestamp ($t_{\text{tx}} > t_{\text{kickoff}} - 5\text{ min}$) immediately raises `TemporalLeakageError` and aborts execution.
+
+## 2. Five Immutable Temporal & Statistical Guards
+
+| Guard Layer | Mathematical Invariant | Enforcement Boundary |
+| :--- | :--- | :--- |
+| **1. Tuesday `04:00 CT` Vault Seal** | Locks Empirical Bayes BTL ratings ([arXiv:1807.09236](https://arxiv.org/abs/1807.09236)), Glicko-2 bye-week RD updates ($\phi^* = \sqrt{\phi^2 + \sigma^2}$), 5×5 role cost matrix $C$, $\hat{\tau} = 0.42$ ([arXiv:2309.00756](https://arxiv.org/abs/2309.00756)), `QB_QUESTIONABLE = 0.0947`, and `PROB_PER_POINT = 0.033` into 64-hex SHA-256 `coachMindsetHash` ([GSE Continuous Learning Plan](https://docs.google.com/document/d/1cO6VC1DguIJsF0z9aKZWEEy2STSv974TdcNsZQhi4s8/edit?usp=drivesdk&ouid=117370885799080207136)). | Mid-week Sinkhorn overlays must re-derive and assert `recomputedHash == coachMindsetHash` and `assertTauSealed(0.42, current_tau)` after every run; second seals in the same ISO week are refused. |
+| **2. Three-Zone Epistemic Firewall** | Zone 1 (Pre-Seal Class A) and Zone 2 (Mid-Week Sinkhorn Overlay) have **zero imports or write-backs** from Zone 3 (Class B sportsbook odds, public splits, Form 4s). | Enforced at compile/AST time (`assertNoBookInCoachEngine`) and runtime delta routing (`dk_line` / `form4` forbidden in `applyInjuryOverlay`). |
+| **3. Pre-Kickoff Cryptographic Cutoff** | Every live forecast and pick is SHA-256 hashed and anchored via OpenTimestamps / RFC 3161 strictly at $t_{\text{commit}} \le t_{\text{kickoff}} - 5\text{ min}$ ([Autonomous Architecture Blueprint](https://docs.google.com/document/d/1sHvDyLn7DkVF4Vcxu8mlYtHEkRZ0kTZQ8-Lct_6vOAA/edit?usp=drivesdk&ouid=117370885799080207136)). | Post-kickoff or retroactive mutations fail `verifyPreCommitmentHash` and are rejected from the official `62-23-1` (`+26.50u`) ledger and GSE-LiveBench. |
+| **4. MIT SEAL + James-Stein + ACI-CRC Barrier** | Tuesday OOF weight updates require positive composite outer-loop gain ($\Delta\text{Brier}, \Delta\text{CRPS}, \Delta\text{DeVigCLV} > 0$, [arXiv:2506.10943](https://arxiv.org/abs/2506.10943)), Positive-Part James-Stein shrinkage clamped at $\|\Delta\text{log-odds}\|_\infty \le 0.35$, weighted conformal miscoverage $\le \alpha + 0.025$ ($\alpha = 0.10$), and 1-Wasserstein shift $W_1 \le 0.08$ ([OpenReview GfyvbLYKMW](https://openreview.net/attachment?id=GfyvbLYKMW&name=pdf)). | Candidate self-edits violating any trust-region bound are discarded before `MindGuardian` touches `brain/mind.jsonl`. |
+| **5. Proper Scoring & Conformal-Copula-Kelly Sizing** | Enforces 5-Stage Inductive Gate ($\hat{c} \le 12.42$, $|\Delta\text{log-odds}| \le 0.35$, $E \ge 1.35$, $\text{CRPS} \le 7.099$, `00-TRUTH-FILE`), Murphy Brier kill-switch ($\text{Reliability} \le \text{Resolution}$), and ruin-bounded Kelly sizing ([Small-Capital Trading Architecture](https://docs.google.com/document/d/1tze48YnS1sCHJG4xcRq4FBmGyhIbqUjwD8Og5rpQ1Xk/edit?usp=drivesdk&ouid=117370885799080207136)). | Prevents variance drag, over-leveraged first-passage ruin, and Brier/ECE benchmark overfitting. |

@@ -55,10 +55,14 @@ vi.mock("@/lib/scraping/clearance-engine", () => ({
 }));
 
 // ─── Mock multi-source-scores ──────────────────────────────────────────────────
-vi.mock("./multi-source-scores", () => ({
-  fetchScoresMultiSource: (sport: unknown, opts?: unknown) =>
-    mocks.fetchScoresMultiSourceMock(sport, opts),
-}));
+vi.mock("./multi-source-scores", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./multi-source-scores")>();
+  return {
+    ...actual,
+    fetchScoresMultiSource: (sport: unknown, opts?: unknown) =>
+      mocks.fetchScoresMultiSourceMock(sport, opts),
+  };
+});
 
 // ─── Mock henrygd NCAA adapter ─────────────────────────────────────────────────
 vi.mock("./free-adapters/henrygd-ncaa", () => ({

@@ -317,6 +317,27 @@ const ALLOWLISTED_DEFINITION_LINES = new Map([
     "apps/web/lib/content-engine/build-draft.ts",
     [/Past results do not guarantee future results/],
   ],
+  [
+    // Runtime safety regex literals that match-and-reject prohibited tout or
+    // internal-jargon strings (same category as copy-fence.ts above).
+    "apps/web/lib/governance/gse_autonomous_revenue_and_b2b_api_blueprint.ts",
+    [/^\s*if\s*\(\/\\b\\d\{1,3\}/],
+  ],
+  [
+    "apps/web/lib/governance/gse_seo_wcag22_and_posthog_516325_pack.ts",
+    [/^\s*\/\\brisk\[- \]free\\b/],
+  ],
+  [
+    "packages/ops/src/one_mind_agent_bus_daemon.ts",
+    [
+      /^\s*const FORBIDDEN_JARGON_REGEX\s*=/,
+      /^\s*\/\\b\(22,750,000 snap evaluations/,
+    ],
+  ],
+  [
+    "packages/prediction-engine/src/parlay/parlay_mri_and_store_credit.ts",
+    [/^\s*\{\s*id:\s*'(?:tout_guaranteed_win|tout_lock|tout_risk_free)'/],
+  ],
 ]);
 
 // "lock" is banned ONLY as betting slang for a guaranteed pick (a lock, lock of

@@ -1,853 +1,965 @@
 {
- "schema": "gse.preflight_roster_gate.v1",
- "week": 10,
- "as_of": "2026-11-13",
- "verified_by": "hermes-wp6-stage0-from-neon (injuries wk10 + snap_counts wk7-9 QB leaders) + Motif-verified transactions via Garrett standing order 2026-11-13 (Garrett->LAR, Verse->CLE, Simmons->CHI, McDuffie->LAR, Parsons OUT)",
- "note": "Generated 2026-11-13T08:51:49Z from live Neon: 800 wk10 injury rows (latest fetch 2026-11-12T11:19:43Z), 126 excluded, 32 QB1s confirmed from snap evidence. traded_players empty: no live transactions feed in Neon — re-verify trades before DFS lock.",
- "max_age_days": 3,
- "blocked_statuses": [
-  "OUT",
-  "O",
-  "IR",
-  "D",
-  "DOUBTFUL",
-  "SUSP",
-  "PUP",
-  "NFI",
-  "OUT_FOR_SEASON"
- ],
- "excluded_players": [
-  {
-   "name": "Gardner Minshew II",
-   "team": "ARI",
-   "reason": "IR - Elbow (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "QB"
-  },
-  {
-   "name": "Hunter Long",
-   "team": "ARI",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "TE"
-  },
-  {
-   "name": "Michael Wilson",
-   "team": "ARI",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Zachary Carter",
-   "team": "ARI",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DT"
-  },
-  {
-   "name": "Brian Robinson Jr.",
-   "team": "ATL",
-   "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Cameron Williams",
-   "team": "ATL",
-   "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "OL"
-  },
-  {
-   "name": "Samson Ebukam",
-   "team": "ATL",
-   "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DE"
-  },
-  {
-   "name": "Zachariah Branch",
-   "team": "ATL",
-   "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Adam Randall",
-   "team": "BAL",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Lamar Jackson",
-   "team": "BAL",
-   "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "QB"
-  },
-  {
-   "name": "Tyler Huntley",
-   "team": "BAL",
-   "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "QB"
-  },
-  {
-   "name": "DJ Moore",
-   "team": "BUF",
-   "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "UNKNOWN"
-  },
-  {
-   "name": "Joshua Palmer",
-   "team": "BUF",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Tyrell Shavers",
-   "team": "BUF",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Damien Lewis",
-   "team": "CAR",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "G"
-  },
-  {
-   "name": "Jaelan Phillips",
-   "team": "CAR",
-   "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "Jaycee Horn",
-   "team": "CAR",
-   "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Jonathon Brooks",
-   "team": "CAR",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "RB"
-  },
-  {
-   "name": "Mike Jackson",
-   "team": "CAR",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Will Lee III",
-   "team": "CAR",
-   "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Xavier Legette",
-   "team": "CAR",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Braxton Jones",
-   "team": "CHI",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "OT"
-  },
-  {
-   "name": "Case Keenum",
-   "team": "CHI",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "QB"
-  },
-  {
-   "name": "Kentavius Street",
-   "team": "CHI",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DT"
-  },
-  {
-   "name": "Kyle Monangai",
-   "team": "CHI",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Malik Muhammad II",
-   "team": "CHI",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Zavier Scott",
-   "team": "CHI",
-   "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Andrei Iosivas",
-   "team": "CIN",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Cashius Howell",
-   "team": "CIN",
-   "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DE"
-  },
-  {
-   "name": "Erick All Jr.",
-   "team": "CIN",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "TE"
-  },
-  {
-   "name": "Zack Moss",
-   "team": "CIN",
-   "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "UNKNOWN"
-  },
-  {
-   "name": "Deshaun Watson",
-   "team": "CLE",
-   "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-12) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "QB"
-  },
-  {
-   "name": "Devin Moore",
-   "team": "DAL",
-   "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Jake Ferguson",
-   "team": "DAL",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "TE"
-  },
-  {
-   "name": "Jonathan Bullard",
-   "team": "DAL",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DT"
-  },
-  {
-   "name": "Luke Schoonmaker",
-   "team": "DAL",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "TE"
-  },
-  {
-   "name": "Malachi Lawrence",
-   "team": "DAL",
-   "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "P.J. Locke",
-   "team": "DAL",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "S"
-  },
-  {
-   "name": "Tyler Goodson",
-   "team": "DAL",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Brandon Jones",
-   "team": "DEN",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "S"
-  },
-  {
-   "name": "Eyioma Uwazurike",
-   "team": "DEN",
-   "reason": "IR - Shoulder (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DE"
-  },
-  {
-   "name": "Kris Abrams-Draine",
-   "team": "DEN",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Talanoa Hufanga",
-   "team": "DEN",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "S"
-  },
-  {
-   "name": "Isiah Pacheco",
-   "team": "DET",
-   "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Jack Campbell",
-   "team": "DET",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "Jacob Saylors",
-   "team": "DET",
-   "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Jimmy Rolder",
-   "team": "DET",
-   "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "Kerby Joseph",
-   "team": "DET",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "S"
-  },
-  {
-   "name": "Chris Brooks",
-   "team": "GB",
-   "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Josh Jacobs",
-   "team": "GB",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "MarShawn Lloyd",
-   "team": "GB",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Micah Parsons",
-   "team": "GB",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DE"
-  },
-  {
-   "name": "Skyy Moore",
-   "team": "GB",
-   "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Zaire Franklin",
-   "team": "GB",
-   "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "Cade Stover",
-   "team": "HOU",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "TE"
-  },
-  {
-   "name": "Christian Kirk",
-   "team": "HOU",
-   "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "UNKNOWN"
-  },
-  {
-   "name": "Jake Hummel",
-   "team": "HOU",
-   "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "Jaylin Smith",
-   "team": "HOU",
-   "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Alec Pierce",
-   "team": "IND",
-   "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Arden Key",
-   "team": "IND",
-   "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DE"
-  },
-  {
-   "name": "Jalen Travis",
-   "team": "IND",
-   "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "OT"
-  },
-  {
-   "name": "Justin Walley",
-   "team": "IND",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "B.J. Green II",
-   "team": "JAX",
-   "reason": "IR - Elbow (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DE"
-  },
-  {
-   "name": "Cam'Ron Silmon-Craig",
-   "team": "JAX",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "S"
-  },
-  {
-   "name": "L'Jarius Sneed",
-   "team": "KC",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Mansoor Delane",
-   "team": "KC",
-   "reason": "OUT - Shoulder (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Omarr Norman-Lott",
-   "team": "KC",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DT"
-  },
-  {
-   "name": "Rashee Rice",
-   "team": "KC",
-   "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "UNKNOWN"
-  },
-  {
-   "name": "Davante Adams",
-   "team": "LA",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Jordan Whittington",
-   "team": "LA",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Puka Nacua",
-   "team": "LA",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Terrance Ferguson",
-   "team": "LA",
-   "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "TE"
-  },
-  {
-   "name": "David Njoku",
-   "team": "LAC",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "TE"
-  },
-  {
-   "name": "Denzel Perryman",
-   "team": "LAC",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "Aidan O'Connell",
-   "team": "LV",
-   "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "QB"
-  },
-  {
-   "name": "Darrell Baker Jr.",
-   "team": "MIA",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Jaylen Wright",
-   "team": "MIA",
-   "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Malik Willis",
-   "team": "MIA",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "QB"
-  },
-  {
-   "name": "Zach Sieler",
-   "team": "MIA",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DT"
-  },
-  {
-   "name": "Demond Claiborne",
-   "team": "MIN",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Kyler Murray",
-   "team": "MIN",
-   "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "QB"
-  },
-  {
-   "name": "Ben Brown",
-   "team": "NE",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "C"
-  },
-  {
-   "name": "Carlton Davis III",
-   "team": "NE",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Reggie Gilliam",
-   "team": "NE",
-   "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "FB"
-  },
-  {
-   "name": "Rhamondre Stevenson",
-   "team": "NE",
-   "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "TreVeyon Henderson",
-   "team": "NE",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Erik McCoy",
-   "team": "NO",
-   "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "C"
-  },
-  {
-   "name": "Travis Etienne Jr.",
-   "team": "NO",
-   "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Cam Skattebo",
-   "team": "NYG",
-   "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Colton Hood",
-   "team": "NYG",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Max Mitchell",
-   "team": "NYJ",
-   "reason": "IR - Concussion (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "OT"
-  },
-  {
-   "name": "VJ Payne",
-   "team": "NYJ",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "S"
-  },
-  {
-   "name": "Britain Covey",
-   "team": "PHI",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "DeVonta Smith",
-   "team": "PHI",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Dontayvion Wicks",
-   "team": "PHI",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Jihaad Campbell",
-   "team": "PHI",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "Jonathan Jones",
-   "team": "PHI",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Michael Carter II",
-   "team": "PHI",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Ben Skowronek",
-   "team": "PIT",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Brandin Echols",
-   "team": "PIT",
-   "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Derrick Harmon",
-   "team": "PIT",
-   "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DT"
-  },
-  {
-   "name": "Doneiko Slaughter",
-   "team": "PIT",
-   "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Michael Pittman Jr.",
-   "team": "PIT",
-   "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Charles Cross",
-   "team": "SEA",
-   "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "OT"
-  },
-  {
-   "name": "Cooper Kupp",
-   "team": "SEA",
-   "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "UNKNOWN"
-  },
-  {
-   "name": "Quenton Nelson",
-   "team": "SEA",
-   "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "G"
-  },
-  {
-   "name": "Rashid Shaheed",
-   "team": "SEA",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Sam Darnold",
-   "team": "SEA",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "QB"
-  },
-  {
-   "name": "Brandon Aiyuk",
-   "team": "SF",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "WR"
-  },
-  {
-   "name": "C.J. West",
-   "team": "SF",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DT"
-  },
-  {
-   "name": "Gracen Halton",
-   "team": "SF",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DT"
-  },
-  {
-   "name": "Chris Godwin",
-   "team": "TB",
-   "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "UNKNOWN"
-  },
-  {
-   "name": "Jalen McMillan",
-   "team": "TB",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Yaya Diaby",
-   "team": "TB",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "Dorian Mausi",
-   "team": "TEN",
-   "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "James Williams Sr.",
-   "team": "TEN",
-   "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "LB"
-  },
-  {
-   "name": "Jaylon Jones",
-   "team": "TEN",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "CB"
-  },
-  {
-   "name": "Tommy Townsend",
-   "team": "TEN",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "P"
-  },
-  {
-   "name": "Will Levis",
-   "team": "TEN",
-   "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "UNKNOWN"
-  },
-  {
-   "name": "Colson Yankoff",
-   "team": "WAS",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "TE"
-  },
-  {
-   "name": "Daron Payne",
-   "team": "WAS",
-   "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "DT"
-  },
-  {
-   "name": "Dyami Brown",
-   "team": "WAS",
-   "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
-  },
-  {
-   "name": "Jeremy McNichols",
-   "team": "WAS",
-   "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "RB"
-  },
-  {
-   "name": "Lucas Patrick",
-   "team": "WAS",
-   "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "G"
-  },
-  {
-   "name": "Stefon Diggs",
-   "team": "WAS",
-   "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
-   "position": "UNKNOWN"
-  },
-  {
-   "name": "Treylon Burks",
-   "team": "WAS",
-   "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
-   "position": "WR"
+  "schema": "gse.preflight_roster_gate.v1",
+  "week": 10,
+  "as_of": "2026-11-13",
+  "verified_by": "hermes-wp6-stage0-from-neon (injuries wk10 + snap_counts wk7-9 QB leaders) + Motif-verified transactions via Garrett standing order 2026-11-13 (Garrett->LAR, Verse->CLE, Simmons->CHI, McDuffie->LAR, Parsons OUT)",
+  "note": "Generated 2026-11-13T08:51:49Z from live Neon: 800 wk10 injury rows (latest fetch 2026-11-12T11:19:43Z), 126 excluded, 32 QB1s confirmed from snap evidence. traded_players empty: no live transactions feed in Neon \u2014 re-verify trades before DFS lock.",
+  "max_age_days": 3,
+  "blocked_statuses": [
+    "OUT",
+    "O",
+    "IR",
+    "D",
+    "DOUBTFUL",
+    "SUSP",
+    "PUP",
+    "NFI",
+    "OUT_FOR_SEASON"
+  ],
+  "excluded_players": [
+    {
+      "name": "Gardner Minshew II",
+      "team": "ARI",
+      "reason": "IR - Elbow (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "QB"
+    },
+    {
+      "name": "Hunter Long",
+      "team": "ARI",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "TE"
+    },
+    {
+      "name": "Michael Wilson",
+      "team": "ARI",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Zachary Carter",
+      "team": "ARI",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DT"
+    },
+    {
+      "name": "Brian Robinson Jr.",
+      "team": "ATL",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Cameron Williams",
+      "team": "ATL",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "OL"
+    },
+    {
+      "name": "Samson Ebukam",
+      "team": "ATL",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DE"
+    },
+    {
+      "name": "Zachariah Branch",
+      "team": "ATL",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Adam Randall",
+      "team": "BAL",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Lamar Jackson",
+      "team": "BAL",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "QB"
+    },
+    {
+      "name": "Tyler Huntley",
+      "team": "BAL",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "QB"
+    },
+    {
+      "name": "DJ Moore",
+      "team": "BUF",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "UNKNOWN"
+    },
+    {
+      "name": "Joshua Palmer",
+      "team": "BUF",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Tyrell Shavers",
+      "team": "BUF",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Damien Lewis",
+      "team": "CAR",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "G"
+    },
+    {
+      "name": "Jaelan Phillips",
+      "team": "CAR",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "Jaycee Horn",
+      "team": "CAR",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Jonathon Brooks",
+      "team": "CAR",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "RB"
+    },
+    {
+      "name": "Mike Jackson",
+      "team": "CAR",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Will Lee III",
+      "team": "CAR",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Xavier Legette",
+      "team": "CAR",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Braxton Jones",
+      "team": "CHI",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "OT"
+    },
+    {
+      "name": "Case Keenum",
+      "team": "CHI",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "QB"
+    },
+    {
+      "name": "Kentavius Street",
+      "team": "CHI",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DT"
+    },
+    {
+      "name": "Kyle Monangai",
+      "team": "CHI",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Malik Muhammad II",
+      "team": "CHI",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Zavier Scott",
+      "team": "CHI",
+      "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Andrei Iosivas",
+      "team": "CIN",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Cashius Howell",
+      "team": "CIN",
+      "reason": "IR - Wrist (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DE"
+    },
+    {
+      "name": "Erick All Jr.",
+      "team": "CIN",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "TE"
+    },
+    {
+      "name": "Zack Moss",
+      "team": "CIN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "UNKNOWN"
+    },
+    {
+      "name": "Deshaun Watson",
+      "team": "CLE",
+      "reason": "OUT - Concussion (Neon injuries wk10, fetched 2026-11-12) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "QB"
+    },
+    {
+      "name": "Devin Moore",
+      "team": "DAL",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Jake Ferguson",
+      "team": "DAL",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "TE"
+    },
+    {
+      "name": "Jonathan Bullard",
+      "team": "DAL",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DT"
+    },
+    {
+      "name": "Luke Schoonmaker",
+      "team": "DAL",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "TE"
+    },
+    {
+      "name": "Malachi Lawrence",
+      "team": "DAL",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "P.J. Locke",
+      "team": "DAL",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "S"
+    },
+    {
+      "name": "Tyler Goodson",
+      "team": "DAL",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Brandon Jones",
+      "team": "DEN",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "S"
+    },
+    {
+      "name": "Eyioma Uwazurike",
+      "team": "DEN",
+      "reason": "IR - Shoulder (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DE"
+    },
+    {
+      "name": "Kris Abrams-Draine",
+      "team": "DEN",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Talanoa Hufanga",
+      "team": "DEN",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "S"
+    },
+    {
+      "name": "Isiah Pacheco",
+      "team": "DET",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Jack Campbell",
+      "team": "DET",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "Jacob Saylors",
+      "team": "DET",
+      "reason": "OUT - Ankle (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Jimmy Rolder",
+      "team": "DET",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "Kerby Joseph",
+      "team": "DET",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "S"
+    },
+    {
+      "name": "Chris Brooks",
+      "team": "GB",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Josh Jacobs",
+      "team": "GB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "MarShawn Lloyd",
+      "team": "GB",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Micah Parsons",
+      "team": "GB",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DE"
+    },
+    {
+      "name": "Skyy Moore",
+      "team": "GB",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Zaire Franklin",
+      "team": "GB",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "Cade Stover",
+      "team": "HOU",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "TE"
+    },
+    {
+      "name": "Christian Kirk",
+      "team": "HOU",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "UNKNOWN"
+    },
+    {
+      "name": "Jake Hummel",
+      "team": "HOU",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "Jaylin Smith",
+      "team": "HOU",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Alec Pierce",
+      "team": "IND",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Arden Key",
+      "team": "IND",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DE"
+    },
+    {
+      "name": "Jalen Travis",
+      "team": "IND",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "OT"
+    },
+    {
+      "name": "Justin Walley",
+      "team": "IND",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "B.J. Green II",
+      "team": "JAX",
+      "reason": "IR - Elbow (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DE"
+    },
+    {
+      "name": "Cam'Ron Silmon-Craig",
+      "team": "JAX",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "S"
+    },
+    {
+      "name": "L'Jarius Sneed",
+      "team": "KC",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Mansoor Delane",
+      "team": "KC",
+      "reason": "OUT - Shoulder (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Omarr Norman-Lott",
+      "team": "KC",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DT"
+    },
+    {
+      "name": "Rashee Rice",
+      "team": "KC",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "UNKNOWN"
+    },
+    {
+      "name": "Davante Adams",
+      "team": "LA",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Jordan Whittington",
+      "team": "LA",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Puka Nacua",
+      "team": "LA",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Terrance Ferguson",
+      "team": "LA",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "TE"
+    },
+    {
+      "name": "David Njoku",
+      "team": "LAC",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "TE"
+    },
+    {
+      "name": "Denzel Perryman",
+      "team": "LAC",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "Aidan O'Connell",
+      "team": "LV",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "QB"
+    },
+    {
+      "name": "Darrell Baker Jr.",
+      "team": "MIA",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Jaylen Wright",
+      "team": "MIA",
+      "reason": "OUT - Back (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Malik Willis",
+      "team": "MIA",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "QB"
+    },
+    {
+      "name": "Zach Sieler",
+      "team": "MIA",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DT"
+    },
+    {
+      "name": "Demond Claiborne",
+      "team": "MIN",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Kyler Murray",
+      "team": "MIN",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "QB"
+    },
+    {
+      "name": "Ben Brown",
+      "team": "NE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "C"
+    },
+    {
+      "name": "Carlton Davis III",
+      "team": "NE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Reggie Gilliam",
+      "team": "NE",
+      "reason": "IR - Ankle (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "FB"
+    },
+    {
+      "name": "Rhamondre Stevenson",
+      "team": "NE",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "TreVeyon Henderson",
+      "team": "NE",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Erik McCoy",
+      "team": "NO",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "C"
+    },
+    {
+      "name": "Travis Etienne Jr.",
+      "team": "NO",
+      "reason": "IR - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Cam Skattebo",
+      "team": "NYG",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Colton Hood",
+      "team": "NYG",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Max Mitchell",
+      "team": "NYJ",
+      "reason": "IR - Concussion (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "OT"
+    },
+    {
+      "name": "VJ Payne",
+      "team": "NYJ",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "S"
+    },
+    {
+      "name": "Britain Covey",
+      "team": "PHI",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "DeVonta Smith",
+      "team": "PHI",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Dontayvion Wicks",
+      "team": "PHI",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Jihaad Campbell",
+      "team": "PHI",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "Jonathan Jones",
+      "team": "PHI",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Michael Carter II",
+      "team": "PHI",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Ben Skowronek",
+      "team": "PIT",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Brandin Echols",
+      "team": "PIT",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Derrick Harmon",
+      "team": "PIT",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DT"
+    },
+    {
+      "name": "Doneiko Slaughter",
+      "team": "PIT",
+      "reason": "OUT - Hamstring (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Michael Pittman Jr.",
+      "team": "PIT",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Charles Cross",
+      "team": "SEA",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "OT"
+    },
+    {
+      "name": "Cooper Kupp",
+      "team": "SEA",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "UNKNOWN"
+    },
+    {
+      "name": "Quenton Nelson",
+      "team": "SEA",
+      "reason": "DOUBTFUL - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "G"
+    },
+    {
+      "name": "Rashid Shaheed",
+      "team": "SEA",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Sam Darnold",
+      "team": "SEA",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "QB"
+    },
+    {
+      "name": "Brandon Aiyuk",
+      "team": "SF",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12) + MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "WR"
+    },
+    {
+      "name": "C.J. West",
+      "team": "SF",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DT"
+    },
+    {
+      "name": "Gracen Halton",
+      "team": "SF",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DT"
+    },
+    {
+      "name": "Chris Godwin",
+      "team": "TB",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "UNKNOWN"
+    },
+    {
+      "name": "Jalen McMillan",
+      "team": "TB",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Yaya Diaby",
+      "team": "TB",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "Dorian Mausi",
+      "team": "TEN",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "James Williams Sr.",
+      "team": "TEN",
+      "reason": "IR - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "LB"
+    },
+    {
+      "name": "Jaylon Jones",
+      "team": "TEN",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "CB"
+    },
+    {
+      "name": "Tommy Townsend",
+      "team": "TEN",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "P"
+    },
+    {
+      "name": "Will Levis",
+      "team": "TEN",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "UNKNOWN"
+    },
+    {
+      "name": "Colson Yankoff",
+      "team": "WAS",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "TE"
+    },
+    {
+      "name": "Daron Payne",
+      "team": "WAS",
+      "reason": "IR - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "DT"
+    },
+    {
+      "name": "Dyami Brown",
+      "team": "WAS",
+      "reason": "IR - Foot (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Jeremy McNichols",
+      "team": "WAS",
+      "reason": "IR - Back (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "RB"
+    },
+    {
+      "name": "Lucas Patrick",
+      "team": "WAS",
+      "reason": "OUT - no detail (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "G"
+    },
+    {
+      "name": "Stefon Diggs",
+      "team": "WAS",
+      "reason": "MASTER-PLAN STAGE 0 BAN (2026-11-04, owner-imposed; wk10 injury report does not lift it)",
+      "position": "UNKNOWN"
+    },
+    {
+      "name": "Treylon Burks",
+      "team": "WAS",
+      "reason": "OUT - Knee (Neon injuries wk10, fetched 2026-11-12)",
+      "position": "WR"
+    },
+    {
+      "name": "Aaron Brewer",
+      "team": "MIA",
+      "position": "C",
+      "reason": "OUT - Friday Nov 13 verification (WEEK10-ROSTER-INJURY-VERIFICATION-2026-11-13.md)"
+    },
+    {
+      "name": "Gardner Minshew",
+      "team": "ARI",
+      "position": "QB",
+      "reason": "IR - Alias of Gardner Minshew II (WEEK10-ROSTER-INJURY-VERIFICATION-2026-11-13.md)"
+    }
+  ],
+  "traded_players": [
+    {
+      "name": "Greg Dortch",
+      "from": "ARI",
+      "to": "BUF",
+      "position": "WR",
+      "date": "2026-11-10",
+      "reason": "Verified trade-deadline move (GREG DORTCH IS BUF; Fri Nov 13 verification)"
+    },
+    {
+      "name": "Kendrick Bourne",
+      "from": "SF",
+      "to": "ARI",
+      "position": "WR",
+      "date": "2026-11-10",
+      "reason": "Verified move (BOURNE IS ARIZ; Fri Nov 13 verification)"
+    },
+    {
+      "name": "Josh Downs",
+      "from": "IND",
+      "to": "KC",
+      "position": "WR",
+      "date": "2026-11-10",
+      "reason": "Nov 10 trade-deadline move IND->KC (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Keenan Allen",
+      "from": "IND",
+      "to": "SF",
+      "position": "WR",
+      "date": "2026-11-10",
+      "reason": "Trade-deadline move IND->SF (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Kenneth Walker III",
+      "from": "SEA",
+      "to": "KC",
+      "position": "RB",
+      "date": "2026-11-10",
+      "reason": "Verified move SEA->KC (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Tyler Allgeier",
+      "from": "ATL",
+      "to": "ARI",
+      "position": "RB",
+      "date": "2026-11-10",
+      "reason": "Verified lead back ATL->ARI (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Myles Garrett",
+      "from": "CLE",
+      "to": "LAR",
+      "position": "LB",
+      "date": "2026-06-01",
+      "reason": "Motif-verified trade CLE->LAR"
+    },
+    {
+      "name": "Jared Verse",
+      "from": "LAR",
+      "to": "CLE",
+      "position": "DE",
+      "date": "2026-06-01",
+      "reason": "Motif-verified trade LAR->CLE"
+    },
+    {
+      "name": "Jeffery Simmons",
+      "from": "TEN",
+      "to": "CHI",
+      "position": "DT",
+      "date": "2026-11-10",
+      "reason": "Motif-verified trade TEN->CHI"
+    },
+    {
+      "name": "Trent McDuffie",
+      "from": "KC",
+      "to": "LAR",
+      "position": "CB",
+      "date": "2026-11-10",
+      "reason": "Motif-verified trade KC->LAR"
+    },
+    {
+      "name": "Amani Hooker",
+      "from": "TEN",
+      "to": "BUF",
+      "position": "S",
+      "date": "2026-11-10",
+      "reason": "Verified move TEN->BUF (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Jessie Bates",
+      "from": "ATL",
+      "to": "JAX",
+      "position": "S",
+      "date": "2026-11-10",
+      "reason": "Verified move ATL->JAX (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Kyler Murray",
+      "from": "ARI",
+      "to": "MIN",
+      "position": "QB",
+      "date": "2026-11-10",
+      "reason": "Verified move ARI->MIN (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Kirk Cousins",
+      "from": "ATL",
+      "to": "MIN",
+      "position": "QB",
+      "date": "2026-11-10",
+      "reason": "Verified expected MIN starter (Fri Nov 13 verification)"
+    },
+    {
+      "name": "Jacoby Brissett",
+      "from": "ARI",
+      "to": "BAL",
+      "position": "QB",
+      "date": "2026-11-04",
+      "reason": "Verified BAL MNF starter ARI->BAL (Fri Nov 13 verification)"
+    },
+    {
+      "name": "J.J. McCarthy",
+      "from": "MIN",
+      "to": "NYG",
+      "position": "QB",
+      "date": "2026-11-10",
+      "reason": "Verified move MIN->NYG (Fri Nov 13 verification)"
+    }
+  ],
+  "confirmed_qb1": {
+    "ARI": "Carson Beck",
+    "ATL": "Michael Penix Jr.",
+    "BAL": "Jacoby Brissett",
+    "BUF": "Josh Allen",
+    "CAR": "Bryce Young",
+    "CHI": "Caleb Williams",
+    "CIN": "Joe Burrow",
+    "CLE": "Shedeur Sanders",
+    "DAL": "Dak Prescott",
+    "DEN": "Bo Nix",
+    "DET": "Jared Goff",
+    "GB": "Jordan Love",
+    "HOU": "C.J. Stroud",
+    "IND": "Daniel Jones",
+    "JAX": "Trevor Lawrence",
+    "KC": "Patrick Mahomes",
+    "LA": "Matthew Stafford",
+    "LAC": "Justin Herbert",
+    "LV": "Fernando Mendoza",
+    "MIA": "Kyle McCord",
+    "MIN": "Kirk Cousins",
+    "NE": "Drake Maye",
+    "NO": "Tyler Shough",
+    "NYG": "J.J. McCarthy",
+    "NYJ": "Geno Smith",
+    "PHI": "Joe Milton",
+    "PIT": "Aaron Rodgers",
+    "SEA": "Drew Lock",
+    "SF": "Brock Purdy",
+    "TB": "Baker Mayfield",
+    "TEN": "Cam Ward",
+    "WAS": "Jayden Daniels"
+  },
+  "qb1_fallback_rule": "QB1 = most offenseSnaps in team's latest snap_counts week (>=7, 2026); if excluded by wk10 injury report, next non-excluded QB with snap evidence. Teams without evidence are omitted and props fail-closed: none.",
+  "situational_multipliers_unfitted": {},
+  "situational_flags": {
+    "ARI": {
+      "qb1_change": true,
+      "reason": "wk9 snap leader excluded by wk10 injury report; promoted Jacoby Brissett from snap evidence"
+    },
+    "MIA": {
+      "qb1_change": true,
+      "reason": "ESPN MIA roster fetched 2026-11-13 (site.api.espn.com .../teams/mia/roster, artifact data/nflverse/evidence/mia_roster_2026_11_13.json): McCord Active, only active QB on roster; Malik Willis IR (matches Neon wk10); Tagovailoa not on roster. Willis snap leader wk7-9 now excluded."
+    }
   }
- ],
- "traded_players": [
-  {
-   "name": "Myles Garrett",
-   "from": "CLE",
-   "to": "LAR",
-   "position": "LB",
-   "reason": "Motif-verified trade (Garrett standing order 2026-11-13; June 2026 trade, roster CSV wk9 already LA ACT)"
-  },
-  {
-   "name": "Jared Verse",
-   "from": "LAR",
-   "to": "CLE",
-   "position": "DE",
-   "reason": "Motif-verified trade (Garrett standing order 2026-11-13; roster CSV wk9 already CLE ACT)"
-  },
-  {
-   "name": "Jeffery Simmons",
-   "from": "TEN",
-   "to": "CHI",
-   "position": "DT",
-   "reason": "Motif-verified trade (Garrett standing order 2026-11-13; roster CSV wk9 stale at TEN)"
-  },
-  {
-   "name": "Trent McDuffie",
-   "from": "KC",
-   "to": "LAR",
-   "position": "CB",
-   "reason": "Motif-verified trade (Garrett standing order 2026-11-13; roster CSV wk9 already LA ACT)"
-  }
- ],
- "confirmed_qb1": {
-  "ARI": "Jacoby Brissett",
-  "ATL": "Michael Penix",
-  "BAL": "Joe Fagnano",
-  "BUF": "Josh Allen",
-  "CAR": "Bryce Young",
-  "CHI": "Caleb Williams",
-  "CIN": "Joe Burrow",
-  "CLE": "Shedeur Sanders",
-  "DAL": "Dak Prescott",
-  "DEN": "Bo Nix",
-  "DET": "Jared Goff",
-  "GB": "Jordan Love",
-  "HOU": "C.J. Stroud",
-  "IND": "Daniel Jones",
-  "JAX": "Trevor Lawrence",
-  "KC": "Patrick Mahomes",
-  "LA": "Matthew Stafford",
-  "LAC": "Justin Herbert",
-  "LV": "Kirk Cousins",
-  "MIA": "Kyle McCord",
-  "MIN": "Carson Wentz",
-  "NE": "Drake Maye",
-  "NO": "Tyler Shough",
-  "NYG": "J.J. McCarthy",
-  "NYJ": "Geno Smith",
-  "PHI": "Joe Milton",
-  "PIT": "Aaron Rodgers",
-  "SEA": "Drew Lock",
-  "SF": "Brock Purdy",
-  "TB": "Baker Mayfield",
-  "TEN": "Cam Ward",
-  "WAS": "Jayden Daniels"
- },
- "qb1_fallback_rule": "QB1 = most offenseSnaps in team's latest snap_counts week (>=7, 2026); if excluded by wk10 injury report, next non-excluded QB with snap evidence. Teams without evidence are omitted and props fail-closed: none.",
- "situational_multipliers_unfitted": {},
- "situational_flags": {
-  "ARI": {
-   "qb1_change": true,
-   "reason": "wk9 snap leader excluded by wk10 injury report; promoted Jacoby Brissett from snap evidence"
-  },
-  "MIA": {
-   "qb1_change": true,
-   "reason": "ESPN MIA roster fetched 2026-11-13 (site.api.espn.com .../teams/mia/roster, artifact data/nflverse/evidence/mia_roster_2026_11_13.json): McCord Active, only active QB on roster; Malik Willis IR (matches Neon wk10); Tagovailoa not on roster. Willis snap leader wk7-9 now excluded."
-  }
- }
 }

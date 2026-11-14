@@ -1,10 +1,10 @@
 # Galaxy Sports Edge (GSE) & Stealth-Skeleton Autonomous Intelligence Engine — Architecture & Knowledge Graph Onboarding Guide
 
-- **Analyzed At:** `2026-11-08T00:26:06.911281+00:00`
-- **Git Commit:** `5e7e6a1b1adf48497e6813ad7ca7e6367b288246`
+- **Analyzed At:** `2026-11-14T02:56:32.863957+00:00`
+- **Git Commit:** `c7b897c75d2bd758bcf15e8a8680dfce2708a376`
 - **Languages:** `python, typescript, c, cpp, sql, markdown`
 - **Frameworks:** `Next.js, Cloudflare Workers, Pytest, Vitest, Bazel, NumPy/SciPy`
-- **Knowledge Graph Nodes / Edges / Layers:** `189 nodes` / `192 edges` / `9 layers`
+- **Knowledge Graph Nodes / Edges / Layers:** `193 nodes` / `196 edges` / `9 layers`
 
 ## 1. Project Overview
 
@@ -117,21 +117,22 @@ Examine `workers/stealth-skeleton-provider/src/index.ts` and `apps/web/lib/write
 ## 4. Complexity Hotspots (Approach Carefully)
 
 - **`intelligence/data_sources/firecrawl_alexandria_live_sync.py`** (`555 lines`): firecrawl_alexandria_live_sync.py (555 lines) in Stage 0 Data, Schedule & Active Roster Ingestion Layer.
-- **`packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts`** (`1058 lines`): master-situational-reasoning-aggregator.ts (1058 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
-- **`packages/prediction-engine/src/nfl/x-situational-80-rules.ts`** (`1094 lines`): x-situational-80-rules.ts (1094 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
-- **`packages/mcp-equations-server/src/mcp-cognitive-router.ts`** (`633 lines`): mcp-cognitive-router.ts (633 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
-- **`scripts/ops/gse_connected_game_workflow.py`** (`5150 lines`): gse_connected_game_workflow.py (5150 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
+- **`packages/prediction-engine/src/nfl/master-situational-reasoning-aggregator.ts`** (`1089 lines`): master-situational-reasoning-aggregator.ts (1089 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
+- **`packages/prediction-engine/src/nfl/x-situational-80-rules.ts`** (`1119 lines`): x-situational-80-rules.ts (1119 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
+- **`packages/mcp-equations-server/src/mcp-cognitive-router.ts`** (`943 lines`): mcp-cognitive-router.ts (943 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
+- **`scripts/ops/gse_connected_game_workflow.py`** (`5427 lines`): gse_connected_game_workflow.py (5427 lines) in Stage 1 & 2 Coaching Tendencies & Situational Reasoning Layer.
+- **`intelligence/native_kernels/native_bridge.py`** (`479 lines`): native_bridge.py (479 lines) in Stage 3 Native C11/C++20 AVX2 & Correlated Trajectory Layer.
 - **`intelligence/reasoning/live_cognitive_self_improvement_engine.py`** (`777 lines`): live_cognitive_self_improvement_engine.py (777 lines) in L1-L5 Specialist Synthesis, 18-Authority Eval & Cognitive Self-Improvement Layer.
 - **`intelligence/routing/stealth_skeleton_external_eval_and_distillation.py`** (`1666 lines`): stealth_skeleton_external_eval_and_distillation.py (1666 lines) in L1-L5 Specialist Synthesis, 18-Authority Eval & Cognitive Self-Improvement Layer.
 - **`intelligence/reasoning/understand_anything_and_session_librarian_engine.py`** (`1192 lines`): understand_anything_and_session_librarian_engine.py (1192 lines) in L1-L5 Specialist Synthesis, 18-Authority Eval & Cognitive Self-Improvement Layer.
-- **`intelligence/dfs/dfs_and_fantasy_accuracy_engine.py`** (`673 lines`): dfs_and_fantasy_accuracy_engine.py (673 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.
-- **`scripts/dfs/build_week9_dual_slate_dfs_packets.py`** (`1089 lines`): build_week9_dual_slate_dfs_packets.py (1089 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.
-- **`scripts/ops/dfs_stochastic_milp_optimizer.py`** (`612 lines`): dfs_stochastic_milp_optimizer.py (612 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.
-- **`workers/stealth-skeleton-provider/src/index.ts`** (`4337 lines`): index.ts (4337 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.
+- **`intelligence/dfs/dfs_and_fantasy_accuracy_engine.py`** (`735 lines`): dfs_and_fantasy_accuracy_engine.py (735 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.
+- **`scripts/dfs/build_week9_dual_slate_dfs_packets.py`** (`1060 lines`): build_week9_dual_slate_dfs_packets.py (1060 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.
+- **`scripts/ops/dfs_stochastic_milp_optimizer.py`** (`812 lines`): dfs_stochastic_milp_optimizer.py (812 lines) in Two-Stage Sim-to-DFS Player Pool, 19-Equation Frontier & MILP Layer.
+- **`workers/stealth-skeleton-provider/src/index.ts`** (`4378 lines`): index.ts (4378 lines) in Cloudflare Edge Worker (`stealth-skeleton-provider`) & Telemetry Layer.
 - **`apps/web/lib/writeups/coach-writeup-engine.ts`** (`2600 lines`): coach-writeup-engine.ts (2600 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.
-- **`apps/web/components/redline/redline-world.tsx`** (`853 lines`): redline-world.tsx (853 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.
+- **`apps/web/components/redline/redline-world.tsx`** (`856 lines`): redline-world.tsx (856 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.
 - **`intelligence/performance/full_stack_performance_and_data_optimizer.py`** (`654 lines`): full_stack_performance_and_data_optimizer.py (654 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.
-- **`intelligence/seo/seo_and_lcp_optimization_engine.py`** (`474 lines`): seo_and_lcp_optimization_engine.py (474 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.
+- **`intelligence/seo/seo_and_lcp_optimization_engine.py`** (`489 lines`): seo_and_lcp_optimization_engine.py (489 lines) in Next.js Web Storefront, Mobile Client, Performance & 8-Skill SEO/LCP Layer.
 
 ## 5. Cross-Session Immunization Rules (`/session-librarian`)
 
@@ -150,7 +151,7 @@ Examine `workers/stealth-skeleton-provider/src/index.ts` and `apps/web/lib/write
 
 ## 6. Recent Diff & Blast-Radius Overlay (`/understand-diff`)
 
-- **Changed Files (`HEAD~1..HEAD`):** `18`
-- **Changed Graph Nodes:** `50`
-- **1-Hop Affected Nodes:** `6`
-- **Blast Radius Risk Score:** `1.0`
+- **Changed Files (`HEAD~1..HEAD`):** `106`
+- **Changed Graph Nodes:** `0`
+- **1-Hop Affected Nodes:** `0`
+- **Blast Radius Risk Score:** `0.0`

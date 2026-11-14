@@ -36,7 +36,7 @@
       "total_equations_evaluated": 21419,
       "active_equations": 20019,
       "held_below_min_sample_equations": 1400,
-      "lookup_total_matches": 297
+      "lookup_total_matches": 267
     },
     "baseline_before_optimization": {
       "cold_279_wall_s": 6.1168,
@@ -47,29 +47,29 @@
       "total_cpu_s": 11.5938
     },
     "measured_after_optimization": {
-      "cold_279_wall_s": 9.2236,
-      "cold_279_cpu_s": 9.0781,
-      "warm_279_wall_s": 0.000665,
+      "cold_279_wall_s": 24.8801,
+      "cold_279_cpu_s": 23.2344,
+      "warm_279_wall_s": 0.00175,
       "warm_279_cpu_s": 0.0,
-      "all_26_layers_cold_wall_s": 2.2151,
-      "all_26_layers_warm_wall_s": 0.005701,
-      "lookup_10_queries_wall_s": 0.1034,
-      "total_wall_s": 11.5485,
-      "total_cpu_s": 11.3906,
-      "peak_memory_mb": 218.431
+      "all_26_layers_cold_wall_s": 2.8781,
+      "all_26_layers_warm_wall_s": 0.020952,
+      "lookup_10_queries_wall_s": 6.456,
+      "total_wall_s": 34.2369,
+      "total_cpu_s": 32.125,
+      "peak_memory_mb": 234.109
     },
     "speedup_ratios": {
-      "warm_279_family_speedup_x": 2992.9,
-      "all_26_layers_cold_speedup_x": 1.42,
-      "all_26_layers_warm_speedup_x": 553.1,
-      "book_lookup_10_queries_speedup_x": 5.17
+      "warm_279_family_speedup_x": 1137.3,
+      "all_26_layers_cold_speedup_x": 1.1,
+      "all_26_layers_warm_speedup_x": 150.5,
+      "book_lookup_10_queries_speedup_x": 0.08
     },
     "cache_diagnostics": {
       "owner": "intelligence/equations/equation_executor.py",
       "max_batch_cache_entries": 64,
       "retained_batch_entries": 27,
       "retained_registry_snapshots": 1,
-      "retained_ast_closures": 19764,
+      "retained_ast_closures": 40658,
       "invalidation_triggers": [
         "registry_file_mtime_ns_or_size_change",
         "AST_FORMULA_SPEC_EXECUTOR_ENABLED_env_toggle",

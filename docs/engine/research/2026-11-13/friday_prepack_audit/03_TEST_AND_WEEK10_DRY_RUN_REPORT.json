@@ -1,0 +1,2027 @@
+{
+  "generated_at_utc": "2026-11-14T03:17:21.987649+00:00",
+  "total_duration_sec": 441.85,
+  "worktree": "C:\\Users\\Garrett\\Sports_prepack_audit_wt",
+  "suites_1a_1b_1c": {
+    "guardrails_and_invariants": [
+      {
+        "name": "guard_trust_gate_root",
+        "command": "node scripts/trust-gate.mjs",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 47.37,
+        "output_line_count": 1,
+        "output_tail": "[trust-gate] OK - scanned 4785 file(s); no banned phrases."
+      },
+      {
+        "name": "guard_trust_gate_subdir",
+        "command": "node scripts/guardrails/trust-gate.mjs",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 47.3,
+        "output_line_count": 1,
+        "output_tail": "[trust-gate] OK - scanned 4785 file(s); no banned phrases."
+      },
+      {
+        "name": "guard_mobile_lint_rules",
+        "command": "node apps/mobile/scripts/lint-rules.js",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 0.41,
+        "output_line_count": 3,
+        "output_tail": "lint-rules: 48 files scanned\ntype tokens 20 · colour tokens 22\nviolations 0"
+      },
+      {
+        "name": "guard_mobile_lint_rules_selftest",
+        "command": "node apps/mobile/scripts/lint-rules.js --self-test",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 0.41,
+        "output_line_count": 1,
+        "output_tail": "lint-rules self-test: 9/9 rules fire"
+      },
+      {
+        "name": "guard_connected_workflow_dossier",
+        "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe scripts/guardrails/connected-workflow-dossier-guard.py",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 2.54,
+        "output_line_count": 1,
+        "output_tail": "  PASS  connected-workflow-dossier-guard — cryptographic Stage 0..5 receipt & zero-contamination verified"
+      },
+      {
+        "name": "permanent_sequenced_week10_dryrun",
+        "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe scripts/ops/run_permanent_sequenced_weekly_pipeline.py --week 10 --mode dry-run-audit",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 59.66,
+        "output_line_count": 1,
+        "output_tail": "[SEQUENCED PIPELINE] PASS | week=10 | mode=dry-run-audit | gates=7/7 | sha256=d0364a131b0e47b0..."
+      },
+      {
+        "name": "foundry_readonly_rlvr_and_crucible_check",
+        "passed": true,
+        "duration_sec": 0.23,
+        "ro_write_blocked": true,
+        "ro_error": "attempt to write a readonly database",
+        "rlvr_batches": 6,
+        "rlvr_scenarios": 18,
+        "rlvr_self_tests_passed": 54,
+        "primitives_books": 104,
+        "primitives_total": 750,
+        "primitives_schema_errors": 0,
+        "crucible_files_count": 14,
+        "ne_at_det_crucible_override_required": false,
+        "kc_at_atl_crucible_override_required": false
+      }
+    ],
+    "typescript_typechecks": [
+      {
+        "name": "tsc_prediction_engine",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\tsc.cmd -p packages/prediction-engine/tsconfig.json --noEmit",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 26.79,
+        "output_line_count": 0,
+        "output_tail": ""
+      },
+      {
+        "name": "tsc_ops",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\tsc.cmd -p packages/ops/tsconfig.json --noEmit",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 4.25,
+        "output_line_count": 0,
+        "output_tail": ""
+      },
+      {
+        "name": "tsc_apps_web",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\tsc.cmd -p apps/web/tsconfig.json --noEmit",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 42.98,
+        "output_line_count": 0,
+        "output_tail": ""
+      }
+    ],
+    "node_and_tsx_tests": [
+      {
+        "name": "node_test_mobile_ios",
+        "command": "npm.cmd --prefix apps/mobile run test",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 1,
+        "passed": false,
+        "duration_sec": 3.9,
+        "output_line_count": 283,
+        "output_tail": "    expected: [\n      'AI-powered',              'AI powered',\n      'powered by AI',           'AI-driven',\n      'AI driven',               'AI-assisted',\n      'AI assisted',             'AI-based',\n      'AI based',                'AI-enabled',\n      'AI enabled',              'AI-generated',\n      'AI generated',            'AI-generated pick',\n      'AI-generated picks',      'AI generated pick',\n      'AI generated picks',      'AI picks',\n      'AI pick',                 'our AI',\n      'artificial intelligence', 'machine learning',\n      'machine learning model',  'ML model',\n      'AI agents',               'multimodal intelligence'\n    ],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\nnpm notice run gse-ios@1.0.0 test\nnpm notice run node --test --test-concurrency=1 tests/*.test.js"
+      },
+      {
+        "name": "node_test_all_mjs_32",
+        "command": "node --test docs/calibration-proposals/evidence/verify-evidence.test.mjs intelligence/week10_engines_2026_11_13/GSE-Belichick-Omni-Causal-World-Model-2026-11-13/test_gse_belichick_omni_causal_world_model.test.mjs scripts/__tests__/cv-no-synthetic-rng.test.mjs scripts/ai/build-call-site-inventory.test.mjs scripts/db/prune-usage.test.mjs scripts/edge-lab/freeze-model-hash.test.mjs scripts/factors/index.test.mjs scripts/guardrails/ai-transport-import-boundary.test.mjs scripts/guardrails/api-route-boundary.test.mjs scripts/guardrails/commercial-copy-scan.test.mjs scripts/guardrails/dependency-audit.test.mjs scripts/guardrails/draft-only.test.mjs scripts/guardrails/ingestion-source-clearance.test.mjs scripts/guardrails/no-unsupported-performance-claims.test.mjs scripts/guardrails/node-container-parity.test.mjs scripts/guardrails/node-version-parity.test.mjs scripts/guardrails/plugin-supply-chain-gate.test.mjs scripts/guardrails/sealed-holdout-open-scan.test.mjs scripts/guardrails/shell-defensive.test.mjs scripts/guardrails/solidity-compile.test.mjs scripts/guardrails/sql-identifier-case.test.mjs scripts/guardrails/trust-gate.test.mjs scripts/lib/node-runtime-pin.test.mjs scripts/nova/convergence-inventory.test.mjs scripts/nova/multihead-inventory.test.mjs scripts/nova/nova-intelligence.test.mjs scripts/nova/source-runtime.test.mjs scripts/ops/cron-matrix-from-vercel.test.mjs scripts/ops/free-auto-settle.test.mjs scripts/ops/gse-connected-5stage-gameday-orchestrator.test.mjs scripts/vercel-skip-build.test.mjs workers/twitter-bot/test/draft-only.test.mjs",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 41.35,
+        "output_line_count": 444,
+        "output_tail": "✔ isMergeCommit detects 2+ parents from rev-list output (0.3761ms)\n✔ builds when a deploy-relevant path changed (non-trunk branch) (0.2397ms)\n✔ skips docs-only / unrelated changes on a non-trunk branch (0.2571ms)\n✔ custom trunk list is honored (0.1737ms)\n✔ deployment scripts and the skip gate itself force a build (0.1797ms)\n✔ the last successful deployment SHA is the preferred multi-commit diff base (0.4383ms)\n✔ an unavailable supplied deployment SHA fails closed instead of diffing only HEAD^ (0.4724ms)\n✔ merge detection failure forces a build (0.3957ms)\n✔ Governed Dispatch Gate permits scripts with dryRun flag or MUSE_X_PUBLISH_APPROVED (2.1196ms)\n✔ Governed Dispatch Gate rejects ungoverned scripts without approval/dry-run checks (2.311ms)\n✔ Core engine (apps/, packages/) cannot import workers/twitter-bot under any condition (0.2513ms)\n✔ The repository currently has zero ungoverned transport importers (24634.5146ms)\nℹ tests 434\nℹ suites 0\nℹ pass 431\nℹ fail 0\nℹ cancelled 0\nℹ skipped 3\nℹ todo 0\nℹ duration_ms 41203.0108"
+      },
+      {
+        "name": "tsx_standalone_parlay_mri_and_store_credit",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\tsx.cmd intelligence/week10_engines_2026_11_13/GSE-Week10-Parlay-MRI-and-Two-Door-Storefront-Pack-2026-11-13/parlay_mri_and_store_credit.test.ts",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 0.8,
+        "output_line_count": 1,
+        "output_tail": "{\"passed\":5,\"assertions\":43,\"scipyVectors\":[{\"name\":\"2_leg_positive_qb_wr1\",\"marginals\":[0.5,0.5],\"psdMatrix\":[[1,0.48],[0.48,1]],\"tsGaussianProb\":0.32967798777640717,\"tsStudentT4Prob\":0.3293311062505127,\"tsMonteCarloT4Prob\":0.3298,\"hiddenHoldPct\":20.96},{\"name\":\"3_leg_sgp_quoted_plus425\",\"marginals\":[0.5,0.5,0.3843537414965813],\"psdMatrix\":[[1,0.48,0.0924],[0.48,1,0.0756],[0.0924,0.0756,1]],\"tsGaussianProb\":0.139591084175378,\"tsStudentT4Prob\":0.13942488240953424,\"tsMonteCarloT4Prob\":0.13843333333333332,\"hiddenHoldPct\":26.8},{\"name\":\"3_leg_cannibalistic_trap\",\"marginals\":[0.5,0.5,0.4017223910840835],\"psdMatrix\":[[1,-0.38,-0.24],[-0.38,1,-0.09],[-0.24,-0.09,1]],\"tsGaussianProb\":0.0504577214053248,\"tsStudentT4Prob\":0.050510279090905656,\"tsMonteCarloT4Prob\":0.050116666666666664,\"hiddenHoldPct\":65.91},{\"name\":\"4_leg_passing_stack_plus350\",\"marginals\":[0.5,0.5,0.5110741971207069,0.5],\"psdMatrix\":[[1,0.48,0.52,0.39],[0.48,1,0.33,0.31],[0.52,0.33,1,0.42],[0.39,0.31,0.42,1]],\"tsGaussianProb\":0.17394541029526564,\"tsStudentT4Prob\":0.1736750444752411,\"tsMonteCarloT4Prob\":0.17381666666666667,\"hiddenHoldPct\":21.85},{\"name\":\"5_leg_full_script_sgp\",\"marginals\":[0.5,0.5110741971207069,0.5,0.5216450216450175,0.5],\"psdMatrix\":[[1,0.36,0.46,0.31,-0.0665],[0.36,1,0.22,0,0],[0.46,0.22,1,0.42,0],[0.31,0,0.42,1,0],[-0.0665,0,0,0,1]],\"tsGaussianProb\":0.07120349133393344,\"tsStudentT4Prob\":0.07106386583951015,\"tsMonteCarloT4Prob\":0.07025,\"hiddenHoldPct\":32.49}]}"
+      }
+    ],
+    "vitest_batches": [
+      {
+        "name": "vitest_root_config_packages",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run packages/mcp-equations-server packages/compliance packages/competitive-intel workers/immortal-orchestrator workers/stealth-skeleton-provider --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_root_config_packages.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 1,
+        "passed": false,
+        "cached": true,
+        "duration_sec": 2.28,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_root_config_packages.vitest.json",
+        "suites_total": 42,
+        "suites_passed": 40,
+        "suites_failed": 2,
+        "suites_pending": 0,
+        "tests_total": 106,
+        "tests_passed": 106,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [
+          "stealth-skeleton-provider.test.ts::SUITE_ERROR",
+          "immortal-orchestrator.test.ts::SUITE_ERROR"
+        ],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_ops",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_ops.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/ops",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.0,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_ops.vitest.json",
+        "suites_total": 2,
+        "suites_passed": 2,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 4,
+        "tests_passed": 4,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_governed",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_governed.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/governed",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.7,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_governed.vitest.json",
+        "suites_total": 10,
+        "suites_passed": 10,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 22,
+        "tests_passed": 22,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_verifier",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_verifier.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/verifier",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 2.78,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_verifier.vitest.json",
+        "suites_total": 42,
+        "suites_passed": 42,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 110,
+        "tests_passed": 110,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_epistemic-twin",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_epistemic-twin.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/epistemic-twin",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.07,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_epistemic-twin.vitest.json",
+        "suites_total": 28,
+        "suites_passed": 28,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 141,
+        "tests_passed": 141,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_genesis-kernel",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_genesis-kernel.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/genesis-kernel",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 3.91,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_genesis-kernel.vitest.json",
+        "suites_total": 9,
+        "suites_passed": 9,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 26,
+        "tests_passed": 26,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_ai-council",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_ai-council.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/ai-council",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.01,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_ai-council.vitest.json",
+        "suites_total": 2,
+        "suites_passed": 2,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 7,
+        "tests_passed": 7,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_quote-plane",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_quote-plane.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/quote-plane",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 1.86,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_quote-plane.vitest.json",
+        "suites_total": 43,
+        "suites_passed": 43,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 99,
+        "tests_passed": 99,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_stats-api",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_stats-api.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/stats-api",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 2.86,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_stats-api.vitest.json",
+        "suites_total": 45,
+        "suites_passed": 45,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 100,
+        "tests_passed": 100,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_feature-store",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_feature-store.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/feature-store",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 8.03,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_feature-store.vitest.json",
+        "suites_total": 101,
+        "suites_passed": 101,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 276,
+        "tests_passed": 276,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_db",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run packages/db --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_db.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.17,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_db.vitest.json",
+        "suites_total": 6,
+        "suites_passed": 6,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 38,
+        "tests_passed": 38,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_crypto",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_crypto.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/crypto",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 3.57,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_crypto.vitest.json",
+        "suites_total": 14,
+        "suites_passed": 14,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 48,
+        "tests_passed": 48,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_phase-c",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_phase-c.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/phase-c",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.0,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_phase-c.vitest.json",
+        "suites_total": 2,
+        "suites_passed": 2,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 6,
+        "tests_passed": 6,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_partner-stack",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_partner-stack.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/partner-stack",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.02,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_partner-stack.vitest.json",
+        "suites_total": 4,
+        "suites_passed": 4,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 14,
+        "tests_passed": 14,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_util",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_util.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/util",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.01,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_util.vitest.json",
+        "suites_total": 11,
+        "suites_passed": 11,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 26,
+        "tests_passed": 26,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_types",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_types.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/types",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.49,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_types.vitest.json",
+        "suites_total": 32,
+        "suites_passed": 32,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 123,
+        "tests_passed": 123,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_packages_dev-tools_context-compiler",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_packages_dev-tools_context-compiler.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/dev-tools/context-compiler",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 11.21,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_packages_dev-tools_context-compiler.vitest.json",
+        "suites_total": 7,
+        "suites_passed": 7,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 17,
+        "tests_passed": 17,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_workers_content-publishing",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_workers_content-publishing.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/workers/content-publishing",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.04,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_workers_content-publishing.vitest.json",
+        "suites_total": 2,
+        "suites_passed": 2,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 5,
+        "tests_passed": 5,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_workers_data-refresh",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_workers_data-refresh.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/workers/data-refresh",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 0.03,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_workers_data-refresh.vitest.json",
+        "suites_total": 2,
+        "suites_passed": 2,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 16,
+        "tests_passed": 16,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_prediction_engine_nfl",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run src/nfl --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_prediction_engine_nfl.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/prediction-engine",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 1.58,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_prediction_engine_nfl.vitest.json",
+        "suites_total": 123,
+        "suites_passed": 123,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 245,
+        "tests_passed": 245,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_prediction_engine_shard_1_of_4",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_prediction_engine_shard_1_of_4.vitest.json --shard=1/4",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/prediction-engine",
+        "exit_code": 1,
+        "passed": false,
+        "cached": true,
+        "duration_sec": 58.07,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_prediction_engine_shard_1_of_4.vitest.json",
+        "suites_total": 293,
+        "suites_passed": 289,
+        "suites_failed": 4,
+        "suites_pending": 0,
+        "tests_total": 796,
+        "tests_passed": 794,
+        "tests_failed": 2,
+        "tests_skipped": 0,
+        "failed_tests_exact": [
+          "arxiv-hnsw-bridge.t1t4.spec.ts::T4 -- the empty corpus and the class-A guard T4: the class-A coverage guard still exits 0 and reports zero gaps",
+          "causal-engine.mutation-v4.spec.ts::T1-T16 -- the spec's named falsification suite, and its own coverage ledger the repo-level guards are green: the threshold auditor and the class-A guard"
+        ],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_prediction_engine_shard_2_of_4",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_prediction_engine_shard_2_of_4.vitest.json --shard=2/4",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/prediction-engine",
+        "exit_code": 1,
+        "passed": false,
+        "cached": true,
+        "duration_sec": 230.06,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_prediction_engine_shard_2_of_4.vitest.json",
+        "suites_total": 311,
+        "suites_passed": 305,
+        "suites_failed": 6,
+        "suites_pending": 0,
+        "tests_total": 774,
+        "tests_passed": 771,
+        "tests_failed": 3,
+        "tests_skipped": 0,
+        "failed_tests_exact": [
+          "zero-orphan-engine-audit.test.ts::Zero-Orphan GSE Engine Audit & W1-W14 / F2-F3 Dossier Calculators verifies zero orphaned non-test modules across src/expected-metrics and src/nfl",
+          "causal-engine.mutation-v3.spec.ts::T12 -- the zero-unenforced-constants gate the auditor exits 0",
+          "public-picks-enabled-readers.t21.spec.ts::GAP-21: the PUBLIC_PICKS_ENABLED reader table every recorded reader still exists, at the recorded line, with the recorded default"
+        ],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_prediction_engine_shard_3_of_4",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_prediction_engine_shard_3_of_4.vitest.json --shard=3/4",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/prediction-engine",
+        "exit_code": 1,
+        "passed": false,
+        "cached": true,
+        "duration_sec": 57.77,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_prediction_engine_shard_3_of_4.vitest.json",
+        "suites_total": 296,
+        "suites_passed": 293,
+        "suites_failed": 3,
+        "suites_pending": 0,
+        "tests_total": 1730,
+        "tests_passed": 1728,
+        "tests_failed": 2,
+        "tests_skipped": 0,
+        "failed_tests_exact": [
+          "model-registry.test.ts::model registry: accuracy against the filesystem enumerates exactly the modules that declare ENABLED = false",
+          "model-registry.test.ts::model registry: ratchets (coverage may only improve) keeps the registry total in step with the filesystem"
+        ],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_prediction_engine_shard_4_of_4",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_prediction_engine_shard_4_of_4.vitest.json --shard=4/4",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/prediction-engine",
+        "exit_code": 1,
+        "passed": false,
+        "cached": true,
+        "duration_sec": 45.02,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_prediction_engine_shard_4_of_4.vitest.json",
+        "suites_total": 273,
+        "suites_passed": 271,
+        "suites_failed": 2,
+        "suites_pending": 0,
+        "tests_total": 859,
+        "tests_passed": 858,
+        "tests_failed": 1,
+        "tests_skipped": 0,
+        "failed_tests_exact": [
+          "teb-avalanche-braid-overlay.test.ts::GSE/GSI Sovereign v4.0 TEB, Failed-Avalanche & D(S3) Braiding Overlay integrates seamlessly into runMasterSituationalReasoningOverlay with Stage 0 roster check"
+        ],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_data_ingestion_shard_1_of_2",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_data_ingestion_shard_1_of_2.vitest.json --shard=1/2",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/data-ingestion",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 45.69,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_data_ingestion_shard_1_of_2.vitest.json",
+        "suites_total": 570,
+        "suites_passed": 570,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 1183,
+        "tests_passed": 1183,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_data_ingestion_shard_2_of_2",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_data_ingestion_shard_2_of_2.vitest.json --shard=2/2",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/data-ingestion",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 44.69,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_data_ingestion_shard_2_of_2.vitest.json",
+        "suites_total": 597,
+        "suites_passed": 597,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 1391,
+        "tests_passed": 1391,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "vitest_ingestion_pipeline",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run . --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_ingestion_pipeline.vitest.json",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/packages/ingestion-pipeline",
+        "exit_code": 0,
+        "passed": true,
+        "cached": true,
+        "duration_sec": 84.11,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_ingestion_pipeline.vitest.json",
+        "suites_total": 516,
+        "suites_passed": 516,
+        "suites_failed": 0,
+        "suites_pending": 0,
+        "tests_total": 1695,
+        "tests_passed": 1689,
+        "tests_failed": 0,
+        "tests_skipped": 6,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": [
+          "slate-opening-reader.integration.test.ts::planSlateOpeningFromDb against real Postgres REFUSES not_settled while every covered pick is pending",
+          "slate-opening-reader.integration.test.ts::planSlateOpeningFromDb against real Postgres REFUSES a mostly-settled slate — one pending covered pick still blocks",
+          "slate-opening-reader.integration.test.ts::planSlateOpeningFromDb against real Postgres an UNRELATED pending pick does NOT block a fully-settled slate (covered-set keying)",
+          "slate-opening-reader.integration.test.ts::planSlateOpeningFromDb against real Postgres REVEALS a genuine opening once every covered pick has settled",
+          "slate-opening-reader.integration.test.ts::planSlateOpeningFromDb against real Postgres REFUSES no_opener when the slate's opener columns are null (pre-0.5 slate)",
+          "slate-opening-reader.integration.test.ts::planSlateOpeningFromDb against real Postgres REFUSES no_opener for a slateKey with no commitment row, without throwing"
+        ]
+      },
+      {
+        "name": "vitest_web_brand_safety",
+        "command": "npm.cmd run test:brand-safety --workspace=apps/web",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 1,
+        "passed": false,
+        "duration_sec": 39.23,
+        "output_line_count": 67,
+        "output_tail": "    \u001b[90m152| \u001b[39m          \u001b[32m`\u001b[39m\u001b[36m${\u001b[39mdoc\u001b[36m}\u001b[39m\u001b[32m contains banned phrases outside code spans:\\n\u001b[39m\u001b[36m${\u001b[39msumma…\n    \u001b[90m153| \u001b[39m            \u001b[32m`If a phrase is referenced legitimately (e.g. documenting \u001b[39m…\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\u001b[31m\u001b[1m\u001b[7m FAIL \u001b[27m\u001b[22m\u001b[39m __tests__/policy-only-winrate.test.ts\u001b[2m > \u001b[22mPolicy module is the only path to a public win-rate\u001b[2m > \u001b[22mlib\\ledger\\verify-math.test.ts contains no ad-hoc win-rate math\n\u001b[31m\u001b[1mError\u001b[22m: lib\\ledger\\verify-math.test.ts contains ad-hoc win-rate math (wins/(wins+losses). Use evaluatePublicPerformancePolicy() instead.\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m __tests__/policy-only-winrate.test.ts:\u001b[2m66:17\u001b[22m\u001b[39m\n    \u001b[90m 64| \u001b[39m        \u001b[35mconst\u001b[39m m \u001b[33m=\u001b[39m src\u001b[33m.\u001b[39m\u001b[34mmatch\u001b[39m(pattern)\u001b[33m;\u001b[39m\n    \u001b[90m 65| \u001b[39m        \u001b[35mif\u001b[39m (m) {\n    \u001b[90m 66| \u001b[39m          \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\n    \u001b[90m   | \u001b[39m                \u001b[31m^\u001b[39m\n    \u001b[90m 67| \u001b[39m            \u001b[32m`\u001b[39m\u001b[36m${\u001b[39mrel\u001b[36m}\u001b[39m\u001b[32m contains ad-hoc win-rate math (\u001b[39m\u001b[36m${\u001b[39mm[\u001b[34m0\u001b[39m]\u001b[36m}\u001b[39m\u001b[32m). Use evalu\u001b[39m…\n    \u001b[90m 68| \u001b[39m          )\u001b[33m;\u001b[39m\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m\nnpm error Lifecycle script `test:brand-safety` failed with error:\nnpm error code 1\nnpm error path C:\\Users\\Garrett\\Sports_prepack_audit_wt\\apps\\web\nnpm error workspace @sports/web@1.0.0\nnpm error location C:\\Users\\Garrett\\Sports_prepack_audit_wt\\apps\\web\nnpm error command failed\nnpm error command C:\\WINDOWS\\system32\\cmd.exe /d /s /c vitest run __tests__/public-copy-scanner.test.ts __tests__/public-copy-scan-strong.test.ts __tests__/public-performance-policy.test.ts __tests__/dashboard-performance-gate.test.ts __tests__/history-eligibility.test.ts __tests__/jarvis.test.ts __tests__/jarvis-purity.test.ts __tests__/cockpit-routes.test.ts __tests__/cockpit-nav-coverage.test.ts __tests__/cockpit-stub-safety.test.ts __tests__/trust-claims.test.ts __tests__/docs-public-copy-scan.test.ts __tests__/metadata-banned-phrases.test.ts __tests__/snapshots-banned-phrases.test.ts __tests__/phone-number-policy.test.ts __tests__/readiness-gate-enforcement.test.ts __tests__/policy-only-winrate.test.ts __tests__/env-example-coverage.test.ts __tests__/audit-drawer-shape.test.ts"
+      },
+      {
+        "name": "vitest_web_cockpit",
+        "command": "npm.cmd run test:cockpit --workspace=apps/web",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 36.69,
+        "output_line_count": 32,
+        "output_tail": " \u001b[32m✓\u001b[39m __tests__/jarvis-trend.test.ts \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 9\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/cockpit-history-export.test.ts \u001b[2m(\u001b[22m\u001b[2m7 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 11\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/cockpit-link-usage.test.ts \u001b[2m(\u001b[22m\u001b[2m48 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 232\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/cockpit-jarvis-trend-api.test.ts \u001b[2m(\u001b[22m\u001b[2m7 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 8\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/jarvis-type-shape.test.ts \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 25\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/jarvis-audit-log.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 30\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/jarvis-diff.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 21\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/jarvis-purity.test.ts \u001b[2m(\u001b[22m\u001b[2m9 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 23\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/jarvis-history.test.ts \u001b[2m(\u001b[22m\u001b[2m10 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 52\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/jarvis.test.ts \u001b[2m(\u001b[22m\u001b[2m33 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 63\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/cockpit-sectional-rendering.test.ts \u001b[2m(\u001b[22m\u001b[2m12 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 5\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m __tests__/jarvis-diff-badge.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[90m 6\u001b[2mms\u001b[22m\u001b[39m\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m23 passed\u001b[39m\u001b[22m\u001b[90m (23)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m261 passed\u001b[39m\u001b[22m\u001b[90m (261)\u001b[39m\n\u001b[2m   Start at \u001b[22m 21:15:32\n\u001b[2m   Duration \u001b[22m 32.04s\u001b[2m (transform 15.71s, setup 30.31s, collect 127.47s, tests 1.11s, environment 133.16s, prepare 12.02s)\u001b[22m\nnpm notice run @sports/web@1.0.0 test:cockpit\nnpm notice run vitest run __tests__/cockpit-routes.test.ts __tests__/cockpit-nav-coverage.test.ts __tests__/cockpit-stub-safety.test.ts __tests__/cockpit-history-export.test.ts __tests__/cockpit-history-a11y.test.ts __tests__/cockpit-history-checklist.test.ts __tests__/cockpit-history-filter-contract.test.ts __tests__/cockpit-jarvis-api.test.ts __tests__/cockpit-jarvis-trend-api.test.ts __tests__/cockpit-sectional-rendering.test.ts __tests__/cockpit-lib-docstrings.test.ts __tests__/cockpit-link-usage.test.ts __tests__/jarvis.test.ts __tests__/jarvis-purity.test.ts __tests__/jarvis-history.test.ts __tests__/jarvis-trend.test.ts __tests__/jarvis-diff.test.ts __tests__/jarvis-diff-badge.test.ts __tests__/jarvis-audit-log.test.ts __tests__/jarvis-assessment-panel.test.ts __tests__/jarvis-type-shape.test.ts __tests__/jarvis-loader-shape.test.ts __tests__/stub-mode-contract.test.ts\n\u001b[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.\u001b[39m\n\u001b[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.\u001b[39m"
+      },
+      {
+        "name": "vitest_apps_web_shard_1_of_4",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_apps_web_shard_1_of_4.vitest.json --shard=1/4",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/apps/web",
+        "exit_code": 1,
+        "passed": false,
+        "cached": true,
+        "duration_sec": 572.93,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_apps_web_shard_1_of_4.vitest.json",
+        "suites_total": 1133,
+        "suites_passed": 1100,
+        "suites_failed": 33,
+        "suites_pending": 0,
+        "tests_total": 3388,
+        "tests_passed": 3341,
+        "tests_failed": 29,
+        "tests_skipped": 18,
+        "failed_tests_exact": [
+          "board-picks-route-equivalence.test.ts::Board vs Picks differentiation each page keeps its own job and data source",
+          "board-picks-route-equivalence.test.ts::Board vs Picks differentiation each page routes onward with its job named; neither links the other",
+          "compliance-scanner-payments-surfaces.test.ts::payments surfaces — live page source pricing copy still contains underwriting tokens the layer is meant to see",
+          "decision-hero-states.test.tsx::Record + Verify share one evidence room, no decorative plate both pages keep the shared evidence header rhythm",
+          "decision-hero-states.test.tsx::banned FIELD phrases stay off customer chrome homepage eyebrow states the concrete product",
+          "evidence-audit-drawer-focus-a11y.test.tsx::SUITE_ERROR",
+          "free-tier-gate-coupling.test.ts::pricing never advertises a surface the app does not serve the free tier still describes what a free visitor actually gets",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER unset (default): honest unpublished state renders the exact sealed headline and no numbers anywhere",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER unset (default): honest unpublished state renders ZERO numeric metric values — the guard's render path never executes here",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER unset (default): honest unpublished state still shows the sealed-vault design content — the four-field plaque and the verifier reference",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER unset (default): honest unpublished state carries the ALL-picks-default / transparency-tool sentence",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER unset (default): honest unpublished state never uses banned/marketing performance language",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER unset (default): honest unpublished state robots is noindex while unpublished",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER=true with today's empty ledger-view contract every metric cell renders the honest 'not yet substantiated' state, still no fabricated numbers",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER=true with today's empty ledger-view contract renders the guard-refusal element (not a blank cell) for every unsubstantiated metric",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER=true with today's empty ledger-view contract carries the ALL-picks-default / transparency-tool sentence and defaults the tier filter to All picks",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER=true with today's empty ledger-view contract robots is not forced to noindex once published",
+          "glass-ledger-page.test.tsx::/ledger — PUBLISH_LEDGER=true with a fully substantiated fixture metric (mocked ledger-view) renders the value, and all four bundle legs — coverage, lower bound, CLV backing, walk-forward lineage — in the DOM",
+          "ingest-depth-charts.test.ts::ingestDepthCharts parses legacy + new schemas, resolves playerId, replaces the season",
+          "machine-proof.test.ts::route handlers GET /llms.txt → 200 text/plain, agent manifest",
+          "main-content-id-coverage.test.ts::main-content id coverage (FE-09) resolves #main-content on every public page",
+          "mega-sweep-and-surface-truth.test.ts::Mega-Sweep 2026-11-06 & Live Surface Truth Wiring wires Week 9 Plays (verified 36-13-1, +20.14u), DraftKings/FanDuel DFS, 5 Multi-Channel Short-Form Video Scripts, and 7 Revenue Attribution Streams without leaking paid picks",
+          "migration-additivity.test.ts::every Prisma migration is additive (the rollback invariant) contains no destructive statement in any migration",
+          "migration-additivity.test.ts::index builds that would lock an existing table records which migrations build a non-CONCURRENT index on a pre-existing table",
+          "page-explainer-focus-a11y.test.tsx::SUITE_ERROR",
+          "public-copy-plain-language.test.ts::FE-10: /board and /picks speak plainly (sealed-era design) /board says it is under construction and points at Galaxy Picks and DFS",
+          "public-copy-plain-language.test.ts::FE-10: /board and /picks speak plainly (sealed-era design) /picks renders the sealed card only, in plain language",
+          "public-copy-plain-language.test.ts::C-107: the public calibration claim is MONEYLINE-scoped is rendered on /about from the single constant (/calibration is a stub)",
+          "public-copy-plain-language.test.ts::C-107: the public calibration claim is MONEYLINE-scoped /calibration renders no interactive chart and no chart-basis claim",
+          "sample-mode-ui.test.ts::Sample-mode UI contracts /picks is a static sealed card with no demo banner - the seal digest is its provenance",
+          "vercel-config-drift.test.ts::vercel.json drift keeps the inert repo-root copy byte-identical to the live one"
+        ],
+        "skipped_tests_exact": [
+          "ai-control-plane-budget-alpha-witness-pg.test.ts::W5 budget_alpha_witness against real Postgres both consumers independently observe the same GE2 window via two distinct processed_event sinks",
+          "ai-control-plane-budget-alpha-witness-pg.test.ts::W5 budget_alpha_witness against real Postgres a legal sequential window (no violation) yields zero observations — not a false-positive generator",
+          "ai-control-plane-budget-alpha-witness-pg.test.ts::W5 budget_alpha_witness against real Postgres a GE2 window with NO live budget reservation still witnesses, with liveBudgetReservationFound:false",
+          "ai-control-plane-formal-incident-pg.test.ts::Versioned envelope — FormalIncident + SrqcVersion against real Postgres a GE2 window writes exactly one GE2_PENDING incident; re-running writes no second row",
+          "ai-control-plane-formal-incident-pg.test.ts::Versioned envelope — FormalIncident + SrqcVersion against real Postgres a rejected-fp-unbound window writes one REJECTED_FP_UNBOUND incident",
+          "ai-control-plane-formal-incident-pg.test.ts::Versioned envelope — FormalIncident + SrqcVersion against real Postgres classifies a non-GE2 violation as REJECTED_FP_UNBOUND (direct kind-mapping proof)",
+          "ai-control-plane-formal-incident-pg.test.ts::Versioned envelope — FormalIncident + SrqcVersion against real Postgres a legal sequential window writes ZERO incident rows",
+          "ai-control-plane-formal-incident-pg.test.ts::Versioned envelope — FormalIncident + SrqcVersion against real Postgres SrqcVersion: candidate + activate yields exactly one active; a second activation supersedes the first",
+          "ai-control-plane-formal-incident-pg.test.ts::Versioned envelope — FormalIncident + SrqcVersion against real Postgres an incident stamps the active SrqcVersion when one is active",
+          "checkout-attempt-db.integration.test.ts::CheckoutAttempt on real Postgres 100 CONCURRENT same-intent requests converge on ONE active attempt and ONE claim winner",
+          "checkout-attempt-db.integration.test.ts::CheckoutAttempt on real Postgres same intent + CHANGED fingerprint conflicts instead of reusing the key",
+          "checkout-attempt-db.integration.test.ts::CheckoutAttempt on real Postgres terminal history stays traceable: the released generation keeps its original intent id",
+          "checkout-attempt-db.integration.test.ts::CheckoutAttempt on real Postgres CHECK constraints reject contract violations at the DB layer",
+          "checkout-attempt-db.integration.test.ts::CheckoutAttempt on real Postgres RETENTION: deleting the user DETACHES the attempt (SET NULL), never deletes it",
+          "governed-gate-pg.test.ts::createGovernedSrqcGate against real Postgres REFUSEs under SRQC_ENFORCE=1 for a real two-pending-attempt window (ai_attempt events)",
+          "governed-gate-pg.test.ts::createGovernedSrqcGate against real Postgres SHADOW (no SRQC_ENFORCE) never REFUSEs, even for the same GE2 window",
+          "governed-gate-pg.test.ts::createGovernedSrqcGate against real Postgres non-gated tools ADMIT without touching the ledger",
+          "depth-chart-continuity.integration.test.ts::depth chart continuity against the live table returns real, signed, non-constant deltas for NFL teams"
+        ]
+      },
+      {
+        "name": "vitest_apps_web_shard_2_of_4",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_apps_web_shard_2_of_4.vitest.json --shard=2/4",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/apps/web",
+        "exit_code": 1,
+        "passed": false,
+        "cached": true,
+        "duration_sec": 472.02,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_apps_web_shard_2_of_4.vitest.json",
+        "suites_total": 1032,
+        "suites_passed": 1002,
+        "suites_failed": 30,
+        "suites_pending": 0,
+        "tests_total": 3570,
+        "tests_passed": 3510,
+        "tests_failed": 22,
+        "tests_skipped": 38,
+        "failed_tests_exact": [
+          "board-class-banner-honesty.test.ts::board class UI honesty parked /board page renders no board-class banner (no live board to classify)",
+          "c224-confidence-not-a-probability-4-surfaces.test.ts::C-224: app/board/page.tsx does not render a win rate at all — reserved for the governed CLV headline policy",
+          "c224-confidence-not-a-probability-4-surfaces.test.ts::C-224: app/glass-ledger/page.tsx intro copy reads as a separation claim, not a calibration/probability claim",
+          "claude-md-accuracy.test.ts::CLAUDE.md documents env vars that fail the app closed documents CRON_SECRET",
+          "commercial-pages-launch-qa.test.ts::launch-facing commercial page QA keeps the exact commercial promise visible on each route",
+          "csp-single-source.test.ts::Content-Security-Policy single source of truth keeps the two vercel.json copies agreeing about CSP",
+          "disclosure-surface.test.ts::responsible-gambling helpline reachability every customer-facing content route renders the helpline",
+          "disclosure-surface.test.ts::existing disclosures stay put the stated refund window is the same on /terms, /pricing and /faq",
+          "freshness-coverage.test.ts::freshness-truth coverage audit /board renders a freshness signal under-construction stub renders no data-derived numbers, so it owes no freshness stamp",
+          "freshness-coverage.test.ts::freshness-truth coverage audit /picks renders a freshness signal sealed card renders the seal digest as provenance, not a live freshness badge",
+          "graded-pool-live.test.ts::graded pool LIVE (node runtime) fetches nflverse and produces a real, band-ordered pool",
+          "intelligence-observatory.test.ts::Live Intelligence & Reasoning Growth Observatory builds a snapshot with exact canonical defaults",
+          "intelligence-observatory.test.ts::Live Intelligence & Reasoning Growth Observatory merges partial overrides correctly",
+          "no-double-brand-title.test.ts::no double brand in page titles (FE-13) every page whose first title already names the brand marks it absolute",
+          "no-fake-percentages.test.ts::no fake percentages on customer pages page has no hardcoded outcome-percentage: C:\\Users\\Garrett\\Sports_prepack_audit_wt\\apps\\web\\components\\redline\\redline-world.tsx",
+          "states-matrix-slice.test.ts::states matrix — pricing explainer cards never render headed-but-empty both explainer paragraphs carry static fallbacks",
+          "dfs-optimizer-optimality.test.ts::dfs optimizer — optimality (oracle-checked) reaches the CP-SAT optimum for 'cash' (stack=false)",
+          "dfs-optimizer-optimality.test.ts::dfs optimizer — optimality (oracle-checked) reaches the CP-SAT optimum for 'cash' (stack=true)",
+          "dfs-optimizer-optimality.test.ts::dfs optimizer — optimality (oracle-checked) reaches the CP-SAT optimum for 'gpp' (stack=false)",
+          "dfs-optimizer-optimality.test.ts::dfs optimizer — optimality (oracle-checked) reaches the CP-SAT optimum for 'gpp' (stack=true)",
+          "dfs-optimizer-optimality.test.ts::dfs optimizer — optimality (oracle-checked) reaches the CP-SAT optimum for 'leverage' (stack=false)",
+          "dfs-optimizer-optimality.test.ts::dfs optimizer — optimality (oracle-checked) reaches the CP-SAT optimum for 'leverage' (stack=true)"
+        ],
+        "skipped_tests_exact": [
+          "actor-hardening-db.integration.test.ts::durable limiter on real Postgres (cross-instance) two limiter instances over two CONNECTIONS enforce one atomic quota under concurrency",
+          "actor-hardening-db.integration.test.ts::durable limiter on real Postgres (cross-instance) a fresh window resets the quota; pruning removes expired counters",
+          "actor-hardening-db.integration.test.ts::durable limiter on real Postgres (cross-instance) zero-limit consume never authorizes and writes nothing",
+          "actor-hardening-db.integration.test.ts::actor receipts on real Postgres actor_receipts accepts the full audit contract and audit tables carry the receipt columns",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres DB cap CHECK: an over-cap write on an ACTIVE window is REJECTED by Postgres",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres DB CHECK: negative money is unrepresentable",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres DB cap CHECK: over-cap IS representable together with OVERAGE_LOCKED (preserved real charge)",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres the conditional UPDATE admits a fitting hold (1 row) and refuses an over-cap one (0 rows)",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres unique (invocationId, windowId, reservationVersion) is DB-enforced",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres window FK is RESTRICT: deleting a window can NEVER cascade away reservation evidence",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres provisional-state CHECK is biconditional: a settled-without-an-amount row is unrepresentable",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres actual > hold preserves the charge over-cap, locks the window, blocks further reserves",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres 100 concurrent end-to-end invocations stay within the cap",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres crash between reserve and dispatch: the sweeper frees the hold after proving a clean ledger",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres crash between dispatch and settle: the sweeper converts the hold to an UNRELEASABLE reconciliation hold",
+          "ai-control-plane-budget-pg.test.ts::§10.9 budget acceptance against real Postgres an ambiguous end-to-end invocation retains every hold (§10.1)",
+          "ai-control-plane-credit-admission.test.ts::[integration] atomic credit authorization against REAL Postgres 100 concurrent authorize() on a grant that can fund 60 -> exactly 60 admitted, invariant holds, NO double-spend",
+          "ai-control-plane-credit-admission.test.ts::[integration] atomic credit authorization against REAL Postgres settle/release against real Postgres: reserved returns to 0 either way, double-settle guarded",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres finalizeSuccess: an applied call writes exactly one deterministic ledger row",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres finalizeSuccess: a FENCED call (wrong owner token) writes ZERO ledger rows",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres finalizeSuccess: sequential double delivery (retry of the same call) writes exactly one row",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres finalizeSuccess: CONCURRENT double delivery (racing redelivery) writes exactly one row",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres finalizeFailure (AMBIGUOUS): applied vs fenced vs double-delivered ledger behavior",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres recordAttemptFailure: an applied call writes one row; retried (idempotent-by-value) UPDATE still writes exactly one ledger row",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres recordAttemptFailure: a FENCED call (wrong owner token) throws and writes zero ledger rows",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres alreadyProcessed / markProcessed (Pattern D gate): marking twice leaves exactly one processed_event row",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres the Pattern D side-effect idiom is a true no-op on the second invocation",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres F1: stealing an expired RUNNING invocation with an unproven (DISPATCHED) attempt writes exactly one FINALIZED_AMBIGUOUS ledger row",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres F3: calling startAttempt twice with identical input does not throw and writes exactly one attempt + one ATTEMPT_STARTED ledger row",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres F3: startAttempt with a genuinely lost fence (wrong owner token) still throws",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres F6: readRecentEvents returns two same-createdAt rows in insertion (seq) order",
+          "ai-control-plane-event-ledger-pg.test.ts::Track A — control event ledger acceptance against real Postgres F4: two concurrent claimForProcessing calls for the same (eventId, sink) → exactly one 'claimed'",
+          "formal-receipt-cron.test.ts::Track B — formal-receipt job against real Postgres a legal sequential shape (attempt fails before the next starts) produces ZERO violations",
+          "formal-receipt-cron.test.ts::Track B — formal-receipt job against real Postgres a synthetic GE2 shape (two ATTEMPT_STARTED for one invocation, no terminal between) is detected",
+          "formal-receipt-cron.test.ts::Track B — formal-receipt job against real Postgres running the SAME window twice logs the violation at most once (exactly-once via processed_event)",
+          "formal-receipt-cron.test.ts::Track B — formal-receipt job against real Postgres readRecentEvents source filter is unused here — a window with no events is a clean, zero-violation no-op",
+          "governed-receipts-pg.test.ts::AgentReceipt persistence — real Postgres persists a signed ADMIT receipt and round-trips it by receiptId",
+          "governed-receipts-pg.test.ts::AgentReceipt persistence — real Postgres persistReceipt upsert is idempotent on receiptId"
+        ]
+      },
+      {
+        "name": "vitest_apps_web_shard_3_of_4",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_apps_web_shard_3_of_4.vitest.json --shard=3/4",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/apps/web",
+        "exit_code": 1,
+        "passed": false,
+        "cached": true,
+        "duration_sec": 530.08,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_apps_web_shard_3_of_4.vitest.json",
+        "suites_total": 1082,
+        "suites_passed": 1047,
+        "suites_failed": 35,
+        "suites_pending": 0,
+        "tests_total": 3307,
+        "tests_passed": 3278,
+        "tests_failed": 24,
+        "tests_skipped": 5,
+        "failed_tests_exact": [
+          "brand-safety-v2.test.ts::BS-040 — secret-scan pre-commit hook --all scans every tracked file, not just the staged set",
+          "cockpit-office-3d-bot-hq.test.ts::Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API World strictly passes all guardrail rules: zero em/en-dashes, zero percent symbols, official 47-19-1 ledger, and NYJ/SF roster truth",
+          "conversion-path-contrast.test.ts::conversion-path contrast (computed from tailwind tokens) pins the page canvas the alpha maths composites against",
+          "data-first-public-surfaces.test.ts::data-first public surfaces fantasy tool routes resolve directly — no middleware bounce — and stay honest at page level",
+          "docs-public-copy-scan.test.ts::Docs — public-copy banned-phrase scan AGENTS.md contains no banned phrases outside code spans",
+          "f28-home-hero-cta.test.ts::F-28: front door CTAs and board door copy primary CTA links to /packages",
+          "fe17-cursor-and-holotilt.test.ts::FE-17: GalaxyCursor and HoloTilt scope GalaxyCursor is mounted on the home hero",
+          "honest-degraded-states.test.ts::/board - the parked stub renders no board state at all renders the under-construction notice and no live-board UI",
+          "palette-cohesion.test.ts::design-token palette cohesion uses design tokens, not legacy gray/slate, across app + components",
+          "picks-page-policy-gate.test.ts::/picks sealed-board policy contract uses the sealed card as its only data source (no runtime picks fetch, no fabricated list)",
+          "picks-page-policy-gate.test.ts::/picks sealed-board policy contract only publish-allowed PUBLISH rows can render (PASS/abstain rows are structurally excluded)",
+          "picks-page-policy-gate.test.ts::/picks sealed-board policy contract shows the seal digest so the locked card is verifiable",
+          "picks-page-policy-gate.test.ts::/picks sealed-board policy contract carries no unearned performance copy",
+          "picks-paywall-copy-truth.test.ts::/picks - the sealed locked board is the deliberate, published model renders the sealed Week 8 card as its only data source (no fetch, no fabricated list)",
+          "picks-paywall-copy-truth.test.ts::/picks - the sealed locked board is the deliberate, published model filters to publish-allowed PUBLISH rows only - PASS/abstained markets cannot render",
+          "picks-paywall-copy-truth.test.ts::/picks - the sealed locked board is the deliberate, published model presents the card as the sealed record with its seal digest, not a live purchasable board",
+          "picks-paywall-copy-truth.test.ts::/picks - the sealed locked board is the deliberate, published model the record banner's numbers trace to the committed ledger (derived, never re-typed)",
+          "picks-states-conversion.test.ts::/picks - static sealed rendering has no runtime-fetch states to regress mounts no hardcoded pick fixtures - cards render only from the sealed card",
+          "picks-states-conversion.test.ts::/picks - static sealed rendering has no runtime-fetch states to regress keeps the conversion path to the paid storefront",
+          "public-consensus-surfaces.test.ts::public claim surface wiring (preview + dashboard + API) /picks renders sealed rows only and makes no bookmaker claim",
+          "public-surface-sweep.test.ts::public surface keep-out sweep no ungated public route or page names keep-out material",
+          "purge-stale-packages.test.ts::POST /api/storefront/purge-stale-packages authorized requests archive stale WEEK_08 promotions/tasks and return 200 with active_slate_target: WEEK_09_LIVE",
+          "whop-telegram-integrations.test.ts::Whop & Telegram Integrations Suite Telegram Formatting & Bot Webhook POST /api/webhooks/telegram strictly gates /picks, /props, /parlays, /dfs until /unlock is verified",
+          "workers-import-boundary.test.ts::workers/ import boundary no file under apps/web or packages imports from workers/"
+        ],
+        "skipped_tests_exact": [
+          "ai-control-plane-cti-miner-pg.test.ts::cti-miner against real Postgres a window one step from GE2 writes exactly one candidate; re-running writes none (dedup)",
+          "ai-control-plane-cti-miner-pg.test.ts::cti-miner against real Postgres a fully-safe window (attempt started then finalized) writes zero candidates",
+          "compliance-store-pg.test.ts::compliance store — real Postgres persistEvidence writes a row and sampleEvidence reads it back",
+          "compliance-store-pg.test.ts::compliance store — real Postgres openException writes an open exception visible via listOpenExceptions",
+          "compliance-store-pg.test.ts::compliance store — real Postgres saveRun writes a run visible via loadLastRun"
+        ]
+      },
+      {
+        "name": "vitest_apps_web_shard_4_of_4",
+        "command": "C:\\Users\\Garrett\\Sports_prepack_audit_wt\\node_modules\\.bin\\vitest.cmd run --minWorkers=1 --maxWorkers=4 --reporter=json --outputFile=C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/_stage3_runner_logs/vitest_apps_web_shard_4_of_4.vitest.json --shard=4/4",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt/apps/web",
+        "exit_code": 1,
+        "passed": false,
+        "cached": true,
+        "duration_sec": 485.55,
+        "output_line_count": 1,
+        "output_tail": "[cached] vitest_apps_web_shard_4_of_4.vitest.json",
+        "suites_total": 1069,
+        "suites_passed": 1046,
+        "suites_failed": 23,
+        "suites_pending": 0,
+        "tests_total": 7771,
+        "tests_passed": 7720,
+        "tests_failed": 14,
+        "tests_skipped": 37,
+        "failed_tests_exact": [
+          "dfs-honesty-contract.test.ts::the DFS page discloses the pool state as a function of that state carries both disclosures, so neither the live nor the dark state is silent",
+          "docs-claim-accuracy.test.ts::docs: every documented npm script exists names no npm script that package.json does not declare",
+          "docs-claim-accuracy.test.ts::docs: agent-facing docs name only paths that exist resolves every repo path in the skill packs and the operator runbook",
+          "docs-pricing-figures.test.ts::docs  -  retired money-path figures stay retired no live-guidance doc carries the retired-pro-monthly figure",
+          "hermes-plugin-universe-suite.test.ts::Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Installer strictly passes all guardrail rules: zero em/en-dashes, zero percent symbols, no voided Nov 5 batch, and no prohibited vendor SDK imports",
+          "marketing-science-conversion-engine.test.ts::24-Paper Marketing Science Conversion Engine & Thursday Live Storefront Route serves the live Thursday conversion pack API with Stage-0-clean players and XX/100 confidence",
+          "packages-storefront-paywall.test.tsx::Packages Storefront & Paywall Reveal Vault renders unlocked PaywallRevealCard in-place with XX/100 confidence and honest BET THIS / PASS · NO BET badges",
+          "packages-storefront-paywall.test.tsx::Packages Storefront & Paywall Reveal Vault gates inactive routes with Under Construction notice (/picks, /board, /calibration, /sgp-projections un-gated to live verified cards), and keeps app/page.tsx free of DoorCard, FieldBoardTicker, NoBetGateChapter, and FieldRecordPanel",
+          "picks-mobile-tap-targets.test.ts::picks mobile ergonomics keeps the sealed-board page's customer links mobile tappable",
+          "policy-only-winrate.test.ts::Policy module is the only path to a public win-rate lib\\ledger\\verify-math.test.ts contains no ad-hoc win-rate math",
+          "public-consensus-claim.test.ts::public claim surface contract (T-1) /picks renders sealed rows only and makes no bookmaker claim",
+          "public-unfinished-copy-fence.test.ts::public unfinished-copy fence keeps public app pages free of unfinished advertising copy",
+          "storefront-stripdown.test.ts::storefront stripdown: surfaces render renders HomePage with the field and the responsible close",
+          "storefront-stripdown.test.ts::storefront stripdown: surfaces render renders PackagesPage with the Week 8 sealed board hero"
+        ],
+        "skipped_tests_exact": [
+          "ai-control-plane-ablation-counters-pg.test.ts::W6 ablation counters against real Postgres computes correct per-kind and overall counters, excluding rows outside the window",
+          "ai-control-plane-ablation-counters-pg.test.ts::W6 ablation counters against real Postgres returns precision:null when nothing in a kind has been reviewed (not 0, not NaN)",
+          "ai-control-plane-ablation-counters-pg.test.ts::W6 ablation counters against real Postgres an empty window returns total:0, precision:null, reviewCoveragePct:null, byKind:[]",
+          "ai-control-plane-ablation-counters-pg.test.ts::W6 ablation counters against real Postgres computeAblationCounters is read-only: running it twice never changes row content",
+          "ai-control-plane-ablation-counters-pg.test.ts::W6 ablation counters against real Postgres recordFormalIncidentReview labels a row, which computeAblationCounters then reflects",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres 100 concurrent identical claims → exactly ONE ACQUIRED (one dispatch)",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres active lease → IN_PROGRESS; expired lease → exactly one fenced steal among concurrent stealers",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres the stale owner's finalize is fenced out after a steal",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres same requestId + different fingerprint → FINGERPRINT_CONFLICT",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres terminal SUCCEEDED replay returns the persisted result without a new claim",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres §9.5 DB constraints: confirmed fields without reconciledAt and negative billed are rejected",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres §9.6 BLOCKED rows are structurally non-dispatchable (CHECK constraint)",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres a stale claim with a recorded AMBIGUOUS attempt is forced AMBIGUOUS on steal — never ACQUIRED (re-spend fence)",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres a stale claim with an attempt still open in DISPATCHED is forced AMBIGUOUS on steal",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres a stale claim whose every attempt failed CLEANLY is still stolen for re-dispatch",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres finalizeSuccess commits invocation + attempt atomically; a fenced finalize touches NEITHER row",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres a CONFIGURATION_BLOCKED row is reclaimed exactly once among concurrent retries, keeping the incident fields",
+          "ai-control-plane-claim-pg.test.ts::§9.2 atomic claim against real Postgres POLICY_BLOCKED rows stay terminal: a later claim replays, never reclaims",
+          "ai-control-plane-claim-pg.test.ts::§9.7 recovery queue drain against real Postgres two concurrent drainers NEVER claim the same row (FOR UPDATE SKIP LOCKED)",
+          "ai-control-plane-claim-pg.test.ts::§9.7 recovery queue drain against real Postgres drain replays a stranded FINALIZE_SUCCESS: invocation + attempt finalized, entry delivered",
+          "ai-control-plane-claim-pg.test.ts::§9.7 recovery queue drain against real Postgres drain upgrades a steal-forced AMBIGUOUS to SUCCEEDED when the stranded success record IS the proof",
+          "ai-control-plane-claim-pg.test.ts::§9.7 recovery queue drain against real Postgres drain replays a stranded FINALIZE_AMBIGUOUS into a durable AMBIGUOUS terminal",
+          "ai-control-plane-claim-pg.test.ts::§9.7 recovery queue drain against real Postgres an entry that exhausts its attempt cap becomes an EXPLICIT abandonment, never a silent drop",
+          "ai-control-plane-claim-pg.test.ts::§9.7 recovery queue drain against real Postgres deleting an invocation with undelivered recovery rows is impossible (RESTRICT, §6.2)",
+          "ai-control-plane-kernel-pg.test.ts::LSRQC KERNEL v1 against real Postgres emit: no active version → 0 minted; active v1 + open cti → 1 (activeVersionAtMint=1, open); re-run → 0",
+          "ai-control-plane-kernel-pg.test.ts::LSRQC KERNEL v1 against real Postgres rescore: recomputes stored stats under current traffic (Prop3 anti-staleness)",
+          "ai-control-plane-kernel-pg.test.ts::LSRQC KERNEL v1 against real Postgres skill-augmented runner: an open proposal adds delta over the baseline and logs it",
+          "ai-control-plane-kernel-pg.test.ts::LSRQC KERNEL v1 against real Postgres accept → activate → admit: accept flips v2 active, proposal accepted; admit stamps srqcVersion=2; v3 supersedes (single active)",
+          "ai-control-plane-shadow-metrics-pg.test.ts::W1 shadow metrics against real Postgres a GE2 window writes a shadow row with ge2Count:1, admitWouldRefuse:1, and SHADOW admission still ADMITs",
+          "ai-control-plane-shadow-metrics-pg.test.ts::W1 shadow metrics against real Postgres a clean (legal sequential) window also writes a shadow row, with zero counts",
+          "ai-control-plane-shadow-metrics-pg.test.ts::W1 shadow metrics against real Postgres re-running over the SAME window writes a SECOND shadow row (no dedup on window)",
+          "cash-os-pg.test.ts::Cash OS — recordActivation + computeCashSnapshot against real Postgres first call inserts count=1",
+          "cash-os-pg.test.ts::Cash OS — recordActivation + computeCashSnapshot against real Postgres second call same (userId, day, surface) increments to 2",
+          "cash-os-pg.test.ts::Cash OS — recordActivation + computeCashSnapshot against real Postgres a different surface the same day inserts a new row",
+          "cash-os-pg.test.ts::Cash OS — recordActivation + computeCashSnapshot against real Postgres a different day for the same surface inserts a new row",
+          "cash-os-pg.test.ts::Cash OS — recordActivation + computeCashSnapshot against real Postgres utcDayFloor truncates to UTC midnight",
+          "cash-os-pg.test.ts::Cash OS — recordActivation + computeCashSnapshot against real Postgres computeCashSnapshot aggregates real revenue_event + product_activation rows"
+        ]
+      }
+    ],
+    "pytest_batches": [
+      {
+        "name": "pytest_week10_engines",
+        "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest intelligence/week10_engines_2026_11_13 -q -ra --junitxml=C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_week10_engines.junit.xml",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 0.0,
+        "output_line_count": 0,
+        "output_tail": "reused cached pytest_week10_engines.junit.xml",
+        "cached_from": "C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_week10_engines.junit.xml",
+        "tests_total": 226,
+        "tests_passed": 226,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "pytest_friday_new_integrations",
+        "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest intelligence/tests/test_parallel_ai_client.py intelligence/tests/test_permanent_sequenced_workflow_and_lessons.py intelligence/tests/test_week10_reasoning_mind_bridge.py intelligence/tests/test_master_plan_gates.py intelligence/tests/test_sovereign_to_cognitive_router_wiring.py -q -ra --junitxml=C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_friday_new_integrations.junit.xml",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 29.23,
+        "output_line_count": 1,
+        "output_tail": "...........................................................              [100%]",
+        "tests_total": 59,
+        "tests_passed": 59,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "pytest_intelligence_tests_all",
+        "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest intelligence/tests -q -ra --junitxml=C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_intelligence_tests_all.junit.xml",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 1,
+        "passed": false,
+        "duration_sec": 0.0,
+        "output_line_count": 0,
+        "output_tail": "reused cached pytest_intelligence_tests_all.junit.xml",
+        "cached_from": "C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_intelligence_tests_all.junit.xml",
+        "tests_total": 4,
+        "tests_passed": 0,
+        "tests_failed": 4,
+        "tests_skipped": 0,
+        "failed_tests_exact": [
+          "::tests.e2e.test_pipeline_integration_e2e [collection failure]",
+          "::tests.e2e.test_research_gates_e2e [collection failure]",
+          "::tests.e2e.test_t1_real_e2e [collection failure]",
+          "::tests.test_grounded_span [collection failure]"
+        ],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "pytest_root_tests_shard_1_of_4",
+        "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest tests/test_analytics_coverage.py tests/test_api_docs_coverage.py tests/test_biomech_kinetic_translation.py tests/test_biomech_quarantine.py tests/test_build_corpus_index_priority.py tests/test_calibration_analysis.py tests/test_calibration_story.py tests/test_core_nfl_schemes_and_systems.py tests/test_corpus_and_proxy_parsers.py tests/test_corpus_contract.py tests/test_corpus_gate.py tests/test_corpus_index.py tests/test_corpus_ingest.py tests/test_corpus_retriever.py tests/test_coverage_sequence_model.py tests/test_crop_pose.py tests/test_data_quality.py -q -ra --junitxml=C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_root_tests_shard_1_of_4.junit.xml",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 0,
+        "passed": true,
+        "duration_sec": 0.0,
+        "output_line_count": 0,
+        "output_tail": "reused cached pytest_root_tests_shard_1_of_4.junit.xml",
+        "cached_from": "C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_root_tests_shard_1_of_4.junit.xml",
+        "tests_total": 233,
+        "tests_passed": 217,
+        "tests_failed": 0,
+        "tests_skipped": 16,
+        "failed_tests_exact": [],
+        "skipped_tests_exact": [
+          "tests.test_corpus_retriever::test_index_loads_from_real_manifest (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_retrieve_returns_relevant_paper_first (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_hits_carry_gate_stamp (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_citation_shape (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_retracted_excluded_by_default (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_retracted_available_when_opted_in (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_tool_backend_contract (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_tool_backend_rejects_unknown_tool (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_tool_backend_rejects_empty_query (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_tool_backend_clamps_k (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_no_match_is_reported_not_invented (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_retrieve_uses_fused_ranker_by_default (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_fused_retrieve_prioritizes_gridiron_for_gridiron_query (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_pose_estimation_football_returns_football_tracking_work (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_fused_false_reproduces_raw_bm25_order (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)",
+          "tests.test_corpus_retriever::test_render_shows_domain_decision (manifest not present at C:\\Users\\Garrett\\AppData\\Local\\hermes\\cache\\scratch\\research_corpus\\manifest.jsonl)"
+        ]
+      },
+      {
+        "name": "pytest_root_tests_shard_2_of_4",
+        "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest tests/test_db_architecture_check.py tests/test_delegation_preflight.py tests/test_dfs_5000_page_corpus_and_7_equations.py tests/test_epistemic_gate_and_week9_sanity.py tests/test_factorized_coverage_and_role_cv.py tests/test_fulltext_backfill.py tests/test_fulltext_backfill_concurrent.py tests/test_gse_connected_workflow_v2_full_repo.py tests/test_honest_equation_executor_unicode_and_guards.py tests/test_ingestion_manifest.py tests/test_ledger_truth.py tests/test_live_voice_app.py tests/test_migration_observability.py tests/test_mind_guardian.py tests/test_mnf_card_integrity.py tests/test_morning_analytics_sweep_wiring.py tests/test_mutation_guards.py -q -ra --junitxml=C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_root_tests_shard_2_of_4.junit.xml",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 1,
+        "passed": false,
+        "duration_sec": 0.0,
+        "output_line_count": 0,
+        "output_tail": "reused cached pytest_root_tests_shard_2_of_4.junit.xml",
+        "cached_from": "C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_root_tests_shard_2_of_4.junit.xml",
+        "tests_total": 176,
+        "tests_passed": 168,
+        "tests_failed": 8,
+        "tests_skipped": 0,
+        "failed_tests_exact": [
+          "tests.test_dfs_5000_page_corpus_and_7_equations::test_7_dfs_equations_execute_and_wire_into_layer_4_gate [ModuleNotFoundError: No module named 'reasoning']",
+          "tests.test_dfs_5000_page_corpus_and_7_equations::test_python_packaging_pyproject_and_init_files [AssertionError: Missing __init__.py in C:\\Users\\Garrett\\Sports_prepack_audit_wt\\intelligence\\architecture\nassert False\n +  where False = is_]",
+          "tests.test_gse_connected_workflow_v2_full_repo::test_stage0_roster_and_contamination_gate [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_gse_connected_workflow_v2_full_repo::test_connected_workflow_master_receipt_and_markdown_dossier [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_gse_connected_workflow_v2_full_repo::test_dynamic_32_team_league_wide_denylist [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_gse_connected_workflow_v2_full_repo::test_live_books_and_pdfs_executable_engine [AssertionError: assert 'JAX' in {}]",
+          "tests.test_honest_equation_executor_unicode_and_guards::test_subscripted_macro_no_longer_trips_on_the_residual_underscore [AssertionError: assert 'Delta tau_Out' in 'Delta_tau_Out = 3.5'\n +  where 'Delta_tau_Out = 3.5' = HonestExecutionResult(status='PARSED_EVALU]",
+          "tests.test_morning_analytics_sweep_wiring::test_seattle_red_zone_inversion_and_player_highlights [KeyError: 'Maye vs rest (26g)']"
+        ],
+        "skipped_tests_exact": []
+      },
+      {
+        "name": "pytest_root_tests_shard_3_of_4",
+        "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest tests/test_nfl_deep_sweep_v2.py tests/test_nfl_video_vl_harvester.py tests/test_nflreadpy_adapter.py tests/test_nov03_football_metrics.py tests/test_pbp_conservation_coupling.py tests/test_physics_biophysics_and_oncology_21_repo_engine.py tests/test_picks_export.py tests/test_pm_sweep_convergence_kernels.py tests/test_pre_sim_full_layer_gate.py tests/test_probabilistic_and_control_19_repo_engine.py tests/test_red_team_7vector_forensic_audit.py tests/test_research_mindset_features.py tests/test_research_pipeline_dag.py tests/test_research_specialist.py tests/test_retrieval_eval.py tests/test_route_ball_qb_load.py tests/test_run_lock.py -q -ra --junitxml=C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_root_tests_shard_3_of_4.junit.xml",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 1,
+        "passed": false,
+        "duration_sec": 0.0,
+        "output_line_count": 0,
+        "output_tail": "reused cached pytest_root_tests_shard_3_of_4.junit.xml",
+        "cached_from": "C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_root_tests_shard_3_of_4.junit.xml",
+        "tests_total": 220,
+        "tests_passed": 214,
+        "tests_failed": 4,
+        "tests_skipped": 2,
+        "failed_tests_exact": [
+          "tests.test_pbp_conservation_coupling::test_showdown_floor_rejects_25000 [assert 48500 == 48000\n +  where 48500 = showdown_salary_floor(25000)]",
+          "tests.test_red_team_7vector_forensic_audit::test_vector2_content_pack_4_lineups_and_json_packets_match_real_dk_csv [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_red_team_7vector_forensic_audit::test_vector2_two_stage_19_equations_non_constant_and_strict_json [AssertionError: EQ-DFS-14 Tweedie zero prob collapsed to constant: {0.00011, 3.8e-05, 9e-06, 5e-05, 8e-06, 0.000158, 0.000213, 7.4e-05, 3.2e]",
+          "tests.test_red_team_7vector_forensic_audit::test_vector4_top_10_props_match_dossiers_on_disk [KeyError: 'Malik Davis']"
+        ],
+        "skipped_tests_exact": [
+          "tests.test_retrieval_eval::test_production_ranker_beats_raw_bm25_on_mrr (corpus manifest not present in this environment)",
+          "tests.test_retrieval_eval::test_production_ranker_has_no_misses (corpus manifest not present in this environment)"
+        ]
+      },
+      {
+        "name": "pytest_root_tests_shard_4_of_4",
+        "command": "C:\\Users\\Garrett\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m pytest tests/test_scientific_and_agentic_15_repo_engine.py tests/test_stage0_qb1_live_starter_resolution.py tests/test_stage0_zero_hallucination_gate.py tests/test_structured_workflow_runner.py tests/test_thirty_three_repo_frontier_integration.py tests/test_ticket_exposure_guard.py tests/test_train_market_specific_calibration_heads.py tests/test_trench_pipeline_integration.py tests/test_trench_pocket_physics.py tests/test_twelve_repo_frontier_integration.py tests/test_week8_forensic_fixes.py tests/test_week8_post_slate_fixes.py tests/test_week9_dual_slate_dfs.py tests/test_week9_forensic_autopsy_fixes.py tests/test_week9_voronoi_and_chip_adapters.py tests/test_weeks_1_to_8_replay_trainer.py tests/test_workflow_runner.py -q -ra --junitxml=C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_root_tests_shard_4_of_4.junit.xml",
+        "cwd": "C:/Users/Garrett/Sports_prepack_audit_wt",
+        "exit_code": 1,
+        "passed": false,
+        "duration_sec": 0.0,
+        "output_line_count": 0,
+        "output_tail": "reused cached pytest_root_tests_shard_4_of_4.junit.xml",
+        "cached_from": "C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\_stage3_runner_logs\\pytest_root_tests_shard_4_of_4.junit.xml",
+        "tests_total": 188,
+        "tests_passed": 175,
+        "tests_failed": 12,
+        "tests_skipped": 1,
+        "failed_tests_exact": [
+          "tests.test_stage0_zero_hallucination_gate::test_stage0_allowlist_and_confirmed_starters [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_stage0_zero_hallucination_gate::test_stage0_contamination_gate_raises_on_hallucinated_or_excluded_players [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_week8_forensic_fixes::test_stage0_allowlist_and_confirmed_starters [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_week8_forensic_fixes::test_stage0_contamination_gate_raises_on_hallucinated_or_excluded_players [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_week8_forensic_fixes::test_pbp_conservation_coupling_and_jev_degraded_and_showdown_floor [assert 48500 == 48000\n +  where 48500 = showdown_salary_floor(25000)]",
+          "tests.test_week8_post_slate_fixes::test_pbp_conservation_coupling_and_jev_degraded_and_showdown_floor [assert 48500 == 48000\n +  where 48500 = showdown_salary_floor(25000)]",
+          "tests.test_week9_dual_slate_dfs::test_classic_loader_normalizes_columns [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_week9_dual_slate_dfs::test_build_all_writes_packets_and_markdown [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_week9_dual_slate_dfs::test_showdown_packet_lineups_are_legal [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_week9_dual_slate_dfs::test_classic_packet_lineups_are_legal [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_week9_dual_slate_dfs::test_build_is_deterministic_for_a_fixed_seed [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]",
+          "tests.test_week9_dual_slate_dfs::test_real_exports_are_week9 [scripts.ops.preflight_live_roster_injury_gate.PreflightRosterGateError: roster config as_of 2026-11-07 is 6 days old (max 5); refresh transa]"
+        ],
+        "skipped_tests_exact": [
+          "tests.test_stage0_qb1_live_starter_resolution::test_week10_hou_cle_allowlist_qb1_is_stage0_live_starter (Week 10 preflight config / HOU@CLE board / 2026 PBP parquet not present)"
+        ]
+      }
+    ]
+  },
+  "week10_dry_run_1d": {
+    "slate_summary": {
+      "remaining_games_simulated": 13,
+      "n_sims_per_game": 10000,
+      "total_monte_carlo_games_simulated": 130000,
+      "slate_pure_seal_merkle_sha256": "757479c9db1f025b1c589cab8437154e446b76e23be291e4af1ba62c846374d6",
+      "ne_det_roof": "outdoor",
+      "kc_atl_roof": "dome",
+      "tnf_excluded": "WSH@NYG (401873052, Final WSH 24 - NYG 21 on 2026-11-12)",
+      "output_path": "C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\dry_run_week10_artifacts\\week10_13_games_full_dryrun.json"
+    },
+    "games_13_summary": [
+      {
+        "matchup_id": "NE@DET",
+        "seal_sha256_prefix": "387893a6b4d40e51",
+        "home_win_prob": 0.7138,
+        "home_margin_mean": 7.0,
+        "total_points_mean": 48.81,
+        "market_home_spread": -2.5,
+        "market_total": 51.5,
+        "spread_gate": "DIAGNOSTIC_CANDIDATE",
+        "total_gate": "PASS_WITHHELD",
+        "spread_conviction": "88/100"
+      },
+      {
+        "matchup_id": "KC@ATL",
+        "seal_sha256_prefix": "9332f8657e22e372",
+        "home_win_prob": 0.3059,
+        "home_margin_mean": -5.96,
+        "total_points_mean": 48.7,
+        "market_home_spread": 3.5,
+        "market_total": 45.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "PASS_WITHHELD",
+        "spread_conviction": "73/100"
+      },
+      {
+        "matchup_id": "HOU@CLE",
+        "seal_sha256_prefix": "c0918b22cd2dec75",
+        "home_win_prob": 0.3041,
+        "home_margin_mean": -5.76,
+        "total_points_mean": 34.96,
+        "market_home_spread": 4.5,
+        "market_total": 39.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "DIAGNOSTIC_CANDIDATE",
+        "spread_conviction": "62/100"
+      },
+      {
+        "matchup_id": "MIN@GB",
+        "seal_sha256_prefix": "25b96b8f5cc01738",
+        "home_win_prob": 0.5265,
+        "home_margin_mean": 0.84,
+        "total_points_mean": 42.55,
+        "market_home_spread": -3.5,
+        "market_total": 42.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "PASS_WITHHELD",
+        "spread_conviction": "75/100"
+      },
+      {
+        "matchup_id": "JAX@TEN",
+        "seal_sha256_prefix": "b3ec06d77d3a272e",
+        "home_win_prob": 0.1473,
+        "home_margin_mean": -12.5,
+        "total_points_mean": 44.76,
+        "market_home_spread": 10.5,
+        "market_total": 47.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "PASS_WITHHELD",
+        "spread_conviction": "69/100"
+      },
+      {
+        "matchup_id": "MIA@IND",
+        "seal_sha256_prefix": "cb17ed2ff97b4f9e",
+        "home_win_prob": 0.6798,
+        "home_margin_mean": 5.39,
+        "total_points_mean": 37.15,
+        "market_home_spread": -3.5,
+        "market_total": 40.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "DIAGNOSTIC_CANDIDATE",
+        "spread_conviction": "68/100"
+      },
+      {
+        "matchup_id": "CAR@NO",
+        "seal_sha256_prefix": "f42bb839cf306e2c",
+        "home_win_prob": 0.5811,
+        "home_margin_mean": 2.54,
+        "total_points_mean": 43.89,
+        "market_home_spread": -2.5,
+        "market_total": 47.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "DIAGNOSTIC_CANDIDATE",
+        "spread_conviction": "50/100"
+      },
+      {
+        "matchup_id": "BUF@NYJ",
+        "seal_sha256_prefix": "b6af190fe06a54aa",
+        "home_win_prob": 0.2078,
+        "home_margin_mean": -9.72,
+        "total_points_mean": 44.73,
+        "market_home_spread": 8.5,
+        "market_total": 51.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "DIAGNOSTIC_CANDIDATE",
+        "spread_conviction": "62/100"
+      },
+      {
+        "matchup_id": "SEA@LV",
+        "seal_sha256_prefix": "490db5322340121f",
+        "home_win_prob": 0.2712,
+        "home_margin_mean": -6.93,
+        "total_points_mean": 33.43,
+        "market_home_spread": 6.5,
+        "market_total": 43.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "DIAGNOSTIC_CANDIDATE",
+        "spread_conviction": "54/100"
+      },
+      {
+        "matchup_id": "LAR@ARI",
+        "seal_sha256_prefix": "3bfe932e01d5755c",
+        "home_win_prob": 0.097,
+        "home_margin_mean": -15.12,
+        "total_points_mean": 39.44,
+        "market_home_spread": 9.5,
+        "market_total": 44.5,
+        "spread_gate": "DIAGNOSTIC_CANDIDATE",
+        "total_gate": "DIAGNOSTIC_CANDIDATE",
+        "spread_conviction": "88/100"
+      },
+      {
+        "matchup_id": "SF@DAL",
+        "seal_sha256_prefix": "b6980481de9a77c1",
+        "home_win_prob": 0.3466,
+        "home_margin_mean": -4.81,
+        "total_points_mean": 49.88,
+        "market_home_spread": 3.5,
+        "market_total": 55.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "DIAGNOSTIC_CANDIDATE",
+        "spread_conviction": "62/100"
+      },
+      {
+        "matchup_id": "PIT@CIN",
+        "seal_sha256_prefix": "e713a4cf2d7af04f",
+        "home_win_prob": 0.5243,
+        "home_margin_mean": 0.85,
+        "total_points_mean": 49.24,
+        "market_home_spread": -3.5,
+        "market_total": 47.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "PASS_WITHHELD",
+        "spread_conviction": "75/100"
+      },
+      {
+        "matchup_id": "LAC@BAL",
+        "seal_sha256_prefix": "661e2b84cbf9903f",
+        "home_win_prob": 0.729,
+        "home_margin_mean": 6.83,
+        "total_points_mean": 36.37,
+        "market_home_spread": -4.5,
+        "market_total": 38.5,
+        "spread_gate": "PASS_WITHHELD",
+        "total_gate": "PASS_WITHHELD",
+        "spread_conviction": "72/100"
+      }
+    ],
+    "motif_non_destructive_remap": {
+      "total_motif_csvs_present": 64,
+      "stale_rows_remapped_in_memory": 0,
+      "source_csvs_modified": 0,
+      "remapped_rows": []
+    },
+    "adversarial_vetoes": {
+      "generated_at_utc": "2026-11-14T03:17:20.718030+00:00",
+      "vetoes": [
+        {
+          "id": 1,
+          "name": "IR_PLAYER_PUKA_NACUA",
+          "blocked": true,
+          "rlvr_bridge_result": {
+            "approved": false,
+            "veto_codes": [
+              "RLVR_VETO_STAGE0_ROSTER_CONTAMINATION"
+            ],
+            "reasons": [
+              "Puka Nacua is OUT/IR/PUP/EXEMPT for Week 10"
+            ],
+            "matchup": "LAR@ARI",
+            "player": "Puka Nacua"
+          },
+          "dfs_hygiene_blocked": true
+        },
+        {
+          "id": 2,
+          "name": "WRONG_TEAM_GREG_DORTCH_AND_BOURNE",
+          "blocked": true,
+          "dortch_ari_result": {
+            "approved": false,
+            "veto_codes": [
+              "RLVR_VETO_STAGE0_ROSTER_CONTAMINATION"
+            ],
+            "reasons": [
+              "Greg Dortch active Week 10 team is BUF, got ARI"
+            ],
+            "matchup": "BUF@NYJ",
+            "player": "Greg Dortch"
+          },
+          "bourne_sf_result": {
+            "approved": false,
+            "veto_codes": [
+              "RLVR_VETO_STAGE0_ROSTER_CONTAMINATION"
+            ],
+            "reasons": [
+              "Kendrick Bourne active Week 10 team is ARI, got SF"
+            ],
+            "matchup": "LAR@ARI",
+            "player": "Kendrick Bourne"
+          }
+        },
+        {
+          "id": 3,
+          "name": "INDEPENDENT_EDGE_PASS_STEELERS_ML_MINUS285",
+          "blocked": true,
+          "detail": {
+            "overlayPublishAllowed": false,
+            "parlayGatePublishAllowed": false,
+            "parlayGateReason": "PARLAY_CONTAINS_PASS_LEG",
+            "blocked": true
+          }
+        },
+        {
+          "id": 4,
+          "name": "RLVR_SATURATED_CONFIDENCE_ABS_Z_6_2",
+          "blocked": true,
+          "detail": {
+            "approved": false,
+            "veto_codes": [
+              "RLVR_VETO_SATURATED_CONFIDENCE"
+            ],
+            "reasons": [
+              "raw_logit_z=6.2 sits in saturated tail (|z|>=5.0)"
+            ],
+            "matchup": "SF@DAL",
+            "player": "Brock Purdy"
+          }
+        },
+        {
+          "id": 5,
+          "name": "TOXIC_NEGATIVE_CORR_SGP_TRAP",
+          "blocked": true,
+          "detail": {
+            "structuralGatePublishAllowed": false,
+            "structuralGateReason": "SGP_STRUCTURAL_CONTRADICTION",
+            "wilsonLower90": 0.188566,
+            "mriGradeSeverity": "EXTREME_SGP_TRAP",
+            "mriHiddenCorrelationHoldPct": 87.91,
+            "mriCorrelationMultiplierPct": -64.25,
+            "mriStudentT4CopulaProb": 0.016675,
+            "blocked": true
+          }
+        }
+      ],
+      "all_5_blocked": true
+    },
+    "dfs_classic_and_showdown": {
+      "generated_at_utc": "2026-11-14T03:17:20.716559+00:00",
+      "classic_sunday_main": {
+        "lineups_count": 3,
+        "blocked_traps_count": 10,
+        "blocked_traps": [
+          {
+            "name": "D'Andre Swift",
+            "team": "CHI",
+            "reason_code": "WEEK10_BYE_TEAM"
+          },
+          {
+            "name": "Bo Nix",
+            "team": "DEN",
+            "reason_code": "WEEK10_BYE_TEAM"
+          },
+          {
+            "name": "Saquon Barkley",
+            "team": "PHI",
+            "reason_code": "WEEK10_BYE_TEAM"
+          },
+          {
+            "name": "Baker Mayfield",
+            "team": "TB",
+            "reason_code": "WEEK10_BYE_TEAM"
+          },
+          {
+            "name": "Jayden Daniels",
+            "team": "WAS",
+            "reason_code": "COMPLETED_TNF_SLATE"
+          },
+          {
+            "name": "Drake Maye",
+            "team": "NE",
+            "reason_code": "MUNICH_830AM_CST_SLATE"
+          },
+          {
+            "name": "Jahmyr Gibbs",
+            "team": "DET",
+            "reason_code": "MUNICH_830AM_CST_SLATE"
+          },
+          {
+            "name": "Puka Nacua",
+            "team": "LAR",
+            "reason_code": "WEEK10_IR_OUT_LIST"
+          },
+          {
+            "name": "Davante Adams",
+            "team": "LAR",
+            "reason_code": "WEEK10_IR_OUT_LIST"
+          },
+          {
+            "name": "Sam Darnold",
+            "team": "SEA",
+            "reason_code": "WEEK10_IR_OUT_LIST"
+          }
+        ],
+        "lineups": [
+          {
+            "rank": 1,
+            "total_salary": 50000,
+            "projected_points": 141.0,
+            "players": [
+              {
+                "slot": "QB",
+                "name": "Kyler Murray",
+                "team": "MIN",
+                "salary": 6200,
+                "proj": 20.8
+              },
+              {
+                "slot": "RB",
+                "name": "Christian McCaffrey",
+                "team": "SF",
+                "salary": 8700,
+                "proj": 23.6
+              },
+              {
+                "slot": "RB",
+                "name": "Kenneth Walker III",
+                "team": "KC",
+                "salary": 6700,
+                "proj": 18.1
+              },
+              {
+                "slot": "WR",
+                "name": "Jayden Reed",
+                "team": "GB",
+                "salary": 5900,
+                "proj": 15.7
+              },
+              {
+                "slot": "WR",
+                "name": "Josh Downs",
+                "team": "KC",
+                "salary": 5400,
+                "proj": 15.2
+              },
+              {
+                "slot": "WR",
+                "name": "Kendrick Bourne",
+                "team": "ARI",
+                "salary": 4100,
+                "proj": 11.8
+              },
+              {
+                "slot": "TE",
+                "name": "Trey McBride",
+                "team": "ARI",
+                "salary": 5800,
+                "proj": 16.4
+              },
+              {
+                "slot": "FLEX",
+                "name": "T.J. Hockenson",
+                "team": "MIN",
+                "salary": 4600,
+                "proj": 13.0
+              },
+              {
+                "slot": "DST",
+                "name": "Cowboys",
+                "team": "DAL",
+                "salary": 2600,
+                "proj": 6.4
+              }
+            ]
+          },
+          {
+            "rank": 2,
+            "total_salary": 50000,
+            "projected_points": 141.6,
+            "players": [
+              {
+                "slot": "QB",
+                "name": "Brock Purdy",
+                "team": "SF",
+                "salary": 6500,
+                "proj": 21.5
+              },
+              {
+                "slot": "RB",
+                "name": "Kenneth Walker III",
+                "team": "KC",
+                "salary": 6700,
+                "proj": 18.1
+              },
+              {
+                "slot": "RB",
+                "name": "Tyler Allgeier",
+                "team": "ARI",
+                "salary": 5200,
+                "proj": 14.3
+              },
+              {
+                "slot": "WR",
+                "name": "CeeDee Lamb",
+                "team": "DAL",
+                "salary": 8200,
+                "proj": 22.1
+              },
+              {
+                "slot": "WR",
+                "name": "Greg Dortch",
+                "team": "BUF",
+                "salary": 4400,
+                "proj": 12.6
+              },
+              {
+                "slot": "WR",
+                "name": "Kendrick Bourne",
+                "team": "ARI",
+                "salary": 4100,
+                "proj": 11.8
+              },
+              {
+                "slot": "TE",
+                "name": "Trey McBride",
+                "team": "ARI",
+                "salary": 5800,
+                "proj": 16.4
+              },
+              {
+                "slot": "FLEX",
+                "name": "Keenan Allen",
+                "team": "SF",
+                "salary": 5700,
+                "proj": 15.6
+              },
+              {
+                "slot": "DST",
+                "name": "Bills",
+                "team": "BUF",
+                "salary": 3400,
+                "proj": 9.2
+              }
+            ]
+          },
+          {
+            "rank": 3,
+            "total_salary": 49900,
+            "projected_points": 141.3,
+            "players": [
+              {
+                "slot": "QB",
+                "name": "Brock Purdy",
+                "team": "SF",
+                "salary": 6500,
+                "proj": 21.5
+              },
+              {
+                "slot": "RB",
+                "name": "Kenneth Walker III",
+                "team": "KC",
+                "salary": 6700,
+                "proj": 18.1
+              },
+              {
+                "slot": "RB",
+                "name": "Tyler Allgeier",
+                "team": "ARI",
+                "salary": 5200,
+                "proj": 14.3
+              },
+              {
+                "slot": "WR",
+                "name": "CeeDee Lamb",
+                "team": "DAL",
+                "salary": 8200,
+                "proj": 22.1
+              },
+              {
+                "slot": "WR",
+                "name": "Josh Downs",
+                "team": "KC",
+                "salary": 5400,
+                "proj": 15.2
+              },
+              {
+                "slot": "WR",
+                "name": "Greg Dortch",
+                "team": "BUF",
+                "salary": 4400,
+                "proj": 12.6
+              },
+              {
+                "slot": "TE",
+                "name": "George Kittle",
+                "team": "SF",
+                "salary": 6000,
+                "proj": 16.5
+              },
+              {
+                "slot": "FLEX",
+                "name": "Kendrick Bourne",
+                "team": "ARI",
+                "salary": 4100,
+                "proj": 11.8
+              },
+              {
+                "slot": "DST",
+                "name": "Bills",
+                "team": "BUF",
+                "salary": 3400,
+                "proj": 9.2
+              }
+            ]
+          }
+        ]
+      },
+      "showdown_mnf_lac_bal": {
+        "lineups_count": 3,
+        "blocked_traps": [
+          {
+            "name": "Lamar Jackson",
+            "team": "BAL",
+            "reason_code": "WEEK10_IR_OUT_LIST"
+          }
+        ],
+        "lineups": [
+          {
+            "rank": 1,
+            "total_salary": 49900,
+            "projected_points": 95.8,
+            "players": [
+              {
+                "slot": "CPT",
+                "name": "Justin Herbert",
+                "team": "LAC",
+                "salary": 15300,
+                "proj": 29.7
+              },
+              {
+                "slot": "UTIL",
+                "name": "Zay Flowers",
+                "team": "BAL",
+                "salary": 9600,
+                "proj": 17.5
+              },
+              {
+                "slot": "UTIL",
+                "name": "Jacoby Brissett",
+                "team": "BAL",
+                "salary": 8400,
+                "proj": 16.4
+              },
+              {
+                "slot": "UTIL",
+                "name": "Mark Andrews",
+                "team": "BAL",
+                "salary": 6800,
+                "proj": 12.6
+              },
+              {
+                "slot": "UTIL",
+                "name": "Oronde Gadsden II",
+                "team": "LAC",
+                "salary": 5200,
+                "proj": 10.2
+              },
+              {
+                "slot": "UTIL",
+                "name": "Rashod Bateman",
+                "team": "BAL",
+                "salary": 4600,
+                "proj": 9.4
+              }
+            ]
+          },
+          {
+            "rank": 2,
+            "total_salary": 50000,
+            "projected_points": 95.25,
+            "players": [
+              {
+                "slot": "CPT",
+                "name": "Derrick Henry",
+                "team": "BAL",
+                "salary": 16800,
+                "proj": 31.65
+              },
+              {
+                "slot": "UTIL",
+                "name": "Justin Herbert",
+                "team": "LAC",
+                "salary": 10200,
+                "proj": 19.8
+              },
+              {
+                "slot": "UTIL",
+                "name": "Jacoby Brissett",
+                "team": "BAL",
+                "salary": 8400,
+                "proj": 16.4
+              },
+              {
+                "slot": "UTIL",
+                "name": "Oronde Gadsden II",
+                "team": "LAC",
+                "salary": 5200,
+                "proj": 10.2
+              },
+              {
+                "slot": "UTIL",
+                "name": "Ravens",
+                "team": "BAL",
+                "salary": 4800,
+                "proj": 7.8
+              },
+              {
+                "slot": "UTIL",
+                "name": "Rashod Bateman",
+                "team": "BAL",
+                "salary": 4600,
+                "proj": 9.4
+              }
+            ]
+          },
+          {
+            "rank": 3,
+            "total_salary": 49900,
+            "projected_points": 95.1,
+            "players": [
+              {
+                "slot": "CPT",
+                "name": "Justin Herbert",
+                "team": "LAC",
+                "salary": 15300,
+                "proj": 29.7
+              },
+              {
+                "slot": "UTIL",
+                "name": "Omarion Hampton",
+                "team": "LAC",
+                "salary": 8800,
+                "proj": 15.6
+              },
+              {
+                "slot": "UTIL",
+                "name": "Jacoby Brissett",
+                "team": "BAL",
+                "salary": 8400,
+                "proj": 16.4
+              },
+              {
+                "slot": "UTIL",
+                "name": "Quentin Johnston",
+                "team": "LAC",
+                "salary": 7600,
+                "proj": 13.8
+              },
+              {
+                "slot": "UTIL",
+                "name": "Oronde Gadsden II",
+                "team": "LAC",
+                "salary": 5200,
+                "proj": 10.2
+              },
+              {
+                "slot": "UTIL",
+                "name": "Rashod Bateman",
+                "team": "BAL",
+                "salary": 4600,
+                "proj": 9.4
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "parlay_mri_and_storefront": {
+      "generated_at_utc": "2026-11-14T03:17:20.719095+00:00",
+      "mnf_positive_parlay_mri": {
+        "quotedSgpAmericanOdds": 420,
+        "studentT4FairAmericanOdds": 351,
+        "studentT4CopulaProb": 0.221515,
+        "gaussianCopulaProb": 0.221785,
+        "naiveIndependentProb": 0.125,
+        "hiddenCorrelationHoldPct": -15.19,
+        "correlationMultiplierPct": 77.21,
+        "gradeSeverity": "FAIR_OR_PLUS_EV",
+        "plainEnglishHeadline": "Rare Mispriced Ticket: +15.2% Player Edge vs Fair Value",
+        "headlineCompliance": {
+          "passed": true,
+          "violations": []
+        }
+      },
+      "commitments": {
+        "mnfShowdownReceipt": {
+          "sha256": "d811b23bfd5aa44124d4d8544bed1a39e339379e5b88e84ad7f2879595496eed",
+          "sealedBeforeKickoff": true,
+          "verified": true
+        },
+        "sunday360Receipt": {
+          "sha256": "0bbd69a4e9cc40a349194eb8490d82410f86f228e903387bbc5632858666d1a9",
+          "sealedBeforeKickoff": true,
+          "verified": true
+        }
+      },
+      "storefront_5_skus": {
+        "catalogDoor2Count": 6,
+        "door2Catalog": {
+          "TNF_SHOWDOWN_STANDARD_19": {
+            "sku": "TNF_SHOWDOWN_STANDARD_19",
+            "label": "Thursday Night Showdown Pack (Standard)",
+            "priceCents": 1900,
+            "storeCreditAligned": false,
+            "slateWindow": "TNF_SHOWDOWN"
+          },
+          "TNF_SHOWDOWN_ALIGNED_29": {
+            "sku": "TNF_SHOWDOWN_ALIGNED_29",
+            "label": "Thursday Night Showdown Pack (100% Store-Credit Alignment)",
+            "priceCents": 2900,
+            "storeCreditAligned": true,
+            "slateWindow": "TNF_SHOWDOWN"
+          },
+          "MNF_SHOWDOWN_STANDARD_19": {
+            "sku": "MNF_SHOWDOWN_STANDARD_19",
+            "label": "Monday Night Showdown Pack (Standard)",
+            "priceCents": 1900,
+            "storeCreditAligned": false,
+            "slateWindow": "MNF_SHOWDOWN"
+          },
+          "MNF_SHOWDOWN_ALIGNED_29": {
+            "sku": "MNF_SHOWDOWN_ALIGNED_29",
+            "label": "Monday Night Showdown Pack (100% Store-Credit Alignment)",
+            "priceCents": 2900,
+            "storeCreditAligned": true,
+            "slateWindow": "MNF_SHOWDOWN"
+          },
+          "SUNDAY_360_STANDARD_29": {
+            "sku": "SUNDAY_360_STANDARD_29",
+            "label": "Sunday 360° Full-Slate Pack (Standard)",
+            "priceCents": 2900,
+            "storeCreditAligned": false,
+            "slateWindow": "SUNDAY_360"
+          },
+          "SUNDAY_360_ALIGNED_39": {
+            "sku": "SUNDAY_360_ALIGNED_39",
+            "label": "Sunday 360° Full-Slate Pack (100% Store-Credit Alignment)",
+            "priceCents": 3900,
+            "storeCreditAligned": true,
+            "slateWindow": "SUNDAY_360"
+          }
+        },
+        "foundingMonthlyCents": 5999,
+        "foundingCap": 100,
+        "rosPlayoffsPassCents": 24900,
+        "allAccessBridgeCents": 3500,
+        "sku1_std19_outcome": "INELIGIBLE_STANDARD_TIER",
+        "sku2_aligned29_outcome": "MINTED_100_PCT_STORE_CREDIT",
+        "sku2_aligned29_mintedCents": 2900,
+        "sku2_aligned29_replayStatus": "ALREADY_MINTED_IDEMPOTENT",
+        "sku3_bridge35_quoteFirstMonthCents": 2499,
+        "sku3_bridge35_promoTopUpCents": 600,
+        "sku3_bridge35_redeemedFirstMonthCents": 2499,
+        "sku4_sunday39_mintedCents": 3900,
+        "sku4_redeemTowardSun29_cashDueCents": 0,
+        "sku4_redeemTowardSun29_remainingWalletCents": 1000,
+        "posthogEventsCaptured": [
+          "store_credit_alignment_minted",
+          "all_access_bridge_35_redeemed"
+        ]
+      },
+      "public_ui_compliance_checks": {
+        "cleanPassed": true,
+        "dirtyControlBlocked": true,
+        "dirtyViolationsCount": 8
+      }
+    },
+    "public_preview_copy": {
+      "path": "C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\dry_run_week10_artifacts\\week10_public_preview_copy_dryrun.md",
+      "bytes": 3150,
+      "compliance": {
+        "passed": true,
+        "violations": []
+      },
+      "contains_pct_confidence": false,
+      "contains_ledger_url": true
+    },
+    "mind_dryrun": {
+      "path": "C:\\Users\\Garrett\\Sports\\foundry\\audits\\friday_full_audit_2026-11-13\\dry_run_week10_artifacts\\mind_dryrun.jsonl",
+      "records_written": 13
+    }
+  }
+}

@@ -1,0 +1,3279 @@
+{
+  "generated_at_utc": "2026-11-14T03:09:33.116127+00:00",
+  "repo": "C:\\Users\\Garrett\\Sports\\foundry\\agent-bus-mirror",
+  "out_sync": "C:\\Users\\Garrett\\Sports\\foundry\\artifacts\\gcp_sync",
+  "branch_commits": {
+    "origin/gcp/foundry-shard-b-2026-11-13": "f34a86dbe3d4a15ef11635f958d95284db499237",
+    "origin/gcp/foundry-node2-2026-11-13": "301cbc1a04359a976ae4dbb896d5045c42056136",
+    "origin/gcp/foundry-node3-2026-11-13": "b9c0bba1ba5e9bbc091d4526d9fee4c5f6993d8d",
+    "origin/gcp/foundry-node4-2026-11-13": "2594f9e02384980ab429e449f5e5be0ddeedddf9"
+  },
+  "per_node_file_counts": {
+    "node1": 1068,
+    "node2": 950,
+    "node3": 518,
+    "node4": 507
+  },
+  "total_branch_blobs": 3043,
+  "unique_filenames_flat": 2985,
+  "actual_flat_files": 2985,
+  "missing_flat_files": [],
+  "extra_local_files_not_in_4_branches": [],
+  "written_by_node": 51,
+  "written_flat": 56,
+  "different_blob_collision_count": 58,
+  "same_blob_overlap_count": 0,
+  "node3_collision_count": 0,
+  "node4_collision_count": 1,
+  "different_blob_collisions": [
+    {
+      "filename": "000ebb065c_1505.01462v1.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/000ebb065c_1505.01462v1.pdf.md",
+        "blob_sha": "83cdd23a3a603b87986cc4f090432eb842caf6b7",
+        "sha256": "be471ab6fee248e3168ddef7b07cc535b2ace113de9d25467911a25a032146c7",
+        "bytes": 55614,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7605,
+        "score": [
+          1,
+          5,
+          7605,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/000ebb065c_1505.01462v1.pdf.md",
+          "blob_sha": "83cdd23a3a603b87986cc4f090432eb842caf6b7",
+          "sha256": "be471ab6fee248e3168ddef7b07cc535b2ace113de9d25467911a25a032146c7",
+          "bytes": 55614,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7605,
+          "score": [
+            1,
+            5,
+            7605,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/000ebb065c_1505.01462v1.pdf.md",
+          "blob_sha": "d3fedae6cb227b2c3a151884282dc0cc6028bf07",
+          "sha256": "99715a540c3c321001216651a60094a36e7d31afc03da89281fc8b965049ef18",
+          "bytes": 27494,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 3716,
+          "score": [
+            1,
+            5,
+            3716,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "01509c4a9f_1906.04066v1.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/01509c4a9f_1906.04066v1.pdf.md",
+        "blob_sha": "0344112c2de95d5a606e6b318654fe1aaccd25ea",
+        "sha256": "25006bfe0a35696c0c6037ac9b420e6950ffa48aa3e58f29e078278ec529579e",
+        "bytes": 49150,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7267,
+        "score": [
+          1,
+          5,
+          7267,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/01509c4a9f_1906.04066v1.pdf.md",
+          "blob_sha": "0344112c2de95d5a606e6b318654fe1aaccd25ea",
+          "sha256": "25006bfe0a35696c0c6037ac9b420e6950ffa48aa3e58f29e078278ec529579e",
+          "bytes": 49150,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7267,
+          "score": [
+            1,
+            5,
+            7267,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/01509c4a9f_1906.04066v1.pdf.md",
+          "blob_sha": "481c69e8e14b45fb5d39077a892bbddf5166a82d",
+          "sha256": "bf26573089f0f0c1b7fda7b4bb635f18073f2e08fbf1dd4e79923001128c6549",
+          "bytes": 49288,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7084,
+          "score": [
+            1,
+            5,
+            7084,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "081cb559c2_Extending_Power_BI_with_Python_and_R_bibis.ir.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/081cb559c2_Extending_Power_BI_with_Python_and_R_bibis.ir.pdf.md",
+        "blob_sha": "240b06635469fd19be3a1968adc278efab012f57",
+        "sha256": "a0724c3e4aa14bafd762457275e7c364639c39b88b68c62ec0b354e743c56527",
+        "bytes": 54777,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7968,
+        "score": [
+          1,
+          5,
+          7968,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/081cb559c2_Extending_Power_BI_with_Python_and_R_bibis.ir.pdf.md",
+          "blob_sha": "240b06635469fd19be3a1968adc278efab012f57",
+          "sha256": "a0724c3e4aa14bafd762457275e7c364639c39b88b68c62ec0b354e743c56527",
+          "bytes": 54777,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7968,
+          "score": [
+            1,
+            5,
+            7968,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/081cb559c2_Extending_Power_BI_with_Python_and_R_bibis.ir.pdf.md",
+          "blob_sha": "e7831cdafba4b668e0ca363cd7787ae521a52c2d",
+          "sha256": "aedc78a48c4b5dec7d8af813c98e67970ae458ff74c1bc37a15c392724892ebf",
+          "bytes": 40579,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5830,
+          "score": [
+            1,
+            5,
+            5830,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "0cd756909e_10.1201_9781003364320_previewpdf.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/0cd756909e_10.1201_9781003364320_previewpdf.pdf.md",
+        "blob_sha": "514338ae25dd4f847c0608e28ef067eda8b4eb3e",
+        "sha256": "3bd866f4a0dfe28d121e29ad63b482eab642b9950551dc3a30feb93e8363cb22",
+        "bytes": 59937,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8786,
+        "score": [
+          1,
+          5,
+          8786,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/0cd756909e_10.1201_9781003364320_previewpdf.pdf.md",
+          "blob_sha": "514338ae25dd4f847c0608e28ef067eda8b4eb3e",
+          "sha256": "3bd866f4a0dfe28d121e29ad63b482eab642b9950551dc3a30feb93e8363cb22",
+          "bytes": 59937,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8786,
+          "score": [
+            1,
+            5,
+            8786,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/0cd756909e_10.1201_9781003364320_previewpdf.pdf.md",
+          "blob_sha": "286f4899b18f957587e66cc6864b12d62b5872ef",
+          "sha256": "cba432d0e7ad560124eb54af21868add436c30dd816b5ffdefb3e077634e37b2",
+          "bytes": 36378,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5431,
+          "score": [
+            1,
+            5,
+            5431,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "1045461bfb_2511.00261v2.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/1045461bfb_2511.00261v2.pdf.md",
+        "blob_sha": "41242e886f546c177e365b713cf6c5d3f3f51c1f",
+        "sha256": "f778328541a0b092476be49f6d5e4a2dda9a0d48ab8a268bb7b10c9c1fd924e1",
+        "bytes": 64409,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 9259,
+        "score": [
+          1,
+          5,
+          9259,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/1045461bfb_2511.00261v2.pdf.md",
+          "blob_sha": "41242e886f546c177e365b713cf6c5d3f3f51c1f",
+          "sha256": "f778328541a0b092476be49f6d5e4a2dda9a0d48ab8a268bb7b10c9c1fd924e1",
+          "bytes": 64409,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9259,
+          "score": [
+            1,
+            5,
+            9259,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/1045461bfb_2511.00261v2.pdf.md",
+          "blob_sha": "91c6a7d811e389e16c161c9ec4b41f7478d87d47",
+          "sha256": "881472d4f706eabc21bc20fa8c65691230a0069899aa14510e9554bf396dc169",
+          "bytes": 36100,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5286,
+          "score": [
+            1,
+            5,
+            5286,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "2124e9fbe3_2606.05966v1.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/2124e9fbe3_2606.05966v1.pdf.md",
+        "blob_sha": "1e525a764589c1fb719d11339eb6a0823f0117b9",
+        "sha256": "128f380a10008eea3d142a2a26888eec83a3d2e3e7f9593440b97e95b8cdaad5",
+        "bytes": 53586,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7563,
+        "score": [
+          1,
+          5,
+          7563,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/2124e9fbe3_2606.05966v1.pdf.md",
+          "blob_sha": "1e525a764589c1fb719d11339eb6a0823f0117b9",
+          "sha256": "128f380a10008eea3d142a2a26888eec83a3d2e3e7f9593440b97e95b8cdaad5",
+          "bytes": 53586,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7563,
+          "score": [
+            1,
+            5,
+            7563,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/2124e9fbe3_2606.05966v1.pdf.md",
+          "blob_sha": "116a7e76157f3c9c141c5b107bd6f2000ba26133",
+          "sha256": "d3e3bbc45b1f293d559a953d805e260bd9c582af1b895b3cc5922badd71edeb6",
+          "bytes": 43005,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6136,
+          "score": [
+            1,
+            5,
+            6136,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "21e10e1f61_2603.26575v1.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/21e10e1f61_2603.26575v1.pdf.md",
+        "blob_sha": "0371e5349c148fbc50ee6c338e8fe8a47138eae5",
+        "sha256": "6061dc2e11bd976c6e139de20d2914b92df9f8bcf1264282647380dabd21ccce",
+        "bytes": 59441,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8806,
+        "score": [
+          1,
+          5,
+          8806,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/21e10e1f61_2603.26575v1.pdf.md",
+          "blob_sha": "0371e5349c148fbc50ee6c338e8fe8a47138eae5",
+          "sha256": "6061dc2e11bd976c6e139de20d2914b92df9f8bcf1264282647380dabd21ccce",
+          "bytes": 59441,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8806,
+          "score": [
+            1,
+            5,
+            8806,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/21e10e1f61_2603.26575v1.pdf.md",
+          "blob_sha": "e3c6fdae250ee4a319e434aea322477f94f9194d",
+          "sha256": "d9e2c01444f06e9b848b86c5dc1c69923b9c71420a745d16887bdc413a915e2e",
+          "bytes": 48945,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7222,
+          "score": [
+            1,
+            5,
+            7222,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "22b882028d_2609.01337v1.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/22b882028d_2609.01337v1.pdf.md",
+        "blob_sha": "15d7d670e6a67c4c28da8801311023fc50c84d5f",
+        "sha256": "8e4ad9382ef74aec0e077a90193ffe1664886c49937e0ac411d14df9954aa855",
+        "bytes": 52071,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7249,
+        "score": [
+          1,
+          5,
+          7249,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/22b882028d_2609.01337v1.pdf.md",
+          "blob_sha": "15d7d670e6a67c4c28da8801311023fc50c84d5f",
+          "sha256": "8e4ad9382ef74aec0e077a90193ffe1664886c49937e0ac411d14df9954aa855",
+          "bytes": 52071,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7249,
+          "score": [
+            1,
+            5,
+            7249,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/22b882028d_2609.01337v1.pdf.md",
+          "blob_sha": "a5069a59736d9bb5093e8c76c2284aeed7e1f40a",
+          "sha256": "3829bee22026494e1c93213414607c74b875610aa1af27c554ce0681004ab195",
+          "bytes": 40704,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5951,
+          "score": [
+            1,
+            5,
+            5951,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "232014a839_ifafrules.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/232014a839_ifafrules.pdf.md",
+        "blob_sha": "44c6224cdc7202d027ee9529f4d815f2bce16a04",
+        "sha256": "4841c550930b9512cee8bd115c753dd43bc430f56823a2ec7063b8ae97e14ca7",
+        "bytes": 69793,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 10729,
+        "score": [
+          1,
+          5,
+          10729,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/232014a839_ifafrules.pdf.md",
+          "blob_sha": "44c6224cdc7202d027ee9529f4d815f2bce16a04",
+          "sha256": "4841c550930b9512cee8bd115c753dd43bc430f56823a2ec7063b8ae97e14ca7",
+          "bytes": 69793,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 10729,
+          "score": [
+            1,
+            5,
+            10729,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/232014a839_ifafrules.pdf.md",
+          "blob_sha": "e7ffa9bbdb05c9d01bfd531b4d3389c1259a5a6e",
+          "sha256": "640fbe2145f51f880195f7f0d7ac8a443e0a591fcee5dd7f0d5ebffb723f8ff1",
+          "bytes": 37188,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5925,
+          "score": [
+            1,
+            5,
+            5925,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "23d50a8065_2605.05997v2.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/23d50a8065_2605.05997v2.pdf.md",
+        "blob_sha": "0ac331062625f6a12f58cf5ea75988cb7805e7f0",
+        "sha256": "f843aa4014c37c2bf999feeb2197dd84067041318c83709d88bf1ef52c7ea925",
+        "bytes": 49659,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7069,
+        "score": [
+          1,
+          5,
+          7069,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/23d50a8065_2605.05997v2.pdf.md",
+          "blob_sha": "0ac331062625f6a12f58cf5ea75988cb7805e7f0",
+          "sha256": "f843aa4014c37c2bf999feeb2197dd84067041318c83709d88bf1ef52c7ea925",
+          "bytes": 49659,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7069,
+          "score": [
+            1,
+            5,
+            7069,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/23d50a8065_2605.05997v2.pdf.md",
+          "blob_sha": "a3801ba5fac34fcf6558526465ea0440fb64b900",
+          "sha256": "22326655cbdd50c254928d3eca0642bf4df32ed4a574aca77aae31e8ad8e2ba5",
+          "bytes": 50901,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7033,
+          "score": [
+            1,
+            5,
+            7033,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "24dff9ca8f_1708.06694v2.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/24dff9ca8f_1708.06694v2.pdf.md",
+        "blob_sha": "8a96b7cae08ee7813c493749bcefbb098d31a591",
+        "sha256": "5289103a61f22e9e7c30bc5357ae7011029580696582ff6fe5a208e488e96cac",
+        "bytes": 64036,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 9433,
+        "score": [
+          1,
+          5,
+          9433,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/24dff9ca8f_1708.06694v2.pdf.md",
+          "blob_sha": "8a96b7cae08ee7813c493749bcefbb098d31a591",
+          "sha256": "5289103a61f22e9e7c30bc5357ae7011029580696582ff6fe5a208e488e96cac",
+          "bytes": 64036,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9433,
+          "score": [
+            1,
+            5,
+            9433,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/24dff9ca8f_1708.06694v2.pdf.md",
+          "blob_sha": "128bb39f034d2928a370b3550fd0bc8c229e2020",
+          "sha256": "def041f90051e0d8eef114fa504415393fda9732926d71728f0a77a2c0227e56",
+          "bytes": 50640,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7116,
+          "score": [
+            1,
+            5,
+            7116,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "24e630a20a_978-3-319-41285-6.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/24e630a20a_978-3-319-41285-6.pdf.md",
+        "blob_sha": "908e0ece992b8deaddb8c3cb9775657361110ef7",
+        "sha256": "4707eda62431a4845917359da8f644b8949c9d85b76ef55b57ca21d12f6ae191",
+        "bytes": 62122,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8652,
+        "score": [
+          1,
+          5,
+          8652,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/24e630a20a_978-3-319-41285-6.pdf.md",
+          "blob_sha": "908e0ece992b8deaddb8c3cb9775657361110ef7",
+          "sha256": "4707eda62431a4845917359da8f644b8949c9d85b76ef55b57ca21d12f6ae191",
+          "bytes": 62122,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8652,
+          "score": [
+            1,
+            5,
+            8652,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/24e630a20a_978-3-319-41285-6.pdf.md",
+          "blob_sha": "0ac932a9a05e7c5a7dcf9446e2ea65b498a4fb6f",
+          "sha256": "19287d6e19dd5582d65fdcc68852bad811f1cd3bd0a6fecc4a3cb999fa4dd1fe",
+          "bytes": 36313,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 4917,
+          "score": [
+            1,
+            5,
+            4917,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "2d99d62aed_2609.13453v1.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/2d99d62aed_2609.13453v1.pdf.md",
+        "blob_sha": "38c990839a7877ea904bc6721119ad62b75b53a2",
+        "sha256": "1b4e11902bf48e4a8d08cd0b0fc0b5552701ca1870485f083910a6d32c1e7310",
+        "bytes": 53614,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7912,
+        "score": [
+          1,
+          5,
+          7912,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/2d99d62aed_2609.13453v1.pdf.md",
+          "blob_sha": "38c990839a7877ea904bc6721119ad62b75b53a2",
+          "sha256": "1b4e11902bf48e4a8d08cd0b0fc0b5552701ca1870485f083910a6d32c1e7310",
+          "bytes": 53614,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7912,
+          "score": [
+            1,
+            5,
+            7912,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/2d99d62aed_2609.13453v1.pdf.md",
+          "blob_sha": "6b4702727dbc28346db76940485435bb7a9cd0eb",
+          "sha256": "56ae5c87f477e86acc70bce00a0056c2b952a2c6b5c5f2a02999f40142ed6e3b",
+          "bytes": 37593,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5460,
+          "score": [
+            1,
+            5,
+            5460,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "311ab61af9_book_9780262374675.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/311ab61af9_book_9780262374675.pdf.md",
+        "blob_sha": "f3acb19caa72e6b9d954dc9b6b39d52857720682",
+        "sha256": "35b7f7dd5a38b070e721f369288b03c7da0b92b329e8f8b9d805e44651086252",
+        "bytes": 41773,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 5766,
+        "score": [
+          1,
+          5,
+          5766,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/311ab61af9_book_9780262374675.pdf.md",
+          "blob_sha": "f3acb19caa72e6b9d954dc9b6b39d52857720682",
+          "sha256": "35b7f7dd5a38b070e721f369288b03c7da0b92b329e8f8b9d805e44651086252",
+          "bytes": 41773,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5766,
+          "score": [
+            1,
+            5,
+            5766,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/311ab61af9_book_9780262374675.pdf.md",
+          "blob_sha": "8f47363d72a35d78a1571d576743b7c048764489",
+          "sha256": "c88192b372831259df790b3014df5a30ce4176520be19d9e49a78cfa03f6a1a1",
+          "bytes": 34901,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 4907,
+          "score": [
+            1,
+            5,
+            4907,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "34fb2c4aa8_2305.01643v2.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/34fb2c4aa8_2305.01643v2.pdf.md",
+        "blob_sha": "c074155e7d3d3d0e676da1c4c42a0ebb31212adc",
+        "sha256": "2f200a0ffe9ddc0d2559d664c378ec52aed472cb32751235319a2c9b46a4dc36",
+        "bytes": 70234,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 10169,
+        "score": [
+          1,
+          5,
+          10169,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/34fb2c4aa8_2305.01643v2.pdf.md",
+          "blob_sha": "c074155e7d3d3d0e676da1c4c42a0ebb31212adc",
+          "sha256": "2f200a0ffe9ddc0d2559d664c378ec52aed472cb32751235319a2c9b46a4dc36",
+          "bytes": 70234,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 10169,
+          "score": [
+            1,
+            5,
+            10169,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/34fb2c4aa8_2305.01643v2.pdf.md",
+          "blob_sha": "22925753fd63edc6ab9792e535ed81db275a5cc8",
+          "sha256": "4d81df20efe57fd25ad48f03e7fdcb4220c825cf394d335608a065742b5fb2f7",
+          "bytes": 70248,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9754,
+          "score": [
+            1,
+            5,
+            9754,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "38bb7693c8_bws_book_2_.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/38bb7693c8_bws_book_2_.pdf.md",
+        "blob_sha": "89cf7ed133151973f1ed3ec22d44a8dee80c87ea",
+        "sha256": "35089a63f107a890daf174843f634c7f35f1b342205dd37f145922305675f69f",
+        "bytes": 40288,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 5744,
+        "score": [
+          1,
+          5,
+          5744,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/38bb7693c8_bws_book_2_.pdf.md",
+          "blob_sha": "89cf7ed133151973f1ed3ec22d44a8dee80c87ea",
+          "sha256": "35089a63f107a890daf174843f634c7f35f1b342205dd37f145922305675f69f",
+          "bytes": 40288,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5744,
+          "score": [
+            1,
+            5,
+            5744,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/38bb7693c8_bws_book_2_.pdf.md",
+          "blob_sha": "25e95807e1cf927b92a2701a492f3e4b48155b56",
+          "sha256": "4b5fff70a1b7727db5dfdcf5d90ff7f673d53e966b9c90ad438488ceccc74330",
+          "bytes": 39547,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5691,
+          "score": [
+            1,
+            5,
+            5691,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "3c1781c4e8_2510.19150v1.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/3c1781c4e8_2510.19150v1.pdf.md",
+        "blob_sha": "57240705e183017906ac3055394d36b923697f10",
+        "sha256": "94dfb977c83fcb28e5ea59808f3fdd11a196b8e05fa0370bef92d5c348f1a942",
+        "bytes": 53774,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7944,
+        "score": [
+          1,
+          5,
+          7944,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/3c1781c4e8_2510.19150v1.pdf.md",
+          "blob_sha": "57240705e183017906ac3055394d36b923697f10",
+          "sha256": "94dfb977c83fcb28e5ea59808f3fdd11a196b8e05fa0370bef92d5c348f1a942",
+          "bytes": 53774,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7944,
+          "score": [
+            1,
+            5,
+            7944,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/3c1781c4e8_2510.19150v1.pdf.md",
+          "blob_sha": "a28a9a924a1eb99d2a3fc9ab3eb30b1c5900cb2b",
+          "sha256": "e1f6c486b16af21aac4f94e9f3b08abd08aa9cc8c8569e0956ed1cd7a4487d0b",
+          "bytes": 29781,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 4264,
+          "score": [
+            1,
+            5,
+            4264,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "4759286936_2512.24601v3.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/4759286936_2512.24601v3.pdf.md",
+        "blob_sha": "c57ab081bc38c508745e9e7776feb18aed808412",
+        "sha256": "f12172c3c1365f9c8aa91183e88813750021083224708e426fc083b035d211f8",
+        "bytes": 50039,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7312,
+        "score": [
+          1,
+          5,
+          7312,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/4759286936_2512.24601v3.pdf.md",
+          "blob_sha": "c57ab081bc38c508745e9e7776feb18aed808412",
+          "sha256": "f12172c3c1365f9c8aa91183e88813750021083224708e426fc083b035d211f8",
+          "bytes": 50039,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7312,
+          "score": [
+            1,
+            5,
+            7312,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/4759286936_2512.24601v3.pdf.md",
+          "blob_sha": "ce26fab78d85881e9ea73b55896081dc487bb182",
+          "sha256": "df84eb8e7d6a406a1401d1c8d6ba428e83bb85fe911ba3a1f1ad8c376562c3a4",
+          "bytes": 46906,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6760,
+          "score": [
+            1,
+            5,
+            6760,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "4a3e94d3ab_PVAMU_MSU_FOOTBALL_GAMENOTES_2024.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/4a3e94d3ab_PVAMU_MSU_FOOTBALL_GAMENOTES_2024.pdf.md",
+        "blob_sha": "42d02a926cef01714dd2bee9df76233e991c9f36",
+        "sha256": "361da24b949dfd9d9b5806ff298568a99207fa9e905f17c24db483618a2b8ee8",
+        "bytes": 57069,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8556,
+        "score": [
+          1,
+          5,
+          8556,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/4a3e94d3ab_PVAMU_MSU_FOOTBALL_GAMENOTES_2024.pdf.md",
+          "blob_sha": "42d02a926cef01714dd2bee9df76233e991c9f36",
+          "sha256": "361da24b949dfd9d9b5806ff298568a99207fa9e905f17c24db483618a2b8ee8",
+          "bytes": 57069,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8556,
+          "score": [
+            1,
+            5,
+            8556,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/4a3e94d3ab_PVAMU_MSU_FOOTBALL_GAMENOTES_2024.pdf.md",
+          "blob_sha": "33e2c246410c02a2588568da51d50e2b2705f135",
+          "sha256": "dcb40d629b19bc991addbbf175700bfc9d618fc1151606c99106f81064d521c0",
+          "bytes": 37145,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5891,
+          "score": [
+            1,
+            5,
+            5891,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "5a6f3925d4_applied-predictive-modeling-max-kuhn-kjell-johnson_1518.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/5a6f3925d4_applied-predictive-modeling-max-kuhn-kjell-johnson_1518.pdf.md",
+        "blob_sha": "7ca4cae99ede808d6b1cc756390b619f37b1f5fd",
+        "sha256": "4165d2d792ce08adff02b32f7beb705d1658eae56076098e02797f6c8830e2dd",
+        "bytes": 71133,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 10275,
+        "score": [
+          1,
+          5,
+          10275,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/5a6f3925d4_applied-predictive-modeling-max-kuhn-kjell-johnson_1518.pdf.md",
+          "blob_sha": "7ca4cae99ede808d6b1cc756390b619f37b1f5fd",
+          "sha256": "4165d2d792ce08adff02b32f7beb705d1658eae56076098e02797f6c8830e2dd",
+          "bytes": 71133,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 10275,
+          "score": [
+            1,
+            5,
+            10275,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/5a6f3925d4_applied-predictive-modeling-max-kuhn-kjell-johnson_1518.pdf.md",
+          "blob_sha": "973c2f34e64e7a7dd6468a19489ddd9be670208a",
+          "sha256": "4fb6e4aa30de3fe76a6a3ea4b0555afbad0dfde97126bf01f98e8c09c99efe07",
+          "bytes": 39852,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5829,
+          "score": [
+            1,
+            5,
+            5829,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "5bf56e566f_2601.11492v2.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/5bf56e566f_2601.11492v2.pdf.md",
+        "blob_sha": "f08b5295a5d0a4aacab9b34851b090e1941e50dd",
+        "sha256": "cca04f3d6c6c9333c34ddbf876a6ce1b205f32acce1df8e8b4bb6fa990744a24",
+        "bytes": 57330,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8001,
+        "score": [
+          1,
+          5,
+          8001,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/5bf56e566f_2601.11492v2.pdf.md",
+          "blob_sha": "f08b5295a5d0a4aacab9b34851b090e1941e50dd",
+          "sha256": "cca04f3d6c6c9333c34ddbf876a6ce1b205f32acce1df8e8b4bb6fa990744a24",
+          "bytes": 57330,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8001,
+          "score": [
+            1,
+            5,
+            8001,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/5bf56e566f_2601.11492v2.pdf.md",
+          "blob_sha": "4d61da538a41c5d22c1a9c4d91a017c7f32c52ff",
+          "sha256": "d897919be153abb7b7a2580bf3f3457e8866ecd64e234d6db951068946403453",
+          "bytes": 28149,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 3927,
+          "score": [
+            1,
+            5,
+            3927,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "5ca8695d28_9789819614455.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/5ca8695d28_9789819614455.pdf.md",
+        "blob_sha": "99f722519ddfce4af49138788618a3fa71e8d785",
+        "sha256": "299c2da2a620ecb50b70489975ffe83cd105cdac9c769795f048c0afb513a447",
+        "bytes": 61594,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 9077,
+        "score": [
+          1,
+          5,
+          9077,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/5ca8695d28_9789819614455.pdf.md",
+          "blob_sha": "99f722519ddfce4af49138788618a3fa71e8d785",
+          "sha256": "299c2da2a620ecb50b70489975ffe83cd105cdac9c769795f048c0afb513a447",
+          "bytes": 61594,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9077,
+          "score": [
+            1,
+            5,
+            9077,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/5ca8695d28_9789819614455.pdf.md",
+          "blob_sha": "ee72b4efdbb21aaee1cc1ef2e1384bac2b527f14",
+          "sha256": "141cf1801eb861e75c50960a6507e179506954d369e629a8c7fd41fbcc5c13c4",
+          "bytes": 60181,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8296,
+          "score": [
+            1,
+            5,
+            8296,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "5f14f376b0_2401.00649v2.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/5f14f376b0_2401.00649v2.pdf.md",
+        "blob_sha": "549d64009293195c139d832fa9701d15155ecad7",
+        "sha256": "1df88b25ebd4a44c3fbcdb5ade34ff655f3d079d609781942250f701c535be48",
+        "bytes": 35743,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 4517,
+        "score": [
+          1,
+          5,
+          4517,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/5f14f376b0_2401.00649v2.pdf.md",
+          "blob_sha": "549d64009293195c139d832fa9701d15155ecad7",
+          "sha256": "1df88b25ebd4a44c3fbcdb5ade34ff655f3d079d609781942250f701c535be48",
+          "bytes": 35743,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 4517,
+          "score": [
+            1,
+            5,
+            4517,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/5f14f376b0_2401.00649v2.pdf.md",
+          "blob_sha": "e826cf2e09197c995fbbe1575d581970f9867c00",
+          "sha256": "397b8524d874fb5f627ec5d9cb108eee8929c36bd5b025d875b0841444e2a31c",
+          "bytes": 33151,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 4506,
+          "score": [
+            1,
+            5,
+            4506,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "628dec66f5_GT_book.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/628dec66f5_GT_book.pdf.md",
+        "blob_sha": "514eac09c7594cacacabaefe16159b2dc10aa550",
+        "sha256": "f0a027ff3802ee3d4d8a69db34f17a2b1cbcc7a191b8e3407778d005b5575c9a",
+        "bytes": 55339,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7748,
+        "score": [
+          1,
+          5,
+          7748,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/628dec66f5_GT_book.pdf.md",
+          "blob_sha": "514eac09c7594cacacabaefe16159b2dc10aa550",
+          "sha256": "f0a027ff3802ee3d4d8a69db34f17a2b1cbcc7a191b8e3407778d005b5575c9a",
+          "bytes": 55339,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7748,
+          "score": [
+            1,
+            5,
+            7748,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/628dec66f5_GT_book.pdf.md",
+          "blob_sha": "1a1fa8159e33afc6a3ebd51496f26159f53aebac",
+          "sha256": "eb24ac35e448c6294435c8706f64fa9217bfe10d5ecca40495d6d61052968cd5",
+          "bytes": 26945,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 3901,
+          "score": [
+            1,
+            5,
+            3901,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "62ea6701b4_mlgm_epfl_book.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/62ea6701b4_mlgm_epfl_book.pdf.md",
+        "blob_sha": "7678f0becc05609a82789ed16089fb57e9efc30f",
+        "sha256": "a3cb28a8b24b19da53c936a584c71560f897d919ffd918484144f0a030e71270",
+        "bytes": 43045,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 5811,
+        "score": [
+          1,
+          5,
+          5811,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/62ea6701b4_mlgm_epfl_book.pdf.md",
+          "blob_sha": "7678f0becc05609a82789ed16089fb57e9efc30f",
+          "sha256": "a3cb28a8b24b19da53c936a584c71560f897d919ffd918484144f0a030e71270",
+          "bytes": 43045,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5811,
+          "score": [
+            1,
+            5,
+            5811,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/62ea6701b4_mlgm_epfl_book.pdf.md",
+          "blob_sha": "b820857a37e156fd2e83874c82596252d6e1f4cc",
+          "sha256": "459889ce82acad7aaf810bc90c0d74f600a41ac5180be0703e8f861fd4916b56",
+          "bytes": 28031,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 3967,
+          "score": [
+            1,
+            5,
+            3967,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "6d6eb7c687_2603.25901v1_1_.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/6d6eb7c687_2603.25901v1_1_.pdf.md",
+        "blob_sha": "576895138635b244e98c9b449d136b2c207b2132",
+        "sha256": "7e8d767cfb4a3647a74d236e04152ca87c90ad0021899d5b562799453ed69008",
+        "bytes": 40520,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 5817,
+        "score": [
+          1,
+          5,
+          5817,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/6d6eb7c687_2603.25901v1_1_.pdf.md",
+          "blob_sha": "576895138635b244e98c9b449d136b2c207b2132",
+          "sha256": "7e8d767cfb4a3647a74d236e04152ca87c90ad0021899d5b562799453ed69008",
+          "bytes": 40520,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5817,
+          "score": [
+            1,
+            5,
+            5817,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/6d6eb7c687_2603.25901v1_1_.pdf.md",
+          "blob_sha": "c28702a0edf3ba402b06ee9b9b88f11f959a5435",
+          "sha256": "cbde63d4fabcc636a2dcd0fb334ea91aecde9b2a1892ace0b76722a2d992ac6c",
+          "bytes": 38340,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5568,
+          "score": [
+            1,
+            5,
+            5568,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "6df8151157_NFL_Football_-_Playbook.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/6df8151157_NFL_Football_-_Playbook.pdf.md",
+        "blob_sha": "bede9dd0e0a871a5e91a0da1175c6c0e3aa508b5",
+        "sha256": "4c5e9f40b27b11d6564c04800d55a8973422340dc880e38bbd08474ba5a2821d",
+        "bytes": 56299,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8997,
+        "score": [
+          1,
+          5,
+          8997,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/6df8151157_NFL_Football_-_Playbook.pdf.md",
+          "blob_sha": "bede9dd0e0a871a5e91a0da1175c6c0e3aa508b5",
+          "sha256": "4c5e9f40b27b11d6564c04800d55a8973422340dc880e38bbd08474ba5a2821d",
+          "bytes": 56299,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8997,
+          "score": [
+            1,
+            5,
+            8997,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/6df8151157_NFL_Football_-_Playbook.pdf.md",
+          "blob_sha": "d91f46e2bc2b7ea248da3434c9777d961c5bff38",
+          "sha256": "a162fd9a67ad751b0a3a96e0e8880a289f2e2f04666e8d1b8cad025d916280cf",
+          "bytes": 42886,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6357,
+          "score": [
+            1,
+            5,
+            6357,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "79f317bbf8_2204.00003v3.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/79f317bbf8_2204.00003v3.pdf.md",
+        "blob_sha": "9f4af32adbd566ecd77f2c5e28b074283c09247e",
+        "sha256": "02abb8adfeac9ea59d4d0914a55ef0d29630312d487128dbea16c3dcd999ad2b",
+        "bytes": 57849,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8735,
+        "score": [
+          1,
+          5,
+          8735,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/79f317bbf8_2204.00003v3.pdf.md",
+          "blob_sha": "9f4af32adbd566ecd77f2c5e28b074283c09247e",
+          "sha256": "02abb8adfeac9ea59d4d0914a55ef0d29630312d487128dbea16c3dcd999ad2b",
+          "bytes": 57849,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8735,
+          "score": [
+            1,
+            5,
+            8735,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/79f317bbf8_2204.00003v3.pdf.md",
+          "blob_sha": "64d4abf4c74d7c44fd7e37f53b1417959e7c9b94",
+          "sha256": "d6f71bb17f079db608772e09d36c87a623a78b03273130091da590bda9289045",
+          "bytes": 33205,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5107,
+          "score": [
+            1,
+            5,
+            5107,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "82d7c37e12_2604.27865v1.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/82d7c37e12_2604.27865v1.pdf.md",
+        "blob_sha": "493688b8760417c345ab435d4d66c28f017b6158",
+        "sha256": "50d59e7f4df77ff3fb5993196daf8baa78ae9d80a803ee2601d48ebfd4b58493",
+        "bytes": 66850,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 9733,
+        "score": [
+          1,
+          5,
+          9733,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/82d7c37e12_2604.27865v1.pdf.md",
+          "blob_sha": "493688b8760417c345ab435d4d66c28f017b6158",
+          "sha256": "50d59e7f4df77ff3fb5993196daf8baa78ae9d80a803ee2601d48ebfd4b58493",
+          "bytes": 66850,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9733,
+          "score": [
+            1,
+            5,
+            9733,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/82d7c37e12_2604.27865v1.pdf.md",
+          "blob_sha": "0ee57dc131f59d2cdb5827b67c5350843a14f5c8",
+          "sha256": "b617d2091a95f5b57330f85be1ae9eb877f41104d22423c39407030158adc78c",
+          "bytes": 57802,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8692,
+          "score": [
+            1,
+            5,
+            8692,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "8685fcb60a_Robert_Kissell_2017.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/8685fcb60a_Robert_Kissell_2017.pdf.md",
+        "blob_sha": "f24359f1e12e22aa84cb853e88247d6267e42169",
+        "sha256": "edc73ba67dd76c96c97e204f32967d6583150e98cf7aeacb5de57c0693518c21",
+        "bytes": 54939,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8010,
+        "score": [
+          1,
+          5,
+          8010,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/8685fcb60a_Robert_Kissell_2017.pdf.md",
+          "blob_sha": "f24359f1e12e22aa84cb853e88247d6267e42169",
+          "sha256": "edc73ba67dd76c96c97e204f32967d6583150e98cf7aeacb5de57c0693518c21",
+          "bytes": 54939,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8010,
+          "score": [
+            1,
+            5,
+            8010,
+            -1
+          ]
+        },
+        {
+          "node": 4,
+          "branch": "origin/gcp/foundry-node4-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/8685fcb60a_Robert_Kissell_2017.pdf.md",
+          "blob_sha": "7d8dee85fb65b03b485df88e51df7c075a72284d",
+          "sha256": "51da15ed1f88f73f2f64c91c2814ac1295936df5203c2a5073b5c0e7274b543a",
+          "bytes": 35565,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5535,
+          "score": [
+            1,
+            5,
+            5535,
+            -4
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "8b98159f37__OceanofPDF.com_Introduction_to_Recursive_Programming_-_Manuel_Rubio-Sanchez.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/8b98159f37__OceanofPDF.com_Introduction_to_Recursive_Programming_-_Manuel_Rubio-Sanchez.pdf.md",
+        "blob_sha": "8fe6e6028a6b46c203034d5efdbed98546781cdc",
+        "sha256": "fef5d757e17977548de7f079f1f62cfcb00078a3bd5c1b49d9bd8e65f1aa8a35",
+        "bytes": 52632,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7967,
+        "score": [
+          1,
+          5,
+          7967,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/8b98159f37__OceanofPDF.com_Introduction_to_Recursive_Programming_-_Manuel_Rubio-Sanchez.pdf.md",
+          "blob_sha": "8fe6e6028a6b46c203034d5efdbed98546781cdc",
+          "sha256": "fef5d757e17977548de7f079f1f62cfcb00078a3bd5c1b49d9bd8e65f1aa8a35",
+          "bytes": 52632,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7967,
+          "score": [
+            1,
+            5,
+            7967,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/8b98159f37__OceanofPDF.com_Introduction_to_Recursive_Programming_-_Manuel_Rubio-Sanchez.pdf.md",
+          "blob_sha": "e2d2540996a01f93349782e289a84e49f095b74d",
+          "sha256": "816c18cb520e68ed905f84b8a6c710c43cd50cc03d22472c4d83dd587693cf8c",
+          "bytes": 25576,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 3932,
+          "score": [
+            1,
+            5,
+            3932,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "8cd094a90d_2602.02979v3.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/8cd094a90d_2602.02979v3.pdf.md",
+        "blob_sha": "ed3a255cd8570ae940a96120026b842ae8776095",
+        "sha256": "82b81240c2b4fed222a0c014aeb6df947e27f6ca918c99fcc46f9b2ffcd28e2e",
+        "bytes": 57145,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8069,
+        "score": [
+          1,
+          5,
+          8069,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/8cd094a90d_2602.02979v3.pdf.md",
+          "blob_sha": "ed3a255cd8570ae940a96120026b842ae8776095",
+          "sha256": "82b81240c2b4fed222a0c014aeb6df947e27f6ca918c99fcc46f9b2ffcd28e2e",
+          "bytes": 57145,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8069,
+          "score": [
+            1,
+            5,
+            8069,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/8cd094a90d_2602.02979v3.pdf.md",
+          "blob_sha": "3a5a8f23e6c75f62e15636cb18cda1e2b8c922a6",
+          "sha256": "424b3a8ff96d61f932544ac407bb335b6ee2ddcca3478ae99b8b4255160612a8",
+          "bytes": 36882,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5140,
+          "score": [
+            1,
+            5,
+            5140,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "92102fcc19_2602.08996v1.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/92102fcc19_2602.08996v1.pdf.md",
+        "blob_sha": "e94373e496a7ca3cb07e1923f1d7f0691baf66e4",
+        "sha256": "6a0e45fcf806a1d979ce8f49789eaffa523b8ff68be82e82bdd6945cf0329d93",
+        "bytes": 42712,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 6265,
+        "score": [
+          1,
+          5,
+          6265,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/92102fcc19_2602.08996v1.pdf.md",
+          "blob_sha": "e94373e496a7ca3cb07e1923f1d7f0691baf66e4",
+          "sha256": "6a0e45fcf806a1d979ce8f49789eaffa523b8ff68be82e82bdd6945cf0329d93",
+          "bytes": 42712,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6265,
+          "score": [
+            1,
+            5,
+            6265,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/92102fcc19_2602.08996v1.pdf.md",
+          "blob_sha": "1f8d985cf9f8333cbd3b39e2e8a6ea1a8d2b29f2",
+          "sha256": "907d4639aefdac9ef32b7bfcd6ff3d13f85a97f69f42fe41297ec22ba7588e77",
+          "bytes": 42882,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6114,
+          "score": [
+            1,
+            5,
+            6114,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "974530f0c6_Concussion_PDF.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/974530f0c6_Concussion_PDF.pdf.md",
+        "blob_sha": "be3fc77e571b6b653211d40a7686380c1667604b",
+        "sha256": "e7093942c338894567f3c63781d9db57cff95a02bcf5f6e0402058545b4f7e0c",
+        "bytes": 44628,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 6122,
+        "score": [
+          1,
+          5,
+          6122,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/974530f0c6_Concussion_PDF.pdf.md",
+          "blob_sha": "be3fc77e571b6b653211d40a7686380c1667604b",
+          "sha256": "e7093942c338894567f3c63781d9db57cff95a02bcf5f6e0402058545b4f7e0c",
+          "bytes": 44628,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6122,
+          "score": [
+            1,
+            5,
+            6122,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/974530f0c6_Concussion_PDF.pdf.md",
+          "blob_sha": "e938adfb41dc46120edd955a4372e58bb099cb5a",
+          "sha256": "e632911fb4a46bca577ec2a48e8ffe00dc3c2d78c0c568a074436387d9ee93fe",
+          "bytes": 27378,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 4125,
+          "score": [
+            1,
+            5,
+            4125,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "98d5e2e8a7_2605.14855v1.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/98d5e2e8a7_2605.14855v1.pdf.md",
+        "blob_sha": "5e42b7aba43a76877f07c59e17c9a240629f73cb",
+        "sha256": "321139ec0ba21b9c37f2417e58b4fb576a2adca96716d69715cd357292f49892",
+        "bytes": 39294,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 5686,
+        "score": [
+          1,
+          5,
+          5686,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/98d5e2e8a7_2605.14855v1.pdf.md",
+          "blob_sha": "5e42b7aba43a76877f07c59e17c9a240629f73cb",
+          "sha256": "321139ec0ba21b9c37f2417e58b4fb576a2adca96716d69715cd357292f49892",
+          "bytes": 39294,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5686,
+          "score": [
+            1,
+            5,
+            5686,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/98d5e2e8a7_2605.14855v1.pdf.md",
+          "blob_sha": "b988b5211d29aaaac418f1b57bca85f83e0ebe38",
+          "sha256": "c48378fc9514edbb9f806dd8d7d39f89f2eaa6a7fb89a67ff3db5cbe6c8f51fb",
+          "bytes": 34324,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 4965,
+          "score": [
+            1,
+            5,
+            4965,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "9bbfe908a4_2406.19563v2_1_.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/9bbfe908a4_2406.19563v2_1_.pdf.md",
+        "blob_sha": "f494fa06646d536a76d7663a6e88f015c045c921",
+        "sha256": "10f09b7d6c323314d5037df1aee7d642b63e3399ea2e03b3416b0b904fdb06ca",
+        "bytes": 69938,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 9773,
+        "score": [
+          1,
+          5,
+          9773,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/9bbfe908a4_2406.19563v2_1_.pdf.md",
+          "blob_sha": "f494fa06646d536a76d7663a6e88f015c045c921",
+          "sha256": "10f09b7d6c323314d5037df1aee7d642b63e3399ea2e03b3416b0b904fdb06ca",
+          "bytes": 69938,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9773,
+          "score": [
+            1,
+            5,
+            9773,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/9bbfe908a4_2406.19563v2_1_.pdf.md",
+          "blob_sha": "b0c9c1c7bbc7c75975f96a9f8eb1f696002ff138",
+          "sha256": "02dadd3e6b777fedc3e727c8e7ce69e8eb42864e55004c0d32aaff036cd9ce33",
+          "bytes": 61404,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8627,
+          "score": [
+            1,
+            5,
+            8627,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "a3de879972_ai4all.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/a3de879972_ai4all.pdf.md",
+        "blob_sha": "eb269ce7c74d311dfb27c2368fdb5f24c33dd35a",
+        "sha256": "8057657854ec47e7dc73c59e5d60742c52a264caf67bbde0df57da515b0d67c0",
+        "bytes": 59177,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8242,
+        "score": [
+          1,
+          5,
+          8242,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/a3de879972_ai4all.pdf.md",
+          "blob_sha": "eb269ce7c74d311dfb27c2368fdb5f24c33dd35a",
+          "sha256": "8057657854ec47e7dc73c59e5d60742c52a264caf67bbde0df57da515b0d67c0",
+          "bytes": 59177,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8242,
+          "score": [
+            1,
+            5,
+            8242,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/a3de879972_ai4all.pdf.md",
+          "blob_sha": "065e97c75ddecf795070921f6218bc3cedf4bc30",
+          "sha256": "8cb839c90b2ba35abbbb6bc6f7bb226d4f636cda1bb6069a022640108bc61b57",
+          "bytes": 24234,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 3384,
+          "score": [
+            1,
+            5,
+            3384,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "a5600e2c62_2609.28049v1.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/a5600e2c62_2609.28049v1.pdf.md",
+        "blob_sha": "8003ebef1daf8c6585f3f0dbf7e5fd9c7b82ade5",
+        "sha256": "6cda98ac54ebf3444d507266412648ebea0cc1c2dd9179436552d4c42b088ccd",
+        "bytes": 71299,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 10260,
+        "score": [
+          1,
+          5,
+          10260,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/a5600e2c62_2609.28049v1.pdf.md",
+          "blob_sha": "8003ebef1daf8c6585f3f0dbf7e5fd9c7b82ade5",
+          "sha256": "6cda98ac54ebf3444d507266412648ebea0cc1c2dd9179436552d4c42b088ccd",
+          "bytes": 71299,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 10260,
+          "score": [
+            1,
+            5,
+            10260,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/a5600e2c62_2609.28049v1.pdf.md",
+          "blob_sha": "c7036d8008334fbaf07277f3e454f46bacb9685b",
+          "sha256": "3f1a63cb50f863df9de76603ee84e133f3797e551e33b56182243c915984f3c2",
+          "bytes": 45775,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6628,
+          "score": [
+            1,
+            5,
+            6628,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "a718683af5_32263160.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/a718683af5_32263160.pdf.md",
+        "blob_sha": "e66ed482daf6ba5e47b33adee62eeda5f7c92523",
+        "sha256": "a7f807b6210a5df4632dc191df5d5c8a4c1cd2d28901057147c806f8db089c4b",
+        "bytes": 47449,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 6803,
+        "score": [
+          1,
+          5,
+          6803,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/a718683af5_32263160.pdf.md",
+          "blob_sha": "e66ed482daf6ba5e47b33adee62eeda5f7c92523",
+          "sha256": "a7f807b6210a5df4632dc191df5d5c8a4c1cd2d28901057147c806f8db089c4b",
+          "bytes": 47449,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6803,
+          "score": [
+            1,
+            5,
+            6803,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/a718683af5_32263160.pdf.md",
+          "blob_sha": "9444f0385bac7245b627340fc1a168398c392d52",
+          "sha256": "14ef67c992d35e237ef7d5b1fd363c61f73684df43cb70d76f0994119292a5d8",
+          "bytes": 39019,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5801,
+          "score": [
+            1,
+            5,
+            5801,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "a9156f88ef_mcs.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/a9156f88ef_mcs.pdf.md",
+        "blob_sha": "a47ddbe9d3f8c57a79b0dbefcadf924c091cfa13",
+        "sha256": "02db5bc7a2cc443f31e6493f6b28f3451f06541d9b9f7a763d4e8366015bab1c",
+        "bytes": 60084,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8839,
+        "score": [
+          1,
+          5,
+          8839,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/a9156f88ef_mcs.pdf.md",
+          "blob_sha": "a47ddbe9d3f8c57a79b0dbefcadf924c091cfa13",
+          "sha256": "02db5bc7a2cc443f31e6493f6b28f3451f06541d9b9f7a763d4e8366015bab1c",
+          "bytes": 60084,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8839,
+          "score": [
+            1,
+            5,
+            8839,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/a9156f88ef_mcs.pdf.md",
+          "blob_sha": "71c5b912dad476a8bfeba3aeb2108f135c999281",
+          "sha256": "adf681e9d48b6d13fe22dd1c38c2be62df8e945c207c6804b8b7014a3ecd7004",
+          "bytes": 11147,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 1576,
+          "score": [
+            1,
+            5,
+            1576,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "b12f5f61bc_Advanced_AI_Architectures_for_Engineering_Innovation.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/b12f5f61bc_Advanced_AI_Architectures_for_Engineering_Innovation.pdf.md",
+        "blob_sha": "57843c00b043673fa25781a1611791cb42995613",
+        "sha256": "f52b2576fa9b3669054ee19ef40d8aa070a36787300cdede0d0bc144fff31b4f",
+        "bytes": 73171,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 9918,
+        "score": [
+          1,
+          5,
+          9918,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/b12f5f61bc_Advanced_AI_Architectures_for_Engineering_Innovation.pdf.md",
+          "blob_sha": "57843c00b043673fa25781a1611791cb42995613",
+          "sha256": "f52b2576fa9b3669054ee19ef40d8aa070a36787300cdede0d0bc144fff31b4f",
+          "bytes": 73171,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9918,
+          "score": [
+            1,
+            5,
+            9918,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/b12f5f61bc_Advanced_AI_Architectures_for_Engineering_Innovation.pdf.md",
+          "blob_sha": "9680f854e2ee2db5be49b9906c1a4a078b9dccfe",
+          "sha256": "435a0696bfb6d93eeda127201c8b41c9fb711ff299b19eb72feef2ae1460946a",
+          "bytes": 65918,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9147,
+          "score": [
+            1,
+            5,
+            9147,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "b1ceea385e_16678907951_1_.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/b1ceea385e_16678907951_1_.pdf.md",
+        "blob_sha": "7ae307182c93786b5226a4058a9fe54a5857c8c3",
+        "sha256": "83707cde97fa85fa7ac2bf6946b8f7fe58fc1e68ddc05bf176cb10194a6e2da7",
+        "bytes": 59795,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8330,
+        "score": [
+          1,
+          5,
+          8330,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/b1ceea385e_16678907951_1_.pdf.md",
+          "blob_sha": "7ae307182c93786b5226a4058a9fe54a5857c8c3",
+          "sha256": "83707cde97fa85fa7ac2bf6946b8f7fe58fc1e68ddc05bf176cb10194a6e2da7",
+          "bytes": 59795,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8330,
+          "score": [
+            1,
+            5,
+            8330,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/b1ceea385e_16678907951_1_.pdf.md",
+          "blob_sha": "a0e81d0890ca73497c5029acd6e3ceb242d10370",
+          "sha256": "5184c87aa7dd1690b5474c4e71dca8d34c002c89a6a8bb5ef669f934eff0f025",
+          "bytes": 49553,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6904,
+          "score": [
+            1,
+            5,
+            6904,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "b705384f38_2608.21381v1.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/b705384f38_2608.21381v1.pdf.md",
+        "blob_sha": "fdf0bd56744d8050698f96ebb342dc8b53eb8f98",
+        "sha256": "5bfa5d3ca203512a7e1cb0da221bb8d76a9a8227e598059ffce203bfb1ce5fab",
+        "bytes": 71652,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 9950,
+        "score": [
+          1,
+          5,
+          9950,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/b705384f38_2608.21381v1.pdf.md",
+          "blob_sha": "fdf0bd56744d8050698f96ebb342dc8b53eb8f98",
+          "sha256": "5bfa5d3ca203512a7e1cb0da221bb8d76a9a8227e598059ffce203bfb1ce5fab",
+          "bytes": 71652,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9950,
+          "score": [
+            1,
+            5,
+            9950,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/b705384f38_2608.21381v1.pdf.md",
+          "blob_sha": "d92f9f78734d31949153d50840615d5915872fa5",
+          "sha256": "8ce9df4579259ab5b0b48188f8d44f09cdf466f9239873ba2c4c2b030f4f7ae5",
+          "bytes": 49866,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7013,
+          "score": [
+            1,
+            5,
+            7013,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "bc5069abec_2105.09506v1.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/bc5069abec_2105.09506v1.pdf.md",
+        "blob_sha": "4ce7ddb089ca487b774561bb5cfbd944c310d2b0",
+        "sha256": "5496564a62ccf1cd959a35bea5231703053f44723d38b95447c6d48008115685",
+        "bytes": 58436,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7983,
+        "score": [
+          1,
+          5,
+          7983,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/bc5069abec_2105.09506v1.pdf.md",
+          "blob_sha": "4ce7ddb089ca487b774561bb5cfbd944c310d2b0",
+          "sha256": "5496564a62ccf1cd959a35bea5231703053f44723d38b95447c6d48008115685",
+          "bytes": 58436,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7983,
+          "score": [
+            1,
+            5,
+            7983,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/bc5069abec_2105.09506v1.pdf.md",
+          "blob_sha": "11227ff959c145fb5d94a6332033f2d31ba45bc4",
+          "sha256": "5b5bddbc64658cdf66b910f6d595b6a7024a7968347fa1e0366de1d38798cb60",
+          "bytes": 17170,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 2471,
+          "score": [
+            1,
+            5,
+            2471,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "be0f684b59_814578.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/be0f684b59_814578.pdf.md",
+        "blob_sha": "fe866f59e92447b0106dc7a474476bfcbaa0b290",
+        "sha256": "3ed5a83a9bb36daf38aab9b7be9c36945e6f1bbf41cc11dba08108a05e25d372",
+        "bytes": 62001,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8327,
+        "score": [
+          1,
+          5,
+          8327,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/be0f684b59_814578.pdf.md",
+          "blob_sha": "fe866f59e92447b0106dc7a474476bfcbaa0b290",
+          "sha256": "3ed5a83a9bb36daf38aab9b7be9c36945e6f1bbf41cc11dba08108a05e25d372",
+          "bytes": 62001,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8327,
+          "score": [
+            1,
+            5,
+            8327,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/be0f684b59_814578.pdf.md",
+          "blob_sha": "927e9a92b9e3c319306c6027dac9a6cb6bb6a645",
+          "sha256": "4d980c6f917b5045a6697e3b93831a5d428bf390ce97eb80d8523a0fbc44b71e",
+          "bytes": 57369,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7890,
+          "score": [
+            1,
+            5,
+            7890,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "c22d517e45_2512.15386v1.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/c22d517e45_2512.15386v1.pdf.md",
+        "blob_sha": "1c630c71d722c41ba72dff217cc699b96823091c",
+        "sha256": "b7e7d8184a7a6cb7b92b709fe2a725b7746b69719db96cdcfaea128d26b7783e",
+        "bytes": 51240,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7503,
+        "score": [
+          1,
+          5,
+          7503,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c22d517e45_2512.15386v1.pdf.md",
+          "blob_sha": "1c630c71d722c41ba72dff217cc699b96823091c",
+          "sha256": "b7e7d8184a7a6cb7b92b709fe2a725b7746b69719db96cdcfaea128d26b7783e",
+          "bytes": 51240,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7503,
+          "score": [
+            1,
+            5,
+            7503,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c22d517e45_2512.15386v1.pdf.md",
+          "blob_sha": "26a091195427903ce5943fb7a81e0fb524f2d3b2",
+          "sha256": "dd67b80609fee633c372d05286494b310f917bd60e58bee1e1f5fa7fca7a8cc0",
+          "bytes": 45069,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6607,
+          "score": [
+            1,
+            5,
+            6607,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "c3a22ffdff_advanced-engineering-mathematics_by-erwin-kreyszig-__10th_edition-1_1_.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/c3a22ffdff_advanced-engineering-mathematics_by-erwin-kreyszig-__10th_edition-1_1_.pdf.md",
+        "blob_sha": "130285a08d2a12dbe323c46a0ed9ed90f933e318",
+        "sha256": "a1950dd5c76f32c426981ee3c13ff716bfdc55ebc5bf3b685942b99caa8afcd8",
+        "bytes": 48100,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7294,
+        "score": [
+          1,
+          5,
+          7294,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c3a22ffdff_advanced-engineering-mathematics_by-erwin-kreyszig-__10th_edition-1_1_.pdf.md",
+          "blob_sha": "130285a08d2a12dbe323c46a0ed9ed90f933e318",
+          "sha256": "a1950dd5c76f32c426981ee3c13ff716bfdc55ebc5bf3b685942b99caa8afcd8",
+          "bytes": 48100,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7294,
+          "score": [
+            1,
+            5,
+            7294,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c3a22ffdff_advanced-engineering-mathematics_by-erwin-kreyszig-__10th_edition-1_1_.pdf.md",
+          "blob_sha": "ca4ce8bca805ddff5488d26aa6c822a60a5bef1d",
+          "sha256": "f197232445a216599fb08c0526fbdf28117feb04a77e154863175b9cdde300dd",
+          "bytes": 43628,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6258,
+          "score": [
+            1,
+            5,
+            6258,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "c4386dc83e_qt5qw5382d_noSplash_983c1629d166d6b046b4a2d65e75e816.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/c4386dc83e_qt5qw5382d_noSplash_983c1629d166d6b046b4a2d65e75e816.pdf.md",
+        "blob_sha": "1d44d33f4a838ea0218c73c8ffab6381b58f08a7",
+        "sha256": "e6cdf626d2deed240d33faa924a9d040956bde51fd551f26ead2e55591876dbe",
+        "bytes": 65558,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 9600,
+        "score": [
+          1,
+          5,
+          9600,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c4386dc83e_qt5qw5382d_noSplash_983c1629d166d6b046b4a2d65e75e816.pdf.md",
+          "blob_sha": "1d44d33f4a838ea0218c73c8ffab6381b58f08a7",
+          "sha256": "e6cdf626d2deed240d33faa924a9d040956bde51fd551f26ead2e55591876dbe",
+          "bytes": 65558,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9600,
+          "score": [
+            1,
+            5,
+            9600,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c4386dc83e_qt5qw5382d_noSplash_983c1629d166d6b046b4a2d65e75e816.pdf.md",
+          "blob_sha": "258cf64b616afe32b5ead01b621054e1951dc9af",
+          "sha256": "d5474941e6b326c56020f63a107fe8b541493fe98d2a095b43b1a3c742aecc4f",
+          "bytes": 19626,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 2855,
+          "score": [
+            1,
+            5,
+            2855,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "c5fe68815a_2303.11174v2.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/c5fe68815a_2303.11174v2.pdf.md",
+        "blob_sha": "629f4b7f4ab11cb12a94bb342e9f4b1a7edd7fb3",
+        "sha256": "bc972a6275b43cf989e92449eaf50d7f5ee5b77b252230d154cc22d148d50450",
+        "bytes": 54997,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8152,
+        "score": [
+          1,
+          5,
+          8152,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c5fe68815a_2303.11174v2.pdf.md",
+          "blob_sha": "629f4b7f4ab11cb12a94bb342e9f4b1a7edd7fb3",
+          "sha256": "bc972a6275b43cf989e92449eaf50d7f5ee5b77b252230d154cc22d148d50450",
+          "bytes": 54997,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8152,
+          "score": [
+            1,
+            5,
+            8152,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c5fe68815a_2303.11174v2.pdf.md",
+          "blob_sha": "0716dbd3f69a738efd82cf2c98be30217c8738f6",
+          "sha256": "2ddab4491dcf20f2913b42576e136bb5e96630315c3d5e9d2d5bfd5d149e894e",
+          "bytes": 45472,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6626,
+          "score": [
+            1,
+            5,
+            6626,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "c8ec997481_1512.06808v1.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/c8ec997481_1512.06808v1.pdf.md",
+        "blob_sha": "b3dc34324fade644d261226eedfbf2a6c4894d63",
+        "sha256": "bcb70e4104161ce4a3ae5264e89d22bc4184f71c00b93375f1ec4368e2906dc4",
+        "bytes": 57723,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8636,
+        "score": [
+          1,
+          5,
+          8636,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c8ec997481_1512.06808v1.pdf.md",
+          "blob_sha": "b3dc34324fade644d261226eedfbf2a6c4894d63",
+          "sha256": "bcb70e4104161ce4a3ae5264e89d22bc4184f71c00b93375f1ec4368e2906dc4",
+          "bytes": 57723,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8636,
+          "score": [
+            1,
+            5,
+            8636,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/c8ec997481_1512.06808v1.pdf.md",
+          "blob_sha": "73cc6a181bdf9d1ddf463659472e3ec0d8e213eb",
+          "sha256": "8d665593cdaedbf0fbb84dc57216b5cb4dec3254c46a7bd3f9fc81629f3e99af",
+          "bytes": 53513,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7829,
+          "score": [
+            1,
+            5,
+            7829,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "cd5f21c15d__OceanofPDF.com_Ultimate_Step_by_Step_Guide_to_Machine_Lea_-_Daneyal_Anis.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/cd5f21c15d__OceanofPDF.com_Ultimate_Step_by_Step_Guide_to_Machine_Lea_-_Daneyal_Anis.pdf.md",
+        "blob_sha": "c55b8937091ae1238b6a5a2df5b9c32d1ced6a0e",
+        "sha256": "c17f44768cebc2f2c7e94a774e1e05e4b25487999288a108459e7c829d4deb4a",
+        "bytes": 60605,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8831,
+        "score": [
+          1,
+          5,
+          8831,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/cd5f21c15d__OceanofPDF.com_Ultimate_Step_by_Step_Guide_to_Machine_Lea_-_Daneyal_Anis.pdf.md",
+          "blob_sha": "c55b8937091ae1238b6a5a2df5b9c32d1ced6a0e",
+          "sha256": "c17f44768cebc2f2c7e94a774e1e05e4b25487999288a108459e7c829d4deb4a",
+          "bytes": 60605,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8831,
+          "score": [
+            1,
+            5,
+            8831,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/cd5f21c15d__OceanofPDF.com_Ultimate_Step_by_Step_Guide_to_Machine_Lea_-_Daneyal_Anis.pdf.md",
+          "blob_sha": "2dd771d71e71521509e34710e90a552c8326a1d0",
+          "sha256": "e58a61a88bfa905ea0d517b4f36dea6ab64cfea0ee959212d545833416ed7604",
+          "bytes": 39108,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5807,
+          "score": [
+            1,
+            5,
+            5807,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "cd966a5df8_2509.05913v3.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/cd966a5df8_2509.05913v3.pdf.md",
+        "blob_sha": "e265e7933ae491d88b5b5c4e75ab234bc00f3267",
+        "sha256": "fbf35a93815bee0168d5f2609ecc39c2fb8276d9e6752a6dc991434cd2d5a129",
+        "bytes": 62724,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 9313,
+        "score": [
+          1,
+          5,
+          9313,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/cd966a5df8_2509.05913v3.pdf.md",
+          "blob_sha": "e265e7933ae491d88b5b5c4e75ab234bc00f3267",
+          "sha256": "fbf35a93815bee0168d5f2609ecc39c2fb8276d9e6752a6dc991434cd2d5a129",
+          "bytes": 62724,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 9313,
+          "score": [
+            1,
+            5,
+            9313,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/cd966a5df8_2509.05913v3.pdf.md",
+          "blob_sha": "c4640094b52e6149382753d02975bbcc0d20ca19",
+          "sha256": "b45629ef49a89fc9761010489e3eb082d94f26f49b846b4db92e811127d53b96",
+          "bytes": 41266,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5981,
+          "score": [
+            1,
+            5,
+            5981,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "d4a5de2a09_2509.21673v1.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/d4a5de2a09_2509.21673v1.pdf.md",
+        "blob_sha": "b628053227b018ba96b3a3b099a82ab7f3da2343",
+        "sha256": "4ade6f9d5ab53873b140bb5dbeee41530439dfc60826e9f3877a1454952a8e8c",
+        "bytes": 39308,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 5581,
+        "score": [
+          1,
+          5,
+          5581,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/d4a5de2a09_2509.21673v1.pdf.md",
+          "blob_sha": "b628053227b018ba96b3a3b099a82ab7f3da2343",
+          "sha256": "4ade6f9d5ab53873b140bb5dbeee41530439dfc60826e9f3877a1454952a8e8c",
+          "bytes": 39308,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5581,
+          "score": [
+            1,
+            5,
+            5581,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/d4a5de2a09_2509.21673v1.pdf.md",
+          "blob_sha": "6376f1c1fe46d1beac4682cf2ccd0636adabc395",
+          "sha256": "3235640393c714c49ac0bea6815e435ed739d497212335a30356bb6d8b7f1d3b",
+          "bytes": 35121,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 5125,
+          "score": [
+            1,
+            5,
+            5125,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "dd12d76495_2403.12977v3.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/dd12d76495_2403.12977v3.pdf.md",
+        "blob_sha": "c525252f9a7e9d79c857792ef9c8debfe2f2f77f",
+        "sha256": "cc12938182d6728c72235fa34adcb16cbd87f50e30b1307d72059f72627d36f9",
+        "bytes": 52701,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7590,
+        "score": [
+          1,
+          5,
+          7590,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/dd12d76495_2403.12977v3.pdf.md",
+          "blob_sha": "c525252f9a7e9d79c857792ef9c8debfe2f2f77f",
+          "sha256": "cc12938182d6728c72235fa34adcb16cbd87f50e30b1307d72059f72627d36f9",
+          "bytes": 52701,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7590,
+          "score": [
+            1,
+            5,
+            7590,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/dd12d76495_2403.12977v3.pdf.md",
+          "blob_sha": "814486be9abdd0381fb33fee14cca49e656af567",
+          "sha256": "35940c1bfb334f8003aecaac6b7778431f91446c1b60121653b518c466dcbacb",
+          "bytes": 45649,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6821,
+          "score": [
+            1,
+            5,
+            6821,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "ec9d92d401_2604.08885v1.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/ec9d92d401_2604.08885v1.pdf.md",
+        "blob_sha": "92b4d09e1c9ec0fa2c510b09a42129eb1259b179",
+        "sha256": "24d38867287c7156e9dc4065f114a5ade11ab5d8726c92ee0422db573fa05ad8",
+        "bytes": 61714,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 8317,
+        "score": [
+          1,
+          5,
+          8317,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/ec9d92d401_2604.08885v1.pdf.md",
+          "blob_sha": "92b4d09e1c9ec0fa2c510b09a42129eb1259b179",
+          "sha256": "24d38867287c7156e9dc4065f114a5ade11ab5d8726c92ee0422db573fa05ad8",
+          "bytes": 61714,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 8317,
+          "score": [
+            1,
+            5,
+            8317,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/ec9d92d401_2604.08885v1.pdf.md",
+          "blob_sha": "a1854fb3d52151376b615c9df2b98dae930a28b7",
+          "sha256": "a8c2caa67005a63b54b696e5236c35f4e531b249f81778cd7162bfc905371739",
+          "bytes": 48692,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6920,
+          "score": [
+            1,
+            5,
+            6920,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "f0c8dd125c_2510.12323v1_1_.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/f0c8dd125c_2510.12323v1_1_.pdf.md",
+        "blob_sha": "40ddbb67a5c76b767a61f481440fa8370fee6e96",
+        "sha256": "855a7853adb70b577c4262c3e29c30e96b562010fc0ea7f9cb17726d3d2948ea",
+        "bytes": 55661,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7715,
+        "score": [
+          1,
+          5,
+          7715,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/f0c8dd125c_2510.12323v1_1_.pdf.md",
+          "blob_sha": "40ddbb67a5c76b767a61f481440fa8370fee6e96",
+          "sha256": "855a7853adb70b577c4262c3e29c30e96b562010fc0ea7f9cb17726d3d2948ea",
+          "bytes": 55661,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7715,
+          "score": [
+            1,
+            5,
+            7715,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/f0c8dd125c_2510.12323v1_1_.pdf.md",
+          "blob_sha": "c9b9c1e06fb559202f75cf2d72ccfce377013b3a",
+          "sha256": "563f2d271b5b2037ea0ec21ecf54945061f8c6fb88b45c72b90c7f069afd419b",
+          "bytes": 50353,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6998,
+          "score": [
+            1,
+            5,
+            6998,
+            -2
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "f7b7784e43_bitstream_59010.pdf.md",
+      "winner": {
+        "node": 2,
+        "branch": "origin/gcp/foundry-node2-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/f7b7784e43_bitstream_59010.pdf.md",
+        "blob_sha": "e63f5a3bb4f2e436b49c8c2a983ff5f28297fd8b",
+        "sha256": "752275a7e88984ec7b0960f8b8b8fb6b941a84549b4ee56622baf29013bf6512",
+        "bytes": 54609,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 7949,
+        "score": [
+          1,
+          5,
+          7949,
+          -2
+        ]
+      },
+      "variants": [
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/f7b7784e43_bitstream_59010.pdf.md",
+          "blob_sha": "e63f5a3bb4f2e436b49c8c2a983ff5f28297fd8b",
+          "sha256": "752275a7e88984ec7b0960f8b8b8fb6b941a84549b4ee56622baf29013bf6512",
+          "bytes": 54609,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7949,
+          "score": [
+            1,
+            5,
+            7949,
+            -2
+          ]
+        },
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/f7b7784e43_bitstream_59010.pdf.md",
+          "blob_sha": "7d8a77f91c74b473285f0980c46d92fff95bc253",
+          "sha256": "8c666d49f851282f07cd6474b18c0d55f6b002d4db8d1ef5cca38bcac95bfcc1",
+          "bytes": 52581,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 7627,
+          "score": [
+            1,
+            5,
+            7627,
+            -1
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "f93881361f_file_1726508125ivhrv.pdf.md",
+      "winner": {
+        "node": 1,
+        "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+        "rel_path": "gdrive_corpus_extractions/f93881361f_file_1726508125ivhrv.pdf.md",
+        "blob_sha": "e945bbfefb353c309c619f1b1aea31f70e53d5c1",
+        "sha256": "5c1845b180df6577b9dae0178fd33579f984aa33bd2f9dfa3a2c88d82c061c0d",
+        "bytes": 46704,
+        "has_all_5_xml_tags": true,
+        "xml_tag_count": 5,
+        "word_count": 6651,
+        "score": [
+          1,
+          5,
+          6651,
+          -1
+        ]
+      },
+      "variants": [
+        {
+          "node": 1,
+          "branch": "origin/gcp/foundry-shard-b-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/f93881361f_file_1726508125ivhrv.pdf.md",
+          "blob_sha": "e945bbfefb353c309c619f1b1aea31f70e53d5c1",
+          "sha256": "5c1845b180df6577b9dae0178fd33579f984aa33bd2f9dfa3a2c88d82c061c0d",
+          "bytes": 46704,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 6651,
+          "score": [
+            1,
+            5,
+            6651,
+            -1
+          ]
+        },
+        {
+          "node": 2,
+          "branch": "origin/gcp/foundry-node2-2026-11-13",
+          "rel_path": "gdrive_corpus_extractions/f93881361f_file_1726508125ivhrv.pdf.md",
+          "blob_sha": "52ac0fac06e3e2efb0066397dd8aa7a07bd0088e",
+          "sha256": "f8a6aeade0c13fe6edb1e830fa474f97c4b87d1f46e22d42ae6908c3a89d89f1",
+          "bytes": 32011,
+          "has_all_5_xml_tags": true,
+          "xml_tag_count": 5,
+          "word_count": 4548,
+          "score": [
+            1,
+            5,
+            4548,
+            -2
+          ]
+        }
+      ]
+    }
+  ],
+  "same_blob_overlaps": []
+}

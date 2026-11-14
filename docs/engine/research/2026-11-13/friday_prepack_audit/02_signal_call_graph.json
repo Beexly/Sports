@@ -1,0 +1,3666 @@
+{
+  "generated_at_utc": "2026-11-14T01:03:39.667338+00:00",
+  "worktree": "C:\\Users\\Garrett\\Sports_prepack_audit_wt",
+  "ts_runtime_probe": {
+    "x_rules_census": {
+      "situational_catalog_80_rules_count": 80,
+      "emission_firewall_7_rules_count": 7,
+      "misleading_stat_firewall_15_rules_count": 15,
+      "situational_plus_misleading_85_rules_count": 85,
+      "total_reconciled_rules_count": 87
+    },
+    "all_87_reconciled_rules": [
+      {
+        "index": 1,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.1",
+        "theme": 1,
+        "title": "@EaglesXsandOs",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Separate EPA (point value of the state change) from leverage/WPA (what the state change is worth in win probability). Weight plays by game state when the target is winning or team "
+      },
+      {
+        "index": 2,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.2",
+        "theme": 1,
+        "title": "@ScottKacsmar",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "The price of a yard is set by down and distance. Never credit a play's yards without the state it started in; short-of-the-sticks gains late in a series are worth far more than the"
+      },
+      {
+        "index": 3,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.3",
+        "theme": 1,
+        "title": "@zxcvbnmwill",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Value is the change in state, not the yardage. Any feature built on raw yards without the before/after state is measuring the wrong thing."
+      },
+      {
+        "index": 4,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.4",
+        "theme": 1,
+        "title": "@galenhall",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Near the goal lines, price the failure state, not just the conversion. Red-zone and backed-up states need their own baselines; a flat model mis-ranks both plays and decisions there"
+      },
+      {
+        "index": 5,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.5",
+        "theme": 1,
+        "title": "@ArkansasQuant",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Evaluate decisions by the delta versus the alternative, never by the absolute success rate. Leverage is a gap, not a level."
+      },
+      {
+        "index": 6,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.6",
+        "theme": 1,
+        "title": "@BenjaminSolak",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Judge decisions by the ex-ante WP delta (+14.5%), not by the outcome that followed. Resulting is a training-data poison: a correct go that fails is still a correct go."
+      },
+      {
+        "index": 7,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.7",
+        "theme": 1,
+        "title": "@Timo_NFL",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Edge states (1 second left, kneel-out clocks, OT) are separate regimes, not the tail of the mid-game distribution. The same nominal choice is a different decision depending on whic"
+      },
+      {
+        "index": 8,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.8",
+        "theme": 1,
+        "title": "@bburkeESPN",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Decision rule — compute p × WP(success) + (1−p) × WP(failure) and compare it to WP(kick/punt). \"Punt\" is never a default; it is one branch among three, priced like the others."
+      },
+      {
+        "index": 9,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.9",
+        "theme": 1,
+        "title": "@tejfbanalytics",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Track cumulative decision WPA. A coach/team decision tendency is a measurable, persistent quantity — small per-play leaks are a real signal, not noise."
+      },
+      {
+        "index": 10,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "1.10",
+        "theme": 1,
+        "title": "@nfl4thbot",
+        "evaluator": "leverage",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Do not treat early-game decisions as low-stakes by default. Price every 4th down in WP; the coach's conservative lean is not evidence the model is wrong."
+      },
+      {
+        "index": 11,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.1",
+        "theme": 2,
+        "title": "@dwainmcfarland",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Learn a team-specific offset from the script-conditioned expectation. Score changes the play call in a predictable direction, but the size of the shift is a team trait."
+      },
+      {
+        "index": 12,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.2",
+        "theme": 2,
+        "title": "@LateRoundQB",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Estimate pace, pass rate, and efficiency in close games first (margin within ~6, or WP roughly 20–80%). That is the team prior; extreme scripts are a separate state."
+      },
+      {
+        "index": 13,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.3",
+        "theme": 2,
+        "title": "@grok",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Train on residuals versus expected pass rate given score, down, and distance (PROE), not on raw attempt shares. (Provenance note: this post is from X's own AI account summarizing t"
+      },
+      {
+        "index": 14,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.4",
+        "theme": 2,
+        "title": "@PurpyNFL",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Any feature built from attempt counts must be script-adjusted before it enters a model, or it encodes the schedule of scores the team happened to face."
+      },
+      {
+        "index": 15,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.5",
+        "theme": 2,
+        "title": "@PurpyNFL",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Exclude or reclassify kneel-downs, sacks, and scrambles before estimating script effects or team tendencies."
+      },
+      {
+        "index": 16,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.6",
+        "theme": 2,
+        "title": "@bjT98504",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Condition run-defense evaluation on score and leverage, or the ranking will track opponent script rather than defensive quality."
+      },
+      {
+        "index": 17,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.7",
+        "theme": 2,
+        "title": "@Moneylinehacks",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Do not treat rush or pass attempts as exogenous inputs when predicting points, spreads, or player yardage. Volume and team success are jointly determined by script."
+      },
+      {
+        "index": 18,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.8",
+        "theme": 2,
+        "title": "@LinkofSunshine",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Any pass-volume feature must carry the score state with it, or the model will learn the arrow of causality backwards."
+      },
+      {
+        "index": 19,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.9",
+        "theme": 2,
+        "title": "@hawkblogger",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Shrink extreme-script rates hard when a team rarely trails or rarely leads. Never pool trailing EPA with leading EPA."
+      },
+      {
+        "index": 20,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.10",
+        "theme": 2,
+        "title": "@NFLSnapIQ",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "The neutral-script early-down split is the diagnostic view. Build it before drawing any conclusion about coaching philosophy."
+      },
+      {
+        "index": 21,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.11",
+        "theme": 2,
+        "title": "@BAI8app",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Do not average across states. Reweight to a common script distribution before ranking teams or feeding a predictive feature."
+      },
+      {
+        "index": 22,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "2.12",
+        "theme": 2,
+        "title": "@RoyRobi73192051",
+        "evaluator": "script",
+        "expected": "positive",
+        "liveValue": 0.5,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Encode the base rule as the expectation; measure every team and game as a deviation from it."
+      },
+      {
+        "index": 23,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.1",
+        "theme": 3,
+        "title": "@SharpFootball",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Define the red zone as its own state (inside the 20, goal-to-go nested inside it) and score the drive outcome — TD vs FG vs nothing — separately from the yards earned getting there"
+      },
+      {
+        "index": 24,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.2",
+        "theme": 3,
+        "title": "@GridironInfo_",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Keep red-zone EPA as a split feature for both offense and defense; never let full-field EPA stand in for it."
+      },
+      {
+        "index": 25,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.3",
+        "theme": 3,
+        "title": "@SharpFootball",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Within the red zone, split by down. An aggregate red-zone number can hide the exact down where the offense breaks."
+      },
+      {
+        "index": 26,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.4",
+        "theme": 3,
+        "title": "@TheJetPress",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Full-field explosiveness does not imply finishing ability. Model the red zone as a distinct regime with its own team ratings."
+      },
+      {
+        "index": 27,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.5",
+        "theme": 3,
+        "title": "@dmlr53",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Backed-up is a negative-EP state; value plays from it in EP/EPA, never raw yards, or the model overvalues empty yardage from bad field position."
+      },
+      {
+        "index": 28,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.6",
+        "theme": 3,
+        "title": "@officialctpod",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Fourth-down conversion priors must be era-current and distance-specific; stale priors systematically under-price going for it."
+      },
+      {
+        "index": 29,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.7",
+        "theme": 3,
+        "title": "@thatcaden_",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Treat distance-to-go as a first-class, continuous feature on 3rd/4th down. \"Long\" is a probability, not a verdict."
+      },
+      {
+        "index": 30,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.8",
+        "theme": 3,
+        "title": "@GridironInfo_",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "The two-minute drill is its own efficiency regime. Condition on clock, timeouts, and score; do not borrow neutral-script play values into it."
+      },
+      {
+        "index": 31,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.9",
+        "theme": 3,
+        "title": "@YUNOsports_NFL",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Carry a clutch/two-minute conversion split for offense and defense separately from overall third-down rates."
+      },
+      {
+        "index": 32,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.10",
+        "theme": 3,
+        "title": "@RedlineFootball",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "State the WP band any EPA feature was computed on (common operational garbage-time definitions: WP outside ~5–95% or ~10–90%, or 17+ down in Q4). Rankings without the filter defini"
+      },
+      {
+        "index": 33,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.11",
+        "theme": 3,
+        "title": "@goblue_mike",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "States are dynamic. A large point swing in a short window moves the game out of the prevent regime — re-classify the state instead of averaging the whole stretch as \"garbage time."
+      },
+      {
+        "index": 34,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "3.12",
+        "theme": 3,
+        "title": "@LordReebs",
+        "evaluator": "redzone",
+        "expected": "positive",
+        "liveValue": 0.1,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Player efficiency features must be state-split. A QB's red-zone TD/INT profile is a separate quantity from his overall line and can diverge sharply."
+      },
+      {
+        "index": 35,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "4.1",
+        "theme": 4,
+        "title": "@RyanPaganetti",
+        "evaluator": "decision",
+        "expected": "positive",
+        "liveValue": 0.015,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Price the full WP of go vs punt with branch values (WP after success ≈ 71%, after failure ≈ 29%), not conversion rate alone. A modest conversion chance still wins when the alternat"
+      },
+      {
+        "index": 36,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "4.2",
+        "theme": 4,
+        "title": "@BenjaminSolak",
+        "evaluator": "decision",
+        "expected": "positive",
+        "liveValue": 0.015,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Always price all three branches. In long-field-goal range late in a tie, the field goal can be dominated by both alternatives."
+      },
+      {
+        "index": 37,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "4.3",
+        "theme": 4,
+        "title": "@billbarnwell",
+        "evaluator": "decision",
+        "expected": "positive",
+        "liveValue": 0.015,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Historical base rates in narrow state bins are strong priors. When a coach deviates from a near-unanimous bin, the burden of proof is on the deviation."
+      },
+      {
+        "index": 38,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "4.4",
+        "theme": 4,
+        "title": "@NextGenStats",
+        "evaluator": "decision",
+        "expected": "positive",
+        "liveValue": 0.015,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "No state is categorically off-limits to the EV computation. Compute the branches everywhere; let the numbers, not field-position folklore, draw the lines."
+      },
+      {
+        "index": 39,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "4.5",
+        "theme": 4,
+        "title": "@BenjaminSolak",
+        "evaluator": "decision",
+        "expected": "positive",
+        "liveValue": 0.015,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "When both branches require the same defensive outcome, the go branch weakly dominates. Compare what each branch actually changes, not the labels \"aggressive\" vs \"safe.\""
+      },
+      {
+        "index": 40,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "4.6",
+        "theme": 4,
+        "title": "@MikeReiss",
+        "evaluator": "decision",
+        "expected": "positive",
+        "liveValue": 0.015,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Score margin interacts with the kick/go choice: a field goal that leaves you still trailing by two scores is worth less than its points. Model the margin after each branch, not jus"
+      },
+      {
+        "index": 41,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "4.7",
+        "theme": 4,
+        "title": "@Timo_NFL",
+        "evaluator": "decision",
+        "expected": "positive",
+        "liveValue": 0.015,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Score, clock, and opponent timeouts interact. \"Take the points\" is not a terminal state; price the game that follows the kick."
+      },
+      {
+        "index": 42,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "4.8",
+        "theme": 4,
+        "title": "@nfl4thbot",
+        "evaluator": "decision",
+        "expected": "positive",
+        "liveValue": 0.015,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "A coach's conservative lean is not automatically justified by information the model lacks. Several-point WP edges are rarely overturned by personnel adjustments (backup QB, kicker "
+      },
+      {
+        "index": 43,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.1",
+        "theme": 5,
+        "title": "@SharpFootball",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Personnel is a prior on the defensive response, not just an offensive label. Model the response (base vs nickel, box, shell) as part of the play's context."
+      },
+      {
+        "index": 44,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.2",
+        "theme": 5,
+        "title": "@Michael_Nania",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Expected production is team-by-package specific. A single team efficiency number that ignores personnel mix blends away the actual signal."
+      },
+      {
+        "index": 45,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.3",
+        "theme": 5,
+        "title": "@Bumi_mind",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Split run and pass expectations by package and encode the interaction. A personnel main effect without the run/pass interaction will be wrong in both directions."
+      },
+      {
+        "index": 46,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.4",
+        "theme": 5,
+        "title": "@sambruchhaus",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Condition on the receiving threat of TE2/FB (target rate, receiving grade), not just the personnel label. The label alone does not determine the defensive price."
+      },
+      {
+        "index": 47,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.5",
+        "theme": 5,
+        "title": "@JonnyPage9",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Expected rush value depends on personnel AND the box and width it creates. Include formation width (spread vs condensed) as a feature alongside personnel."
+      },
+      {
+        "index": 48,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.6",
+        "theme": 5,
+        "title": "@RyanPaganetti",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Coverage shell is part of the same tradeoff as personnel. Predict shell from personnel (and vice versa), then predict EPA conditional on the shell."
+      },
+      {
+        "index": 49,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.7",
+        "theme": 5,
+        "title": "@HoodBall_15",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "The value of heavy personnel is partly the conflict it imposes, not the bodies themselves. Features should capture gap count and LB conflict, not only box count."
+      },
+      {
+        "index": 50,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.8",
+        "theme": 5,
+        "title": "@Kovb41",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Never use box count as a standalone feature. Its effect is an interaction with personnel and era; model it as such."
+      },
+      {
+        "index": 51,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.9",
+        "theme": 5,
+        "title": "@popofansports",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Credit for beating a heavy box should be adjusted for whether the offense forced that box or simply declared heavy and ran into the natural response."
+      },
+      {
+        "index": 52,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "5.10",
+        "theme": 5,
+        "title": "@CaseL731",
+        "evaluator": "personnel",
+        "expected": "positive",
+        "liveValue": 0.275,
+        "sign": 1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Usage is endogenous — defenses price tendencies in. Residual EPA after conditioning on personnel, down-and-distance, and defensive response is closer to skill than raw EPA by perso"
+      },
+      {
+        "index": 53,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.1",
+        "theme": 6,
+        "title": "@SalVetriDFS",
+        "evaluator": "backup",
+        "expected": "negative",
+        "liveValue": -0.519143,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Condition skill-player volume and efficiency on the specific quarterback, game by game. A starter/backup flag is too coarse — the identity of the QB is the feature."
+      },
+      {
+        "index": 54,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.2",
+        "theme": 6,
+        "title": "@KyleM_FF",
+        "evaluator": "backup",
+        "expected": "negative",
+        "liveValue": -0.519143,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Do not apply a uniform backup-QB penalty. Target share and per-route efficiency can survive the QB change while TD rate does not; model the components separately, by player."
+      },
+      {
+        "index": 55,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.3",
+        "theme": 6,
+        "title": "@weatherqb",
+        "evaluator": "weather",
+        "expected": "negative",
+        "liveValue": -0.19,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Apply player-specific weather interactions measured against each player's own baseline, never a single game-level weather penalty."
+      },
+      {
+        "index": 56,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.4",
+        "theme": 6,
+        "title": "@weatherqb",
+        "evaluator": "weather",
+        "expected": "negative",
+        "liveValue": -0.19,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Wind speed (with a ~15 mph threshold) should directly cut QB/WR/kicker expectations. Do not transfer the lost passing value to running backs by assumption."
+      },
+      {
+        "index": 57,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.5",
+        "theme": 6,
+        "title": "@AlexCaruso",
+        "evaluator": "weather",
+        "expected": "negative",
+        "liveValue": -0.19,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Model weather as an interaction with the player's own history and home environment, not as a main effect applied to everyone equally."
+      },
+      {
+        "index": 58,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.6",
+        "theme": 6,
+        "title": "@SharpFootball",
+        "evaluator": "attrition",
+        "expected": "negative",
+        "liveValue": -0.2,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Days-of-rest difference and short-week indicators are material features. Flag extreme differentials (multiple days, repeated short weeks, opponents off byes) explicitly."
+      },
+      {
+        "index": 59,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.7",
+        "theme": 6,
+        "title": "@JusttheFoosball",
+        "evaluator": "attrition",
+        "expected": "negative",
+        "liveValue": -0.2,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Treat OL availability as a first-class, graded feature: number of starters out, replacement quality (veteran vs rookie), and injury vs coach's-decision. It should shift expected QB"
+      },
+      {
+        "index": 60,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.8",
+        "theme": 6,
+        "title": "@CynicalPublius",
+        "evaluator": "attrition",
+        "expected": "negative",
+        "liveValue": -0.2,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Altitude is an acclimatization effect, asymmetric by team and by half. Model visitor performance decay at elevation venues rather than a flat venue penalty."
+      },
+      {
+        "index": 61,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.9",
+        "theme": 6,
+        "title": "@TheNumbersDesk",
+        "evaluator": "attrition",
+        "expected": "negative",
+        "liveValue": -0.2,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Rest belongs in the strength prior, but a model should not expect a large, consistent betting edge from rest alone. Distinguish \"this changes expected performance\" from \"this be"
+      },
+      {
+        "index": 62,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "6.10",
+        "theme": 6,
+        "title": "@trenchpower2025",
+        "evaluator": "attrition",
+        "expected": "negative",
+        "liveValue": -0.2,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Track injury context beyond the binary out/active label — practice participation, injury type, and playing-through-it status all change expected performance even when the player is"
+      },
+      {
+        "index": 63,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "7.1",
+        "theme": 7,
+        "title": "@AdamKoffler",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": -0.4,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Forecast wind speed and precipitation should directly lower expected points, especially outdoors. Weather hits totals more than spreads."
+      },
+      {
+        "index": 64,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "7.2",
+        "theme": 7,
+        "title": "@MrMathBet",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": -0.4,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Confirmed QB absence is a first-order repricing event (team strength and scoring rate, immediately). Score injury clusters, not single absences. A move against the public ticket sp"
+      },
+      {
+        "index": 65,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "7.3",
+        "theme": 7,
+        "title": "@offshoreinsider",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": -0.4,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "QB-to-IR is not a flag, it is a multi-point team-strength rewrite applied immediately. Moves of this size with a confirmed availability cause should be treated as information-compl"
+      },
+      {
+        "index": 66,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "7.4",
+        "theme": 7,
+        "title": "@SBD",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": -0.4,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Availability news propagates across markets at once. Cross-market consistency is a check on whether a move is news-driven or flow-driven."
+      },
+      {
+        "index": 67,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "7.5",
+        "theme": 7,
+        "title": "@BTBSportsIntel",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": -0.4,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Unexplained moves are information. Do not assume every move has a fully observed public driver at the moment it happens; soft availability signals belong in the model before offici"
+      },
+      {
+        "index": 68,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "7.6",
+        "theme": 7,
+        "title": "@kukluxkraut",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": -0.4,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Weight moves by the numbers they cross. A move through 3 or 7 is stronger evidence than an equal move elsewhere, and overshoot past a key is a fade candidate once the news is alrea"
+      },
+      {
+        "index": 69,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "7.7",
+        "theme": 7,
+        "title": "@fredwinss_",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": -0.4,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Short-week and rest-differential indicators belong in the pre-move prior — the market applies them before any news arrives."
+      },
+      {
+        "index": 70,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "7.8",
+        "theme": 7,
+        "title": "@QcrackinBookies",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": -0.4,
+        "sign": -1,
+        "gateStatus": "not-a-gate",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Context factors compound. Price weather and venue together; a total move can be the sum of two situational inputs, neither of which is team news."
+      },
+      {
+        "index": 71,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.1",
+        "theme": 8,
+        "title": "@statsowar",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "A yard is not a yard. Score plays against pre-snap expected points (down, distance, field position), not absolute yards."
+      },
+      {
+        "index": 72,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.2",
+        "theme": 8,
+        "title": "@ArifHasanNFL",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Prefer per-play rates over totals for any quality judgment, and carry the script context with any volume feature."
+      },
+      {
+        "index": 73,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.3",
+        "theme": 8,
+        "title": "@ARKNDJL",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Completion percentage is not accuracy. Condition on air yards/aDOT, designed YAC, and throw difficulty (CPOE or depth bins) before comparing passers."
+      },
+      {
+        "index": 74,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.4",
+        "theme": 8,
+        "title": "@AccidentalZen",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Adjust defensive yardage for opponent run/pass mix and opponent quality, or use success-rate / adjusted metrics. Never rank a defense on raw yards allowed."
+      },
+      {
+        "index": 75,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.5",
+        "theme": 8,
+        "title": "@EaglesXsandOs",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Stack the adjustments: state value (EPA) → leverage (WP context) → opponent quality. Each layer removes a different lie. (Same post as Record 1.1 — the lesson differs by theme.)"
+      },
+      {
+        "index": 76,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.6",
+        "theme": 8,
+        "title": "@ScottKacsmar",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Do not treat play EPA as player skill. Split air yards from YAC and be explicit about credit assignment before aggregating plays into player ratings. (Same post as Record 1.2.)"
+      },
+      {
+        "index": 77,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.7",
+        "theme": 8,
+        "title": "@KenIngalls",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Yards/play is a rough efficiency proxy, not the full read. The model should hunt the residual: the ~19% of EPA that down, distance, and state explain beyond yardage."
+      },
+      {
+        "index": 78,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.8",
+        "theme": 8,
+        "title": "@LordBenne",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Pair yards per play with success rate, negative-play rate, and third-down conversion. Averages without the distribution are a different (worse) statistic."
+      },
+      {
+        "index": 79,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.9",
+        "theme": 8,
+        "title": "@Saint_FinX",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Points beat empty yards. The target should be scoring value or EPA; raw yards are a feature, never the verdict."
+      },
+      {
+        "index": 80,
+        "catalogGroup": "X_SITUATIONAL_80",
+        "recordId": "8.10",
+        "theme": 8,
+        "title": "@PukaJimmer",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateXSituationalRecordById -> master-situational-reasoning-aggregator.ts",
+        "lesson": "Normalize by opportunity and starting state before any cross-team comparison of totals."
+      },
+      {
+        "index": 81,
+        "catalogGroup": "X_EMISSION_FIREWALL_7",
+        "recordId": "7.9",
+        "theme": 7,
+        "title": "GSE Emission Firewall",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": -0.4,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "evaluateMarketMoveInformationCompleteness -> X_RECONCILED_87_RECORD_CATALOG",
+        "lesson": "Unpriced Prop Board Circuit Breaker: zero two-sided juice requires mandatory PASS."
+      },
+      {
+        "index": 82,
+        "catalogGroup": "X_EMISSION_FIREWALL_7",
+        "recordId": "7.10",
+        "theme": 7,
+        "title": "GSE Emission Firewall",
+        "evaluator": "market",
+        "expected": "negative",
+        "liveValue": 0,
+        "sign": 0,
+        "gateStatus": "accepted",
+        "nonNaN": true,
+        "wiredCaller": "evaluateMarketMoveInformationCompleteness -> X_RECONCILED_87_RECORD_CATALOG",
+        "lesson": "Immutable Pregame Direction Freeze (Rule H3 Anti-Flip): pregame direction cannot silently flip without new verified injury/weather."
+      },
+      {
+        "index": 83,
+        "catalogGroup": "X_EMISSION_FIREWALL_7",
+        "recordId": "8.11",
+        "theme": 8,
+        "title": "GSE Misleading-Stat Firewall",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "validateFeatureAgainstMisleadingStats -> runMasterSituationalReasoningOverlay",
+        "lesson": "Play-Clock-at-Snap pooled without down stratification is a proven down confound (pooled t=-3.63 collapses to t=+0.02 within down)."
+      },
+      {
+        "index": 84,
+        "catalogGroup": "X_EMISSION_FIREWALL_7",
+        "recordId": "8.12",
+        "theme": 8,
+        "title": "GSE Misleading-Stat Firewall",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "validateFeatureAgainstMisleadingStats -> runMasterSituationalReasoningOverlay",
+        "lesson": "Disguise collapse hazard without pre-snap spatial width normalization is confounded by formation width."
+      },
+      {
+        "index": 85,
+        "catalogGroup": "X_EMISSION_FIREWALL_7",
+        "recordId": "8.13",
+        "theme": 8,
+        "title": "GSE Misleading-Stat Firewall",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "validateFeatureAgainstMisleadingStats -> runMasterSituationalReasoningOverlay",
+        "lesson": "Cumulative season rushing yards are confounded by carry volume (R^2~0.99); de-confound to per-carry RYOE rate."
+      },
+      {
+        "index": 86,
+        "catalogGroup": "X_EMISSION_FIREWALL_7",
+        "recordId": "8.14",
+        "theme": 8,
+        "title": "GSE Misleading-Stat Firewall",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "validateFeatureAgainstMisleadingStats -> runMasterSituationalReasoningOverlay",
+        "lesson": "Stunt/twist pressure rate without OL slide/chip protection context overstates pass-rush disruption."
+      },
+      {
+        "index": 87,
+        "catalogGroup": "X_EMISSION_FIREWALL_7",
+        "recordId": "8.15",
+        "theme": 8,
+        "title": "GSE Misleading-Stat Firewall",
+        "evaluator": "gate",
+        "expected": "negative",
+        "liveValue": -1,
+        "sign": -1,
+        "gateStatus": "rejected",
+        "nonNaN": true,
+        "wiredCaller": "validateFeatureAgainstMisleadingStats -> runMasterSituationalReasoningOverlay",
+        "lesson": "Right-censored career cohorts and relative-risk claims without base-rate denominators create spurious edges."
+      }
+    ],
+    "all_87_non_nan": true,
+    "six_families": [
+      "pressure",
+      "weather",
+      "restFatigue",
+      "coveragePersonnel",
+      "qbSkillScript",
+      "marketMicrostructure"
+    ],
+    "probability_movement_cap": 0.12,
+    "ne_det_overlay": {
+      "totalProbabilityDelta": 0.0036364470599878082,
+      "cappedDeltaLogOdds": 0.01474551814717992,
+      "capApplied": false,
+      "familyResiduals": {
+        "pressure": -0.022000000000000002,
+        "weather": -0.00176,
+        "restFatigue": -0.0264,
+        "coveragePersonnel": 0.0264,
+        "qbSkillScript": 0.03168000000000001,
+        "marketMicrostructure": 0.0088
+      },
+      "publishAllowed": true,
+      "streamCallsCount": 15,
+      "streamCalls": [
+        {
+          "stream": "corpus:applyCorpusGroundingToFamilyDeltas",
+          "called": false,
+          "detail": "no corpus grounding supplied"
+        },
+        {
+          "stream": "13A:runNgsAwsCnnAttentionCoveragePipeline",
+          "called": false,
+          "detail": "no coverage frames supplied"
+        },
+        {
+          "stream": "13B:computeLeverageAdjustedEpa",
+          "called": true,
+          "detail": "situational play supplied"
+        },
+        {
+          "stream": "13B:evaluateDecisionBranchWp",
+          "called": true,
+          "detail": "2 branches"
+        },
+        {
+          "stream": "14B:computeTackleProbability",
+          "called": false,
+          "detail": "no tackle input supplied"
+        },
+        {
+          "stream": "14B:computeClobMicroPrice",
+          "called": false,
+          "detail": "no CLOB book supplied"
+        },
+        {
+          "stream": "14C:filterKnownAt",
+          "called": false,
+          "detail": "no handoff records/asOf supplied"
+        },
+        {
+          "stream": "12B:computeQbEpaGiniAndVolOe",
+          "called": false,
+          "detail": "no QB EPA supplied"
+        },
+        {
+          "stream": "12C:estimateMultilevelTeamEpaAbility",
+          "called": false,
+          "detail": "no team observations supplied"
+        },
+        {
+          "stream": "12D:evaluateDefenseAgainstWr1",
+          "called": false,
+          "detail": "no WR1 input supplied"
+        },
+        {
+          "stream": "14D:bayesianReverseTokenLogitUpdate",
+          "called": false,
+          "detail": "no token likelihoods supplied"
+        },
+        {
+          "stream": "8:validateFeatureAgainstMisleadingStats",
+          "called": true,
+          "detail": "accepted"
+        },
+        {
+          "stream": "15J:evaluateUniversalNfl360MetricAndSituationalDossier",
+          "called": true,
+          "detail": "6 Universal NFL Suites + 6 Deep Non-Stationary Kernels evaluated"
+        },
+        {
+          "stream": "15K:evaluateMegaSweep20261106Pipeline",
+          "called": true,
+          "detail": "5-Track L1-L5 + 7-Step Weekly Cycle + Double-DQN/PER/CPC + gse-ml-service 5-Model + 30 CSVs/10 Kernels evaluated"
+        },
+        {
+          "stream": "14E:emitMindFeedRecord",
+          "called": true,
+          "detail": "2431 bytes to C:/Users/Garrett/Sports/foundry/audits/friday_full_audit_2026-11-13/probe_master_feed.jsonl"
+        }
+      ]
+    },
+    "kc_atl_preprojection": {
+      "awayTeam": "KC",
+      "homeTeam": "ATL",
+      "week": 10,
+      "conditionedFamilyDeltas": {
+        "pressure": -0.029408,
+        "weather": -0.057843,
+        "restFatigue": -0.013252,
+        "coveragePersonnel": -0.000576,
+        "qbSkillScript": 0.008887,
+        "marketMicrostructure": 0.010648
+      },
+      "simulationTrajectoryConditioners": {
+        "scripted1To15EpaBoost": 0.1225,
+        "postScript16To65CliffDelta": -0.35,
+        "secondHalfTutFatigueMultiplier": 0.917978,
+        "qbTraumaPhantomBailoutProb": 0.414999,
+        "causalTrueUnschemedDuressEpa": -0.218152,
+        "doubleDqnRecommendedFourthDownAction": "go_for_it",
+        "doubleDqnOverestimationBiasRemoved": 0.34,
+        "cpcRegularizedDriveTdProb": 0.871795,
+        "gsiReturnToPlaySnapCap": 0.757485,
+        "gseMlService5ModelCompositeEpaDelta": 0.022946,
+        "morningSweepNgsCommercialCompositeEpa": 0.068499,
+        "compositePreProjectionEpaDelta": 0.047353,
+        "conditionAppliedTo10kWorlds175Snaps": true
+      }
+    },
+    "pass_gate_negative_control": {
+      "independentEdgeDecision": "PASS",
+      "publishAllowed": false
+    },
+    "cognitive_router": {
+      "maskBits": 288,
+      "maxAbsDeltaLogOdds": 0.35,
+      "injectedSignalsCount": 7,
+      "selectedPremisesCount": 25,
+      "jamesSteinShrinkageFactor": 0,
+      "clampedTotalLogOddsDelta": 0.0048,
+      "clampedWithinCap": true,
+      "snapTransitionPriorDelta": 0.00216,
+      "passEfficiencyPriorDelta": -0.00057,
+      "pressureDisruptionHazardDelta": 0.045,
+      "secondHalfTutFatigueDecayRate": 0.0738,
+      "gsiSnapShareCap": 0.91,
+      "missingDiagnosticsSample": [
+        {
+          "family": 12,
+          "field": "trenchWeakLinkCollapseProb",
+          "reason": "trenchWeakLinkCollapseProb was not supplied"
+        },
+        {
+          "family": 48,
+          "field": "qbTraumaCompressionSec",
+          "reason": "qbTraumaCompressionSec was not supplied"
+        },
+        {
+          "family": 94,
+          "field": "causalUnschemedEpaDelta",
+          "reason": "causalUnschemedEpaDelta sample size not supplied; family does not fire"
+        },
+        {
+          "family": 132,
+          "field": "coordinatorScriptCliffDelta",
+          "reason": "coordinatorScriptCliffDelta was not supplied"
+        },
+        {
+          "family": 176,
+          "field": "gsiBiomechanicalEfficiencyLossPct",
+          "reason": "gsiBiomechanicalEfficiencyLossPct was not supplied"
+        },
+        {
+          "family": 210,
+          "field": "kaggleVoronoiControlAdvantage",
+          "reason": "kaggleVoronoiControlAdvantage was not supplied"
+        },
+        {
+          "family": 210,
+          "field": "arxivOptimalTransportDisguiseKl",
+          "reason": "arxivOptimalTransportDisguiseKl was not supplied"
+        },
+        {
+          "family": 210,
+          "field": "huggingFaceAll22StanceTellScore",
+          "reason": "huggingFaceAll22StanceTellScore was not supplied"
+        },
+        {
+          "family": 254,
+          "field": "refereeMarketTrueSteamProb",
+          "reason": "refereeMarketTrueSteamProb was not supplied"
+        }
+      ],
+      "openaiMath721Summary": {
+        "manuscriptsWired": 721,
+        "uniquePdfLinksCount": 721,
+        "resultFamiliesWired": 373,
+        "familyNumberRange": "001..378",
+        "absentFamilyNumbers": [
+          "045",
+          "061",
+          "070",
+          "123",
+          "163"
+        ],
+        "leanFilesCataloged": 53554,
+        "comparatorChallengesWired": 419,
+        "comparatorTopLevelConfigs": 418,
+        "comparatorNestedHodgeConfigs": 1,
+        "formalizationYamlSources": 176,
+        "formalizationMainResultsCount": 208,
+        "formalizationUniqueConfigsCount": 192,
+        "anchorA5FamilyId": "378",
+        "anchorA5ComparatorConfig": "ComparatorChallenges/SubexponentialSAT.json",
+        "pineconeNamespace": "gse-openai-math-721-manuscripts",
+        "pineconeVectorsUpserted": 30,
+        "permittedLeanAxioms": [
+          "propext",
+          "Quot.sound",
+          "Classical.choice"
+        ]
+      }
+    },
+    "calibration_and_gates": {
+      "selectCalibratorRecommended": "identity",
+      "barberInterval": {
+        "low": -4.7,
+        "high": 5.9,
+        "alpha": 0.1,
+        "rho": 0.97
+      },
+      "moneylineCalibrationHead": {
+        "calibratedProb": 0.588,
+        "convictionScore": 59,
+        "headMethod": "platt_beta_conformal",
+        "displayFormat": "conviction_and_calibrated_prob"
+      },
+      "signCallSheetTicketsCheck": {
+        "totalCalls": 2,
+        "signedCount": 1,
+        "firstSignedEdgePct": 7.8,
+        "contradictionBlocked": true
+      },
+      "sgpWrJointExceedance": 0.3253152766497429,
+      "sgpWrIndependenceErrorPp": 7.051527664974289,
+      "parlayConjunctionPass": {
+        "publishAllowed": true,
+        "decision": "SPEAK",
+        "reason": "PARLAY_CONJUNCTION_PASS",
+        "wilsonLower90": 0.5518200206090786
+      },
+      "parlayConjunctionBlockPassLeg": {
+        "publishAllowed": false,
+        "decision": "PASS",
+        "reason": "PARLAY_CONTAINS_PASS_LEG",
+        "wilsonLower90": 0
+      },
+      "mobileBoardCheck": {
+        "survivingCount": 1,
+        "suppressedAdverse": 1,
+        "suppressedStale": 0
+      },
+      "mobileEntitlements": {
+        "freeCanSeePremiumPicks": false,
+        "proCanSeePremiumPicks": true
+      }
+    }
+  },
+  "coaching_files_count": 61,
+  "coaching_61_files": [
+    {
+      "index": 1,
+      "file": "__init__.py",
+      "rel_path": "intelligence/coaching/__init__.py",
+      "ext": ".py",
+      "bytes": 682,
+      "sha256_prefix": "1fb3efcf36a01d2f",
+      "ast_parse_ok": true,
+      "def_count": 0,
+      "class_count": 0,
+      "top_level_defs_preview": [],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 3,
+      "file": "adjustments.py",
+      "rel_path": "intelligence/coaching/adjustments.py",
+      "ext": ".py",
+      "bytes": 1954,
+      "sha256_prefix": "c2f3d103304a15da",
+      "ast_parse_ok": true,
+      "def_count": 3,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "get_adjustment",
+        "team_adjustments",
+        "monken_wk4_gate_status"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 4,
+      "file": "base_data.py",
+      "rel_path": "intelligence/coaching/base_data.py",
+      "ext": ".py",
+      "bytes": 4291,
+      "sha256_prefix": "feccb4b88c7f6f0f",
+      "ast_parse_ok": true,
+      "def_count": 4,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "candidate_dirs",
+        "resolve",
+        "available",
+        "missing_files"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 5,
+      "file": "behavior.py",
+      "rel_path": "intelligence/coaching/behavior.py",
+      "ext": ".py",
+      "bytes": 2790,
+      "sha256_prefix": "5c66f552568f0556",
+      "ast_parse_ok": true,
+      "def_count": 2,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_wp_bin_label",
+        "expected_wp_given_coach"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 6,
+      "file": "biomech_kinetic_translation.py",
+      "rel_path": "intelligence/coaching/biomech_kinetic_translation.py",
+      "ext": ".py",
+      "bytes": 24313,
+      "sha256_prefix": "025c3aa9538dd754",
+      "ast_parse_ok": true,
+      "def_count": 17,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_to_vec2",
+        "compute_inertial_dissipation_ratio",
+        "compute_wavefront_burst_threshold",
+        "compute_elastic_separation_coefficient",
+        "compute_anisotropic_coverage_diffusion_tensor",
+        "compute_secondary_coverage_pde_residual"
+      ],
+      "callers": [
+        "scripts/ops/biomech_kinetic_translation.py",
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "scripts/ops/run_chi_sea_mnf_360_board_review.py",
+        "tests/test_biomech_kinetic_translation.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 8,
+      "file": "coach_audit.py",
+      "rel_path": "intelligence/coaching/coach_audit.py",
+      "ext": ".py",
+      "bytes": 3430,
+      "sha256_prefix": "8c05ce880506146b",
+      "ast_parse_ok": true,
+      "def_count": 3,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "audit_decisions",
+        "aggregate_audit",
+        "weekly_report"
+      ],
+      "callers": [
+        "intelligence/tests/test_coaching_gates.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 9,
+      "file": "coach_risk.py",
+      "rel_path": "intelligence/coaching/coach_risk.py",
+      "ext": ".py",
+      "bytes": 12217,
+      "sha256_prefix": "56cd7f945483379c",
+      "ast_parse_ok": true,
+      "def_count": 14,
+      "class_count": 1,
+      "top_level_defs_preview": [
+        "load_fourth_downs",
+        "_quantile_optimal_action"
+      ],
+      "callers": [
+        "intelligence/coaching/behavior.py",
+        "intelligence/coaching/coach_audit.py",
+        "intelligence/coaching/pre_kickoff_refit_tau.py",
+        "intelligence/coaching/provider.py",
+        "intelligence/coaching/refit_tau.py",
+        "intelligence/coaching/walkforward_tau.py",
+        "intelligence/tests/test_coaching_gates.py",
+        "intelligence/tests/test_coaching_units.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 10,
+      "file": "coach_speak_emotional_deflection_probe.py",
+      "rel_path": "intelligence/coaching/coach_speak_emotional_deflection_probe.py",
+      "ext": ".py",
+      "bytes": 3211,
+      "sha256_prefix": "3adb5121fed6b62c",
+      "ast_parse_ok": true,
+      "def_count": 1,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "extract_coach_emotional_deflection"
+      ],
+      "callers": [
+        "intelligence/coaching/tests/test_coach_speak_emotional_deflection_probe.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 11,
+      "file": "coach_tenures.py",
+      "rel_path": "intelligence/coaching/coach_tenures.py",
+      "ext": ".py",
+      "bytes": 2466,
+      "sha256_prefix": "be4da686d60209ba",
+      "ast_parse_ok": true,
+      "def_count": 1,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "coach_season_rows"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 12,
+      "file": "common.py",
+      "rel_path": "intelligence/coaching/common.py",
+      "ext": ".py",
+      "bytes": 7990,
+      "sha256_prefix": "c99cfb82b15db2d3",
+      "ast_parse_ok": true,
+      "def_count": 17,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_nz1",
+        "is_scrimmage_play",
+        "is_neutral_script",
+        "is_early_down",
+        "ydstogo_bin",
+        "down_group"
+      ],
+      "callers": [
+        "intelligence/qb/props.py",
+        "intelligence/qb/rgax.py"
+      ],
+      "status": "WIRED_INTERNAL_HELPER"
+    },
+    {
+      "index": 13,
+      "file": "compute_tendencies.py",
+      "rel_path": "intelligence/coaching/compute_tendencies.py",
+      "ext": ".py",
+      "bytes": 7021,
+      "sha256_prefix": "d3738d09ea8d5aa9",
+      "ast_parse_ok": true,
+      "def_count": 6,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "load",
+        "safe_div",
+        "offensive_tendencies",
+        "defensive_tendencies",
+        "main"
+      ],
+      "callers": [
+        "scripts/ops/run_wave2_cqr_and_w1_w7_backtest.py"
+      ],
+      "status": "WIRED_INTERNAL_HELPER"
+    },
+    {
+      "index": 14,
+      "file": "CONTRACT.md",
+      "rel_path": "intelligence/coaching/CONTRACT.md",
+      "ext": ".md",
+      "bytes": 4193,
+      "sha256_prefix": "b0512d4d970d1ec1",
+      "def_count": 0,
+      "class_count": 0,
+      "top_level_defs_preview": [],
+      "callers": [],
+      "status": "DOC_CONTRACT"
+    },
+    {
+      "index": 15,
+      "file": "core_nfl_schemes_and_systems.py",
+      "rel_path": "intelligence/coaching/core_nfl_schemes_and_systems.py",
+      "ext": ".py",
+      "bytes": 30263,
+      "sha256_prefix": "d25d2e3178829fbc",
+      "ast_parse_ok": true,
+      "def_count": 3,
+      "class_count": 5,
+      "top_level_defs_preview": [
+        "evaluate_pass_protection_vs_blitz",
+        "evaluate_secondary_coverage_match",
+        "lookup_down_and_distance_prior"
+      ],
+      "callers": [
+        "intelligence/reasoning/layers/layer_registry.py",
+        "tests/test_core_nfl_schemes_and_systems.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 17,
+      "file": "dc_pressure.py",
+      "rel_path": "intelligence/coaching/dc_pressure.py",
+      "ext": ".py",
+      "bytes": 2377,
+      "sha256_prefix": "9ab561eda854909f",
+      "ast_parse_ok": true,
+      "def_count": 4,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "get_pressure",
+        "team_pressure_profile",
+        "honest_gaps",
+        "pressure_index_with_trench"
+      ],
+      "callers": [
+        "intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py",
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "tests/test_trench_pipeline_integration.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 18,
+      "file": "downloads_architecture_and_whitening_kernels.py",
+      "rel_path": "intelligence/coaching/downloads_architecture_and_whitening_kernels.py",
+      "ext": ".py",
+      "bytes": 70460,
+      "sha256_prefix": "6a0e9ac98fd74961",
+      "ast_parse_ok": true,
+      "def_count": 30,
+      "class_count": 1,
+      "top_level_defs_preview": [
+        "compute_rolling_cholesky_whitening",
+        "compute_asymmetric_conformal_nonconformity",
+        "run_conformal_whitening_live_pipeline_kernel",
+        "simulate_dirichlet_multinomial_field",
+        "optimize_gpp_portfolio",
+        "grade_portfolio"
+      ],
+      "callers": [
+        "intelligence/tests/test_downloads_architecture_and_whitening_kernels.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 19,
+      "file": "downloads_social_radio_and_dfs_signals.py",
+      "rel_path": "intelligence/coaching/downloads_social_radio_and_dfs_signals.py",
+      "ext": ".py",
+      "bytes": 43147,
+      "sha256_prefix": "a47c96277199de2d",
+      "ast_parse_ok": true,
+      "def_count": 5,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_parse_dksalaries_showdown_jax_bal",
+        "_cross_check_all_dksalaries_files",
+        "_parse_telemetry_csv",
+        "_audit_downloads_markdown_and_radio_files",
+        "evaluate_all_social_radio_and_pregame_pack_signals"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 20,
+      "file": "drive_dire_situations.py",
+      "rel_path": "intelligence/coaching/drive_dire_situations.py",
+      "ext": ".py",
+      "bytes": 4701,
+      "sha256_prefix": "9ad6793c324c7304",
+      "ast_parse_ok": true,
+      "def_count": 3,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_dire_mask",
+        "compute_dire_situation_drive_efficiency",
+        "league_dire_summary"
+      ],
+      "callers": [
+        "tests/test_nov03_football_metrics.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 21,
+      "file": "emit_last_game.py",
+      "rel_path": "intelligence/coaching/emit_last_game.py",
+      "ext": ".py",
+      "bytes": 1312,
+      "sha256_prefix": "882df74d34fbafe0",
+      "ast_parse_ok": true,
+      "def_count": 0,
+      "class_count": 0,
+      "top_level_defs_preview": [],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 22,
+      "file": "fingerprint.py",
+      "rel_path": "intelligence/coaching/fingerprint.py",
+      "ext": ".py",
+      "bytes": 4021,
+      "sha256_prefix": "1bb8a8321f303419",
+      "ast_parse_ok": true,
+      "def_count": 5,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_base",
+        "_fnum",
+        "team_fingerprint",
+        "weekly_fingerprint",
+        "t1_fixture_check"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 23,
+      "file": "full_repo_279_family_situational_reasoning_matrix.py",
+      "rel_path": "intelligence/coaching/full_repo_279_family_situational_reasoning_matrix.py",
+      "ext": ".py",
+      "bytes": 30693,
+      "sha256_prefix": "89c71d5e600d13d2",
+      "ast_parse_ok": true,
+      "def_count": 5,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "evaluate_all_80_x_situational_rules",
+        "evaluate_measured_reasoning_primitives",
+        "execute_288bit_12304_equation_cognitive_router",
+        "execute_master_6family_cholesky_aggregator",
+        "run_full_repo_situational_reasoning_engine"
+      ],
+      "callers": [
+        "intelligence/reasoning/reasoning_workflow_assembler.py",
+        "scripts/ops/gse_connected_game_workflow.py",
+        "tests/test_week9_forensic_autopsy_fixes.py",
+        "tests/unit/test_family_consumption_279_and_l4_l5.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 24,
+      "file": "gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "rel_path": "intelligence/coaching/gcp_ml_design_patterns_and_agent_workbench_engine.py",
+      "ext": ".py",
+      "bytes": 27189,
+      "sha256_prefix": "3338a2dc642a1058",
+      "ast_parse_ok": true,
+      "def_count": 8,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "ml_pattern_probabilistic_distribution_reframing",
+        "ml_pattern_feature_store_decoy_anomaly_gate",
+        "ml_pattern_checkpoint_freshness_and_eventarc_invalidation",
+        "ml_pattern_model_armor_invariant_shield",
+        "gcp_healthcare_data_engine_fhir_mimic_bridge",
+        "gcp_cloud_run_mcp_and_agent_starter_telemetry"
+      ],
+      "callers": [
+        "scripts/ops/gse_connected_game_workflow.py",
+        "scripts/ops/ingest_wave10_gcp_catalog_and_34_github_repos.py",
+        "tests/test_week9_forensic_autopsy_fixes.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 25,
+      "file": "google_drive_and_onedrive_omni_situational_engine.py",
+      "rel_path": "intelligence/coaching/google_drive_and_onedrive_omni_situational_engine.py",
+      "ext": ".py",
+      "bytes": 57010,
+      "sha256_prefix": "02fe762fd376be00",
+      "ast_parse_ok": true,
+      "def_count": 6,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "evaluate_gdrive_58_paper_and_corpus_situational_laws",
+        "evaluate_tracking_decoupled_and_cqr_small_sample_calibration",
+        "evaluate_onedrive_weather_edge_aerodynamics",
+        "evaluate_nfl_roster_truth_and_wave3_line_level",
+        "evaluate_vault_entropy_evolution_and_alter_xiv_twin",
+        "run_google_drive_and_onedrive_omni_situational_overlay"
+      ],
+      "callers": [
+        "scripts/ops/gse_connected_game_workflow.py",
+        "scripts/ops/ingest_wave12_entire_google_drive_and_onedrive.py",
+        "tests/test_week9_forensic_autopsy_fixes.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 26,
+      "file": "gse_proprietary_metrics_benchmark_and_optimizer.py",
+      "rel_path": "intelligence/coaching/gse_proprietary_metrics_benchmark_and_optimizer.py",
+      "ext": ".py",
+      "bytes": 45071,
+      "sha256_prefix": "b4f60c4ed840e417",
+      "ast_parse_ok": true,
+      "def_count": 5,
+      "class_count": 1,
+      "top_level_defs_preview": [
+        "load_proprietary_coaching_csv_summary",
+        "_extract_empirical_csv_feature_matrix",
+        "_positive_part_james_stein_ridge_weights",
+        "run_proprietary_metrics_ablation_and_optimization",
+        "evaluate_22_proprietary_metrics_for_context"
+      ],
+      "callers": [
+        "intelligence/audit/comprehensive_full_stack_and_engine_review.py",
+        "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py",
+        "intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py",
+        "intelligence/dfs/overnight_9model_fleet_projection_and_200pt_dfs_stress_tester.py",
+        "intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py",
+        "intelligence/funnel/gse_causal_looped_funnel_engine.py",
+        "intelligence/reasoning/reasoning_workflow_assembler.py",
+        "scripts/ops/run_0730_cst_fresh_pull_and_email_dispatch.py",
+        "tests/unit/test_gse_proprietary_metrics_benchmark_and_optimizer.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 27,
+      "file": "identity_join.py",
+      "rel_path": "intelligence/coaching/identity_join.py",
+      "ext": ".py",
+      "bytes": 6266,
+      "sha256_prefix": "33b1b6fed97b9889",
+      "ast_parse_ok": true,
+      "def_count": 3,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_split",
+        "identity_join",
+        "query_player"
+      ],
+      "callers": [
+        "intelligence/vision/validation_harness.py"
+      ],
+      "status": "WIRED_INTERNAL_HELPER"
+    },
+    {
+      "index": 28,
+      "file": "ingame.py",
+      "rel_path": "intelligence/coaching/ingame.py",
+      "ext": ".py",
+      "bytes": 1352,
+      "sha256_prefix": "d8a1d7b2c80194f3",
+      "ast_parse_ok": true,
+      "def_count": 2,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "get_timeouts",
+        "league_timeout_rank"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 29,
+      "file": "intent_beliefs.py",
+      "rel_path": "intelligence/coaching/intent_beliefs.py",
+      "ext": ".py",
+      "bytes": 7733,
+      "sha256_prefix": "57c49c5af17a8355",
+      "ast_parse_ok": true,
+      "def_count": 5,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_dist_bin",
+        "_down_bin",
+        "build_beliefs",
+        "main",
+        "now_iso"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 30,
+      "file": "live_books_and_pdfs_executable_engine.py",
+      "rel_path": "intelligence/coaching/live_books_and_pdfs_executable_engine.py",
+      "ext": ".py",
+      "bytes": 39533,
+      "sha256_prefix": "5b57e1cf5b7b258e",
+      "ast_parse_ok": true,
+      "def_count": 10,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "vmls_kkt_constrained_boxscore_reconciler",
+        "overrelaxed_anderson_sinkhorn_ot",
+        "bm25f_corpus_and_book_lesson_retriever",
+        "tbi_rotational_strain_and_katch_mcardle_short_week_fatigue",
+        "prolate_spheroid_football_aerodynamics_and_ol_route_coaching_network",
+        "tukey_huff_levitin_game_theory_and_markov_drive_engine"
+      ],
+      "callers": [
+        "intelligence/tests/test_downloads_architecture_and_whitening_kernels.py",
+        "scripts/ops/gse_connected_game_workflow.py",
+        "tests/test_gse_connected_workflow_v2_full_repo.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 31,
+      "file": "load.py",
+      "rel_path": "intelligence/coaching/load.py",
+      "ext": ".py",
+      "bytes": 1515,
+      "sha256_prefix": "7786fc7b906204fa",
+      "ast_parse_ok": true,
+      "def_count": 4,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_num",
+        "load_table",
+        "index_by",
+        "clear_cache"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 32,
+      "file": "marketing_science_and_seo_aeo_engine.py",
+      "rel_path": "intelligence/coaching/marketing_science_and_seo_aeo_engine.py",
+      "ext": ".py",
+      "bytes": 24150,
+      "sha256_prefix": "32ed26dd726dc0f6",
+      "ast_parse_ok": true,
+      "def_count": 8,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "run_fader_hardie_clv_and_retention_kernel",
+        "run_meridian_robyn_adstock_hill_mmm_kernel",
+        "run_kunzel_wager_athey_uplift_kernel",
+        "run_bass_and_goel_watts_structural_virality_kernel",
+        "run_thaler_mental_accounting_and_sahni_hook_kernel",
+        "run_train_mixed_logit_demand_kernel"
+      ],
+      "callers": [
+        "intelligence/coaching/live_books_and_pdfs_executable_engine.py"
+      ],
+      "status": "WIRED_INTERNAL_HELPER"
+    },
+    {
+      "index": 33,
+      "file": "mega_sweep_2026_11_06_wiring_engine.py",
+      "rel_path": "intelligence/coaching/mega_sweep_2026_11_06_wiring_engine.py",
+      "ext": ".py",
+      "bytes": 71793,
+      "sha256_prefix": "e3cbb6721546de88",
+      "ast_parse_ok": true,
+      "def_count": 16,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "compute_gsi_step2_health_and_biomechanics",
+        "evaluate_5track_l1_to_l5_and_7step_weekly_cycle",
+        "load_mega_sweep_coverage_ledger",
+        "compute_double_dqn_fourth_down_q_values",
+        "compute_per_td_surprise_priority",
+        "_l2_normalize"
+      ],
+      "callers": [
+        "intelligence/reasoning/mega_sweep_2026_11_06_wiring_engine.py",
+        "intelligence/reasoning/reasoning_workflow_assembler.py",
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "scripts/ops/gse_connected_game_workflow.py",
+        "tests/python/test_mega_sweep_2026_11_06_wiring_engine.py",
+        "tests/test_week9_forensic_autopsy_fixes.py",
+        "tests/unit/test_deep_read_grok_muse_motif_comp_intel.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 34,
+      "file": "ol_provider.py",
+      "rel_path": "intelligence/coaching/ol_provider.py",
+      "ext": ".py",
+      "bytes": 9739,
+      "sha256_prefix": "2de95c9f645022f3",
+      "ast_parse_ok": true,
+      "def_count": 8,
+      "class_count": 1,
+      "top_level_defs_preview": [
+        "_data_dir",
+        "weak_link_survival_for_grades",
+        "ol_pass_set_report",
+        "get_cfbd_opponent_adjusted_line_yards",
+        "map_ol_or_roster_role_to_epa_dropoff_bucket"
+      ],
+      "callers": [
+        "intelligence/coaching/tests/test_ol_provider.py",
+        "intelligence/dfs/conserved_nfl_projection_and_equation_optimizer.py",
+        "intelligence/reasoning_engine/run_game.py",
+        "intelligence/tests/e2e/test_t1_real_e2e.py",
+        "intelligence/trust-signals/prove_honest_trust.py",
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "scripts/ops/run_tuesday_week9_autopsy_and_week10_unified_projections.py",
+        "tests/e2e/test_wave3_unified_arch_and_honest_corpus_e2e.py",
+        "tests/test_trench_pipeline_integration.py",
+        "tests/test_trench_pocket_physics.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 35,
+      "file": "openai_math_721_manuscript_and_lean_engine.py",
+      "rel_path": "intelligence/coaching/openai_math_721_manuscript_and_lean_engine.py",
+      "ext": ".py",
+      "bytes": 16725,
+      "sha256_prefix": "b03f27195e957698",
+      "ast_parse_ok": true,
+      "def_count": 7,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "sogge_local_smoothing_wave_focusing_kernel",
+        "bounded_treewidth_l1_graph_embedding_kernel",
+        "radial_pair_potential_temperature_singularity_kernel",
+        "amplitude_damping_and_atomic_gaussian_channel",
+        "fixed_width_cnf_exact_model_counter",
+        "lean_comparator_challenge_soundness_gate"
+      ],
+      "callers": [
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "scripts/ops/harvest_and_wire_openai_math_721_manuscripts_and_lean.py",
+        "tests/python/test_openai_math_721_manuscripts_and_lean.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 36,
+      "file": "pgwe_luck_audit.py",
+      "rel_path": "intelligence/coaching/pgwe_luck_audit.py",
+      "ext": ".py",
+      "bytes": 4698,
+      "sha256_prefix": "56ad7aa93b250b4d",
+      "ast_parse_ok": true,
+      "def_count": 2,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_fit_wp_fallback",
+        "compute_pgwe_luck_delta"
+      ],
+      "callers": [
+        "tests/test_nov03_football_metrics.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 37,
+      "file": "pm_sweep_convergence_kernels.py",
+      "rel_path": "intelligence/coaching/pm_sweep_convergence_kernels.py",
+      "ext": ".py",
+      "bytes": 44567,
+      "sha256_prefix": "b45f5f636c3d71d3",
+      "ast_parse_ok": true,
+      "def_count": 11,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_sigmoid",
+        "_logit",
+        "qb_breakdown_convergence_kernel",
+        "predict_presnap_coverage_shell",
+        "_baseline_fg_logit_from_distance",
+        "hierarchical_fg_make_prob"
+      ],
+      "callers": [
+        "scripts/ops/run_week8_slate.py",
+        "tests/test_pm_sweep_convergence_kernels.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 38,
+      "file": "pre_kickoff_refit_tau.py",
+      "rel_path": "intelligence/coaching/pre_kickoff_refit_tau.py",
+      "ext": ".py",
+      "bytes": 12088,
+      "sha256_prefix": "48116d937a491449",
+      "ast_parse_ok": true,
+      "def_count": 4,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "recency_weights",
+        "filter_prekickoff",
+        "fit_prekickoff_for_week",
+        "main"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 39,
+      "file": "pressure_answer.py",
+      "rel_path": "intelligence/coaching/pressure_answer.py",
+      "ext": ".py",
+      "bytes": 11649,
+      "sha256_prefix": "2f6d4fbf0d1eaf26",
+      "ast_parse_ok": true,
+      "def_count": 11,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_sched_index",
+        "_press_index",
+        "_qg_index",
+        "opponent",
+        "_top_rush_teams",
+        "faced_top5_rush"
+      ],
+      "callers": [
+        "intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py",
+        "tests/test_nov03_football_metrics.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 40,
+      "file": "proe.py",
+      "rel_path": "intelligence/coaching/proe.py",
+      "ext": ".py",
+      "bytes": 6511,
+      "sha256_prefix": "e5d7909e0dd63e67",
+      "ast_parse_ok": true,
+      "def_count": 7,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "compute_proe_from_cells",
+        "compute_proe_from_plays",
+        "league_cells_from_table",
+        "team_cells_from_table",
+        "bootstrap_proe_ci",
+        "season_zscores"
+      ],
+      "callers": [
+        "intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py"
+      ],
+      "status": "WIRED_INTERNAL_HELPER"
+    },
+    {
+      "index": 42,
+      "file": "provider.py",
+      "rel_path": "intelligence/coaching/provider.py",
+      "ext": ".py",
+      "bytes": 17798,
+      "sha256_prefix": "95cb6fbd22a82491",
+      "ast_parse_ok": true,
+      "def_count": 14,
+      "class_count": 1,
+      "top_level_defs_preview": [
+        "_search_dirs",
+        "_tau_table_path",
+        "_wp_bin_label",
+        "_tau_table",
+        "_fitted_fitter",
+        "_fitted_engine"
+      ],
+      "callers": [
+        "intelligence/coaching/__init__.py",
+        "intelligence/qb-behavior/src/qb_behavior/situational/__init__.py",
+        "intelligence/trust-signals/honest_provider.py"
+      ],
+      "status": "WIRED_INTERNAL_HELPER"
+    },
+    {
+      "index": 43,
+      "file": "qb_disguise_blitz_matrix.py",
+      "rel_path": "intelligence/coaching/qb_disguise_blitz_matrix.py",
+      "ext": ".py",
+      "bytes": 28536,
+      "sha256_prefix": "e1ab3bd8edba6613",
+      "ast_parse_ok": true,
+      "def_count": 7,
+      "class_count": 1,
+      "top_level_defs_preview": [
+        "_load_qb_pressure_profiles",
+        "_json_pressure_entry",
+        "resolve_qb_profile",
+        "evaluate_qb_matchup_2x2",
+        "compute_two_clocks_pressure_collision",
+        "encode_mnar_missingness"
+      ],
+      "callers": [
+        "scripts/ops/gse_connected_game_workflow.py",
+        "scripts/ops/run_week8_slate.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 44,
+      "file": "qb_visual_cognitive_load.py",
+      "rel_path": "intelligence/coaching/qb_visual_cognitive_load.py",
+      "ext": ".py",
+      "bytes": 5336,
+      "sha256_prefix": "a11faafb6146ce32",
+      "ast_parse_ok": true,
+      "def_count": 1,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "compute_qb_visual_cognitive_load"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 45,
+      "file": "README.md",
+      "rel_path": "intelligence/coaching/README.md",
+      "ext": ".md",
+      "bytes": 2328,
+      "sha256_prefix": "3fa74ba7cea3088c",
+      "def_count": 0,
+      "class_count": 0,
+      "top_level_defs_preview": [],
+      "callers": [],
+      "status": "DOC_CONTRACT"
+    },
+    {
+      "index": 46,
+      "file": "redzone.py",
+      "rel_path": "intelligence/coaching/redzone.py",
+      "ext": ".py",
+      "bytes": 9738,
+      "sha256_prefix": "f28cad2ce10f22d8",
+      "ast_parse_ok": true,
+      "def_count": 3,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "get_rz_mix",
+        "second_and_short",
+        "compute_two_minute_trust_and_ez_regression"
+      ],
+      "callers": [
+        "intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py",
+        "tests/test_nov03_football_metrics.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 47,
+      "file": "refit_tau.py",
+      "rel_path": "intelligence/coaching/refit_tau.py",
+      "ext": ".py",
+      "bytes": 2671,
+      "sha256_prefix": "0c5449645168f548",
+      "ast_parse_ok": true,
+      "def_count": 2,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "recency_weights",
+        "main"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 48,
+      "file": "regime.py",
+      "rel_path": "intelligence/coaching/regime.py",
+      "ext": ".py",
+      "bytes": 4734,
+      "sha256_prefix": "32550e940d389ed2",
+      "ast_parse_ok": true,
+      "def_count": 4,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "regime_gate",
+        "changepoint_trigger",
+        "quarantine_weights",
+        "detect_regime_shift"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 49,
+      "file": "rest_days.py",
+      "rel_path": "intelligence/coaching/rest_days.py",
+      "ext": ".py",
+      "bytes": 2650,
+      "sha256_prefix": "4d5cd5ef1d01bb06",
+      "ast_parse_ok": true,
+      "def_count": 2,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_as_date",
+        "rest_before"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 50,
+      "file": "schedule_cleaned_epa.py",
+      "rel_path": "intelligence/coaching/schedule_cleaned_epa.py",
+      "ext": ".py",
+      "bytes": 6419,
+      "sha256_prefix": "c93c6c31fe7d4970",
+      "ast_parse_ok": true,
+      "def_count": 2,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "compute_schedule_adjusted_epa",
+        "detect_paired_adot_drop"
+      ],
+      "callers": [
+        "tests/test_nov03_football_metrics.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 51,
+      "file": "script_elasticity.py",
+      "rel_path": "intelligence/coaching/script_elasticity.py",
+      "ext": ".py",
+      "bytes": 1497,
+      "sha256_prefix": "a98135e84297a7b1",
+      "ast_parse_ok": true,
+      "def_count": 1,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "get_elasticity"
+      ],
+      "callers": [
+        "intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py"
+      ],
+      "status": "WIRED_INTERNAL_HELPER"
+    },
+    {
+      "index": 52,
+      "file": "sequencing.py",
+      "rel_path": "intelligence/coaching/sequencing.py",
+      "ext": ".py",
+      "bytes": 1660,
+      "sha256_prefix": "8f7d3ecc6033633b",
+      "ast_parse_ok": true,
+      "def_count": 2,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "get_sequencing",
+        "league_contrast_rank"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 53,
+      "file": "situational_layer2_compiler_51q.py",
+      "rel_path": "intelligence/coaching/situational_layer2_compiler_51q.py",
+      "ext": ".py",
+      "bytes": 17078,
+      "sha256_prefix": "1e8b82797c739f34",
+      "ast_parse_ok": true,
+      "def_count": 1,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "build_dynamic_matchup_situational_context"
+      ],
+      "callers": [
+        "scripts/ops/gse_connected_game_workflow.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 54,
+      "file": "situational_wp.py",
+      "rel_path": "intelligence/coaching/situational_wp.py",
+      "ext": ".py",
+      "bytes": 18397,
+      "sha256_prefix": "ff7b02f6afded508",
+      "ast_parse_ok": true,
+      "def_count": 22,
+      "class_count": 2,
+      "top_level_defs_preview": [
+        "load_fourth_downs_frame",
+        "_band",
+        "add_state_bands",
+        "add_prev_turnover",
+        "evaluate_timeout_preserve_vs_ice_value",
+        "evaluate_coach_challenge_ev"
+      ],
+      "callers": [
+        "intelligence/coaching/coach_audit.py",
+        "intelligence/tests/test_coaching_gates.py",
+        "intelligence/tests/test_coaching_units.py",
+        "intelligence/tests/test_situational_wp_gaps.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 55,
+      "file": "sovereign_openai_eyi_execution_engine.py",
+      "rel_path": "intelligence/coaching/sovereign_openai_eyi_execution_engine.py",
+      "ext": ".py",
+      "bytes": 38084,
+      "sha256_prefix": "c7842a4d0ddd63c4",
+      "ast_parse_ok": true,
+      "def_count": 10,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "pade_exp_neg",
+        "mezard_parisi_cavity_susceptibility",
+        "mahler_dual_conformal_polytope_score",
+        "evaluate_virtual_icp_and_sulcal_waveguide_step",
+        "evaluate_zone1_coach_mind_v2_and_7_gse_metrics",
+        "evaluate_doctrine_symphony_proof_of_work"
+      ],
+      "callers": [
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "tests/python/test_sovereign_openai_eyi_execution_engine.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 56,
+      "file": "tempo.py",
+      "rel_path": "intelligence/coaching/tempo.py",
+      "ext": ".py",
+      "bytes": 753,
+      "sha256_prefix": "c235a20d161f33be",
+      "ast_parse_ok": true,
+      "def_count": 1,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "get_tempo"
+      ],
+      "callers": [
+        "intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py"
+      ],
+      "status": "WIRED_INTERNAL_HELPER"
+    },
+    {
+      "index": 57,
+      "file": "tenures.py",
+      "rel_path": "intelligence/coaching/tenures.py",
+      "ext": ".py",
+      "bytes": 5313,
+      "sha256_prefix": "a8fc792b2ed46ee2",
+      "ast_parse_ok": true,
+      "def_count": 5,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_load",
+        "lookup_coach",
+        "lookup_team_playcaller",
+        "yoy_delta",
+        "registry_coverage"
+      ],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 59,
+      "file": "trench_pocket_physics.py",
+      "rel_path": "intelligence/coaching/trench_pocket_physics.py",
+      "ext": ".py",
+      "bytes": 50205,
+      "sha256_prefix": "115e4a78b3216dfb",
+      "ast_parse_ok": true,
+      "def_count": 39,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_euclidean_2d",
+        "_leverage_angle_rad",
+        "hmm_viterbi_pass_block_assignments",
+        "cox_weibull_block_survival",
+        "_convex_hull_2d",
+        "polygon_area_shoelace"
+      ],
+      "callers": [
+        "intelligence/coaching/dc_pressure.py",
+        "intelligence/coaching/ol_provider.py",
+        "scripts/ops/run_chi_sea_mnf_360_board_review.py",
+        "scripts/ops/trench_pocket_physics.py",
+        "tests/test_biomech_quarantine.py",
+        "tests/test_trench_pipeline_integration.py",
+        "tests/test_trench_pocket_physics.py",
+        "tests/test_week9_voronoi_and_chip_adapters.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 60,
+      "file": "uncompressed_25k_repo_books_papers_routes_bridge.py",
+      "rel_path": "intelligence/coaching/uncompressed_25k_repo_books_papers_routes_bridge.py",
+      "ext": ".py",
+      "bytes": 50581,
+      "sha256_prefix": "c8360b6bb5319064",
+      "ast_parse_ok": true,
+      "def_count": 14,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "scan_full_monorepo_and_drives_census",
+        "afml_fractional_diff_and_meta_labeling",
+        "boyd_convex_kkt_simplex_allocation",
+        "nocedal_wright_lbfgs_trust_region_step",
+        "cover_thomas_information_kl_jsd",
+        "tsitsiklis_td_lambda_value_iteration"
+      ],
+      "callers": [
+        "scripts/ops/gse_connected_game_workflow.py",
+        "tests/test_week9_forensic_autopsy_fixes.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 61,
+      "file": "universal_nfl_metric_and_situational_engine.py",
+      "rel_path": "intelligence/coaching/universal_nfl_metric_and_situational_engine.py",
+      "ext": ".py",
+      "bytes": 48478,
+      "sha256_prefix": "07c99b7dc2e25ad2",
+      "ast_parse_ok": true,
+      "def_count": 14,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "compute_universal_qb_metrics",
+        "compute_universal_receiving_metrics",
+        "compute_universal_rushing_metrics",
+        "_compute_ftn_aly_single_carry",
+        "compute_universal_trench_metrics",
+        "compute_universal_defense_and_idp_metrics"
+      ],
+      "callers": [
+        "intelligence/coaching/gse_proprietary_metrics_benchmark_and_optimizer.py",
+        "scripts/ops/gse_coach_mind_simulator.py",
+        "tests/python/test_universal_nfl_metric_and_situational_engine.py",
+        "tests/unit/test_deep_read_grok_muse_motif_comp_intel.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 62,
+      "file": "universal_phase_transition_navier_stokes_sheaf_engine.py",
+      "rel_path": "intelligence/coaching/universal_phase_transition_navier_stokes_sheaf_engine.py",
+      "ext": ".py",
+      "bytes": 26933,
+      "sha256_prefix": "586bca6e52795dab",
+      "ast_parse_ok": true,
+      "def_count": 12,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "pade_exp_neg",
+        "pade44_exp_neg",
+        "mezard_parisi_cavity_susceptibility",
+        "mahler_dual_conformal_polytope_score",
+        "r_controls",
+        "hou_li_smooth_spectral_filter"
+      ],
+      "callers": [
+        "scripts/ops/gse_connected_game_workflow.py",
+        "tests/test_week9_forensic_autopsy_fixes.py"
+      ],
+      "status": "WIRED_ACTIVE"
+    },
+    {
+      "index": 63,
+      "file": "walkforward_tau.py",
+      "rel_path": "intelligence/coaching/walkforward_tau.py",
+      "ext": ".py",
+      "bytes": 1182,
+      "sha256_prefix": "41044a4e776f2657",
+      "ast_parse_ok": true,
+      "def_count": 0,
+      "class_count": 0,
+      "top_level_defs_preview": [],
+      "callers": [],
+      "status": "DORMANT_LIBRARY_MODULE"
+    },
+    {
+      "index": 64,
+      "file": "wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "rel_path": "intelligence/coaching/wave8_hidden_game_eager_and_sports_quant_engine.py",
+      "ext": ".py",
+      "bytes": 82788,
+      "sha256_prefix": "cd3ef3dcac476270",
+      "ast_parse_ok": true,
+      "def_count": 36,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "run_hidden_game_of_football_kernel",
+        "run_eager_erickson_football_analytics_kernel",
+        "run_ifaf_rules_sid_gamenotes_and_numbers_game_kernel",
+        "run_davidovg_quant_algo_and_double_entry_kernel",
+        "run_sports_quant_multigrid_kalman_war_and_transformer_kernel",
+        "run_kissell_posirina_optimal_sports_math_kernel"
+      ],
+      "callers": [
+        "intelligence/coaching/live_books_and_pdfs_executable_engine.py"
+      ],
+      "status": "WIRED_INTERNAL_HELPER"
+    },
+    {
+      "index": 65,
+      "file": "x_situational_layer2_compiler.py",
+      "rel_path": "intelligence/coaching/x_situational_layer2_compiler.py",
+      "ext": ".py",
+      "bytes": 57276,
+      "sha256_prefix": "1ef87a48e5817c9d",
+      "ast_parse_ok": true,
+      "def_count": 4,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "_clamp",
+        "compile_x_situational_layer2_overlay",
+        "evaluate_q1_to_q51_feature_registry",
+        "build_jax_at_bal_week9_forensic_context"
+      ],
+      "callers": [
+        "intelligence/coaching/situational_layer2_compiler_51q.py",
+        "scripts/ops/ingest_wave11_downloads_27files_situational_rescue.py",
+        "tests/test_week9_forensic_autopsy_fixes.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    },
+    {
+      "index": 66,
+      "file": "x_sweep_production_signals.py",
+      "rel_path": "intelligence/coaching/x_sweep_production_signals.py",
+      "ext": ".py",
+      "bytes": 7597,
+      "sha256_prefix": "da941fcb879958e1",
+      "ast_parse_ok": true,
+      "def_count": 5,
+      "class_count": 0,
+      "top_level_defs_preview": [
+        "compute_hidden_yardage_and_penalty_profile",
+        "compute_four_level_pressure_matrix",
+        "compute_qb_composition_and_field_zones",
+        "compute_rb_explosive_vs_stuffed_matrix",
+        "compute_wr_target_and_td_regression_matrix"
+      ],
+      "callers": [
+        "intelligence/coaching/tests/test_x_sweep_production_signals.py"
+      ],
+      "status": "TESTED_STANDALONE"
+    }
+  ],
+  "week10_engines_files_count": 40,
+  "week10_engines_41_files": [
+    {
+      "index": 1,
+      "rel_path_sub": "GSE-30TB-Vault-FilmRoom-Bitemporal-and-Revenue-Engine-2026-11-13/gse_30tb_film_room_and_bitemporal_pipeline.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-30TB-Vault-FilmRoom-Bitemporal-and-Revenue-Engine-2026-11-13/gse_30tb_film_room_and_bitemporal_pipeline.py",
+      "ext": ".py",
+      "bytes": 83192,
+      "sha256_prefix": "dbb7b007ce1acf7e",
+      "symbol_or_item_count": 62,
+      "symbols_preview": [
+        "FilmRoomVideoEntry",
+        "SourceCannotSpeakAsOfError",
+        "ZeroImputationViolationError",
+        "SportsbookContaminationFenceError",
+        "CollegeGuardViolationError",
+        "LocalCDiskProtectionError"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 2,
+      "rel_path_sub": "GSE-30TB-Vault-FilmRoom-Bitemporal-and-Revenue-Engine-2026-11-13/gse_autonomous_revenue_and_b2b_api_blueprint.ts",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-30TB-Vault-FilmRoom-Bitemporal-and-Revenue-Engine-2026-11-13/gse_autonomous_revenue_and_b2b_api_blueprint.ts",
+      "ext": ".ts",
+      "bytes": 35664,
+      "sha256_prefix": "7c37c016e0b6e6ac",
+      "symbol_or_item_count": 47,
+      "symbols_preview": [
+        "COMMERCIAL_LEGAL_ENTITY",
+        "COMMERCIAL_DBA",
+        "PUBLIC_CALIBRATION_LEDGER_URL",
+        "PUBLIC_LEDGER_LINE",
+        "POSTHOG_PROJECT_ID",
+        "POSTHOG_DFS_PREVIEW_FLAG"
+      ],
+      "notes": "ts_or_mjs_module"
+    },
+    {
+      "index": 3,
+      "rel_path_sub": "GSE-30TB-Vault-FilmRoom-Bitemporal-and-Revenue-Engine-2026-11-13/test_gse_30tb_bitemporal.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-30TB-Vault-FilmRoom-Bitemporal-and-Revenue-Engine-2026-11-13/test_gse_30tb_bitemporal.py",
+      "ext": ".py",
+      "bytes": 21041,
+      "sha256_prefix": "30826fa26d1103f1",
+      "symbol_or_item_count": 8,
+      "symbols_preview": [
+        "TestGSEBitemporalAndFilmRoomPipeline"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 4,
+      "rel_path_sub": "GSE-Belichick-Omni-Causal-World-Model-2026-11-13/gse_belichick_omni_causal_world_model.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Belichick-Omni-Causal-World-Model-2026-11-13/gse_belichick_omni_causal_world_model.py",
+      "ext": ".py",
+      "bytes": 96773,
+      "sha256_prefix": "d695815bc236d375",
+      "symbol_or_item_count": 77,
+      "symbols_preview": [
+        "DataGapError",
+        "ClassAFirewallViolationError",
+        "OffensiveConcept",
+        "DefensiveCall",
+        "CoordinatorScriptProfile",
+        "CoordinatorGameState"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 5,
+      "rel_path_sub": "GSE-Belichick-Omni-Causal-World-Model-2026-11-13/gse_belichick_omni_causal_world_model.ts",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Belichick-Omni-Causal-World-Model-2026-11-13/gse_belichick_omni_causal_world_model.ts",
+      "ext": ".ts",
+      "bytes": 58394,
+      "sha256_prefix": "28072be10cf1fc36",
+      "symbol_or_item_count": 53,
+      "symbols_preview": [
+        "MAX_LOG_ODDS_DELTA",
+        "MIN_E_VALUE_POINT",
+        "MIN_E_VALUE_CI_LOW",
+        "MIN_SAMPLE_PER_ARM",
+        "BITMASK_TOTAL_BITS",
+        "BITMASK_WORD_COUNT"
+      ],
+      "notes": "ts_or_mjs_module"
+    },
+    {
+      "index": 6,
+      "rel_path_sub": "GSE-Belichick-Omni-Causal-World-Model-2026-11-13/test_gse_belichick_omni_causal_world_model.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Belichick-Omni-Causal-World-Model-2026-11-13/test_gse_belichick_omni_causal_world_model.py",
+      "ext": ".py",
+      "bytes": 50455,
+      "sha256_prefix": "2b071213bf5b6b4b",
+      "symbol_or_item_count": 28,
+      "symbols_preview": [
+        "TestBelichickRecursiveCoordinatorMind",
+        "TestFourStageNeuroSymbolicCausalRouter",
+        "TestSiriusXMAudioClaimVeracityUpdater",
+        "TestEndToEndAndCrossLanguageTypeScriptParity",
+        "_find_matching_delim",
+        "_transpile_ts_to_mjs"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 7,
+      "rel_path_sub": "GSE-Belichick-Omni-Causal-World-Model-2026-11-13/test_gse_belichick_omni_causal_world_model.test.mjs",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Belichick-Omni-Causal-World-Model-2026-11-13/test_gse_belichick_omni_causal_world_model.test.mjs",
+      "ext": ".mjs",
+      "bytes": 12073,
+      "sha256_prefix": "b1578ca7a4f450ed",
+      "symbol_or_item_count": 0,
+      "symbols_preview": [],
+      "notes": "ts_or_mjs_module"
+    },
+    {
+      "index": 8,
+      "rel_path_sub": "GSE-Drive-Book-and-Research-Signal-Codex-2026-11-13/gse_sports_universe_physics_and_situations.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Drive-Book-and-Research-Signal-Codex-2026-11-13/gse_sports_universe_physics_and_situations.py",
+      "ext": ".py",
+      "bytes": 63212,
+      "sha256_prefix": "7963929c7939dc35",
+      "symbol_or_item_count": 37,
+      "symbols_preview": [
+        "DataGapError",
+        "BitemporalLeakageError",
+        "SignalOutput",
+        "StadiumVenueProfile",
+        "BallisticTrajectoryResult",
+        "PocketSurvivalResult"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 9,
+      "rel_path_sub": "GSE-Drive-Book-and-Research-Signal-Codex-2026-11-13/intelligence_signals_master_registry.json",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Drive-Book-and-Research-Signal-Codex-2026-11-13/intelligence_signals_master_registry.json",
+      "ext": ".json",
+      "bytes": 91118,
+      "sha256_prefix": "79dfce165dc6489a",
+      "symbol_or_item_count": 8,
+      "symbols_preview": [
+        "schema_version",
+        "title",
+        "generated_date",
+        "doctrine_reference",
+        "summary_counts",
+        "monorepo_packages_inventory"
+      ],
+      "notes": "verified_json_artifact"
+    },
+    {
+      "index": 10,
+      "rel_path_sub": "GSE-Drive-Book-and-Research-Signal-Codex-2026-11-13/test_gse_sports_universe_physics.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Drive-Book-and-Research-Signal-Codex-2026-11-13/test_gse_sports_universe_physics.py",
+      "ext": ".py",
+      "bytes": 27590,
+      "sha256_prefix": "793b6c89e3222faa",
+      "symbol_or_item_count": 39,
+      "symbols_preview": [
+        "TestStadiumPsychrometricsAndBallistics",
+        "TestTrenchAndPocketPhysics",
+        "TestSchemeCoverageAndBiomechanicalKernels",
+        "TestMarketMicrostructureAndPolymarketExecution",
+        "TestDoctrineGuardsAndMasterRegistry"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 11,
+      "rel_path_sub": "GSE-GSI-Dual-Use-TBI-and-Phase-Transition-Engine-2026-11-13/gsi_gse_dual_use_phase_transition_and_tbi_kernel.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-GSI-Dual-Use-TBI-and-Phase-Transition-Engine-2026-11-13/gsi_gse_dual_use_phase_transition_and_tbi_kernel.py",
+      "ext": ".py",
+      "bytes": 60546,
+      "sha256_prefix": "b32a408847a01e28",
+      "symbol_or_item_count": 39,
+      "symbols_preview": [
+        "TemporalLeakageError",
+        "HelmetEquipmentProfile",
+        "PoseKinematicFrame",
+        "RegularityAuditResult",
+        "BiophysicalKinematicRegularityFilter",
+        "DualUseWaveguideOutput"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 12,
+      "rel_path_sub": "GSE-GSI-Dual-Use-TBI-and-Phase-Transition-Engine-2026-11-13/test_gsi_gse_dual_use_kernel.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-GSI-Dual-Use-TBI-and-Phase-Transition-Engine-2026-11-13/test_gsi_gse_dual_use_kernel.py",
+      "ext": ".py",
+      "bytes": 24416,
+      "sha256_prefix": "64a7e2366d742342",
+      "symbol_or_item_count": 25,
+      "symbols_preview": [
+        "TestPronyOgdenSulcalWaveguideAndDualUseSignals",
+        "TestBiophysicalTelemetryRegularityAndRoughPaths",
+        "TestFluidVorticityAndCriticalSlowingDetector",
+        "TestGSISepsisInterventionKernelAndUnifiedPipeline",
+        "_make_pose_stream"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 13,
+      "rel_path_sub": "GSE-Mind-Thermodynamics-and-T1-T8-Mutation-Harness-2026-11-13/gse_mind_thermodynamics_and_t1_t8_mutations.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Mind-Thermodynamics-and-T1-T8-Mutation-Harness-2026-11-13/gse_mind_thermodynamics_and_t1_t8_mutations.py",
+      "ext": ".py",
+      "bytes": 91806,
+      "sha256_prefix": "a8d48ed7fe2ab5a7",
+      "symbol_or_item_count": 104,
+      "symbols_preview": [
+        "GSEFailClosedError",
+        "DataGapError",
+        "ThermodynamicMaskError",
+        "LatentCollapseError",
+        "ConformalGroundError",
+        "UnidentifiableVerifierError"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 14,
+      "rel_path_sub": "GSE-Mind-Thermodynamics-and-T1-T8-Mutation-Harness-2026-11-13/test_gse_mind_and_t1_t8_mutations.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Mind-Thermodynamics-and-T1-T8-Mutation-Harness-2026-11-13/test_gse_mind_and_t1_t8_mutations.py",
+      "ext": ".py",
+      "bytes": 25743,
+      "sha256_prefix": "16fa7fcc868df1a8",
+      "symbol_or_item_count": 39,
+      "symbols_preview": [
+        "TestModule1Thermodynamics",
+        "TestModule2LatentCollapse",
+        "TestModule3NonExchangeableConformal",
+        "TestModule4ProcessRewardDefense",
+        "TestModule5CanonicalWireFrame",
+        "TestModule6DAGAndFiveP1Guards"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 15,
+      "rel_path_sub": "GSE-One-Mind-Autonomous-Business-OS-2026-11-13/gse_one_mind_autonomous_os.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-One-Mind-Autonomous-Business-OS-2026-11-13/gse_one_mind_autonomous_os.py",
+      "ext": ".py",
+      "bytes": 104046,
+      "sha256_prefix": "d125c48f10938124",
+      "symbol_or_item_count": 89,
+      "symbols_preview": [
+        "GseDoctrineError",
+        "DataGapError",
+        "SecondWriterForbiddenError",
+        "NoOverwriteViolationError",
+        "SecretLeakError",
+        "PairedAuditError"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 16,
+      "rel_path_sub": "GSE-One-Mind-Autonomous-Business-OS-2026-11-13/held-out-discipline.md",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-One-Mind-Autonomous-Business-OS-2026-11-13/held-out-discipline.md",
+      "ext": ".md",
+      "bytes": 5120,
+      "sha256_prefix": "4503213a9fe25348",
+      "symbol_or_item_count": 3,
+      "symbols_preview": [
+        "Doctrine 04: Held-Out Temporal Discipline & Seal Invariance (`held-out-discipline`)",
+        "1. Core Mandate",
+        "2. Five Immutable Temporal & Statistical Guards"
+      ],
+      "notes": "lines=25"
+    },
+    {
+      "index": 17,
+      "rel_path_sub": "GSE-One-Mind-Autonomous-Business-OS-2026-11-13/honest-refusal.md",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-One-Mind-Autonomous-Business-OS-2026-11-13/honest-refusal.md",
+      "ext": ".md",
+      "bytes": 5377,
+      "sha256_prefix": "4e6fee47e5402d23",
+      "symbol_or_item_count": 4,
+      "symbols_preview": [
+        "Doctrine 02: Honest Refusal & Zero Silent Fallback (`honest-refusal`)",
+        "1. Core Mandate",
+        "2. Prohibited Anti-Patterns vs. Required Fail-Closed Behavior",
+        "3. Verification Contract"
+      ],
+      "notes": "lines=29"
+    },
+    {
+      "index": 18,
+      "rel_path_sub": "GSE-One-Mind-Autonomous-Business-OS-2026-11-13/manifest-provenance.md",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-One-Mind-Autonomous-Business-OS-2026-11-13/manifest-provenance.md",
+      "ext": ".md",
+      "bytes": 5826,
+      "sha256_prefix": "d27a6bf67e48c3c8",
+      "symbol_or_item_count": 4,
+      "symbols_preview": [
+        "Doctrine 03: Claim-Matrix & Bi-Temporal Manifest Provenance (`manifest-provenance`)",
+        "1. Core Mandate",
+        "2. Six-Stage Claim-Matrix Specification",
+        "3. Bi-Temporal & Source-Tier Governance"
+      ],
+      "notes": "lines=33"
+    },
+    {
+      "index": 19,
+      "rel_path_sub": "GSE-One-Mind-Autonomous-Business-OS-2026-11-13/one_mind_agent_bus_daemon.ts",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-One-Mind-Autonomous-Business-OS-2026-11-13/one_mind_agent_bus_daemon.ts",
+      "ext": ".ts",
+      "bytes": 39500,
+      "sha256_prefix": "5acab19ef4e70fb8",
+      "symbol_or_item_count": 43,
+      "symbols_preview": [
+        "LEGAL_ENTITY_NAME",
+        "PUBLIC_CALIBRATION_LEDGER_URL",
+        "PUBLIC_LEDGER_ATTESTATION",
+        "CANONICAL_SEALED_HASH_FIXTURE",
+        "SEALED_TAU",
+        "QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF"
+      ],
+      "notes": "ts_or_mjs_module"
+    },
+    {
+      "index": 20,
+      "rel_path_sub": "GSE-One-Mind-Autonomous-Business-OS-2026-11-13/paired-audit.md",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-One-Mind-Autonomous-Business-OS-2026-11-13/paired-audit.md",
+      "ext": ".md",
+      "bytes": 5531,
+      "sha256_prefix": "e2a8e59cceacb32b",
+      "symbol_or_item_count": 4,
+      "symbols_preview": [
+        "Doctrine 01: Paired Adversarial Audit (`paired-audit`)",
+        "1. Core Mandate",
+        "2. Structural Requirements",
+        "3. Enforcement in `one_mind_agent_bus_daemon.ts` and `gse_one_mind_autonomous_os.py`"
+      ],
+      "notes": "lines=31"
+    },
+    {
+      "index": 21,
+      "rel_path_sub": "GSE-One-Mind-Autonomous-Business-OS-2026-11-13/test_gse_one_mind_os.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-One-Mind-Autonomous-Business-OS-2026-11-13/test_gse_one_mind_os.py",
+      "ext": ".py",
+      "bytes": 46998,
+      "sha256_prefix": "965a26806740ab51",
+      "symbol_or_item_count": 11,
+      "symbols_preview": [
+        "TestGseOneMindAutonomousOS",
+        "_make_valid_claim_matrix",
+        "_make_valid_paired_audits"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 22,
+      "rel_path_sub": "GSE-Week10-Line-Free-Coach-Mind-Simulator-2026-11-13/gse_line_free_coach_mind_week10_simulator.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Line-Free-Coach-Mind-Simulator-2026-11-13/gse_line_free_coach_mind_week10_simulator.py",
+      "ext": ".py",
+      "bytes": 169211,
+      "sha256_prefix": "63b05a3fa0280445",
+      "symbol_or_item_count": 43,
+      "symbols_preview": [
+        "CoordinatorArchetype",
+        "PureFootballMatchupInput",
+        "SealedCoachMindDistribution",
+        "PostSealMarketLine",
+        "_is_contaminated_key_name",
+        "assert_zero_market_contamination"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 23,
+      "rel_path_sub": "GSE-Week10-Line-Free-Coach-Mind-Simulator-2026-11-13/test_gse_line_free_coach_mind.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Line-Free-Coach-Mind-Simulator-2026-11-13/test_gse_line_free_coach_mind.py",
+      "ext": ".py",
+      "bytes": 18103,
+      "sha256_prefix": "0e16e418514c59bf",
+      "symbol_or_item_count": 17,
+      "symbols_preview": [
+        "TestZeroMarketContaminationBoundary",
+        "TestCoordinatorArchetypesAndStateMachine",
+        "TestWeek10SlateAndPostSealGovernance",
+        "_sample_clean_matchup_kwargs"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 24,
+      "rel_path_sub": "GSE-Week10-Line-Free-Coach-Mind-Simulator-2026-11-13/week10_pure_coach_mind_13_games.json",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Line-Free-Coach-Mind-Simulator-2026-11-13/week10_pure_coach_mind_13_games.json",
+      "ext": ".json",
+      "bytes": 131413,
+      "sha256_prefix": "511b646ff0d5ecc5",
+      "symbol_or_item_count": 17,
+      "symbols_preview": [
+        "entity",
+        "dba",
+        "domain",
+        "public_ledger_disclosure",
+        "generated_date",
+        "season"
+      ],
+      "notes": "verified_json_artifact"
+    },
+    {
+      "index": 25,
+      "rel_path_sub": "GSE-Week10-Parlay-MRI-and-Two-Door-Storefront-Pack-2026-11-13/parlay_mri_and_store_credit.test.ts",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Parlay-MRI-and-Two-Door-Storefront-Pack-2026-11-13/parlay_mri_and_store_credit.test.ts",
+      "ext": ".ts",
+      "bytes": 25667,
+      "sha256_prefix": "eea845e6d9427749",
+      "symbol_or_item_count": 1,
+      "symbols_preview": [
+        "runAllSuiteTests"
+      ],
+      "notes": "ts_or_mjs_module"
+    },
+    {
+      "index": 26,
+      "rel_path_sub": "GSE-Week10-Parlay-MRI-and-Two-Door-Storefront-Pack-2026-11-13/parlay_mri_and_store_credit.ts",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Parlay-MRI-and-Two-Door-Storefront-Pack-2026-11-13/parlay_mri_and_store_credit.ts",
+      "ext": ".ts",
+      "bytes": 44312,
+      "sha256_prefix": "f58a0bd386cc0e84",
+      "symbol_or_item_count": 33,
+      "symbols_preview": [
+        "STUDENT_T_DEGREES_OF_FREEDOM",
+        "DEFAULT_TWO_WAY_OVERROUND",
+        "NflSgpLegArchetype",
+        "SgpLegInput",
+        "ShinDevigResult",
+        "EvaluatedSgpLeg"
+      ],
+      "notes": "ts_or_mjs_module"
+    },
+    {
+      "index": 27,
+      "rel_path_sub": "GSE-Week10-Parlay-MRI-and-Two-Door-Storefront-Pack-2026-11-13/parlay_mri_preview.html",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Parlay-MRI-and-Two-Door-Storefront-Pack-2026-11-13/parlay_mri_preview.html",
+      "ext": ".html",
+      "bytes": 103668,
+      "sha256_prefix": "c2d8c6398cc752e9",
+      "symbol_or_item_count": 1722,
+      "symbols_preview": [],
+      "notes": "lines=1722"
+    },
+    {
+      "index": 28,
+      "rel_path_sub": "GSE-Week10-Parlay-MRI-and-Two-Door-Storefront-Pack-2026-11-13/store-credit-ledger.ts",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Parlay-MRI-and-Two-Door-Storefront-Pack-2026-11-13/store-credit-ledger.ts",
+      "ext": ".ts",
+      "bytes": 33300,
+      "sha256_prefix": "7088c40bbde03f5d",
+      "symbol_or_item_count": 27,
+      "symbols_preview": [
+        "FOUNDING_ALL_ACCESS_CAP",
+        "FOUNDING_ALL_ACCESS_MONTHLY_CENTS",
+        "STANDARD_ALL_ACCESS_MONTHLY_CENTS",
+        "ROS_PLAYOFFS_PASS_CENTS",
+        "ALL_ACCESS_UPGRADE_BRIDGE_CENTS",
+        "StorefrontDoor"
+      ],
+      "notes": "ts_or_mjs_module"
+    },
+    {
+      "index": 29,
+      "rel_path_sub": "GSE-Week10-Verified-Engine-Gate-Pack-2026-11-13/board_quarantine_and_hnsw_fix.sql",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Verified-Engine-Gate-Pack-2026-11-13/board_quarantine_and_hnsw_fix.sql",
+      "ext": ".sql",
+      "bytes": 12274,
+      "sha256_prefix": "fa0abb7b5af461e3",
+      "symbol_or_item_count": 15,
+      "symbols_preview": [
+        "IF",
+        "IF",
+        "IF",
+        "public.restore_quarantined_picks"
+      ],
+      "notes": "sql_migration_and_quarantine"
+    },
+    {
+      "index": 30,
+      "rel_path_sub": "GSE-Week10-Verified-Engine-Gate-Pack-2026-11-13/multimodal_decisions_router.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Verified-Engine-Gate-Pack-2026-11-13/multimodal_decisions_router.py",
+      "ext": ".py",
+      "bytes": 21424,
+      "sha256_prefix": "17955b7185ca4e8b",
+      "symbol_or_item_count": 15,
+      "symbols_preview": [
+        "DecisionQuestionSpec",
+        "DisplacementEvaluation",
+        "MultimodalDecisionsRouter",
+        "assert_no_forbidden_fallback_constants",
+        "split_question_batches",
+        "_validate_public_only_context_for_free_tier"
+      ],
+      "notes": "ast_ok=True callers=2"
+    },
+    {
+      "index": 31,
+      "rel_path_sub": "GSE-Week10-Verified-Engine-Gate-Pack-2026-11-13/oof_logit_temp_calibration.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Verified-Engine-Gate-Pack-2026-11-13/oof_logit_temp_calibration.py",
+      "ext": ".py",
+      "bytes": 27693,
+      "sha256_prefix": "ac80163c45493fdf",
+      "symbol_or_item_count": 23,
+      "symbols_preview": [
+        "CalibrationFitResult",
+        "LogitTempCalibrator",
+        "PushEVResult",
+        "PurgedEmbargoedChronologicalSplitter",
+        "BarberConformalDecision",
+        "PlaceboVerificationResult"
+      ],
+      "notes": "ast_ok=True callers=2"
+    },
+    {
+      "index": 32,
+      "rel_path_sub": "GSE-Week10-Verified-Engine-Gate-Pack-2026-11-13/test_master_plan_gates.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/GSE-Week10-Verified-Engine-Gate-Pack-2026-11-13/test_master_plan_gates.py",
+      "ext": ".py",
+      "bytes": 35703,
+      "sha256_prefix": "b295dcfbd590d939",
+      "symbol_or_item_count": 35,
+      "symbols_preview": [
+        "TestBoardQuarantineAndHnswSql",
+        "TestMultimodalDecisionsRouter",
+        "TestOofLogitTempCalibrationAndGates",
+        "_ApproxValue",
+        "_MarkNamespace",
+        "_PytestCompat"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 33,
+      "rel_path_sub": "gse_18_master_equations_and_homography.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/gse_18_master_equations_and_homography.py",
+      "ext": ".py",
+      "bytes": 87943,
+      "sha256_prefix": "80bfab7850d616d8",
+      "symbol_or_item_count": 73,
+      "symbols_preview": [
+        "PublicCopyAuditResult",
+        "HomographyDiagnostics",
+        "FieldLineCorrespondence",
+        "Edge1b2HybridDistribution",
+        "LockedMeanCRPSGateReport",
+        "format_confidence_score"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 34,
+      "rel_path_sub": "gse_dk_dfs_mip_optimizer.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/gse_dk_dfs_mip_optimizer.py",
+      "ext": ".py",
+      "bytes": 53803,
+      "sha256_prefix": "5cd790e79689d48c",
+      "symbol_or_item_count": 40,
+      "symbols_preview": [
+        "SlateMode",
+        "OptimizationInfeasibleError",
+        "LateSwapValidationError",
+        "PlayerPoolEntry",
+        "BlockedPlayerRecord",
+        "SlateHygieneReport"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 35,
+      "rel_path_sub": "gse_seo_wcag22_and_posthog_516325_pack.ts",
+      "rel_path": "intelligence/week10_engines_2026_11_13/gse_seo_wcag22_and_posthog_516325_pack.ts",
+      "ext": ".ts",
+      "bytes": 37108,
+      "sha256_prefix": "fb13ad988a57150a",
+      "symbol_or_item_count": 40,
+      "symbols_preview": [
+        "GSE_LEGAL_ENTITY",
+        "SITEMAP_PREVIEW_CAP",
+        "AI_CRAWLER_USER_AGENTS",
+        "NextRouteMetadataShape",
+        "TruthComplianceViolation",
+        "auditTruthFileCopy"
+      ],
+      "notes": "ts_or_mjs_module"
+    },
+    {
+      "index": 36,
+      "rel_path_sub": "gse_situational_coach_and_injury_engine.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/gse_situational_coach_and_injury_engine.py",
+      "ext": ".py",
+      "bytes": 121319,
+      "sha256_prefix": "8f1ddf6adf611505",
+      "symbol_or_item_count": 87,
+      "symbols_preview": [
+        "DataGapError",
+        "WalkForwardDiagnostic",
+        "Glicko2Rating",
+        "Glicko2Match",
+        "EligibleTarget",
+        "CoachSimPureInput"
+      ],
+      "notes": "ast_ok=True callers=1"
+    },
+    {
+      "index": 37,
+      "rel_path_sub": "test_gse_18_master_equations.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/test_gse_18_master_equations.py",
+      "ext": ".py",
+      "bytes": 28642,
+      "sha256_prefix": "62e9038a56840053",
+      "symbol_or_item_count": 10,
+      "symbols_preview": [
+        "TestGSE18MasterEquationsAndHomography",
+        "test_pytest_entrypoint_all_suites"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 38,
+      "rel_path_sub": "test_gse_dk_dfs_mip_optimizer.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/test_gse_dk_dfs_mip_optimizer.py",
+      "ext": ".py",
+      "bytes": 23718,
+      "sha256_prefix": "cb17deb8937f75e6",
+      "symbol_or_item_count": 14,
+      "symbols_preview": [
+        "TestGSEDKDFSMipOptimizer",
+        "build_realistic_week10_pool"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 39,
+      "rel_path_sub": "test_gse_situational_coach_engine.py",
+      "rel_path": "intelligence/week10_engines_2026_11_13/test_gse_situational_coach_engine.py",
+      "ext": ".py",
+      "bytes": 22948,
+      "sha256_prefix": "e62edd6dead447cf",
+      "symbol_or_item_count": 24,
+      "symbols_preview": [
+        "TestPitGuardsAndSituationalMetrics",
+        "TestGlicko2AndByeWeekRd",
+        "TestUpgradedInjuryOverlayAndCoachLock",
+        "TestWeek10SlateAndDoctrineHygiene",
+        "approx"
+      ],
+      "notes": "ast_ok=True callers=0"
+    },
+    {
+      "index": 40,
+      "rel_path_sub": "unified_quantitative_nfl_architecture_fixed.ts",
+      "rel_path": "intelligence/week10_engines_2026_11_13/unified_quantitative_nfl_architecture_fixed.ts",
+      "ext": ".ts",
+      "bytes": 37189,
+      "sha256_prefix": "69773a84ee419eb0",
+      "symbol_or_item_count": 45,
+      "symbols_preview": [
+        "atOrThrow",
+        "at2DOrThrow",
+        "setAtOrThrow",
+        "set2DOrThrow",
+        "recordGetOrDefault",
+        "recordGetOrThrow"
+      ],
+      "notes": "ts_or_mjs_module"
+    }
+  ],
+  "gse_213_equation_engine": {
+    "feature_count": 204,
+    "expected_feature_count": 204,
+    "bases_count": 12,
+    "states_count": 8,
+    "all_204_finite": true,
+    "cpoe_val": 2.5,
+    "ryoe_val": 0.8,
+    "james_stein_shrink_sample": 0.242,
+    "target_conservation_sum_after_wr2_scratch": 30.72,
+    "points_from_epa_sample": 23.0888,
+    "win_prob_from_spread_minus3": 0.3929,
+    "student_t_tail_dependence": 0.2269
+  },
+  "permanent_bridges": [
+    {
+      "rel_path": "intelligence/providers/parallel_ai_client.py",
+      "exists": true,
+      "bytes": 23201,
+      "sha256_prefix": "6b5db7d15c4c4616",
+      "ast_parse_ok": true,
+      "def_count": 21,
+      "class_count": 4,
+      "top_level_defs": [
+        "mask_api_key",
+        "assert_no_raw_secrets",
+        "enforce_privacy_boundary",
+        "strip_html_boilerplate",
+        "_detect_prompt_injection",
+        "screen_passages_for_prompt_injection",
+        "_extract_host",
+        "_domain_matches",
+        "classify_source_tier",
+        "_parse_iso_utc",
+        "filter_bitemporal_results",
+        "_default_urllib_transport"
+      ],
+      "role": "Parallel AI $20 CreditBudgetGovernor + Six-Tier Bitemporal Client"
+    },
+    {
+      "rel_path": "intelligence/foundry_bridge/week10_reasoning_mind_bridge.py",
+      "exists": true,
+      "bytes": 34196,
+      "sha256_prefix": "ed8d2e7377aa3d53",
+      "ast_parse_ok": true,
+      "def_count": 9,
+      "class_count": 0,
+      "top_level_defs": [
+        "open_foundry_db_readonly",
+        "load_all_sovereign_primitives",
+        "_reference_answers_by_signature",
+        "build_reference_answer_for_rlvr_scenario",
+        "load_and_verify_all_rlvr_vetoes",
+        "remap_motif_csv_season_stats",
+        "audit_gcp_week10_crucibles",
+        "_parse_iso_dt",
+        "evaluate_candidate_ticket_with_rlvr_bridge"
+      ],
+      "role": "Foundry SFT/Primitives/RLVR -> Week 10 Reasoning Mind Bridge & Motif Non-Destructive Remapper"
+    },
+    {
+      "rel_path": "intelligence/ops/lessons_learned_and_sequenced_gate_engine.py",
+      "exists": true,
+      "bytes": 18661,
+      "sha256_prefix": "01eda9b8659fbbc0",
+      "ast_parse_ok": true,
+      "def_count": 16,
+      "class_count": 0,
+      "top_level_defs": [
+        "load_lessons_ledger",
+        "record_lesson_learned",
+        "ensure_default_lessons_seeded",
+        "_gate_001",
+        "_gate_002",
+        "_gate_003",
+        "_gate_004",
+        "_gate_005",
+        "_gate_006",
+        "_gate_007",
+        "_gate_008",
+        "_gate_009",
+        "_gate_010",
+        "_gate_011",
+        "_gate_012",
+        "run_all_lessons_learned_gates"
+      ],
+      "role": "Permanent 12-Lesson Execution Registry & Sequenced Pipeline State Machine"
+    },
+    {
+      "rel_path": "scripts/ops/run_permanent_sequenced_weekly_pipeline.py",
+      "exists": true,
+      "bytes": 21647,
+      "sha256_prefix": "1aa57cf17ce0db3f",
+      "ast_parse_ok": true,
+      "def_count": 8,
+      "class_count": 0,
+      "top_level_defs": [
+        "_sha256_obj",
+        "resolve_nfl_week_auto",
+        "_fetch_json_url",
+        "_normalize_espn_abbr",
+        "harvest_32_team_espn_context",
+        "run_permanent_sequenced_pipeline",
+        "main"
+      ],
+      "role": "7-Gate Sequenced Weekly Orchestrator (--week auto + Live ESPN Roster/Scoreboard Sync)"
+    }
+  ]
+}

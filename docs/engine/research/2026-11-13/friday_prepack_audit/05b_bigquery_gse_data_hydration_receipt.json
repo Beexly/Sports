@@ -1,0 +1,60 @@
+{
+  "schema": "gse.bigquery_hydration_receipt.v1",
+  "generated_at_utc": "2026-11-14T03:03:21.402649+00:00",
+  "project_id": "galaxysportsedge",
+  "dataset_id": "gse_data",
+  "billing_tier": "GCP Always Free (10 GB/mo active storage, 1 TB/mo queries)",
+  "estimated_cost_usd": 0.0,
+  "total_staged_bytes": 2718879,
+  "total_verified_rows": 3980,
+  "tables": [
+    {
+      "table": "galaxysportsedge.gse_data.sovereign_primitives",
+      "source_jsonl": "sovereign_primitives.jsonl",
+      "staged_rows": 730,
+      "staged_bytes": 775265,
+      "load_exit_code": 0,
+      "bq_verified_row_count": 730
+    },
+    {
+      "table": "galaxysportsedge.gse_data.sovereign_reasoning_traces",
+      "source_jsonl": "sovereign_reasoning_traces.jsonl",
+      "staged_rows": 159,
+      "staged_bytes": 49378,
+      "load_exit_code": 0,
+      "bq_verified_row_count": 159
+    },
+    {
+      "table": "galaxysportsedge.gse_data.gcp_shard_b_extractions",
+      "source_jsonl": "gcp_shard_b_extractions.jsonl",
+      "staged_rows": 2940,
+      "staged_bytes": 1847015,
+      "load_exit_code": 0,
+      "bq_verified_row_count": 2940
+    },
+    {
+      "table": "galaxysportsedge.gse_data.router_and_situational_wiring",
+      "source_jsonl": "router_and_situational_wiring.jsonl",
+      "staged_rows": 117,
+      "staged_bytes": 37247,
+      "load_exit_code": 0,
+      "bq_verified_row_count": 117
+    },
+    {
+      "table": "galaxysportsedge.gse_data.week10_entity_and_venue_truth",
+      "source_jsonl": "week10_entity_and_venue_truth.jsonl",
+      "staged_rows": 34,
+      "staged_bytes": 9974,
+      "load_exit_code": 0,
+      "bq_verified_row_count": 34
+    }
+  ],
+  "bq_ls_table_ids": [
+    "gcp_shard_b_extractions",
+    "router_and_situational_wiring",
+    "sovereign_primitives",
+    "sovereign_reasoning_traces",
+    "week10_entity_and_venue_truth"
+  ],
+  "verification_sql": "SELECT 'sovereign_primitives' AS table_name, COUNT(*) AS row_count FROM `galaxysportsedge.gse_data.sovereign_primitives` UNION ALL SELECT 'sovereign_reasoning_traces' AS table_name, COUNT(*) AS row_count FROM `galaxysportsedge.gse_data.sovereign_reasoning_traces` UNION ALL SELECT 'gcp_shard_b_extractions' AS table_name, COUNT(*) AS row_count FROM `galaxysportsedge.gse_data.gcp_shard_b_extractions` UNION ALL SELECT 'router_and_situational_wiring' AS table_name, COUNT(*) AS row_count FROM `galaxysportsedge.gse_data.router_and_situational_wiring` UNION ALL SELECT 'week10_entity_and_venue_truth' AS table_name, COUNT(*) AS row_count FROM `galaxysportsedge.gse_data.week10_entity_and_venue_truth` ORDER BY table_name"
+}

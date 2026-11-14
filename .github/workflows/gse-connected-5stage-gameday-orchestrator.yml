@@ -2,6 +2,9 @@ name: GSE Connected 5-Stage Gameday & Overnight Orchestrator
 
 on:
   schedule:
+    # Weekly Sequenced Roster, Injury & Scoreboard Venue Sync Windows (UTC)
+    - cron: "0 15 * * 2"     # Tuesday Roster Baseline (32-team ESPN sync)
+    - cron: "0 21 * * 3,4,5" # Wed-Fri Practice & Injury Delta Windows
     # T-85m Pregame Connected 5-Stage Windows (UTC)
     - cron: "35 16 * * 0"     # T-85m Sunday Early (1:00 PM ET slate)
     - cron: "40 19 * * 0"     # T-85m Sunday Late (4:05/4:25 PM ET slate)
@@ -20,27 +23,35 @@ on:
         default: "full_slate_pregame_t85m"
         type: choice
         options:
+          - tuesday_roster_baseline
+          - wed_fri_practice_delta
           - full_slate_pregame_t85m
           - halftime_live_2h
           - overnight_corpus_mind_consolidation
       week:
-        description: "NFL regular-season week number"
+        description: "NFL week ('auto' or 1..18 / postseason)"
         required: true
-        default: "9"
+        default: "auto"
         type: string
 
 concurrency:
-  group: gse-5stage-orchestrator-${{ github.event.schedule || github.event.inputs.mode }}-${{ github.event.inputs.week || '9' }}
+  group: gse-5stage-orchestrator-${{ github.event.schedule || github.event.inputs.mode }}-${{ github.event.inputs.week || 'auto' }}
   cancel-in-progress: false
 
 jobs:
   pregame-t85m-connected-5stage-workflow:
-    name: Pregame T-85m Connected 5-Stage Workflow (Stages 0..5)
+    name: Permanent Sequenced 7-Gate Weekly Workflow (Gates 0A..5)
     if: >-
+      github.event.schedule == '0 15 * * 2' ||
+      github.event.schedule == '0 21 * * 3,4,5' ||
       github.event.schedule == '35 16 * * 0' ||
       github.event.schedule == '40 19 * * 0' ||
       github.event.schedule == '50 23 * * 0,1,4' ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'full_slate_pregame_t85m')
+      (github.event_name == 'workflow_dispatch' && (
+        github.event.inputs.mode == 'tuesday_roster_baseline' ||
+        github.event.inputs.mode == 'wed_fri_practice_delta' ||
+        github.event.inputs.mode == 'full_slate_pregame_t85m'
+      ))
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -74,10 +85,14 @@ jobs:
       - name: Execute 30-Team Conserved NFL Box-Score Projection Spine
         run: python intelligence/dfs/conserved_nfl_projection_and_equation_optimizer.py
 
-      - name: Execute Week ${{ github.event.inputs.week || '9' }} Connected 5-Stage Slate Workflow
+      - name: Execute Permanent Week-${{ github.event.inputs.week || 'auto' }} Sequenced 7-Gate Pipeline
         env:
-          GSE_NFL_WEEK: ${{ github.event.inputs.week || '9' }}
-        run: python scripts/ops/run_week9_full_slate_connected_workflow.py
+          GSE_NFL_WEEK: ${{ github.event.inputs.week || 'auto' }}
+        run: >-
+          python scripts/ops/run_permanent_sequenced_weekly_pipeline.py
+          --week "${{ github.event.inputs.week || 'auto' }}"
+          --mode t85m-lock
+          --skip-js-guards
 
       - name: Verify Cryptographic Stage 0..5 Receipts & E2E Projection Conservation Invariants
         run: |
@@ -85,7 +100,9 @@ jobs:
           python -m unittest tests/unit/test_unified_5000eq_mnf_projections_and_storefront.py tests/unit/test_intel_loop_q52_q54_and_research_consolidation.py tests/unit/test_no_fake_projections_or_ir_players.py
 
       - name: Run Trust Gate Guardrail
-        run: node scripts/guardrails/trust-gate.mjs
+        run: |
+          node scripts/trust-gate.mjs
+          node scripts/guardrails/trust-gate.mjs
 
   halftime-live-2h-resimulator:
     name: Halftime Live 2H 10,000-World Re-Simulator (Rules H1, H2, H3)
@@ -118,7 +135,7 @@ jobs:
 
       - name: Execute Halftime Live 2H Re-Simulator (H1 Emergency QB Clamp, H2 Blowout Preservation, H3 Immutable Pregame Direction Lock)
         env:
-          GSE_NFL_WEEK: ${{ github.event.inputs.week || '9' }}
+          GSE_NFL_WEEK: ${{ github.event.inputs.week || 'auto' }}
           ENFORCE_RULE_H1_EMERGENCY_QB_CLAMP: "1"
           ENFORCE_RULE_H2_BLOWOUT_STARTER_PRESERVATION: "1"
           ENFORCE_RULE_H3_IMMUTABLE_PREGAME_DIRECTION_LOCK: "1"
