@@ -1,0 +1,850 @@
+{
+  "book_id": "3a610f0512401167",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_SOCCER_COLLECTIVE_MODE_SURVIVAL_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Herrera Sanchez, Gradeci, Ramsay & Khan (Framewave Lab London), 'The life and death of football team runs: survival of collective modes shapes Levy-like transport', arXiv:2609.15541v1 [physics.soc-ph], 14 Sep 2026, 29 pages (main + supplement). Physics-of-football collective transport: links player- and team-centroid Levy-like movement through a FINITE-LIVED collective mode (directional centroid run) whose age and internal order state shape survival. Exact displacement decomposition x_i=X_c+r_i (Eq1) and signed MSD decomposition M_i=M_c+M_rel+C (Eq2); centroid share of player displacement rises with lag (5-30s centroid alpha~1.20 / pitch-player~1.13 superdiffusive, centroid-relative~0.93 diffusive; 1-4s near-ballistic). Polarisation order p=|mean unit velocity| (Eq3). Termination hazard highest at onset, inverse-age decline lambda_0=mu/(a+a_0) (Eq5), state-multiplied + common later-age tempering term (Eq6; multipliers low 1.31/mid 1.00/high 0.67). Age-banded survival-conditional switching (Eq7, bands 0-5/5-10/10-20/20-35s) + live-cohort propagation u_{j+1}=A^T u, A=(1-d)P (Eq8/9); continuous-age McKendrick-von Foerster limit (Eq11-13) separating mass-conserving switching from removing differential termination. Generalised-cutoff duration law p(T)~t^-gamma exp[-(t/T_c)^beta] (Eq15; gamma=1.33/T_c=32.3s/beta=2.78) ranked first of six families but NO family passes absolute goodness-of-fit -> best RELATIVE summary not exact generative law. Data: public SoccerMon GPS (Zenodo 10.5281/zenodo.10033832), Rosenborg + Valerenga, Norwegian women's Toppserien 2020+2021; 66 team-match records/62 fixtures/47 dates; 69802 centroid runs/69670 terminations/132 censored/355330 1s intervals; 10Hz->1Hz no interpolation; sticky hierarchical active-XI reconstruction. Grouped leave-one-match-date-out (47 folds): log loss 0.471->0.466->0.464, calibration slope 0.99, Brier 0.148->0.147; high-order survivor fraction ~0.1 birth->>0.5 at 5-7s->~0.2 by 35s (stationary comparator fails, age-banded reproduces); process-removal NOT additive. Order-termination associations modest (OR~0.80 per SD) NOT causal; limited predictive beyond kinematics. Limitations: internal not external validation, exploratory state definitions, segmentation-sensitive, no official substitution logs, incomplete ball/possession/opponent/event data -> cannot identify the football event ending each run; foraging not excluded (different explanation level: why vs how statistical form). Code github.com/framewave-lab/Athlelorien. Extracted faithfully (not a derivative summary). Equations 1-15 and S1-S23 printed in math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain football matches catalog (association football / soccer collective-motion physics; women's Toppserien). Directly isomorphic to GSE's team-translation-vs-formation decomposition, run-lifetime hazard kernel, time-varying collective-state transition, switching-vs-termination two-process attribution, and survivorship-aware heavy-tail interpretation. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "levy_not_unique_family",
+      "name": "A Levy-like trajectory does not identify a unique statistical family (truncated power law / log-normal indistinguishable)",
+      "verbatim_quote": "A Lévy-like trajectory does not identify a unique statistical family",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Guillermo Herrera Sanchez, Daniel Gradeci, Daniele Ramsay, Safe Khan; Framewave Lab London; arXiv:2609.15541v1 [physics.soc-ph], 14 Sep 2026) opens from the caveat that a Levy-like trajectory does not identify a unique statistical family: in finite samples, truncated power laws, log-normal distributions and other broad forms can be difficult to distinguish, so broad run-length statistics alone cannot select a generative law."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The non-identifiability of the tail family is literally GSE's distribution-ambiguity veto on heavy-tail claims.",
+        "source_operator": "levy_not_unique_family",
+        "telemetry": "Levy-like trajectory NOT unique statistical family; finite samples truncated power law/log-normal/broad forms hard to distinguish; broad run-lengths alone cannot select generative law"
+      }
+    },
+    {
+      "primitive_id": "levy_not_unique_mechanism",
+      "name": "Similar statistics arise from heterogeneity / switching / interactions / multiplicative noise / mixtures",
+      "verbatim_quote": "similar statistics can arise from environmental heterogeneity, behavioural switching, interactions, multiplicative fluctuations or population mixtures",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Nor does the trajectory identify a unique mechanism: similar statistics can arise from environmental heterogeneity, behavioural switching, interactions, multiplicative fluctuations or population mixtures; residence-time-dependent turning can broaden run lifetimes whereas random death or other termination processes can temper them."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mechanism non-identifiability is literally GSE's multiple-generative-processes caution for broad movement statistics.",
+        "source_operator": "levy_not_unique_mechanism",
+        "telemetry": "similar statistics from environmental heterogeneity/behavioural switching/interactions/multiplicative fluctuations/population mixtures; residence-time turning broadens, random death tempers"
+      }
+    },
+    {
+      "primitive_id": "mechanistic_question_survival",
+      "name": "The question is WHY some movements survive far longer, not just which distribution fits",
+      "verbatim_quote": "The mechanistic question is therefore not only which distribution describes completed movements, but why some movements survive far longer than others",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The mechanistic question is therefore not only which distribution describes completed movements, but why some movements survive far longer than others; the paper reframes broad collective transport as a survival-and-reorganisation problem rather than a duration-selection problem."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The survival-question reframing is literally GSE's lifetime-mechanism focus over completed-step fitting.",
+        "source_operator": "mechanistic_question_survival",
+        "telemetry": "question not only which distribution fits completed movements but WHY some survive far longer; survival-and-reorganisation not duration-selection"
+      }
+    },
+    {
+      "primitive_id": "translating_mode_definition",
+      "name": "Translating collective mode = directional run of team centroid (similar heading persists)",
+      "verbatim_quote": "a translating collective mode is a directional run of the team centroid: a period during which the centroid continues along a similar heading",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A translating collective mode is defined as a directional run of the team centroid: a period during which the centroid continues along a similar heading; this is the relevant collective transport object whose lifetime the paper models."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The centroid directional-run definition is literally GSE's collective-transport-mode object.",
+        "source_operator": "translating_mode_definition",
+        "telemetry": "translating collective mode = directional run of team centroid (continues along similar heading); the collective transport object whose lifetime is modelled"
+      }
+    },
+    {
+      "primitive_id": "completed_steps_cannot_answer",
+      "name": "Completed-step distribution cannot separate translation from rearrangement or reveal age-dependent termination",
+      "verbatim_quote": "A distribution of completed steps cannot answer either question because it neither separates translation of the team from rearrangement within the formation nor reveals how termination changes as a run ages",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A distribution of completed steps cannot answer either question because it neither separates translation of the team from rearrangement within the formation nor reveals how termination changes as a run ages; this motivates the displacement decomposition and the interval-level age-dependent termination model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The completed-step insufficiency is literally GSE's argument for decomposition plus age-resolved hazard over marginal fitting.",
+        "source_operator": "completed_steps_cannot_answer",
+        "telemetry": "completed-step distribution cannot separate team translation from formation rearrangement nor reveal age-dependent termination; motivates decomposition + interval hazard"
+      }
+    },
+    {
+      "primitive_id": "eq1_displacement_decomposition",
+      "name": "Eq1 x_i(t)=X_c(t)+r_i(t): exact player = centroid translation + within-formation motion",
+      "verbatim_quote": "the pitch-frame position of active player i was decomposed exactly as",
+      "page": 3,
+      "latex": "x_i(t)=X_c(t)+r_i(t)",
+      "symbol_and_unit_ledger": {
+        "x_i(t": "pitch-frame position of active player i [m]",
+        "X_c(t)": "team centroid [m]",
+        "r_i(t)": "player position relative to centroid [m]"
+      },
+      "assumptions": [
+        "The pitch-frame position of active player i was decomposed exactly as x_i(t)=X_c(t)+r_i(t), where X_c(t) is the team centroid and r_i(t) the player's position relative to that centroid, separating whole-team translation from rearrangement within the moving formation. Equation 1 is printed math-font and reconstructed here.",
+        "Equation 1 (exact displacement decomposition) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Exact identity; no approximation",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The exact centroid-plus-relative decomposition is literally GSE's team-translation versus within-formation separation.",
+        "source_operator": "eq1_displacement_decomposition",
+        "telemetry": "x_i(t)=X_c(t)+r_i(t); X_c team centroid, r_i relative position; exact separation of whole-team translation from within-formation rearrangement"
+      }
+    },
+    {
+      "primitive_id": "eq2_msd_decomposition",
+      "name": "Eq2 M_i=M_c+M_rel+C_c,rel: exact signed MSD decomposition (centroid + relative + cross term)",
+      "verbatim_quote": "This separates displacement caused by translation of the whole team from rearrangement within the moving formation",
+      "page": 3,
+      "latex": "M_i(\\tau)=\\underbrace{\\langle|\\Delta_\\tau X_c|^2\\rangle}_{M_c}+\\underbrace{\\langle|\\Delta_\\tau r_i|^2\\rangle}_{M_{rel}}+\\underbrace{2\\langle\\Delta_\\tau X_c\\cdot\\Delta_\\tau r_i\\rangle}_{C_{c,rel}}",
+      "symbol_and_unit_ledger": {
+        "M_i(tau)": "player MSD at lag tau [m^2]",
+        "M_c": "centroid-translation MSD [m^2]",
+        "M_rel": "within-formation MSD [m^2]",
+        "C_c,rel": "centroid-relative covariance cross term [m^2]",
+        "tau": "lag [s]"
+      },
+      "assumptions": [
+        "For lag tau the mean-squared displacement satisfies M_i(tau)=M_c(tau)+M_rel(tau)+C_c,rel(tau), an exact signed decomposition into centroid translation M_c=<|Delta X_c|^2>, within-formation motion M_rel=<|Delta r_i|^2>, and the centroid-relative cross term C_c,rel=2<Delta X_c . Delta r_i>; the cross term remained small while the centroid contribution increased with lag. Equation 2 is printed math-font and reconstructed here.",
+        "Equation 2 (exact signed MSD decomposition) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Exact signed decomposition; cross term small empirically",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The signed MSD decomposition is literally GSE's quantified team-translation share of player displacement.",
+        "source_operator": "eq2_msd_decomposition",
+        "telemetry": "M_i(tau)=M_c(tau)+M_rel(tau)+C_c,rel(tau); M_c=<|Delta X_c|^2>, M_rel=<|Delta r_i|^2>, C=2<Delta X_c.Delta r_i>; cross term small, centroid share rises with lag"
+      }
+    },
+    {
+      "primitive_id": "centroid_greater_persistence",
+      "name": "Centroid runs higher survival at intermediate/long durations than mean-matched exponential (collective persistence)",
+      "verbatim_quote": "Centroid runs had higher survival probability at intermediate and long durations, indicating greater directional persistence at the collective scale",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Directional-run durations were broader than mean-matched exponential distributions for both centroid and player trajectories; these exponentials are memoryless constant-rate references, and centroid runs had higher survival probability at intermediate and long durations, indicating greater directional persistence at the collective scale."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The centroid-over-memoryless persistence is literally GSE's collective-scale directional-memory evidence.",
+        "source_operator": "centroid_greater_persistence",
+        "telemetry": "centroid + player run durations broader than mean-matched exponential (memoryless constant-rate reference); centroid higher survival intermediate/long -> greater collective directional persistence"
+      }
+    },
+    {
+      "primitive_id": "generalised_cutoff_ranked_first",
+      "name": "Generalised-cutoff (power law + stretched-exponential cutoff) ranked first of six families",
+      "verbatim_quote": "ranked first, ahead of the conventional truncated power law, Weibull, log-normal, pure power law and geometric model",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Across 69,670 completed centroid runs, six candidate duration families were compared using grouped leave-one-match-date-out log likelihood; the generalised-cutoff model (a power law with a stretched-exponential cutoff, beta=1 recovering conventional exponential truncation) ranked first, ahead of the conventional truncated power law, Weibull, log-normal, pure power law and geometric model (the discrete-time memoryless analogue)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The relative duration-family ranking is literally GSE's held-out model-comparison discipline for run lifetimes.",
+        "source_operator": "generalised_cutoff_ranked_first",
+        "telemetry": "69670 completed centroid runs; 6 families grouped leave-one-match-date-out log likelihood; generalised-cutoff (power law + stretched-exp cutoff, beta=1=exponential truncation) rank 1 > truncated power law > Weibull > log-normal > pure power law > geometric"
+      }
+    },
+    {
+      "primitive_id": "no_family_passes_gof",
+      "name": "NO candidate family passes absolute goodness-of-fit (best relative summary, not exact law)",
+      "verbatim_quote": "None of the candidate families reproduced the full empirical distribution closely enough to pass the absolute goodness-of-fit test",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "None of the candidate families reproduced the full empirical distribution closely enough to pass the absolute goodness-of-fit test (parametric-bootstrap Kolmogorov-Smirnov with refitting); the generalised-cutoff model is therefore used as the best relative summary among the families tested, not as an exact generative law."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The no-absolute-fit honesty is literally GSE's relative-not-generative model-status discipline.",
+        "source_operator": "no_family_passes_gof",
+        "telemetry": "NO family passes absolute GoF (parametric-bootstrap KS refit); generalised-cutoff = best RELATIVE summary not exact generative law"
+      }
+    },
+    {
+      "primitive_id": "best_relative_not_exact_law",
+      "name": "Generalised-cutoff used as best relative summary, NOT exact generative law",
+      "verbatim_quote": "used as the best relative summary among the families tested, not as an exact generative law",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The generalised-cutoff model is used as the best relative summary among the families tested, not as an exact generative law; the fit describes completed run lifetimes while the interval-level termination process is analysed separately, so the distribution is an empirical summary of resulting lifetimes rather than evidence that a team samples a duration when a run begins."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The summary-not-law status is literally GSE's empirical-lifetime-summary versus pre-sampled-duration distinction.",
+        "source_operator": "best_relative_not_exact_law",
+        "telemetry": "generalised-cutoff best relative summary NOT exact generative law; describes completed lifetimes; interval termination analysed separately; NOT evidence team samples duration at run birth"
+      }
+    },
+    {
+      "primitive_id": "finite_pitch_tempering",
+      "name": "Late downturn consistent with finite pitch/match boundaries, inconsistent with unbounded power-law tail",
+      "verbatim_quote": "The late downturn in both duration and length is consistent with finite pitch and match boundaries",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The late downturn in both duration and length is consistent with finite pitch and match boundaries and inconsistent with an unbounded pure power-law tail over the observed range; the late rise in termination is therefore finite-range tempering rather than a universal asymptotic law."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The finite-boundary tempering is literally GSE's bounded-domain cutoff on heavy-tail extrapolation.",
+        "source_operator": "finite_pitch_tempering",
+        "telemetry": "late downturn duration+length consistent finite pitch/match boundaries, inconsistent unbounded pure power-law tail; late termination rise = finite-range tempering not universal asymptotic law"
+      }
+    },
+    {
+      "primitive_id": "short_lag_ballistic",
+      "name": "Short lags 1-4s: all three frames strongly superdiffusive, near-ballistic persistence",
+      "verbatim_quote": "all three coordinate systems were strongly superdiffusive, with descriptive slopes close to the ballistic limit",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At short lags of 1-4 s, all three coordinate systems (centroid, pitch-frame player, centroid-relative) were strongly superdiffusive with descriptive slopes close to the ballistic limit (alpha=2); ordinary diffusion is alpha=1, ballistic alpha=2, and 1<alpha<2 superdiffusion, with M(tau) proportional to tau^alpha."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The short-lag ballistic persistence is literally GSE's initial directional-memory regime across frames.",
+        "source_operator": "short_lag_ballistic",
+        "telemetry": "1-4s all three frames (centroid/pitch-player/centroid-relative) strongly superdiffusive near-ballistic; M(tau)~tau^alpha, diffusion alpha=1, ballistic alpha=2, superdiffusion 1<alpha<2"
+      }
+    },
+    {
+      "primitive_id": "frame_dependent_crossover",
+      "name": "5-30s crossover: centroid alpha~1.20 / pitch-player ~1.13 superdiffusive, centroid-relative ~0.93 diffusive",
+      "verbatim_quote": "whereas centroid-relative motion became approximately diffusive, with an exponent of 0.93",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Over the principal 5-30 s fitting range the dynamics separated: centroid and pitch-frame player MSDs remained superdiffusive with effective exponents of approximately 1.20 and 1.13, whereas centroid-relative motion became approximately diffusive with an exponent of 0.93; after the first few seconds directional persistence remained in centroid and pitch-frame coordinates but was largely lost within the formation, a finite-range crossover rather than asymptotic transport."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The frame-dependent crossover is literally GSE's timescale separation of team translation from internal rearrangement.",
+        "source_operator": "frame_dependent_crossover",
+        "telemetry": "5-30s: centroid alpha~1.20, pitch-player~1.13 (superdiffusive), centroid-relative~0.93 (diffusive); persistence kept in centroid/pitch frames, lost within formation; finite-range crossover not asymptotic"
+      }
+    },
+    {
+      "primitive_id": "centroid_share_increases",
+      "name": "Centroid translation share of player displacement increases with lag; relative motion declines",
+      "verbatim_quote": "At longer timescales, translation of the team as a whole accounted for an increasing share of absolute player displacement",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The MSD decomposition showed the centroid contribution increased with lag, the relative-motion contribution decreased, and the centroid-relative cross term remained small; at longer timescales translation of the team as a whole accounted for an increasing share of absolute player displacement while rearrangement within the formation declined."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The increasing centroid share is literally GSE's growing team-translation dominance at long lags.",
+        "source_operator": "centroid_share_increases",
+        "telemetry": "centroid MSD contribution increases with lag, relative-motion decreases, cross term small; long-lag player displacement increasingly whole-team translation"
+      }
+    },
+    {
+      "primitive_id": "coupled_not_independent",
+      "name": "Player and centroid transport signatures coupled, not independent (centroid = natural collective coordinate)",
+      "verbatim_quote": "The player- and centroid-level signatures were therefore coupled rather than independent",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The player- and centroid-level signatures were therefore coupled rather than independent: individual trajectories still contained motion not captured by the centroid, but at longer lags a growing share of player displacement came from translation of the team, so the centroid provides a natural collective coordinate for studying how directional team movements persist and reorganise."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The coupled-signatures conclusion is literally GSE's justification for the centroid as the collective transport coordinate.",
+        "source_operator": "coupled_not_independent",
+        "telemetry": "player + centroid signatures coupled not independent; individual motion not all centroid-captured but long-lag share from team translation; centroid = natural collective coordinate"
+      }
+    },
+    {
+      "primitive_id": "eq3_polarisation",
+      "name": "Eq3 polarisation p(t)=|(1/N_v) sum v_i/|v_i||| in [0,1]; aligned vs incoherent motion",
+      "verbatim_quote": "Values near one indicate aligned motion, whereas lower values indicate less coherent movement",
+      "page": 5,
+      "latex": "p(t)=\\Big|\\frac{1}{N_v(t)}\\sum_{i\\in A_v(t)}\\frac{v_i(t)}{|v_i(t)|}\\Big|,\\qquad 0\\le p\\le 1",
+      "symbol_and_unit_ledger": {
+        "p(t)": "polarisation / collective order [dimensionless 0-1]",
+        "v_i(t)": "player velocity [m/s]",
+        "A_v(t)": "active players with defined non-zero velocity direction",
+        "N_v(t)": "|A_v(t)| count"
+      },
+      "assumptions": [
+        "Order was quantified by the polarisation p(t)=|(1/N_v(t)) sum_{i in A_v(t)} v_i(t)/|v_i(t)||| with 0<=p<=1, where A_v(t) contains active players with a defined non-zero velocity direction and N_v=|A_v|; values near one indicate aligned motion whereas lower values indicate less coherent movement; A_v is a subset of the active set A (all valid-coordinate players contribute to the centroid, only non-zero-velocity players to polarisation). Equation 3 is printed math-font and reconstructed here.",
+        "Equation 3 (polarisation order parameter) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Zero-speed/undefined headings excluded; A_v subset of centroid active set A",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The polarisation order parameter is literally GSE's collective-alignment measure for translating states.",
+        "source_operator": "eq3_polarisation",
+        "telemetry": "p(t)=|(1/N_v) sum v_i/|v_i||| in [0,1]; A_v = active players with defined non-zero velocity (subset of centroid set A); near 1 aligned, low incoherent"
+      }
+    },
+    {
+      "primitive_id": "order_speed_confound",
+      "name": "Order-speed kinematic confound: faster translation lengthens runs without extending duration",
+      "verbatim_quote": "This relationship creates a potential kinematic confound: faster translation can increase run length without extending duration",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Order and speed were closely related: high-polarisation runs occurred more often at higher centroid speeds and long runs occupied an ordered faster-moving region of the joint state space; this creates a potential kinematic confound because faster translation can increase run length without extending duration, while tactical context may influence both speed and order, motivating the speed-adjusted interval analyses."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The order-speed confound is literally GSE's kinematic-adjustment requirement before attributing persistence to order.",
+        "source_operator": "order_speed_confound",
+        "telemetry": "high polarisation at higher centroid speed; long runs ordered+faster; confound: faster translation increases run LENGTH without extending DURATION; tactical context affects both speed+order; motivates speed adjustment"
+      }
+    },
+    {
+      "primitive_id": "polarisation_odds_ratio",
+      "name": "Speed-adjusted polarisation termination OR 0.80 per SD (contemporaneous); lagged 0.82/0.94/0.98",
+      "verbatim_quote": "a one-standard-deviation increase in current polarisation was associated with a termination odds ratio of 0.80",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "After adjustment for interval age and mean active-player speed, a one-standard-deviation increase in current polarisation was associated with a termination odds ratio of 0.80 (95% match-date bootstrap 0.79-0.81), about 20% lower termination odds per SD; the stricter preceding-five-second lagged measure gave OR 0.82 adjusted for lagged active-player speed, 0.94 for lagged centroid speed, and 0.98 (near null) with both speed measures (r=0.92, max VIF 8.0, treated as collinearity diagnostic)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The speed-adjusted order-termination association is literally GSE's modest protective-order signal with collinearity caution.",
+        "source_operator": "polarisation_odds_ratio",
+        "telemetry": "contemporaneous polarisation OR 0.80 [0.79-0.81] per SD (age+active-speed adjusted, ~20% lower termination); lagged 5s OR 0.82 (active speed)/0.94 (centroid speed)/0.98 (both, r=0.92 VIF 8.0 diagnostic)"
+      }
+    },
+    {
+      "primitive_id": "associations_not_causal",
+      "name": "Order-termination estimates are associations, NOT causal effects of collective order",
+      "verbatim_quote": "These estimates quantify associations and do not establish a causal effect of collective order",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "These estimates quantify associations and do not establish a causal effect of collective order; the available data cannot distinguish whether alignment helps stabilise translation, records an already stable mode, or lies on the same causal pathway as directional persistence."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The association-not-causation caveat is literally GSE's no-causal-claim discipline for order-persistence links.",
+        "source_operator": "associations_not_causal",
+        "telemetry": "estimates associations NOT causal effect of order; cannot distinguish alignment stabilises translation vs records stable mode vs same causal pathway as persistence"
+      }
+    },
+    {
+      "primitive_id": "limited_predictive_beyond_kinematics",
+      "name": "Polarisation adds only LIMITED predictive info beyond centroid kinematics (Brier contrasts include zero)",
+      "verbatim_quote": "Polarisation therefore added only limited predictive information beyond centroid kinematics",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Adding preceding-five-second polarisation to models already containing run age and preceding centroid speed produced a small improvement in held-out log loss on excluded match dates, remaining after including preceding centroid directional stability; the corresponding Brier-score contrasts included zero and gains varied across match dates, so polarisation added only limited predictive information beyond centroid kinematics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The limited-incremental-value finding is literally GSE's order-as-one-feature-not-large-protective-force conclusion.",
+        "source_operator": "limited_predictive_beyond_kinematics",
+        "telemetry": "preceding-5s polarisation small held-out log-loss gain beyond age+centroid speed (+directional stability); Brier contrasts include zero, gains vary by date; limited predictive info beyond kinematics"
+      }
+    },
+    {
+      "primitive_id": "termination_onset_peak",
+      "name": "Termination highest at onset, declines sharply with age, minimum mid-range, modest late rise",
+      "verbatim_quote": "Termination probability was highest immediately after a run began and then declined sharply",
+      "page": 7,
+      "latex": "S(a)=P(T>a),\\qquad \\lambda(a)=-\\frac{d}{da}\\log S(a),\\qquad \\lambda_0(a)=\\frac{\\mu}{a+a_0}",
+      "symbol_and_unit_ledger": {
+        "S(a)": "survival function [dimensionless]",
+        "T": "run lifetime [s]",
+        "lambda(a)": "continuous-time termination hazard [1/s]",
+        "a": "run age [s]",
+        "mu,a_0": "inverse-age baseline parameters"
+      },
+      "assumptions": [
+        "Termination probability was highest immediately after a run began and then declined sharply; over the early and intermediate supported range the decrease was approximated by an inverse-age baseline, empirical termination reached a minimum around the middle of the supported range (about 18.5 s) and increased modestly thereafter; the survival function S(a)=P(T>a) and continuous-time hazard lambda(a)=-d/da log S(a) define the framework, with the empirical analysis on one-second intervals displaying interval termination probability rather than the infinitesimal hazard. Equations 4-5 are printed math-font and reconstructed here.",
+        "Equations 4-5 (survival/hazard + inverse-age baseline) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Primary inference 0-35s (older risk sets sparse); interval prob not infinitesimal hazard",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The onset-peak age-declining hazard is literally GSE's run-vulnerability-at-birth lifetime kernel.",
+        "source_operator": "termination_onset_peak",
+        "telemetry": "termination highest at onset, declines sharply (inverse-age), min ~18.5s, modest late rise; S(a)=P(T>a), lambda(a)=-d/da log S(a); 1s intervals show interval termination prob not infinitesimal hazard"
+      }
+    },
+    {
+      "primitive_id": "eq5_inverse_age_baseline",
+      "name": "Eq5 inverse-age baseline lambda_0=mu/(a+a_0) yields power-law survival when acting alone",
+      "verbatim_quote": "which produces a power-law form of survival when acting alone",
+      "page": 7,
+      "latex": "\\lambda_0(a)=\\frac{\\mu}{a+a_0}",
+      "symbol_and_unit_ledger": {
+        "lambda_0(a)": "inverse-age baseline hazard [1/s]",
+        "mu": "scale parameter",
+        "a_0": "age offset [s]",
+        "a": "run age [s]"
+      },
+      "assumptions": [
+        "The early-intermediate termination decrease was approximated by the inverse-age baseline lambda_0(a)=mu/(a+a_0), which produces a power-law form of survival when acting alone; fold-median parameters were (mu,a_0)=(1.33,2.55 s) for age-only and (1.92,4.77 s) for age-plus-order. Equation 5 is printed math-font and reconstructed here.",
+        "Equation 5 (inverse-age baseline hazard) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Power-law survival when acting alone; tempered by later-age term",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The inverse-age hazard is literally GSE's power-law-survival baseline for run lifetimes.",
+        "source_operator": "eq5_inverse_age_baseline",
+        "telemetry": "lambda_0(a)=mu/(a+a_0) inverse-age baseline -> power-law survival alone; fold-median (mu,a_0)=(1.33,2.55s) age-only, (1.92,4.77s) age+order"
+      }
+    },
+    {
+      "primitive_id": "eq6_state_hazard",
+      "name": "Eq6 state hazard lambda_k=m_s mu/(a+a_0)+q[1-exp(-(a-t_c)+/tau_q)]; multiplier on inverse-age only",
+      "verbatim_quote": "The state multiplier applies only to the inverse-age component",
+      "page": 8,
+      "latex": "\\lambda_k(a)=m_{s_k(a)}\\frac{\\mu}{a+a_0}+q\\Big[1-\\exp\\Big(-\\frac{(a-t_c)_+}{\\tau_q}\\Big)\\Big]",
+      "symbol_and_unit_ledger": {
+        "lambda_k(a)": "state-dependent hazard for run k [1/s]",
+        "m_s": "state multiplier (low/mid/high)",
+        "s_k(a)": "recent order state",
+        "t_c": "later-age onset ~20s",
+        "tau_q": "later-age rise time ~5s",
+        "q": "later-age magnitude ~0.104/s",
+        "(x)+": "max(x,0)"
+      },
+      "assumptions": [
+        "The crossover was represented by the effective state-dependent hazard lambda_k(a)=m_{s_k(a)} mu/(a+a_0) + q[1-exp(-(a-t_c)_+/tau_q)], where s_k(a) is the recent low/mid/high-order state, m_s in {m_L,m_M,m_H} the state multiplier applying only to the inverse-age component, and (x)_+=max(x,0); the later-age term is common to all states, zero before t_c and rising gradually thereafter (t_c~20 s, tau_q~5 s, q~0.104/s), describing late attenuation over the observed range. Equation 6 is printed math-font and reconstructed here.",
+        "Equation 6 (state-dependent hazard with later-age term) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Later-age term describes finite-range attenuation; data do not resolve much longer ages",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The state-multiplied inverse-age-plus-late hazard is literally GSE's order-conditioned run-termination kernel.",
+        "source_operator": "eq6_state_hazard",
+        "telemetry": "lambda_k(a)=m_s mu/(a+a_0)+q[1-exp(-(a-t_c)+/tau_q)]; m_s in {m_L,m_M,m_H} on inverse-age only; later-age term common, zero before t_c~20s, rise tau_q~5s, q~0.104/s; (x)+=max(x,0)"
+      }
+    },
+    {
+      "primitive_id": "state_multipliers_low_mid_high",
+      "name": "Median state multipliers low 1.31 / mid 1.00 / high 0.67 (high ~half low termination)",
+      "verbatim_quote": "the median state multipliers were 1.31, 1.00 and 0.67 for low, mid and high order, respectively",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At a given age termination varied with recent order: low-order intervals generally most vulnerable, high-order least, mid intermediate; for the cross-fitted age-plus-order model the median state multipliers were 1.31, 1.00 and 0.67 for low, mid and high order respectively, so within the inverse-age component high-order intervals carried approximately half the termination multiplier of low-order intervals; state separation weakened and uncertainty increased towards the oldest supported ages."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The low/mid/high termination multipliers are literally GSE's order-stratified run-vulnerability ranking.",
+        "source_operator": "state_multipliers_low_mid_high",
+        "telemetry": "median state multipliers low 1.31/mid 1.00/high 0.67; low most vulnerable, high least; high ~half low termination multiplier (inverse-age component); separation weakens at oldest ages"
+      }
+    },
+    {
+      "primitive_id": "high_half_low_multiplier",
+      "name": "High-order intervals ~half the termination multiplier of low-order (within inverse-age component)",
+      "verbatim_quote": "high-order intervals carried approximately half the termination multiplier of low-order intervals",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Within the inverse-age component of the fitted model, high-order intervals carried approximately half the termination multiplier of low-order intervals (0.67 vs 1.31); the later-age contribution began at approximately 20 s and rose over a timescale of approximately 5 s, with exact fold-median parameters in Supplementary Methods S4."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The half-multiplier protective order is literally GSE's quantified high-order survival advantage.",
+        "source_operator": "high_half_low_multiplier",
+        "telemetry": "high-order ~half low-order termination multiplier (0.67 vs 1.31) within inverse-age component; later-age term onset ~20s rise ~5s"
+      }
+    },
+    {
+      "primitive_id": "heldout_logloss_calibration",
+      "name": "Held-out log loss 0.471->0.466->0.464 (age/+order/full); full calibration slope 0.99 intercept -0.03",
+      "verbatim_quote": "Log loss decreased from 0.471 for the age-only model to 0.466 with order and 0.464 for the full model",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Held-out scores confirmed the nested ordering: log loss decreased from 0.471 for the age-only model to 0.466 with order and 0.464 for the full model; the full model was close to ideal calibration with slope 0.99 and intercept -0.03, while the Brier score changed only slightly from 0.148 to 0.147, indicating the clearest gain was improved likelihood-based fit and calibration of interval termination probabilities rather than a large increase in overall predictive accuracy; evaluation used 355,330 one-second intervals and 69,670 terminations with 132 right-censored endings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The nested held-out calibration gain is literally GSE's likelihood-and-calibration-over-accuracy evaluation discipline.",
+        "source_operator": "heldout_logloss_calibration",
+        "telemetry": "held-out log loss age 0.471 -> +order 0.466 -> full 0.464; full calibration slope 0.99 intercept -0.03; Brier 0.148->0.147 (small); gain = likelihood fit + calibration not big accuracy; 355330 intervals/69670 terminations/132 censored"
+      }
+    },
+    {
+      "primitive_id": "observed_path_not_forecast",
+      "name": "Fig4C tests transfer of termination relationship (observed order covariate), NOT forecasting future order",
+      "verbatim_quote": "Figure 4C therefore tests transfer of the termination relationship rather than prediction of future order",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "These were observed-path predictions: fitted parameters came from training dates while the held-out preceding-order sequence was supplied as a time-varying covariate, so Figure 4C tests transfer of the termination relationship rather than prediction of future order; the age-only model predicted too many long-lived runs, adding order reduced this discrepancy, and the later-age term captured the attenuation most closely."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The observed-path-versus-forecast distinction is literally GSE's covariate-transfer validation scope.",
+        "source_operator": "observed_path_not_forecast",
+        "telemetry": "observed-path predictions: training params + held-out preceding-order as time-varying covariate; tests termination-relationship transfer NOT future-order forecast; age-only over-predicts long runs, order reduces, later-age term best"
+      }
+    },
+    {
+      "primitive_id": "eq7_age_banded_transitions",
+      "name": "Eq7 age-banded survival-conditional transitions; high persistence 0.82->0.73, low 0.64->0.80",
+      "verbatim_quote": "High-order persistence decreased from approximately 0.82 in the first age band to 0.73 in the last",
+      "page": 10,
+      "latex": "P_{sr,j}=P(Z_{j+1}=r\\mid Z_j=s,\\ \\text{run survives interval }j),\\qquad P_j=P(b(j))",
+      "symbol_and_unit_ledger": {
+        "P_sr,j": "transition prob current state s -> next r [dimensionless]",
+        "Z_j": "current order state in {L,M,H}",
+        "b(j)": "age band (0-5/5-10/10-20/20-35s)",
+        "survival": "conditional on surviving interval j"
+      },
+      "assumptions": [
+        "Transition probabilities conditional on survival, P_sr,j=P(Z_j+1=r|Z_j=s, run survives interval j) with age bands 0-5/5-10/10-20/20-35 s, changed systematically with age: high-order persistence decreased from approximately 0.82 in the first band to 0.73 in the last while low-order persistence increased from 0.64 to 0.80; mid-to-high switching decreased 0.31->0.15 and high-to-mid increased 0.17->0.25; direct low-to-high transitions were uncommon, early movement to high order occurring mainly via low-to-mid and mid-to-high steps. Equation 7 is printed math-font and reconstructed here.",
+        "Equation 7 (age-banded survival-conditional transition) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Death/censoring NOT next states; rows sum to one",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The age-banded order-switching matrix is literally GSE's time-varying collective-state transition kernel.",
+        "source_operator": "eq7_age_banded_transitions",
+        "telemetry": "P_sr,j=P(Z_j+1=r|Z_j=s,survives j); age bands 0-5/5-10/10-20/20-35s; high persistence 0.82->0.73, low 0.64->0.80; mid->high 0.31->0.15, high->mid 0.17->0.25; low->high rare (via low->mid->high)"
+      }
+    },
+    {
+      "primitive_id": "eq8_population_propagation",
+      "name": "Eq8/9 u_j+1=A_j^T u_j, A_sr=(1-d_s)P_sr; S_j=1^T u_j, c_s=u_s/S_j (survivor composition)",
+      "verbatim_quote": "The matrix Aj combines survival during the current interval with switching into the next state",
+      "page": 10,
+      "latex": "u_{j+1}=A_j^{\\top}u_j,\\quad A_{sr,j}=(1-d_{s,j})P_{sr,j},\\qquad S_j=\\mathbf 1^{\\top}u_j,\\quad c_{s,j}=u_{s,j}/S_j",
+      "symbol_and_unit_ledger": {
+        "u_j": "live-state cohort fraction vector",
+        "A_sr,j": "survival-times-switching matrix",
+        "d_s,j": "state-specific termination prob",
+        "P_sr,j": "survival-conditional transition",
+        "S_j": "total survival",
+        "c_s,j": "survivor composition"
+      },
+      "assumptions": [
+        "The live-population vector u_j=(u_L,u_M,u_H) records the fraction of the original run cohort alive in each state at interval j; with d_s,j the state-specific termination probability, the population evolves as u_j+1=A_j^T u_j with A_sr,j=(1-d_s,j)P_sr,j, combining survival during the current interval with switching into the next state; total survival S_j=1^T u_j and survivor composition c_s,j=u_s,j/S_j; once birth-state distribution, transition matrices and termination probabilities are estimated, future composition is generated without replaying observed held-out states. Equations 8-9 are printed math-font and reconstructed here.",
+        "Equations 8-9 (population propagation + survivor composition) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Transpose because u_j column vector; rows of P current state, columns next",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The survival-times-switching population recursion is literally GSE's live-cohort composition propagator.",
+        "source_operator": "eq8_population_propagation",
+        "telemetry": "u_j+1=A_j^T u_j, A_sr,j=(1-d_s,j)P_sr,j (survival x switching); u_j=(u_L,u_M,u_H) live cohort fractions; S_j=1^T u_j total survival, c_s,j=u_s,j/S_j composition; generate future without replaying held-out states"
+      }
+    },
+    {
+      "primitive_id": "stationary_comparator_fails",
+      "name": "Stationary (age-independent) transition matrix fails; age-banded reproduces high-order rise-peak-decline",
+      "verbatim_quote": "A stationary comparator, which used the same transition matrix at every run age, approached a nearly constant high-order fraction and failed to reproduce this trajectory",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The empirical high-order fraction among surviving runs rose from approximately 0.1 at birth to above 0.5 around 5-7 s then declined towards 0.2 by 35 s; a stationary comparator using the same transition matrix at every run age approached a nearly constant high-order fraction and failed to reproduce this trajectory, whereas the age-banded model fitted without each evaluated match-date group generated the early rise, peak and later decline without using future held-out states."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The stationary-versus-age-banded failure is literally GSE's age-dependence necessity for survivor composition.",
+        "source_operator": "stationary_comparator_fails",
+        "telemetry": "high-order fraction ~0.1 birth -> >0.5 at 5-7s -> ~0.2 by 35s; stationary (same matrix all ages) ~constant FAILS; age-banded reproduces rise/peak/decline without future held-out states"
+      }
+    },
+    {
+      "primitive_id": "eq11_mckendrick_von_foerster",
+      "name": "Eq11-13 McKendrick-von Foerster age-structured limit; switching conserves mass, termination removes",
+      "verbatim_quote": "The continuum form places the recursion within the standard class of age-structured population-balance models",
+      "page": 12,
+      "latex": "\\frac{\\partial n}{\\partial t}+\\frac{\\partial n}{\\partial a}=[K(a)^{\\top}-D(a)]n,\\quad \\frac{dS}{da}=-\\lambda(a)S,\\quad \\frac{dc}{da}=\\underbrace{K(a)^{\\top}c}_{\\text{switching}}+\\underbrace{[\\lambda(a)I-D(a)]c}_{\\text{selection}}",
+      "symbol_and_unit_ledger": {
+        "n(a,t)": "density of live runs age a, match time t, state",
+        "K(a)": "switching generator (rows sum 0) [1/s]",
+        "D(a)": "diag state hazards [1/s]",
+        "lambda(a)": "composition-weighted hazard",
+        "c(a)": "survivor composition",
+        "S(a)": "total survival"
+      },
+      "assumptions": [
+        "The switching-and-termination process has a formal continuous-age limit dn/dt+dn/da=[K(a)^T-D(a)]n, a McKendrick-von Foerster interpretation of the fitted discrete model (not a separately fitted smooth generator), where K(a) is the switching generator (off-diagonal kappa_sr transition rates, rows sum to zero) and D(a)=diag[lambda_L,lambda_M,lambda_H]; because switching conserves live mass, dS/da=-lambda(a)S(a), and survivor composition obeys dc/da=K(a)^T c + [lambda(a)I-D(a)]c, separating mass-conserving redistribution by switching from removal by differential termination. Equations 11-13 are printed math-font and reconstructed here.",
+        "Equations 11-13 (McKendrick-von Foerster limit + mass conservation + composition ODE) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Continuum interpretation of discrete fit, not separately fitted smooth generator",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The age-structured population-balance limit is literally GSE's switching-redistribution versus termination-selection decomposition.",
+        "source_operator": "eq11_mckendrick_von_foerster",
+        "telemetry": "dn/dt+dn/da=[K(a)^T-D(a)]n (McKendrick-von Foerster, interpretation not separately fitted); K switching generator rows sum 0, D=diag(lambda_L,M,H); dS/da=-lambda S (switching conserves mass); dc/da=K^T c+[lambda I-D]c (redistribution + selection)"
+      }
+    },
+    {
+      "primitive_id": "switching_redistributes_not_terminates",
+      "name": "Switching redistributes live runs among states but does NOT terminate them directly",
+      "verbatim_quote": "Switching redistributes live runs among states but does not terminate them directly",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Switching redistributes live runs among states but does not terminate them directly; the transition generator conserves live mass so total survival declines only through the composition-weighted hazard, and survivor composition changes through both redistribution by state switching and selection by differential termination."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The mass-conserving-switching versus removing-termination distinction is literally GSE's two-process separation.",
+        "source_operator": "switching_redistributes_not_terminates",
+        "telemetry": "switching redistributes live runs among states NOT terminate directly; generator conserves live mass; survival declines only via composition-weighted hazard; composition = redistribution + differential-termination selection"
+      }
+    },
+    {
+      "primitive_id": "process_removal_not_additive",
+      "name": "Process-removal: switching generates early rise, differential termination sustains; effects NOT additive",
+      "verbatim_quote": "Because each process changes the population on which the other subsequently acts, their effects are not additive",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The full switching-and-termination model reproduced the rapid early increase, extended peak and later decline in high-order exposure; removing termination differences between states left age-dependent switching still generating the rapid early rise, while preventing switching left state-dependent termination producing a slower enrichment; the full model was required for both the early rise and its persistence, and because each process changes the population on which the other subsequently acts, their effects are not additive."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The non-additive process-removal ablation is literally GSE's interacting-mechanism attribution caution.",
+        "source_operator": "process_removal_not_additive",
+        "telemetry": "switching generates early high-order rise, differential termination sustains enrichment; full model needed for rise+persistence; process-removal NOT additive (each changes population the other acts on)"
+      }
+    },
+    {
+      "primitive_id": "long_displacements_not_preselected",
+      "name": "Long displacements need not be pre-selected; emerge when transient modes persist/reorganise/selectively survive",
+      "verbatim_quote": "Long displacements need not be selected in advance; they can emerge when transient collective modes persist, reorganise and selectively survive",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Long displacements need not be selected in advance; they can emerge when transient collective modes persist, reorganise and selectively survive, linking player- and team-level Levy-like movement through a finite-lived collective mode whose age and internal state shape its survival."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The emergent-not-preselected long-step mechanism is literally GSE's survival-generated heavy-tail interpretation.",
+        "source_operator": "long_displacements_not_preselected",
+        "telemetry": "long displacements NOT pre-selected; emerge when transient collective modes persist/reorganise/selectively survive; finite-lived mode whose age+internal state shape survival links player+team Levy-like movement"
+      }
+    },
+    {
+      "primitive_id": "trajectory_records_selection",
+      "name": "Trajectory statistics record which dynamical histories SURVIVE, not only the rules of motion",
+      "verbatim_quote": "trajectory statistics may record which dynamical histories survive, not only the rules by which agents move",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "More broadly, trajectory statistics may record which dynamical histories survive, not only the rules by which agents move; a completed long movement need not have been chosen as long but may be the realised path of a collective mode that avoided termination, changed state and remained coherent long enough to travel far, so the object requiring explanation is the collective mode that survives long enough to produce the long step."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The selection-among-histories framing is literally GSE's survivorship-aware trajectory interpretation.",
+        "source_operator": "trajectory_records_selection",
+        "telemetry": "trajectory statistics record which dynamical histories SURVIVE not only rules of motion; long movement = realised path of mode that avoided termination/changed state/stayed coherent; explain the surviving mode not pre-chosen duration"
+      }
+    },
+    {
+      "primitive_id": "foraging_different_level",
+      "name": "Foraging not excluded: why movement occurs vs how its statistical form is generated (different levels)",
+      "verbatim_quote": "Foraging and survival dynamics may therefore operate at different levels of explanation: one concerns why movement occurs, the other how its statistical form is generated",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "These results do not exclude foraging as a functional description: search for the ball, open space or advantageous configurations may influence when collective runs begin, how states switch or when runs end; foraging and survival dynamics may operate at different levels of explanation, one concerning why movement occurs and the other how its statistical form is generated, and with richer event data the foraging hypothesis could be tested by asking whether possession, ball distance, opponent pressure or space access modifies run formation, transitions or termination."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The why-versus-how level separation is literally GSE's functional-versus-mechanistic explanation distinction.",
+        "source_operator": "foraging_different_level",
+        "telemetry": "foraging NOT excluded (functional); search ball/space/configurations may influence run birth/switch/end; foraging=why movement occurs, survival=how statistical form generated; richer event data could test possession/ball-distance/pressure/space effects"
+      }
+    },
+    {
+      "primitive_id": "limitations_internal_validation",
+      "name": "Limitations: 2 clubs/2 seasons, internal not external validation, exploratory state defs, segmentation-sensitive",
+      "verbatim_quote": "The cohort contains two clubs over two seasons, and match-date cross-fitting provides internal rather than external validation",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Several limitations constrain interpretation: the cohort contains two clubs over two seasons and match-date cross-fitting provides internal rather than external validation; state definitions and age bands emerged during exploratory analysis; run counts and duration scales remain sensitive to segmentation; active players were reconstructed without complete official substitution records; these restrict causal and tactical interpretation and leave generality to be tested in other teams, competitions and tracking systems."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The internal-validation limitation is literally GSE's scope-bound on mechanism generality.",
+        "source_operator": "limitations_internal_validation",
+        "telemetry": "2 clubs/2 seasons; match-date cross-fitting INTERNAL not external validation; exploratory state defs+age bands; segmentation-sensitive run counts/durations; no complete official subs; generality untested elsewhere"
+      }
+    },
+    {
+      "primitive_id": "cannot_id_ending_event",
+      "name": "Incomplete ball/possession/opponent/event data prevent identifying the football event that ends each run",
+      "verbatim_quote": "incomplete ball, possession, opponent and event data prevent identification of the football event that ends each run",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Incomplete ball, possession, opponent and event data prevent identification of the football event that ends each run; the analysis therefore characterises the statistical survival of collective modes without attributing termination to specific football events, a key boundary on tactical interpretation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The no-event-attribution boundary is literally GSE's statistical-survival-versus-tactical-cause separation.",
+        "source_operator": "cannot_id_ending_event",
+        "telemetry": "incomplete ball/possession/opponent/event data -> cannot ID football event ending each run; characterises statistical survival without attributing termination to specific events; tactical-interpretation boundary"
+      }
+    },
+    {
+      "primitive_id": "eq15_generalised_cutoff",
+      "name": "Eq15 generalised-cutoff p(T=t) proportional t^-gamma exp[-(t/T_c)^beta]; gamma=1.33/T_c=32.3s/beta=2.78",
+      "verbatim_quote": "Relative support was assessed from paired held-out log-likelihood differences per run",
+      "page": 16,
+      "latex": "p(T=t)\\propto t^{-\\gamma}\\exp\\!\\big[-(t/T_c)^{\\beta}\\big],\\quad t\\ge 1\\,\\text{s},\\qquad \\gamma=1.33,\\ T_c=32.3\\,\\text{s},\\ \\beta=2.78",
+      "symbol_and_unit_ledger": {
+        "p(T=t)": "run-duration probability mass [dimensionless]",
+        "gamma": "early decay exponent (1.33)",
+        "T_c": "cutoff timescale (32.3s)",
+        "beta": "late attenuation sharpness (2.78; =1 exponential truncation)",
+        "t": "run duration [s]"
+      },
+      "assumptions": [
+        "The generalised-cutoff probability mass is p(T=t) proportional to t^-gamma exp[-(t/T_c)^beta] for t>=1 s, where gamma controls the broad early decay, T_c the cutoff timescale and beta the sharpness of late attenuation (beta=1 gives conventional exponential truncation); the whole-sample fit yielded gamma=1.33, T_c=32.3 s, beta=2.78 (beta>1 attenuates the tail more sharply than exponential); parameters were estimated by maximum likelihood, relative support from paired held-out log-likelihood differences per run, absolute agreement from parametric-bootstrap Kolmogorov-Smirnov with refitting. Equation 15 is printed math-font and reconstructed here.",
+        "Equation 15 (generalised-cutoff duration mass) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Best relative summary; NO family passes absolute GoF; beta>1 sharper than exponential",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The generalised-cutoff duration law is literally GSE's best-relative run-lifetime summary (not generative).",
+        "source_operator": "eq15_generalised_cutoff",
+        "telemetry": "p(T=t)~t^-gamma exp[-(t/T_c)^beta], t>=1s; gamma early decay, T_c cutoff timescale, beta late sharpness (beta=1=exp truncation); fit gamma=1.33/T_c=32.3s/beta=2.78 (beta>1 sharper); MLE, paired held-out log-lik relative, parametric-bootstrap KS absolute"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "collectivemode2026_trace",
+      "think": "The retrocausal genealogy of this paper is the collective-transport turn in the physics of football. Guillermo Herrera Sanchez, Daniel Gradeci, Daniele Ramsay, and Safe Khan of Framewave Lab London, posting to arXiv in September 2026 as 2609.15541 in physics.soc-ph, start from the recent report of broad run-length distributions and short-lag superdiffusion in both individual players and team centroids, which had prompted a collective-foraging interpretation, and ask the mechanistic question that a completed-step distribution cannot answer: whether player transport is inherited from a translating team mode, and what controls the lifetime of that mode. The work sits in the lineage of Levy-walk theory, the Edwards critique that broad tails do not identify a unique family, Reynolds and Ouellette's swarm-fluctuation route to Levy flights, Fedotov's interacting-individual and mortal-walker models, and the football collective-dynamics literature on centroids, occupied areas, coordination and recurrent states, while using the public SoccerMon GPS dataset of Rosenborg and Valerenga in the Norwegian women's Toppserien. The recursive theory of mind is the finite-lived collective mode and its age-and-state-dependent survival. The pitch-frame position of each active player is decomposed exactly into the team centroid plus a relative position, and the mean-squared displacement splits exactly into centroid translation, within-formation motion, and a small cross term; at longer lags the centroid carries an increasing share of player displacement, so the centroid is the natural collective coordinate. A directional run of the centroid, segmented at heading changes above thirty degrees, is treated as a finite-lived transport state whose termination hazard is highest at onset, declines with age through an inverse-age baseline, and rises modestly later through a common tempering term, with a low-mid-high order multiplier on the inverse-age component. Cross-layer veto adjudication is the survival-and-reorganisation population model and its honest validation. Order is measured by polarisation, the norm of the mean unit velocity, and the speed-adjusted association with termination is modest — an odds ratio of about zero point eight per standard deviation contemporaneously, shrinking toward null once both correlated speed measures enter — so the authors treat polarisation as one feature of a persistent translating state rather than a large independent protective force, and explicitly deny a causal reading. The live-cohort population is propagated by a survival-times-switching matrix in four age bands, and its continuous-age limit is a McKendrick-von Foerster age-structured balance in which switching conserves live mass while differential termination removes it; the high-order fraction among survivors rises from about one tenth at birth to above one half at five to seven seconds and declines toward one fifth by thirty-five seconds, a trajectory a stationary transition matrix cannot reproduce. The implementation invariants map directly onto GSE. The exact centroid-plus-relative displacement decomposition is GSE's separation of team translation from within-formation rearrangement; the inverse-age-plus-state hazard is GSE's run-vulnerability-at-birth lifetime kernel; the age-banded survival-conditional switching matrix is GSE's time-varying collective-state transition kernel; the mass-conserving-switching versus removing-termination decomposition is GSE's two-process attribution; and the survivorship framing — that trajectory statistics record which dynamical histories survive, not only the rules of motion — is GSE's selection-among-histories interpretation of heavy-tailed movement. The empirical scale and the held-out discipline give the result its weight. The cohort is sixty-six tracked team-match records from sixty-two fixtures on forty-seven match dates across the 2020 and 2021 seasons, yielding sixty-nine thousand eight hundred two centroid runs, sixty-nine thousand six hundred seventy observed terminations, one hundred thirty-two right-censored endings, and three hundred fifty-five thousand three hundred thirty one-second risk intervals, with native ten-hertz GPS reduced to one hertz by keeping the first observation per second and never interpolating missing seconds. Generalisation uses grouped leave-one-match-date-out cross-fitting over forty-seven folds, with the termination model tested as observed-path covariate transfer and the composition model propagated from training-estimated birth distributions without replaying future held-out states; the nested log loss falls from zero point four seven one to zero point four six six to zero point four six four with near-ideal calibration slope zero point nine nine, while the Brier score barely moves, so the gain is likelihood fit and calibration rather than raw accuracy. The caveats close the account with the boundaries that keep the mechanism honest. No candidate duration family passes the absolute goodness-of-fit test, so the generalised-cutoff law with gamma one point three three, cutoff thirty-two point three seconds and beta two point seven eight is a best relative summary, not an exact generative law, and the late downturn is finite-pitch tempering rather than an asymptotic power law. The validation is internal to two clubs and two seasons, the state definitions and age bands are exploratory, run counts are segmentation-sensitive, active players are reconstructed without official substitution logs, and incomplete ball, possession, opponent and event data prevent identifying the football event that ends each run. Foraging is not excluded but relocated to a different level of explanation — why movement occurs versus how its statistical form is generated. The invariant for GSE is to adopt the centroid transport decomposition, the age-and-state termination hazard, the age-banded switching-and-selection population model, and the survivorship interpretation of broad transport, while carrying the no-absolute-fit, the internal-validation, the no-causal-order, and the no-event-attribution limits as honest bounds on what the collective-mode mechanism can claim.",
+      "retrocausal_genealogy": "Collective-transport turn in physics of football (soccer). Guillermo Herrera Sanchez, Daniel Gradeci, Daniele Ramsay, Safe Khan (Framewave Lab London); arXiv:2609.15541v1 [physics.soc-ph] 14 Sep 2026. From broad run-lengths + short-lag superdiffusion in players AND team centroids (collective-foraging interpretation, Shpurov 2024); asks whether player transport inherited from translating team mode + what controls mode lifetime. Lineage: Levy walks (Viswanathan 1999, Zaburdaev 2015), Edwards 2007 tail non-identifiability, Reynolds-Ouellette 2016 swarm Levy, Fedotov interacting/mortal walkers, football centroids/coordination (Frencken 2011, Moura 2013, Welch 2021, Marcelino 2020, Chacoma 2021), McKendrick 1926 / von Foerster 1959 age-structured, Vaupel 1979 frailty. Data SoccerMon GPS (Zenodo 10.5281/zenodo.10033832), Rosenborg+Valerenga Toppserien 2020+2021; code github framewave-lab/Athlelorien.",
+      "theory_of_mind": "Finite-lived collective mode = directional centroid run (heading change >theta_c=30deg). Eq1 x_i=X_c+r_i exact; Eq2 M_i=M_c+M_rel+C_c,rel exact signed MSD (cross small, centroid share rises with lag). Eq3 polarisation p=|(1/N_v)sum v_i/|v_i||| in [0,1] (A_v non-zero-velocity subset). Eq4 S(a)=P(T>a), lambda=-d/da log S; Eq5 inverse-age lambda_0=mu/(a+a_0) (power-law survival); Eq6 lambda_k=m_s mu/(a+a_0)+q[1-exp(-(a-t_c)+/tau_q)] (m_s on inverse-age only, later-age common t_c~20s/tau_q~5s/q~0.104). State multipliers low 1.31/mid 1.00/high 0.67 (high~half low). Eq7 age-banded survival-conditional transitions (0-5/5-10/10-20/20-35s; high persist 0.82->0.73, low 0.64->0.80). Eq8/9 u_j+1=A_j^T u_j, A_sr=(1-d_s)P_sr, S=1^T u, c_s=u_s/S. Eq10 mean exposure Pi_s(A). Eq11-13 McKendrick-von Foerster dn/dt+dn/da=[K^T-D]n, dS/da=-lambda S (switching conserves mass), dc/da=K^T c+[lambda I-D]c (redistribution+selection). Eq14 centroid X_c=(1/N)sum x_i. Eq15 generalised-cutoff p(T=t)~t^-gamma exp[-(t/T_c)^beta], gamma=1.33/T_c=32.3s/beta=2.78. Eqs 1-15 + S1-S23 math-font reconstructed.",
+      "cross_layer_veto": "66 team-match records/62 fixtures/47 dates/2 clubs/2 seasons; 69802 centroid runs/69670 terminations/132 censored/355330 1s intervals/1192715 player runs; 10Hz->1Hz first-obs-per-second NO interpolation; active XI sticky hierarchical (geometry 70s/110s, margins 5/30m, seed 120s, replacement 35s, centroid min 7). MSD 1-4s near-ballistic all frames; 5-30s centroid alpha~1.20/pitch-player~1.13 superdiffusive, centroid-relative~0.93 diffusive. Duration: generalised-cutoff rank 1 of 6 (gamma 1.33/T_c 32.3/beta 2.78) but NO family passes absolute GoF (parametric-bootstrap KS) -> best relative summary not generative; late downturn finite-pitch tempering. Order-speed confound (faster translation lengthens not extends duration); polarisation OR 0.80 [0.79-0.81] contemporaneous (age+speed), lagged 0.82/0.94/0.98 (both speeds r=0.92 VIF 8.0 diagnostic); associations NOT causal; limited predictive beyond kinematics (Brier contrasts include zero). Termination onset peak, inverse-age decline, min ~18.5s, late rise ~20s. Held-out 47 folds grouped leave-one-match-date-out: log loss 0.471->0.466->0.464, calibration slope 0.99/intercept -0.03, Brier 0.148->0.147 (gain=fit+calibration not accuracy); Fig4C observed-path covariate transfer NOT future-order forecast. High-order fraction ~0.1 birth->>0.5 at 5-7s->~0.2 by 35s; stationary comparator FAILS, age-banded reproduces; process-removal switching=early rise, differential termination=sustains, NOT additive. Limitations: internal not external validation, exploratory state defs, segmentation-sensitive, no official subs, incomplete ball/possession/opponent/event -> cannot ID ending football event; foraging not excluded (why vs how statistical form). Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A physics-of-football study links player- and team-level Levy-like transport through a finite-lived collective mode — a directional run of the team centroid — by exactly decomposing player displacement into centroid translation plus within-formation motion, modelling the run's termination hazard as highest at onset then declining with age through an inverse-age baseline with a low-mid-high order multiplier and a common later-age tempering term, and propagating the surviving cohort through age-banded switching and differential termination whose continuous-age limit is a McKendrick-von Foerster balance; the high-order fraction among survivors rises then falls in a way only an age-dependent model reproduces, while the authors honestly treat the best-fitting duration family as a relative summary that passes no absolute goodness-of-fit test, the order-termination link as a modest non-causal association, and the validation as internal to two clubs.",
+  "gsi_mapping": "GSI treats finite-lived collective mode = directional centroid run (theta_c=30deg); Eq1 x_i=X_c+r_i exact + Eq2 M_i=M_c+M_rel+C signed MSD (centroid share rises with lag; 5-30s centroid alpha~1.20/pitch-player~1.13 superdiffusive, centroid-relative~0.93 diffusive, 1-4s near-ballistic); Eq3 polarisation p=|mean unit velocity| in [0,1]; Eq4 S(a)=P(T>a)/lambda=-d/da log S; Eq5 inverse-age lambda_0=mu/(a+a_0) power-law survival; Eq6 lambda_k=m_s mu/(a+a_0)+q[1-exp(-(a-t_c)+/tau_q)] (m_s low 1.31/mid 1.00/high 0.67 on inverse-age only, later-age common t_c~20s/tau_q~5s/q~0.104); Eq7 age-banded survival-conditional transitions (0-5/5-10/10-20/20-35s, high persist 0.82->0.73/low 0.64->0.80); Eq8/9 u_{j+1}=A^T u, A=(1-d)P, S=1^T u, c_s=u_s/S; Eq10 mean exposure; Eq11-13 McKendrick-von Foerster dn/dt+dn/da=[K^T-D]n, dS/da=-lambda S (switching conserves mass), dc/da=K^T c+[lambda I-D]c; Eq14 centroid; Eq15 generalised-cutoff p(T)~t^-gamma exp[-(t/T_c)^beta] gamma 1.33/T_c 32.3/beta 2.78 (rank 1 of 6, NO absolute GoF pass -> relative summary); data SoccerMon 66 records/62 fixtures/47 dates/69802 runs/69670 terminations/132 censored/355330 intervals, 10->1Hz no interpolation, sticky active-XI (70/110s geometry, 5/30m margins, 120s seed, 35s replacement, centroid min 7); 47-fold grouped leave-one-match-date-out log loss 0.471->0.466->0.464 calibration slope 0.99 Brier 0.148->0.147; high-order fraction 0.1->>0.5 (5-7s)->0.2 (35s), stationary fails age-banded reproduces, process-removal NOT additive; order OR~0.80/SD NOT causal limited beyond kinematics; limitations internal validation/exploratory defs/segmentation-sensitive/no official subs/incomplete event data cannot ID ending event; foraging why-vs-how; Eqs 1-15+S1-S23 math-font reconstructed.",
+  "gse_mapping": "GSE lifts the exact centroid-plus-relative displacement decomposition as its team-translation-versus-formation-rearrangement separation, the onset-peak inverse-age-plus-state termination hazard as its run-vulnerability-at-birth lifetime kernel, the age-banded survival-conditional switching matrix and live-cohort propagation as its time-varying collective-state transition and survivor-composition engine, the McKendrick-von Foerster mass-conserving-switching versus removing-termination split as its two-process attribution, the polarisation order parameter as its collective-alignment feature (with the speed-confound adjustment and non-causal modest-association discipline), and the survivorship framing that trajectory statistics record which histories survive as its selection-among-histories interpretation of heavy-tailed movement; treats the generalised-cutoff duration law as a best-relative summary that passes no absolute goodness-of-fit, the grouped leave-one-match-date-out observed-path transfer as its internal-validation scope, and carries the no-absolute-fit, the internal-not-external-validation, the no-causal-order, the segmentation-sensitivity, and the cannot-identify-ending-event limits as honest bounds; all outputs are collective-mode survival statistics from GPS tracking, never sportsbook lines."
+}

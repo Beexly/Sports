@@ -626,3 +626,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 06:25:48 | COMPLETE | 314bb5b2616cb834 | primitives=37 think_words=893
 - 2026-11-14 06:26:32 | CLAIMED | 18166c7364bb19c7 | worker=hermes-inline shard03 file=2026 - Strategic Multi-Agent Learning for Interpretable Action Valuation of All Players in Football - Ide et al.pdf
 - 2026-11-14 06:40:22 | COMPLETE | 18166c7364bb19c7 | primitives=34 think_words=943
+- 2026-11-14 06:41:42 | CLAIMED | 3a610f0512401167 | worker=hermes-inline shard03 file=2026 - The life and death of football team runs survival of collective modes shapes L vy-like transport - S nchez et al.pdf
+- 2026-11-14 06:47:50 | COMPLETE | 3a610f0512401167 | primitives=40 think_words=852
