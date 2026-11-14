@@ -620,3 +620,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 06:04:47 | COMPLETE | 01cc15a66710f19f | primitives=32 think_words=924
 - 2026-11-14 06:05:31 | CLAIMED | 0f7a15a9e46c43f2 | worker=hermes-inline shard03 file=2026 - From Metrics to Decisions in NBA Analytics A Critical Integrative Review and Decision-Readiness Framework - Zhou et al.pdf
 - 2026-11-14 06:14:03 | COMPLETE | 0f7a15a9e46c43f2 | primitives=32 think_words=913
+- 2026-11-14 06:14:47 | CLAIMED | 231bf7b09d64465b | worker=hermes-inline shard03 file=2026 - Learning Human Sports Motion Feasibility via Quantile Regression on Tracking Data - Guti rrez-P rez et al.pdf
+- 2026-11-14 06:19:24 | COMPLETE | 231bf7b09d64465b | primitives=32 think_words=858

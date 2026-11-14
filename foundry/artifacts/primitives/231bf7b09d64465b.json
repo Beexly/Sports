@@ -1,0 +1,657 @@
+{
+  "book_id": "231bf7b09d64465b",
+  "shard": "2",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_TTA_QUANTILE_REGRESSION_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Gutierrez-Perez & Agudo, 'Learning Human Sports Motion Feasibility via Quantile Regression on Tracking Data', arXiv:2610.36183v1 [cs.AI], 26 Oct 2026 (Marc Gutierrez-Perez, Antonio Agudo; Institut de Robotica i Informatica Industrial, CSIC-UPC, Barcelona), 17 pages; code github.com/mguti97/TTA-Quantile. Casts time-to-arrival (TTA) — shortest plausible time to reach a location given kinematic state k=(p,v,a) — as conditional lower-quantile regression at tau=0.01 (feasibility bound, lower envelope of observed locomotion, not mean/density). Eq1 tau(g)=Q0.01(Delta t|g(k,x)); Eq2 reachable-area sublevel duality R(Delta t)={x:tau(x)<=Delta t}; Eq3 pinball loss (over-prediction 99x under at tau=0.01); Eq4 differentiable area-aware sigmoid soft-count term (beta=0.25s, grid 25x25@4m |G|=624, lambda=0.01). Heading-invariant physics-normalized 6 features (d/120, cos/sin theta, v/12, ax/ay/10); self-supervised labels (~154M samples, 5 horizons [0.10,8.0]s); SUVAT noise floor discards 0.3% teleport artifacts (caps 8 m/s^2/9 m/s; ablation: noise screen not physical prior). MLP 6-64-64-1 ReLU+Softplus; profile variant + per-player max speed (99th percentile, train matches only). Benchmark vs six best-tuned physics motion models (constant speed/accel/accel+vmax/two-segment/free-direction Wu-Swartz/friction-damped Fujimura-Sugihara) inverted as TTA + Anzer-Bauer reachable-hull. Matched-coverage (99%) area comparison: MLP MAE 2.596s/area 31.6 m^2 beats all physics (two-segment 2.992/34.1) and hull (3.065/34.8), tightest 8/9 cells; profile +0.025s 95% CI [+0.019,+0.030] cluster bootstrap; representation not feature (personalized baseline trails 0.30s). Structural audit: connected/star-shaped sublevel sets 100%, monotonicity violation 1.4%. Real-time 22-player full-pitch pass 2.4ms (~420fps). Cross-sport transfer asymmetric (NFL-trained best, basketball furthest; transferred area loses to destination physics = label-regime mismatch not representation failure). Data: PFF FC FIFA World Cup 2022 (64 matches, 30fps, 45/10/9 cross-match split); NBA SportVU 2015-16 (631 games, 25fps); NFL Big Data Bowl 2019 (single game, 10fps, 729510 samples, by-player split). Extracted faithfully (not a derivative summary). Equations 1-4 printed in math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain cs matches catalog (tracking-data machine learning / quantile regression; soccer primary with basketball + NFL transfer). Directly isomorphic to GSE's arrival-time/space-control kernel, lower-quantile feasibility bound, time-area duality, teleport-artifact veto, matched-coverage tightness metric, and live-inference latency budget. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "tta_lower_envelope_definition",
+      "name": "TTA = shortest plausible arrival time, lower envelope of observed locomotion",
+      "verbatim_quote": "the shortest plausible time a player needs to reach an arbitrary location on the pitch given their current kinematic state",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Marc Gutierrez-Perez, Antonio Agudo; Institut de Robotica i Informatica Industrial, CSIC-UPC Barcelona; arXiv:2610.36183v1 [cs.AI], 26 Oct 2026) studies time-to-arrival (TTA): the shortest plausible time a player needs to reach an arbitrary location given their current kinematic state, estimated as the lower envelope of observed locomotion times rather than via position density or closed-form physics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "TTA is literally GSE's receiver/defender arrival-time kernel underlying safe-pass and pass-probability surfaces.",
+        "source_operator": "tta_lower_envelope_definition",
+        "telemetry": "TTA = shortest plausible arrival time given kinematic state k=(p,v,a); lower envelope of observed locomotion; not density/closed-form; Gutierrez-Perez/Agudo arXiv 2610.36183"
+      }
+    },
+    {
+      "primitive_id": "space_currency_team_sports",
+      "name": "Space is the currency: where a player can be in a second determines pass/lane/control",
+      "verbatim_quote": "where a player can be a second from now determines who can receive a pass, who can close a passing lane",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Space is the currency of team sports: where a player can be a second from now determines who can receive a pass, who can close a passing lane, and which regions a team effectively controls; almost every pitch-control, off-ball-value, or pass-probability method rests on a player-motion model answering 'where can this player get to, and how fast?'"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The space-as-currency framing is the same reachability foundation GSE's space-control and pass-value layers inherit.",
+        "source_operator": "space_currency_team_sports",
+        "telemetry": "space = currency; where player can be in 1s determines pass reception/lane closure/control; pitch-control/off-ball/pass-prob all rest on motion model"
+      }
+    },
+    {
+      "primitive_id": "lower_envelope_not_mean",
+      "name": "Lower envelope, not mean: upper tail uninformative (dawdling), floor sharply defined",
+      "verbatim_quote": "a player may dawdle to any location, so the upper tail is uninformative, but the floor on how quickly they can plausibly arrive is sharply defined",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The key modeling choice is to estimate a low envelope of arrival times rather than the mean: a player may dawdle to any location so the upper tail is uninformative, but the floor on how quickly they can plausibly arrive is sharply defined and is exactly the quantity downstream space models need."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The lower-envelope-over-mean choice is literally GSE's feasibility-floor estimation (ignore choice-driven slowness).",
+        "source_operator": "lower_envelope_not_mean",
+        "telemetry": "low envelope not mean; upper tail uninformative (dawdle); floor sharply defined = quantity downstream space models need"
+      }
+    },
+    {
+      "primitive_id": "feasibility_bound_tau001",
+      "name": "Floor estimated at tau=0.01 because target is a feasibility bound, not typical case",
+      "verbatim_quote": "since the target quantity is a feasibility bound (the player could be there in time)",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The floor is estimated at tau=0.01 rather than a looser quantile since the target quantity is a feasibility bound (the player could be there in time), not a typical-case estimate; this turns an ill-posed counterfactual into a well-posed conditional-quantile regression problem, and the resulting predictor is a single compact feed-forward pass running beyond real time."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The tau=0.01 feasibility-bound target is the same lower-quantile calibration GSE uses for could-arrive-in-time gates.",
+        "source_operator": "feasibility_bound_tau001",
+        "telemetry": "floor at tau=0.01 (feasibility bound, player could be there in time); not typical-case; ill-posed counterfactual -> well-posed conditional quantile; single feed-forward pass beyond real time"
+      }
+    },
+    {
+      "primitive_id": "illposed_to_quantile",
+      "name": "Ill-posed counterfactual becomes well-posed conditional-quantile regression",
+      "verbatim_quote": "This turns an ill-posed counterfactual into a well-posed conditional-quantile regression problem",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At inference the model is queried at locations the player never visited, so it must generalize from observed trajectories to hypothetical ones; framing the lower envelope as conditional quantile regression turns an ill-posed counterfactual into a well-posed conditional-quantile regression problem."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The counterfactual-to-quantile reformulation is the same well-posedness move GSE makes for hypothetical reachability queries.",
+        "source_operator": "illposed_to_quantile",
+        "telemetry": "inference at never-visited locations; generalize observed->hypothetical; ill-posed counterfactual -> well-posed conditional-quantile regression"
+      }
+    },
+    {
+      "primitive_id": "density_not_feasibility",
+      "name": "Density/behavioral models score where players often are/choose, not whether reachable in time",
+      "verbatim_quote": "a location scores high because players are often there, or often choose it, independent of whether anyone could actually get there in time",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The data-driven space-model line drops arrival time, shaping a Gaussian influence kernel or fitting a kernel-density estimate over observed endpoints; the output is a density or behavioral commitment likelihood, not a feasibility bound: a location scores high because players are often there or often choose it, independent of whether anyone could actually get there in time."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The density-vs-feasibility critique is literally GSE's distinction between occupancy propensity and physical reachability.",
+        "source_operator": "density_not_feasibility",
+        "telemetry": "Gaussian influence / KDE over endpoints -> density/commitment likelihood NOT feasibility bound; high score = often there/choose, independent of could-arrive-in-time"
+      }
+    },
+    {
+      "primitive_id": "eq1_conditional_quantile",
+      "name": "Eq1: tau(g)=Q0.01(Delta t | g(k,x)), conditional 1st-percentile arrival time",
+      "verbatim_quote": "Estimating a low quantile, rather than the mean, forces the model to hug the fastest reliably observed behavior",
+      "page": 6,
+      "latex": "\\tau(g)=Q_{0.01}\\big(\\Delta t\\mid g(k,x)\\big),\\qquad k=(p,v,a)",
+      "symbol_and_unit_ledger": {
+        "k": "kinematic state (position p, velocity v, acceleration a)",
+        "x": "target location",
+        "Delta t(k->x)": "arrival time from state k to target x [s]",
+        "g(k,x)": "state-target geometry feature map",
+        "Q0.01": "conditional 1st percentile (lower quantile)",
+        "tau(g)": "predicted feasibility-bound arrival time [s]"
+      },
+      "assumptions": [
+        "With kinematic state k=(p,v,a) and target x, the arrival time Delta t(k->x) is a counterfactual regression target; the task is framed as conditional quantile regression tau(g)=Q0.01(Delta t | g(k,x)), where g(k,x) is the state-target geometry and Q0.01 the 1st percentile of the arrival-time distribution; estimating a low quantile rather than the mean forces the model to hug the fastest reliably observed behavior while remaining robust to the long upper tail. Equation 1 is printed math-font and reconstructed here.",
+        "Equation 1 (conditional quantile) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Lower envelope, not per-observation minimum; intent/fatigue/tactics/obstacles act conservatively",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The conditional 1st-percentile arrival-time regression is literally GSE's lower-quantile feasibility kernel.",
+        "source_operator": "eq1_conditional_quantile",
+        "telemetry": "k=(p,v,a); tau(g)=Q0.01(Delta t|g(k,x)); g=state-target geometry; Q0.01=1st percentile; hug fastest reliable behavior, robust to upper tail"
+      }
+    },
+    {
+      "primitive_id": "single_trajectory_upper_bound",
+      "name": "A single observed trajectory only upper-bounds what the player could have done",
+      "verbatim_quote": "A single observed trajectory only upper-bounds what the player could have done",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The target is the conditional lower envelope of arrival times, not a per-observation minimum; a single observed trajectory only upper-bounds what the player could have done, but across the roughly 154 million extracted samples many observations share the same kinematic state with the player fully committed to that displacement."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The single-trajectory upper-bound insight is the same pooled-conditional-floor logic GSE uses to recover feasibility from committed displacements.",
+        "source_operator": "single_trajectory_upper_bound",
+        "telemetry": "target = conditional lower envelope not per-obs minimum; single trajectory only upper-bounds; ~154M samples; many share kinematic state fully committed"
+      }
+    },
+    {
+      "primitive_id": "choice_driven_slowness_discarded",
+      "name": "Pinball at 1st percentile recovers fast tail, discarding choice-driven slowness",
+      "verbatim_quote": "the pinball loss at the 1st percentile recovers the fast tail of that conditional distribution, discarding choice-driven slowness rather than averaging it in",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Across the roughly 154 million extracted samples many observations share the same kinematic state with the player fully committed to that displacement, and the pinball loss at the 1st percentile recovers the fast tail of that conditional distribution, discarding choice-driven slowness rather than averaging it in; intent, fatigue, tactical constraints, and obstacles all act in the conservative direction."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The choice-driven-slowness discard is literally GSE's separation of physical feasibility from behavioral intent.",
+        "source_operator": "choice_driven_slowness_discarded",
+        "telemetry": "pinball@1st percentile recovers fast tail; discards choice-driven slowness (not average); intent/fatigue/tactics/obstacles conservative direction"
+      }
+    },
+    {
+      "primitive_id": "eq2_reachable_area_duality",
+      "name": "Eq2: reachable area R(Delta t)={x:tau(x)<=Delta t}, sublevel-set duality",
+      "verbatim_quote": "it is the bridge that lets us evaluate a time output with a reachable-area metric",
+      "page": 6,
+      "latex": "R(\\Delta t)=\\{x:\\tau(x)\\le \\Delta t\\},\\qquad \\tau(x)=\\min\\{t:x\\in R(t)\\}",
+      "symbol_and_unit_ledger": {
+        "tau(x)": "predicted arrival-time surface [s]",
+        "R(Delta t)": "reachable region within horizon Delta t [m^2]",
+        "Delta t": "time horizon [s]",
+        "x": "pitch location"
+      },
+      "assumptions": [
+        "A TTA surface tau(.) is the dual of a reachable-area model: the region a player can reach within a horizon Delta t is exactly the sublevel set R(Delta t)={x:tau(x)<=Delta t}; this identity connects the work to the player-motion-model literature that models R(Delta t) directly, and is the bridge that lets a time output be evaluated with a reachable-area metric. Equation 2 is printed math-font and reconstructed here.",
+        "Equation 2 (reachable-area sublevel duality) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Sublevel-set duality; lets time output be evaluated by reachable-area metric",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The time-area sublevel duality is literally GSE's invertible arrival-time-to-reachable-region kernel.",
+        "source_operator": "eq2_reachable_area_duality",
+        "telemetry": "tau(.) dual of reachable-area; R(Delta t)={x:tau(x)<=Delta t} sublevel set; bridges time output <-> reachable-area metric; invert tau(x)=min{t:x in R(t)}"
+      }
+    },
+    {
+      "primitive_id": "heading_frame_invariant",
+      "name": "Heading-frame representation invariant to absolute pitch position and orientation",
+      "verbatim_quote": "making the representation invariant to absolute pitch position and orientation",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Every state-target pair is expressed in the player's heading frame, making the representation invariant to absolute pitch position and orientation: translate so the player sits at the origin and rotate by -phi so heading aligns with +x, so the lateral velocity component vanishes and is dropped; the target lands at (d cos theta, d sin theta) and acceleration is rotated into longitudinal/lateral components."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The heading-invariant frame is the same translation/rotation-normalized geometry GSE uses for cross-context motion features.",
+        "source_operator": "heading_frame_invariant",
+        "telemetry": "heading frame: translate to origin + rotate -phi (heading=+x); lateral velocity vanishes; target (d cos theta,d sin theta); accel longitudinal/lateral; invariant to absolute position/orientation"
+      }
+    },
+    {
+      "primitive_id": "six_physics_normalized_features",
+      "name": "Six features normalized by hard physical bounds (d/120, cos/sin theta, v/12, ax/ay/10)",
+      "verbatim_quote": "The network consumes six values, each normalized by a hard physical bound",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The network consumes six values each normalized by a hard physical bound: distance d/120 (Dnorm=120 m), cos theta and sin theta (in [-1,1]), speed v/12 (Vnorm=12 m/s), longitudinal ax/10 and lateral ay/10 (Anorm=10 m/s^2); the same constants serve as clipping thresholds and feature scales, so a checkpoint trained on one sport can be scored directly on another with no retraining or feature adaptation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The physics-normalized feature set is the same unit-scaled, cross-sport-portable input GSE uses for motion models.",
+        "source_operator": "six_physics_normalized_features",
+        "telemetry": "6 features: d/120 (Dnorm 120m), cos theta/sin theta [-1,1], v/12 (Vnorm 12 m/s), ax/10/ay/10 (Anorm 10 m/s^2); constants = clipping + scale; cross-sport no retraining"
+      }
+    },
+    {
+      "primitive_id": "invariance_discards_boundary",
+      "name": "Heading invariance deliberately discards absolute position and boundary context",
+      "verbatim_quote": "The invariance deliberately discards absolute pitch position and boundary context",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The angle is always encoded as the pair (cos theta, sin theta), never as a raw angle which would introduce a 2pi discontinuity; the invariance deliberately discards absolute pitch position and boundary context, a modeling trade-off that buys cross-sport portability at the cost of sideline and end-zone awareness."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The deliberate boundary-context discard is the same portability-vs-context trade-off GSE flags in invariant motion features.",
+        "source_operator": "invariance_discards_boundary",
+        "telemetry": "angle as (cos theta,sin theta) not raw (avoids 2pi discontinuity); invariance discards absolute position + boundary context; portability vs sideline/end-zone awareness trade-off"
+      }
+    },
+    {
+      "primitive_id": "self_supervised_labels",
+      "name": "Self-supervised labels: each target is the player's own observed future arrival",
+      "verbatim_quote": "every target is the player's own observed future arrival time at the position they actually reached",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For every usable state frame the pipeline emits training tuples (k, x_Delta t, Delta t) where x_Delta t is the player's smoothed position Delta t seconds later; each state draws five continuous horizon offsets uniformly from [0.10, 8.0] s; labels are self-supervised: every target is the player's own observed future arrival time at the position they actually reached."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The self-supervised arrival labeling is the same observed-future-as-label scheme GSE uses for locomotion training.",
+        "source_operator": "self_supervised_labels",
+        "telemetry": "tuples (k,x_Delta t,Delta t); 5 horizon offsets uniform [0.10,8.0]s; self-supervised label = own observed future arrival at actually-reached position"
+      }
+    },
+    {
+      "primitive_id": "suvat_noise_floor",
+      "name": "SUVAT noise floor: discard samples faster than physically plausible (teleport artifacts)",
+      "verbatim_quote": "a single teleport artifact at a given geometry can drag the predicted floor below what is physically achievable",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because the tau=0.01 objective learns from the fastest realizations, a single teleport artifact at a given geometry can drag the predicted floor below what is physically achievable; a SUVAT closed-form kinematic intercept model (redirect phase keeping useful momentum, then sprint phase accelerating at a capped rate to a capped top speed) computes the fastest physically plausible arrival time Delta t_SUVAT for every sample, and any sample whose observed Delta t < Delta t_SUVAT is discarded along with degenerate near-zero-distance samples."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The SUVAT physical-plausibility screen is literally GSE's teleport-artifact veto on lower-quantile training labels.",
+        "source_operator": "suvat_noise_floor",
+        "telemetry": "tau=0.01 learns fastest -> teleport artifact drags floor below physical; SUVAT redirect+sprint (capped accel/top speed) computes Delta t_SUVAT; discard observed Delta t<Delta t_SUVAT + near-zero-distance"
+      }
+    },
+    {
+      "primitive_id": "noise_screen_not_physical_prior",
+      "name": "Filter is a noise screen, not a physical prior (removing it loosens area, not floor)",
+      "verbatim_quote": "This is the signature of a noise screen, not of a physical prior, which would move the floor itself",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Retraining with the filter off, or with its caps widened to the model-free clipping bounds, leaves the fitted floor unchanged and only degrades regularity: matched-coverage areas loosen by up to 31% and 12-17% respectively, and monotonicity violations rise from 1.4% to 23.4% of rays; this is the signature of a noise screen, not of a physical prior, which would move the floor itself."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The noise-screen-vs-prior diagnostic is the same ablation logic GSE uses to distinguish data cleaning from modeling assumptions.",
+        "source_operator": "noise_screen_not_physical_prior",
+        "telemetry": "filter off / caps widened -> floor unchanged, regularity degrades (area +31%/+12-17%, monotonicity violations 1.4%->23.4%); noise screen not physical prior (prior would move floor)"
+      }
+    },
+    {
+      "primitive_id": "filter_removes_03pct",
+      "name": "Conservative SUVAT filter removes only 0.3% of samples (caps 8 m/s^2, 9 m/s)",
+      "verbatim_quote": "The filter is deliberately conservative: it removes only 0.3% of extracted samples",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The filter is deliberately conservative: it removes only 0.3% of extracted samples, and its caps (8 m/s^2 acceleration, 9 m/s top speed) are stricter than the independent physical clipping bounds, so it discards only samples already implausible under a model-free criterion."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The conservative 0.3% removal rate is the same minimal-intervention cleaning threshold GSE applies.",
+        "source_operator": "filter_removes_03pct",
+        "telemetry": "filter removes 0.3% samples; caps 8 m/s^2 / 9 m/s stricter than model-free clipping; discards only already-implausible samples"
+      }
+    },
+    {
+      "primitive_id": "six_baselines_inverted",
+      "name": "Six literature motion models re-expressed as TTA predictors, inverted via sublevel duality",
+      "verbatim_quote": "we re-express six models from the literature as TTA predictors and invert each via",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "To benchmark on a common footing, six literature motion models are re-expressed as TTA predictors and inverted via tau(x)=min{t:x in R(t)}: constant speed (capped-speed disk), constant acceleration (quadratic disk with drifting center), constant acceleration with speed limit (non-circular boundary), two-segment constant speed (inertial drift then free radial), acceleration with free direction (Wu-Swartz), and friction-damped acceleration (Fujimura-Sugihara resistive force); each model's free parameters are fit by the same reachable-area validation score, so the comparison is between best-tuned versions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The best-tuned physics-baseline inversion is the same fair-comparison protocol GSE uses against closed-form motion models.",
+        "source_operator": "six_baselines_inverted",
+        "telemetry": "6 models inverted tau(x)=min{t:x in R(t)}: constant speed/constant accel/accel+vmax/two-segment/free-direction (Wu-Swartz)/friction-damped (Fujimura-Sugihara); fit by reachable-area score; best-tuned comparison"
+      }
+    },
+    {
+      "primitive_id": "mlp_softplus_extrapolation",
+      "name": "MLP 6-64-64-1, ReLU + Softplus output (linear growth -> graceful extrapolation)",
+      "verbatim_quote": "Because softplus of an affine map grows linearly, the network extrapolates gracefully beyond the training-horizon range",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The primary model is a small fully connected network 6->64->64->1 with ReLU hidden activations and a Softplus output; because softplus of an affine map grows linearly, the network extrapolates gracefully beyond the training-horizon range, an architectural choice that keeps arrival-time predictions physically sensible at long horizons."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Softplus linear-growth extrapolation is the same long-horizon sanity property GSE wants in arrival-time regressors.",
+        "source_operator": "mlp_softplus_extrapolation",
+        "telemetry": "MLP 6->64->64->1; ReLU hidden + Softplus output; softplus(affine) grows linearly -> graceful extrapolation beyond training horizon"
+      }
+    },
+    {
+      "primitive_id": "profile_max_speed_99pct",
+      "name": "Player-profile MLP adds per-player max speed (99th percentile, train matches only)",
+      "verbatim_quote": "each player's maximum speed, estimated as the 99th percentile of that player's cleaned, state-valid speeds pooled over the 45 training matches only",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The player-profile MLP augments the input with each player's maximum speed, estimated as the 99th percentile of that player's cleaned, state-valid speeds pooled over the 45 training matches only; the scalar is normalized and appended as a seventh input, allowing the network to scale each player's reachable envelope individually rather than assuming one population-wide relationship between kinematic state and ceiling speed."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The per-player max-speed capacity feature is literally GSE's personalized athletic-ceiling conditioning.",
+        "source_operator": "profile_max_speed_99pct",
+        "telemetry": "profile MLP + per-player max speed (99th percentile cleaned state-valid speeds, 45 train matches only); normalized 7th input; individual envelope vs population-wide ceiling"
+      }
+    },
+    {
+      "primitive_id": "eq3_pinball_lower_envelope",
+      "name": "Eq3 pinball loss: at tau=0.01 over-prediction penalized 99x under-prediction",
+      "verbatim_quote": "pushing the estimate toward the lower envelope so the model learns how quickly a player can arrive",
+      "page": 9,
+      "latex": "L_{\\tau}(\\hat y,y)=\\begin{cases}\\tau\\,(y-\\hat y) & y\\ge \\hat y\\\\ (1-\\tau)(\\hat y-y) & y<\\hat y\\end{cases},\\qquad \\tau=0.01",
+      "symbol_and_unit_ledger": {
+        "y": "true observed TTA [s]",
+        "yhat": "predicted arrival time [s]",
+        "tau": "target quantile (0.01)",
+        "L_tau": "pinball (quantile) loss [s]"
+      },
+      "assumptions": [
+        "All learned models minimize a pinball loss L_tau(yhat,y)=tau(y-yhat) for y>=yhat and (1-tau)(yhat-y) for y<yhat, augmented with an area-aware auxiliary term; at tau=0.01 over-prediction is penalized 99 times more heavily than under-prediction, pushing the estimate toward the lower envelope so the model learns how quickly a player can arrive. Equation 3 is printed math-font and reconstructed here.",
+        "Equation 3 (pinball loss) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Asymmetric: over-prediction 99x under-prediction at tau=0.01",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The asymmetric pinball loss is literally GSE's lower-envelope quantile objective (99:1 over/under penalty).",
+        "source_operator": "eq3_pinball_lower_envelope",
+        "telemetry": "L_tau(yhat,y)=tau(y-yhat) if y>=yhat else (1-tau)(yhat-y); tau=0.01 -> over-prediction 99x under-prediction; pushes to lower envelope"
+      }
+    },
+    {
+      "primitive_id": "eq4_area_aware_term",
+      "name": "Eq4 area-aware term: differentiable sigmoid soft-count of reachable cells, lambda=0.01",
+      "verbatim_quote": "The pointwise pinball loss never sees the integrated pitch area that the learned surface produces through the duality",
+      "page": 9,
+      "latex": "L_{\\text{area}}=\\operatorname*{mean}_{k,h}\\frac{1}{|G|}\\sum_{x\\in G}\\sigma\\!\\left(\\frac{h-\\hat\\tau_k(x)}{\\beta}\\right),\\quad \\beta=0.25\\,\\text{s},\\quad L=L_{\\tau}+\\lambda L_{\\text{area}},\\ \\lambda=0.01",
+      "symbol_and_unit_ledger": {
+        "G": "heading-frame grid (25x25 @4m, +/-48m, origin excluded, |G|=624)",
+        "h": "horizon in {3,5} s",
+        "tauhat_k(x)": "predicted arrival time at x for state k [s]",
+        "sigma": "logistic sigmoid (differentiable relaxation)",
+        "beta": "transition sharpness 0.25 s",
+        "lambda": "area-term weight 0.01"
+      },
+      "assumptions": [
+        "The pointwise pinball loss never sees the integrated pitch area the learned surface produces through the duality, so a differentiable relaxation of the reachable-area fraction is added: L_area=mean over states k and horizons h in {3,5}s of (1/|G|) sum over grid x of sigma((h-tauhat_k(x))/beta) with beta=0.25 s, on a fixed heading-frame grid G of 25x25 nodes at 4 m spacing spanning +/-48 m (origin excluded, |G|=624); sigma is the logistic sigmoid giving a soft count of cells inside the horizon-h reachable set; the total objective is L=L_tau+lambda L_area with lambda=0.01. Equation 4 is printed math-font and reconstructed here.",
+        "Equation 4 (area-aware auxiliary loss) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Soft count of cells inside horizon-h reachable set; translation/rotation-invariant area on fixed grid",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The differentiable area-aware regularizer is the same integrated-surface penalty GSE adds to pointwise quantile losses.",
+        "source_operator": "eq4_area_aware_term",
+        "telemetry": "L_area=mean_{k,h}(1/|G|)sum_x sigma((h-tauhat_k(x))/beta), beta=0.25s; grid 25x25 @4m +/-48m |G|=624; h in {3,5}s; sigmoid soft-count; L=L_tau+lambda L_area, lambda=0.01"
+      }
+    },
+    {
+      "primitive_id": "coverage_area_never_isolated",
+      "name": "Never rank on coverage or area alone (coverage 1.0 trivial by inflating to whole pitch)",
+      "verbatim_quote": "Any model reaches coverage 1.0 by inflating its reachable set to the whole pitch, so we never rank models on coverage or on area in isolation",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Coverage at horizon Delta t is the fraction of held-out trails whose actually-reached point lies inside the predicted reachable set, and reachable area is the pitch area of the sublevel set; any model reaches coverage 1.0 by inflating its reachable set to the whole pitch, so models are never ranked on coverage or area in isolation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The coverage-area degeneracy guard is literally GSE's matched-operating-point comparison discipline.",
+        "source_operator": "coverage_area_never_isolated",
+        "telemetry": "coverage = fraction trails with tau_pred(xt)<=Delta t; area = sublevel-set pitch area; coverage 1.0 trivial by whole-pitch inflation; never rank coverage/area alone"
+      }
+    },
+    {
+      "primitive_id": "matched_coverage_tighter",
+      "name": "Matched coverage: smallest area at shared coverage = tighter model",
+      "verbatim_quote": "the model that covers the same fraction of actually-reached points with the smallest area is the tighter one",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Every model is tuned to a matched coverage and the resulting mean reachable area compared at that shared operating point: the model that covers the same fraction of actually-reached points with the smallest area is the tighter one; this is done across five canonical horizons (1,2,3,4,5 s) at the project's 99% coverage target."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The matched-coverage area comparison is the same precision-at-fixed-recall metric GSE uses for reachable-set tightness.",
+        "source_operator": "matched_coverage_tighter",
+        "telemetry": "tune to matched coverage (99%); compare mean reachable area at shared operating point; smallest area at same coverage = tighter; horizons {1,2,3,4,5}s"
+      }
+    },
+    {
+      "primitive_id": "mlp_beats_all_physics",
+      "name": "Both quantile MLPs beat every physics baseline on MAE and pinball by wide margin",
+      "verbatim_quote": "Both MLPs beat every physics baseline on MAE and pinball, by a wide margin",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Both MLPs beat every physics baseline on MAE and pinball by a wide margin (MLP MAE 2.596+/-0.005 s, RMSE 3.193, pinball 0.028, area@99% coverage 31.6 m^2; profile MLP 2.577, area 31.7; best physics two-segment 2.992/34.1, friction-damped 2.984/35.0; learned reachable-hull 3.065/34.8); a quantile MLP is tightest in eight of nine coverage-by-horizon cells."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The MLP-over-physics result is the same learned-beats-closed-form evidence GSE cites for data-driven arrival times.",
+        "source_operator": "mlp_beats_all_physics",
+        "telemetry": "MLP MAE 2.596+/-0.005/RMSE 3.193/pinball 0.028/area 31.6; profile 2.577/31.7; two-segment 2.992/34.1; friction 2.984/35.0; hull 3.065/34.8; tightest 8/9 cells"
+      }
+    },
+    {
+      "primitive_id": "quantile_not_mere_datadriven",
+      "name": "Being data-driven alone does not produce tight lower envelope — the quantile formulation does",
+      "verbatim_quote": "being data-driven is not, by itself, what produces a tight, well-calibrated lower envelope",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The learned reachable-hull model trails both quantile MLPs on every reported metric and even the best closed-form baselines on point error: being data-driven is not, by itself, what produces a tight, well-calibrated lower envelope — the quantile formulation is; this separates the quantile objective from mere data-drivenness."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The quantile-vs-data-drivenness distinction is literally GSE's claim that the lower-quantile objective, not flexibility alone, yields calibrated feasibility.",
+        "source_operator": "quantile_not_mere_datadriven",
+        "telemetry": "reachable-hull trails quantile MLPs on every metric + best closed-form on point error; data-driven alone != tight calibrated lower envelope; quantile formulation is the cause"
+      }
+    },
+    {
+      "primitive_id": "profile_cluster_bootstrap_ci",
+      "name": "Profile-vs-base MAE gap +0.025s, 95% CI [+0.019,+0.030] (paired cluster bootstrap)",
+      "verbatim_quote": "A paired cluster bootstrap over the nine held-out test matches puts the base-versus-profile MAE gap at +0.025 s",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The profile model's advantage over the base model is positive in all five training seeds; a paired cluster bootstrap over the nine held-out test matches puts the base-versus-profile MAE gap at +0.025 s with a 95% confidence interval of [+0.019, +0.030] s, excluding zero; the gaps to every physics baseline are an order of magnitude larger than this interval."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The cluster-bootstrap significance test is the same dependence-aware uncertainty quantification GSE applies to model comparisons.",
+        "source_operator": "profile_cluster_bootstrap_ci",
+        "telemetry": "profile advantage positive all 5 seeds; paired cluster bootstrap over 9 test matches; base-vs-profile MAE gap +0.025s, 95% CI [+0.019,+0.030] excludes zero; physics gaps order-of-magnitude larger"
+      }
+    },
+    {
+      "primitive_id": "representation_not_feature",
+      "name": "Advantage stems from learned representation, not per-player feature (personalized baseline still trails)",
+      "verbatim_quote": "The advantage therefore stems from the learned representation, not from the per-player feature",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A control gives the closed-form baselines the same train-split per-player vmax table; the two-segment model benefits most but the best personalized baseline still trails the profile MLP by 0.30 s of MAE, with gains small and concentrated at long horizons where a player's own ceiling speed binds; the advantage therefore stems from the learned representation, not from the per-player feature."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The representation-over-feature ablation is the same controlled-attribution logic GSE uses to credit architecture vs inputs.",
+        "source_operator": "representation_not_feature",
+        "telemetry": "control: closed-form baselines given same per-player vmax; two-segment benefits most; best personalized baseline still trails profile MLP by 0.30s MAE; gains at long horizons; advantage = representation not feature"
+      }
+    },
+    {
+      "primitive_id": "cross_sport_asymmetric",
+      "name": "Cross-sport transfer asymmetric: NFL-trained transfers best; basketball furthest in regime",
+      "verbatim_quote": "football transfers into American football almost as well as NFL's own model but basketball's slower, more lateral game sits furthest in kinematic regime",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cross-sport transfer is markedly asymmetric: the American-football-trained checkpoint transfers out best, beating the destination's own two-segment baseline in both directions with pinball within a few percent of the destination's in-domain MLP; football transfers into American football almost as well as NFL's own model, but basketball's slower, more lateral game sits furthest in kinematic regime."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The asymmetric cross-sport transfer is the same kinematic-regime-distance effect GSE flags when transporting motion models.",
+        "source_operator": "cross_sport_asymmetric",
+        "telemetry": "NFL-trained transfers best (beats destination two-segment both directions, pinball within few % in-domain); football->NFL nearly as well; basketball slower/lateral furthest in regime"
+      }
+    },
+    {
+      "primitive_id": "label_regime_mismatch",
+      "name": "Transferred area loses to destination physics: label-regime mismatch, not representation failure",
+      "verbatim_quote": "The mechanism is a mismatch in label regime rather than a failure of the representation",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Every out-of-domain checkpoint has a larger reachable area than the destination's own two-segment baseline even where its MAE and pinball beat it: the lower envelope carries point-error competitiveness across sports while producing a looser reachable set than a physics model tuned to the destination's geometry; the mechanism is a mismatch in label regime rather than a failure of the representation, since American-football pass plays are short, explosive, straight-line sprints with faster arrival times at matched distance and speed."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The label-regime mismatch diagnosis is literally GSE's distinction between representation transfer and target-distribution shift.",
+        "source_operator": "label_regime_mismatch",
+        "telemetry": "out-of-domain area > destination two-segment even when MAE/pinball beat it; point-error transfers but reachable set looser; label-regime mismatch (NFL short explosive straight-line sprints, faster arrival at matched distance/speed) not representation failure"
+      }
+    },
+    {
+      "primitive_id": "structural_audit_connected",
+      "name": "Structural audit: sublevel sets single connected region containing player (100% of cases)",
+      "verbatim_quote": "the predicted sublevel sets are a single connected region containing the player",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Nothing in the architecture enforces reachable-set properties, so they are audited directly: on 5,000 held-out states the predicted sublevel sets are a single connected region containing the player in 100% of the 25,000 state-by-horizon cases examined and star-shaped in 100% of 80,000 audited rays at every canonical horizon; radial monotonicity is violated on 1.4% of rays, all at tau>4 s and beyond 20 m, with a median dip of 16 ms, far outside the operating range, so the polygon representation the downstream literature assumes remains valid in practice."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The structural reachable-set audit is the same geometric-validity verification GSE applies to learned space surfaces.",
+        "source_operator": "structural_audit_connected",
+        "telemetry": "5000 states; sublevel sets single connected region containing player 100% of 25000 state x horizon; star-shaped 100% of 80000 rays; radial monotonicity violated 1.4% (tau>4s, >20m, median dip 16ms); polygon representation valid"
+      }
+    },
+    {
+      "primitive_id": "realtime_full_pitch_pass",
+      "name": "Real-time: full 22-player pitch-control map in one 2.4ms forward pass (~420 fps)",
+      "verbatim_quote": "batched across all 22 on-field players into one forward pass of 157,080 rows",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Both learned models run online during a live match: a full reachable-area or pitch-control map evaluates every player's surface over the 1 m heading-frame grid of the 105x68 m pitch (7,140 cells), batched across all 22 on-field players into one forward pass of 157,080 rows; on an NVIDIA RTX A5000 GPU this pass takes 2.4 ms, about 420 frames per second, an order of magnitude above the 25-30 fps a tracking system samples at."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The real-time full-pitch inference is the same live-deployment latency budget GSE requires for in-game space surfaces.",
+        "source_operator": "realtime_full_pitch_pass",
+        "telemetry": "full pitch-control map: 105x68m @1m grid 7140 cells x 22 players = 157080 rows, one forward pass; RTX A5000 2.4ms ~420 fps vs 25-30 fps tracking"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ttaquantile2026_trace",
+      "think": "The retrocausal genealogy of this paper is the arrival-time turn in player-motion modeling. Marc Gutierrez-Perez and Antonio Agudo of the Institut de Robotica i Informatica Industrial in Barcelona, posting to arXiv in October 2026 as 2610.36183, argue that space is the currency of team sports and that almost every pitch-control, off-ball-value, or pass-probability surface rests on a player-motion model answering where a player can get to and how fast. The work sits between two dominant strands: the closed-form physical motion models of Taki and Hasegawa, Fujimura and Sugihara, Renkin, Wu and Swartz, and Narizuka, which are interpretable and parameter-light but commit to a fixed functional form, and the data-driven space models of Fernandez and Bornn, Brefeld, Spencer, and Wu, which are flexible but discard physically meaningful arrival time in favor of a density or behavioral-commitment probability. The paper's contribution is to keep the interpretable output type of the motion-model literature, an arrival time invertible to a reachable area, while inheriting the accuracy of a data-driven regressor, building on Koenker and Bassett's regression quantiles and Anzer and Bauer's expected-passes reachable hulls. The recursive theory of mind is the lower-quantile feasibility formulation and its geometric duality. The quantity of interest is the minimum time-to-arrival from a kinematic state of position, velocity, and acceleration to any target location, framed as conditional quantile regression at the first percentile because the target is a feasibility bound — the player could be there in time — rather than a typical-case estimate; a player may dawdle anywhere so the upper tail is uninformative, but the floor on how quickly they can plausibly arrive is sharply defined. A single observed trajectory only upper-bounds what the player could have done, but across roughly 154 million extracted samples many share a kinematic state with the player fully committed, so the pinball loss at the first percentile recovers the fast tail and discards choice-driven slowness. The reachable area is exactly the sublevel set of the arrival-time surface, a duality that lets a time output be evaluated with an area metric. Cross-layer veto adjudication is the matched-coverage benchmark and its ablations. The model is a small multilayer perceptron with a Softplus output whose linear growth extrapolates gracefully beyond the training horizon, trained on six physics-normalized heading-invariant features with a per-player max-speed capacity feature added in the profile variant, and optimized with a pinball loss that penalizes over-prediction ninety-nine times more than under-prediction plus a differentiable area-aware sigmoid soft-count term. A SUVAT noise floor discards the 0.3 percent of samples faster than physically plausible, and the ablation shows this is a noise screen rather than a physical prior because removing it leaves the floor unchanged while loosening areas and raising monotonicity violations from 1.4 to 23.4 percent of rays. Both quantile MLPs beat every physics baseline and the learned reachable-hull baseline on point error and pinball, and are tightest in eight of nine matched-coverage cells, with the profile advantage confirmed by a paired cluster bootstrap whose confidence interval excludes zero. The implementation invariants map directly onto GSE. The conditional first-percentile arrival-time regression is GSE's lower-quantile feasibility kernel underlying safe-pass targeting and pass-probability surfaces; the sublevel-set duality is GSE's invertible arrival-time-to-reachable-region bridge; the heading-invariant physics-normalized features are GSE's cross-context motion representation; the SUVAT plausibility screen is GSE's teleport-artifact veto on training labels; the matched-coverage area comparison is GSE's precision-at-fixed-recall tightness metric; and the real-time full-pitch forward pass at 2.4 milliseconds is GSE's live-deployment latency budget. The structural audit confirming connected, star-shaped sublevel sets with negligible monotonicity violation is GSE's geometric-validity verification for learned space surfaces. The cross-sport transfer results make the portability boundary concrete and honest. Retrained unchanged on basketball and American-football tracking, each sport's own model beats that sport's two-segment baseline in-domain, confirming the recipe is not tuned to one geometry; but transfer is markedly asymmetric, with the American-football-trained checkpoint transferring out essentially for free on point error and pinball while basketball's slower, more lateral game sits furthest in kinematic regime. Crucially, every transferred checkpoint's reachable area loses to the destination's own physics baseline even where its point error wins, a mismatch traced to label regime — American-football pass plays are short, explosive, straight-line sprints with faster arrival times at matched distance and speed — rather than to a failure of the representation. The caveats close the account with the scope limits that bound the claim. The heading invariance deliberately discards absolute pitch position and boundary context, buying cross-sport portability at the cost of sideline and end-zone awareness; the per-player max-speed feature is estimated only from training matches to avoid leakage; and the authors are explicit that a fixed closed-form motion model is not necessary to produce a physically plausible, well-calibrated reachable-area estimate, while noting that richer personalization and transfer across leagues and tracking providers within soccer remain future work. The invariant for GSE is to adopt the lower-quantile feasibility formulation, the time-area sublevel duality, the physics-normalized heading-invariant representation, the SUVAT noise screen, the matched-coverage tightness metric, the area-aware regularizer, and the real-time inference budget, while carrying the boundary-context discard, the label-regime transfer asymmetry, and the representation-versus-feature attribution as honest bounds on what a learned locomotion model can claim across sports.",
+      "retrocausal_genealogy": "Arrival-time turn in player-motion modeling. Marc Gutierrez-Perez, Antonio Agudo (IRI CSIC-UPC Barcelona); arXiv:2610.36183v1 [cs.AI] 26 Oct 2026; GitHub mguti97/TTA-Quantile. Space=currency; pitch-control/off-ball/pass-prob all rest on motion model. Between closed-form physics (Taki-Hasegawa 2000, Fujimura-Sugihara 2005, Renkin 2022, Wu-Swartz 2025, Narizuka 2023) and data-driven space (Fernandez-Bornn 2018, Brefeld 2019, Spencer 2019, Wu 2022) which discard arrival time for density. Keeps interpretable arrival-time output (invertible to reachable area) + data-driven accuracy. Builds on Koenker-Bassett 1978 regression quantiles, Anzer-Bauer 2022 expected passes reachable hulls, Spearman 2017/2018 time-to-intercept, Schilling 2026 safe passing regions NFL, Augustine 2025 NFL pass completion, Yurko 2020 going-deep.",
+      "theory_of_mind": "TTA = min plausible arrival time from k=(p,v,a) to target x; conditional quantile regression Eq1 tau(g)=Q0.01(Delta t|g(k,x)) (feasibility bound not typical case; upper tail uninformative/dawdle, floor sharp). Single trajectory only upper-bounds; ~154M samples share committed kinematic state; pinball@1st percentile recovers fast tail, discards choice-driven slowness. Eq2 duality R(Delta t)={x:tau(x)<=Delta t}, invert tau(x)=min{t:x in R(t)}. Heading frame (translate origin + rotate -phi, lateral v drops); 6 features d/120,cos/sin theta,v/12,ax/ay/10 (physics-normalized, cross-sport portable); angle (cos,sin) avoids 2pi discontinuity; discards boundary context. Self-supervised labels (own future arrival, 5 horizons [0.10,8.0]s). SUVAT noise floor (redirect+sprint, caps 8 m/s^2/9 m/s) discards observed<SUVAT (0.3%). MLP 6-64-64-1 ReLU+Softplus (linear extrapolation); profile +per-player vmax (99th pct, 45 train matches). Eq3 pinball tau=0.01 over-pred 99x under; Eq4 L_area=mean sigmoid((h-tauhat)/beta) beta=0.25 grid 25x25@4m |G|=624 h{3,5}; L=L_tau+0.01 L_area. Eqs 1-4 math-font reconstructed.",
+      "cross_layer_veto": "Benchmark: 6 physics models inverted + reachable-hull, fit by reachable-area score (best-tuned). Coverage=fraction trails tau_pred(xt)<=Delta t; area=sublevel pitch area; coverage 1.0 trivial by whole-pitch inflation -> never rank alone; matched coverage 99%, smallest area=tighter, horizons {1..5}s. MLP MAE 2.596+/-0.005/RMSE 3.193/pinball 0.028/area 31.6; profile 2.577/31.7; two-segment 2.992/34.1; friction 2.984/35.0; hull 3.065/34.8; tightest 8/9 cells. Data-driven alone != tight envelope (quantile formulation is). Profile vs base +0.025s 95% CI [+0.019,+0.030] paired cluster bootstrap 9 matches; personalized baseline still trails 0.30s -> representation not feature. SUVAT filter off -> floor unchanged, area +31%/12-17%, monotonicity 1.4%->23.4% (noise screen not prior). Structural audit: connected+star-shaped 100% (25000 cases/80000 rays), monotonicity violation 1.4% (tau>4s,>20m,16ms). Real-time 22-player 157080-row pass 2.4ms ~420fps RTX A5000. Cross-sport asymmetric: NFL-trained transfers best, basketball furthest; transferred area loses to destination physics (label-regime mismatch: NFL short explosive straight-line sprints) not representation failure. Data PFF FC WC2022 64 matches 30fps 45/10/9; NBA SportVU 2015-16 631 games 25fps; NFL BDB 2019 single game 10fps 729510 samples by-player. Boundary context discarded; closed-form not necessary. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A lower-quantile regression treatment of player motion feasibility estimates time-to-arrival as the conditional first percentile of observed locomotion — a sharply defined feasibility floor rather than an uninformative mean or a density — over physics-normalized heading-invariant geometry, with a reachable-area sublevel duality, an asymmetric pinball loss, a differentiable area-aware regularizer, and a SUVAT teleport-artifact noise screen; a compact MLP beats six best-tuned closed-form motion models and a learned reachable-hull baseline on point error and matched-coverage area, transfers asymmetrically across soccer, basketball, and American football with a label-regime rather than representation mismatch, and runs a full 22-player pitch-control map in 2.4 milliseconds, showing that a fixed closed-form motion model is not necessary for a physically plausible, well-calibrated reachable-area estimate.",
+  "gsi_mapping": "GSI treats TTA=min plausible arrival from k=(p,v,a); Eq1 tau(g)=Q0.01(Delta t|g(k,x)) feasibility bound (lower envelope not mean; single trajectory upper-bounds; ~154M committed samples; pinball@1st pct discards choice-driven slowness); Eq2 R(Delta t)={x:tau(x)<=Delta t} duality, invert tau(x)=min{t:x in R(t)}; heading frame (origin+rotate -phi, lateral v drops), 6 features d/120/cos-sin theta/v/12/ax-ay/10 (cross-sport portable, discards boundary context, angle (cos,sin) avoids 2pi); self-supervised labels 5 horizons [0.10,8.0]s; SUVAT noise floor redirect+sprint caps 8 m/s^2/9 m/s discards 0.3% (filter off -> floor unchanged area +31%/12-17% monotonicity 1.4%->23.4% = noise screen not prior); MLP 6-64-64-1 ReLU+Softplus linear extrapolation; profile +per-player vmax 99th pct 45 train matches; Eq3 pinball tau=0.01 over-pred 99x; Eq4 L_area=mean sigmoid((h-tauhat)/0.25) grid 25x25@4m |G|=624 h{3,5}, L=L_tau+0.01 L_area; 6 physics baselines inverted best-tuned + reachable-hull; matched coverage 99% smallest area tighter horizons {1..5}s; MLP MAE 2.596/area 31.6 beats two-segment 2.992/34.1 friction 2.984/35.0 hull 3.065/34.8 tightest 8/9; data-driven alone != tight envelope; profile +0.025s CI [+0.019,+0.030] cluster bootstrap 9 matches; personalized baseline trails 0.30s -> representation not feature; structural audit connected/star-shaped 100% monotonicity 1.4%; real-time 157080-row pass 2.4ms ~420fps; cross-sport asymmetric NFL-best/basketball-furthest, transferred area loses to destination physics (label-regime mismatch NFL short explosive sprints); data PFF FC WC2022 64@30fps 45/10/9, NBA SportVU 631@25fps, NFL BDB2019 single@10fps 729510 by-player; Eqs 1-4 math-font reconstructed.",
+  "gse_mapping": "GSE lifts the conditional first-percentile arrival-time regression as its lower-quantile feasibility kernel for safe-pass targeting and pass-probability surfaces, the time-area sublevel duality as its invertible arrival-time-to-reachable-region bridge, the physics-normalized heading-invariant representation as its cross-context motion features, the SUVAT plausibility screen as its teleport-artifact veto on training labels, the matched-coverage smallest-area comparison as its precision-at-fixed-recall tightness metric, the asymmetric pinball plus area-aware regularizer as its lower-envelope objective, the per-player max-speed conditioning as its personalized athletic-ceiling input, the structural connected/star-shaped audit as its geometric-validity verification, and the 2.4ms full-pitch forward pass as its live-deployment latency budget; treats the boundary-context discard, the cross-sport label-regime transfer asymmetry (point error transfers but reachable area loses to destination physics), and the representation-versus-feature attribution as honest bounds, and the finding that a fixed closed-form motion model is unnecessary for a calibrated reachable-area estimate as license for its learned space surfaces; all outputs are arrival-time and reachability estimates from tracking data, never sportsbook lines."
+}
