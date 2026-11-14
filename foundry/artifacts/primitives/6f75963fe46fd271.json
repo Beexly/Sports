@@ -1,0 +1,364 @@
+{
+  "book_id": "6f75963fe46fd271",
+  "source_status": "COMPLETE",
+  "title": "openalex_W2133122533",
+  "file_name": "openalex_W2133122533.pdf",
+  "sha256": "6f75963fe46fd271e9793f23bfc9235846ee07fe33f9447d5017fd306b0ff5ff",
+  "primary_domain": "other",
+  "pages_total": 67,
+  "pages_read": 67,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 66,
+  "windows_extracted": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal discretization of aircraft motion under MPC constraints enables structured optimization of trajectory conflicts via parallelized computational kernels. Fuel and CO2 savings across aircraft scenarios; noise pollution cost functions with altitude penalties; population density maps via Gaussian kernels; trajectory optimization under multi-objective constraints.",
+  "gsi_mapping": "Bayesian inference maps flight path uncertainty to probabilistic conflict zones using observed telemetry; conformal prediction ensures robustness against adversarial perturbations in airspace dynamics. Bayesian inference on fuel efficiency gains and CO2 reductions using probabilistic models over simulated aircraft trajectories; conformal prediction of environmental impact under varying density scenarios.",
+  "gse_mapping": "Situational reasoning models sequential state transitions through conflict resolution logic gates, enabling real-time decision-making under dynamic airspace constraints. Situational reasoning engine maps aircraft paths through noise-cost augmented space-time fields, transitioning states based on altitude-dependent penalties and population density gradients to optimize flight corridors.",
+  "primitives": [
+    {
+      "primitive_id": "w0_snake_case_id",
+      "name": "Monte_Carlo_Optimization",
+      "verbatim_quote": "We propose the real-time use of Monte Carlo optimisation in the framework of Model Predictive Control (MPC) as the trajectory planning algorithm.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Real-time execution, noisy environment, non-convex constraints.",
+      "breakdown_regime": "Deterministic convergence under sufficient samples.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian sequential decision-making under uncertainty.",
+        "source_operator": "w0_snake_case_id",
+        "telemetry": "Solution time per iteration, constraint satisfaction rate."
+      }
+    },
+    {
+      "primitive_id": "w1_snake_case_id",
+      "name": "Model_Predictive_Control",
+      "verbatim_quote": "Department of Engineering REFERENCE: CUED/F-INFENG/TR.693 DATE: 28/05/2015 ISSUE: 1 PAGE: 3 of 65 Contents 1 Introduction 5 1.1 Contribution of this report .",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Finite horizon optimization, feedback correction.",
+      "breakdown_regime": "Steady-state stability for linear systems.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Adaptive betting line optimization; GSE: Trajectory state prediction.",
+        "source_operator": "w1_snake_case_id",
+        "telemetry": "Prediction error variance, computational load."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id",
+      "name": "Graphical_Processor_Unit_Implementation",
+      "verbatim_quote": "Implementation on a Graphical Processor Unit (GPU) allows the exploitation of the parallelism inherent in Monte Carlo methods, which results in solution speeds high enough to allow real-time use.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Massively parallel architecture, shared memory access.",
+      "breakdown_regime": "Amdahl's law scaling limit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "High-performance computing for rapid scenario evaluation.",
+        "source_operator": "w2_snake_case_id",
+        "telemetry": "Floating-point operations per second, energy efficiency."
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id",
+      "name": "Fuel_Savings_Estimation",
+      "verbatim_quote": "We evaluate our algorithm on flight data obtained in the London Gatwick Airport TMA, and show that fuel saving of about 30% can be obtained.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Constant specific impulse, perfect weather forecast.",
+      "breakdown_regime": "Bregman divergence minimization for convex costs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Cost function modeling for optimal wagering; GSE: Energy-optimal pathfinding.",
+        "source_operator": "w3_snake_case_id",
+        "telemetry": "Total fuel burn, CO2 emissions per flight segment."
+      }
+    },
+    {
+      "primitive_id": "6f75963fe46fd271_w1_g1",
+      "name": "openalex_W2133122533 Ch.2 Grounded Operator",
+      "verbatim_quote": "Department of Engineering REFERENCE: CUED/F-INFENG/TR.693 DATE: 28/05/2015 ISSUE: 1 PAGE: 13 of 65 3.4 Constraint Handling There are two types of constraint handled by line 12.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f75963fe46fd271_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f75963fe46fd271_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6f75963fe46fd271_w1_g2",
+      "name": "openalex_W2133122533 Ch.2 Grounded Operator",
+      "verbatim_quote": "The first are unary constraints which deal only with one aircraft at a time.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f75963fe46fd271_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f75963fe46fd271_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6f75963fe46fd271_w1_g3",
+      "name": "openalex_W2133122533 Ch.2 Grounded Operator",
+      "verbatim_quote": "Examples of these include flight envelope constraints and the minimum aircraft mass constraint.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f75963fe46fd271_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f75963fe46fd271_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "mpc_time_step",
+      "name": "Model Predictive Control Time Step",
+      "verbatim_quote": "MPC time steps were 10 seconds in length (δt = 10) and had a horizon length of H = 6 time steps.",
+      "page": 28,
+      "latex": "\\delta t = 10 \\text{ s}, \\quad H = 6",
+      "symbol_and_unit_ledger": "{'δt': 'seconds', 'H': 'dimensionless'}",
+      "assumptions": "Fixed time-step control policy with finite horizon predictive optimization.",
+      "breakdown_regime": "When δt approaches or exceeds 60 seconds, convergence guarantees may degrade.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables temporal decoupling of conflict detection and resolution in GSE state-space traversal.",
+        "source_operator": "mpc_time_step",
+        "telemetry": "Average computation time per update across thread-block configurations."
+      }
+    },
+    {
+      "primitive_id": "aircraft_standardization",
+      "name": "Aircraft Aerodynamic Standardization",
+      "verbatim_quote": "For simplicity aircraft have been standardised with the aerodynamic properties of an Airbus A320 obtained from BADA[8].",
+      "page": 28,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All simulated aircraft share identical aerodynamic characteristics.",
+      "breakdown_regime": "In multi-aircraft scenarios, deviations from standardization introduce variability in maneuverability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's uniform probabilistic model of aircraft behavior under shared dynamics.",
+        "source_operator": "aircraft_standardization",
+        "telemetry": "Consistency of simulated trajectories across varying disturbance inputs."
+      }
+    },
+    {
+      "primitive_id": "tma_geometry",
+      "name": "Terminal Maneuvering Area Geometry",
+      "verbatim_quote": "The TMA is considered as a circle of radius 30km where there is a single runway at the origin.",
+      "page": 28,
+      "latex": "r = 30 \\text{ km}",
+      "symbol_and_unit_ledger": "{'r': 'kilometers'}",
+      "assumptions": "Circular TMA geometry simplifies spatial conflict modeling.",
+      "breakdown_regime": "Non-circular TMA geometries require adaptive boundary conditions for conflict avoidance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines GSE spatial domain for conflict-free trajectory planning.",
+        "source_operator": "tma_geometry",
+        "telemetry": "Distance-based separation enforcement metrics near runway envelope."
+      }
+    },
+    {
+      "primitive_id": "thread_block_layout",
+      "name": "Parallel Computation Thread Block Layout",
+      "verbatim_quote": "The simulations were performed on an NVIDIA Tesla C2070, which has 448 cores.",
+      "page": 29,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Threaded execution improves throughput for large-scale simulation tasks.",
+      "breakdown_regime": "Beyond 448 threads, diminishing returns occur due to memory contention.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's parallelizable inference engine for scalable conflict resolution.",
+        "source_operator": "thread_block_layout",
+        "telemetry": "Computation time reduction with increasing thread count up to optimal block size."
+      }
+    },
+    {
+      "primitive_id": "6f75963fe46fd271_w3_g1",
+      "name": "openalex_W2133122533 Ch.4 Grounded Operator",
+      "verbatim_quote": "Department of Engineering REFERENCE: CUED/F-INFENG/TR.693 DATE: 28/05/2015 ISSUE: 1 PAGE: 40 of 65 data.",
+      "page": 42,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f75963fe46fd271_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f75963fe46fd271_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6f75963fe46fd271_w3_g2",
+      "name": "openalex_W2133122533 Ch.4 Grounded Operator",
+      "verbatim_quote": "The most important of these is to shorten the sampling time from every 60 seconds from the recorded data to time steps of 20 seconds.",
+      "page": 42,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f75963fe46fd271_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f75963fe46fd271_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6f75963fe46fd271_w3_g3",
+      "name": "openalex_W2133122533 Ch.4 Grounded Operator",
+      "verbatim_quote": "As highlighted in the various fuel estimates with a linear model between time steps longer sampling times do have negative effects on the accuracy of aircraft trajectories.",
+      "page": 42,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6f75963fe46fd271_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6f75963fe46fd271_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "fuel_savings_accumulator",
+      "name": "Total Fuel Savings Accumulator",
+      "verbatim_quote": "In total across all four scenarios 14653.5 kg of fuel was saved.",
+      "page": 55,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'total_fuel_saved_kg': 'kilograms'}",
+      "assumptions": "All aircraft scenarios modeled under identical operational conditions except for density variation.",
+      "breakdown_regime": "Scenario-based aggregate fuel consumption model.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps cumulative fuel savings across multiple simulation runs to inform GSI's environmental impact scoring system.",
+        "source_operator": "fuel_savings_accumulator",
+        "telemetry": "Total kg of fuel saved per simulation run"
+      }
+    },
+    {
+      "primitive_id": "co2_reduction_calculator",
+      "name": "CO2 Reduction Calculator",
+      "verbatim_quote": "On average during flight 3.15g of CO2 is produced for each gram of aircraft fuel burnt [1] leading to a saving of 46158.52 kg of CO2.",
+      "page": 55,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'co2_per_fuel_g': 'grams per gram', 'total_co2_saved_kg': 'kilograms'}",
+      "assumptions": "Constant emission factor of 3.15 g CO2 per gram fuel burned.",
+      "breakdown_regime": "Linear scaling of CO2 output with fuel consumption.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Calculates CO2 savings from fuel efficiency improvements for use in GSI's carbon footprint metrics.",
+        "source_operator": "co2_reduction_calculator",
+        "telemetry": "Total kg of CO2 reduced per simulation"
+      }
+    },
+    {
+      "primitive_id": "population_density_mapper",
+      "name": "Population Density Mapper",
+      "verbatim_quote": "the entire area and the population density in each location was estimated using a Gaussian function: popdense(x, y) = min    20 X i=1 e -bi(x,y)2 2ci2 ci √ 2π , 1   .",
+      "page": 56,
+      "latex": "\\text{popdense}(x, y) = \\min\\left(\\sum_{i=1}^{20} \\frac{e^{-\\frac{b_i(x,y)^2}{2c_i^2}}}{c_i \\sqrt{2\\pi}}, 1\\right)",
+      "symbol_and_unit_ledger": "{'x, y': 'grid coordinates (meters)', 'b_i(x,y)': 'distance from grid point to i-th population center (meters)', 'c_i': 'radius of i-th population center (meters)', 'popdense(x, y)': 'normalized population density (dimensionless)'}",
+      "assumptions": "Each population center modeled as a Gaussian distribution with known radius and position.",
+      "breakdown_regime": "20-center Gaussian superposition model for spatial density estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's terrain risk assessment kernel, mapping population density to noise cost surfaces.",
+        "source_operator": "population_density_mapper",
+        "telemetry": "Spatially resolved population density map"
+      }
+    },
+    {
+      "primitive_id": "noise_cost_function",
+      "name": "Noise Cost Function",
+      "verbatim_quote": "Department of Engineering REFERENCE: CUED/F-INFENG/TR.693 DATE: 28/05/2015 ISSUE: 1 PAGE: 56 of 65 Jnoise = 1 -max 1 \u0012 1 -Ac -a Ac \u00132!",
+      "page": 58,
+      "latex": "J_{\\text{noise}} = 1 - \\max\\left(1, \\left(1 - \\frac{A_c - a}{A_c}\\right)^2\\right) \\cdot \\text{popdense}(x, y)",
+      "symbol_and_unit_ledger": "{'J_noise': 'dimensionless noise cost', 'A_c': 'altitude cutoff (meters)', 'a': 'aircraft altitude (meters)', 'popdense(x, y)': 'population density at location (dimensionless)'}",
+      "assumptions": "Quadratic penalty for low-altitude flights; noise negligible above 4000m.",
+      "breakdown_regime": "Piecewise quadratic penalty function with threshold at 4000m.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Integrates altitude and population density into a single scalar cost for GSE path planning algorithms.",
+        "source_operator": "noise_cost_function",
+        "telemetry": "Per-aircraft noise cost value per trajectory segment"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6f75963fe46fd271_t0",
+      "think": "The core contribution is a scalable, parallelizable solver for dynamic trajectory optimization under uncertainty. By casting the problem as a sequential Monte Carlo approximation within a Model Predictive Control framework, we enable real-time decision-making in complex airspace. The GPU implementation reduces computation time from minutes to milliseconds, making it deployable in air traffic control centers. Empirical results at Gatwick show significant fuel reduction without compromising safety. Window 1 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in stochastic optimal control (Bellman, 1957), particle filtering (Gordon et al., 1993), and parallel computing (Hockney & Eastwood, 1988). Applied to ATC via trajectory optimization (Calvert & Parrington, 1997). Retrocausal Genealogy (Window 1): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Air traffic controllers seek predictable, safe trajectories while airlines want cost-efficient routes. Our method provides a systematic way to balance these conflicting objectives by optimizing over ensembles of possible futures. Theory of Mind (Window 1): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid leakage between different aircraft types (e.g., fighters vs commercial jets) due to varying dynamics. Also, prevent collinearity between wind models and separation constraints, which could lead to overfitting. Cross-Layer Veto (Window 1): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6f75963fe46fd271_t1",
+      "think": "Window 2 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6f75963fe46fd271_t2",
+      "think": "Chapter 3 delves into the simulation architecture and empirical validation of a Model Predictive Control (MPC) framework tailored for air traffic management within a Terminal Maneuvering Area (TMA). The core methodology employs a fixed time-step MPC with a horizon of six steps, operating at 10-second intervals, which aligns with modern ATC update cycles but may not fully capture real-world variability. Simulations utilize standardized aircraft dynamics derived from BADA, ensuring consistency while abstracting complex aerodynamic behaviors. The TMA is modeled as a circular region with a central runway, simplifying spatial conflict modeling. Parallel computation is implemented using NVIDIA Tesla C2070 hardware, optimizing performance through thread-block layouts. Results demonstrate that departure and arrival trajectories adapt dynamically to flow fields, indicating effective conflict mitigation strategies. The study emphasizes computational efficiency and scalability, particularly when handling multiple aircraft simultaneously. These findings support the integration of MPC-based algorithms into real-time air traffic systems, offering a foundation for future research in autonomous airspace coordination and adaptive control policies. Window 3 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This work builds upon foundational MPC frameworks developed in aerospace engineering and control theory, extending earlier studies on trajectory optimization and conflict resolution in dense airspace environments. Retrocausal Genealogy (Window 3): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include air traffic controllers who rely on heuristic rules, and autonomous systems that optimize for efficiency and safety. Modeling these interactions reveals potential misalignments between human-centric and algorithmic decision-making protocols. Theory of Mind (Window 3): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity checks ensure that GSE's trajectory planning does not overly depend on GSI's probabilistic estimates, preventing leakage of uncertainty into deterministic state transitions during critical maneuvers. Cross-Layer Veto (Window 3): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6f75963fe46fd271_t3",
+      "think": "Window 4 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6f75963fe46fd271_t4",
+      "think": "Chapter 5 explores the integration of environmental and societal constraints into aircraft trajectory optimization. It begins with quantifying fuel and CO2 savings across various density scenarios, establishing baseline performance metrics. The core innovation lies in modeling noise pollution through a composite cost function that incorporates both altitude-dependent penalties and spatially resolved population density. The Gaussian-based population density estimator allows for precise mapping of human exposure zones, while the noise cost function penalizes low-altitude flights over populated areas. These primitives form a foundational layer for GSI’s environmental impact scoring and GSE’s real-time path adjustment systems. The interplay between these components enables multi-objective optimization, balancing efficiency with societal well-being. The derived kernels support robust decision-making under uncertainty, particularly when aircraft must navigate complex airspace constrained by noise regulations and population centers. Window 5 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 2000s aviation trajectory optimization literature, building upon stochastic control theory and multi-criteria decision analysis frameworks developed for urban air mobility and sustainable aviation initiatives. Retrocausal Genealogy (Window 5): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 5): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing forces: regulatory compliance (noise limits), economic efficiency (fuel savings), and public safety (population avoidance). Simulates adversarial behavior of air traffic controllers and environmental agencies in optimizing flight paths. Theory of Mind (Window 5): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to noise penalties by ensuring fuel efficiency remains a dominant objective. Veto conditions include excessive go-around maneuvers due to conflicting noise constraints, maintaining safe landing envelopes. Cross-Layer Veto (Window 5): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 5): Rooted in openalex_W2133122533 (6f75963fe46fd271, 67/67 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

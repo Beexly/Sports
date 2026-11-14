@@ -1,0 +1,330 @@
+{
+  "book_id": "6c2cc9844eab7827",
+  "source_status": "COMPLETE",
+  "title": "vmls",
+  "file_name": "vmls.pdf",
+  "sha256": "6c2cc9844eab7827d48865f904a536ca7456e34f181ce4535de78a44d1f91be8",
+  "primary_domain": "other",
+  "pages_total": 473,
+  "pages_read": 473,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 455,
+  "windows_extracted": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Vector spaces, matrix transformations, and least squares form a coherent algebraic framework for modeling linear relationships and optimization in applied mathematics. 35 to 55 words structural mathematical unification Universal Lens: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian inference on vectorial data uses matrix-valued likelihoods and prior distributions over linear functionals to update beliefs about system parameters. 35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "Situational reasoning in GSE models state transitions via linear dynamical systems governed by matrix exponentials and least-squares projections onto constraint manifolds. 35 to 55 words GSE situational reasoning & state-transition mapping",
+  "primitives": [
+    {
+      "primitive_id": "vec_addition",
+      "name": "Vector Addition",
+      "verbatim_quote": "Contents Preface xi I Vectors 1 1 Vectors 3 1.1 Vectors .",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p': 'position vector in \\\\(\\\\mathbb{R}^n\\\\)', 'a': 'displacement vector in \\\\(\\\\mathbb{R}^n\\\\)', 'p + a': 'resultant position vector in \\\\(\\\\mathbb{R}^n\\\\)'}",
+      "assumptions": "Vectors are elements of a real vector space with standard addition and scalar multiplication.",
+      "breakdown_regime": "Undefined when vectors belong to different vector spaces.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Vector addition underpins affine transformations used in GSE state updates and GSI belief propagation through linear combinations of basis vectors.",
+        "source_operator": "vec_addition",
+        "telemetry": "Displacement consistency across coordinate frames."
+      }
+    },
+    {
+      "primitive_id": "linear_function",
+      "name": "Linear Function",
+      "verbatim_quote": "2.1 Linear functions 31 In the first line here, we apply (two-term) superposition to the argument α1x1 + (1)(α2x2 + · · · + αkxk), and in the other lines we apply this recursively.",
+      "page": 41,
+      "latex": "\\(f(\\alpha x + y) = \\alpha f(x) + f(y)\\)",
+      "symbol_and_unit_ledger": "{'f': 'linear map from \\\\(\\\\mathbb{R}^n\\\\) to \\\\(\\\\mathbb{R}\\\\)', 'x, y': 'vectors in \\\\(\\\\mathbb{R}^n\\\\)', '\\\\(\\\\alpha\\\\)': 'scalar in \\\\(\\\\mathbb{R}\\\\)'}",
+      "assumptions": "Function preserves vector addition and scalar multiplication.",
+      "breakdown_regime": "Non-homogeneous or non-additive mappings fail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Linear functions define kernel subspaces in GSE control theory and serve as probabilistic priors in GSI uncertainty quantification.",
+        "source_operator": "linear_function",
+        "telemetry": "Kernel rank and range dimensionality."
+      }
+    },
+    {
+      "primitive_id": "least_squares",
+      "name": "Least Squares Solution",
+      "verbatim_quote": "217 III Least squares 223 12 Least squares 225 12.1 Least squares problem .",
+      "page": 7,
+      "latex": "\\(\\min_{x} \\|Ax - b\\|^2\\)",
+      "symbol_and_unit_ledger": "{'A': 'matrix in \\\\(\\\\mathbb{R}^{m \\\\times n}\\\\)', 'x': 'unknown vector in \\\\(\\\\mathbb{R}^n\\\\)', 'b': 'observation vector in \\\\(\\\\mathbb{R}^m\\\\)'}",
+      "assumptions": "Overdetermined system with full column rank; noise follows Gaussian distribution.",
+      "breakdown_regime": "Ill-conditioned matrices or rank deficiency lead to unstable solutions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Least squares minimizes prediction error in GSE trajectory estimation and enables Bayesian posterior computation in GSI.",
+        "source_operator": "least_squares",
+        "telemetry": "Residual norm and condition number of normal equation."
+      }
+    },
+    {
+      "primitive_id": "matrix_inverse",
+      "name": "Matrix Inverse",
+      "verbatim_quote": "Contents ix 11 Matrix inverses 199 11.1 Left and right inverses .",
+      "page": 7,
+      "latex": "\\(A^{-1}A = I\\)",
+      "symbol_and_unit_ledger": "{'A': 'square matrix in \\\\(\\\\mathbb{R}^{n \\\\times n}\\\\)', 'A^{-1}': 'inverse matrix in \\\\(\\\\mathbb{R}^{n \\\\times n}\\\\)', 'I': 'identity matrix in \\\\(\\\\mathbb{R}^{n \\\\times n}\\\\)'}",
+      "assumptions": "Matrix is square and invertible (full rank).",
+      "breakdown_regime": "Singular or non-square matrices do not admit inverse.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Matrix inversion enables GSE feedback control design and GSI parameter recovery in constrained optimization problems.",
+        "source_operator": "matrix_inverse",
+        "telemetry": "Determinant sign and spectral radius of inverse."
+      }
+    },
+    {
+      "primitive_id": "w1_snake_case_id",
+      "name": "Descriptive operator name",
+      "verbatim_quote": "4.5 Applications 85 The identification of these separate topics among the documents is impressive, when you consider that the k-means algorithm does not understand the meaning of the words in the documents (and indeed, does not even know the order of the words in each document).",
+      "page": 95,
+      "latex": "Exact authentic LaTeX equation from source (or null if purely prose)",
+      "symbol_and_unit_ledger": "Exact SI / dimensionless unit definitions for every symbol",
+      "assumptions": "Mathematical assumptions",
+      "breakdown_regime": "Exact breakdown/singularity regime",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Detailed mathematical isomorphism to GSE/GSI",
+        "source_operator": "w1_snake_case_id",
+        "telemetry": "Empirical observable / verification metric"
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w1_g2",
+      "name": "vmls Ch.2 Grounded Operator",
+      "verbatim_quote": "It uses only the simple concept of document dissimilarity, as measured by the distance between word count histogram vectors.",
+      "page": 95,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w1_g3",
+      "name": "vmls Ch.2 Grounded Operator",
+      "verbatim_quote": "4.5 Applications Clustering, and the k-means algorithm in particular, has many uses and applications.",
+      "page": 95,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id",
+      "name": "Descriptive operator name",
+      "verbatim_quote": "180 10 Matrix multiplication are compatible.) Then C = AB can be expressed as the m × n block matrix with entries Cij, given by the formula (10.1).",
+      "page": 190,
+      "latex": "Exact authentic LaTeX equation from source (or null if purely prose)",
+      "symbol_and_unit_ledger": "Exact SI / dimensionless unit definitions for every symbol",
+      "assumptions": "Mathematical assumptions",
+      "breakdown_regime": "Exact breakdown/singularity regime",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Detailed mathematical isomorphism to GSE/GSI",
+        "source_operator": "w2_snake_case_id",
+        "telemetry": "Empirical observable / verification metric"
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w2_g2",
+      "name": "vmls Ch.3 Grounded Operator",
+      "verbatim_quote": "For example, we have \u0014 A B C D \u0015 \u0014 E F G H \u0015 = \u0014 AE + BG AF + BH CE + DG CF + DH \u0015 , for any matrices A, B, .",
+      "page": 190,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w2_g3",
+      "name": "vmls Ch.3 Grounded Operator",
+      "verbatim_quote": ", H for which the matrix products above make sense.",
+      "page": 190,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w3_g1",
+      "name": "vmls Ch.4 Grounded Operator",
+      "verbatim_quote": "274 13 Least squares data fitting 13.3.4 Summary The discussion above makes it clear that there is much art in choosing features to use in a model.",
+      "page": 284,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w3_g2",
+      "name": "vmls Ch.4 Grounded Operator",
+      "verbatim_quote": "But it is important to keep several things in mind when creating new features: • Try simple models first.",
+      "page": 284,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w3_g3",
+      "name": "vmls Ch.4 Grounded Operator",
+      "verbatim_quote": "Start with a constant, then a simple regression model, and so on.",
+      "page": 284,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w4_g1",
+      "name": "vmls Ch.5 Grounded Operator",
+      "verbatim_quote": "17.2 Linear quadratic control 367 The linear quadratic control problem (with initial and final state constraints) is minimize Joutput + ρJinput subject to xt+1 = Atxt + Btut, t = 1, .",
+      "page": 377,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w4_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w4_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w4_g2",
+      "name": "vmls Ch.5 Grounded Operator",
+      "verbatim_quote": ", T -1, x1 = xinit, xT = xdes, (17.8) where the variables to be chosen are x1, .",
+      "page": 377,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w4_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w4_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6c2cc9844eab7827_w4_g3",
+      "name": "vmls Ch.5 Grounded Operator",
+      "verbatim_quote": "We can solve the linear quadratic control problem (17.8) by setting it up as a big linearly constrained least squares problem.",
+      "page": 377,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6c2cc9844eab7827_w4_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6c2cc9844eab7827_w4_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6c2cc9844eab7827_t0",
+      "think": "Chapter 1 introduces foundational concepts of vectors and their operations, establishing the geometric interpretation of vector addition and subtraction. These operations are essential for describing positions and displacements in physical and abstract spaces. Chapter 2 formalizes linear functions, which are central to understanding how transformations preserve structure under scalar multiplication and vector addition. This leads naturally to the concept of linear independence (Chapter 5), which determines whether a set of vectors spans a space without redundancy. Matrices (Chapter 6) provide a compact representation of linear functions, enabling efficient computation and storage. The notion of linear equations (Chapter 8) connects these ideas to solving systems of equations, while linear dynamical systems (Chapter 9) model time evolution using matrix exponentials. Matrix inverses (Chapter 11) allow for solving such systems uniquely when possible. Finally, least squares methods (Chapters 12–17) extend linear algebra to handle overdetermined systems and noisy data, forming the backbone of statistical estimation and optimization in applied contexts. Window 1 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Cartesian geometry and Gauss's method of least squares, linear algebra evolved through vector spaces and matrix theory in the 19th century, culminating in modern computational frameworks. Retrocausal Genealogy (Window 1): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents may interpret vector directions differently based on reference frames, leading to misaligned predictions unless shared coordinate systems are enforced. Coaches might optimize player trajectories using least-squares approximations of motion paths. Theory of Mind (Window 1): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that independent variables contribute unique information to GSE models; leakage veto prevents spurious correlations between unrelated observables in GSI inference pipelines. Cross-Layer Veto (Window 1): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6c2cc9844eab7827_t1",
+      "think": "220 to 340 words mathematical/doctrinal derivation for this chapter window Window 2 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "65 to 85 words historical lineage Retrocausal Genealogy (Window 2): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "65 to 85 words modeling opposing agents / players / coaches Theory of Mind (Window 2): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "65 to 85 words anti-collinearity and leakage veto conditions Cross-Layer Veto (Window 2): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6c2cc9844eab7827_t2",
+      "think": "220 to 340 words mathematical/doctrinal derivation for this chapter window Window 3 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "65 to 85 words modeling opposing agents / players / coaches Theory of Mind (Window 3): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "65 to 85 words anti-collinearity and leakage veto conditions Cross-Layer Veto (Window 3): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6c2cc9844eab7827_t3",
+      "think": "Window 4 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6c2cc9844eab7827_t4",
+      "think": "Window 5 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 5): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 5): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 5): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 5): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 5): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 5): Rooted in vmls (6c2cc9844eab7827, 473/473 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

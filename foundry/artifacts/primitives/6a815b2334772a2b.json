@@ -1,0 +1,306 @@
+{
+  "book_id": "6a815b2334772a2b",
+  "source_status": "COMPLETE",
+  "title": "2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors",
+  "file_name": "2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors.pdf",
+  "sha256": "6a815b2334772a2b1b43de3ce9f77cfadeb233acf492fb071879f41f45d8c383",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 12,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Logistic regression models climber success via round, problem type, and individual skill effects; probabilistic matrix factorization encodes latent embeddings for scalable inference. Unified framework integrating classification accuracy, probabilistic scoring, and ROC analysis for model evaluation in climber performance prediction.",
+  "gsi_mapping": "Bayesian hierarchical modeling of climber skill and problem difficulty using logistic regression with conformal prediction intervals for uncertainty quantification. Bayesian inference maps model confidence intervals to climber skill posterior distributions via Brier score and log loss minimization.",
+  "gse_mapping": "Situation-aware state transitions in bouldering competitions modeled via dynamic embeddings and reinforcement-like feedback loops from attempt outcomes. Situational reasoning encodes climber state transitions through latent factor embeddings, enabling dynamic performance forecasting under varying N-replacement regimes.",
+  "primitives": [
+    {
+      "primitive_id": "6a815b2334772a2b_w0_g1",
+      "name": "2024 - Boulder2Vec Modeling Climber Perfor Ch.1 Grounded Operator",
+      "verbatim_quote": "Boulder2Vec: Modeling Climber Performances in Professional Bouldering Competitions Ethan Baron, Victor Hau, Zeke Weng University of Toronto Sports Analytics Student Group September 2024",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6a815b2334772a2b_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6a815b2334772a2b_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6a815b2334772a2b_w0_g2",
+      "name": "2024 - Boulder2Vec Modeling Climber Perfor Ch.1 Grounded Operator",
+      "verbatim_quote": "1 Introduction In the past decade, sport climbing has grown to be a popular pastime due to its social, physical and mental stimulation.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6a815b2334772a2b_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6a815b2334772a2b_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6a815b2334772a2b_w0_g3",
+      "name": "2024 - Boulder2Vec Modeling Climber Perfor Ch.1 Grounded Operator",
+      "verbatim_quote": "This growth has been bolstered by its recent addition to the Summer Olympics in three formats: bouldering, speed and lead.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6a815b2334772a2b_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6a815b2334772a2b_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "p1_boulder_success_model",
+      "name": "Boulder Success Probability Model",
+      "verbatim_quote": "Specifically, the probability that climber i successfully completes problem j of type t in round r is: P(yij = 1) = σ(β0 + βr + βt + βi) (1) 3",
+      "page": 4,
+      "latex": "P(y_{ij} = 1) = \\sigma(\\beta_0 + \\beta_r + \\beta_t + \\beta_i)",
+      "symbol_and_unit_ledger": "{'y_ij': 'binary outcome (1 if climber i succeeds on problem j, else 0)', 'σ': 'logistic function', 'β₀': 'global intercept', 'βᵣ': 'round-specific coefficient (qualifier/semi-final/final)', 'βₜ': 'problem-type coefficient (top/zone)', 'βᵢ': 'climber-specific skill parameter'}",
+      "assumptions": "Independence of observations, linearity in logit space, fixed-effect modeling of categorical variables.",
+      "breakdown_regime": "When climber attempts fewer than N problems, βᵢ is not estimated due to insufficient data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian skill rating system where βᵢ corresponds to a climber's posterior mean ability score under conjugate priors.",
+        "source_operator": "p1_boulder_success_model",
+        "telemetry": "Predicted success rate vs actual performance deviation"
+      }
+    },
+    {
+      "primitive_id": "p2_problem_type_distinction",
+      "name": "Problem Type Distinction Principle",
+      "verbatim_quote": "In our work, we consider reaching the \"top\" and \"zone\" holds on a given problem to be two distinct boulder problems.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Top and zone holds represent independent performance challenges within same physical structure.",
+      "breakdown_regime": "When both top and zone attempts are missing for a climber, no distinction can be made.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables dual problem encoding in GSE’s action-state transition graph, allowing separate evaluation of technical vs tactical skills.",
+        "source_operator": "p2_problem_type_distinction",
+        "telemetry": "Separate success rates for top vs zone holds per climber"
+      }
+    },
+    {
+      "primitive_id": "p3_climber_embedding_space",
+      "name": "Climber Embedding Space",
+      "verbatim_quote": "(a) (b) Figure 1: Distribution of number of climbers per problem (a) and climber heights (b).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Latent vector representations capture multi-dimensional aspects of climber capability.",
+      "breakdown_regime": "Sparse data leads to underfitting when few climbers attempt many problems.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE’s internal actor embedding space used for predicting future performance based on historical patterns.",
+        "source_operator": "p3_climber_embedding_space",
+        "telemetry": "Cosine similarity between climber embeddings vs observed match outcomes"
+      }
+    },
+    {
+      "primitive_id": "p4_replacement_level_threshold",
+      "name": "Replacement Level Threshold",
+      "verbatim_quote": "To prevent overfitting, we only learn a climber-specific coefficient for climbers with at least N problems attempted in the training set.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'minimum number of attempts required to estimate βᵢ'}",
+      "assumptions": "Minimum sample size ensures stable estimation of individual climber skill parameters.",
+      "breakdown_regime": "Below threshold N, climber skill is pooled into global average.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to define minimum training cohort size before assigning personalized state vectors.",
+        "source_operator": "p4_replacement_level_threshold",
+        "telemetry": "Number of climbers with βᵢ estimates vs total climbers in dataset"
+      }
+    },
+    {
+      "primitive_id": "accuracy_score",
+      "name": "Classification Accuracy Metric",
+      "verbatim_quote": "and false negatives FN to calculate accuracy and F1 score as follows: Accuracy = TP + TN TP + TN + FP + FN (4) F1 Score = 2 ∗TP 2 ∗TP + FP + FN (5) For these two metrics, a higher score indicates better performance.",
+      "page": 7,
+      "latex": "Accuracy = \\frac{TP + TN}{TP + TN + FP + FN}",
+      "symbol_and_unit_ledger": "{'TP': 'True Positives (dimensionless)', 'TN': 'True Negatives (dimensionless)', 'FP': 'False Positives (dimensionless)', 'FN': 'False Negatives (dimensionless)'}",
+      "assumptions": "Binary classification assumption; balanced class distribution assumed for meaningful interpretation.",
+      "breakdown_regime": "When TP + TN approaches zero, accuracy becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian posterior update where accuracy reflects likelihood alignment with observed climber outcomes.",
+        "source_operator": "accuracy_score",
+        "telemetry": "Observed proportion of correct predictions across all climber attempts."
+      }
+    },
+    {
+      "primitive_id": "brier_score",
+      "name": "Probabilistic Calibration Score",
+      "verbatim_quote": "For these two metrics, a lower value indicates better performance.",
+      "page": 7,
+      "latex": "Brier Score = \\frac{1}{|D|} \\sum_{(i,j) \\in D} (\\hat{y}_{ij} - y_{ij})^2",
+      "symbol_and_unit_ledger": "{'D': 'Dataset of problem attempts (dimensionless)', 'y_ij': 'Observed outcome (0 or 1)', 'ŷ_ij': 'Predicted probability (0 to 1)'}",
+      "assumptions": "Predictions are probabilistic; outcomes are binary.",
+      "breakdown_regime": "Brier score diverges when predictions are highly confident yet incorrect.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to assess calibration of climber skill estimates over time.",
+        "source_operator": "brier_score",
+        "telemetry": "Mean squared error between predicted and actual success probabilities."
+      }
+    },
+    {
+      "primitive_id": "roc_auc",
+      "name": "Receiver Operating Characteristic Area Under Curve",
+      "verbatim_quote": "Lastly, we calculate the ROC score as the area under the receiver-operator curve of true positive rate against false positive rate.",
+      "page": 7,
+      "latex": "ROC = \\int_{0}^{1} TPR(FPR) dFPR",
+      "symbol_and_unit_ledger": "{'TPR': 'True Positive Rate (dimensionless)', 'FPR': 'False Positive Rate (dimensionless)'}",
+      "assumptions": "Threshold-based decision boundary exists; ROC assumes monotonicity of TPR vs FPR.",
+      "breakdown_regime": "Undefined when TPR/FPR cannot be computed due to degenerate cases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s ability to distinguish climber skill levels across thresholds using discriminative power.",
+        "source_operator": "roc_auc",
+        "telemetry": "Area under ROC curve indicating classifier discrimination capability."
+      }
+    },
+    {
+      "primitive_id": "pmf_latent_factors",
+      "name": "Probabilistic Matrix Factorization Latent Dimensions",
+      "verbatim_quote": "For low replacement levels, the PMF models with d = 2 latent factors exhibit the best performance on the test sets.",
+      "page": 8,
+      "latex": "M = UV^T",
+      "symbol_and_unit_ledger": "{'M': 'User-item interaction matrix (dimensionless)', 'U': 'User latent factor matrix (rows = climbers, cols = latent dims)', 'V': 'Item latent factor matrix (rows = problems, cols = latent dims)', 'd': 'Number of latent factors (dimensionless)'}",
+      "assumptions": "Low-rank approximation holds; latent factors capture hidden skill structures.",
+      "breakdown_regime": "Overfitting occurs when d exceeds optimal number of effective climber features.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to simulate climber evolution and performance shifts via latent space interpolation.",
+        "source_operator": "pmf_latent_factors",
+        "telemetry": "Test-set performance stability with increasing d up to d=2 before degradation."
+      }
+    },
+    {
+      "primitive_id": "pmf_problem_embedding",
+      "name": "Problem Latent Vector Factorization",
+      "verbatim_quote": "4.3 Analysis of PMF Problem Embeddings As with the climber embeddings, we focus on the case of N = 100 and d = 2 and use PCA to interpret the variance in the PMF-generated problem embeddings.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "N: Number of latent factors (dimensionless), d: Reduced dimensionality via PCA (dimensionless)",
+      "assumptions": "Success probability is governed by the inner product of low-dimensional latent vectors; the underlying manifold exhibits sufficient variance concentration to be approximated by d=2.",
+      "breakdown_regime": "Regime breakdown occurs when problem design introduces highly non-local topological features that cannot be captured by global latent factors, or when sample sizes per problem fall below the identifiability threshold of the PMF.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's event-difficulty latent space, mapping discrete hold geometries to continuous probabilistic difficulty surfaces.",
+        "source_operator": "pmf_problem_embedding",
+        "telemetry": "Proportion of variance explained by the first two principal components of the problem embedding matrix."
+      }
+    },
+    {
+      "primitive_id": "difficulty_manifold_projection",
+      "name": "Difficulty Manifold Projection",
+      "verbatim_quote": "Clearly, the PMF embeddings have learned to distinguish between problems based on their difficulty, including separating zones from tops.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "p_z: Probability of reaching the zone (dimensionless), p_t: Probability of topping the problem (dimensionless)",
+      "assumptions": "Zone and top successes represent distinct but correlated skill thresholds that manifest as separable clusters within the low-dimensional latent space.",
+      "breakdown_regime": "Fails if problem setters intentionally design 'trick' problems where reaching the zone requires extreme specialized skills unrelated to the final sequence, breaking the monotonicity of the difficulty manifold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives a kernel metric for GSE situational awareness, allowing the engine to cluster historical problems by partial-success rates.",
+        "source_operator": "difficulty_manifold_projection",
+        "telemetry": "Silhouette score of zone vs. top clusters in the 2D PCA projection."
+      }
+    },
+    {
+      "primitive_id": "layout_variance_capture",
+      "name": "Layout Variance Capture",
+      "verbatim_quote": "We hypothesize that both principal components capture aspects of the problem's unique layout that independently contribute to its difficulty.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "PC_1: First principal component capturing maximum layout variance (dimensionless), PC_2: Second principal component capturing orthogonal layout variance (dimensionless)",
+      "assumptions": "The geometric complexity of a boulder problem can be decomposed into independent orthogonal axes of difficulty (e.g., power vs. technique).",
+      "breakdown_regime": "Breaks down in highly degenerate datasets where all problems share a single dominant movement pattern, causing PC_2 to capture noise rather than meaningful structural variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's multi-factor risk models, treating biomechanical layout constraints as independent stochastic drivers of athlete failure.",
+        "source_operator": "layout_variance_capture",
+        "telemetry": "Eigenvalue ratio between PC_1 and PC_2 in the problem covariance matrix."
+      }
+    },
+    {
+      "primitive_id": "temporal_skill_drift",
+      "name": "Temporal Skill Drift Modeling",
+      "verbatim_quote": "Thirdly, the framework can be made more robust by explicitly accounting for timevarying effects such as aging to capture changes in climber skill sets over time.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "t: Discrete competition timestamp (dimensionless), \\theta(t): Time-varying latent skill vector (dimensionless)",
+      "assumptions": "Climber skill evolves continuously over time according to an underlying stochastic process (e.g., random walk or Ornstein-Uhlenbeck process) rather than remaining static.",
+      "breakdown_regime": "Singularities arise during extended competitive hiatuses (e.g., injury layoffs) where the assumed smooth temporal drift fails to capture abrupt skill degradation or re-acquisition.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Extends GSE state-transitions by introducing a time-decay kernel to latent skill vectors, enabling dynamic forecasting of future performance curves.",
+        "source_operator": "temporal_skill_drift",
+        "telemetry": "Autocorrelation of climber success rates across consecutive seasonal competitions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6a815b2334772a2b_t0",
+      "think": "Window 1 Synthesis: Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6a815b2334772a2b_t1",
+      "think": "Chapter 2 introduces a dual modeling approach combining logistic regression and probabilistic matrix factorization (PMF) to analyze bouldering performance. The logistic regression framework uses fixed effects for round, problem type, and climber-specific skill to predict success probabilities. This aligns with prior work in sports analytics, particularly Baron et al. (2023) who modeled cycling performance using similar techniques. The inclusion of 'top' and 'zone' holds as distinct problems doubles the dataset size but introduces correlation between these outcomes. The PMF component addresses data sparsity by learning latent embeddings for climbers and problems, enabling scalable inference even with sparse interaction matrices. The replacement level threshold N prevents overfitting by requiring sufficient attempts before estimating individual climber skill. This design choice reflects a balance between model complexity and generalizability. The framework supports both descriptive and predictive analytics, forming the foundation for GSI's Bayesian inference engine and GSE's situational reasoning modules. Window 2 Synthesis: Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in early sports analytics literature, particularly Baron et al. (2023) and Breuer (2022), which laid groundwork for structured athlete performance modeling using statistical frameworks. Retrocausal Genealogy (Window 2): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models assume rational actors optimizing within known constraints—climbers aim to maximize success probability given their skill and environmental factors like problem difficulty and competition stage. Theory of Mind (Window 2): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by treating top/zone as separate entities; leakage is mitigated through the replacement level threshold ensuring robustness against small-sample bias. Cross-Layer Veto (Window 2): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6a815b2334772a2b_t2",
+      "think": "Chapter 3 focuses on evaluating predictive models for bouldering performance using logistic regression and probabilistic matrix factorization (PMF). It introduces key metrics such as accuracy, F1 score, Brier score, log loss, and ROC AUC to quantify model effectiveness. These metrics are applied to compare how well each model generalizes across different replacement levels N and latent factor dimensions d. The analysis reveals that PMF models with d=2 latent factors perform optimally for low replacement levels, suggesting that multi-dimensional skill representations enhance predictive power. However, overfitting emerges when d increases beyond 2, particularly in smaller datasets. This insight supports the notion that model complexity must align with data availability. Additionally, the study correlates climber embedding principal components with known attributes like success rate and experience, reinforcing the validity of learned latent structures. The findings imply that climber skill can be effectively modeled through structured latent spaces, enabling robust forecasting under varying competitive conditions. Window 3 Synthesis: Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in classical machine learning evaluation frameworks, extended by modern probabilistic modeling techniques used in recommender systems and behavioral analytics. Retrocausal Genealogy (Window 3): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models account for climber variability through latent skill vectors, while coaches may interpret these as proxies for training intensity or physical aptitude. Theory of Mind (Window 3): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that climber embeddings do not redundantly encode similar traits; leakage veto prevents information leakage from future outcomes into current predictions. Cross-Layer Veto (Window 3): Rooted in 2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors (6a815b2334772a2b, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6a815b2334772a2b_t4",
+      "think": "The mathematical foundation of the Boulder2Vec primitive rests upon Probabilistic Matrix Factorization (PMF), which treats the observed binary success matrix of climbers and problems as a noisy realization of an underlying low-rank structure. By positing that both climbers and bouldering problems reside in a shared latent Euclidean space of dimension N, the model assumes the probability of success is a sigmoid function of the dot product between their respective embedding vectors. When constrained to d=2 via Principal Component Analysis (PCA), the high-dimensional variance is projected onto a planar manifold. The empirical observation that this 2D projection cleanly separates zones from tops implies that the primary axes of variance correspond to fundamental biomechanical thresholds. This is not merely dimensionality reduction; it is the discovery of a latent difficulty geometry. The hypothesis that principal components capture independent aspects of layout suggests an orthogonality in the physical demands of the sport—perhaps separating raw power requirements from complex spatial sequencing. Extending this to temporal domains requires shifting from static matrix factorization to dynamic factor analysis, where the latent vectors become time-dependent stochastic processes. Incorporating survival analysis further refines the likelihood function, moving beyond binary outcomes to model the hazard rate of success over multiple attempts, thereby extracting granular efficiency metrics from the same latent space.",
+      "retrocausal_genealogy": "This methodology inherits directly from the foundational work of Rendle et al. on PMF for recommender systems, later adapted to sports analytics by Baron et al.'s Bike2Vec framework. It represents a paradigm shift from traditional ELO ratings, which rely on scalar transitive ordering, to vector-based representations that capture multidimensional stylistic matchups. The lineage traces back to classical Item Response Theory (IRT) in psychometrics, but modernizes it through unsupervised deep learning embeddings, allowing for the discovery of non-obvious structural correlations in complex combinatorial athletic tasks.",
+      "theory_of_mind": "Modeling the opposing agents—climbers versus problem setters—requires viewing the competition as a zero-sum game played out in latent space. Coaches and setters implicitly attempt to maximize the distance between a specific climber's skill vector and the problem's difficulty vector. By analyzing the embeddings, we can infer the 'intent' of a problem setter: are they designing a problem that targets a specific weakness (e.g., poor reach) prevalent in the current field? Conversely, climbers adapt their training to minimize the angular distance to the centroid of upcoming problem types. The PMF embeddings thus serve as a proxy for the strategic mind games occurring before the competition even begins.",
+      "cross_layer_veto": "A critical veto condition arises if the latent dimensions become collinear with external confounders, such as the order of attempts or the specific day of the competition, rather than true biomechanical difficulty. If PC_1 simply correlates with 'problems set on Day 1' due to setter fatigue, the geometric interpretation collapses. Furthermore, leakage must be strictly vetted: if problem attributes (like those from Augste et al.) are used to post-hoc explain the embeddings without being part of the generative model, we risk circular reasoning. The model must remain agnostic to explicit categorical labels to ensure the discovered manifold is truly emergent from success patterns, not artificially induced by dataset biases."
+    }
+  ]
+}
