@@ -1,17 +1,17 @@
 {
   "schema": "gse.arxiv_and_sovereign_equation_synthesis.v1",
-  "generated_at_utc": "2026-11-14T11:35:27Z",
+  "generated_at_utc": "2026-11-14T12:08:15Z",
   "counts": {
-    "complete_sovereign_books": 635,
+    "complete_sovereign_books": 717,
     "refused_stub_books_fail_closed": 22,
     "gatekeeper_validation_failures": 0,
-    "total_sovereign_primitives": 7570,
-    "total_sovereign_reasoning_traces": 1939,
-    "total_pages_inspected": 36948,
-    "trainer_feed_records_emitted": 9509,
+    "total_sovereign_primitives": 8824,
+    "total_sovereign_reasoning_traces": 2264,
+    "total_pages_inspected": 40259,
+    "trainer_feed_records_emitted": 11088,
     "active_router_mask_bits": 276,
     "arxiv_program_unique_ids_indexed": 6183,
-    "sovereign_books_with_explicit_arxiv_id": 81
+    "sovereign_books_with_explicit_arxiv_id": 105
   },
   "context_mask_uint32_words_9": [
     4294967295,
@@ -25,42 +25,42 @@
     1048575
   ],
   "track_counts": {
-    "arxiv_and_preprints": 81,
+    "arxiv_and_preprints": 105,
     "football_coaching_rules_and_scouting": 10,
-    "graduate_math_stats_physics_textbooks": 500,
+    "graduate_math_stats_physics_textbooks": 558,
     "mit_sloan_jqas_nessis_conferences": 1,
     "nfl_war_and_fourth_down_decision": 4,
     "sports_psychology_and_cognition": 39
   },
   "six_situational_family_weights": {
     "pressure": {
-      "sovereign_primitives_count": 342,
-      "bounded_james_stein_weight": 0.173898,
+      "sovereign_primitives_count": 402,
+      "bounded_james_stein_weight": 0.174783,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_count": 1015,
-      "bounded_james_stein_weight": 0.177897,
+      "sovereign_primitives_count": 1145,
+      "bounded_james_stein_weight": 0.178133,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_count": 753,
-      "bounded_james_stein_weight": 0.177176,
+      "sovereign_primitives_count": 868,
+      "bounded_james_stein_weight": 0.177545,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_count": 718,
-      "bounded_james_stein_weight": 0.177041,
+      "sovereign_primitives_count": 829,
+      "bounded_james_stein_weight": 0.177432,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_count": 4171,
-      "bounded_james_stein_weight": 0.179484,
+      "sovereign_primitives_count": 4927,
+      "bounded_james_stein_weight": 0.179563,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_count": 571,
-      "bounded_james_stein_weight": 0.176295,
+      "sovereign_primitives_count": 653,
+      "bounded_james_stein_weight": 0.176752,
       "all_finite_non_nan": true
     }
   },
@@ -126,9 +126,9 @@
     "partition_tier_summary": {
       "0..3|tier_A": {
         "total": 110,
-        "completed_or_extracted": 95,
-        "pending_unextracted": 12,
-        "pending_with_local_file": 12
+        "completed_or_extracted": 99,
+        "pending_unextracted": 8,
+        "pending_with_local_file": 8
       },
       "0..3|tier_B": {
         "total": 835,
@@ -146,9 +146,9 @@
       },
       "4..7|tier_B": {
         "total": 814,
-        "completed_or_extracted": 469,
-        "pending_unextracted": 345,
-        "pending_with_local_file": 345
+        "completed_or_extracted": 551,
+        "pending_unextracted": 263,
+        "pending_with_local_file": 263
       },
       "4..7|tier_C": {
         "total": 3347,
@@ -170,7 +170,7 @@
     },
     "shard_4to7_tier_a_remaining_with_file": 0,
     "shard_4to7_tier_a_remaining_preview": [],
-    "shard_4to7_tier_b_pending_candidates_count": 345,
+    "shard_4to7_tier_b_pending_candidates_count": 263,
     "shard_4to7_tier_b_pending_candidates": [
       {
         "book_id": "591d1c3f6efeb8d1",
@@ -197,297 +197,297 @@
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5eb98bd06d3dc782",
-        "title": "2025 - Pairwise-Elo rating system - Wong et al",
-        "file_name": "2025 - Pairwise-Elo rating system - Wong et al.pdf",
+        "book_id": "686794dde520ea77",
+        "title": "openalex_W3207926413",
+        "file_name": "openalex_W3207926413.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5ed4fe6f9aa33760",
-        "title": "2024 - Exploring various NBA draft value curves - Bewtra et al",
-        "file_name": "2024 - Exploring various NBA draft value curves - Bewtra et al.pdf",
+        "book_id": "687dc667560bcd02",
+        "title": "TP2",
+        "file_name": "TP2.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5ee57b9123cd8326",
-        "title": "arxiv_2105.09397v1",
-        "file_name": "arxiv_2105.09397v1.pdf",
+        "book_id": "6899aaffefe64f78",
+        "title": "2025 - Evaluating NBA Player Consistency through GARCH Modeling - Unknown Authors",
+        "file_name": "2025 - Evaluating NBA Player Consistency through GARCH Modeling - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5f03577e2f6e753b",
-        "title": "openalex_W2795704304",
-        "file_name": "openalex_W2795704304.pdf",
+        "book_id": "68d64c16fc0e4f26",
+        "title": "openalex_W2605539036",
+        "file_name": "openalex_W2605539036.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5f1cc6f3fda5e2e3",
-        "title": "2012 - Foreign Player Quota, Experience and Efficiency of Basketball Players - Unknown Authors",
-        "file_name": "2012 - Foreign Player Quota, Experience and Efficiency of Basketball Players - Unknown Authors.pdf",
+        "book_id": "69108746fe09025c",
+        "title": "prob-weber",
+        "file_name": "prob-weber.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5f33c287391e8cf0",
-        "title": "arxiv_1003.0134v2",
-        "file_name": "arxiv_1003.0134v2.pdf",
+        "book_id": "6914cf0b281bf375",
+        "title": "arxiv_1802.00998v2",
+        "file_name": "arxiv_1802.00998v2.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5f4231bda273d39e",
-        "title": "ALPACA+SECURITIES+LLC++OPTIONS+AGREEMENT (1)",
-        "file_name": "ALPACA+SECURITIES+LLC++OPTIONS+AGREEMENT (1).pdf",
+        "book_id": "6919bd8b24f743fe",
+        "title": "2302.09276",
+        "file_name": "2302.09276.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5f45ed595c6a135e",
-        "title": "openalex_W3168261381",
-        "file_name": "openalex_W3168261381.pdf",
+        "book_id": "69518f1dd0ab797f",
+        "title": "2604.26099v1",
+        "file_name": "2604.26099v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5f7f88a3f9e976fb",
-        "title": "arxiv_2206.02373v2",
-        "file_name": "arxiv_2206.02373v2.pdf",
+        "book_id": "695819b8f2998e03",
+        "title": "arxiv_2109.14306v1",
+        "file_name": "arxiv_2109.14306v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5f83de6a28a14bb8",
-        "title": "arxiv_2104.11747v1",
-        "file_name": "arxiv_2104.11747v1.pdf",
+        "book_id": "69906c6aaf6d1d84",
+        "title": "openalex_W54941906",
+        "file_name": "openalex_W54941906.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5f84cae3d10771f3",
-        "title": "2019 - Estimating (four) Factor Values inthe NBA A Seemingly Unrelated Regression Analysis - Unknown Authors",
-        "file_name": "2019 - Estimating (four) Factor Values inthe NBA A Seemingly Unrelated Regression Analysis - Unknown Authors.pdf",
+        "book_id": "69a3c8118577f001",
+        "title": "openalex_W2688838357",
+        "file_name": "openalex_W2688838357.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5f945e91dc849689",
-        "title": "2024 - Understanding the Relationship Between Mental Health Literacy and Grit in a Sample of High School Female Athletes - Hone",
-        "file_name": "2024 - Understanding the Relationship Between Mental Health Literacy and Grit in a Sample of High School Female Athletes - Hone.pdf",
+        "book_id": "69a7b72739c6e6e5",
+        "title": "openalex_W4394593159",
+        "file_name": "openalex_W4394593159.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5fae8dd754061d0c",
-        "title": "openalex_W4306746417",
-        "file_name": "openalex_W4306746417.pdf",
+        "book_id": "69b5647798161860",
+        "title": "arxiv_2206.13785v1",
+        "file_name": "arxiv_2206.13785v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5fb88571fd390733",
-        "title": "Pearson-1892-GrammarOfScience",
-        "file_name": "Pearson-1892-GrammarOfScience.pdf",
+        "book_id": "69b5ccc8d58d5467",
+        "title": "Boole-1854-LawsOfThought",
+        "file_name": "Boole-1854-LawsOfThought.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "5fba6f765ea8cc2f",
-        "title": "openalex_W7204801053",
-        "file_name": "openalex_W7204801053.pdf",
+        "book_id": "6a022f28c20021a6",
+        "title": "PVLDB26-song",
+        "file_name": "PVLDB26-song.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "6026c2907e9b56de",
-        "title": "2022 - Hot Hand Fallacy, Fallacy, Fallacy - Babitz",
-        "file_name": "2022 - Hot Hand Fallacy, Fallacy, Fallacy - Babitz.pdf",
+        "book_id": "6a02aaa0a2b9cb6f",
+        "title": "YiPadalinoChinMontenigroCantu_CSMR_2013",
+        "file_name": "YiPadalinoChinMontenigroCantu_CSMR_2013.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "603de7f254ed0807",
-        "title": "arxiv_1906.02042v2",
-        "file_name": "arxiv_1906.02042v2.pdf",
+        "book_id": "6a0dab6b2e7ad00d",
+        "title": "2022 - cricWAR A reproducible system for evaluating player performance in limited-overs cricket - Unknown Authors",
+        "file_name": "2022 - cricWAR A reproducible system for evaluating player performance in limited-overs cricket - Unknown Authors.pdf",
+        "primary_domain": "history",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "6a167ef603f58ec2",
+        "title": "arxiv_2410.11582v1",
+        "file_name": "arxiv_2410.11582v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "604506b2c04ac734",
-        "title": "arxiv_2304.05170v2",
-        "file_name": "arxiv_2304.05170v2.pdf",
+        "book_id": "6a6a2322b8e5e53b",
+        "title": "2019 - Winning Isn t Everything A contextual analysis of hockey face-offs - Unknown Authors",
+        "file_name": "2019 - Winning Isn t Everything A contextual analysis of hockey face-offs - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "605e2929005646d9",
-        "title": "openalex_W194495087",
-        "file_name": "openalex_W194495087.pdf",
+        "book_id": "6a7cf8988974a595",
+        "title": "2602.00676v1",
+        "file_name": "2602.00676v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "607b59fccaa342ef",
-        "title": "openalex_W2289890159",
-        "file_name": "openalex_W2289890159.pdf",
+        "book_id": "6a815b2334772a2b",
+        "title": "2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors",
+        "file_name": "2024 - Boulder2Vec Modeling Climber Performances in Professional Bouldering Competitions - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "609022cbe3f65f11",
-        "title": "arxiv_1906.01760v3",
-        "file_name": "arxiv_1906.01760v3.pdf",
+        "book_id": "6abe7381f97e782c",
+        "title": "openalex_W3016139316",
+        "file_name": "openalex_W3016139316.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "60921c2a1629f871",
-        "title": "arxiv_2403.15712v1",
-        "file_name": "arxiv_2403.15712v1.pdf",
+        "book_id": "6b1a776670cd2d96",
+        "title": "2012 - Comparing and Forecasting Performances in Different Events of Athletics Using a Probabilistic Model - Unknown Authors",
+        "file_name": "2012 - Comparing and Forecasting Performances in Different Events of Athletics Using a Probabilistic Model - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "60a20cf60b5ac81a",
-        "title": "openalex_W4295689624",
-        "file_name": "openalex_W4295689624.pdf",
+        "book_id": "6b386b5225a8a29a",
+        "title": "2013 - Going for Three Predicting the Likelihood of Field Goal Success with Logistic Regression - Unknown Authors",
+        "file_name": "2013 - Going for Three Predicting the Likelihood of Field Goal Success with Logistic Regression - Unknown Authors.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "60bc1115d0e5b276",
-        "title": "arxiv_2507.10172v1",
-        "file_name": "arxiv_2507.10172v1.pdf",
+        "book_id": "6b9fd9878c622307",
+        "title": "arxiv_2105.01226v1",
+        "file_name": "arxiv_2105.01226v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "60edfd81a58ad580",
-        "title": "openalex_W4415110710",
-        "file_name": "openalex_W4415110710.pdf",
+        "book_id": "6bb3c47bff475349",
+        "title": "Predicting_college_basketball_match_outc",
+        "file_name": "Predicting_college_basketball_match_outc.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "60f157643a318bf4",
-        "title": "openalex_W3205709908",
-        "file_name": "openalex_W3205709908.pdf",
+        "book_id": "6bca8c489773d76e",
+        "title": "arxiv_2607.17151v1",
+        "file_name": "arxiv_2607.17151v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "6128662f723908a0",
-        "title": "p26",
-        "file_name": "p26.pdf",
+        "book_id": "6bd285033e0b79f6",
+        "title": "Depth_of_Player_Rotation_on_Game_Perform",
+        "file_name": "Depth_of_Player_Rotation_on_Game_Perform.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "61318c29e76d59f5",
-        "title": "2309.09089v2",
-        "file_name": "2309.09089v2.pdf",
+        "book_id": "6becd1d446d3bc54",
+        "title": "HernanRobins-2020-CausalInferenceWhatIf",
+        "file_name": "HernanRobins-2020-CausalInferenceWhatIf.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "613b59a971872b1b",
-        "title": "2022 - Creating a Better Pythagorean Expectation for Basketball - Zhuang et al",
-        "file_name": "2022 - Creating a Better Pythagorean Expectation for Basketball - Zhuang et al.pdf",
+        "book_id": "6bff9f0624897176",
+        "title": "Document (2)",
+        "file_name": "Document (2).pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "614f72135f6c9324",
-        "title": "2026 - The Effect of Bio-Banding On Talent Identification in Youth Soccer A Systematic Review - Han et al",
-        "file_name": "2026 - The Effect of Bio-Banding On Talent Identification in Youth Soccer A Systematic Review - Han et al.pdf",
+        "book_id": "6c06b1663d4e2a90",
+        "title": "openalex_W2593564570",
+        "file_name": "openalex_W2593564570.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "6162a61955af283a",
-        "title": "openalex_W7172529474",
-        "file_name": "openalex_W7172529474.pdf",
+        "book_id": "6c0d782dfd66f276",
+        "title": "arxiv_2602.15181v1",
+        "file_name": "arxiv_2602.15181v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "61839cf10d64080c",
-        "title": "arxiv_2006.13458v1",
-        "file_name": "arxiv_2006.13458v1.pdf",
+        "book_id": "6c19525afe23ffc1",
+        "title": "openalex_W4395065336",
+        "file_name": "openalex_W4395065336.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "61a43f8e980cd299",
-        "title": "2024 - The coach's dilemma how a yellow card can change the course of a match - Unknown Authors",
-        "file_name": "2024 - The coach's dilemma how a yellow card can change the course of a match - Unknown Authors.pdf",
+        "book_id": "6c2cc9844eab7827",
+        "title": "vmls",
+        "file_name": "vmls.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "61e0c338108dff38",
-        "title": "2026 - Interpretable Prediction and Large-Scale Analysis of Judging in Professional Boxing - duBoef et al",
-        "file_name": "2026 - Interpretable Prediction and Large-Scale Analysis of Judging in Professional Boxing - duBoef et al.pdf",
+        "book_id": "6c3fe30efa5ed10f",
+        "title": "arxiv_2602.13772v1",
+        "file_name": "arxiv_2602.13772v1.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "62455e19d17441bf",
-        "title": "2011 The Price of Anarchy in Basketball",
-        "file_name": "2011 The Price of Anarchy in Basketball.pdf",
-        "primary_domain": "other",
+        "book_id": "6c50f3fee1f7496e",
+        "title": "Clemente-Ed-2022-Training-Load-WellBeing-Readiness-MDPI",
+        "file_name": "Clemente-Ed-2022-Training-Load-WellBeing-Readiness-MDPI.pdf",
+        "primary_domain": "physiology",
         "tier": "B",
         "file_size_mb": 0.0
       },
       {
-        "book_id": "624ff8b1286ead3f",
-        "title": "Bertsekas-2020-RolloutPolicyIterationAndDistributedRL",
-        "file_name": "Bertsekas-2020-RolloutPolicyIterationAndDistributedRL.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.0
-      },
-      {
-        "book_id": "6295e57f14301b5e",
-        "title": "2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors",
-        "file_name": "2018 - An Open-Sourced Optical Tracking and Advanced eSports Analytics Platform for League of Legends - Unknown Authors.pdf",
+        "book_id": "6c692b1a835acfaa",
+        "title": "2019 DeepHoops - Evaluating Micro-Actions in Basketball Using Deep Feature Representations - Sicilia, Pelechrinis, Goldsberry",
+        "file_name": "2019 DeepHoops - Evaluating Micro-Actions in Basketball Using Deep Feature Representations - Sicilia, Pelechrinis, Goldsberry.pdf",
         "primary_domain": "other",
         "tier": "B",
         "file_size_mb": 0.0

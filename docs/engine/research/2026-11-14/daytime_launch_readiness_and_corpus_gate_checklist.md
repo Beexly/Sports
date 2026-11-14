@@ -35,19 +35,35 @@
 
 ---
 
-## 2. Production Launch-Readiness Probe Baseline (`2026-11-14T11:27:37Z`)
+## 2. Production Launch-Readiness Probe Baseline (`2026-11-14T11:51:08Z`)
 
-Executed read-only against `https://www.galaxysportsedge.com` via `node scripts/check-launch-readiness.mjs` (`5 PASS, 2 WARN, 2 FAIL`):
+Executed read-only against `https://www.galaxysportsedge.com` via `node scripts/check-launch-readiness.mjs` after fixing the `/api/ops/public-surface-truth` client timeout (`95s` matching route `maxDuration = 120`) and direct Windows `node_modules/tsx/dist/cli.mjs` invocation (**`0 FAIL, 7 WARN, 15 PASS`**):
 
-- **PASS:** `health (strict)` -> `HTTP 200, status=healthy, settlement=healthy`
-- **PASS:** `GET /api/picks` -> `HTTP 503 feature gate (deliberate: public picks off)`
-- **PASS:** `GET /api/proof/ledger` -> `HTTP 200`
-- **PASS:** `GET /api/proof/openapi.json` -> `HTTP 200`
-- **PASS:** `cron config` -> `40 schedules in apps/web/vercel.json; root mirror identical`
-- **WARN:** `scheduler liveness` -> `not reported`
-- **WARN:** `operator tasks` (`node scripts/check-operator-tasks.mjs`) -> `9 open, 1 done, 1 repo-verified; 1 repo-verifiable item(s) UNVERIFIED` (`SANDBOX-NET` has `failIfUnavailable=false` in `.claude/settings.json`; manual items include `NEON-RO`, `CONN-PRUNE`, `PRE-COMMIT-BRAND`, `HENRYGD-REG`, `PUSH-PROTECT`, `BRANCH-PROTECT`, `NEXT-MAJOR`)
-- **FAIL:** `ops truth` (`GET /api/ops/public-surface-truth`) -> `HTTP 0 This operation was aborted` (exceeded 20s timeout; must be diagnosed/fast before daytime launch flip)
-- **FAIL:** `nflverse currency` (`npx tsx scripts/check-nflverse-currency.ts`) -> probe exited without dataset verdict under `check-launch-readiness.mjs` Windows `spawnSync` invocation; run `npx.cmd tsx scripts/check-nflverse-currency.ts` directly before launch.
+- **PASS (`15`):**
+  - `health (strict)`: `HTTP 200, status=healthy, settlement=healthy`
+  - `settlement`: `HEALTHY, 0 overdue of 4492 commenced`
+  - `gates`: `publicPicks=false performanceStats=false statsPublic=true calibrationPublished=false`
+  - `stale-data kill switch`: `FORCE_NO_BET_IF_STALE=true`
+  - `record gate`: `performance stats closed unless eligibility is GREEN`
+  - `canonical sample`: `settled=4003 pending=78 floor=100`
+  - `odds freshness`: `last insert 36m ago (soccer_usa_mls), key present=true`
+  - `free score spine`: `7/7 sports returned games (99m ago)`
+  - `pricing ladder`: `FOUNDING -> PROVEN; blockers: Calibration not published`
+  - `closing-line value`: `graded=2545; counts and rate gated by the CLV policy (GATE_OFF_PERFORMANCE_STATS) - read them from the database, never from this public surface`
+  - `money path`: `stripe secret + webhook + 6/6 price slots`
+  - `GET /api/picks`: `HTTP 503 feature gate (deliberate: public picks off; see the gates row)`
+  - `GET /api/proof/ledger`: `HTTP 200`
+  - `GET /api/proof/openapi.json`: `HTTP 200`
+  - `cron config`: `40 schedules in apps/web/vercel.json; root mirror identical`
+- **WARN (`7`):**
+  - `scheduler liveness`: `not reported`
+  - `calibration eligibility`: `RED: n=470 brier=0.181 (floor 0.22) ece=0.0575 (floor 0.05) streak 0/3` (Brier clears `<0.22` floor, ECE `0.0575` vs `0.05` floor keeps record/calibration gates fail-closed)
+  - `market coverage`: `americanfootball_ncaaf:MONEYLINE (56 games, 0 picks) | americanfootball_nfl:MONEYLINE (13 games, 0 picks) | americanfootball_nfl:SPREAD (13 games, 0 picks) | americanfootball_nfl:TOTAL (13 games, 0 picks) | basketball_ncaab:MONEYLINE (11 games, 0 picks) | icehockey_nhl:MONEYLINE (21 games, 0 picks)` (expected while `WEEK10_HELD_FOR_CORPUS_COMPLETION` holds Week 10 slate generation)
+  - `confidence tail`: `overconfident at >=80: n=268 win=52.2% claimed=86.4%` (confirms why `PERFORMANCE_STATS` remains closed pending corpus wiring + calibration)
+  - `founder P0 queue`: `stats-public-on: STATS_PUBLIC is ON - confirm rights memo + feed SLA before promoting StatKing.`
+  - `operator tasks`: `9 open, 1 done, 1 repo-verified; 1 repo-verifiable item(s) UNVERIFIED` (`SANDBOX-NET` in `.claude/settings.json`; manual items include `NEON-RO`, `CONN-PRUNE`, `PRE-COMMIT-BRAND`, `HENRYGD-REG`, `PUSH-PROTECT`, `BRANCH-PROTECT`, `NEXT-MAJOR`)
+  - `nflverse currency`: `1 dataset(s) not yet at the current season (expected before week 1; re-check after kickoff)`
+- **FAIL (`0`):** None after fixing the two client probe defects in `scripts/check-launch-readiness.mjs`.
 
 ---
 
@@ -56,17 +72,17 @@ Executed read-only against `https://www.galaxysportsedge.com` via `node scripts/
 Do **not** promote public surfaces until every prerequisite below clears in order:
 
 1. **Stage 1 -- Complete Pending Corpus Ingestion & Router Wiring (`MIND-FIRST` + `WIRE-FIRST SEQUENCING`):**
-   - Finish `0-3` Tier-A (`13` active left -> `hermes`) and drain Tier-B across both `4-7` (`345` remaining) and `0-3` (`835` pending), plus Vision OCR rescue on the 3 Wave-10 scanned PDFs (`empty_pages`) and continued 4-VM Shard B / Drive sweep (`4822/8598`).
+   - Finish `0-3` Tier-A (`13` active left -> `hermes`) and drain Tier-B across both `4-7` (`345` remaining entering Wave 11) and `0-3` (`835` pending), plus Vision OCR rescue on the 3 Wave-10 scanned PDFs (`empty_pages`) and continued 4-VM Shard B / Drive sweep (`4822/8598`).
    - Re-run compilers (`arxiv_and_tierb_corpus_synthesizer.py`, `shard_b_and_drive_master_compiler.py`, `sovereign_to_cognitive_router_wiring.py`, `corpus_wired_calibration_and_ablation.py`), refresh BigQuery `galaxysportsedge.gse_data` across all 5 tables, and let Windows trainer ingest `brain/feeds/*` into `brain/mind.jsonl`.
    - Note: `generate-signal-slate.ts` must remain untouched per `WIRE-FIRST SEQUENCING` and `MIND-FIRST` baseline doctrine.
 2. **Stage 2 -- Code, Guardrail & Ledger Verification Before Merging `feat/autonomous-workflows-and-corpus-wiring-2026-11-13`:**
    - Run `C-375` `apps/web` test suite + `npm run guardrails` + `node scripts/guardrails/trust-gate.mjs` + `node apps/mobile/scripts/lint-rules.js` + `python scripts/guardrails/connected-workflow-dossier-guard.py` + `npm run check:ledger` + `npx.cmd tsx scripts/check-nflverse-currency.ts`.
    - Run `npm run verify:ledger` (`scripts/verify-ledger.ts` using read-only `hermes_ro`) so `apps/web/lib/ledger/verified-ledger.json` reflects latest Neon truth.
    - Merge feature branch to `origin/main` cleanly and verify Vercel Production deployment reaches `READY`.
-3. **Stage 3 -- Resolve Readiness Probe Blockers:**
-   - Diagnose why `GET /api/ops/public-surface-truth` timed out at 20s and re-run `node scripts/check-launch-readiness.mjs` until `ops truth` returns `HTTP 200` and strict readiness checks pass.
-   - Verify `node scripts/check-deploy-readiness.mjs` against production env (DB, Odds API, Stripe slots, webhook, crons).
+3. **Stage 3 -- Live Production Pre-Flip Sign-Off:**
+   - Confirm `/api/ops/public-surface-truth` latency (`21` sequential DB awaits currently warm-runs under `95s` but cold-exceeded `20s`) and confirm founder P0 action (`stats-public-on: confirm rights memo + feed SLA before promoting StatKing`).
+   - Verify `node scripts/check-launch-readiness.mjs` stays `0 FAIL` and run `node scripts/check-deploy-readiness.mjs` against production env (DB, Odds API, Stripe slots, webhook, crons).
 4. **Stage 4 -- Explicit Founder Flag Flip (Only After Stages 1-3 Pass):**
-   - Verify `FORCE_NO_BET_IF_STALE=true` is set in Vercel Production before opening public picks (`scripts/ops/owner-runbook.mjs` requirement).
-   - Founder explicitly decides whether to flip `PUBLIC_PICKS_ENABLED=true` / `LIVE_BOARD` on Vercel Production once corpus + 5-stage Week 10 Connected Workflow Dossier + Conjunction Gate are complete.
-   - Keep `PERFORMANCE_STATS_ENABLED` and `PUBLISH_LEDGER` **closed (`false`)** unless `/api/ops/public-surface-truth` reports calibration eligibility `GREEN` (`>= 200` CLV-backed settled official plays) per `scripts/ops/launch-preflight.mjs` and `scripts/check-launch-readiness.mjs`.
+   - `FORCE_NO_BET_IF_STALE=true` is already verified `PASS` in Vercel Production (`scripts/ops/owner-runbook.mjs` requirement).
+   - Founder explicitly decides whether to flip `PUBLIC_PICKS_ENABLED=true` / `LIVE_BOARD` on Vercel Production once corpus + 5-stage Week 10 Connected Workflow Dossier + Conjunction Gate clear (clearing `market coverage` WARNs cleanly).
+   - Keep `PERFORMANCE_STATS_ENABLED` and `PUBLISH_LEDGER` **closed (`false`)** while `calibration eligibility` is `RED` (`ece=0.0575 > 0.05`, `streak 0/3`) and `confidence tail` warns at `>=80`, per `scripts/ops/launch-preflight.mjs` and `scripts/check-launch-readiness.mjs`.

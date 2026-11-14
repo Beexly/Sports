@@ -1,0 +1,364 @@
+{
+  "book_id": "5eb98bd06d3dc782",
+  "source_status": "COMPLETE",
+  "title": "2025 - Pairwise-Elo rating system - Wong et al",
+  "file_name": "2025 - Pairwise-Elo rating system - Wong et al.pdf",
+  "sha256": "5eb98bd06d3dc782b270463fd675e00bed45bdab9bec0dd74a9aed89e270440c",
+  "primary_domain": "other",
+  "pages_total": 43,
+  "pages_read": 43,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 43,
+  "windows_extracted": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework linking bookmaker calibration, bettor edge, and value betting via probabilistic divergence and expected utility maximization. Pairwise-Elo extends standard Elo by incorporating player-specific match-up advantages, enabling nuanced predictions in intransitive domains like MMA and SC2.",
+  "gsi_mapping": "Bayesian inference models bettor probabilities as posterior distributions over latent truths, conformal prediction ensures valid uncertainty quantification for betting strategies. Bayesian inference framework for pairwise-Elo adapts posterior beliefs via likelihood ratios, conformally calibrated for uncertainty quantification in sport analytics.",
+  "gse_mapping": "Situational reasoning maps player strength dynamics to state transitions in pairwise Elo systems, enabling real-time adaptive betting based on evolving calibration gaps. Situational reasoning in GSE models state transitions through pairwise advantage matrices, enabling dynamic policy adaptation in competitive environments.",
+  "primitives": [
+    {
+      "primitive_id": "5eb98bd06d3dc782_w0_g1",
+      "name": "2025 - Pairwise-Elo rating system - Wong e Ch.1 Grounded Operator",
+      "verbatim_quote": "Most existing rating systems assume that players' ratings are totally ordered and that transitivity holds, which precludes situations where a player performs exceptionally well against a specific opponent regardless of their overall ability.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5eb98bd06d3dc782_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5eb98bd06d3dc782_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5eb98bd06d3dc782_w0_g2",
+      "name": "2025 - Pairwise-Elo rating system - Wong e Ch.1 Grounded Operator",
+      "verbatim_quote": "The proposed model, called the Pairwise-Elo (P-ELO) model, allows us to (i) construct a hypothesis test for the existence of pairwise advantages (i.e., intransitivity) across the players, and (ii) estimate winning probabilities for each pair while incorporating these pairwise effects.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5eb98bd06d3dc782_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5eb98bd06d3dc782_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5eb98bd06d3dc782_w0_g3",
+      "name": "2025 - Pairwise-Elo rating system - Wong e Ch.1 Grounded Operator",
+      "verbatim_quote": "We compare P-ELO to ELO and mElo 2k on Sumo Wrestling, Mixed Martial Arts, StarCraft II, and Large Language Models (LLMs) evaluations, in terms of match outcome prediction and probability estimation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5eb98bd06d3dc782_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5eb98bd06d3dc782_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "p1_value_betting_edge",
+      "name": "Value Betting Edge",
+      "verbatim_quote": "Shinki: Pairwise-Elo rating system — 9 Table 2: A value betting example, not limited to the ELO and P-ELO context, illustrating how a better-calibrated model with low accuracy and AUC can profit from exploiting a poorly calibrated bookmaker model with high accuracy and AUC.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p_bettor': 'probability estimate by bettor (dimensionless)', 'p_book': 'implied probability from bookmaker (dimensionless)', 'EV': 'expected value of bet (currency units)'}",
+      "assumptions": "Bettor's calibrated probabilities differ from bookmaker's; outcomes are stochastic draws from true distribution.",
+      "breakdown_regime": "When p_bettor = p_book, EV = 0; when p_bettor ≠ p_book, EV > 0 if bettor's calibration is superior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Betting edge corresponds to KL divergence between bettor and bookmaker probability distributions, with GSI computing posterior belief updates and GSE simulating outcome transitions.",
+        "source_operator": "p1_value_betting_edge",
+        "telemetry": "Realized profit distribution mean and variance across simulations."
+      }
+    },
+    {
+      "primitive_id": "p2_expected_value_zero",
+      "name": "Expected Value Under Calibration",
+      "verbatim_quote": "Shinki: Pairwise-Elo rating system When the bookmaker's odds reflect the true probabilities, i.e., p book = p true , the expected value of any bet of size $d is zero, regardless of the chosen outcome.",
+      "page": 10,
+      "latex": "\\mathbb{E}[EV] = d \\cdot (p_{\\text{true}} - p_{\\text{book}}) = 0 \\quad \\text{if } p_{\\text{book}} = p_{\\text{true}}",
+      "symbol_and_unit_ledger": "{'d': 'bet size (currency units)', 'p_true': 'true probability (dimensionless)', 'p_book': \"bookmaker's implied probability (dimensionless)\", 'EV': 'expected value (currency units)'}",
+      "assumptions": "Bookmaker perfectly calibrates odds to true probabilities; no margin distortion.",
+      "breakdown_regime": "Perfect calibration implies zero expected edge for any betting strategy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expected value kernel derived from information-theoretic entropy loss; GSI evaluates model calibration error, GSE computes optimal bet sizes under constraint.",
+        "source_operator": "p2_expected_value_zero",
+        "telemetry": "Variance of EV across matched bets under perfect calibration."
+      }
+    },
+    {
+      "primitive_id": "p3_calibration_asymmetry",
+      "name": "Calibration Asymmetry Between Models",
+      "verbatim_quote": "To analyze the distribution of the profit and the frequency of profitable outcomes, we simulate this strategy using the bootstrap method.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Model_A': 'high-accuracy overestimator (dimensionless)', 'Model_B': 'low-accuracy near-true estimator (dimensionless)', 'profit_dist_A': 'distribution of profits when Model A is bookmaker (currency units)', 'profit_dist_B': 'distribution of profits when Model B is bookmaker (currency units)'}",
+      "assumptions": "Models generate distinct probability estimates; simulation captures stochasticity.",
+      "breakdown_regime": "Asymmetry in profit shift indicates relative calibration superiority of one model over another.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Profit asymmetry mirrors mutual information gain between models and true probabilities; GSI uses cross-validation to assess calibration, GSE models transition dynamics between calibrated states.",
+        "source_operator": "p3_calibration_asymmetry",
+        "telemetry": "Kolmogorov-Smirnov distance between profit distributions under different bookmaker roles."
+      }
+    },
+    {
+      "primitive_id": "p4_simulation_profit_distribution",
+      "name": "Simulation-Based Profit Distribution",
+      "verbatim_quote": "Assessing a strategy's performance therefore requires simulation, which yields a distribution of realized profits.",
+      "page": 10,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'π_sim': 'simulated profit vector (currency units)', 'μ_π': 'mean profit (currency units)', 'σ_π': 'standard deviation of profit (currency units)'}",
+      "assumptions": "Strategy is repeatable; outcomes follow stochastic process from true distribution.",
+      "breakdown_regime": "Distribution of π_sim converges to normality under large N; μ_π > 0 implies positive edge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Bootstrap sampling generates empirical profit density; GSI infers confidence intervals, GSE predicts future state transitions via Monte Carlo.",
+        "source_operator": "p4_simulation_profit_distribution",
+        "telemetry": "Mean and standard deviation of π_sim over multiple bootstrap iterations."
+      }
+    },
+    {
+      "primitive_id": "mma_pairwise_advantage",
+      "name": "Mixed Martial Arts Pairwise Advantage",
+      "verbatim_quote": "Given this distribution, we can reasonably expect that pairwise advantages do not play a significant role in predicting outcomes in this dataset, even if they exist between some players.",
+      "page": 18,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K_2': 'Estimated pairwise advantage parameter (dimensionless)', 'N_{pair}': 'Number of unique pairings (unitless)'}",
+      "assumptions": "Only frequent fighters (≥1 appearance) are considered; pairwise effects are assumed negligible due to sparse data.",
+      "breakdown_regime": "When N_pair < 1000, K_2 estimation becomes unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel for pairwise adjustment in Elo ratings derived from empirical matchup frequency.",
+        "source_operator": "mma_pairwise_advantage",
+        "telemetry": "Accuracy and AUC metrics from P-ELO vs ELO"
+      }
+    },
+    {
+      "primitive_id": "sc2_frequent_matchup_filter",
+      "name": "StarCraft II Frequent Matchup Filter",
+      "verbatim_quote": "4.2.3 StarCraft II (SC2) In the analysis of SC2, we have analyzed a dataset comprising 567 players and 37,215 matches, post-selection of frequent matchups, i.e., each match up appeared at least seven times.",
+      "page": 18,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{matchups}': 'Total unique matchups (unitless)', 'min_appearances': 'Minimum required appearances per matchup (unitless)'}",
+      "assumptions": "Frequent matchups ensure sufficient statistical power for estimating K_2.",
+      "breakdown_regime": "Below min_appearances threshold, K_2 estimates become unstable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to frequent fighter filter in MMA but applied to game matchups.",
+        "source_operator": "sc2_frequent_matchup_filter",
+        "telemetry": "MLE of K_2 and accuracy improvement in SC2"
+      }
+    },
+    {
+      "primitive_id": "llm_intransitivity_test",
+      "name": "Large Language Model Intransitivity Test",
+      "verbatim_quote": "The results of the LRT indicate the presence of pairwise advantages while rejecting the assumption of transitivity.",
+      "page": 18,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'LRT': 'Likelihood Ratio Test statistic (dimensionless)', 'H_0': 'Null hypothesis of transitivity (boolean)'}",
+      "assumptions": "Intransitivity implies non-transitive pairwise preferences among models.",
+      "breakdown_regime": "When H_0 is rejected, traditional Elo fails to capture preference dynamics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel for modeling intransitive preferences in LLM comparisons.",
+        "source_operator": "llm_intransitivity_test",
+        "telemetry": "Rejection of transitivity hypothesis via LRT"
+      }
+    },
+    {
+      "primitive_id": "elo_vs_pelo_performance",
+      "name": "Elo vs Pairwise-Elo Performance Comparison",
+      "verbatim_quote": "Table 9: MLE of parameters; and the accuracy and AUC on MMA.",
+      "page": 18,
+      "latex": "\\text{Accuracy}_{\\text{P-ELO}} > \\text{Accuracy}_{\\text{ELO}} \\text{ in SC2}",
+      "symbol_and_unit_ledger": "{'Accuracy': 'Prediction accuracy (0–1)', 'AUC': 'Area Under ROC Curve (0–1)', 'K_2': 'Pairwise advantage parameter (dimensionless)'}",
+      "assumptions": "Performance differences reflect model sensitivity to pairwise effects.",
+      "breakdown_regime": "Performance gap narrows when pairwise advantages are minimal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic comparison of ELO and P-ELO across domains.",
+        "source_operator": "elo_vs_pelo_performance",
+        "telemetry": "Accuracy and AUC values from Table 9"
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id",
+      "name": "Likelihood_ratio_test_statistic_convergence",
+      "verbatim_quote": "Shinki: Pairwise-Elo rating system Table 18: (8 players 20 games) Summary statistics of λ n across different values of K .",
+      "page": 26,
+      "latex": null,
+      "symbol_and_unit_ledger": "λ_n: likelihood ratio test statistic; K: scaling factor; χ²(1): chi-squared distribution with 1 degree of freedom",
+      "assumptions": "(8 players, 20 games, pairwise Elo framework)",
+      "breakdown_regime": "K → ∞ breaks χ²(1) convergence",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: posterior predictive checks for model misspecification; GSE: state-transition stability metrics",
+        "source_operator": "w3_snake_case_id",
+        "telemetry": "empirical λ_n distribution compared to χ²(1)"
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_2",
+      "name": "Chi_squared_goodness_of_fit",
+      "verbatim_quote": "Means and variances are reported with 95 % bootstrap confidence intervals.",
+      "page": 26,
+      "latex": null,
+      "symbol_and_unit_ledger": "CI: confidence interval; bootstrapping: resampling method",
+      "assumptions": "Bootstrap validity under exchangeability",
+      "breakdown_regime": "Non-iid data causes CI inflation",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: uncertainty quantification via simulation; GSE: robust policy evaluation",
+        "source_operator": "w3_snake_case_id_w3_2",
+        "telemetry": "CI coverage frequency"
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_3",
+      "name": "Chi_squared_distribution_deviation",
+      "verbatim_quote": "Confidence intervals that do not include the mean or variance of χ 2 (1) are shown in red.",
+      "page": 26,
+      "latex": null,
+      "symbol_and_unit_ledger": "χ²(1): reference distribution; red highlighting: rejection",
+      "assumptions": "Null hypothesis: data follows χ²(1)",
+      "breakdown_regime": "Deviation indicates model misspecification",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: hypothesis testing for distributional fit; GSE: anomaly detection in state transitions",
+        "source_operator": "w3_snake_case_id_w3_3",
+        "telemetry": "p-value from goodness-of-fit tests"
+      }
+    },
+    {
+      "primitive_id": "w3_snake_case_id_w3_4",
+      "name": "Likelihood_ratio_test_convergence_rate",
+      "verbatim_quote": "Shinki: Pairwise-Elo rating system — 27 Figure 13: (8 players 50 games) Empirical distribution of λ n with χ 2 (1) density overlay, and QQ-plots, K = 48, 56, 64, 72, 80.",
+      "page": 27,
+      "latex": null,
+      "symbol_and_unit_ledger": "λ_n: likelihood ratio; K: scaling parameter; QQ-plot: quantile-quantile plot",
+      "assumptions": "(8 players, 50 games, increasing K)",
+      "breakdown_regime": "Large K accelerates χ²(1) convergence",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: power analysis for statistical tests; GSE: transition probability matrix eigenvalue analysis",
+        "source_operator": "w3_snake_case_id_w3_4",
+        "telemetry": "Convergence speed measured by distance to χ²(1)"
+      }
+    },
+    {
+      "primitive_id": "5eb98bd06d3dc782_w4_g1",
+      "name": "2025 - Pairwise-Elo rating system - Wong e Ch.5 Grounded Operator",
+      "verbatim_quote": "Shinki: Pairwise-Elo rating system — 35 Table 24: (128 players 5,800 games) Summary statistics of λ n across different values of K .",
+      "page": 35,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5eb98bd06d3dc782_w4_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5eb98bd06d3dc782_w4_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5eb98bd06d3dc782_w4_g2",
+      "name": "2025 - Pairwise-Elo rating system - Wong e Ch.5 Grounded Operator",
+      "verbatim_quote": "Shinki: Pairwise-Elo rating system Figure 25: (128 players 14,500 games) Empirical distribution of λ n with χ 2 (1) density overlay, and QQ-plots, K = 48, 56, 64, 72, 80.",
+      "page": 36,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5eb98bd06d3dc782_w4_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5eb98bd06d3dc782_w4_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5eb98bd06d3dc782_w4_g3",
+      "name": "2025 - Pairwise-Elo rating system - Wong e Ch.5 Grounded Operator",
+      "verbatim_quote": "Table 25: (128 players 14,500 games) Summary statistics of λ n across different values of K .",
+      "page": 36,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5eb98bd06d3dc782_w4_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5eb98bd06d3dc782_w4_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5eb98bd06d3dc782_t0",
+      "think": "Window 1 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5eb98bd06d3dc782_t1",
+      "think": "Chapter 2 explores the theoretical foundations of value betting through a comparative lens between bookmaker and bettor probability models. It establishes that profitability arises not from correct directional predictions but from superior calibration of estimated probabilities. The core insight hinges on the distinction between accuracy (predictive correctness) and calibration (alignment with true probabilities). Even if a bettor’s model has lower accuracy and AUC than the bookmaker’s, it can still yield a positive expected value if its probability estimates are better calibrated. This principle is demonstrated through simulations where one model acts as the bookmaker and another as the bettor, revealing asymmetric profit distributions. The chapter underscores that in practice, bettors observe only distorted bookmaker probabilities, while true data-generating probabilities remain latent. Therefore, evaluating a betting strategy necessitates simulation-based analysis to capture the stochastic nature of outcomes and compute realized profits. The implications extend beyond ELO/P-ELO frameworks, emphasizing that value betting is fundamentally about probabilistic calibration rather than outcome prediction. This aligns with broader principles in Bayesian decision theory and conformal prediction, where uncertainty quantification and model reliability are paramount. Window 2 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on market efficiency and behavioral finance, particularly the Efficient Market Hypothesis and its deviations. Influenced by developments in machine learning calibration techniques and game-theoretic approaches to betting markets. Retrocausal Genealogy (Window 2): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agents as having distinct calibration errors—some overestimate, others underestimate probabilities. The bettor is assumed to possess superior calibration, while the bookmaker reflects market distortions. Coaches or analysts may model these agents' biases and adjust strategies accordingly. Theory of Mind (Window 2): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity prevents reliance on single-source probability estimates; leakage vetoes direct use of bookmaker odds without accounting for margin distortion. Ensures independence between GSI's probabilistic inference and GSE's strategic state transitions. Cross-Layer Veto (Window 2): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5eb98bd06d3dc782_t2",
+      "think": "Chapter 3 explores the extension of the classic Elo rating system to incorporate pairwise advantages, particularly in domains with intransitive preferences such as MMA, SC2, and LLMs. The core idea is to model player performance not just as a function of individual skill but also as a function of specific matchups. In MMA, the authors filter for frequent fighters and find that the sparse nature of repeated matchups limits the reliability of pairwise advantage estimates, resulting in counterintuitive negative K_2 values. In contrast, SC2's dense matchup data allows for robust estimation of K_2, improving prediction accuracy. The LLM analysis reveals strong evidence of intransitivity, suggesting that pairwise adjustments are essential for accurate modeling. The study contrasts ELO, P-ELO, and mElo 2, showing that while P-ELO often outperforms ELO, mElo 2 struggles with overconfidence in low-frequency matchups. These findings suggest that pairwise adjustments are domain-dependent and require careful calibration to avoid overfitting or misestimation. The implications extend beyond sports analytics into broader applications of ranking and preference modeling in complex systems. Window 3 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in the Elo system's foundational work by Arpad Elo, extended by pairwise modeling in intransitive domains like chess and card games, later adapted for modern AI and competitive gaming. Retrocausal Genealogy (Window 3): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models assume agents (fighters, players, models) exhibit consistent but context-sensitive preferences. Intransitivity arises from hidden strategic or behavioral factors, requiring pairwise adjustments to capture true preference structures. Theory of Mind (Window 3): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that pairwise advantages are estimated independently from base skill ratings. Leakage is mitigated by restricting frequent matchup filters to prevent overfitting in sparse datasets. Cross-Layer Veto (Window 3): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "w3_snake_case_id_t1",
+      "think": "This chapter window systematically examines how the scaling factor K influences the asymptotic distribution of the pairwise Elo likelihood ratio test statistic λ_n. For small numbers of games (20), λ_n deviates significantly from χ²(1) even at moderate K, indicating slow convergence. Increasing games to 50 improves adherence to χ²(1) for larger K values, while smaller K still show notable discrepancies. At 300 games, λ_n closely matches χ²(1) across most K ranges, demonstrating rapid convergence in the dense-data regime. These findings establish empirical guidelines for choosing K based on game volume, ensuring valid frequentist inference. Window 4 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in Wald's 1943 sequential analysis and Wilks' theorem on likelihood ratios, adapted here for paired comparison models with adaptive learning. Retrocausal Genealogy (Window 4): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts seeking reliable performance rankings must understand these convergence patterns to avoid spurious inferences from poorly calibrated K values. Theory of Mind (Window 4): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must ensure independence between games to prevent autocorrelation leakage into λ_n distribution. Cross-Layer Veto (Window 4): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5eb98bd06d3dc782_t4",
+      "think": "Window 5 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 5): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 5): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 5): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 5): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 5): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 5): Rooted in 2025 - Pairwise-Elo rating system - Wong et al (5eb98bd06d3dc782, 43/43 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

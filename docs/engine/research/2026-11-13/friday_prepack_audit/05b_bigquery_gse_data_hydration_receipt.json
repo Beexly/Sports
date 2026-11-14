@@ -1,36 +1,36 @@
 {
   "schema": "gse.bigquery_hydration_receipt.v1",
-  "generated_at_utc": "2026-11-14T11:38:30.053729+00:00",
+  "generated_at_utc": "2026-11-14T12:14:32.933199+00:00",
   "project_id": "galaxysportsedge",
   "dataset_id": "gse_data",
   "billing_tier": "GCP Always Free (10 GB/mo active storage, 1 TB/mo queries)",
   "estimated_cost_usd": 0.0,
-  "total_staged_bytes": 9700045,
-  "total_verified_rows": 16267,
+  "total_staged_bytes": 10912865,
+  "total_verified_rows": 18432,
   "tables": [
     {
       "table": "galaxysportsedge.gse_data.sovereign_primitives",
       "source_jsonl": "sovereign_primitives.jsonl",
-      "staged_rows": 8737,
-      "staged_bytes": 5806960,
+      "staged_rows": 10140,
+      "staged_bytes": 6666513,
       "load_exit_code": 0,
-      "bq_verified_row_count": 8737
+      "bq_verified_row_count": 10140
     },
     {
       "table": "galaxysportsedge.gse_data.sovereign_reasoning_traces",
       "source_jsonl": "sovereign_reasoning_traces.jsonl",
-      "staged_rows": 1989,
-      "staged_bytes": 640756,
+      "staged_rows": 2325,
+      "staged_bytes": 749242,
       "load_exit_code": 0,
-      "bq_verified_row_count": 1989
+      "bq_verified_row_count": 2325
     },
     {
       "table": "galaxysportsedge.gse_data.gcp_shard_b_extractions",
       "source_jsonl": "gcp_shard_b_extractions.jsonl",
-      "staged_rows": 4822,
-      "staged_bytes": 2999535,
+      "staged_rows": 5248,
+      "staged_bytes": 3244316,
       "load_exit_code": 0,
-      "bq_verified_row_count": 4822
+      "bq_verified_row_count": 5248
     },
     {
       "table": "galaxysportsedge.gse_data.router_and_situational_wiring",
