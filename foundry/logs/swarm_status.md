@@ -560,3 +560,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 02:08:31 | COMPLETE | 021a62c7e1ac65da | primitives=16 think_words=854
 - 2026-11-14 02:09:11 | CLAIMED | 31578d5b20fc1a1f | worker=hermes-inline shard03 file=2025 - A Comps-Based Approach for Interpreting Tree-Based Predictions with an Application to the NFL Draft - Unknown Authors.pdf
 - 2026-11-14 02:12:22 | COMPLETE | 31578d5b20fc1a1f | primitives=18 think_words=852
+- 2026-11-14 02:13:22 | CLAIMED | 0be32c68562efac5 | worker=hermes-inline shard03 file=2025 - College Football Volatility A Bayesian state-space model of the transfer portal and NIL impact - Unknown Authors.pdf
+- 2026-11-14 02:22:07 | COMPLETE | 0be32c68562efac5 | primitives=27 think_words=850

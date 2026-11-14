@@ -1,0 +1,549 @@
+{
+  "book_id": "0be32c68562efac5",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PRESENTATION_STATE_SPACE_RECONSTRUCTED",
+  "source_note": "Ron Yurko (Carnegie Mellon, Director of CMSAC, Dept of Statistics & Data Science), joint work with Luke Benz, 'College Football Volatility: A Bayesian state-space model of the transfer portal and NIL impact', NESSIS 2025 slide deck (45 slides, Sept 27 2025). Substantive deck with the Glickman-Stern state-space rating model, a transfer/NIL-driven stochastic-volatility extension, a 9003-game FBS corpus, holdout model comparison, and case studies; extracted faithfully (not a derivative summary). The state-space and volatility equations are slide figures (not extractable text), so they are reconstructed as labeled LaTeX from unambiguous prose and flagged in assumptions, attributed to Glickman & Stern 1998/2017 and Glickman 2001. Outputs are statistical team ratings and volatility estimates from public cfbfastR data; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "transfer_rule_2021",
+      "name": "2021: one-time transfer without sitting out",
+      "verbatim_quote": "2021 - Student athletes allowed to transfer once without sitting out a year",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "In 2021 student athletes were allowed to transfer once without sitting out a year, alongside conference realignment and the start of the NIL era."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A rule change that increases roster churn is the same structural-break trigger GSE flags for its team-rating volatility.",
+        "source_operator": "transfer_rule_2021",
+        "telemetry": "2021: transfer once, no sit-out"
+      }
+    },
+    {
+      "primitive_id": "nil_era_alston",
+      "name": "NIL era begins: NCAA v Alston Supreme Court ruling",
+      "verbatim_quote": "NIL era begins! Supreme Court ruling in NCAA vs Alston",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The NIL era begins in 2021 with the Supreme Court ruling in NCAA v Alston, enabling name-image-likeness compensation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A compensation-rule shock is the same regime change GSE models as a volatility driver in college football.",
+        "source_operator": "nil_era_alston",
+        "telemetry": "2021 NIL: NCAA v Alston"
+      }
+    },
+    {
+      "primitive_id": "immediate_eligibility_2024",
+      "name": "2024: immediate eligibility regardless of transfer count",
+      "verbatim_quote": "2024 - Immediate eligibility no matter how many times athletes transferred",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "In 2024 athletes gained immediate eligibility no matter how many times they transferred, completing the move to perpetual free-agency."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Unlimited immediate transfers is the same roster-fluidity regime GSE treats as a new uncertainty era.",
+        "source_operator": "immediate_eligibility_2024",
+        "telemetry": "2024: unlimited immediate eligibility"
+      }
+    },
+    {
+      "primitive_id": "military_academies_fewest",
+      "name": "Fewest incoming transfers: the military academies",
+      "verbatim_quote": "United States military academies! Army, Navy, Air Force",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Army, Navy, and Air Force have the fewest incoming transfers, an institutional constraint on roster churn."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Institutional constraints that suppress churn are the same low-volatility prior GSE assigns to service academies.",
+        "source_operator": "military_academies_fewest",
+        "telemetry": "fewest transfers: Army/Navy/Air Force"
+      }
+    },
+    {
+      "primitive_id": "dabo_high_school_transfers",
+      "name": "Dabo: every player is technically a transfer",
+      "verbatim_quote": "Every player is technically a transfer. We just signed a whole class of guys transferring from high school",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Clemson HC Dabo Swinney, on taking zero transfers in 2024, quipped that every player is technically a transfer since they signed a class transferring from high school."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A recruiting-vs-transfer distinction is the same roster-source nuance GSE records when counting churn.",
+        "source_operator": "dabo_high_school_transfers",
+        "telemetry": "Dabo: 0 transfers, HS class = transfers"
+      }
+    },
+    {
+      "primitive_id": "colorado_transfer_turnaround",
+      "name": "Colorado: 52/38 transfers, 1-11 to 9-4",
+      "verbatim_quote": "Prime Time! Led by Deion Sanders: Colorado with 52 in 2023 and 38 in 2024",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "2022": "1-11",
+        "2023": "4-8 (52 transfers)",
+        "2024": "9-4 (38 transfers)"
+      },
+      "assumptions": [
+        "Deion Sanders' Colorado took 52 transfers in 2023 and 38 in 2024, going from 1-11 in 2022 to 4-8 in 2023 to 9-4 in 2024."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A high-churn roster turnaround is the same volatility-and-upside case GSE studies for transfer-heavy programs.",
+        "source_operator": "colorado_transfer_turnaround",
+        "telemetry": "Colorado: 52/38 transfers, 1-11->9-4"
+      }
+    },
+    {
+      "primitive_id": "charlotte_high_churn_fired",
+      "name": "Charlotte: high transfers, coach fired at 6-16",
+      "verbatim_quote": "Fired on Nov 18 2024 after 3-7 start to season, compiled 6-16 record overall",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "UNC Charlotte's Biff Poggi took 40 transfers in 2023 and 31 in 2024 but was fired Nov 18 2024 after a 3-7 start, compiling a 6-16 record."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "High churn without results is the same volatility-without-upside case GSE contrasts with Colorado.",
+        "source_operator": "charlotte_high_churn_fired",
+        "telemetry": "Charlotte: 40/31 transfers, fired 6-16"
+      }
+    },
+    {
+      "primitive_id": "texas_state_stable_success",
+      "name": "Texas State: high transfers, 8-5 twice, extended",
+      "verbatim_quote": "Finished 8-5 in both 2023 and 2024, signed 7-year contract in Nov 2024",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Texas State's GJ Kinne took 42 transfers in 2023 and 36 in 2024, finished 8-5 both years, and signed a 7-year contract in Nov 2024."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "High churn with stable success is the same managed-volatility case GSE distinguishes from chaotic churn.",
+        "source_operator": "texas_state_stable_success",
+        "telemetry": "Texas State: 42/36 transfers, 8-5 twice"
+      }
+    },
+    {
+      "primitive_id": "indiana_transfers_playoff",
+      "name": "Indiana: 30 transfers, made the playoff",
+      "verbatim_quote": "Indiana - Curt Cignetti: 4th most transfers with 30 in 2024, made playoff!",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Indiana's Curt Cignetti took the 4th-most transfers (30 in 2024) and made the playoff, showing high churn can coincide with elite outcomes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A transfer-heavy playoff team is the same high-churn-high-ceiling evidence GSE weighs.",
+        "source_operator": "indiana_transfers_playoff",
+        "telemetry": "Indiana: 30 transfers, playoff"
+      }
+    },
+    {
+      "primitive_id": "glickman_stern_state_space",
+      "name": "Glickman-Stern state-space team ratings",
+      "verbatim_quote": "Let Yijt be the score differential in a game between teams i and j during year t",
+      "page": 15,
+      "latex": "Y_{ijt}\\sim N(\\theta_{it}-\\theta_{jt}+\\alpha,\\ \\sigma^2);\\quad \\theta_{it}=\\gamma\\,\\theta_{i,t-1}+\\varepsilon_{it},\\ \\varepsilon_{it}\\sim N(0,\\tau^2)",
+      "symbol_and_unit_ledger": {
+        "Y_ijt": "score differential",
+        "theta_it": "team i rating in year t",
+        "alpha": "constant home-field advantage",
+        "gamma": "autoregressive parameter",
+        "tau^2": "innovation variance"
+      },
+      "assumptions": [
+        "Following Glickman & Stern (1998, 2017), the score differential is a game-mean model with constant home-field advantage, and team ratings follow an autoregressive process with constant innovation variance. The equations are slide figures, reconstructed here from the prose labels."
+      ],
+      "breakdown_regime": "equations are slide figures; reconstructed from prose (Glickman & Stern 1998, 2017)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An autoregressive state-space rating with constant innovation variance is the same dynamic team-strength kernel GSE uses for CFB.",
+        "source_operator": "glickman_stern_state_space",
+        "telemetry": "Y = theta_i - theta_j + HA; theta AR(1)"
+      }
+    },
+    {
+      "primitive_id": "cfbfastR_9003_fbs_games",
+      "name": "9003 FBS regular-season games, 2014-2024 (cfbfastR)",
+      "verbatim_quote": "Focus on 9003 regular season NCAA Division I Football Bowl Subdivision (FBS) games in playoff era (2014-2024)",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Data gathered via cfbfastR (College Football Data API): 9003 regular-season FBS games in the playoff era 2014-2024, the highest level of college football."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A public CFB play-by-play corpus is the same data substrate GSE uses for college ratings.",
+        "source_operator": "cfbfastR_9003_fbs_games",
+        "telemetry": "9003 FBS games, 2014-2024, cfbfastR"
+      }
+    },
+    {
+      "primitive_id": "exclude_bowls_playoffs",
+      "name": "Exclude bowls/playoffs (players sit out)",
+      "verbatim_quote": "Did NOT include bowl games and playoffs due to players sitting out",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Bowl games and playoffs are excluded because players sit out, which would distort the team-strength signal."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Excluding opt-out games is the same roster-availability filter GSE applies to avoid biased strength estimates.",
+        "source_operator": "exclude_bowls_playoffs",
+        "telemetry": "exclude bowls/playoffs (opt-outs)"
+      }
+    },
+    {
+      "primitive_id": "fcs_pooled_one_team",
+      "name": "FCS teams pooled as one 'FCS team'",
+      "verbatim_quote": "Treated all NCAA Division I Football Championship Subdivision (FCS) teams as one ‘FCS team’",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "All FCS teams are treated as a single 'FCS team' (the second-highest level), and FCS innovation variance uses the average transfer count across FCS teams."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pooling a lower division into one opponent is the same coarse-graining GSE uses for out-of-sample opponents.",
+        "source_operator": "fcs_pooled_one_team",
+        "telemetry": "FCS -> single pooled team"
+      }
+    },
+    {
+      "primitive_id": "incoming_transfer_counts",
+      "name": "Count incoming transfers per season (by position)",
+      "verbatim_quote": "Gathered roster information about each team, counting the number of incoming transfers entering a season",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Roster information counts the number of incoming transfers entering a season, including by position group, as the volatility covariate."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Incoming-transfer counts (total and by position) are the same roster-churn feature GSE feeds its volatility model.",
+        "source_operator": "incoming_transfer_counts",
+        "telemetry": "incoming transfers / season, by position"
+      }
+    },
+    {
+      "primitive_id": "stochastic_volatility_extension",
+      "name": "Stochastic volatility: is constant innovation variance valid?",
+      "verbatim_quote": "Is the constant innovation variance assumption appropriate in this crazy era?",
+      "page": 20,
+      "latex": "\\tau^2_{it}\\ \\text{dynamic (Glickman 2001 stochastic volatility)}",
+      "symbol_and_unit_ledger": {
+        "tau^2_it": "team i innovation variance entering season t"
+      },
+      "assumptions": [
+        "Glickman's 2001 stochastic-volatility extension questions the constant innovation variance assumption and allows a dynamic innovation variance; the equation is a slide figure."
+      ],
+      "breakdown_regime": "equation is a slide figure; Glickman 2001 stochastic volatility",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A time-varying innovation variance is the same stochastic-volatility extension GSE uses to let team uncertainty drift.",
+        "source_operator": "stochastic_volatility_extension",
+        "telemetry": "constant tau^2 -> dynamic tau^2_it"
+      }
+    },
+    {
+      "primitive_id": "variance_function_transfers_nil",
+      "name": "Innovation variance = f(NIL era, incoming transfers)",
+      "verbatim_quote": "Allow the innovation variance to vary between teams based on transfers and changes to transfer portal + NIL rule (beginning in 2021)",
+      "page": 22,
+      "latex": "\\log\\tau^2_{it}=\\beta_0+\\beta_1\\,\\text{NIL}_t+\\beta_2\\,\\text{Transfers}_{it}",
+      "symbol_and_unit_ledger": {
+        "NIL_t": "indicator season t >= 2021",
+        "Transfers_it": "incoming transfers for team i entering season t"
+      },
+      "assumptions": [
+        "Innovation variance entering season t varies between teams as a function of a NIL-era indicator (since 2021) and the number of incoming transfers; FCS uses average transfer counts. The log-linear form is reconstructed from the prose (equation is a slide figure)."
+      ],
+      "breakdown_regime": "log-linear form reconstructed; prose states variance = f(NIL indicator, transfer count)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Modeling rating volatility as a function of roster churn and a regime indicator is the same transfer/NIL volatility kernel GSE builds.",
+        "source_operator": "variance_function_transfers_nil",
+        "telemetry": "log tau^2 = b0 + b1*NIL + b2*transfers"
+      }
+    },
+    {
+      "primitive_id": "nil_lower_transfers_higher",
+      "name": "NIL era lowers variance; transfers raise it",
+      "verbatim_quote": "Lower variance in NIL era, but higher variance with transfers",
+      "page": 23,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The fitted model shows lower innovation variance in the NIL era overall, but higher variance with more incoming transfers."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A regime that lowers baseline volatility while churn raises it is the same offsetting-effect structure GSE estimates.",
+        "source_operator": "nil_lower_transfers_higher",
+        "telemetry": "NIL: lower variance; transfers: higher"
+      }
+    },
+    {
+      "primitive_id": "pass_defense_transfers_variance",
+      "name": "Pass-defense transfers associated with higher variance",
+      "verbatim_quote": "Pass defense transfers are associated with higher variance?",
+      "page": 30,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Positional analysis finds pass-defense transfers are associated with higher innovation variance, suggesting secondary churn is especially destabilizing."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Position-specific churn effects are the same granular volatility driver GSE tests for CFB secondaries.",
+        "source_operator": "pass_defense_transfers_variance",
+        "telemetry": "pass-defense transfers -> higher variance"
+      }
+    },
+    {
+      "primitive_id": "posterior_predictive_holdout",
+      "name": "Posterior predictive holdout: train 2014-22, test 2023-24",
+      "verbatim_quote": "Posterior predictive comparison for holdout performance in 2023 and 2024",
+      "page": 33,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Models are compared by posterior predictive holdout: train on 2014-2022, then sample the 2023 team rating from the innovation distribution and predict 2023-2024 games."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A temporal holdout that samples next-season ratings from the innovation distribution is the same out-of-sample volatility test GSE runs.",
+        "source_operator": "posterior_predictive_holdout",
+        "telemetry": "train 2014-22, sample '23 rating, test 23-24"
+      }
+    },
+    {
+      "primitive_id": "glickman_stern_best_rmse_elpd",
+      "name": "Classic Glickman-Stern wins game-level RMSE/ELPD",
+      "verbatim_quote": "Transfer model (w/o positions) is next best in performance, w/ comparable results in 2024",
+      "page": 34,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Best game-level predictions (RMSE and ELPD): Glickman & Stern 1998 wins; the transfer model without positions is next best with comparable 2024 results; the stochastic-volatility extension is by far the worst of the four."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A classic constant-variance model beating volatility extensions out-of-sample is the same parsimony veto GSE applies when extra flexibility overfits.",
+        "source_operator": "glickman_stern_best_rmse_elpd",
+        "telemetry": "RMSE/ELPD: GS1998 > transfer > SV2001"
+      }
+    },
+    {
+      "primitive_id": "sv_extension_worst",
+      "name": "Stochastic volatility extension is by far the worst",
+      "verbatim_quote": "Stochastic volatility extension (2001) is by far the worst of the four",
+      "page": 34,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The Glickman 2001 stochastic-volatility extension is by far the worst of the four models on game-level holdout prediction."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A flexible volatility model that overfits is the same failed-complexity veto GSE records.",
+        "source_operator": "sv_extension_worst",
+        "telemetry": "SV2001: worst of four (holdout)"
+      }
+    },
+    {
+      "primitive_id": "transfer_model_best_waic",
+      "name": "Transfer model best in-sample NIL-era fit (WAIC)",
+      "verbatim_quote": "Overall NIL era between-season variance is lower, but transfers offset this!",
+      "page": 35,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Best in-sample fit during the NIL era (WAIC) is the transfer model without positions; the discussion notes overall NIL-era between-season variance is lower but transfers offset this."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A churn-aware model fitting the new era best in-sample is the same regime-fit signal GSE weighs against out-of-sample parsimony.",
+        "source_operator": "transfer_model_best_waic",
+        "telemetry": "WAIC (NIL era): transfer model best"
+      }
+    },
+    {
+      "primitive_id": "coach_transfer_confound",
+      "name": "New coach confounded with high transfer counts",
+      "verbatim_quote": "Obvious relationship between new coach and high number of transfers",
+      "page": 36,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A limitation is the obvious relationship between a new coach and a high number of transfers, confounding the churn effect."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A coaching-change confound on churn is the same endogeneity GSE flags when attributing volatility to transfers.",
+        "source_operator": "coach_transfer_confound",
+        "telemetry": "new coach <-> high transfers (confound)"
+      }
+    },
+    {
+      "primitive_id": "transfer_selection_bias",
+      "name": "Selection bias: fewer but better transfers?",
+      "verbatim_quote": "What about the selection bias displayed by schools in transfers?",
+      "page": 36,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A limitation is selection bias in transfers, e.g. whether Ohio State gets fewer but better transfers, so counts alone miss quality."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Transfer quality vs quantity selection bias is the same count-vs-talent gap GSE records.",
+        "source_operator": "transfer_selection_bias",
+        "telemetry": "selection bias: fewer but better transfers?"
+      }
+    },
+    {
+      "primitive_id": "ignored_recruiting_nil_amounts",
+      "name": "Recruiting ignored; no access to NIL amounts",
+      "verbatim_quote": "Completely ignored recruiting in this study, and do not have access to NIL amounts",
+      "page": 36,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The study completely ignores recruiting and has no access to NIL dollar amounts, limiting the volatility model's covariates."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Missing recruiting and NIL-amount data is the same covariate gap GSE records as a binding limitation.",
+        "source_operator": "ignored_recruiting_nil_amounts",
+        "telemetry": "no recruiting, no NIL amounts"
+      }
+    },
+    {
+      "primitive_id": "limited_nil_era_data",
+      "name": "Very limited NIL-era data (only since 2021)",
+      "verbatim_quote": "Key point: we are working with very limited data in the NIL era! Only started in 2021",
+      "page": 36,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The key limitation is very limited data in the NIL era, which only started in 2021; the model also ignores transferring-player quality and possible autoregressive-parameter changes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A short post-regime sample is the same small-data caution GSE applies to NIL-era estimates.",
+        "source_operator": "limited_nil_era_data",
+        "telemetry": "NIL era only since 2021 (limited data)"
+      }
+    },
+    {
+      "primitive_id": "incoming_departing_corr_075",
+      "name": "Incoming and departing transfers correlate ~0.75",
+      "verbatim_quote": "Relationship between incoming and departing transfers Correlation of about 0.75",
+      "page": 42,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The appendix reports a correlation of about 0.75 between incoming and departing transfers, so churn in and out move together."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Coupled incoming/departing churn is the same roster-turnover correlation GSE models.",
+        "source_operator": "incoming_departing_corr_075",
+        "telemetry": "incoming vs departing transfers r ~ 0.75"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cfbvolatility2025_trace",
+      "think": "The retrocausal genealogy of this presentation is the transformation of college football into an era of perpetual free-agency and the question of what that does to team-strength volatility. Ron Yurko of Carnegie Mellon, with Luke Benz, traces the timeline: the College Football Playoff era begins in 2014, the NCAA transfer portal launches in 2018, 2021 brings the one-time transfer without sitting out plus the NIL era following the Supreme Court's NCAA v Alston ruling, and 2024 grants immediate eligibility no matter how many times an athlete has transferred. The modeling lineage is Glickman and Stern's 1998 and 2017 state-space team ratings, extended by Glickman's 2001 stochastic volatility, and the data lineage is the cfbfastR package wrapping the College Football Data API. The motivating observations are that the military academies take the fewest transfers while Colorado, Charlotte, Texas State, and Indiana lead in churn, with very different outcomes. The model is a Bayesian state-space rating system. Let Yijt be the score differential between teams i and j in year t; the game-mean model adds a constant home-field advantage to the rating gap, and team ratings follow an autoregressive process with constant innovation variance. The data are 9003 regular-season FBS games in the playoff era 2014 to 2024, excluding bowls and playoffs because players sit out, with all FCS teams pooled as one opponent, and roster information counting incoming transfers per season including by position group. The stochastic-volatility extension asks whether constant innovation variance is appropriate in this crazy era and allows a dynamic variance; the transfer model makes the innovation variance entering a season a function of a NIL-era indicator and the number of incoming transfers, with FCS using average transfer counts. The recursive theory of mind is modeling each program as a latent strength whose year-to-year uncertainty is itself driven by roster decisions. The model reasons about a team not just as a rating but as a rating with a volatility that responds to how many new players it integrates and whether it is in the NIL era, so a high-churn program is represented as a wider innovation distribution around its autoregressive mean. The fitted result is that the NIL era lowers between-season variance overall but transfers offset this, and positional analysis suggests pass-defense transfers are associated with higher variance, so secondary churn is especially destabilizing. Cross-layer veto adjudication is the out-of-sample model comparison and the honest limitations. A posterior predictive holdout trains on 2014 to 2022, samples the 2023 rating from the innovation distribution, and predicts 2023 and 2024; on game-level RMSE and ELPD the classic Glickman-Stern 1998 model wins, the transfer model without positions is next best with comparable 2024 results, and the stochastic-volatility extension is by far the worst of the four, while the transfer model has the best in-sample NIL-era fit by WAIC. The limitations are explicit: a new coach is confounded with high transfer counts, schools may show selection bias such as Ohio State getting fewer but better transfers, recruiting is completely ignored and NIL amounts are unavailable, transferring-player quality is ignored, and the autoregressive parameter might change instead of the variance. The key point is that the NIL era only started in 2021, so the data are very limited. The implementation invariants map directly onto GSE. The autoregressive state-space rating with constant home-field advantage is GSE's dynamic CFB strength kernel; the innovation variance as a function of roster churn and a regime indicator is GSE's transfer/NIL volatility model; the temporal holdout that samples next-season ratings from the innovation distribution is GSE's out-of-sample volatility test; and the parsimony veto, where the classic constant-variance model beats the flexible extensions out-of-sample, is GSE's guard against overfitting volatility. The outputs are statistical team ratings and volatility estimates from public college data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The corpus is 9003 FBS regular-season games from 2014 to 2024 via cfbfastR, FCS pooled as one team, bowls and playoffs excluded; the model parameters are the autoregressive coefficient, the constant home-field advantage, and the innovation variance modeled as a function of a NIL-era indicator and incoming-transfer counts; the incoming-departing transfer correlation is about 0.75; and the case studies are Colorado 52 and 38 transfers rising from 1-11 to 9-4, Charlotte fired at 6-16, Texas State 8-5 twice and extended, and Indiana making the playoff with 30 transfers. The state-space and volatility equations are slide figures, so they are reconstructed as labeled LaTeX from the unambiguous prose and flagged in the assumptions, attributed to Glickman-Stern and Glickman 2001. The invariant for GSE is to carry the churn-driven volatility kernel and the parsimony veto, while recording that the NIL-era sample is short and that transfer quality, recruiting, and NIL amounts are unobserved confounders. The 2025 season examples reinforce the point: programs such as Purdue, UNLV, West Virginia, North Carolina, Western Kentucky, and Oklahoma State show wide year-over-year swings that a churn-aware volatility model is built to anticipate rather than treat as noise, which is exactly the regime-aware uncertainty GSE needs before committing to a college projection.",
+      "retrocausal_genealogy": "The deck originates in college football's move to perpetual free-agency: 2014 CFP, 2018 transfer portal, 2021 one-time transfer + NIL (NCAA v Alston), 2024 unlimited immediate eligibility. Yurko (CMU) with Benz asks how this changes team-strength volatility. Lineage: Glickman-Stern 1998/2017 state-space ratings, Glickman 2001 stochastic volatility, cfbfastR/College Football Data API. Motivating cases: military academies fewest transfers; Colorado/Charlotte/Texas State/Indiana lead churn with divergent outcomes.",
+      "theory_of_mind": "Each program is a latent autoregressive strength whose year-to-year innovation variance is driven by roster decisions: variance entering season t = f(NIL-era indicator, incoming transfers). A high-churn team is a wider innovation distribution around its AR mean. Fitted: NIL era lowers between-season variance but transfers offset; pass-defense transfers associate with higher variance. Game mean Yijt = theta_it - theta_jt + constant HA; FCS pooled as one team; bowls/playoffs excluded (opt-outs).",
+      "cross_layer_veto": "Posterior predictive holdout (train 2014-22, sample '23 rating from innovation dist, test 23-24): game-level RMSE/ELPD won by classic Glickman-Stern 1998, transfer model (no positions) next, stochastic volatility 2001 by far worst; transfer model best NIL-era in-sample WAIC. Parsimony veto on flexible volatility. Limitations: new-coach<->transfers confound, selection bias (fewer but better transfers), recruiting ignored, no NIL amounts, player quality ignored, possible AR-parameter change, NIL-era data only since 2021. Equations are slide figures, reconstructed as labeled LaTeX, flagged."
+    }
+  ],
+  "universal_lens": "College football team strength is modeled as a Bayesian autoregressive state-space rating whose innovation variance is driven by incoming transfers and the NIL-era regime, capturing the new era of roster-churn uncertainty, with a parsimony veto showing the classic constant-variance model still wins out-of-sample game prediction.",
+  "gsi_mapping": "GSI treats Yijt~N(theta_it-theta_jt+HA,sigma^2) with theta_it=gamma*theta_i,t-1+eps, eps~N(0,tau^2) (Glickman-Stern), extended to log tau^2_it=b0+b1*NIL_t+b2*Transfers_it; 9003 FBS games 2014-2024 via cfbfastR, FCS pooled, bowls/playoffs excluded; holdout RMSE/ELPD favors GS1998, transfer model best NIL-era WAIC, SV2001 worst; incoming-departing transfer r~0.75.",
+  "gse_mapping": "GSE lifts the churn-driven innovation-volatility kernel (transfers + NIL regime), the autoregressive state-space CFB rating, the temporal holdout sampling next-season ratings from the innovation distribution, and the parsimony veto against overfit volatility; transfer quality/recruiting/NIL amounts are recorded unobserved confounders; all outputs are statistical ratings, never sportsbook lines."
+}
