@@ -1,0 +1,890 @@
+{
+ "book_id": "76491de7f01ce9ce",
+ "source_status": "COMPLETE",
+ "source_note": "Philipp Petersen (Universitaet Wien) and Jakob Zech (Universitaet Heidelberg), 'Mathematical Theory of Deep Learning.' The local file is arXiv:2407.18384v4 [cs.LG], title page dated January 16, 2026 (arXiv stamp 15 Jan 2026): a full book manuscript with Preface, 17 chapters, and appendices, grown from the authors' Vienna and Heidelberg lecture courses. The local filename, PetersenZech-2024-MathematicalTheoryOfDeepLearning.pdf, reflects the first arXiv version year (2024), and the spawn task described the work as a 2025 draft; the file itself is the v4 text dated January 2026, and the file's own facts govern. PDF: 18,912,769 bytes; scan digest sha256(str(size) + file bytes) = 76491de7f01ce9ce49d63ffc58396bea6ee90874425622752ce45820ca6de397; book_id = 76491de7f01ce9ce. Extracted text: 950,560 bytes, 16,447 lines; prose is clean and complete, while mathematical glyphs are partially flattened by extraction (superscripts and subscripts set inline), so verbatim quotes were drawn from clean prose passages and each was proven contiguous in the text file under the verifier's normalization. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "three_pillars_framework",
+   "name": "Deep learning theory is organized by three pillars, approximation, optimization, and statistical learning, matching the three error terms of the total error",
+   "page": "Preface, text lines ~160-170",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A trained model error can be decomposed into approximation, optimization, and generalization components",
+    "The three parts can be analyzed with separate mathematical machinery"
+   ],
+   "breakdown_regime": "The decomposition is an organizing device, not a bound by itself: the terms interact in practice (the optimizer sees only the empirical risk, and the hypothesis class is chosen before data arrives), so pillar-wise optima need not compose into a global optimum.",
+   "domain": "deep learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps an explicit error budget with three accounts for every learned component: representation error (can the class express the target), search error (did fitting find it), and estimation error (does sample performance transfer). No component is promoted on the strength of one account while another account is unmeasured, because the book's whole structure says total error is the sum of the three.",
+    "source_operator": "three_pillars_framework",
+    "telemetry": "Per-component ablation and audit reports that attribute held-out error to capacity, optimization, or sample size"
+   },
+   "verbatim_quote": "The material is structured around the three main pillars of deep learning theory: Approximation theory, Optimization theory, and Statistical Learning theory. This structure, which corresponds to the three error terms typically occuring in the theoretical analysis of deep learning models"
+  },
+  {
+   "primitive_id": "empirical_risk_minimization",
+   "name": "Training is empirical risk minimization: average the loss over the sample and minimize it over the network class",
+   "page": "Ch. 1, Sec. 1.2, eq. (1.2.3), text lines ~485-510",
+   "latex": "\\hat{R}_S(\\Phi) = \\frac{1}{m} \\sum_{i=1}^{m} L(\\Phi(x_i), y_i)",
+   "symbol_and_unit_ledger": {
+    "\\hat{R}_S": "empirical risk of the network on sample S (loss units)",
+    "m": "sample size (count)",
+    "L": "loss function (loss units)",
+    "\\Phi(x_i)": "network prediction at input x_i",
+    "y_i": "observed output for sample i"
+   },
+   "assumptions": [
+    "Sample S of input-output pairs is given",
+    "A loss function L measuring dissimilarity is fixed",
+    "The network output depends differentiably on the parameters when gradient methods are used"
+   ],
+   "breakdown_regime": "The empirical risk measures fit at the training points only. Driving it to zero says nothing by itself about unseen inputs, which is the interpolation trap the book formalizes in Chapters 9 and 14.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every fitted engine component is an empirical risk minimizer over a historical sample with an explicit loss. The engine records the sample, the loss, and the achieved empirical risk for each fit, so any later claim about a component can be traced to the exact minimization that produced it, and the gap to population risk is booked separately under the risk decomposition primitive.",
+    "source_operator": "empirical_risk_minimization",
+    "telemetry": "Training samples, loss definitions, and achieved empirical risk values per fitted component"
+   },
+   "verbatim_quote": "A standard way of achieving (1.2.2) is by minimizing the so-called empirical risk of Φ with respect to the sample S"
+  },
+  {
+   "primitive_id": "deep_composition_formalism",
+   "name": "A deep network is a composition of affine maps and componentwise activations, hence a parameterized function class whose parameters are the affine entries",
+   "page": "Ch. 1, Sec. 1.2, text lines ~440-465",
+   "latex": "\\Phi(x) = T_{L+1} \\circ \\sigma \\circ \\cdots \\circ T_1 \\circ \\sigma \\circ T_0(x)",
+   "symbol_and_unit_ledger": {
+    "T_j": "affine map of layer j, T_j(x) = W_j x + b_j",
+    "\\sigma": "activation function applied componentwise",
+    "L": "number of hidden layers (count)",
+    "x": "input vector in R^d"
+   },
+   "assumptions": [
+    "Layers are feedforward: neurons in layer l+1 read only layer l",
+    "The same activation is applied componentwise within a layer",
+    "Parameters are exactly the weights and biases of the affine maps"
+   ],
+   "breakdown_regime": "The formalism covers feedforward architectures; recurrence, attention with data-dependent weights, and weight sharing need the extensions of Chapter 17, and the realization map it induces is nonlinear in the parameters even though each layer is affine in its input.",
+   "domain": "neural network theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's reasoning stack has the same shape: layers of evidence transforms composed in sequence, with the parameter vector being the full set of transform coefficients. Treating the stack as one parameterized class, rather than as unrelated heuristics, is what makes capacity, training, and generalization analysis applicable to the whole stack at once.",
+    "source_operator": "deep_composition_formalism",
+    "telemetry": "The engine's layer graph, its coefficient inventory, and intermediate activations on logged cases"
+   },
+   "verbatim_quote": "Similar to a single neuron, (deep) neural networks can be viewed as a parameterized function class, with the parameters being the entries of the matrices and vectors determining the affine transformations"
+  },
+  {
+   "primitive_id": "relu_activation_dead_neurons",
+   "name": "ReLU has derivative zero or one, which limits vanishing gradients, but a neuron whose preactivation stays negative is dead: constant output and zero gradient, untrainable by gradient methods",
+   "page": "Ch. 2, Sec. 2.3, text lines ~1020-1045",
+   "latex": "\\sigma_{\\mathrm{ReLU}}(x) = \\max\\{x, 0\\}",
+   "symbol_and_unit_ledger": {
+    "\\sigma_{\\mathrm{ReLU}}": "rectified linear unit activation",
+    "x": "preactivation (real number)"
+   },
+   "assumptions": [
+    "ReLU activation",
+    "Gradient-based training",
+    "The dead case arises when a bias makes the unit output zero for all inputs, as in the book's example with negative bias"
+   ],
+   "breakdown_regime": "ReLU is not differentiable at zero, is unbounded above, and passes negative evidence by deleting it entirely; a dead unit is a stationary point, so gradient training cannot revive it from that configuration.",
+   "domain": "neural network theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any gated unit in the engine can die the same way: if a situation gate's threshold regime makes its output constant across all observed cases, its gradient signal is zero and downstream fitting treats it as absent. The engine therefore monitors per-gate activation rates and flags a silent gate as a failed sensor to be repaired, never as evidence that the gated factor does not matter.",
+    "source_operator": "relu_activation_dead_neurons",
+    "telemetry": "Per-gate activation frequency, output variance, and gradient magnitude across logged cases"
+   },
+   "verbatim_quote": "Since its derivative is always zero or one, it does not suffer from the vanishing gradient problem to the same extent as the sigmoid function. However, ReLU can suffer from the so-called dead neurons problem."
+  },
+  {
+   "primitive_id": "universal_approximation_thm39",
+   "name": "Shallow networks are universal approximators of continuous functions if and only if the activation is not a polynomial (Theorem 3.9)",
+   "page": "Ch. 3, Sec. 3.1, Theorem 3.9, text line ~1272",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Activation in the class M of Definition 3.1 (measurable, not a.e. polynomial in the book's setup)",
+    "Arbitrary width is allowed",
+    "Approximation is uniform on compact sets for continuous targets"
+   ],
+   "breakdown_regime": "The theorem is qualitative: it gives no rate, no width bound, and no way to find the weights. The book itself warns that such existence results leave the practically relevant questions open, which is why the later chapters replace it with rates.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Representation possibility is not the engine's binding constraint: a wide enough shallow readout can approximate any continuous evidence-to-projection map. Design effort therefore goes to approximation rates, sample sizes, and trainability, and a failed fit is never excused by claiming the class could not express the target without a rate argument attached.",
+    "source_operator": "universal_approximation_thm39",
+    "telemetry": "Width versus held-out approximation error curves for engine readout classes"
+   },
+   "verbatim_quote": "Then Nd1 (σ; 1) is a universal approximator of C 0 (Rd ) if and only if σ is not a polynomial."
+  },
+  {
+   "primitive_id": "kolmogorov_superposition_thm321",
+   "name": "Kolmogorov superposition: every continuous multivariate function is a sum of 2d+1 compositions of univariate functions, a fixed depth-2, width O(d^2) representation (Theorem 3.21)",
+   "page": "Ch. 3, Sec. 3.2, Theorem 3.21 and discussion, text lines ~1716-1900",
+   "latex": "f(x) = \\sum_{j=1}^{2d+1} f_j\\left(\\sum_{i=1}^{d} \\varphi_{i,j}(x_i)\\right)",
+   "symbol_and_unit_ledger": {
+    "f": "continuous target function on R^d",
+    "f_j": "univariate outer functions",
+    "\\varphi_{i,j}": "univariate inner functions, independent of f",
+    "d": "input dimension (count)"
+   },
+   "assumptions": [
+    "Target continuous on a compact cube",
+    "Inner functions can be chosen independently of the target",
+    "Exact representation, not approximation"
+   ],
+   "breakdown_regime": "The inner and outer univariate functions can be extremely rough and hard to approximate themselves, and the companion superexpressive activation result (Proposition 3.20) encodes all rational polynomials into one activation. The book concludes these results have highly limited practical relevance; they are possibility results, not constructions.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The theorem licenses the engine's additive factor architecture in principle: a multivariate projection can be decomposed into per-factor univariate response curves combined by an outer sum. The engine uses the decomposition as a structural prior for interpretability, while heeding the book's warning that the univariate pieces may be rough, so their fitted smoothness is measured rather than assumed.",
+    "source_operator": "kolmogorov_superposition_thm321",
+    "telemetry": "Fitted univariate factor curves and their measured roughness (variation, Lipschitz estimates)"
+   },
+   "verbatim_quote": "Kolmogorov's superposition theorem is intriguing as it shows that approximating d-dimensional functions can be reduced to the (generally much simpler) one-dimensional case through compositions."
+  },
+  {
+   "primitive_id": "spline_approximation_rate_thm43",
+   "name": "N-term B-spline superposition approximates C^k functions at rate C N^{-k/d}: accuracy epsilon needs order epsilon^{-d/k} parameters, exponential in dimension (Theorem 4.3, Remark 4.4)",
+   "page": "Ch. 4, Sec. 4.1, Theorem 4.3 and Remark 4.4, text lines ~1996-2010",
+   "latex": "\\left\\| f - \\sum_{i=1}^{N} c_i B_i \\right\\|_{L^\\infty([0,1]^d)} \\le C N^{-k/d} \\|f\\|_{C^k([0,1]^d)}",
+   "symbol_and_unit_ledger": {
+    "B_i": "multivariate cardinal B-splines of order n from Definition 4.1",
+    "c_i": "superposition coefficients, bounded by C times the sup norm of f",
+    "N": "number of spline terms (count)",
+    "k": "smoothness order of the target",
+    "d": "input dimension (count)"
+   },
+   "assumptions": [
+    "Target in C^k([0,1]^d) with 0 < k at most n, the spline order",
+    "Coefficients uniformly bounded as stated",
+    "Uniform (sup norm) error on the unit cube"
+   ],
+   "breakdown_regime": "The rate is the curse of dimensionality in concrete form: for fixed smoothness the parameter cost of accuracy grows exponentially in d, and the bound is an upper bound whose constant depends on the C^k norm of the target.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Smooth response surfaces in the engine are priced by this rate: a claimed fit quality for a k-smooth surface over d inputs implies a basis budget of order epsilon^{-d/k}. The engine refuses to certify a smooth high-dimensional fit whose term count cannot support its claimed accuracy, and reports the implied budget next to the fit.",
+    "source_operator": "spline_approximation_rate_thm43",
+    "telemetry": "Basis term counts, fitted smoothness order, and sup-norm residuals of engine response surfaces"
+   },
+   "verbatim_quote": "The number of parameters N determines the approximation accuracy N −k/d . This implies that achieving accuracy ε > 0 requires O(ε−d/k ) parameters (according to this upper bound), which grows exponentially in d."
+  },
+  {
+   "primitive_id": "nn_spline_parity_thm49",
+   "name": "Networks with higher-order sigmoidal activations match the spline rate C N^{-k/d} with size at most C N and depth logarithmic in d and k (Theorem 4.9)",
+   "page": "Ch. 4, Sec. 4.2, Theorem 4.9 and discussion, text lines ~2226-2260",
+   "latex": "\\| f - \\Phi_N \\|_{L^\\infty([0,1]^d)} \\le C N^{-k/d} \\|f\\|_{C^k([0,1]^d)}",
+   "symbol_and_unit_ledger": {
+    "\\Phi_N": "neural network with sigmoidal activation of order q",
+    "N": "number of spline terms matched (count)",
+    "k": "target smoothness",
+    "d": "input dimension (count)"
+   },
+   "assumptions": [
+    "Sigmoidal activation of order q at least 2",
+    "Target in C^k with 0 < k at most n and n at least 2",
+    "Depth is the ceiling of log base 2 of d plus the ceiling of log base q of (k-1)"
+   ],
+   "breakdown_regime": "Parity with splines means networks inherit the spline rate including its curse of dimensionality; nothing here beats N^{-k/d}, and the construction uses higher-order sigmoidals rather than the ReLU used in practice.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine loses nothing by using learned readouts instead of hand-built spline tables for smooth response surfaces: same rate, comparable parameter count, and depth that grows only logarithmically in smoothness. Readout choice is therefore made on auditability and data fit, not on approximation power.",
+    "source_operator": "nn_spline_parity_thm49",
+    "telemetry": "Parameter counts and sup residuals of spline-table versus network readouts on the same surfaces"
+   },
+   "verbatim_quote": "Theorem 4.9 shows that neural networks with higher-order sigmoidal functions can approximate smooth functions with the same accuracy as spline approximations while having a comparable number of parameters."
+  },
+  {
+   "primitive_id": "cpwl_relu_equivalence_thm57",
+   "name": "Every continuous piecewise linear function with n affine pieces is exactly a ReLU network, of size, width order d n 2^n and depth order n (Theorem 5.7)",
+   "page": "Ch. 5, Sec. 5.2, Theorem 5.7, text line ~2641",
+   "latex": "\\mathrm{size}(\\Phi_f) = O(d n 2^n), \\quad \\mathrm{width}(\\Phi_f) = O(d n 2^n), \\quad \\mathrm{depth}(\\Phi_f) = O(n)",
+   "symbol_and_unit_ledger": {
+    "\\Phi_f": "ReLU network realizing the cpwl function f exactly",
+    "n": "number of affine pieces of f (count)",
+    "d": "input dimension (count)",
+    "\\Omega": "convex domain"
+   },
+   "assumptions": [
+    "Target continuous and piecewise linear with n affine pieces",
+    "Domain convex",
+    "Exact realization, no approximation error"
+   ],
+   "breakdown_regime": "The generic construction is exponential in the number of pieces, so exact conversion of a hand-built piecewise linear rule can be far larger than the rule itself; structured cases (triangulations, Theorem 5.14) do better, but arbitrary cpwl surfaces do not.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hand-built piecewise linear scoring surfaces and learned ReLU components live in one hypothesis space: each can be audited against the other exactly. The engine keeps both forms for important surfaces, converts when an audit needs it, and budgets the conversion cost, which can be exponential in piece count, before promising an exact translation.",
+    "source_operator": "cpwl_relu_equivalence_thm57",
+    "telemetry": "Piece counts and converted sizes of the engine's piecewise linear surfaces"
+   },
+   "verbatim_quote": "Then, there exists a ReLU neural network Φf such that Φf (x) = f (x) for all x ∈ Ω and size(Φf ) = O(dn2n ), width(Φf ) = O(dn2n ), depth(Φf ) = O(n)."
+  },
+  {
+   "primitive_id": "maxmin_representation_prop58",
+   "name": "Every cpwl function on a convex domain has a max-min representation: a maximum over minima of its affine pieces (Proposition 5.8, eq. 5.2.1)",
+   "page": "Ch. 5, Sec. 5.2, Proposition 5.8, eq. (5.2.1), text line ~2658",
+   "latex": "f(x) = \\max_{1 \\le j \\le m} \\min_{i \\in s_j} g_i(x)",
+   "symbol_and_unit_ledger": {
+    "g_i": "the n affine pieces of f",
+    "s_j": "index subsets of the affine pieces",
+    "m": "number of outer max terms (count)"
+   },
+   "assumptions": [
+    "Target cpwl with n affine pieces as in Definition 5.5",
+    "Domain convex"
+   ],
+   "breakdown_regime": "The representation is exact but not unique and not necessarily small; the number of max terms can grow combinatorially, and minima of affine functions are concave, so the form exposes structure without making optimization convex.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Max-min form is the engine's interpretable normal form for scenario logic: the outer maximum selects the governing scenario and the inner minimum is the binding constraint inside it. Any piecewise linear engine surface can be rewritten this way so a human can read which scenario and which constraint produced a given output.",
+    "source_operator": "maxmin_representation_prop58",
+    "telemetry": "Scenario counts and binding-constraint identities logged per engine output"
+   },
+   "verbatim_quote": "Then there exists m ∈ N and sets sj ⊆ {1, . . . , n} for j ∈ {1, . . . , m}, such that f (x) = max min(gi (x)) for all x ∈ Ω."
+  },
+  {
+   "primitive_id": "pieces_depth_width_thm63",
+   "name": "A cpwl network of depth L has at most (p times width)^L pieces: width grows pieces polynomially, depth exponentially (Theorem 6.3); matching lower bounds force error at least C (2 width)^{-2L} (Theorem 6.4)",
+   "page": "Ch. 6, Sec. 6.1, Theorems 6.3 and 6.4, text lines ~3560-3620",
+   "latex": "\\mathrm{Pieces}(\\Phi) \\le (p \\cdot \\mathrm{width}(\\Phi))^L",
+   "symbol_and_unit_ledger": {
+    "p": "number of pieces of the activation function (2 for ReLU)",
+    "width(\\Phi)": "maximal layer width (count)",
+    "L": "number of hidden layers (count)",
+    "Pieces(\\Phi)": "number of affine regions of the realized function (count)"
+   },
+   "assumptions": [
+    "Activation continuous piecewise linear with p pieces",
+    "Univariate input and output for the stated form",
+    "Upper bound is worst case over parameters"
+   ],
+   "breakdown_regime": "The bound counts what an architecture could realize, not what trained parameters do realize; Chapter 6.3 shows typical random networks sit far below it, so the bound must not be quoted as realized capacity.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Depth is the engine's regime-multiplication dial: when a reasoning surface needs many distinct linear regimes, adding depth multiplies regime capacity while adding width only adds to it polynomially. Capacity plans for engine surfaces are therefore written in terms of depth first, with width sized to the per-regime complexity.",
+    "source_operator": "pieces_depth_width_thm63",
+    "telemetry": "Architecture depth and width of engine surfaces, with realized region counts measured on sampled inputs"
+   },
+   "verbatim_quote": "While increasing the width can polynomially increase the number of pieces, increasing the depth can result in exponential increase. This is a first indication of the prowess of depth of neural networks."
+  },
+  {
+   "primitive_id": "typical_pieces_thm69",
+   "name": "Randomly initialized deep networks have far fewer pieces than the maximum: along a segment the expected piece count grows essentially linearly in depth times total neurons, not exponentially (Theorem 6.9, Remark 6.10)",
+   "page": "Ch. 6, Sec. 6.3, Theorem 6.9 and Remark 6.10, text lines ~3850-4030",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Random biases and weights with the maximal internal derivative bounded as in Definition 6.8",
+    "Expectation over the random initialization",
+    "Pieces counted along a unit line segment through the domain"
+   ],
+   "breakdown_regime": "The result is about initialization, not trained networks, and it needs the internal derivative control that standard initialization schemes are designed to provide; adversarially chosen weights can still approach the exponential bound.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Capacity claims in the engine are calibrated to measured, realized complexity rather than architecture maxima. A deep component is not credited with exponential expressivity by default; its realized region count is measured at initialization and after fitting, and only the measured number enters capacity arguments.",
+    "source_operator": "typical_pieces_thm69",
+    "telemetry": "Empirical linear-region counts along sampled segments, at initialization and after fitting"
+   },
+   "verbatim_quote": "This shows that in expectation, the number of pieces is linear in the number of layers, as opposed to the exponential upper bound of Theorem 6.3."
+  },
+  {
+   "primitive_id": "square_sawtooth_lemma72",
+   "name": "Depth approximates the square function exponentially fast: the sawtooth construction s_n has depth n, width 3, size at most 7n, and sup error at most 2^{-2n-1} (Lemma 7.2)",
+   "page": "Ch. 7, Sec. 7.1, Lemma 7.2, text line ~4169",
+   "latex": "\\sup_{x \\in [0,1]} |x^2 - s_n(x)| \\le 2^{-2n-1}",
+   "symbol_and_unit_ledger": {
+    "s_n": "piecewise linear interpolant of x^2 at 2^n breakpoints, realized as a ReLU network",
+    "n": "number of sawtooth compositions, equal to depth (count)"
+   },
+   "assumptions": [
+    "Domain [0,1]",
+    "ReLU activation",
+    "s_n is the linear interpolant of the square at dyadic breakpoints"
+   ],
+   "breakdown_regime": "The construction is specific to the square on [0,1] and its iterates; it is the engine inside the multiplication and polynomial results, not a general approximation scheme by itself, and shallow networks provably cannot match it (Theorem 6.4).",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Quadratic interaction terms in the engine are implemented with small deep units rather than wide shallow ones, because this lemma prices a quadratic at single-digit size per binary digit of accuracy. When an engine component needs a product-like nonlinearity, depth is spent here first.",
+    "source_operator": "square_sawtooth_lemma72",
+    "telemetry": "Approximation error of engine quadratic units versus their depth"
+   },
+   "verbatim_quote": "In conclusion, we have shown that sn : [0, 1] → [0, 1] approximates the square function uniformly on [0, 1] with exponentially decreasing error in the neural network size."
+  },
+  {
+   "primitive_id": "multiplication_network_lemma73",
+   "name": "Multiplication of two numbers is approximable to accuracy epsilon by a ReLU network of size and depth order 1 + |log epsilon|, via the polarization identity and the square construction (Lemma 7.3)",
+   "page": "Ch. 7, Sec. 7.2, Lemma 7.3, eq. (7.2.1), text lines ~4223-4260",
+   "latex": "x \\cdot y = \\frac{(x+y)^2 - (x-y)^2}{4}",
+   "symbol_and_unit_ledger": {
+    "x, y": "factors in [-1, 1]",
+    "\\Phi^\\times_\\varepsilon": "ReLU network approximating the product with sup error at most epsilon"
+   },
+   "assumptions": [
+    "Inputs in [-1, 1]",
+    "Polarization identity reduces product to squares",
+    "The approximant is exactly zero when either factor is zero"
+   ],
+   "breakdown_regime": "Cost grows logarithmically in accuracy but the construction is for scalar products on a bounded range; unbounded ranges need rescaling, and n-fold products (Proposition 7.4) pay a binary-tree overhead per additional factor.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Multiplicative interactions between evidence factors are cheap in the engine and are never linearized away for cost reasons: a product of two bounded factors costs size logarithmic in the accuracy target. Wherever the reasoning says two effects multiply, the implementation multiplies, with the accuracy budget stated.",
+    "source_operator": "multiplication_network_lemma73",
+    "telemetry": "Product-unit sizes and sup errors for engine interaction terms"
+   },
+   "verbatim_quote": "We start with the multiplication of two numbers, in which case neural networks of logarithmic size in the desired accuracy are sufficient, [332, Proposition 3]."
+  },
+  {
+   "primitive_id": "analytic_exponential_rate_prop76",
+   "name": "Analytic non-linear functions are approximable by deep ReLU networks at an exponential rate: size at most N and depth order sqrt(N) give sup error at most C exp(-beta sqrt(N)) (Proposition 7.6)",
+   "page": "Ch. 7, Sec. 7.3, Proposition 7.6, text line ~4431",
+   "latex": "\\sup_{x \\in [-1,1]} |f(x) - \\Phi_N(x)| \\le C \\exp(-\\beta \\sqrt{N})",
+   "symbol_and_unit_ledger": {
+    "f": "analytic, non-linear target on [-1, 1]",
+    "N": "network size budget (count)",
+    "C, \\beta": "positive constants depending on f",
+    "\\Phi_N": "deep ReLU network with size at most N and depth at most C sqrt(N)"
+   },
+   "assumptions": [
+    "Target analytic on [-1, 1] and not linear",
+    "Univariate case as stated",
+    "Constants depend on the target's Taylor coefficients"
+   ],
+   "breakdown_regime": "Analyticity is a strong assumption: merely smooth or piecewise smooth targets fall back to the polynomial rates of Theorem 7.11, and the constants degrade as the analyticity radius shrinks toward the interval.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Very smooth, physics-like response components in the engine are expected to fit nearly exactly at modest size. When such a component fits poorly, this result redirects suspicion from capacity to the data or the smoothness premise itself, and the audit asks which of those failed before any size is added.",
+    "source_operator": "analytic_exponential_rate_prop76",
+    "telemetry": "Fit residuals of smooth engine subcomponents as a function of allocated size"
+   },
+   "verbatim_quote": "Let f : [−1, 1] → R be analytic but not linear. Then there exist constants C, β > 0 such that for every N ∈ N, there exists a ReLU neural network ΦN such that"
+  },
+  {
+   "primitive_id": "depth_separation_cor78",
+   "name": "Depth separation: for analytic non-linear targets, deep networks reach error epsilon exponentially fast in size while every depth-at-most-L network has error at least C^{-1} size^{-2L} (Corollary 7.8)",
+   "page": "Ch. 7, Sec. 7.3, Corollary 7.8, eqs. (7.3.2) and (7.3.3), text lines ~4495-4515",
+   "latex": "\\sup_{x \\in [-1,1]} |f(x) - \\Phi_{\\mathrm{shallow}}(x)| \\ge C^{-1} \\, \\mathrm{size}(\\Phi_{\\mathrm{shallow}})^{-2L}",
+   "symbol_and_unit_ledger": {
+    "\\Phi_{\\mathrm{shallow}}": "any ReLU network of depth at most L",
+    "L": "depth cap (count)",
+    "C": "constant depending on the analytic target f"
+   },
+   "assumptions": [
+    "Target analytic and non-linear on [-1, 1]",
+    "Lower bound holds for every shallow network, uniformly",
+    "Upper bound is Proposition 7.6"
+   ],
+   "breakdown_regime": "The separation is proven for specific target classes; it does not say depth helps for every function, and for fixed small L the shallow lower bound still decays polynomially, so shallow models are inefficient here rather than useless.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Persistent underfitting by a shallow engine head on a structured target is treated as architecture evidence, not signal absence: this corollary is the standing justification for answering a shallow failure with depth before concluding the underlying pattern is not there.",
+    "source_operator": "depth_separation_cor78",
+    "telemetry": "Shallow versus deep parameter counts at equal held-out error for engine heads"
+   },
+   "verbatim_quote": "The proposition shows that the approximation of certain (highly relevant) functions requires significantly more parameters when using shallow instead of deep architectures. Such statements are known as depth separation results."
+  },
+  {
+   "primitive_id": "smooth_rate_thm711",
+   "name": "Deep ReLU networks approximate C^{k,s} functions at rate C N^{-(k+s)/d} with size order N log N and depth order log N, by partition of unity, local Taylor polynomials, and approximate multiplication (Theorem 7.11)",
+   "page": "Ch. 7, Sec. 7.4, Theorem 7.11, eq. (7.4.3), text line ~4628",
+   "latex": "\\inf_{w} \\| f - \\Phi_N(\\cdot, w) \\|_{C^0([0,1]^d)} \\le C \\|f\\|_{C^{k,s}} N^{-(k+s)/d}",
+   "symbol_and_unit_ledger": {
+    "C^{k,s}": "Hölder space of functions with k derivatives and s-Hölder highest derivative",
+    "\\Phi_N": "ReLU network of size order N log N and depth order log N",
+    "(k+s)/d": "rate exponent: total smoothness over dimension"
+   },
+   "assumptions": [
+    "Target in C^{k,s} on the unit cube",
+    "Construction: uniform mesh, partition of unity, local Taylor polynomials, approximate multiplication by Lemma 7.3",
+    "The earlier cpwl route (Theorem 5.23) gives the Hölder case with bounded depth"
+   ],
+   "breakdown_regime": "Up to logarithmic factors the rate equals the spline rate, so depth does not beat the curse for generic smooth classes; it only matches the optimal rate with a more flexible class, and the constant depends on d, k, s and the target norm.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This construction is the engine's local-expert pattern made precise: partition the state space into cells, fit a simple local model in each cell, blend with a partition of unity, and multiply factors approximately. The theorem prices the pattern: total error scales as N^{-(k+s)/d}, so cell count and local smoothness jointly determine what accuracy a local-expert design can claim.",
+    "source_operator": "smooth_rate_thm711",
+    "telemetry": "Cell counts, per-cell local fit errors, and blend weights in engine local-expert components"
+   },
+   "verbatim_quote": "The idea of the proof is to use the so-called \"partition of unity method\": First we will construct a partition of unity (φν )ν , such that for an appropriately chosen M ∈ N each φν has support on a O(1/M ) neighborhood of a point η ∈ Ω."
+  },
+  {
+   "primitive_id": "curse_nonlinear_width_thm84",
+   "name": "Curse of dimensionality as a lower bound: the continuous nonlinear N-width of the C^k unit ball is at least C_k N^{-k/d}, so any network with continuous weight selection needs N at least (C_k/epsilon)^d parameters for accuracy epsilon (Theorem 8.4, Corollary 8.6)",
+   "page": "Ch. 8, Sec. 8.1.2, Theorem 8.4, Corollary 8.6, eq. (8.1.5), text lines ~5080-5140",
+   "latex": "N \\ge \\left( \\frac{C_k}{\\varepsilon} \\right)^d",
+   "symbol_and_unit_ledger": {
+    "\\gamma_{k,d,N}": "continuous nonlinear N-width of the C^k unit ball, eq. (8.1.4)",
+    "N": "number of parameters (count)",
+    "k": "smoothness",
+    "d": "dimension (count)",
+    "\\varepsilon": "target uniform accuracy"
+   },
+   "assumptions": [
+    "Weight selection map W from targets to parameters is continuous",
+    "Worst case over the whole C^k unit ball",
+    "Holds for every architecture, activation, and sparsity pattern"
+   ],
+   "breakdown_regime": "Continuity of the weight selection is essential: with discontinuous selection, space-filling pathologies (and the superexpressive activation of Chapter 3) make the width zero. The bound is a worst-case statement about a whole smoothness ball, not about any one structured target.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's impossibility filter: any claim of dimension-free accuracy on an unstructured smooth class is rejected on sight, and the claimant must name the structural assumption (compositionality, manifold support, Barron-type spectrum) that exempts the target from the lower bound. No structural assumption, no exemption.",
+    "source_operator": "curse_nonlinear_width_thm84",
+    "telemetry": "Accuracy claims logged with their parameter counts, dimensions, and named structural assumptions"
+   },
+   "verbatim_quote": "The statement shows again a curse of dimensionality: for any continuous weight selection process, and any neural network architecture of size at most N ∈ N, the best achievable uniform approximation is lower bounded by Ck N −k/d ."
+  },
+  {
+   "primitive_id": "barron_class_thm812",
+   "name": "Barron class: functions with bounded first Fourier moment are approximable by one-hidden-layer networks with mean-square error at most c/N on the unit ball, with no dimension factor in the rate (Theorem 8.12)",
+   "page": "Ch. 8, Sec. 8.2, Theorem 8.12, eq. (8.2.1), text lines ~5335-5480",
+   "latex": "\\frac{1}{|B_1^d|} \\int_{B_1^d} |f(x) - \\Phi_f(x)|^2 \\, dx \\le \\frac{c}{N}",
+   "symbol_and_unit_ledger": {
+    "\\Gamma_C": "Barron class: functions whose representing density g satisfies the integral of |xi| |g(xi)| at most C",
+    "N": "number of hidden neurons (count)",
+    "c": "any constant above 4 C^2",
+    "B_1^d": "unit ball in R^d"
+   },
+   "assumptions": [
+    "Target in the Barron class Gamma_C for some finite C",
+    "Sigmoidal activation",
+    "Error measured in mean square over the unit ball, not uniformly"
+   ],
+   "breakdown_regime": "The constant C can itself grow with dimension (the book's Exercise 8.21 gives a Gaussian in Gamma of order sqrt(d)), the guarantee is mean-square rather than uniform, and membership in the class is a real restriction that many targets fail.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine screens candidate target surfaces for Barron-type spectral decay before choosing a head: where the first Fourier moment is finite and moderate, a shallow wide head is statistically cheap even in high dimension; where the moment is huge or infinite, the curse pricing of the spline and width results applies instead.",
+    "source_operator": "barron_class_thm812",
+    "telemetry": "Spectral moment estimates of target surfaces and the head architectures chosen for them"
+   },
+   "verbatim_quote": "Importantly, the dimension d does not enter on the right-hand side of (8.2.1), in particular the convergence rate is not directly affected by the dimension, which is in stark contrast to the results of the previous chapters."
+  },
+  {
+   "primitive_id": "compositionality_rate",
+   "name": "Compositional functions on a directed acyclic graph whose nodes consume at most m inputs are approximable at rate N^{-(k+s)/m}: the maximal node arity, not the ambient dimension, sets the rate (Sec. 8.3)",
+   "page": "Ch. 8, Sec. 8.3, text lines ~5650-5780",
+   "latex": "\\sup_{x \\in [0,1]^d} |F_M(x) - \\Phi_{F_M}(x)| \\le N^{-(k+s)/m}",
+   "symbol_and_unit_ledger": {
+    "F_M": "compositional target built on a DAG with M vertices",
+    "m": "maximal number of ingoing edges per vertex (count)",
+    "d": "ambient input dimension (count)",
+    "\\Phi_{F_M}": "ReLU network of size order N log N"
+   },
+   "assumptions": [
+    "Each node function fj has C^{k,s} norm at most 1",
+    "Graph is acyclic with one output vertex",
+    "Node functions depend on at most m variables each"
+   ],
+   "breakdown_regime": "The constant depends on the graph size M and on m, k, s; if some node consumes many inputs the rate degrades toward the ambient curse, and the result presumes the compositional structure is real, not imposed on a target that lacks it.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the design law for the engine's reasoning graph: keep every node's input arity small. A pipeline of narrow compositions inherits the rate of its widest node, so the engine audits the graph by maximal arity and refactors any node that silently accumulates inputs, because that node alone sets the price of the whole graph.",
+    "source_operator": "compositionality_rate",
+    "telemetry": "Reasoning graph arity distribution and per-node approximation errors"
+   },
+   "verbatim_quote": "As a next instance of types of functions for which the curse of dimensionality can be overcome, we study functions with compositional structure. In words, this means that we study high-dimensional functions that are constructed by composing many low-dimensional functions."
+  },
+  {
+   "primitive_id": "manifold_rate_prop818",
+   "name": "Functions on a smooth compact m-dimensional manifold in R^d are approximable at rate C N^{-(k+s)/m}: the intrinsic dimension m, not the ambient d, sets the rate (Proposition 8.18)",
+   "page": "Ch. 8, Sec. 8.4, Proposition 8.18, text lines ~5836-5900",
+   "latex": "\\sup_{x \\in M} |f(x) - \\Phi_f^N(x)| \\le C \\|f\\|_{C^{k,s}(M)} N^{-(k+s)/m}",
+   "symbol_and_unit_ledger": {
+    "M": "smooth compact m-dimensional manifold in R^d",
+    "m": "intrinsic dimension (count)",
+    "d": "ambient dimension (count)",
+    "\\Phi_f^N": "ReLU network of size order N log N and depth order log N"
+   },
+   "assumptions": [
+    "Manifold smooth and compact, covered by finitely many tangent projection charts",
+    "Target C^{k,s} on the manifold, measured chartwise",
+    "Error measured only on the manifold"
+   ],
+   "breakdown_regime": "Constants depend on the manifold's geometry (chart count, curvature scale delta), and the rate says nothing off the manifold: inputs that leave the data manifold are outside the guarantee entirely.",
+   "domain": "approximation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine budgets parameters against the intrinsic dimension of its state representation, not the raw feature count. State embeddings are therefore built and audited for low intrinsic dimension, and any input that falls off the training manifold is flagged as out-of-guarantee rather than extrapolated silently.",
+    "source_operator": "manifold_rate_prop818",
+    "telemetry": "Intrinsic dimension estimates of state representations and off-manifold distance flags for live inputs"
+   },
+   "verbatim_quote": "Another instance in which the curse of dimension can be mitigated, is if the input to the network belongs to Rd , but stems from an m-dimensional manifold M ⊆ Rd . If we only measure the approximation error on M, then we can again show that it is m rather than d that determines the rate of convergence."
+  },
+  {
+   "primitive_id": "optimal_lipschitz_reconstruction_thm94",
+   "name": "Optimal reconstruction under a Lipschitz bound: the average of the upper and lower cone envelopes through the data is a worst-case optimal, interpolating reconstruction (Theorem 9.4)",
+   "page": "Ch. 9, Sec. 9.2, Theorem 9.4, eq. (9.2.6), text lines ~6350-6450",
+   "latex": "\\Phi(x) := \\frac{1}{2} \\left( f^{\\mathrm{upper}}(x) + f^{\\mathrm{lower}}(x) \\right), \\quad f^{\\mathrm{upper}}(x) := \\min_{k} \\left( y_k + M \\|x - x_k\\| \\right), \\quad f^{\\mathrm{lower}}(x) := \\max_{k} \\left( y_k - M \\|x - x_k\\| \\right)",
+   "symbol_and_unit_ledger": {
+    "M": "assumed Lipschitz constant bound, at least the data-implied minimum of eq. (9.2.3)",
+    "(x_k, y_k)": "observed data pairs",
+    "\\Phi": "optimal reconstruction, itself M-Lipschitz and interpolating"
+   },
+   "assumptions": [
+    "Target is M-Lipschitz with M at least the slope implied by the data pairs",
+    "Reconstruction quality judged by worst-case sup error over all such targets",
+    "Data values are exact"
+   ],
+   "breakdown_regime": "Optimality is worst-case over the whole Lipschitz class: for a specific smoother target the midpoint envelope is conservative, its width grows linearly away from data, and a wrong (too small) M voids the guarantee and can make the envelopes inconsistent.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Whenever an engine projection leans on a smoothness assumption, the cone envelopes give it honesty bounds for free: the upper and lower envelopes through nearby observations, at the fitted Lipschitz constant, bound every target consistent with the assumption, and their midpoint is the minimax choice. The engine reports envelope width as the price of the smoothness premise at each query point.",
+    "source_operator": "optimal_lipschitz_reconstruction_thm94",
+    "telemetry": "Fitted Lipschitz constants, envelope widths, and data distances at engine query points"
+   },
+   "verbatim_quote": "This Φ not only allows for an explicit formula, it also belongs to LipM (Ω) and additionally interpolates the data. Hence, it is not just an optimal reconstruction, it is also an optimal interpolant."
+  },
+  {
+   "primitive_id": "gd_linear_convergence_thm107",
+   "name": "Gradient descent on an L-smooth, mu-strongly convex objective with step 1/L converges linearly: squared distance shrinks by (1 - mu/L) per step, at a rate set by the condition number kappa = L/mu (Theorem 10.7)",
+   "page": "Ch. 10, Sec. 10.1.2, Theorem 10.7, eq. (10.1.11), text lines ~6800-6900",
+   "latex": "\\| w_k - w^* \\|^2 \\le \\left( 1 - \\frac{\\mu}{L} \\right)^k \\| w_0 - w^* \\|^2",
+   "symbol_and_unit_ledger": {
+    "w_k": "gradient descent iterate k",
+    "w^*": "unique minimizer",
+    "L": "smoothness constant (gradient Lipschitz constant)",
+    "\\mu": "strong convexity constant",
+    "\\kappa = L/\\mu": "condition number (dimensionless)"
+   },
+   "assumptions": [
+    "Objective L-smooth and mu-strongly convex with L at least mu",
+    "Constant step size h in (0, 1/L]",
+    "Unique minimizer exists by strong convexity"
+   ],
+   "breakdown_regime": "Neural network losses are not strongly convex, so the theorem is the idealized benchmark, not a description of deep training; for merely convex objectives the rate drops to order 1/k in function value (Remark 10.8), and for nonconvex losses no global rate of this form exists.",
+   "domain": "optimization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Convex subproblems inside the engine (calibration fits, convex readouts, regularized regressions) are monitored by conditioning, not by iteration counts: the condition number predicts the convergence rate before the run, and a badly conditioned fit is reparameterized or regularized rather than iterated longer.",
+    "source_operator": "gd_linear_convergence_thm107",
+    "telemetry": "Condition number estimates and objective traces for engine convex subfits"
+   },
+   "verbatim_quote": "This term, known as the condition number of F , determines the rate of convergence."
+  },
+  {
+   "primitive_id": "sgd_convergence_thm1010",
+   "name": "Stochastic gradient descent with decreasing steps of order 1/k reaches expected squared error and suboptimality of order C/k on smooth strongly convex objectives, provided gradient second moments grow at most linearly (Theorem 10.10)",
+   "page": "Ch. 10, Sec. 10.2.2, Theorem 10.10, text lines ~7050-7200",
+   "latex": "\\mathbb{E} \\left[ \\| w_k - w^* \\|^2 \\right] \\le \\frac{C}{k}, \\qquad \\mathbb{E}[F(w_k)] - F(w^*) \\le \\frac{C}{k}",
+   "symbol_and_unit_ledger": {
+    "G_k": "unbiased stochastic gradient at step k",
+    "h_k": "step size, of order 1/k under the theorem's schedule (10.2.4)",
+    "\\gamma": "constant in the second-moment bound (10.2.6)",
+    "C": "constant depending on w_0, gamma, mu, L"
+   },
+   "assumptions": [
+    "Objective L-smooth and mu-strongly convex",
+    "Stochastic gradients unbiased given the current iterate",
+    "Second moments bounded by gamma times (1 + squared gradient norm)",
+    "Step sizes follow the stated decreasing schedule"
+   ],
+   "breakdown_regime": "With a constant step size the iterates do not converge but stabilize in a noise ball around the minimizer, as the book's Figure 10.3 shows; the 1/k rate is also slower than full gradient descent's linear rate, and everything is stated in expectation, not per-run.",
+   "domain": "optimization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Online updates in the engine use explicitly decaying step sizes or growing batches, because this theorem names the alternative: constant-step stochastic updates carry a permanent noise floor that masquerades as model error. Update schedules are logged so a plateau can be attributed to the noise floor rather than to the signal.",
+    "source_operator": "sgd_convergence_thm1010",
+    "telemetry": "Gradient noise variance estimates and step size schedules of engine online updates"
+   },
+   "verbatim_quote": "To achieve convergence in the limit, the variance of the update vector, −hk Gk , must decrease over time however."
+  },
+  {
+   "primitive_id": "ntk_limit_thm1120",
+   "name": "Neural tangent kernel: the scaled empirical tangent kernel of a wide shallow network converges almost surely to a deterministic kernel set by architecture and initialization (Theorem 11.20)",
+   "page": "Ch. 11, Sec. 11.6.2, Theorem 11.20, eq. (11.6.4), text line ~8938",
+   "latex": "\\lim_{n \\to \\infty} \\frac{1}{n} \\hat{K}_n(x, z) = \\mathbb{E} \\left[ \\sigma(u^\\top x) \\, \\sigma(u^\\top z) \\right] =: K^{\\mathrm{NTK}}(x, z)",
+   "symbol_and_unit_ledger": {
+    "\\hat{K}_n": "empirical tangent kernel: inner product of parameter gradients at initialization",
+    "n": "hidden width (count)",
+    "u": "random vector with i.i.d. components from the initialization law W(0, 1/d)",
+    "K^{NTK}": "limiting neural tangent kernel"
+   },
+   "assumptions": [
+    "Initialization as in (11.6.3) with Assumption 11.17",
+    "Shallow network of the form (11.6.1)",
+    "Inputs in a bounded ball for the finite-width concentration statement"
+   ],
+   "breakdown_regime": "The limit is a statement about initialization and infinite width; finite networks deviate, deeper architectures need the recursive kernel versions, and the kernel depends on the initialization scheme, so changing initialization changes the implicit model class.",
+   "domain": "optimization theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For wide engine heads, training behavior can be forecast before fitting: the initialization kernel is computable from architecture and initialization alone, and its spectrum predicts which components of the target are learned fast. The engine computes tangent kernel spectra at initialization as a pre-flight check on wide components.",
+    "source_operator": "ntk_limit_thm1120",
+    "telemetry": "Tangent kernel matrices and their spectra at initialization, across widths"
+   },
+   "verbatim_quote": "Scaled properly, it converges in the infinite width limit n → ∞ towards a specific kernel known as the neural tangent kernel (NTK) [147]."
+  },
+  {
+   "primitive_id": "wide_network_linearization_thm1128",
+   "name": "Wide networks train like their linearization: gradient descent on a wide shallow network tracks the linearized model's training, with prediction gap of order sqrt(F(w_0)/n) (Theorem 11.28)",
+   "page": "Ch. 11, Sec. 11.6.3, Theorem 11.28, eq. (11.6.10), text lines ~9294-9380",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Assumptions 11.17 and 11.23 (initialization and kernel eigenvalue bounds theta_min, theta_max)",
+    "Width n large enough, with probability at least 1 - delta",
+    "Learning rate at most 2 / (n (theta_min + 4 theta_max)) in the stated scaling",
+    "Ridgeless square loss"
+   ],
+   "breakdown_regime": "The approximation is a wide-network phenomenon with constants depending on the sample size and the kernel conditioning; narrow or feature-learning regimes are exactly where the linearization fails to describe training, and the result is for shallow networks of the stated form.",
+   "domain": "optimization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A kernel least squares surrogate can stand in for a wide trained head during what-if analysis: the surrogate trains in closed form and its predictions track the real network's up to the stated gap. The engine uses the surrogate for fast scenario sweeps over wide components and verifies the gap empirically as width varies.",
+    "source_operator": "wide_network_linearization_thm1128",
+    "telemetry": "Surrogate versus network prediction gaps as a function of width, on logged cases"
+   },
+   "verbatim_quote": "Theorem 11.28 establishes that the trained neural network mirrors the behavior of the trained linearized model."
+  },
+  {
+   "primitive_id": "no_spurious_valleys_prop124",
+   "name": "A shallow network with at least as many hidden units as training samples, convex loss, and a non-polynomial activation has no spurious valleys in its loss landscape (Proposition 12.4)",
+   "page": "Ch. 12, Sec. 12.2, Proposition 12.4, text line ~9873",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Architecture (d_0, d_1, 1) with sample size m at most d_1",
+    "Activation in class M, not a polynomial",
+    "Convex loss function",
+    "A global minimum of the landscape exists"
+   ],
+   "breakdown_regime": "No spurious valleys is weaker than no spurious local minima in general landscapes, the result is for shallow networks, and deep or underparameterized landscapes can and do have bad local structure; the book treats saddle points separately in Sec. 12.3.",
+   "domain": "optimization theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For overparameterized shallow heads, the engine does not blame bad outcomes on local minima: this result removes that excuse, so a poor trained head triggers an audit of the data, the loss, and the optimization path instead. Landscape complaints are only entertained for components outside the proposition's regime.",
+    "source_operator": "no_spurious_valleys_prop124",
+    "telemetry": "Loss values reached from many random initializations for the same head and data"
+   },
+   "verbatim_quote": "The next proposition shows that spurious local minima do not exist for shallow overparameterized neural networks, i.e., for neural networks that have at least as many parameters in the hidden layer as there are training samples."
+  },
+  {
+   "primitive_id": "lipschitz_parameterization_prop131",
+   "name": "The realization map is Lipschitz in the parameters: function distance is at most (3 C_sigma B d_max)^L times the active parameter count times parameter distance (Proposition 13.1)",
+   "page": "Ch. 13, Sec. 13.1, Proposition 13.1, text lines ~10180-10260",
+   "latex": "\\| R_\\sigma(w \\odot s) - R_\\sigma(v \\odot s) \\|_{L^\\infty([-1,1]^{d_0})} \\le (3 C_\\sigma B d_{\\max})^L \\, |s| \\, \\| w - v \\|_\\infty",
+   "symbol_and_unit_ledger": {
+    "R_\\sigma": "realization map from parameters to functions",
+    "w \\odot s": "parameters masked by a sparsity vector s",
+    "|s|": "number of active parameters (count)",
+    "B": "parameter bound, at least 1",
+    "C_\\sigma": "Lipschitz constant of the activation",
+    "d_max": "maximal layer width (count)"
+   },
+   "assumptions": [
+    "Activation C_sigma-Lipschitz with the stated growth bound",
+    "Parameters confined to the bounded set P_N(A, B)",
+    "Inputs in [-1, 1]^{d_0}"
+   ],
+   "breakdown_regime": "The Lipschitz constant grows exponentially in depth L and polynomially in width and parameter bound, so for deep or large-weight networks the bound is vacuous even though the map is continuous; it is a stability certificate for small, bounded, sparse networks.",
+   "domain": "neural network theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Parameter perturbations in the engine carry an explicit output price: for bounded sparse components this bound converts a weight change into a worst-case output change, and it is the lemma that makes covering number generalization bounds possible. The engine uses it to sanity check that a proposed weight update cannot move outputs more than intended.",
+    "source_operator": "lipschitz_parameterization_prop131",
+    "telemetry": "Weight update norms, active parameter counts, and measured output movements"
+   },
+   "verbatim_quote": "Concretely, we show in Section 13.1, that if σ is Lipschitz, then the set of neural networks is the image of PN (A, ∞) under a locally Lipschitz map."
+  },
+  {
+   "primitive_id": "nonconvexity_holes_thm139",
+   "name": "Fixed-architecture network sets are typically non-convex with arbitrarily large holes: approximate convexity for some epsilon would force density in C(K), which practical activations do not have (Corollary 13.7, Theorem 13.9)",
+   "page": "Ch. 13, Sec. 13.2, Corollary 13.7 and Theorem 13.9, text lines ~10370-10560",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Lipschitz continuous activation",
+    "Architecture with more than n_A linearly independent functions in the class",
+    "For Theorem 13.9: activation in class M, not a polynomial, differentiable and non-constant on some open set"
+   ],
+   "breakdown_regime": "Non-convexity is a property of the function set of a fixed architecture, not of any single training run; enlarging the architecture changes the set, and the holes statement is about uniform approximation on compact sets.",
+   "domain": "neural network theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine never ensembles by averaging weights or by interpolating between two models' functions and assuming the result stays in class: this result says midpoints can fall into holes of arbitrary size. Ensembles are built at the prediction level and every combined output is revalidated as a new object.",
+    "source_operator": "nonconvexity_holes_thm139",
+    "telemetry": "Midpoint and interpolation errors measured for pairs of engine models"
+   },
+   "verbatim_quote": "We will use this fact to show in Section 13.2 that sets of neural networks are typically non-convex, and even have arbitrarily large holes."
+  },
+  {
+   "primitive_id": "risk_decomposition_erm",
+   "name": "Excess risk of the empirical risk minimizer splits as twice the generalization gap plus the approximation error, R(h_S) - R* at most 2 eps_gen + eps_approx, with an interpolation variant (eq. 14.2.2)",
+   "page": "Ch. 14, Sec. 14.2, eqs. (14.2.1) to (14.2.3), text lines ~10930-10990",
+   "latex": "R(h_S) - R^* \\le 2 \\varepsilon_{\\mathrm{gen}} + \\varepsilon_{\\mathrm{approx}}",
+   "symbol_and_unit_ledger": {
+    "R": "population risk",
+    "R^*": "Bayes risk",
+    "h_S": "empirical risk minimizer on sample S",
+    "\\varepsilon_{gen}": "generalization error: sup over H of |R(h) - empirical risk|",
+    "\\varepsilon_{approx}": "approximation error: inf over H of R(h) - R^*"
+   },
+   "assumptions": [
+    "An empirical risk minimizer exists for all samples",
+    "Sample drawn i.i.d. from the distribution D",
+    "Loss and hypothesis class fixed in advance"
+   ],
+   "breakdown_regime": "The decomposition is an upper bound with a factor 2, not an identity: the terms are not independent (a richer class lowers approximation error while raising the generalization gap), which is exactly the trade-off of Sec. 14.6.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every learned engine component reports its error in this split form: approximation account (best achievable in class), generalization account (sample versus population), and, for interpolating fits, the interpolation account. A bad component is diagnosed by which account is large, and the fix is prescribed accordingly: more capacity, more data, or a different optimizer.",
+    "source_operator": "risk_decomposition_erm",
+    "telemetry": "Train risk, held-out risk, and best-in-class risk estimates per component"
+   },
+   "verbatim_quote": "From a generalization perspective, supervised deep learning is empirical risk minimization over sets of neural networks. The question we want to address next is how effective this approach is at producing hypotheses that achieve a risk close to the Bayes risk."
+  },
+  {
+   "primitive_id": "sparse_covering_generalization_thm1415",
+   "name": "Covering numbers of sparse bounded networks grow like (s+1)^{7sL} times range and accuracy factors in the active parameter count s and depth L, which through Theorem 14.11 bounds the generalization gap (Theorems 14.15 and 14.16)",
+   "page": "Ch. 14, Sec. 14.5, Definition 14.14, Theorems 14.15 and 14.16, text lines ~11215-11360",
+   "latex": "\\mathcal{G}\\left( \\mathcal{N}^{\\mathrm{sp}}(\\sigma; L, B, s), \\varepsilon, C^0([0,1]^{d_0}) \\right) \\le (s+1)^{7sL} \\lceil 3 C_\\sigma B \\rceil^{2sL} \\lceil 1/\\varepsilon \\rceil^{s}",
+   "symbol_and_unit_ledger": {
+    "\\mathcal{G}": "epsilon-covering number of the function class in sup norm",
+    "s": "number of nonzero (active) parameters (count)",
+    "L": "maximal depth (count)",
+    "B": "weight bound",
+    "\\mathcal{N}^{sp}": "sparse network class of Definition 14.14"
+   },
+   "assumptions": [
+    "Activation C_sigma-Lipschitz with the stated growth bound",
+    "Networks sparse: at most s nonzero weights, each at most B in absolute value",
+    "Theorem 14.16 conclusion needs a Lipschitz loss and outputs in [-1, 1]"
+   ],
+   "breakdown_regime": "The book calls the bound rather crude: it is exponential in s L inside the covering number, so after the square root in the generalization bound it is informative only when the sample size dominates s L log factors; dense large networks fall outside its useful range.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine regularizes and reports by active parameter count: what enters the generalization price is s times L (times log factors), not the size of the ambient architecture the sparse net was carved from. Sparsity is therefore a first-class design lever, and every fitted component ships with its s, L, B, and sample size attached.",
+    "source_operator": "sparse_covering_generalization_thm1415",
+    "telemetry": "Active parameter counts, depths, weight bounds, and sample sizes per fitted component"
+   },
+   "verbatim_quote": "In words, N sp (σ; L, B, s) denotes the set of feedforward neural networks with activation function σ, at least one hidden layer and at most L hidden layers, at most N nonzero weights, and all weights bounded in absolute value by B."
+  },
+  {
+   "primitive_id": "vc_dimension_thm1428",
+   "name": "VC dimension of ReLU network classifiers is at most C (n_A L log n_A + n_A L^2), so uniform guarantees need sample sizes well above that scale (Theorem 14.28)",
+   "page": "Ch. 14, Sec. 14.8, Theorem 14.28, eq. (14.8.1), text lines ~11690-11710",
+   "latex": "\\mathrm{VCdim}(H) \\le C \\left( n_A L \\log(n_A) + n_A L^2 \\right)",
+   "symbol_and_unit_ledger": {
+    "H": "class of thresholded ReLU network outputs",
+    "n_A": "total parameter count of architecture A (count)",
+    "L": "depth (count)",
+    "C": "absolute constant independent of L and A"
+   },
+   "assumptions": [
+    "ReLU activation",
+    "Binary classification via thresholding at zero",
+    "Bound pairs with the VC lower-bound machinery of Theorems 14.25 to 14.27"
+   ],
+   "breakdown_regime": "VC bounds are distribution-free and therefore pessimistic: they suggest generalization should fail in the overparameterized regime, which practice and Chapter 15 contradict, so the bound certifies a regime rather than describing all learning.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine computes this scale for every classifier head and labels the regime honestly: sample size well above the VC scale means uniform guarantees are meaningful; sample size below it means the head operates in the interpolation regime and must justify itself by held-out evidence, not by uniform bounds.",
+    "source_operator": "vc_dimension_thm1428",
+    "telemetry": "Parameter counts, depths, and labeled sample counts per classifier head"
+   },
+   "verbatim_quote": "Then, there exists a constant C > 0 independent of L and A such that VCdim(H) ≤ C · (nA L log(nA ) + nA L2 )."
+  },
+  {
+   "primitive_id": "double_descent_thm152",
+   "name": "Double descent: past the interpolation threshold the risk decreases again, and for Lipschitz-bounded networks the generalization bound is the minimum of a classical parameter-count term and a dimension-driven term (Sec. 15.1, Theorem 15.2)",
+   "page": "Ch. 15, Secs. 15.1 and 15.3, Theorem 15.2, eq. (15.3.3), text lines ~11908-12320",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Theorem 15.2: activation Lipschitz with |sigma(x)| at most C_sigma |x|, weights bounded by B, networks C-Lipschitz as functions",
+    "Ridgeless least squares analysis of Sec. 15.1.1 motivates the phenomenon",
+    "Bound holds uniformly over the stated class with probability at least 1 - delta"
+   ],
+   "breakdown_regime": "The book itself warns (Remark 15.3) that the Lipschitz assumption likely makes the bound too optimistic near the interpolation threshold, and the phenomenon is established for the analyzed models, not as a universal law for every architecture and optimizer.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interpolating the training data is not, by itself, grounds for rejecting an engine component: the engine evaluates components on held-out risk across the parameter-to-sample ratio, expects the classical U-curve only below the threshold, and requires the second descent to be demonstrated empirically rather than assumed.",
+    "source_operator": "double_descent_thm152",
+    "telemetry": "Held-out risk curves as a function of parameter-to-sample ratio for engine components"
+   },
+   "verbatim_quote": "Instead, after surpassing the so-called \"interpolation threshold\", the risk starts to decrease again. This behavior, known as double descent, is illustrated in Figure 15.2."
+  },
+  {
+   "primitive_id": "adversarial_examples_thm168",
+   "name": "Adversarial examples are explicit: stepping from x along the normalized gradient by (epsilon + |Phi(x)|) / ||grad Phi(x)|| flips the classifier wherever the ground-truth margin permits (Theorem 16.8)",
+   "page": "Ch. 16, Secs. 16.1 and 16.4, Theorem 16.8, text lines ~12381-12730",
+   "latex": "x' := x - h(x) \\, \\frac{\\varepsilon + |\\Phi(x)|}{\\| \\nabla \\Phi(x) \\|^2} \\, \\nabla \\Phi(x)",
+   "symbol_and_unit_ledger": {
+    "x'": "constructed adversarial example",
+    "h(x)": "predicted label sign(Phi(x))",
+    "\\nabla \\Phi(x)": "input gradient of the network at x",
+    "\\varepsilon": "slack above the decision boundary value",
+    "\\mu_g(x), \\nu_\\Phi(x)": "ground-truth margin and affine-piece radius, both required to exceed the perturbation size"
+   },
+   "assumptions": [
+    "Network differentiable at x with nonzero gradient",
+    "x lies inside one affine piece far enough (nu condition)",
+    "Ground-truth label constant within the perturbation ball (mu condition)"
+   ],
+   "breakdown_regime": "The construction needs the margins to cooperate: near the true class boundary or near a kink of the piecewise linear surface the stated step is not available, and Lipschitz control of the network (Proposition 16.10) gives certified robustness radii that this attack cannot cross.",
+   "domain": "statistical learning theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine decision boundary gets a fragility score from this formula: perturbation size to flip is (margin value) divided by (input gradient norm), so boundaries with large gradients relative to their margins are marked fragile and their outputs are reported with that fragility attached rather than as bare labels.",
+    "source_operator": "adversarial_examples_thm168",
+    "telemetry": "Input gradient norms and decision margins at engine decision points"
+   },
+   "verbatim_quote": "This phenomenon, where a correctly classified image is misclassified after a slight perturbation, is termed an adversarial example."
+  },
+  {
+   "primitive_id": "resnet_universal_thm176",
+   "name": "Residual networks with width 2 and sufficient depth are universal in L^p: identity skip paths make very deep stacks trainable and expressive (Theorem 17.6)",
+   "page": "Ch. 17, Sec. 17.1, Theorem 17.6, text lines ~13095-13530",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "ReLU residual networks with hidden widths all equal to 2 and output dimension 1",
+    "Target continuous on [0, 1]^d, error in L^p for finite p",
+    "Depth chosen large enough for the target accuracy"
+   ],
+   "breakdown_regime": "Universality here is in L^p, not uniform, and uses a quantization construction whose depth grows with the number of quantization cells; it is an expressivity statement about the residual class, separate from the optimization benefits that motivated ResNets.",
+   "domain": "neural network theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Deep engine stacks carry identity skip paths so that any layer can default to passing its input through unchanged: depth then adds refinements instead of forcing every layer to justify the whole transformation. This is the architectural form of the book's identity network lemma (Lemma 5.1) put to work inside a trainable stack.",
+    "source_operator": "resnet_universal_thm176",
+    "telemetry": "Residual branch magnitudes relative to the identity path in deep engine stacks"
+   },
+   "verbatim_quote": "The idea is to introduce so-called residual blocks, which complement a regular neural network with an identity."
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "76491de7f01ce9ce-t1",
+   "think": "This book is a mathematical theory of deep learning, and its first move is organizational: everything a trained network does wrong is charged to one of three accounts, approximation, optimization, or statistical estimation, and the seventeen chapters are those three accounts audited in order. That framing matters because it forbids a common confusion. A model that fails might lack the capacity to express the target, might own the capacity but never find the right parameters, or might fit the available sample perfectly while saying nothing about unseen cases. The book insists these are different failures with different mathematics, and it proves theorems about each under assumptions stated sharply enough to be checked.\nThe approximation part begins with possibility and immediately replaces it with price. Universal approximation (Theorem 3.9) says a shallow network with a non-polynomial activation can approximate any continuous function, and the book treats this as the start of the subject rather than its triumph, because it carries no rate. Rates arrive through splines: N spline terms buy error N^{-k/d} for a C^k target, and the exponent already contains the curse of dimensionality, since accuracy epsilon costs on the order of epsilon^{-d/k} parameters. Networks with higher-order sigmoidal activations match the spline rate exactly (Theorem 4.9), so the first honest statement of the theory is that the flexible class inherits the classical price. Exactness results sharpen the picture of what ReLU networks are: they are precisely the continuous piecewise linear functions (Theorem 5.7), every such function has a max-min normal form (Proposition 5.8), and the number of linear pieces is the currency in which expressivity is counted. Depth multiplies that currency exponentially while width only adds polynomially (Theorem 6.3), yet typical random networks realize only a piece count linear in depth and size (Theorem 6.9), an early warning that worst-case capacity and realized capacity are different quantities.\nThe engine room of the positive results is Chapter 7. A width-3, depth-n sawtooth network approximates the square function with error 2^{-2n-1} (Lemma 7.2); the polarization identity turns squares into products at logarithmic cost (Lemma 7.3); products build polynomials; polynomials plus a partition of unity build the optimal smooth rate N^{-(k+s)/d} with only logarithmic depth (Theorem 7.11). Along the way sit the results that justify depth as more than a heuristic: analytic targets are approximable at the exponential rate exp(-beta sqrt(N)) (Proposition 7.6), while every shallow network pays a polynomial lower bound on the same targets (Corollary 7.8), a clean depth separation. Then Chapter 8 turns the theory around and proves what cannot be done. For any continuous way of assigning parameters to targets, the worst-case error over a smoothness ball is at least C_k N^{-k/d} (Theorem 8.4, via Borsuk-Ulam), so the curse is not an artifact of a bad construction but a property of continuous parameterization itself. The escapes from the curse are therefore the most valuable statements in the book, and each one names a structure: a bounded first Fourier moment (Barron class, rate c/N free of dimension in the rate), compositional structure with small node arity (rate governed by m, not d), or data supported on a low-dimensional manifold (rate governed by intrinsic dimension). Kolmogorov superposition and the superexpressive activation serve as controlled warnings in the other direction: representation theorems whose inner functions are arbitrarily rough, or whose parameters cannot be found by any stable procedure, are mathematically true and practically empty, and the book says so in plain words.\nThe optimization part starts from the convex ideal, where gradient descent converges linearly at a rate set by the condition number (Theorem 10.7) and stochastic gradient descent reaches order 1/k error only when update variance is driven down (Theorem 10.10). Real network losses are not convex, so the book studies the landscape directly. A shallow network with at least as many hidden units as samples has no spurious valleys (Proposition 12.4); the set of functions a fixed architecture realizes is the image of parameter space under a locally Lipschitz map whose constant degrades exponentially with depth (Proposition 13.1); and that function set is typically non-convex with arbitrarily large holes (Theorem 13.9), which is why best approximations can fail to exist and weights can grow without bound during training. The bridge back to tractability is width. The empirical tangent kernel concentrates on a deterministic limit (Theorem 11.20), and for sufficiently wide networks gradient descent provably tracks the training of the linearized model and reaches global minima of the square loss (Theorems 11.13 and 11.28). In that regime the trained network is, up to a vanishing gap, a kernel machine, which explains both its trainability and its limits: feature learning is precisely what the linearization leaves out.\nThe statistical part closes the loop. Empirical risk minimization splits excess risk into twice a generalization term plus an approximation term (equation 14.2.2), and the generalization term is controlled by covering numbers, which for sparse bounded networks scale with the active parameter count times depth (Theorems 14.15 and 14.16), or by VC dimension, of order n_A L log n_A for ReLU classes (Theorem 14.28). Those classical bounds then meet their own boundary: networks can interpolate arbitrary labels (Chapter 9), the optimal use of data under a mere Lipschitz assumption is an explicit max-min envelope (Theorem 9.4), and past the interpolation threshold the risk can descend a second time (Chapter 15), so interpolation is not by itself a verdict. Finally the book prices fragility: an adversarial perturbation is an explicit gradient step whose size is the margin divided by the gradient norm (Theorem 16.8), tying robustness to the same Lipschitz quantities that governed stability in Chapter 13.\nFor a reasoning engine the transfer is direct. Budget error in three accounts and never let one account's success hide another's debt. Keep every node's input arity small, because arity, not ambient dimension, sets the achievable rate for compositional structure. Measure realized complexity rather than quoting architecture maxima. Treat depth as the multiplier of representational regimes and width as the additive term. Score every decision boundary by margin over gradient norm before trusting its label. Combine models at the prediction level, never by averaging weights into a hole in function space. And refuse, on the authority of the width lower bound, any accuracy claim that does not name the structure exempting it from the curse of dimensionality.",
+   "retrocausal_genealogy": "The lineage is explicit in the book's own bibliography discussions. Universal approximation descends from Cybenko, Hornik, and Funahashi in the late 1980s to the Leshno, Lin, Pinkus and Schocken characterization the book proves as Theorem 3.9. Kolmogorov's superposition theorem dates to 1957 and its practical relevance has been debated ever since. The spline rate machinery comes from classical approximation theory, the sawtooth and multiplication constructions from Yarotsky's 2017 work, and depth separation from Telgarsky. The nonlinear width lower bounds follow DeVore and collaborators, with Borsuk-Ulam as the topological engine. Barron's class is from 1993, the neural tangent kernel from Jacot, Gabriel and Hongler in 2018, residual networks from He and collaborators in 2015, double descent from Belkin and collaborators, and adversarial examples from Szegedy and collaborators. The book's contribution is consolidation: one notation, one set of definitions, and the classical and modern results made to confront each other.",
+   "theory_of_mind": "The authors write as mathematicians who believe that deep learning practice has outrun its justification, and that the remedy is not skepticism but sharper statements. Their philosophy, stated in the outline section, is to prioritize provable statements presented with simplicity and clarity over generality, illustrating ideas in special cases under strong assumptions when that is what honesty requires. Their model of the reader is someone who will check the proofs and who distrusts an existence claim that arrives without a rate, a constant, or a procedure for finding the weights. They consistently treat the assumptions of a theorem as part of the theorem: continuity of the weight selection map, boundedness of the weights, finiteness of a Fourier moment. Where the field tells itself comforting stories, about capacity, about interpolation, about robustness, their instinct is to ask what the words mean precisely, and then let the resulting statement be a theorem or a counterexample, whichever it turns out to be.",
+   "cross_layer_veto": "The book's layers veto each other in ways an engine designer must respect. The nonlinear width lower bound vetoes any approximation claim that cannot name a structural escape, no matter how good the construction looks. The covering number and VC results veto trust in a fitted component whose active complexity dwarfs its sample, however low its training error sits. The interpolation results veto the inference from training fit to generalization, and the typical-pieces theorem vetoes capacity arguments built from worst-case region counts. In the other direction, the no-spurious-valleys and linearization results veto blaming local minima for failures of overparameterized or wide components, redirecting the audit to data and loss design. The adversarial margin formula vetoes confidence in any boundary whose gradient norm is large relative to its margin. Each veto is a case of one part of the theory constraining what another part is permitted to assert."
+  }
+ ],
+ "universal_lens": "Strip the domain away and the book is a general audit template for any parameterized prediction system. Ask three questions in order. What can the class express, and what does accuracy cost in the complexity budget, given the dimension of the input and the smoothness or structure of the target. Can the parameters actually be reached by the search procedure in use, and what does the geometry of the parameter-to-function map do to stability along the way. Does success on the observed sample certify anything off the sample, and at what sample size relative to the class's complexity. Then apply the book's standing warning: possibility is cheap, and any claim that escapes a lower bound must name the structural assumption that exempts it. A discipline that cannot separate its approximation, optimization, and estimation accounts does not yet know why its systems work.",
+ "gsi_mapping": "The institute takes this book as its audit standard and its taxonomy for learning methods. Every method admitted to the institute corpus is filed by pillar, approximation, optimization, or statistics, with its structural assumption named in plain language, its convergence or approximation rate stated in the budget it consumes, and its breakdown regime recorded beside the claim rather than in a footnote. The three proven escapes from the curse of dimensionality, Barron-type spectral decay, compositional structure with small node arity, and low intrinsic dimension of the data support, become the institute's classification of when high-dimensional learning is legitimate at all. The lower bounds, nonlinear widths, VC dimension, and the adversarial margin formula, become rejection criteria: a result that cannot say which side of them it lives on is not yet a result the institute will teach.",
+ "gse_mapping": "The engine takes operational rules, each traceable to a theorem. Error is budgeted in three accounts per component, so a failure is charged to capacity, search, or sample before it is charged to the model. The reasoning graph keeps node arity small, because maximal arity sets the approximation rate for everything downstream. Parameter budgets are set against measured intrinsic dimension rather than raw feature count. Multiplicative interactions are implemented as products, since depth makes them logarithmically cheap, and local structure is handled by partition-of-unity experts whose cell counts are priced by the smooth rate theorem. Decision boundaries carry a fragility score, margin over gradient norm. Ensembles combine predictions, never weights. And no component is promoted on training fit alone, because interpolation and generalization are separate facts in this theory."
+}

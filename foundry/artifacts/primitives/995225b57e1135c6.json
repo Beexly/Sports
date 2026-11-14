@@ -1,0 +1,856 @@
+{
+ "book_id": "995225b57e1135c6",
+ "source_status": "COMPLETE",
+ "source_note": "Imre Csiszar (Renyi Institute of Mathematics, Hungarian Academy of Sciences, Budapest) and Paul C. Shields (University of Toledo), 'Information Theory and Statistics: A Tutorial', Foundations and Trends in Communications and Information Theory, Vol. 1, No. 4 (2004), pp. 417-528, now Publishers Inc. The local file is the publisher PDF held in books-d-models under the filename 'Csiszar & Shields (2004) - Information Theory and Statistics - A Tutorial.pdf'; the catalog filename given in the assignment (CsiszarShields-2004-FoundationsAndTrendsInfoTheory.pdf) does not exist on disk. File size 730,600 bytes; sha256 over (str(size) encoded + full file bytes) = 995225b57e1135c6119606508dad0fbeb16d56f2a0f2669c17c659c4e7c1aeae; book_id is the first 16 hex characters. The extracted text (245,277 bytes) is complete for all eight sections and the appendix; extraction quirks: the divergence separator glyph renders as a control character, hats render as combining circumflex accents, and the not-equal sign in the appendix renders as an equals sign, so verbatim quotes were drawn from passages free of the corrupted glyphs. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "entropy_definition",
+   "name": "Entropy of a distribution: expected surprise, in bits",
+   "verbatim_quote": "The entropy H(P ) of a probability distribution P = {P (a), a ∈ A} is defined by the formula",
+   "page": "Section 1, p. 422",
+   "latex": "H(P) = -\\sum_{a \\in A} P(a) \\log P(a)",
+   "symbol_and_unit_ledger": {
+    "P(a)": "probability of symbol a, dimensionless, sums to 1 over A",
+    "log": "base 2 logarithm, so H(P) is in bits",
+    "0 log 0": "defined as 0 by convention"
+   },
+   "assumptions": [
+    "Finite alphabet A",
+    "Base two logarithms throughout the tutorial"
+   ],
+   "breakdown_regime": "Finite alphabet only; continuous alphabets need differential entropy, which can be negative and lacks the counting interpretation.",
+   "domain": "information theory foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Entropy is the engine's baseline uncertainty meter for any categorical projection: a projected distribution over discrete outcomes carries H(P) bits of irreducible uncertainty, against which every signal's information gain is measured as an entropy reduction.",
+    "source_operator": "entropy_definition",
+    "telemetry": "Projected outcome distributions and realized outcome frequencies from settled events."
+   }
+  },
+  {
+   "primitive_id": "kl_divergence_definition",
+   "name": "Information divergence (Kullback-Leibler distance): definition, nonnegative, zero only at equality (via the log-sum inequality)",
+   "verbatim_quote": "The information measure known as information divergence or Kullback-Leibler distance or relative entropy plays a key role, often with a geometric flavor as an analogue of squared Euclidean distance",
+   "page": "Abstract, p. 417 (definition at Section 1, eq. (1.9))",
+   "latex": "D(P\\|Q) = \\sum_{a \\in A} P(a) \\log \\frac{P(a)}{Q(a)}",
+   "symbol_and_unit_ledger": {
+    "P(a), Q(a)": "probabilities of symbol a under the two distributions, dimensionless",
+    "D(P||Q)": "divergence in bits; +infinity if P(a) > 0 = Q(a) for some a",
+    "p log(p/0)": "defined as +infinity, p log 0 conventions as in the source"
+   },
+   "assumptions": [
+    "Log-sum inequality gives D(P||Q) >= 0 with equality iff P = Q",
+    "D is lower semi-continuous in (P, Q), continuous where Q is strictly positive"
+   ],
+   "breakdown_regime": "Asymmetric and no triangle inequality: it is a squared-distance analogue, not a metric. Infinite whenever the second argument excludes an event the first allows.",
+   "domain": "information theory foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Divergence is the engine's universal scoring geometry: forecast versus realized distributions, prior versus updated beliefs, and model versus data are all compared in bits, and the score decomposes along projections instead of being a single opaque number.",
+    "source_operator": "kl_divergence_definition",
+    "telemetry": "Any pair of categorical distributions the engine holds: projections, empirical frequencies, fused signal summaries."
+   }
+  },
+  {
+   "primitive_id": "kraft_inequality",
+   "name": "Kraft inequality: a length function is a prefix code length function iff the dyadic sum is at most 1",
+   "verbatim_quote": "A function L: A → N is the length function of some prefix code if and only if it satisfies the so-called Kraft inequality",
+   "page": "Section 1, Lemma 1.1, p. 424",
+   "latex": "\\sum_{a \\in A} 2^{-L(a)} \\le 1",
+   "symbol_and_unit_ledger": {
+    "L(a)": "codeword length for symbol a, in bits (natural number)",
+    "2^{-L(a)}": "dyadic interval length claimed by codeword a, dimensionless"
+   },
+   "assumptions": [
+    "Binary image alphabet",
+    "Prefix (instantaneously decodable) codes"
+   ],
+   "breakdown_regime": "Non-prefix codes beat the bound only by an additive log log |A| term (Theorem 1.2); the characterization is exact only for prefix codes.",
+   "domain": "coding theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Kraft sum is a budget constraint the engine can reuse anywhere it allocates a finite resource over discrete alternatives: any set of nonnegative weights 2^{-L} summing to at most 1 is a valid code, hence a valid prior skeleton for a countable model list.",
+    "source_operator": "kraft_inequality",
+    "telemetry": "Model lists with assigned code lengths, for example candidate model classes indexed by integers."
+   }
+  },
+  {
+   "primitive_id": "shannon_noiseless_coding_theorem",
+   "name": "Shannon's noiseless coding theorem: expected prefix code length is at least the entropy, and the Shannon code beats entropy plus 1",
+   "verbatim_quote": "A key consequence of the lemma is Shannon's noiseless coding theorem.",
+   "page": "Section 1, Theorem 1.1, p. 424",
+   "latex": "H(P) \\le E(L) < H(P) + 1 \\quad \\text{for the Shannon code } L(a) = \\lceil -\\log P(a) \\rceil",
+   "symbol_and_unit_ledger": {
+    "E(L)": "expected codeword length under P, bits per symbol",
+    "H(P)": "entropy of the source distribution, bits"
+   },
+   "assumptions": [
+    "Prefix codes",
+    "Known source distribution P"
+   ],
+   "breakdown_regime": "The plus 1 slack is per message for block codes it amortizes; with unknown P the bound is unattainable and redundancy (Sections 6-8) is the price.",
+   "domain": "coding theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's achievability template: an ideal score (-log P of the realized outcome) plus a bounded rounding loss. Any internal scoring rule that claims to beat the entropy floor by more than the rounding slack is mis-specified.",
+    "source_operator": "shannon_noiseless_coding_theorem",
+    "telemetry": "Realized outcomes scored under projected distributions; per-event log scores."
+   }
+  },
+  {
+   "primitive_id": "arithmetic_coding",
+   "name": "Arithmetic coding: interval subdivision by conditional probabilities gives practical prefix codes within 1 bit of Shannon codes",
+   "verbatim_quote": "We close this introduction with a discussion of arithmetic codes, which are of both practical and conceptual importance.",
+   "page": "Section 1, pp. 427-428",
+   "latex": "L'(x_1^n) = -\\log Q_n(x_1^n) + 1",
+   "symbol_and_unit_ledger": {
+    "Q_n": "the coding process's marginal distribution on length n blocks",
+    "L'(x_1^n)": "length of the second-kind arithmetic codeword, bits",
+    "J(x_1^n)": "nested subinterval of [0,1) of length Q_n(x_1^n)"
+   },
+   "assumptions": [
+    "Consistent marginals Q_n (they must come from a process)",
+    "Conditional probabilities Q(a | past) cheap to compute"
+   ],
+   "breakdown_regime": "First-kind arithmetic codes are one-to-one but not prefix; strict Shannon codes may be computationally prohibitive for large n, which is the gap arithmetic coding fills.",
+   "domain": "coding theory / sequential prediction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Arithmetic coding is sequential probability assignment made literal: the engine's running conditional probabilities ARE a code, so calibration of sequential forecasts and compression quality are the same measurement, and the plus 1 bit bound prices the conversion.",
+    "source_operator": "arithmetic_coding",
+    "telemetry": "Sequential conditional probability streams for ordered events."
+   }
+  },
+  {
+   "primitive_id": "method_of_types",
+   "name": "Method of types: polynomially many empirical distributions, type class size about 2^{nH}, type class probability about 2^{-nD}",
+   "verbatim_quote": "An important application of information theory is to the theory of large deviations. A key to this application is the theory of types.",
+   "page": "Section 2.1, Lemmas 2.1-2.3, pp. 429-431",
+   "latex": "\\frac{2^{nH(P)}}{\\binom{n+|A|-1}{|A|-1}} \\le |T_P^n| \\le 2^{nH(P)}, \\qquad P^n(T_Q^n) \\doteq 2^{-nD(Q\\|P)}",
+   "symbol_and_unit_ledger": {
+    "T_P^n": "type class: all length n sequences with empirical distribution P",
+    "n-type": "a distribution realizable as an empirical distribution at sample size n",
+    "number of n-types": "binomial(n+|A|-1, |A|-1), polynomial in n"
+   },
+   "assumptions": [
+    "I.i.d. sampling from a fixed distribution on a finite alphabet",
+    "Polynomial factors are negligible on the exponential scale"
+   ],
+   "breakdown_regime": "Exponential approximations only: at small n the polynomial factors matter, and the method is tied to i.i.d. sampling on finite alphabets.",
+   "domain": "large deviations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Types give the engine a counting-based evidence calculus: the probability of any empirical pattern is read off from its divergence to the assumed distribution, with no simulation, which is the fast path for tail questions about categorical count data.",
+    "source_operator": "method_of_types",
+    "telemetry": "Count vectors and empirical distributions over finite outcome sets, with sample sizes."
+   }
+  },
+  {
+   "primitive_id": "sanov_theorem",
+   "name": "Sanov's theorem: the probability that the empirical distribution falls in a set Pi decays with exponent D(Pi||P), the divergence to the nearest member",
+   "verbatim_quote": "The empirical distribution P̂n in the Corollary converges to P with probability 1 as n → ∞, by the law of large numbers, or by the very Corollary (and Borel–Cantelli).",
+   "page": "Section 2.1, Theorem 2.1, p. 431",
+   "latex": "-\\frac{1}{n} \\log \\mathrm{Prob}(\\hat P_n \\in \\Pi) \\to D(\\Pi\\|P) = \\inf_{Q \\in \\Pi} D(Q\\|P)",
+   "symbol_and_unit_ledger": {
+    "Pi": "a set of distributions, closure equal to closure of its interior",
+    "P": "the true, strictly positive sampling distribution",
+    "D(Pi||P)": "infimum divergence from the set to the truth, bits"
+   },
+   "assumptions": [
+    "Strictly positive true distribution",
+    "Regularity of Pi (closure equals closure of interior)"
+   ],
+   "breakdown_regime": "Only the exponent is identified, not the prefactor; sets touching the truth have exponent 0 and polynomial, not exponential, rarity.",
+   "domain": "large deviations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sanov is the engine's rare-pattern pricing rule: the plausibility of an observed empirical pattern under a working model is governed by the single nearest alternative distribution in the pattern's set, so stress questions reduce to one divergence minimization.",
+    "source_operator": "sanov_theorem",
+    "telemetry": "Empirical distributions from samples; candidate pattern sets defined by moment or frequency constraints."
+   }
+  },
+  {
+   "primitive_id": "large_deviation_dual_exponent",
+   "name": "Large deviation exponent in dual form: the divergence exponent equals a maximum over exponential tilts (Chernoff form)",
+   "verbatim_quote": "This latter form is the one usually found in textbooks",
+   "page": "Section 2.1, eq. (2.1) and Remark 2.1, pp. 433-434",
+   "latex": "\\lim_{n\\to\\infty} -\\frac{1}{n} \\log \\mathrm{Prob}\\left(\\frac{1}{n}\\sum_{i=1}^n f(X_i) > \\alpha\\right) = \\max_{t \\ge 0} \\left[ -\\log \\sum_a P(a) 2^{t f(a)} + t\\alpha \\right]",
+   "symbol_and_unit_ledger": {
+    "f": "a real function on the alphabet (the statistic whose mean is thresholded)",
+    "alpha": "threshold above the true mean of f",
+    "t": "tilt parameter; the maximizing tilt defines the nearest alternative distribution Q*(a) = c* P(a) 2^{t* f(a)}"
+   },
+   "assumptions": [
+    "Threshold alpha strictly between the true mean and max f",
+    "The unconstrained maximizer has t* > 0 in this regime"
+   ],
+   "breakdown_regime": "If alpha is at or below the true mean the exponent is 0; the dual form hides the primal geometry, and numerical maximization over t can be ill-conditioned for heavy statistics.",
+   "domain": "large deviations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The dual form is the computable face of Sanov for mean-threshold events: the engine can price the rarity of an average exceeding a threshold by a one-dimensional maximization, and the maximizing tilt exhibits the least unlikely way the event happens, which is itself an interpretable scenario.",
+    "source_operator": "large_deviation_dual_exponent",
+    "telemetry": "Sample means of bounded per-event statistics; threshold exceedance queries."
+   }
+  },
+  {
+   "primitive_id": "stein_lemma_optimal_tests",
+   "name": "Stein's lemma and optimal divergence tests: best type 2 error exponent is D(P1||P2); divergence-threshold tests are asymptotically optimal against all alternatives",
+   "verbatim_quote": "Hence, the tests in Theorem 2.3 are asymptotically optimal against all alternatives P2 ∈ Π.",
+   "page": "Section 2.2, Theorems 2.2-2.3 and Remark 2.3, pp. 434-437",
+   "latex": "\\frac{1}{n} \\log P_2^n(A^n - C_n) \\to -D(\\Pi\\|P_2), \\qquad C_n = \\left\\{ x_1^n : \\inf_{P \\in \\Pi} D(\\hat P_{x_1^n}\\|P) \\ge \\delta_n \\right\\}",
+   "symbol_and_unit_ledger": {
+    "C_n": "critical region of the test at sample size n",
+    "delta_n": "|A| log n / n, a vanishing threshold",
+    "type 1 / type 2 error": "rejecting a true null / accepting a false one"
+   },
+   "assumptions": [
+    "Null set Pi closed, so D(Pi||P2) > 0 for alternatives off Pi",
+    "Tests are nonrandomized; optimality is asymptotic in exponent"
+   ],
+   "breakdown_regime": "Fixed sample size performance is not governed by the exponent alone; alternatives on the boundary of the null set may not have vanishing type 2 error.",
+   "domain": "hypothesis testing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Stein sets the engine's discrimination budget: distinguishing two candidate generators of categorical data costs samples in inverse proportion to their divergence, and the divergence-to-null statistic is the optimal test statistic, so model comparison modules should report exactly that quantity.",
+    "source_operator": "stein_lemma_optimal_tests",
+    "telemetry": "Paired candidate distributions; samples scored by divergence to each candidate null set."
+   }
+  },
+  {
+   "primitive_id": "sequential_tests_wald_identity",
+   "name": "Sequential tests and Wald's identity: expected sample size multiplies the per-sample divergence; the SPRT attains both best exponents simultaneously",
+   "verbatim_quote": "In this sense, sequential tests are not superior to tests with constant sample size.",
+   "page": "Section 2.2, pp. 438-439",
+   "latex": "D(P_1^N\\|P_2^N) = E_1(N) \\, D(P_1\\|P_2)",
+   "symbol_and_unit_ledger": {
+    "N": "stopping time of the sequential test (random sample size)",
+    "E_1(N)": "average sample size when P1 is true",
+    "alpha, beta": "type 1 and type 2 error probabilities of the sequential test"
+   },
+   "assumptions": [
+    "I.i.d. observations; stopping set G prefix-free so N is well defined",
+    "Finite expected sample size for Wald's identity"
+   ],
+   "breakdown_regime": "Sequential tests cannot beat the fixed-sample exponent per expected observation; their advantage is attaining both error exponents at once, and exact likelihood-ratio constancy on the decision sets is generally unattainable, only approached.",
+   "domain": "hypothesis testing / sequential analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Wald's identity is the engine's stopping economics: evidence accrues at D bits per observation, so any sequential monitoring rule can budget expected time-to-decision as target exponent divided by per-step divergence, and the SPRT thresholds are the optimal stopping shape.",
+    "source_operator": "sequential_tests_wald_identity",
+    "telemetry": "Streaming observations with running log-likelihood ratios; decision thresholds on accumulated evidence."
+   }
+  },
+  {
+   "primitive_id": "i_projection_definition",
+   "name": "I-projection: the distribution in a closed convex set minimizing D(P||Q); divergence read as squared Euclidean distance",
+   "verbatim_quote": "Information divergence of probability distributions can be interpreted as a (nonsymmetric) analogue of squared Euclidean distance.",
+   "page": "Section 3, p. 440",
+   "latex": "P^* = \\arg\\min_{P \\in \\Pi} D(P\\|Q), \\qquad D(P^*\\|Q) = \\min_{P \\in \\Pi} D(P\\|Q)",
+   "symbol_and_unit_ledger": {
+    "Pi": "a nonempty closed convex set of distributions",
+    "Q": "the reference distribution, strictly positive",
+    "P*": "the I-projection of Q onto Pi, exists and is unique by strict convexity of D in its first argument"
+   },
+   "assumptions": [
+    "Q(a) > 0 for all a",
+    "Pi closed and convex"
+   ],
+   "breakdown_regime": "The analogy is one-sided: D is not symmetric, so projecting Q onto Pi and projecting onto Q are different operations (the second is the reverse I-projection of Section 3).",
+   "domain": "information geometry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "I-projection is the engine's belief-revision operator: given a base projection Q and a convex set of trusted constraints, the projected distribution is the unique closest belief satisfying them, which is the principled way to impose new information without inventing any beyond the constraints.",
+    "source_operator": "i_projection_definition",
+    "telemetry": "Base predictive distributions; constraint sets from trusted marginal or moment information."
+   }
+  },
+  {
+   "primitive_id": "pythagorean_inequality",
+   "name": "Pythagorean inequality for I-projection onto a convex set, with full support of the projection",
+   "verbatim_quote": "With this interpretation, several results in this Section are intuitive “information geometric” counterparts of standard results in Euclidean geometry, such as the inequality in Theorem 3.1 and the identity in Theorem 3.2.",
+   "page": "Section 3, Theorem 3.1, p. 440",
+   "latex": "D(P\\|Q) \\ge D(P\\|P^*) + D(P^*\\|Q), \\qquad \\forall P \\in \\Pi, \\quad S(P^*) = S(\\Pi)",
+   "symbol_and_unit_ledger": {
+    "S(P)": "support of P, the set of symbols with positive probability",
+    "S(Pi)": "the largest support among members of Pi"
+   },
+   "assumptions": [
+    "Pi closed and convex, Q strictly positive",
+    "The inequality for a candidate P* and all P in Pi is also sufficient for P* to be the projection"
+   ],
+   "breakdown_regime": "Only an inequality for general convex sets; equality needs the linear-family structure of Theorem 3.2.",
+   "domain": "information geometry",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The inequality is a free audit for any fusion step: total divergence from base to any feasible belief is at least the divergence spent reaching the projection plus the remainder, so an engine module can certify that a constraint-imposition step moved beliefs by no more than the information the constraints carry.",
+    "source_operator": "pythagorean_inequality",
+    "telemetry": "Divergences before and after constraint imposition; supports of feasible distributions."
+   }
+  },
+  {
+   "primitive_id": "linear_exponential_family_duality",
+   "name": "Linear families (moment constraints, closed) and exponential families (log-linear tilts) are dual parametrizations meeting at the I-projection",
+   "verbatim_quote": "Linear families are closed sets of distributions, exponential families are not.",
+   "page": "Section 3, pp. 441-442",
+   "latex": "L = \\left\\{ P : \\sum_a P(a) f_i(a) = \\alpha_i, \\ 1 \\le i \\le k \\right\\}, \\qquad E = \\left\\{ P(a) = c\\, Q(a) \\exp\\Big( \\sum_{i=1}^k \\theta_i f_i(a) \\Big) \\right\\}",
+   "symbol_and_unit_ledger": {
+    "f_i": "given real functions on A (sufficient statistics)",
+    "alpha_i": "prescribed moment values defining the linear family",
+    "theta_i": "natural parameters of the exponential family",
+    "c": "normalizing constant, inverse sum of Q(a) exp(sum theta_i f_i(a))"
+   },
+   "assumptions": [
+    "Same functions f_1..f_k define both families",
+    "Nonempty linear family; S(Q) = A"
+   ],
+   "breakdown_regime": "Exponential families are not closed: their closure adds boundary distributions supported on subsets (the form (3.3) of Remark 3.1), and MLEs can escape to that boundary.",
+   "domain": "information geometry / exponential families",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This duality is the engine's two views of every parametric component: a model can be specified by the moments it must match (linear view, auditable against data) or by its tilt parameters (exponential view, fittable), and the tutorial guarantees they describe the same object at the projection.",
+    "source_operator": "linear_exponential_family_duality",
+    "telemetry": "Moment vectors of samples; natural parameters of fitted tilts; constraint lists per model component."
+   }
+  },
+  {
+   "primitive_id": "pythagorean_identity_linear_family",
+   "name": "Pythagorean identity: for a linear family the inequality becomes equality, and L intersect cl(E) is the single projection point",
+   "verbatim_quote": "This proves that P ∗ satisfies the Pythagorean identity.",
+   "page": "Section 3, Theorem 3.2, p. 442",
+   "latex": "D(P\\|Q) = D(P\\|P^*) + D(P^*\\|Q), \\qquad \\forall P \\in L, \\quad L \\cap \\mathrm{cl}(E_Q) = \\{P^*\\}",
+   "symbol_and_unit_ledger": {
+    "L": "linear family from moment constraints",
+    "E_Q": "exponential family through Q with the same statistics",
+    "cl(E_Q)": "closure of the exponential family, needed when S(L) is a proper subset of A"
+   },
+   "assumptions": [
+    "Linear and exponential families defined by the same f_i",
+    "If S(L) = A then P* lies in E itself, not only its closure"
+   ],
+   "breakdown_regime": "Fails for nonlinear constraint sets; when S(L) is smaller than A the projection sits in the closure, which is the mechanism behind nonexistent MLEs in Theorem 3.3.",
+   "domain": "information geometry",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The identity gives the engine an exact divergence ledger for moment matching: the cost of moving from base Q to any moment-feasible P splits into the unavoidable cost of reaching the projection plus the residual, so fitted and unfitted components of a discrepancy can be reported separately.",
+    "source_operator": "pythagorean_identity_linear_family",
+    "telemetry": "Moment constraints and fitted exponential tilts; divergence budgets per constraint set."
+   }
+  },
+  {
+   "primitive_id": "mle_as_i_projection",
+   "name": "Maximum likelihood is a reverse I-projection; for exponential families the MLE is the I-projection of Q onto the linear family matching the sample moments, when it exists",
+   "verbatim_quote": "In the case when Π is an exponential family, the MLE equals a proper I-projection",
+   "page": "Section 3, Lemma 3.1 and Theorem 3.3, pp. 444-445",
+   "latex": "\\hat P_{\\mathrm{MLE}} = \\arg\\min_{P \\in \\Pi} D(\\hat P\\|P); \\qquad \\text{for } \\Pi = E: \\ \\hat P_{\\mathrm{MLE}} = P^* = \\arg\\min_{P \\in L} D(P\\|Q), \\ L = \\left\\{ P : \\sum_a P(a) f_i(a) = \\frac{1}{n} \\sum_{j=1}^n f_i(x_j) \\right\\}",
+   "symbol_and_unit_ledger": {
+    "P-hat": "empirical distribution of the sample",
+    "L": "linear family fixing the sample moments of the sufficient statistics",
+    "S(L) = A": "existence condition: the MLE exists in E iff the moment-matching family has full support"
+   },
+   "assumptions": [
+    "Feasible set is an exponential family through a strictly positive Q",
+    "Sample arbitrary; P-hat automatically lies in L"
+   ],
+   "breakdown_regime": "If S(L) is a proper subset of A the MLE does not exist in E (only in its closure): a standing warning that some samples push fitted models to the boundary, where parameters diverge.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This collapses two engine subsystems into one: fitting an exponential-family component and projecting a base distribution onto data moments are the same computation, and the existence criterion S(L) = A is a pre-flight check that detects boundary-seeking fits before parameters blow up.",
+    "source_operator": "mle_as_i_projection",
+    "telemetry": "Sample moment vectors; fitted natural parameters; support of the moment-matching family."
+   }
+  },
+  {
+   "primitive_id": "f_divergence_definition",
+   "name": "f-divergence: the convex-function generalization of divergence, containing KL, reversed KL, chi-square, Hellinger and variational distance",
+   "verbatim_quote": "Let f (t) be a convex function defined for t > 0, with f (1) = 0. The f -divergence of a distribution P from Q is defined by",
+   "page": "Section 4, p. 447",
+   "latex": "D_f(P\\|Q) = \\sum_a Q(a) f\\left( \\frac{P(a)}{Q(a)} \\right)",
+   "symbol_and_unit_ledger": {
+    "f": "convex function on t > 0 with f(1) = 0",
+    "f(t) = t log t": "gives D(P||Q); f(t) = -log t gives D(Q||P); f(t) = (t-1)^2 gives chi-square divergence; f(t) = 1 - sqrt(t) gives Hellinger; f(t) = |t-1| gives variational distance"
+   },
+   "assumptions": [
+    "Boundary conventions 0f(0/0) = 0 and 0f(a/0) = a lim_{u to infinity} f(u)/u",
+    "Strict convexity of f at 1 for D_f = 0 to force P = Q"
+   ],
+   "breakdown_regime": "Most f-divergences lack the projection transitivity and Pythagorean structure of KL (Lemma 4.2 discussion): the choice of f is a real modeling decision, not a cosmetic one.",
+   "domain": "statistical distances",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The f-divergence menu lets the engine pick a discrepancy with known behavior: chi-square for quadratic, locally normal scoring, variational distance for worst-case event discrepancy, Hellinger for a bounded symmetric score, each inheriting nonnegativity and the lumping inequality from one convexity fact.",
+    "source_operator": "f_divergence_definition",
+    "telemetry": "Distribution pairs scored under alternative discrepancies for sensitivity checks."
+   }
+  },
+  {
+   "primitive_id": "f_divergence_lumping",
+   "name": "Lumping (data processing) property: coarse-graining a distribution can only decrease every f-divergence",
+   "verbatim_quote": "The first assertion and the lumping property obviously follow from the analogue of the log-sum inequality, (4.1).",
+   "page": "Section 4, Lemma 4.1, p. 448",
+   "latex": "D_f(P\\|Q) \\ge D_f(P^B\\|Q^B) \\quad \\text{for every partition } B \\text{ of } A",
+   "symbol_and_unit_ledger": {
+    "P^B": "the B-lumping of P: probability of cell i is the sum of P over the block B_i",
+    "B": "a partition of the alphabet into blocks"
+   },
+   "assumptions": [
+    "f convex; the underlying inequality (4.1) is the f-analogue of log-sum",
+    "Equality conditions require f strictly convex at the lumped ratio"
+   ],
+   "breakdown_regime": "Information destroyed by coarse-graining is unrecoverable: any downstream statistic computed from lumped data inherits the reduced divergence, which bounds every test or estimate built on it.",
+   "domain": "statistical distances / data processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Lumping is the engine's aggregation law: binning outcomes, merging categories, or marginalizing a joint distribution can only shrink the divergence between model and data, so reported fit quality must always state the granularity at which it was measured.",
+    "source_operator": "f_divergence_lumping",
+    "telemetry": "Partition choices for outcome spaces; marginal versus joint divergence reports."
+   }
+  },
+  {
+   "primitive_id": "f_divergence_local_quadratic",
+   "name": "Local quadratic equivalence: near Q every smooth f-divergence is f''(1)/2 times the chi-square divergence",
+   "verbatim_quote": "does not remain true if Q is not fixed and the probabilities of Q(a) are not bounded away from 0.",
+   "page": "Section 4, Theorem 4.1 and Remark 4.1, pp. 448-449",
+   "latex": "D_f(P\\|Q) \\sim \\frac{f''(1)}{2} \\chi^2(P, Q), \\qquad \\chi^2(P, Q) = \\sum_a \\frac{(P(a) - Q(a))^2}{Q(a)}, \\quad P \\to Q",
+   "symbol_and_unit_ledger": {
+    "f''(1)": "curvature of f at 1; for f(t) = t log t it equals log e",
+    "chi-square divergence": "squared weighted Euclidean distance between P and Q"
+   },
+   "assumptions": [
+    "f twice differentiable at 1 with f''(1) > 0",
+    "Q fixed with full support; probabilities of Q bounded away from 0"
+   ],
+   "breakdown_regime": "The equivalence collapses exactly where rare events matter: if some Q(a) can approach 0, different f-divergences disagree at leading order and tail behavior must be checked with the exact divergence, not the quadratic surrogate.",
+   "domain": "statistical distances / asymptotics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Locally, the engine can treat divergence geometry as Euclidean with the chi-square metric, which licenses least-squares style computations and normal approximations for small discrepancies, with an explicit tripwire: cells with tiny model probability exit the regime where the quadratic picture is valid.",
+    "source_operator": "f_divergence_local_quadratic",
+    "telemetry": "Cell-wise model probabilities and observed counts; minimum cell probability diagnostics."
+   }
+  },
+  {
+   "primitive_id": "chi_square_decomposition",
+   "name": "Pythagorean chi-square decomposition (Wilks-type): total divergence splits into fit and model terms with independent chi-square limits and stated degrees of freedom",
+   "verbatim_quote": "The χ2 distribution with k degrees of freedom is defined as the distribution of the sum of squares of k independent random variables having the standard normal distribution.",
+   "page": "Section 4, Theorem 4.2 and Remark 4.2, pp. 451-453",
+   "latex": "D(\\hat P_n\\|Q) = D(\\hat P_n\\|P_n^*) + D(P_n^*\\|Q), \\qquad \\frac{2n}{\\log e} D(\\hat P_n\\|P_n^*) \\Rightarrow \\chi^2_{|A|-1-k}, \\quad \\frac{2n}{\\log e} D(P_n^*\\|Q) \\Rightarrow \\chi^2_k",
+   "symbol_and_unit_ledger": {
+    "P_n*": "I-projection of Q onto the random linear family matching the sample moments of f_1..f_k",
+    "k": "number of fitted constraint functions (parameters)",
+    "|A|-1-k": "residual degrees of freedom after fitting"
+   },
+   "assumptions": [
+    "f_0 = 1, f_1..f_k linearly independent; P-hat_n converges to Q",
+    "Asymptotic (large n) chi-square limits"
+   ],
+   "breakdown_regime": "The decomposition is exact for divergence but the chi-square limits are asymptotic; small samples and sparse cells break the approximation, and degrees of freedom change if further nested projections are taken (they still decompose additively).",
+   "domain": "goodness of fit / contingency tables",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's goodness-of-fit gate: divergence of data from a fitted family comes with a null distribution and a degrees-of-freedom count, so a model family can be rejected at a stated level rather than by eyeballing a distance, and nested fits decompose the total misfit into attributable layers.",
+    "source_operator": "chi_square_decomposition",
+    "telemetry": "Fitted versus empirical distributions; parameter counts per fitted family; sample sizes."
+   }
+  },
+  {
+   "primitive_id": "log_linear_models",
+   "name": "Log-linear models for contingency tables: fixing marginals defines a linear family whose dual exponential family is a product of interaction terms",
+   "verbatim_quote": "The family of all distributions of the form (4.4) is called a log-linear family with interactions γ ∈ Γ.",
+   "page": "Section 4, pp. 455-456",
+   "latex": "P(\\omega) = c\\, Q(\\omega) \\prod_{\\gamma \\in \\Gamma} a_\\gamma(\\omega(\\gamma))",
+   "symbol_and_unit_ledger": {
+    "omega": "a cell of the d-dimensional table (one category per feature)",
+    "gamma": "a subset of features; omega(gamma) is the marginal coordinate",
+    "a_gamma": "interaction factor depending on the cell only through its gamma-marginal",
+    "Gamma": "the family of interaction sets; hierarchical models close Gamma under subsets"
+   },
+   "assumptions": [
+    "Uniform Q gives the classical log-linear model",
+    "Representation made unique by setting a_gamma = 1 when any component of omega(gamma) is 0"
+   ],
+   "breakdown_regime": "The parametrization is redundant without the hierarchical normalization; sparse tables (many zero cells) push fits to the closure boundary, the same MLE existence issue as Theorem 3.3.",
+   "domain": "contingency tables / graphical models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Contingency structure is the engine's native format for categorical interactions: any joint distribution over discrete factors with specified marginals has a log-linear dual, so feature-interaction models can be specified by which marginals they must reproduce and fitted by projection rather than by ad hoc regression.",
+    "source_operator": "log_linear_models",
+    "telemetry": "Multi-way count tables: joint outcomes cross-classified by discrete situational factors."
+   }
+  },
+  {
+   "primitive_id": "iterative_scaling",
+   "name": "Iterative scaling (IPF): cyclically rescaling to match one prescribed marginal at a time converges to the I-projection onto all of them",
+   "verbatim_quote": "This applies, in particular, to I-projections to families defined by prescribed marginals, required in the analysis of contingency tables",
+   "page": "Section 5.1, Theorem 5.1, pp. 459-461",
+   "latex": "P^{(n)}(\\omega) = P^{(n-1)}(\\omega) \\frac{\\bar P_{\\gamma_n}(\\omega(\\gamma_n))}{P^{(n-1)}_{\\gamma_n}(\\omega(\\gamma_n))}, \\qquad P^{(0)} = Q, \\quad P^{(n)} \\to P^*",
+   "symbol_and_unit_ledger": {
+    "gamma_n": "the marginal constraint applied at step n, cycling through Gamma",
+    "P-bar_gamma": "the prescribed gamma-marginal",
+    "P*": "I-projection of Q onto the intersection of all marginal families"
+   },
+   "assumptions": [
+    "Intersection of the constraint families nonempty",
+    "Each single-marginal projection has the closed scaling form (5.1)"
+   ],
+   "breakdown_regime": "Convergence is to the projection only when the intersection is nonempty; with incompatible marginals the cycle has no feasible limit point in the family.",
+   "domain": "algorithms / contingency tables",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Iterative scaling is the engine's workhorse solver for marginal fusion: each trusted marginal signal is imposed by an exact multiplicative rescale, the cycle provably converges to the unique least-committal joint distribution matching all of them, and the proof (a telescoping Pythagorean sum) doubles as a convergence certificate.",
+    "source_operator": "iterative_scaling",
+    "telemetry": "Target marginal distributions per factor subset; current joint distribution iterates."
+   }
+  },
+  {
+   "primitive_id": "generalized_iterative_scaling",
+   "name": "Generalized iterative scaling (SMART): simultaneous weighted geometric-mean updates fit I-projections to general linear families and MLEs in exponential families",
+   "verbatim_quote": "Intuitively, in generalized iterative scaling the values bn (a) are updated using all constraints in each step, via multiplications by weighted geometric means of the analogues αi /βn,i of the ratios in (5.1) that have been used in standard iterative scaling, taking one constraint into account in each step.",
+   "page": "Section 5.1, Theorem 5.2, pp. 461-463",
+   "latex": "b_{n+1}(a) = b_n(a) \\prod_{i=1}^k \\left( \\frac{\\alpha_i}{\\beta_{n,i}} \\right)^{f_i(a)}, \\qquad \\beta_{n,i} = \\sum_{a} b_n(a) f_i(a), \\quad b_n(a) \\to P^*(a)",
+   "symbol_and_unit_ledger": {
+    "f_i >= 0 with sum_i f_i(a) = 1": "normalization (5.3), achievable from arbitrary statistics by affine reparametrization plus one slack function",
+    "alpha": "target moment vector, a probability vector under (5.3)",
+    "b_n": "unnormalized iterates; only the limit is a distribution"
+   },
+   "assumptions": [
+    "Constraint set in the normalized form (5.3)",
+    "Linear family nonempty"
+   ],
+   "breakdown_regime": "The iterates are not distributions along the way, so intermediate values cannot be interpreted probabilistically; if the family is empty the same iteration converges to a minimizer of a divergence between the target moments and the achievable moment set instead (Remark 5.2).",
+   "domain": "algorithms / maximum likelihood",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GIS is the engine's general-purpose fitter for any exponential-family component: one update rule handles arbitrary moment constraints, the proof reduces it to ordinary iterative scaling on a lifted alphabet, and its empty-family behavior (converging to the closest achievable moments) is a built-in infeasibility diagnostic.",
+    "source_operator": "generalized_iterative_scaling",
+    "telemetry": "Sufficient statistics and target moments; current parameter iterates; achieved-versus-target moment gaps."
+   }
+  },
+  {
+   "primitive_id": "alternating_divergence_minimization",
+   "name": "Alternating minimization: under the three-points and four-points properties, naive alternation between two sets attains the minimum divergence between them",
+   "verbatim_quote": "We show that, subject to some technical conditions, the naive iteration scheme (5.5) determines the infimum in (5.4).",
+   "page": "Section 5.2, Theorem 5.3 and Corollary 5.1, pp. 464-467",
+   "latex": "P_n = P^*(Q_{n-1}), \\quad Q_n = Q^*(P_n), \\qquad D(P_n\\|Q_n) \\to D_{\\min} = \\inf_{P \\in \\mathcal{P}, Q \\in \\mathcal{Q}} D(P\\|Q)",
+   "symbol_and_unit_ledger": {
+    "delta(P, P')": "auxiliary divergence-like function satisfying the three-points property delta(P, P*(Q)) + D(P*(Q)||Q) <= D(P, Q) and the four-points property",
+    "D_min": "minimum divergence between the two sets",
+    "starting condition": "the iteration must start from a Q_0 of maximal support"
+   },
+   "assumptions": [
+    "Existence of the one-sided minimizers P*(Q) and Q*(P)",
+    "For the divergence case: convex compact sets of measures and a maximal-support start"
+   ],
+   "breakdown_regime": "Minimizers in the second argument need not be unique when supports are strictly nested, so Q_n may fail to converge even though D(P_n||Q_n) always converges; the rate bound (5.7) also supplies the practical stopping criterion.",
+   "domain": "algorithms / optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's master convergence theorem for coupled estimation: whenever two model blocks are fitted alternately and each step is a divergence projection, the joint fit converges to the best achievable pair, and inequality (5.7) turns the last step's movement into a certified optimality gap for stopping.",
+    "source_operator": "alternating_divergence_minimization",
+    "telemetry": "Paired model blocks fitted alternately; per-step divergence decrements."
+   }
+  },
+  {
+   "primitive_id": "mixture_decomposition_cover_portfolio",
+   "name": "Mixture decomposition by alternating minimization: fitting mixture weights is maximum likelihood, with Cover's portfolio algorithm as the same iteration",
+   "verbatim_quote": "This example fits into the framework of Problem 1, above, by setting A = {1, . . . , k} × B, T (i, b) = b, Q = {Q: Q(i, b) = ci µi (b)}.",
+   "page": "Section 5.2, Example 5.1 and Remark 5.1, pp. 468-470",
+   "latex": "c_i^n = c_i^{n-1} \\sum_{b \\in B} \\frac{\\mu_i(b) P(b)}{\\sum_j c_j^{n-1} \\mu_j(b)}",
+   "symbol_and_unit_ledger": {
+    "c_i": "mixture weights, nonnegative, summing to 1",
+    "mu_i": "component measures on B",
+    "P": "target distribution (the empirical distribution makes weight fitting an MLE problem)"
+   },
+   "assumptions": [
+    "Support condition: support of P contained in the union of component supports",
+    "Start with all c_i^0 > 0 (maximal support)"
+   ],
+   "breakdown_regime": "The iteration is the EM algorithm for mixture weights in disguise; with nonconvex feasible sets in richer problems the same alternation can stall at local optima.",
+   "domain": "algorithms / mixture models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any engine component that blends expert distributions by weights inherits this exact solver and its convergence guarantee, and the portfolio reading shows the same update maximizes expected log score of the blend, so weight learning and score maximization are one computation.",
+    "source_operator": "mixture_decomposition_cover_portfolio",
+    "telemetry": "Component predictive distributions; blend weights; realized outcome scores per component."
+   }
+  },
+  {
+   "primitive_id": "em_algorithm",
+   "name": "EM algorithm: expectation-maximization is alternating divergence minimization between completed-data distributions and the model set",
+   "verbatim_quote": "The expectation-maximization or EM algorithm is an iterative method frequently used in statistics to estimate a distribution supposed to belong to a given set Q of distributions on a set A",
+   "page": "Section 5.3, pp. 471-473",
+   "latex": "P_k(a) = \\hat P_n^T(Ta) \\frac{Q_{k-1}(a)}{Q_{k-1}^T(Ta)} \\quad \\text{(E-step)}, \\qquad Q_k = \\arg\\min_{Q \\in \\mathcal{Q}} D(P_k\\|Q) \\quad \\text{(M-step)}",
+   "symbol_and_unit_ledger": {
+    "T: A to B": "the coarsening map; only y = T x is observed",
+    "P-hat_n^T": "empirical distribution of the observed incomplete sample",
+    "Q^T": "image distribution of Q under T"
+   },
+   "assumptions": [
+    "Finite alphabets A and B; known observation map T",
+    "Ideal convergence (to the MLE of the incomplete-data distribution) guaranteed when the model set is convex and compact and the start has maximal support"
+   ],
+   "breakdown_regime": "In most statistical uses the model set is not convex, Corollary 5.1 does not apply, and the iteration often gets stuck at a local optimum; the tutorial's practical remedy is multiple restarts from different initial Q_0.",
+   "domain": "algorithms / latent variable models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine gets EM with its warranty card attached: the E-step has a closed form (conditional expectation equals a divergence projection), monotone decrease of the observed-data divergence is guaranteed, and the failure mode is named in advance, nonconvexity, with restarts as the sanctioned mitigation.",
+    "source_operator": "em_algorithm",
+    "telemetry": "Incomplete observations with a known coarsening structure; latent completion distributions per iterate."
+   }
+  },
+  {
+   "primitive_id": "pointwise_redundancy_floor",
+   "name": "Pointwise redundancy floor: no code, prefix or not, can beat the ideal -log P by more than about 3 log n, eventually almost surely",
+   "verbatim_quote": "The next theorem shows, however, that pointwise redundancy can never be “substantially” negative for large n, with P -probability 1.",
+   "page": "Section 6.1, Theorem 6.1, p. 476",
+   "latex": "R(x_1^n) = L(x_1^n) + \\log P(x_1^n) \\ge -c_n \\quad \\text{eventually a.s., for any } \\sum_n n 2^{-c_n} < \\infty, \\text{ e.g. } c_n = 3 \\log n",
+   "symbol_and_unit_ledger": {
+    "R(x_1^n)": "pointwise redundancy of the code on this message, bits",
+    "L": "length function of an arbitrary (not necessarily prefix) sequence of codes",
+    "P": "the true process"
+   },
+   "assumptions": [
+    "Any process P and any sequence of codes",
+    "Stronger conclusion E_P(inf_n R) > -infinity for strongly prefix codes or codes dominated by some process Q"
+   ],
+   "breakdown_regime": "Expected redundancy is nonnegative only for prefix codes; pointwise redundancy can be negative on individual messages, and the floor is about typical behavior, not a per-message guarantee at small n.",
+   "domain": "universal coding",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is an anti-overfitting bound the engine can quote internally: any scoring or compression scheme that appears to beat the true model's ideal score by more than a few log n bits on long records is exploiting noise or leakage, because such gains are almost surely impossible.",
+    "source_operator": "pointwise_redundancy_floor",
+    "telemetry": "Per-record log scores under competing models; cumulative score differences over growing samples."
+   }
+  },
+  {
+   "primitive_id": "nml_minimax_code",
+   "name": "Normalized maximum likelihood: the NML distribution attains the minimax worst case maximum redundancy, R_n* = log sum of maximized likelihoods",
+   "verbatim_quote": "While Shannon codes for the distributions NMLn , n = 1, 2, . . . are optimal for the class P within 1 bit, with respect to the maximum redundancy criterion, by Theorem 6.2, they are typically not practical from the implementation point of view.",
+   "page": "Section 6.1, Theorem 6.2, p. 480",
+   "latex": "R_n^* = \\log \\sum_{x_1^n \\in A^n} P_{ML}(x_1^n), \\qquad NML_n(x_1^n) = \\frac{P_{ML}(x_1^n)}{\\sum_{y_1^n} P_{ML}(y_1^n)}, \\quad P_{ML}(x_1^n) = \\sup_{P \\in \\mathcal{P}} P(x_1^n)",
+   "symbol_and_unit_ledger": {
+    "P_ML": "maximized likelihood of the message over the class",
+    "R_n*": "least possible worst case maximum redundancy over the class, bits",
+    "NML_n": "normalized maximum likelihood distribution, the minimax coding distribution"
+   },
+   "assumptions": [
+    "Any class of processes on a finite alphabet",
+    "Shannon code for NML_n attains the bound within 1 bit"
+   ],
+   "breakdown_regime": "NML distributions for successive n are generally inconsistent, so no single process has them as marginals; direct computation sums over all A^n messages and is usually infeasible, which is why mixture codes replace NML in practice.",
+   "domain": "universal coding / minimax",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "NML is the engine's reference standard for class-relative scoring: the regret of any predictive distribution against the best member of a model class, in the worst case, is exactly log of the total maximized likelihood, so class complexity is a measurable quantity rather than a prior belief.",
+    "source_operator": "nml_minimax_code",
+    "telemetry": "Maximized likelihoods per candidate record under each model class; class regret accounts."
+   }
+  },
+  {
+   "primitive_id": "krichevsky_trofimov_jeffreys_predictor",
+   "name": "Krichevsky-Trofimov add-one-half predictor: the Dirichlet(1/2) mixture (Jeffreys prior) gives a universal code for i.i.d. data with redundancy ((k-1)/2) log n",
+   "verbatim_quote": "It is not intuitively obvious at this point in our discussion why exactly 1/2 is the “right” bias term that admits the strong redundancy bound below.",
+   "page": "Section 6.2, eq. (6.5), Theorem 6.3, Remark 6.1, pp. 481-482; mixture identity in Section 7.2, p. 499",
+   "latex": "Q(i \\mid x_1^{t-1}) = \\frac{n(i \\mid x_1^{t-1}) + 1/2}{t - 1 + k/2}, \\qquad \\frac{P(x_1^n)}{Q(x_1^n)} \\le K_0 \\, n^{(k-1)/2}",
+   "symbol_and_unit_ledger": {
+    "n(i | past)": "count of symbol i in the observed past",
+    "k": "alphabet size |A|",
+    "1/2": "the Jeffreys-prior pseudocount; replacing it by 1 gives the inferior two-stage type code redundancy",
+    "K_0": "constant depending only on k"
+   },
+   "assumptions": [
+    "I.i.d. class with alphabet {1..k}",
+    "The coding process is the mixture of all i.i.d. processes under the Dirichlet(1/2,...,1/2) prior (Section 7.2)"
+   ],
+   "breakdown_regime": "Tuned to the i.i.d. class: for Markov or context classes the same construction must be applied per context, and the redundancy scales with the number of free parameters of the class actually used.",
+   "domain": "universal coding / Bayesian mixtures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Add-one-half smoothing is the engine's default sequential estimator for sparse categorical data, now with a theorem attached: it is the Jeffreys mixture, its worst case regret is ((k-1)/2) log n, and the one-half is not a fudge factor but the unique choice the minimax bound sanctions.",
+    "source_operator": "krichevsky_trofimov_jeffreys_predictor",
+    "telemetry": "Running symbol counts per categorical stream; alphabet sizes; sequential probability assignments."
+   }
+  },
+  {
+   "primitive_id": "context_mixture_twice_universal",
+   "name": "Context classes and twice universal codes: mixtures over context functions and over Markov orders keep the per-class redundancy bound up to a constant",
+   "verbatim_quote": "the arithmetic code determined by this mixture will satisfy the bound (6.17) whenever the true process belongs to one of the subclasses with s possible values of context function. Such codes are sometimes called twice universal.",
+   "page": "Section 6.2, eq. (6.17) and Remark 6.3, pp. 487-489",
+   "latex": "R_{C_n}^* \\le \\frac{s(k-1)}{2} \\log n + \\mathrm{const}, \\qquad Q = \\sum_{m=0}^{\\infty} \\alpha_m Q^{(m)}, \\quad \\alpha_m > 0, \\ \\sum_m \\alpha_m = 1",
+   "symbol_and_unit_ledger": {
+    "s": "number of distinct values of the context function (effective number of contexts)",
+    "Q^{(m)}": "coding process tailored to Markov chains of order m",
+    "alpha_m": "mixture weights; the redundancy penalty for not knowing m is at most -log alpha_m, a constant"
+   },
+   "assumptions": [
+    "True process in one of the mixed subclasses",
+    "Conditional probabilities of the mixture must remain computable; context weighting is the practical algorithm in the cited case"
+   ],
+   "breakdown_regime": "Redundancy scales with the richest class entered, through its parameter count; mixing over too rich a family reintroduces the strong-universality obstruction of Example 8.3.",
+   "domain": "universal coding / context models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Twice universality is the engine's architecture for unknown memory: maintain a weighted mixture over context structures and orders, pay only a constant for the mixture, and let the data select the effective complexity, with regret still governed by the parameter count of the true structure.",
+    "source_operator": "context_mixture_twice_universal",
+    "telemetry": "Counts per context; mixture weights over orders and context partitions; per-class regret tallies."
+   }
+  },
+  {
+   "primitive_id": "i_radius_equals_channel_capacity",
+   "name": "I-radius equals channel capacity: minimax expected redundancy of a parametric class is the capacity of the channel from parameter to data, attained at the I-centroid",
+   "verbatim_quote": "In information theory parlance, {Pθ , θ ∈ Θ} defines a channel with input alphabet Θ and output alphabet A: when an input θ ∈ Θ is selected, the output is governed by the distribution Pθ = {Pθ (a), a ∈ A}.",
+   "page": "Section 7.1, Lemma 7.1, Theorems 7.1-7.2, Corollary 7.1, pp. 491-494",
+   "latex": "\\min_Q \\sup_{P \\in \\Pi} D(P\\|Q) = \\sup_{\\nu} I(\\nu) = C, \\qquad Q^* = Q_{\\nu^*} = \\int P_\\theta \\, \\nu^*(d\\theta)",
+   "symbol_and_unit_ledger": {
+    "I-radius": "minimum over Q of the worst case divergence to the set Pi",
+    "I-centroid Q*": "the unique minimizer; equals the output distribution of a capacity achieving input distribution",
+    "I(nu)": "mutual information between parameter and output under input distribution nu",
+    "capacity achieving nu*": "exists concentrated on at most |A| points (Lemma 7.2, Caratheodory)"
+   },
+   "assumptions": [
+    "Parametric representation with measurable P_theta(a); closedness gives existence of capacity achieving distributions",
+    "Applied to classes of processes via their marginals on A^n"
+   ],
+   "breakdown_regime": "The capacity achieving prior typically depends on n and is not a single prior for all n; the identity is exact for expected redundancy, while maximum redundancy needs the separate NML analysis.",
+   "domain": "minimax redundancy / channel capacity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This identity is the deepest bridge in the book for engine design: the price of not knowing a parameter equals the information the data can carry about it, so redundancy budgets can be computed from either side, and the least favorable prior (the capacity achieving one) is the principled worst case prior for any fitted class.",
+    "source_operator": "i_radius_equals_channel_capacity",
+    "telemetry": "Parametric model classes with their parameter-to-data channels; candidate priors; worst case divergence profiles."
+   }
+  },
+  {
+   "primitive_id": "minimax_redundancy_sandwich",
+   "name": "Minimax redundancy sandwich: for k-parameter classes R_n is (k/2) log n up to constants, and the KT and Markov arithmetic codes attain it",
+   "verbatim_quote": "To prove “near optimality” of any code, a lower bound to Rn in equation (7.1) is required. Such bound can be obtained applying Theorems 7.1 and 7.3, with An in the role of A.",
+   "page": "Section 7.2, Theorems 7.3-7.5, pp. 495-502",
+   "latex": "\\frac{k}{2} \\log n - K \\le R_n \\le R_n^* \\le \\frac{k}{2} \\log n + K'; \\qquad \\text{i.i.d.: } k \\to k-1; \\quad \\text{order-}m \\text{ Markov: } k \\to (k-1) k^m \\text{ with alphabet size } k",
+   "symbol_and_unit_ledger": {
+    "R_n": "least possible worst case expected redundancy (eq. 7.1)",
+    "estimator condition": "an estimator with E_theta ||theta - theta-hat_n||^2 <= c(theta)/n drives the lower bound via Theorem 7.3",
+    "K, K'": "constants independent of n"
+   },
+   "assumptions": [
+    "Parameter set of positive Lebesgue measure in R^k",
+    "Existence of root-n consistent estimators on the class"
+   ],
+   "breakdown_regime": "The lower bound is in the strong sense of Theorem 7.4: no code can beat (k/2) log n - K except on a parameter subset of arbitrarily small measure; constants hidden by the asymptotics can dominate at moderate n.",
+   "domain": "minimax redundancy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The sandwich gives the engine an exact complexity price list with both sides proven: a fitted block with k free parameters costs (k/2) log n bits of expected redundancy, no method can do materially better, and the named mixture codes achieve it, so complexity taxes in model scoring can be set to this value without apology.",
+    "source_operator": "minimax_redundancy_sandwich",
+    "telemetry": "Parameter counts per fitted block; sample sizes; redundancy accounts per model class."
+   }
+  },
+  {
+   "primitive_id": "no_strong_universality_for_ergodic",
+   "name": "No strongly universal codes for the ergodic class: worst case redundancy can be forced to grow linearly, n log |A| - log n",
+   "verbatim_quote": "In particular, no strongly universal codes exist for the class P, let alone for the larger class of all ergodic processes.",
+   "page": "Section 8.1, Example 8.3, p. 509",
+   "latex": "R_n = \\inf_{Q_n} \\sup_{P \\in \\mathcal{P}} D(P_n\\|Q_n) \\ge n \\log |A| - \\log n \\quad \\text{for the constructed subclass of ergodic processes}",
+   "symbol_and_unit_ledger": {
+    "P^(m) classes": "ergodic processes uniform on the m cyclic shifts of a fixed block, one class per block",
+    "strong universality": "uniform convergence of per-symbol redundancy to 0 over the whole class"
+   },
+   "assumptions": [
+    "The lower bound is proved for a specific union of ergodic subclasses via Theorem 7.1 with uniform input distributions",
+    "Weak universality for each fixed ergodic process still holds (Theorem 8.2, Examples 8.1-8.2)"
+   ],
+   "breakdown_regime": "This kills uniform guarantees, not per-process ones: for any single ergodic source a mixture code's per-symbol redundancy vanishes, but the rate can be arbitrarily slow across the class.",
+   "domain": "universal coding / impossibility",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An impossibility boundary the engine must design around: no single fixed model or code can promise uniform performance over all stationary sources, so adaptivity, mixtures, or explicit class restrictions are structural requirements, and any vendor-style claim of uniform universality is refuted by this example.",
+    "source_operator": "no_strong_universality_for_ergodic",
+    "telemetry": "Class definitions for source models; uniformity requirements in evaluation harnesses."
+   }
+  },
+  {
+   "primitive_id": "mdl_principle",
+   "name": "MDL principle: choose the model minimizing total description length, model code plus data code; equivalently penalized likelihood with an exact penalty",
+   "verbatim_quote": "The statistical information in data is best extracted when a possibly short description of the data is found. The statistical model best fitting to the data is the one that leads to the shortest description, taking into account that the model itself must also be described.",
+   "page": "Section 8.2, pp. 510-512",
+   "latex": "\\hat\\gamma = \\arg\\min_{\\gamma \\in \\Gamma} \\left[ L(\\gamma) + L_\\gamma(x_1^n) \\right], \\qquad L_\\gamma(x_1^n) = -\\log Q_\\gamma(x_1^n) \\ \\text{or} \\ -\\log NML_\\gamma(x_1^n)",
+   "symbol_and_unit_ledger": {
+    "Gamma": "countable list of candidate models",
+    "L(gamma)": "code length of the model itself (a prior of 2^{-L(gamma)} in the Bayesian reading)",
+    "R_n(gamma) penalty": "with NML codes the penalty is L(gamma) + log sum of maximized likelihoods; asymptotically (k_gamma/2) log n, the BIC penalty (Remark 8.2)"
+   },
+   "assumptions": [
+    "Candidate models indexed by a countable set with a prefix code for indices",
+    "Mixture codes make MDL equivalent to Bayesian model choice with priors 2^{-L(gamma)}; NML codes make it penalized maximum likelihood"
+   ],
+   "breakdown_regime": "The asymptotic BIC equivalence can fail when Gamma is infinite; the choice of code for each model is a real degree of freedom that different MDL variants resolve differently.",
+   "domain": "model selection / MDL",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "MDL is the engine's model selection rule with no free knobs: every candidate structure pays its description length plus its redundancy, both in bits and both computed from the coding machinery of Sections 6-7, so selection among feature sets, context structures, and model orders is one arithmetic comparison.",
+    "source_operator": "mdl_principle",
+    "telemetry": "Candidate model lists with per-model code lengths; maximized likelihoods and redundancy terms per candidate."
+   }
+  },
+  {
+   "primitive_id": "mdl_consistency",
+   "name": "MDL consistency: with mutually singular candidate models (or mixtures over parametric classes), the true model is the unique MDL minimizer eventually almost surely",
+   "verbatim_quote": "The next theorems address the consistency of MDL inference, namely, whether the true model is always recovered, eventually almost surely, whenever one of the candidate models is true.",
+   "page": "Section 8.2, Theorems 8.3-8.4, pp. 512-514",
+   "latex": "\\arg\\min_{\\gamma \\in \\Gamma} \\left[ L(\\gamma) - \\log Q_\\gamma(x_1^n) \\right] = \\gamma^* \\quad \\text{eventually, } Q_{\\gamma^*}\\text{-a.s.}",
+   "symbol_and_unit_ledger": {
+    "mutual singularity": "distinct candidate processes give probability 1 to disjoint sets of infinite sequences; automatic for distinct ergodic processes",
+    "N_gamma exceptional sets": "in the parametric version, consistency holds for all parameters outside a prior-null exceptional subset of each class"
+   },
+   "assumptions": [
+    "True model is on the candidate list",
+    "Candidate mixture processes mutually singular; classes essentially disjoint"
+   ],
+   "breakdown_regime": "Exceptional parameter sets are not fully characterized; they are known to include parameters representing lower-order or non-irreducible chains in the Markov order problem, and Example 8.4 shows they can matter.",
+   "domain": "model selection / consistency",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Consistency is the engine's license to let MDL run unattended: if the true structure is in the candidate list and the candidates are mutually singular, selection provably locks onto it with enough data, and the singularity hypothesis converts directly into a checklist item (distinct ergodic candidates) when assembling candidate lists.",
+    "source_operator": "mdl_consistency",
+    "telemetry": "Candidate model lists; ergodicity and distinctness checks per candidate; accumulated description lengths."
+   }
+  },
+  {
+   "primitive_id": "mdl_counterexample",
+   "name": "MDL consistency counterexample (Csiszar-Shields): for the uniform i.i.d. truth, unbounded-order MDL with sublinear model code diverges to infinite order",
+   "verbatim_quote": "Nevertheless, the conjecture is false, and we conclude this subsection by a counterexample.",
+   "page": "Section 8.2, Example 8.4, pp. 514-516",
+   "latex": "L(0) - \\log Q^{(0)}(x_1^n) > \\inf_{m > 0} \\left[ L(m) - \\log Q^{(m)}(x_1^n) \\right] \\quad \\text{eventually a.s., if } L(m) = o(m); \\qquad \\hat m(x_1^n) \\to +\\infty \\ \\text{a.s.}",
+   "symbol_and_unit_ledger": {
+    "P": "the i.i.d. uniform process, true Markov order m* = 0",
+    "Q^{(m)}": "the coding process tailored to order m Markov chains (Dirichlet mixture)",
+    "mechanism": "for m about (log n)/(4 log k), no m-block repeats in the sample, so Q^{(m)} assigns the maximal probability k^{-n} and longer models keep winning"
+   },
+   "assumptions": [
+    "Model code lengths L(m) growing sublinearly in m",
+    "BIC-penalized and order-bounded variants remain consistent; the failure is specific to the raw mixture MDL over an unbounded list"
+   ],
+   "breakdown_regime": "This is a genuine counterexample, not a technicality: the simplest possible truth defeats the principle when model complexity is undercharged, so any deployment needs either a known order bound, a BIC-strength penalty, or model codes growing fast enough.",
+   "domain": "model selection / counterexamples",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A standing red flag for the engine's selection layer: description length accounting must charge for model index complexity at the right rate, because a too-cheap model code lets phantom structure win on pure noise; the example names the exact mechanism (unrepeated long blocks look maximally likely) so the failure can be tested for directly.",
+    "source_operator": "mdl_counterexample",
+    "telemetry": "Model index code lengths; block repetition statistics of samples; selected order versus sample size traces."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "995225b57e1135c6-t1",
+   "think": "This tutorial is built around a single object, the information divergence D(P||Q), and a single claim: that most of classical statistics becomes clearer, and several of its algorithms become inevitable, once divergence is treated as a squared distance and statistical problems are treated as geometry in the space of distributions. The first movement is definitional. Entropy, conditional entropy, mutual information and divergence are introduced on a finite alphabet, with the log-sum inequality supplying nonnegativity and the Kraft inequality tying probability to code length, so that from the very start a distribution is simultaneously a belief state and a compression scheme, and the ideal code length of an outcome is minus its log probability. The second movement is combinatorial. The method of types turns multinomial probability into counting: there are only polynomially many empirical distributions of length n, each type class has size about 2^{nH}, and each carries probability about 2^{-nD} under a candidate law. Sanov's theorem and Stein's lemma are then nearly corollaries: the probability of a rare empirical pattern, and the best achievable error exponent of a test, both equal the divergence from the assumed truth to the nearest distribution in the offending set, so error exponents are distances and hypothesis testing is nearest-point geometry. The third movement is the geometry proper. The I-projection of a reference distribution onto a closed convex set satisfies a Pythagorean inequality, and onto a linear family, defined by moment constraints, a Pythagorean identity; linear families and exponential families are dual descriptions of one object, and maximum likelihood in an exponential family is exactly the projection, with the sample moments supplying the constraint values and with a sharp existence criterion in terms of support. The fourth movement turns geometry into algorithms. Projections onto single marginal constraints are simple rescalings, so cyclic projection yields iterative scaling for contingency tables; the Pythagorean identity generalizes to three-points and four-points properties that make alternating divergence minimization converge between arbitrary convex sets, and the EM algorithm falls out as the special case where one of the sets is defined by the observed marginals of incomplete data, complete with its local optimum warning outside convex problems. The fifth movement changes the question from estimating one distribution to coding for a whole class of processes. Redundancy, the excess of a code's length over the ideal minus log P, becomes the currency of model uncertainty: the normalized maximum likelihood distribution is exactly minimax for worst case redundancy, the Krichevsky-Trofimov add one half rule is revealed as a Dirichlet mixture with the Jeffreys prior, and the minimax expected redundancy of a parametric class equals a channel capacity, the I-radius of the class, which estimation based lower bounds pin at (k/2) log n for a k parameter class. The final movement spends that currency on model selection. The minimum description length principle chooses the model minimizing total description length, the model coded plus the data coded under it; with mixture or normalized maximum likelihood codes this is penalized likelihood with an exact, computable penalty whose asymptotic form is the BIC term, and consistency theorems show the true model is recovered eventually almost surely when candidates are mutually singular, while the authors' own counterexample shows the naive version of that claim fails for unbounded model lists with cheap model codes. For a reasoning engine the transferable payload is fourfold. First, divergence is a universal comparison geometry: any two belief states, forecasts, or signal summaries can be scored in bits and their disagreement decomposed along projections. Second, constraint fusion is projection: imposing trusted moment or marginal constraints on a base distribution by I-projection, computed by iterative scaling, is the principled merge that adds no information beyond the constraints. Third, complexity has a proven price list: each fitted parameter costs about half a log n bits of redundancy, so model classes can be taxed exactly rather than by taste, and the tax is attained by named mixture codes. Fourth, evidence is governed by nearest alternatives: the probability that data mislead is set by the divergence to the closest distribution that would produce them, which is the correct way to size confidence. The limits are stated just as plainly. Everything is finite alphabet, and continuous models need the general theory the authors deliberately set aside. Exponents are asymptotic and can mislead at small samples. Strong universality is impossible over the ergodic class. Alternating algorithms stall at local optima in nonconvex problems. And MDL, deployed carelessly over unbounded lists, can select infinite complexity on pure noise. Inside those limits, the tutorial is a complete operating system for turning data into beliefs: count types, project onto constraints, price parameters, and let divergences, not intuitions, set the error bars. One more strand deserves emphasis, because it is where the book stops being a survey and becomes a design manual. The algorithmic results are not a miscellany: iterative scaling, generalized iterative scaling, alternating minimization and EM are one algorithm viewed at four levels of generality, each justified by the same Pythagorean bookkeeping, so an implementer who understands the projection theorem understands why all four converge and exactly when each can fail. Likewise the coding results are one theorem viewed from three sides: the normalized maximum likelihood distribution is the minimax answer for worst case redundancy, the mixture construction is the practical answer for expected redundancy, and the capacity identity is the information theoretic answer explaining why both prices coincide at (k/2) log n. A reader who internalizes that unity can move between estimation, compression and model selection without changing tools, which is precisely the fluency a reasoning engine needs when the same evidence must be scored, fused and taxed inside a single pipeline.",
+   "retrocausal_genealogy": "The lineage runs from Boltzmann's combinatorial entropy through Shannon's 1948 coding theorems and the Kullback and Leibler divergence of 1951, Wald's sequential analysis, and Sanov's 1957 large deviation theorem, all of which already used divergence as the exponent of error. Kullback proposed divergence minimization as an inference principle in 1959; Cencov and Amari later uncovered the differential geometry underneath it, and Csiszar's 1975 I-divergence geometry paper supplied the projection theorems this tutorial teaches. The algorithmic line runs from Kruithof's 1937 scaling through Darroch and Ratcliff's generalized iterative scaling to the Dempster, Laird and Rubin EM algorithm of 1977. The coding line runs from Fitingof and Davisson through Krichevsky and Trofimov and Shtarkov's normalized maximum likelihood to Rissanen's MDL principle and Schwarz's BIC, closing with Barron's redundancy theory and the authors' own work on BIC consistency for Markov order estimation.",
+   "theory_of_mind": "The authors write for a reader who knows basic probability and distrusts black boxes: every theorem is proved, usually by elementary counting, and every abstraction is immediately cashed out as a statistical procedure. Their model of the domain is that statistics and compression are one subject seen from two sides, so a good estimator should induce a good code and a good code should reveal the model that generated the data. They deliberately restrict attention to finite alphabets, trading generality for a setting where combinatorics replaces analysis and the geometry stays visible. Their recurring rhetorical move is Euclidean analogy: divergence is introduced as a squared distance analogue, and projections, Pythagoras, radius and centroid follow, with the reader expected to import geometric intuition wholesale and then note precisely where the analogy bends, since divergence is not symmetric and satisfies no triangle inequality.",
+   "cross_layer_veto": "Several results act as vetoes on other layers of any system built from this material. The singularity phenomenon behind Theorems 8.1 and 8.3 vetoes any pipeline whose model assigns probability zero to events the truth can produce: redundancy then grows without bound and no amount of data repairs a support error, so support coverage must be audited before fitting begins. The absence of strongly universal codes for the ergodic class vetoes any claim that one fixed model class performs uniformly well over all stationary sources; adaptivity or explicit mixtures are mandatory, not optional. The MDL counterexample vetoes naive consistency claims for unbounded model lists with slowly growing model codes: selection can diverge to infinite order on the simplest true model unless an order bound or a full strength penalty is imposed. Finally, the chi-square theory vetoes fixed universal thresholds for goodness of fit, because the same divergence statistic carries different null distributions depending on how many parameters were fitted, so every divergence passed upward must travel with its degrees of freedom."
+  }
+ ],
+ "universal_lens": "Read as a general template, the tutorial says: pick a divergence and you have picked a geometry; pick a geometry and estimation becomes projection, algorithms become alternating projection, and model choice becomes accounting. Any domain whose states are distributions over finitely many outcomes, whose constraints arrive as moments or marginals, and whose models arrive as nested families can run the same operating system: compare states by divergence, fuse constraints by projection, tax each parameter at half a log of the sample size, and judge evidence by the distance to the nearest alternative that would explain the data. The specific content is information theory; the reusable form is a discipline for turning counting into inference without ever leaving the geometry that makes the answers checkable.",
+ "gsi_mapping": "For the Galaxy Sports Institute this tutorial is a curriculum spine for evidence theory. It supplies the cleanest available route from counting (types) to large deviations (Sanov), to testing exponents (Stein), to projection based belief revision, to universal coding and MDL, with each step proved by elementary tools. It fixes the vocabulary the institute teaches for talking about sample evidence: exponents are divergences, fitted parameters cost half a log n bits, and goodness of fit decomposes by projection with chi-square limits and stated degrees of freedom. It also supplies the cautionary exhibits for the syllabus: the MDL consistency counterexample, the failure of strong universality over ergodic processes, and the breakdown of f-divergence equivalence when small model probabilities are not bounded away from zero.",
+ "gse_mapping": "For the Galaxy Sports Edge engine this tutorial contributes machinery, not picks. Divergence is the scoring geometry for comparing a projected distribution over game outcomes with the realized empirical distribution, and its Pythagorean decomposition separates misfit caused by wrong marginals from misfit inside the model family. I-projection is the fusion operator: a base projection is adjusted to match trusted marginal signals such as usage shares, availability rates and situational frequencies by iterative scaling, which is exactly the constraint structure of contingency tables. Redundancy supplies the complexity tax for every fitted component, (k/2) log n per parameter block, and the normalized maximum likelihood and Dirichlet mixture constructions give concrete priors, add one half smoothing, for sparse categorical estimates. EM covers latent state estimation from incomplete observations, with the tutorial's local optimum warning attached."
+}

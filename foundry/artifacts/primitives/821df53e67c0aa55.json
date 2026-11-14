@@ -1,0 +1,821 @@
+{
+ "book_id": "821df53e67c0aa55",
+ "source_status": "COMPLETE",
+ "source_note": "François Fleuret, The Little Book of Deep Learning (first released 2023; this PDF edition carries a foreword dated May 19, 2024, fleuret.org, distributed free by the author). Local file Fleuret-2023-LittleBookOfDeepLearning.pdf, 4,747,258 bytes, full PDF sha256 821df53e67c0aa55fa4082ea8329e4152456fd8c961f51da8fb69ab75084bbe4, extracted text at full-library-2026-11-12/text/books-d-models/. Extraction quality note: the text layer carries overlapping-glyph duplication artifacts on emphasized words and hyphenated line breaks; all quotes in this artifact were taken from clean contiguous prose spans and machine-verified as normalized substrings of the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "basis_function_regression",
+   "name": "A linear-in-parameters model over a fixed basis is fit by minimizing mean squared error, which reduces to solving a linear system",
+   "verbatim_quote": "Given a basis of functions (blue curves) and a training set (black dots), we can compute an optimal linear combination of the former (red curve) to approximate the latter for the mean squared error.",
+   "page": "§1.2, p. 14 (Figure 1.1 caption)",
+   "latex": "\\mathcal{L}(w) = \\frac{1}{N} \\sum_{n=1}^{N} (y_n - f(x_n; w))^2, \\qquad f(x; w) = \\sum_{k=1}^{K} w_k f_k(x)",
+   "symbol_and_unit_ledger": {
+    "\\mathcal{L}(w)": "mean squared error loss over the training set (squared target units)",
+    "N": "number of training pairs (count)",
+    "y_n": "target value of sample n",
+    "x_n": "input of sample n",
+    "w_k": "trainable coefficient of basis function k",
+    "f_k": "k-th pre-defined basis function",
+    "K": "number of basis functions (count)"
+   },
+   "assumptions": [
+    "Training pairs (x_n, y_n) are given and representative of future inputs",
+    "The model is linear in the trainable coefficients w_k even if the basis functions are nonlinear in x"
+   ],
+   "breakdown_regime": "Fails when the fixed basis cannot express the target mapping; capacity is capped by the basis, and richer targets require learned representations instead",
+   "domain": "machine learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's simplest scorers are exactly this shape: a weighted combination of fixed evidence features fit against historical outcomes, with the closed-form least-squares solution as the sanity baseline every learned scorer must beat",
+    "source_operator": "basis_function_regression",
+    "telemetry": "Historical game results paired with pre-game feature vectors (matchup, usage, health features) as (x_n, y_n) pairs"
+   }
+  },
+  {
+   "primitive_id": "capacity_under_overfitting",
+   "name": "Model capacity must match the amount and quality of training data: too little capacity underfits, too much freedom on too little data overfits",
+   "verbatim_quote": "When the capacity is insufficient, the model cannot fit the data, resulting in a high error during training.",
+   "page": "§1.3, p. 16",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Generalization, not training fit, is the quantity of interest",
+    "Training examples are drawn from the same structure as future inputs"
+   ],
+   "breakdown_regime": "The classical picture is incomplete for very large models, which can keep improving despite extreme capacity; capacity alone does not predict the failure, the data regime and inductive bias decide",
+   "domain": "machine learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every candidate signal family in the engine carries a capacity budget: the number of free parameters a signal may spend is set against the number of historical games available to fit it, and training fit alone never promotes a signal",
+    "source_operator": "capacity_under_overfitting",
+    "telemetry": "Counts of historical games per signal family versus number of fitted parameters, tracked in the engine's fit registry"
+   }
+  },
+  {
+   "primitive_id": "inductive_bias",
+   "name": "Inductive bias: the model structure should correspond to the underlying structure of the data, so the right functions are easy to express and the wrong ones are hard",
+   "verbatim_quote": "which means that its structure corresponds to the underlying structure of the data at hand.",
+   "page": "§1.3, p. 17",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The data-generating process has stable structure that a model class can mirror",
+    "Prior knowledge about the domain is available at design time"
+   ],
+   "breakdown_regime": "A wrong inductive bias is worse than none: it fits the training data through the wrong mechanism and fails silently when the regime shifts",
+   "domain": "machine learning foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine encodes football structure directly in its architecture: usage before health before matchups before situations, so the hypothesis space itself expresses how games are actually decided instead of leaving everything to a generic learner",
+    "source_operator": "inductive_bias",
+    "telemetry": "Domain structure audits: which engine stages mirror which real causal steps in a game week"
+   }
+  },
+  {
+   "primitive_id": "gpu_batch_processing",
+   "name": "GPUs are memory-bandwidth bound, so computation is organized in batches that fit in device memory and are processed in parallel at near single-sample cost",
+   "verbatim_quote": "In practice, a GPU processes a batch that fits in memory almost as quickly as it would process a single sample.",
+   "page": "§2.1, p. 21-22",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Samples in a batch are processed by the same operator with the same parameters",
+    "The batch fits entirely in GPU memory"
+   ],
+   "breakdown_regime": "Breaks when samples have irregular sizes or sequential dependencies that prevent parallel batching, and when host-to-device copies dominate the compute",
+   "domain": "compute infrastructure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine inference and backtesting are batched the same way: a full slate of games is scored in one pass with shared parameters, and any per-game serial step is treated as a cost bug to be engineered away",
+    "source_operator": "gpu_batch_processing",
+    "telemetry": "Batch sizes, device memory headroom, and wall-clock per slate in the engine's run logs"
+   }
+  },
+  {
+   "primitive_id": "cross_entropy_log_likelihood",
+   "name": "Classification is trained by maximizing the probability assigned to the true classes, equivalently minimizing cross-entropy, with logits read as unnormalized log-probabilities through the softmax",
+   "verbatim_quote": "the model should be trained to maximize the probability of the true classes",
+   "page": "§3.1, p. 26-27",
+   "latex": "\\mathcal{L}_{ce}(w) = -\\frac{1}{N} \\sum_{n=1}^{N} \\log \\hat{P}(Y = y_n \\mid X = x_n), \\qquad \\hat{P}(Y = y \\mid X = x) = \\frac{\\exp f(x; w)_y}{\\sum_z \\exp f(x; w)_z}",
+   "symbol_and_unit_ledger": {
+    "\\mathcal{L}_{ce}(w)": "cross-entropy loss (nats per sample)",
+    "N": "number of training samples (count)",
+    "\\hat{P}(Y = y \\mid X = x)": "model-estimated probability of class y given input x (probability, 0 to 1)",
+    "f(x; w)_y": "logit score for class y (log of unnormalized probability)",
+    "y_n": "true class of sample n"
+   },
+   "assumptions": [
+    "Model outputs are interpreted as logits, one score per class",
+    "The true class is known for every training sample"
+   ],
+   "breakdown_regime": "Cross-entropy is a proxy: it is minimized by calibrated probabilities, not by the lowest possible error rate, and it can keep improving a model whose decisions no longer change",
+   "domain": "loss functions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine probabilities are trained and judged as probabilities: log-loss against realized outcomes is the primary fit metric for win and margin distributions, so a confident wrong projection costs more than a hedged one",
+    "source_operator": "cross_entropy_log_likelihood",
+    "telemetry": "Realized outcomes joined to pre-game predicted probability vectors for every scored game"
+   }
+  },
+  {
+   "primitive_id": "contrastive_triplet_loss",
+   "name": "Metric learning with triplets: minimize max(0, 1 - f(x_a, x_c; w) + f(x_a, x_b; w)) so same-class pairs score closer than different-class pairs by a margin",
+   "verbatim_quote": "where the objective is to learn a measure of distance between samples such that a sample xa from a certain semantic class is closer to any sample xb of the same class than to any sample xc from another class.",
+   "page": "§3.1, p. 27",
+   "latex": "\\max(0,\\; 1 - f(x_a, x_c; w) + f(x_a, x_b; w))",
+   "symbol_and_unit_ledger": {
+    "f(x_a, x_c; w)": "model similarity score between anchor a and different-class sample c (score units)",
+    "f(x_a, x_b; w)": "model similarity score between anchor a and same-class sample b (score units)",
+    "1": "margin constant separating the two scores (score units)",
+    "w": "trainable parameters"
+   },
+   "assumptions": [
+    "Triplets (x_a, x_b, x_c) satisfy y_a = y_b and y_a differs from y_c",
+    "A scalar score can express the semantic distance to be learned"
+   ],
+   "breakdown_regime": "Collapses when triplets are uninformative or mislabeled; random triplets are mostly already satisfied and give no gradient, so mining of hard triplets becomes the real problem",
+   "domain": "loss functions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Historical game matching in the engine is a metric-learning problem of this exact form: a past game is a useful analog for an upcoming game only if the learned distance ranks truly similar situations closer than superficially similar ones",
+    "source_operator": "contrastive_triplet_loss",
+    "telemetry": "Pairs of historical games with realized outcomes, labeled by situation similarity (rest, venue, personnel) for triplet construction"
+   }
+  },
+  {
+   "primitive_id": "weight_decay_gaussian_prior",
+   "name": "Weight decay adds a term proportional to the sum of squared parameters to the loss, equivalent to a Gaussian Bayesian prior that shrinks parameters and reduces the data's influence",
+   "verbatim_quote": "This can be interpreted as having a Gaussian Bayesian prior on the parameters, which favors smaller values and thereby reduces the influence of the data.",
+   "page": "§3.1, p. 28",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A Gaussian prior on parameters is a reasonable default belief",
+    "Shrinking parameters trades training fit for a smaller train-to-test gap"
+   ],
+   "breakdown_regime": "Over-shrinking underfits real structure; under distribution shift the prior keeps the model near an outdated solution and slows adaptation",
+   "domain": "regularization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine coefficients are shrunk toward prior means with strength set per signal family: a veteran signal with thousands of games earns a weak prior, a new signal starts heavily shrunk until its own data argues otherwise",
+    "source_operator": "weight_decay_gaussian_prior",
+    "telemetry": "Posterior coefficient magnitudes and shrinkage strengths per signal family across refits"
+   }
+  },
+  {
+   "primitive_id": "causal_autoregressive_models",
+   "name": "Autoregressive models factor a sequence distribution with the chain rule and predict each token from its predecessors only, so all positions can be trained in one causal pass",
+   "verbatim_quote": "This allows computing the distributions at all the time steps in one pass during training.",
+   "page": "§3.2, p. 31 (Figure 3.1 caption)",
+   "latex": "P(X_1 = x_1, \\ldots, X_T = x_T) = \\prod_{t=1}^{T} P(X_t = x_t \\mid X_1 = x_1, \\ldots, X_{t-1} = x_{t-1})",
+   "symbol_and_unit_ledger": {
+    "P": "probability (0 to 1)",
+    "X_t": "token at position t",
+    "x_t": "realized value of token t",
+    "T": "sequence length (count)",
+    "t": "position index (count)"
+   },
+   "assumptions": [
+    "The sequence has a well-defined order and each conditional depends only on earlier positions",
+    "A finite vocabulary of tokens covers the signal"
+   ],
+   "breakdown_regime": "Sampling is serial and slow, errors compound over long generations, and the factorization imposes an arbitrary order on data that may have none",
+   "domain": "generative modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Drive-by-drive and play-by-play game modeling in the engine is autoregressive in the same sense: the state available before a snap conditions the distribution of the next event, and causality is a hard constraint, never a convenience",
+    "source_operator": "causal_autoregressive_models",
+    "telemetry": "Timestamped play-by-play sequences with strict pre-snap information cutoffs in the training pipeline"
+   }
+  },
+  {
+   "primitive_id": "gradient_descent",
+   "name": "Gradient descent minimizes the loss by iterating w_{n+1} = w_n - eta * grad L(w_n), stepping against the gradient",
+   "verbatim_quote": "This procedure corresponds to moving the current estimate a bit in the direction that locally decreases ℒ (w) maximally, as illustrated in Figure 3.2.",
+   "page": "§3.3, p. 35-36",
+   "latex": "w_{n+1} = w_n - \\eta \\, \\nabla \\mathcal{L}\\, (w_n)",
+   "symbol_and_unit_ledger": {
+    "w_n": "parameter vector at iteration n",
+    "\\eta": "learning rate, positive step size (loss units per gradient unit)",
+    "\\nabla \\mathcal{L}\\, (w_n)": "gradient of the loss with respect to the parameters at w_n",
+    "\\mathcal{L}": "loss function"
+   },
+   "assumptions": [
+    "The loss is differentiable almost everywhere with an informative gradient",
+    "A local linear approximation of the loss is usable at the step size chosen"
+   ],
+   "breakdown_regime": "Fails on plateaus, sharp valleys, and saddle regions; the full-batch gradient is also too expensive for large data, which is why stochastic variants replace it in practice",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "All fitted components of the engine, from rating updates to calibration maps, are this iteration with different losses; the update rule is never hand-waved, it is logged with its step size and its resulting loss",
+    "source_operator": "gradient_descent",
+    "telemetry": "Per-iteration loss values and gradient norms from engine training runs"
+   }
+  },
+  {
+   "primitive_id": "learning_rate",
+   "name": "The learning rate is a positive hyper-parameter that sets how fast minimization proceeds and must be chosen carefully: too small stalls or traps, too large bounces around the minimum",
+   "verbatim_quote": "It is a positive value that modulates how quickly the minimization is done, and must be chosen carefully.",
+   "page": "§3.3, p. 35",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The loss landscape has curvature that a single step size must compromise across",
+    "The rate can be scheduled over iterations"
+   ],
+   "breakdown_regime": "No single rate is right for the whole run: early training wants large steps to escape bad minima, late training wants small steps to settle into narrow valleys",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Rating updates in the engine use the same discipline: step sizes for weekly rating movement are scheduled and capped, because an oversized update after one noisy game is the same failure as an oversized gradient step",
+    "source_operator": "learning_rate",
+    "telemetry": "Weekly rating deltas versus subsequent prediction error, used to tune the update step size"
+   }
+  },
+  {
+   "primitive_id": "minibatch_sgd",
+   "name": "Stochastic gradient descent replaces the full gradient with partial sums over shuffled mini-batches, which are unbiased but noisy estimators of the full gradient",
+   "verbatim_quote": "any partial sum of Equation 3.2 is an unbiased estimator of the full sum, albeit noisy.",
+   "page": "§3.3, p. 37-38",
+   "latex": "\\nabla \\mathcal{L}\\, (w) = \\frac{1}{N} \\sum_{n=1}^{N} \\nabla \\ell_n (w)",
+   "symbol_and_unit_ledger": {
+    "\\nabla \\mathcal{L}\\, (w)": "full-data gradient of the loss",
+    "N": "number of samples (count)",
+    "\\ell_n (w)": "loss on sample n",
+    "\\nabla \\ell_n (w)": "gradient of the per-sample loss"
+   },
+   "assumptions": [
+    "Samples are exchangeable, for instance properly shuffled, so partial sums are unbiased",
+    "Data redundancy makes noisy frequent steps beat exact rare steps"
+   ],
+   "breakdown_regime": "Gradient noise can prevent settling; adaptive variants such as Adam, which normalizes by running mean and variance of each gradient component, are needed when components train at very different speeds",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine refits on streaming game data with the same bargain: many small noisy updates from each new week of games instead of rare exact refits, with adaptive per-parameter step sizes where signal scales differ",
+    "source_operator": "minibatch_sgd",
+    "telemetry": "Update counts, batch composition, and loss trajectories in the engine's continuous fit logs"
+   }
+  },
+  {
+   "primitive_id": "backpropagation_autograd",
+   "name": "Backpropagation computes gradients through a composition of layers by the chain rule in a backward pass, and frameworks such as Autograd construct that gradient computation automatically",
+   "verbatim_quote": "Deep learning frameworks are able to automatically construct the sequence of operations to compute gradients.",
+   "page": "§3.4, p. 42",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The model is a composition of standard differentiable tensor operations",
+    "Forward activations are stored or recomputed for the backward pass"
+   ],
+   "breakdown_regime": "Training memory grows with depth because activations must be kept; the backward pass costs roughly twice the forward pass, and checkpointing or reversible layers trade compute to recover memory",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's reasoning traces are built to be auditable the way backpropagation is mechanical: every downstream number must be reproducible by replaying the recorded operations that produced it, with no hidden state",
+    "source_operator": "backpropagation_autograd",
+    "telemetry": "Stored intermediate activations (stage outputs) for every published projection, replayed in verification runs"
+   }
+  },
+  {
+   "primitive_id": "vanishing_gradient",
+   "name": "Gradients are scaled multiplicatively as they traverse layers, so they can shrink or grow exponentially with depth and make parts of a model train at mismatched speeds",
+   "verbatim_quote": "cause different parts of the model to be updated at different speeds, degrading their coadaptation",
+   "page": "§3.4, p. 43-44",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The model is a long composition of mappings whose Jacobians multiply",
+    "Gradient norm clipping can contain explosion but not vanishing"
+   ],
+   "breakdown_regime": "This is the failure that historically blocked deep models; the field's answer was not a better generic optimizer but engineering the models themselves to stay optimizable",
+   "domain": "optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Deep signal stacks in the engine have the same pathology in reasoning form: a weak early signal multiplied through many stages vanishes from the final projection, so stage gains are monitored and normalized like gradient norms",
+    "source_operator": "vanishing_gradient",
+    "telemetry": "Per-stage contribution magnitudes from engine traces, checked for exponential decay across the stack"
+   }
+  },
+  {
+   "primitive_id": "depth_expressivity",
+   "name": "For a fixed computational budget or number of parameters, increasing depth increases the complexity of the mapping the model can express",
+   "verbatim_quote": "Theoretical results show that, for a fixed computational budget or number of parameters, increasing the depth leads to a greater complexity of the resulting mapping [Telgarsky, 2016].",
+   "page": "§3.5, p. 47",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Depth is added as composition of nonlinear mappings, not as repeated linear maps",
+    "The optimization can still train the deeper composition"
+   ],
+   "breakdown_regime": "Expressivity is not learnability: past the point where optimization or data runs out, extra depth buys nothing and the toy low-dimensional picture of feature warping misleads about high-dimensional behavior",
+   "domain": "architecture theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine prefers deeper reasoning chains over wider shallow ones at equal cost: a matchup read refined by health, then situation, then venue expresses interactions that no flat feature list of the same size can",
+    "source_operator": "depth_expressivity",
+    "telemetry": "Ablation results comparing flat feature models against staged reasoning chains at matched parameter counts"
+   }
+  },
+  {
+   "primitive_id": "validation_loss_dynamic",
+   "name": "Training loss falls monotonically while validation loss reaches a minimum and then rises; that turn marks the onset of overfitting and the point where training should stop or be re-regularized",
+   "verbatim_quote": "the training loss decreases as long as the optimization runs, while the validation loss may reach a minimum after a certain number of epochs and then start to increase",
+   "page": "§3.6, p. 48-49",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Training, validation, and test sets are disjoint, with validation used for hyper-parameter and architecture choices",
+    "Losses are monitored per epoch"
+   ],
+   "breakdown_regime": "Very large models can violate the simple picture and keep improving past apparent overfitting, because the inductive bias takes over as training fit saturates; the validation curve remains the arbiter either way",
+   "domain": "training protocol",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Signal promotion in the engine is governed by exactly this curve discipline: a candidate signal is fitted on past seasons, watched on a held-out season, and its promotion stops at the validation minimum rather than at the best training number",
+    "source_operator": "validation_loss_dynamic",
+    "telemetry": "Per-epoch training and validation losses stored for every fitted engine component"
+   }
+  },
+  {
+   "primitive_id": "scaling_laws",
+   "name": "Test performance improves with data, model size, and compute along predictable scaling laws, provided model size grows correspondingly with data",
+   "verbatim_quote": "is possible in part thanks to the structure of deep models, which can be scaled up arbitrarily, as we will see, by increasing the number of layers or feature dimensions.",
+   "page": "§3.7, p. 52-54",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The model family can be scaled in depth and width without structural change",
+    "Training uses stochastic gradient descent, which needs only a fraction of the data at a time"
+   ],
+   "breakdown_regime": "Scaling needs data that exists: detailed ground truth is costly and small, so the largest models train on automatically collected web data with minimal curation, importing its noise and bias",
+   "domain": "training protocol",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine development is budgeted by the same empirical law: expected gains from more historical data, more tracked features, or more compute are estimated from measured learning curves before the spend, not hoped for after it",
+    "source_operator": "scaling_laws",
+    "telemetry": "Measured loss-versus-data curves from engine backtests across seasons and feature sets"
+   }
+  },
+  {
+   "primitive_id": "fully_connected_layer",
+   "name": "The fully connected layer is an affine map Y = W X + b applied over the last tensor dimension, with a trainable weight matrix and bias",
+   "verbatim_quote": "It implements an affine transformation generalized to arbitrary tensor shapes, where the supplementary dimensions are interpreted as vector indexes.",
+   "page": "§4.2, p. 63",
+   "latex": "Y[d_1, \\ldots, d_K] = W X[d_1, \\ldots, d_K] + b",
+   "symbol_and_unit_ledger": {
+    "Y": "output tensor with last dimension D'",
+    "X": "input tensor with last dimension D",
+    "W": "trainable weight matrix of size D' by D",
+    "b": "trainable bias vector of dimension D'",
+    "d_1, \\ldots, d_K": "indexes over the supplementary tensor dimensions"
+   },
+   "assumptions": [
+    "The same affine map is applied at every supplementary index",
+    "Input and output feature dimensions are fixed in advance"
+   ],
+   "breakdown_regime": "Parameter count grows with the product of input and output dimensions, and the layer ignores all structure in the signal, which makes it unusable alone on large structured inputs",
+   "domain": "model components",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's final projection heads are affine readouts of this form over the fused evidence representation; keeping the last stage affine makes the final step from evidence to projection fully inspectable",
+    "source_operator": "fully_connected_layer",
+    "telemetry": "Weight matrices of projection heads, exported for audit with their input feature names"
+   }
+  },
+  {
+   "primitive_id": "parameter_initialization",
+   "name": "Initialization scales random parameters according to the input dimension so activation variance stays constant through the network and pathological regimes are avoided",
+   "verbatim_quote": "Deep learning frameworks implement initialization methods that in particular scale the random parameters according to the dimension of the input to keep the variance of the activations constant and prevent pathological behaviors.",
+   "page": "§4.2, p. 64",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Parameters start random, so their scale is a design choice, not a learned one",
+    "Activation variance compounding across layers is the failure being prevented"
+   ],
+   "breakdown_regime": "A scale that is right at initialization can drift during training; initialization prevents pathological starts, it does not guarantee healthy dynamics throughout",
+   "domain": "model components",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "New signals enter the engine with prior scales set by their fan-in, the number of evidence streams feeding them, so a new signal neither shouts over established ones nor starts inaudible",
+    "source_operator": "parameter_initialization",
+    "telemetry": "Initial versus current scale of every signal weight in the engine's parameter registry"
+   }
+  },
+  {
+   "primitive_id": "convolution_layer",
+   "name": "A convolutional layer applies the same kernel at every spatial position, recombining local information into fewer spatial positions with more channels",
+   "verbatim_quote": "Convolutions are used to recombine information, generally to reduce the spatial size of the representation, in exchange for a greater number of channels, which translates into a richer local representation.",
+   "page": "§4.2, p. 69-71",
+   "latex": "T' = \\frac{T - K}{S} + 1",
+   "symbol_and_unit_ledger": {
+    "T'": "output size along one dimension (positions)",
+    "T": "input size (positions)",
+    "K": "kernel size (positions)",
+    "S": "stride (positions)"
+   },
+   "assumptions": [
+    "The signal's distribution is approximately invariant to translation, so sharing one kernel across positions is a sound prior",
+    "Local neighborhoods carry the information worth combining first"
+   ],
+   "breakdown_regime": "Parameter count and compute grow quadratically with channel count, and stacking layers grows the receptive field only gradually, so global interactions are expensive to reach by convolution alone",
+   "domain": "model components",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Local pattern detectors in the engine, for example short sequences of plays or downs, are shared-weight convolutions in spirit: the same detector scans every drive, and its response is pooled before it reaches the projection stage",
+    "source_operator": "convolution_layer",
+    "telemetry": "Drive-level play sequences and per-position detector responses in engine feature logs"
+   }
+  },
+  {
+   "primitive_id": "relu_activation",
+   "name": "ReLU and its variants introduce the nonlinearity that makes depth meaningful; differentiability everywhere is not required, only an informative gradient on average",
+   "verbatim_quote": "However, the main property gradient descent requires is that the gradient is informative on average.",
+   "page": "§4.3, p. 73-74",
+   "latex": "\\mathrm{relu}(x) = \\begin{cases} 0 & \\text{if } x < 0 \\\\ x & \\text{otherwise} \\end{cases}",
+   "symbol_and_unit_ledger": {
+    "x": "scalar activation input (activation units)",
+    "\\mathrm{relu}(x)": "rectified output (activation units)"
+   },
+   "assumptions": [
+    "Roughly half the activations are positive at initialization, through initialization and normalization, so gradient signal flows",
+    "A piecewise-linear nonlinearity is expressive enough when composed deeply"
+   ],
+   "breakdown_regime": "Units that go permanently negative stop learning (dead ReLUs); smooth variants such as GELU, defined through the Gaussian cumulative distribution, are preferred in Transformer blocks",
+   "domain": "model components",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Thresholded evidence in the engine follows the same rule: a signal below its activation threshold contributes zero rather than a small negative drag, which keeps weak evidence from taxing strong evidence",
+    "source_operator": "relu_activation",
+    "telemetry": "Activation rates per signal (fraction of games where each signal contributes) in engine diagnostics"
+   }
+  },
+  {
+   "primitive_id": "dropout",
+   "name": "Dropout zeroes each activation independently with probability p during training and rescales by 1/(1-p), which destroys joint representations and forces individually meaningful activations",
+   "verbatim_quote": "The motivation behind dropout is to favor meaningful individual activation and discourage group representation.",
+   "page": "§4.5, p. 79",
+   "latex": "(1 - p)^k",
+   "symbol_and_unit_ledger": {
+    "p": "probability that one activation is set to zero (probability, 0 to 1)",
+    "k": "size of a group of activations (count)",
+    "(1 - p)^k": "probability that a group of k activations survives dropout intact (probability)"
+   },
+   "assumptions": [
+    "Activations are dropped independently, so groups survive with probability (1-p)^k",
+    "The rescaling keeps the expected activation value unchanged between training and inference"
+   ],
+   "breakdown_regime": "Dropout is a training-time device; left active at inference it injects noise, though that same noise can be exploited deliberately to estimate confidence empirically",
+   "domain": "regularization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine stress-tests projections by dropping evidence streams at random and re-scoring: a projection that collapses when one stream is removed was a group representation, and it is reported with lower confidence",
+    "source_operator": "dropout",
+    "telemetry": "Projection variance under randomized evidence-stream ablation, stored per published projection"
+   }
+  },
+  {
+   "primitive_id": "batch_normalization",
+   "name": "Batch normalization standardizes each feature over the mini-batch and then applies a learned per-feature scale and shift, preventing scale changes in early layers from destabilizing all later layers",
+   "verbatim_quote": "The motivation behind batch normalization was to prevent a change in scaling in an early layer of the network during training from impacting all the layers that follow, which then have to adapt their trainable parameters accordingly.",
+   "page": "§4.6, p. 82-84",
+   "latex": "y_{b,d} = \\gamma_d \\, \\frac{x_{b,d} - \\hat{m}_d}{\\sqrt{\\hat{v}_d + \\epsilon}} + \\beta_d",
+   "symbol_and_unit_ledger": {
+    "y_{b,d}": "normalized output for sample b, feature d (standardized units)",
+    "x_{b,d}": "input activation (activation units)",
+    "\\hat{m}_d": "mini-batch mean of feature d (activation units)",
+    "\\hat{v}_d": "mini-batch variance of feature d (squared activation units)",
+    "\\gamma_d": "learned scale for feature d",
+    "\\beta_d": "learned shift for feature d",
+    "\\epsilon": "small constant preventing division by zero"
+   },
+   "assumptions": [
+    "Mini-batch statistics are adequate estimates of the feature distribution",
+    "Statistics are accumulated during training so inference on single samples uses population estimates"
+   ],
+   "breakdown_regime": "Batch statistics make training and inference behave differently and couple samples within a batch; layer normalization, which normalizes per sample across features, removes that coupling and behaves identically in both regimes",
+   "domain": "model components",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every evidence stream entering the engine is standardized against its own rolling distribution before fusion, for the same reason: a scale drift in one upstream feed must not silently reweight every downstream stage",
+    "source_operator": "batch_normalization",
+    "telemetry": "Rolling mean and variance per evidence stream, with drift alarms in the data pipeline"
+   }
+  },
+  {
+   "primitive_id": "residual_connections",
+   "name": "Residual connections add a block's input to its output, guaranteeing that gradient propagates through the skip path even when the block itself kills it",
+   "verbatim_quote": "The most desirable property of this design is to ensure that, even in the case of gradient-killing processing at a certain stage, the gradient will still propagate through the skip connections.",
+   "page": "§4.7, p. 87-89",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The identity is a reasonable default transformation, so learning a differential correction is easier than learning a full update",
+    "Block input and output have the same shape, or a projection aligns them"
+   ],
+   "breakdown_regime": "Residual paths do not fix bad conditioning inside the block itself, and very deep residual stacks still need normalization to keep signal scales healthy",
+   "domain": "model components",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Projection updating in the engine is residual by design: each stage proposes a bounded differential correction to the running projection, and the base projection always survives intact if a stage's evidence is voided",
+    "source_operator": "residual_connections",
+    "telemetry": "Per-stage correction magnitudes and the fraction of projections changed by each stage, in engine traces"
+   }
+  },
+  {
+   "primitive_id": "attention_operator",
+   "name": "Attention retrieves values by content: each query is matched against all keys by dot product, scaled, softargmaxed into scores, and the output is the score-weighted average of values",
+   "verbatim_quote": "So if a query Qn matches one key Km far more than all the others, the corresponding attention score An,m will be close to one, and the retrieved value Yn will be the value Vm associated to that key.",
+   "page": "§4.8, p. 91-92",
+   "latex": "A_{q,k} = \\frac{\\exp \\left( Q_q \\cdot K_k \\, / \\, \\sqrt{D_{QK}} \\right)}{\\sum_l \\exp \\left( Q_q \\cdot K_l \\, / \\, \\sqrt{D_{QK}} \\right)}, \\qquad \\mathrm{att}(Q, K, V) = \\mathrm{softargmax}\\left( \\frac{Q K^T}{\\sqrt{D_{QK}}} \\right) V",
+   "symbol_and_unit_ledger": {
+    "A_{q,k}": "attention score of query q for key k (weight, 0 to 1, scores sum to 1 over k)",
+    "Q_q": "query vector at position q",
+    "K_k": "key vector at position k",
+    "V": "value vectors",
+    "D_{QK}": "dimension of query and key vectors (count)",
+    "q, k, l": "position indexes (count)"
+   },
+   "assumptions": [
+    "Queries, keys, and values are linear projections of token representations",
+    "Scaling by the square root of the key dimension keeps dot products in a range where the softmax stays informative"
+   ],
+   "breakdown_regime": "Cost is quadratic in sequence length because every query-key pair is scored, which caps context length; without masking or positional information the operator is permutation-equivariant and blind to order",
+   "domain": "model components",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's situational memory is an attention operator over historical games: the upcoming matchup is the query, stored game situations are keys, and their realized outcomes are the values, so analogies are retrieved by content and weighted explicitly",
+    "source_operator": "attention_operator",
+    "telemetry": "Attention weight distributions over retrieved historical games, exported with each projection for audit"
+   }
+  },
+  {
+   "primitive_id": "positional_encoding",
+   "name": "Positional encoding injects order into order-blind layers by adding or concatenating a position-dependent vector at every position, learned or defined analytically",
+   "verbatim_quote": "This positional encoding can be learned as other layer parameters, or defined analytically.",
+   "page": "§4.10, p. 99-100",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Absolute or relative position carries information the task needs",
+    "The encoding dimension is compatible with the feature representation it joins"
+   ],
+   "breakdown_regime": "Analytic encodings extrapolate poorly to lengths never seen in training, and learned encodings cannot represent positions beyond the training range at all",
+   "domain": "model components",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sequence position is explicit state in the engine's game model: down, quarter, and snap index are encoded as first-class positional features rather than left for the model to infer from content",
+    "source_operator": "positional_encoding",
+    "telemetry": "Positional feature coverage checks confirming every sequence input carries its position encoding"
+   }
+  },
+  {
+   "primitive_id": "transformer_architecture",
+   "name": "The Transformer composes multi-head attention and position-wise feed-forward blocks into an encoder that refines a sequence representation and an autoregressive decoder that generates from it",
+   "verbatim_quote": "It combines an encoder that processes the input sequence to get a refined representation, and an autoregressive decoder that generates each token of the result sequence, given the encoder's representation of the input sequence and the output tokens generated so far.",
+   "page": "§5.3, p. 111-113",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Inputs are token embeddings plus positional encodings",
+    "Self-attention in the decoder is causally masked so generation cannot see future tokens"
+   ],
+   "breakdown_regime": "The architecture's cost is dominated by attention's quadratic term, and its decoder-only reduction (GPT) trades the encoder away, relying on scale and autoregressive training alone; vision variants must first patchify images into token sequences",
+   "domain": "architectures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's play-sequence model follows the decoder-only pattern: a causal stack over snap tokens where each prediction conditions on the game so far, with the encoder pattern reserved for digesting static pre-game documents into a representation the generator can attend to",
+    "source_operator": "transformer_architecture",
+    "telemetry": "Mask correctness tests (no future-snap leakage) run in the engine's model test suite"
+   }
+  },
+  {
+   "primitive_id": "clip_contrastive_embedding",
+   "name": "CLIP trains an image encoder and a text encoder with a contrastive loss on embedding dot products, aligning modalities so classification can be done zero-shot against text descriptions",
+   "verbatim_quote": "that is, classifying a signal in the absence of training examples by defining a series of candidate classes with text descriptions, and computing the similarity of the embedding of an image with the embedding of each of those descriptions",
+   "page": "§6.6, p. 134-135",
+   "latex": "l_{m,n} = f(i_m) \\cdot g(t_n)",
+   "symbol_and_unit_ledger": {
+    "l_{m,n}": "logit score pairing image m with text n (similarity units)",
+    "f(i_m)": "embedding of image m produced by the image encoder",
+    "g(t_n)": "embedding of text n produced by the text encoder",
+    "m, n": "sample indexes in the batch (count)"
+   },
+   "assumptions": [
+    "Training batches pair each image with its true caption among many negatives",
+    "A shared embedding geometry can express cross-modal similarity as a dot product"
+   ],
+   "breakdown_regime": "Zero-shot quality is bounded by the text descriptions offered and by biases in the web image-text data; the model inherits whatever the pairs encode, including mismatches the loss cannot see",
+   "domain": "multimodal learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine uses the same contrastive alignment between structured game states and textual situation descriptions, so a scout's written matchup note can retrieve and weight comparable historical games without a hand-built taxonomy",
+    "source_operator": "clip_contrastive_embedding",
+    "telemetry": "Retrieval precision of text-described situations against labeled historical game situations"
+   }
+  },
+  {
+   "primitive_id": "bellman_target_network",
+   "name": "Deep Q-learning fits Q(s, a) to bootstrapped targets from the Bellman equation, with the target computed by a frozen copy of the parameters so the regression target does not chase the current estimate",
+   "verbatim_quote": "This is necessary since the target value in Equation 6.1 is the expectation of yn , while it is yn itself which is used in Equation 6.2.",
+   "page": "§6.7, p. 137-139",
+   "latex": "Q(s, a) = \\mathbb{E} \\left[ R_t + \\gamma \\max_{a'} Q(S_{t+1}, a') \\,\\middle|\\, S_t = s, A_t = a \\right]",
+   "symbol_and_unit_ledger": {
+    "Q(s, a)": "expected return of action a in state s (reward units)",
+    "R_t": "reward at time t (reward units)",
+    "\\gamma": "discount factor (0 to 1)",
+    "S_t, A_t": "state and action at time t",
+    "s, a": "a specific state and action",
+    "a'": "candidate action in the successor state"
+   },
+   "assumptions": [
+    "The state is Markovian: it carries alone as much information about the future as the full history",
+    "A frozen target network makes the bootstrapped target a stable regression problem between updates"
+   ],
+   "breakdown_regime": "Bootstrapping plus function approximation can diverge, exploration must be injected deliberately (the epsilon-greedy strategy), and the method degrades when the environment is not Markovian in the chosen state representation",
+   "domain": "reinforcement learning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In-game decision evaluation in the engine is value learning with the same guard: win-probability values are fitted against targets produced by a frozen prior version of the model, so a model never grades its own homework in the same step",
+    "source_operator": "bellman_target_network",
+    "telemetry": "Versioned target-model identifiers stored with every value fit, plus divergence alarms on value drift"
+   }
+  },
+  {
+   "primitive_id": "diffusion_denoising",
+   "name": "Diffusion models define an analytic process that gradually degrades data into a known simple density, then train a network to invert the degradation step by step",
+   "verbatim_quote": "The principle consists of defining analytically a process that gradually degrades any sample, and consequently transforms the complex and unknown density of the data into a simple and well-known density such as a normal, and training a deep architecture to invert this degradation process [Ho et al., 2020].",
+   "page": "§7.2, p. 145-147",
+   "latex": "x_{t-1} \\mid x_t \\sim \\mathcal{N} \\left( x_t + f(x_t, t; w), \\sigma_t \\right)",
+   "symbol_and_unit_ledger": {
+    "x_t": "sample degraded by t steps of the forward process",
+    "x_{t-1}": "one-step-denoised sample",
+    "f(x_t, t; w)": "learned correction computed by the denoising model with parameters w",
+    "\\sigma_t": "noise scale at step t",
+    "\\mathcal{N}": "Gaussian distribution"
+   },
+   "assumptions": [
+    "The forward degradation is analytic, Gaussian, and gradual enough that each reverse step is a small learnable correction",
+    "Samples from the data distribution are available for training the reverse process"
+   ],
+   "breakdown_regime": "Generation requires many sequential reverse steps and is slow; the model learns the data density as given, including its flaws, and offers no explicit handle on which factors it used",
+   "domain": "generative modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Score-distribution modeling in the engine borrows the shape of the idea: start from a simple base distribution for a game outcome and apply a sequence of small learned corrections conditioned on evidence layers, each correction inspectable, instead of one opaque jump",
+    "source_operator": "diffusion_denoising",
+    "telemetry": "Per-step correction magnitudes in the engine's generative outcome sampler, checked for gradualism"
+   }
+  },
+  {
+   "primitive_id": "prompt_engineering",
+   "name": "Prompt engineering moves part of the information traditionally encoded in a model's parameters into its input, steering a frozen model at inference time",
+   "verbatim_quote": "This approach moves a part of the information traditionally encoded in the model's parameters to the input.",
+   "page": "§8.1, p. 150",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The model is a general conditional generator whose behavior can be steered by context",
+    "The needed information can be expressed in the input within the context budget"
+   ],
+   "breakdown_regime": "Prompt-carried information is fragile: it competes for a finite context, is sensitive to phrasing, and cannot add capability the parameters do not already support",
+   "domain": "model use",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every analyst note and situational brief as prompt-side information layered over a frozen reasoning core, versioned and tested like code, because moving knowledge into inputs is cheaper and more auditable than refitting parameters",
+    "source_operator": "prompt_engineering",
+    "telemetry": "Prompt template versions and their measured effect on reasoning trace quality in evaluation runs"
+   }
+  },
+  {
+   "primitive_id": "chain_of_thought",
+   "name": "Decomposing a hard prediction into a chain of simpler intermediate steps improves accuracy because each step is better modeled and predicted more deterministically than the direct jump",
+   "verbatim_quote": "is composed of successive steps that are simpler, hence have been better modeled during training, and are predicted more deterministically",
+   "page": "§8.1, p. 151",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The target task decomposes into intermediate steps that are individually easier than the whole",
+    "The model has been trained on text containing such decompositions"
+   ],
+   "breakdown_regime": "Longer chains cost more tokens and can wander: an early wrong step is conditioned on by all later steps, so decomposition quality, not chain length, is the binding constraint",
+   "domain": "model use",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's published reasoning is a chain of this form by construction: usage, health, matchup, situation, venue, each step a small checkable inference that the next step conditions on, rather than a single leap from data to projection",
+    "source_operator": "chain_of_thought",
+    "telemetry": "Step-level audit results: each reasoning step scored for support by the evidence attached to it"
+   }
+  },
+  {
+   "primitive_id": "retrieval_augmented_generation",
+   "name": "Retrieval-augmented generation embeds a document collection, retrieves documents whose embeddings correlate with the query embedding, and conditions generation on the retrieved text",
+   "verbatim_quote": "an embedding model is used to retrieve documents whose embedding is correlated to that of the user's query. Then, a prompt is constructed by joining these retrieved documents with instructions to combine them, and the generative model produces the response to the user.",
+   "page": "§8.1, p. 152",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Relevant knowledge exists in an external collection that can be embedded once and searched by similarity",
+    "The generator can ground its answer in supplied documents when instructed"
+   ],
+   "breakdown_regime": "Retrieval quality bounds answer quality: a missed or wrong document is indistinguishable from knowledge to the generator, and stale collections silently age the system's facts",
+   "domain": "model use",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's evidence architecture verbatim: the corpus of books, papers, and historical situations is embedded, the current matchup retrieves its support set, and the reasoning layer may only cite what retrieval actually returned",
+    "source_operator": "retrieval_augmented_generation",
+    "telemetry": "Retrieval hit lists stored with every engine reasoning trace, with corpus version identifiers"
+   }
+  },
+  {
+   "primitive_id": "quantization",
+   "name": "Quantization stores weights and activations in low-precision formats, cutting memory and raising inference speed, with an averaging effect over many summed terms mitigating the rounding error",
+   "verbatim_quote": "In addition to reducing the memory footprint, quantization also improves inference speed significantly.",
+   "page": "§8.2, p. 153-155",
+   "latex": "\\tilde{x} = d \\, q + m",
+   "symbol_and_unit_ledger": {
+    "\\tilde{x}": "de-quantized value approximating the original (value units)",
+    "q": "quantized integer code",
+    "d": "per-block scale factor (value units per code step)",
+    "m": "per-block minimum value (value units)"
+   },
+   "assumptions": [
+    "Values are quantized block-wise with a shared scale and minimum per block",
+    "Activations are sums of many terms, so individual rounding errors partially cancel"
+   ],
+   "breakdown_regime": "Precision loss is real at the extremes: models pushed to very few bits per parameter eventually degrade, and training in low precision is far less forgiving than inference",
+   "domain": "deployment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine deployment follows the same budget logic: projection models are served in reduced precision where measured accuracy loss is negligible, and full precision is reserved for the fitting path where small errors compound",
+    "source_operator": "quantization",
+    "telemetry": "Accuracy deltas between full-precision and quantized engine models on held-out seasons"
+   }
+  },
+  {
+   "primitive_id": "lora_adapter",
+   "name": "LoRA freezes a pre-trained linear layer and trains a low-rank delta BA in parallel, with A Gaussian-initialized and B zero so adaptation starts from exactly the original model's behavior",
+   "verbatim_quote": "The matrix A is initialized with random Gaussian values, and B is set to zero, so that the fine-tuning starts with a model that computes an output identical to that of the original one.",
+   "page": "§8.3, p. 156-157",
+   "latex": "X (W + B A)^T",
+   "symbol_and_unit_ledger": {
+    "X": "batch of N activation vectors of dimension D",
+    "W": "frozen pre-trained weight matrix of size C by D",
+    "B": "trainable matrix of size C by R",
+    "A": "trainable matrix of size R by D",
+    "R": "adapter rank, much smaller than C and D (count)"
+   },
+   "assumptions": [
+    "The task-specific change to a layer is well approximated by a low-rank update",
+    "The base model stays frozen, so adapters can be merged back by adding BA to W with no inference cost"
+   ],
+   "breakdown_regime": "Rank caps the expressiveness of the adaptation; a task that requires rotating the representation broadly, not nudging it, will not fit in a low-rank delta",
+   "domain": "adaptation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Season-over-season engine adaptation is run as low-rank deltas over a frozen base model: each season's adapter is small, mergeable, and removable, so a bad season adaptation can be subtracted without retraining the base",
+    "source_operator": "lora_adapter",
+    "telemetry": "Adapter ranks, merge history, and per-adapter validation deltas in the engine's model registry"
+   }
+  },
+  {
+   "primitive_id": "task_arithmetic_model_merging",
+   "name": "Task vectors, the parameter differences between a fine-tuned model and its base, can be added to compose capabilities or subtracted to remove them, without further training",
+   "verbatim_quote": "An alternative to the fine-tuning and prompting methods seen in the previous sections consists of combining multiple models with diverse capabilities into a single one, without additional training.",
+   "page": "§8.4, p. 159-160",
+   "latex": "\\theta + \\tau_1 + \\cdots + \\tau_T",
+   "symbol_and_unit_ledger": {
+    "\\theta": "parameters of the shared pre-trained base model",
+    "\\tau_t": "task vector for task t, the difference between the fine-tuned and base parameters",
+    "T": "number of task vectors combined (count)"
+   },
+   "assumptions": [
+    "All merged models are fine-tunes of the same base, so their parameters live in a shared geometry",
+    "Task vectors for different tasks are near-orthogonal enough that adding them does not destroy either capability"
+   ],
+   "breakdown_regime": "Interference grows with the number and similarity of merged tasks; merging models from different bases or different initializations is meaningless because the parameter spaces do not align",
+   "domain": "adaptation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine composes specialized adaptations the same way: a weather adapter, a rest-disadvantage adapter, and an indoor-outdoor adapter are separate deltas over one base projection model, combined per game and removable when one starts hurting validation",
+    "source_operator": "task_arithmetic_model_merging",
+    "telemetry": "Per-adapter validation contribution measured with each adapter added and removed, in the model registry"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "trace_fleuret_little_book_deep_learning_01",
+   "think": "This book is a compressed engineering manual for the whole deep learning stack, and its value is that nothing in it is decorative. It opens with the minimal learning problem: collect pairs of inputs and targets, define a parametric model, formalize goodness as a loss, and compute parameters that minimize it. Everything after that is the working out of what that sentence requires at scale. The loss is the contract. Cross-entropy turns classification into probability estimation, the triplet loss turns similarity into a margin problem, weight decay turns a Bayesian prior into a penalty term, and the autoregressive factorization turns sequence modeling into iterated classification. In each case the tractable proxy is chosen because its gradient is informative, not because it is the quantity ultimately cared about. The second thread is optimization as the binding constraint. Gradient descent is trivial to state and brutal to run: the gradient of a deep composition is a product of Jacobians, so it explodes or vanishes exponentially with depth, and stochastic estimates trade exactness for iteration count. The book's central historical claim is that progress came from engineering models to be optimizable rather than from better generic optimizers. Initialization that preserves activation variance, batch and layer normalization that restabilize distributions during training, residual connections that guarantee a gradient path, dropout that prevents brittle coadaptation, and Adam's per-coordinate normalization are all the same move at different layers: reshape the computation so that gradient descent can do its simple job. The third thread is architecture as encoded prior knowledge. A fully connected layer knows nothing; a convolution knows translation structure and shares parameters across positions; attention knows nothing about locality but can retrieve any element by content, at quadratic cost; embeddings turn discrete symbols into geometry; positional encodings repair the permutation blindness of attention. Architectures are compositions of these priors: the MLP as universal approximator, ResNet as residual compositions with bottleneck economics, the Transformer as attention plus position-wise feed-forward blocks, GPT as its causal decoder-only reduction, CLIP as two encoders tied by a contrastive loss. Reading the stack this way, a model is a hypothesis about the structure of the data written in code. The fourth thread is measurement discipline. Training loss always falls; validation loss is the arbiter, and its turn upward is the operational definition of overfitting. Hyper-parameters live outside gradient descent and are selected on validation data, test data is touched rarely, and scaling laws turn the vague hope that bigger is better into measured exponents relating loss to data, parameters, and compute. Fine-tuning, and later prompting, chain-of-thought, and retrieval augmentation, are successive attempts to reuse a trained model's knowledge at lower marginal cost, moving information from parameters to adapters to inputs. Two chapters extend the same machinery beyond supervised prediction. Autoregressive models and diffusion models are both density models trained by likelihood-style objectives, one by factoring the joint distribution along time, the other by learning to reverse a gradual noising process whose endpoint is a known Gaussian. Deep Q-learning reuses supervised regression machinery against targets produced by the model itself, stabilized by freezing the target network, which is a reminder that the optimizer will exploit any feedback loop left unguarded. Contrastive models such as CLIP show that the choice of loss can align entirely different modalities into one geometry, which is what makes zero-shot classification and retrieval possible at all. The fifth thread is that a trained model is an asset with an economics. Quantization cuts its memory and raises its inference speed because sums of many terms average out rounding error. LoRA freezes the asset and trains a low-rank delta that can be merged back at zero inference cost. Task arithmetic treats fine-tuning deltas as vectors that can be added to compose skills or subtracted to remove them. The sixth thread is the data and compute substrate, which the book treats as part of the method rather than as plumbing. Tensors are the universal currency because virtually any computation decomposes into elementary tensor operations that map onto GPU hardware, and batching exploits the fact that a device processes a full batch nearly as fast as one sample because memory traffic, not arithmetic, is the bottleneck. Data parallelism, model parallelism, and pipeline parallelism are then just different ways of cutting the same computation across devices when a model or a batch outgrows one device. Tokenization by byte pair encoding and learned embeddings solve the input side of the same problem: discrete symbols become vectors whose geometry the rest of the stack can exploit, and the vocabulary itself is learned from data frequencies rather than designed. Even the apparently special-purpose chapters reduce to the same components. Pooling is a hand-coded selection with fixed rules where attention would learn the scores; the ResNet bottleneck is an accounting identity about channel costs growing quadratically; the Vision Transformer is the observation that an image becomes a sequence once it is cut into patches, after which the standard blocks apply unchanged; object detection is classification and regression heads evaluated at multiple scales; a denoising autoencoder is regression toward a conditional expectation. The universal approximation theorem is cited and immediately put in its place: knowing that one hidden layer suffices in principle says nothing about what gradient descent can actually find in practice, and that gap between existence and learnability is the question the whole book is really answering. For a reasoning engine, the transferable core is not any single layer. It is the discipline: define the scalar feedback honestly, keep every intermediate quantity inspectable, let held-out data veto training enthusiasm, encode domain structure in the architecture rather than in wishes, and treat compute, memory, and latency as first-class design variables. The book also marks its own limits clearly: expressivity theorems say nothing about learnability, scaling laws are empirical, and none of this machinery reasons; it fits. Knowing exactly where fitting ends is what makes the machinery safe to build on.",
+   "retrocausal_genealogy": "This stack has a traceable lineage in the book's own citations. Convolutional networks descend from LeCun's 1989 handwritten digit work and the 2012 AlexNet moment when GPUs made them practical. The optimization thread runs from Glorot and Bengio's 2010 analysis of activation saturation, through batch normalization in 2015, to He's residual networks the same year, each step removing a specific failure of the previous generation. Attention arrives with the 2017 Transformer and immediately reorganizes sequence modeling around content-based retrieval. Scaling laws in 2020 convert folklore about size into measurement. LoRA, diffusion models, and task arithmetic in 2020 to 2023 mark the shift from training models to adapting and composing models that already exist.",
+   "theory_of_mind": "Fleuret writes for a reader he models precisely: mathematically literate, impatient with folklore, and likely to implement what he reads. He assumes the reader distrusts claims without mechanisms, so every component is introduced by the failure it repairs and every formula is followed by its operational meaning. He also assumes the reader's real bottleneck is judgment, not information, which is why the book is short: it is a curated stack of load-bearing ideas with citations pointing outward, not an encyclopedia. His stance toward large models is empirical rather than mystical; capabilities are reported as measurements with references, and open puzzles, such as why overparameterized models generalize, are flagged as open instead of explained away.",
+   "cross_layer_veto": "Several veto relations structure the stack. Validation loss vetoes training loss: any claim of progress that the validation curve contradicts is void. Gradient health vetoes depth: an architecture whose gradients vanish or explode is rejected no matter how expressive it is in principle. Attention's quadratic cost vetoes unlimited context: sequence length is a budget, not a preference. Data volume vetoes capacity: a model class whose freedom exceeds what the data can constrain is rejected at design time. Precision vetoes are asymmetric: low precision is acceptable for inference activations and weights, but gradient accumulation and master weights demand more, so deployment compression cannot be copied blindly into training."
+  }
+ ],
+ "universal_lens": "Read as a template, the book says any hard prediction problem can be attacked the same way: write the predictor as a composition of simple differentiable modules, choose a scalar loss whose gradient is informative about the real objective, encode everything known about the problem's structure into the composition itself, fit by stochastic gradient methods, and let held-out data arbitrate every design choice. Capacity, compute, and data are three currencies spent against one loss curve, and their exchange rates are empirical laws to be measured, not constants to be assumed. Adaptation after training is a first-class operation with its own algebra of low-rank deltas and vector arithmetic on parameters.",
+ "gsi_mapping": "For the institute, this is the canonical foundations text: it defines the shared vocabulary (loss, capacity, inductive bias, scaling law) that every other research lane can assume. Its optimizability doctrine, that architecture is chosen so gradient methods succeed, is a general research heuristic for any fitted system the institute studies. Its treatment of validation discipline and scaling measurement is the template for evaluating empirical claims in any domain. The adaptation stack, fine-tuning, LoRA, quantization, model merging, describes how research artifacts are reused and composed, which is the institute's core operational question: how knowledge encoded in one model or dataset transfers to a new problem with minimal new cost.",
+ "gse_mapping": "For the prediction engine, the mappings are direct. Projections are outputs of fitted models whose losses are proper scoring rules against realized outcomes, judged out of sample. Attention is the formal version of the engine's evidence retrieval: a game state queries a memory of historical situations and weights them by content match, not recency. Residual structure maps to projection updating, where each new evidence layer proposes a differential correction to a base projection instead of a fresh opinion. Validation dynamics govern signal promotion, dropout-style perturbation estimates confidence, and quantization plus low-rank adaptation set the compute budget for scoring a full slate of games in real time."
+}

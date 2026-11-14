@@ -1,0 +1,615 @@
+{
+  "book_id": "fb84696d1970c3ec",
+  "source_status": "COMPLETE",
+  "source_note": "David Easley (Cornell University) and Jon Kleinberg (Cornell University), Networks, Crowds, and Markets: Reasoning About a Highly Connected World, Cambridge University Press, 2010. The local file is the authors' draft version dated June 10, 2010 (running footer on the extracted text), PDF held at library/books-must-have/EasleyKleinberg-2010-NetworksCrowdsAndMarkets.pdf; a byte-identical duplicate sits in books-c-systems under the name Easley-Kleinberg-2010-NetworksCrowdsMarkets.pdf. File size 19,491,605 bytes. Scan digest (sha256 over str(size) plus full file bytes, the gatekeeper identity): fb84696d1970c3eccee38573dc2b9ab8e7c16a6ff48062d892f40bf00ccf2715; plain file sha256: 78e2a7e612bd490676e86cdb15b03bde76932325a5faceca15329a9a6011f014. Extracted text (34,497 lines, about 2.17 MB) is clean and complete across all 24 chapters; mathematical glyphs are partly flattened in extraction (subscripts print inline, primes print as spaces), so verbatim quotes were drawn from clean prose passages inside single pages. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "connected_component",
+      "name": "Connected component: a maximal set of nodes pairwise joined by paths",
+      "verbatim_quote": "a connected component of a graph (often shortened just to the term \"component\") is a subset of the nodes such that: (i) every node in the subset has a path to every other; and (ii) the subset is not part of some larger set with the property that every node can reach every other",
+      "page": "Chapter 2.2, printed p. 29 (text lines 1445-1448)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["The graph is treated as undirected for connectivity; paths may pass through any intermediate nodes.", "Maximality (condition ii) is part of the definition, so components partition the node set."],
+      "breakdown_regime": "Connectivity is brittle: one isolated node or one cut vertex changes the component structure, and the notion says nothing about density or strength inside a component.",
+      "domain": "graph structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's evidence graph decomposes into components before any propagation runs: signals in different components can never influence each other, so cross-component claims of support or contradiction are structurally void and get flagged rather than averaged.",
+        "source_operator": "connected_component",
+        "telemetry": "Node and edge counts per component in the match evidence graph; component membership of every signal family before a projection is emitted."
+      }
+    },
+    {
+      "primitive_id": "giant_component",
+      "name": "Giant component: real large networks carry one dominant component holding a significant fraction of all nodes",
+      "verbatim_quote": "large, complex networks often have what is called a giant component, a deliberately informal term for a connected component that contains a significant fraction of all the nodes",
+      "page": "Chapter 2.2, printed p. 31 (text lines 1496-1498)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Empirical regularity across large network datasets, stated as an informal term rather than a theorem.", "Uniqueness is argued from the near-certainty that some edge would merge two coexisting giant components."],
+      "breakdown_regime": "Fails for fragmented or deliberately partitioned networks, and the significant-fraction threshold is deliberately left vague, so borderline cases are judgment calls.",
+      "domain": "graph structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Coverage diagnostic for the reasoning corpus: if the ingested signal graph for a matchup has no giant component, the evidence base is fragmented and any integrated projection is overclaiming; the engine reports the fragmentation instead of hiding it.",
+        "source_operator": "giant_component",
+        "telemetry": "Share of nodes and of total signal weight inside the largest component, per game and per signal family."
+      }
+    },
+    {
+      "primitive_id": "graph_distance",
+      "name": "Distance between nodes: the length of the shortest path joining them",
+      "verbatim_quote": "we define the distance between two nodes in a graph to be the length of the shortest path between them",
+      "page": "Chapter 2.3 (text lines 1592-1593)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Unweighted edges; every edge contributes one unit of length.", "Nodes in different components have no finite distance."],
+      "breakdown_regime": "Ignores edge strength, direction, and multiplicity of paths; two nodes at distance two can be far less coupled than the number suggests when the shared neighbor is weak.",
+      "domain": "graph structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reasoning depth control: the engine prices indirect evidence by graph distance, so a conclusion supported only through long chains of intermediaries is discounted relative to one supported at distance one, and the discount schedule is explicit in the trace.",
+        "source_operator": "graph_distance",
+        "telemetry": "Shortest-path lengths between each published claim node and the raw observation nodes that support it."
+      }
+    },
+    {
+      "primitive_id": "triadic_closure",
+      "name": "Triadic closure: two people with a friend in common are more likely to become friends",
+      "verbatim_quote": "If two people in a social network have a friend in common, then there is an increased likelihood that they will become friends themselves at some point in the future",
+      "page": "Chapter 3.1, printed p. 49 (text lines 2177-2180)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Stated as an empirical principle for social networks, driven by opportunity, trust, and incentive mechanisms the chapter discusses.", "Applies to edge formation over time, not to a static snapshot."],
+      "breakdown_regime": "It is a likelihood shift, not a law; it weakens in adversarial or purely transactional networks and says nothing about the sign or strength of the edge that forms.",
+      "domain": "social network dynamics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Link-prediction prior inside the evidence graph: when two signal sources share a strong common neighbor (same underlying data feed, same reporting chain), the engine raises the prior that an unobserved dependence edge exists between them, which deflates their apparent independence.",
+        "source_operator": "triadic_closure",
+        "telemetry": "Counts of open triads among sources per claim; correlation residuals between sources predicted dependent versus sources treated as independent."
+      }
+    },
+    {
+      "primitive_id": "clustering_coefficient",
+      "name": "Clustering coefficient of a node: the probability that two randomly chosen friends of the node are friends with each other",
+      "verbatim_quote": "The clustering coefficient of a node A is defined as the probability that two randomly selected friends of A are friends with each other",
+      "page": "Chapter 3.1, printed p. 49 (text lines 2226-2228)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Undirected friendship-style edges; the coefficient is the fraction of friend pairs that are themselves connected.", "Ranges from 0 to 1 by construction."],
+      "breakdown_regime": "Undefined for degree below two and purely local: a node can sit in a dense cluster that is globally peripheral, which the coefficient cannot see.",
+      "domain": "social network measurement",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Echo-chamber gauge for evidence: a claim whose supporting sources have a high mutual clustering coefficient is one opinion repeated through a closed neighborhood, and the engine counts it once rather than once per source.",
+        "source_operator": "clustering_coefficient",
+        "telemetry": "Clustering coefficient of the source neighborhood behind each high-weight claim; effective independent-source count after de-clustering."
+      }
+    },
+    {
+      "primitive_id": "local_bridge_and_span",
+      "name": "Local bridge: an edge whose endpoints share no common neighbor; its span is the distance created by deleting it",
+      "verbatim_quote": "We say that an edge joining two nodes A and B in a graph is a local bridge if its endpoints A and B have no friends in common - in other words, if deleting the edge would increase the distance between A and B to a value strictly more than two",
+      "page": "Chapter 3.2, printed p. 53 (text lines 2374-2377)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Defined on the friendship graph with common neighbors counted on the current snapshot.", "Span is measured after deletion of the edge itself."],
+      "breakdown_regime": "A local bridge can still be redundant at longer range (small span), and the definition is binary: near-bridges with one weak common neighbor count as fully embedded.",
+      "domain": "social network structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Single-channel detection: an inference chain whose only connection between two evidence regions is a local bridge is a fragility point, so the engine marks conclusions that hang on one bridging report or one bridging assumption for corroboration before emission.",
+        "source_operator": "local_bridge_and_span",
+        "telemetry": "List of local bridges in the per-game evidence graph with their spans; number of published claims whose support crosses exactly one bridge."
+      }
+    },
+    {
+      "primitive_id": "strong_triadic_closure_property",
+      "name": "Strong Triadic Closure Property: a node with strong ties to two others forces an edge between those two",
+      "verbatim_quote": "We say that a node A violates the Strong Triadic Closure Property if it has strong ties to two other nodes B and C, and there is no edge at all (either a strong or weak tie) between B and C",
+      "page": "Chapter 3.2, printed p. 54 (text lines 2440-2443)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Edges are labeled strong or weak; the property is imposed as an idealization the authors call slightly too powerful for real networks.", "Satisfaction is defined node by node as the absence of a violation."],
+      "breakdown_regime": "Too extreme to hold across a whole large network; real data violates it routinely, so it functions as a reasoning scaffold, not an empirical law.",
+      "domain": "social network structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Consistency audit on strong claims: if the engine holds strong support for two signals from one hub source, the missing relation between those signals is queried explicitly; an unexplained absence is recorded as a structural hole in the reasoning trace rather than passed over.",
+        "source_operator": "strong_triadic_closure_property",
+        "telemetry": "Count of strong-tie triad violations among top-weighted signals per matchup; resolution status of each flagged hole."
+      }
+    },
+    {
+      "primitive_id": "weak_ties_local_bridge_claim",
+      "name": "Claim: under Strong Triadic Closure, every local bridge at a node with two or more strong ties must be a weak tie",
+      "verbatim_quote": "Claim: If a node A in a network satifies the Strong Triadic Closure Property and is involved in at least two strong ties, then any local bridge it is involved in must be a weak tie",
+      "page": "Chapter 3.2, printed p. 54 (text lines 2468-2470)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Conditional on the Strong Triadic Closure Property holding at the node and on the node having at least two strong ties.", "This is Granovetter's strength-of-weak-ties argument made graph-theoretic."],
+      "breakdown_regime": "Inherits the idealization of its premise; where Strong Triadic Closure fails, strong ties can be bridges and the informational monopoly of weak ties disappears.",
+      "domain": "social network structure",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Novel-information routing: genuinely new information about a matchup is expected to arrive over weak, bridging channels (a beat reporter outside the usual circle, a cross-league source), so the engine watches low-embeddedness channels for novelty instead of expecting it from the dense core.",
+        "source_operator": "weak_ties_local_bridge_claim",
+        "telemetry": "Share of material news items per week that first appeared on low-embeddedness channels versus the dense core of regular sources."
+      }
+    },
+    {
+      "primitive_id": "embeddedness",
+      "name": "Embeddedness of an edge: the number of common neighbors its endpoints have; local bridges are exactly the edges with embeddedness zero",
+      "verbatim_quote": "We define the embeddedness of an edge in a network to be the number of common neighbors the two endpoints have",
+      "page": "Chapter 3.5, printed p. 65 (text lines 2887-2888)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Common neighbors counted on the undirected graph; the chapter notes embeddedness is the numerator of the neighborhood-overlap ratio of Equation (3.1).", "Trust interpretation imported from sociology: high embeddedness supports trust and cooperation on the edge."],
+      "breakdown_regime": "Counts neighbors without weighting their reliability; a crowd of copied reports inflates embeddedness without adding independent support.",
+      "domain": "social network measurement",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Corroboration score with a copy-discount: the engine scores each dependency between two signals by embeddedness computed over genuinely independent common neighbors, so a claim backed by many mutually citing sources scores lower than one backed by few independent ones.",
+        "source_operator": "embeddedness",
+        "telemetry": "Embeddedness distribution over claim-support edges; independence-adjusted corroboration counts stored per claim."
+      }
+    },
+    {
+      "primitive_id": "betweenness_girvan_newman",
+      "name": "Betweenness of an edge: total shortest-path flow it carries across all node pairs; the basis of Girvan-Newman partitioning",
+      "verbatim_quote": "We define the betweenness of an edge to be the total amount of flow it carries, counting flow between all pairs of nodes using this edge",
+      "page": "Chapter 3.6, printed p. 75 (text lines 3284-3285)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["One unit of flow per ordered node pair, split evenly across all shortest paths between them (1/k per path when there are k).", "Flow between nodes in different components is zero."],
+      "breakdown_regime": "Shortest-path flow is a stylization: real influence travels non-shortest routes too, and exact betweenness is expensive on very large graphs.",
+      "domain": "graph partitioning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Bottleneck ranking for verification effort: edges and nodes with high betweenness in the reasoning graph are the load-bearing joints of an argument, so adversarial review time is allocated to them first, and community splits of the signal graph are found by removing them.",
+        "source_operator": "betweenness_girvan_newman",
+        "telemetry": "Betweenness ranking of assumptions and intermediate claims per published projection; review coverage of the top-betweenness joints."
+      }
+    },
+    {
+      "primitive_id": "schelling_threshold_segregation",
+      "name": "Schelling model: agents with a mild same-type neighbor threshold t relocate when unsatisfied, and global segregation emerges",
+      "verbatim_quote": "We will assume that there is a threshold t common to all agents: if an agent discovers that fewer than t of its neighbors are of the same type as itself, then it has an interest in moving to a new cell",
+      "page": "Chapter 4.5, printed p. 109 (text lines 4913-4917)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Two agent types on a grid with eight neighbors per interior cell; one common threshold t for all agents.", "Agents move when unsatisfied; nobody seeks segregation as a goal."],
+      "breakdown_regime": "Stylized geography and a single shared threshold; real populations have heterogeneous thresholds, moving costs, and constraints that can arrest or reverse the cascade of moves.",
+      "domain": "spatial dynamics and homophily",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Emergence warning for consensus formation: mild local preferences inside the analyst and model ecosystem (cite what nearby sources cite) compound into a segregated consensus that no participant intended, so the engine treats sudden unanimity as a Schelling-style artifact to be stress-tested, not as confirmation.",
+        "source_operator": "schelling_threshold_segregation",
+        "telemetry": "Diversity index of source positions per claim over time; frequency with which near-unanimous source states formed without new primary evidence."
+      }
+    },
+    {
+      "primitive_id": "structural_balance_property",
+      "name": "Structural Balance Property: every triangle has all three edges positive, or exactly one positive edge",
+      "verbatim_quote": "Structural Balance Property: For every set of three nodes, if we consider the three edges connecting them, either all three of these edges are labeled +, or else exactly one of them is labeled +",
+      "page": "Chapter 5.1 (text lines 5424-5426)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Complete graph with every edge labeled + or minus; balance is required of every triangle without exception.", "The authors present the all-triangles version as a deliberately extreme first step."],
+      "breakdown_regime": "Real signed networks tolerate many unbalanced triangles; the property is a limit case, and partial-balance versions are needed for empirical work.",
+      "domain": "signed networks",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Signed-consistency check on the factor graph: factor relations are signed (supports, opposes), and unbalanced triangles among high-weight factors mark a reasoning state that cannot be narrated coherently until the weak edge is identified and re-examined.",
+        "source_operator": "structural_balance_property",
+        "telemetry": "Count and weight of unbalanced signed triangles among active factors per game; which edge was revised in each resolution."
+      }
+    },
+    {
+      "primitive_id": "balance_theorem",
+      "name": "Balance Theorem (Harary): a balanced complete signed graph is one camp, or exactly two mutually hostile camps with internal friendship",
+      "verbatim_quote": "Balance Theorem: If a labeled complete graph is balanced, then either all pairs of nodes are friends, or else the nodes can be divided into two groups, X and Y , such that every pair of nodes in X like each other, every pair of nodes in Y like each other, and everyone in X is the enemy of everyone in Y",
+      "page": "Chapter 5.2 (text lines 5486-5490)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Premise is the full Structural Balance Property on a complete labeled graph.", "Proved by Frank Harary in 1953, as the text notes."],
+      "breakdown_regime": "The two-camp conclusion is forced only under the exact premise; relax balance slightly and multi-camp structures (weak balance) appear immediately.",
+      "domain": "signed networks",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Narrative compression test: when the engine's signed read of a matchup is near-balanced, its honest summary collapses to at most two coherent camps of factors; a write-up needing three or more camps is evidence that some signed relation in the graph is wrong.",
+        "source_operator": "balance_theorem",
+        "telemetry": "Camp structure extracted from near-balanced factor graphs; mismatches between published narrative camps and graph camps."
+      }
+    },
+    {
+      "primitive_id": "best_response",
+      "name": "Best response: a strategy that does at least as well as any alternative against the opponent's strategy; strict when it does strictly better than every alternative",
+      "verbatim_quote": "a strategy S of Player 1 is a strict best response to a strategy T for Player 2 if S produces a strictly higher payoff than any other strategy paired with T",
+      "page": "Chapter 6.3, printed p. 165 (text lines 7184-7185)",
+      "latex": "P_1(S,T) > P_1(S',T)",
+      "symbol_and_unit_ledger": {"P_1(S,T)": "payoff to Player 1 when Player 1 plays S and Player 2 plays T (payoff units)", "S, S'": "two strategies of Player 1", "T": "strategy of Player 2"},
+      "assumptions": ["Payoffs are complete evaluations of outcomes for each player, as the book defines them in Chapter 6.", "The companion non-strict definition requires P1(S,T) at least P1(S',T) for all other strategies S'."],
+      "breakdown_regime": "Best responses can tie, leaving behavior underdetermined, and the concept presumes the opponent's strategy is held fixed while one player deviates.",
+      "domain": "game theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Local optimality test inside matchup reasoning: a projected game plan is interrogated as a strategy profile, and any actor (a coaching staff, a quarterback) holding a strictly better response to the projected opponent plan invalidates the projection's equilibrium reading until the response is priced in.",
+        "source_operator": "best_response",
+        "telemetry": "Deviations found per projection during adversarial review; payoff deltas (expected points) of the best available response versus the projected plan."
+      }
+    },
+    {
+      "primitive_id": "dominant_strategy",
+      "name": "Dominant strategy: a strategy that is a best response to every strategy of the opponent",
+      "verbatim_quote": "We say that a dominant strategy for Player 1 is a strategy that is a best response to every strategy of Player 2",
+      "page": "Chapter 6.3, printed p. 165 (text lines 7195-7196)",
+      "latex": "P_1(S,T) \\geq P_1(S',T) \\quad \\text{for all } S', T",
+      "symbol_and_unit_ledger": {"P_1(S,T)": "payoff to Player 1 under strategy pair (S,T) (payoff units)", "S": "candidate dominant strategy of Player 1", "S'": "any other strategy of Player 1", "T": "any strategy of Player 2"},
+      "assumptions": ["Defined through best responses; the strict version replaces weak with strict inequality throughout.", "Existence is not guaranteed; most interesting games have no dominant strategy."],
+      "breakdown_regime": "When no dominant strategy exists the concept is silent, and dominance reasoning by both players can still land on a Pareto-bad equilibrium, as in the Prisoner's Dilemma.",
+      "domain": "game theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Robustness classification for engine conclusions: a conclusion that survives every opponent response in the modeled range is labeled dominant-grade and can carry full weight; one that wins only against specific responses is labeled conditional and must name the responses it depends on.",
+        "source_operator": "dominant_strategy",
+        "telemetry": "Fraction of published conclusions classified dominant-grade versus conditional; post-hoc accuracy split between the two classes."
+      }
+    },
+    {
+      "primitive_id": "nash_equilibrium",
+      "name": "Nash equilibrium: a strategy pair in which each strategy is a best response to the other",
+      "verbatim_quote": "(S, T ) is a Nash equilibrium if S is a best response to T , and T is a best response to S",
+      "page": "Chapter 6.4, printed p. 168 (text line 7347)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Two-player formulation as stated; the chapter extends the same mutual-best-response idea to more players.", "An equilibrium concept, not a derivation from rationality alone, as the authors stress."],
+      "breakdown_regime": "Equilibria can be multiple (selection problem) or absent in pure strategies, forcing mixed strategies; equilibrium also need not be socially optimal.",
+      "domain": "game theory",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Fixed-point test for two-sided projections: a matchup projection is accepted only when neither side's projected plan has a profitable unilateral deviation against the other side's projected plan; failed fixed points are sent back with the profitable deviation named as the reason.",
+        "source_operator": "nash_equilibrium",
+        "telemetry": "Share of projections passing the mutual-best-response check on first pass; identity of the deviating actor in failed checks."
+      }
+    },
+    {
+      "primitive_id": "evolutionarily_stable_strategy",
+      "name": "Evolutionarily stable strategy: a strategy whose fitness exceeds any rare invader's fitness when the invader is sufficiently rare",
+      "verbatim_quote": "we say that a strategy S is evolutionarily stable if there is a (small) positive number y such that when any other strategy T invades S at any level x < y, the fitness of an organism playing S is strictly greater than the fitness of an organism playing T",
+      "page": "Chapter 7.2 (text lines 9257-9260)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Fitness is the expected payoff against a random member of the population; invasion level x is a population fraction.", "For two-strategy symmetric games the chapter reduces stability to payoff comparisons (S is stable when a exceeds c, or a equals c and b exceeds d)."],
+      "breakdown_regime": "Stability is local to small invasions and to the stated payoff matrix; finite populations, drift, and multi-strategy invasions can overturn an ESS.",
+      "domain": "evolutionary game theory",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Meta-stability test for engine heuristics: a modeling convention (a weighting habit, a situational rule) earns incumbent status only if small doses of a rival convention cannot outperform it on the shared evaluation set; conventions that fail the invasion test are replaced rather than defended.",
+        "source_operator": "evolutionarily_stable_strategy",
+        "telemetry": "Invasion-test results per incumbent heuristic: rival convention, invasion share tested, fitness (out-of-sample score) differential."
+      }
+    },
+    {
+      "primitive_id": "braess_paradox",
+      "name": "Braess's Paradox: adding capacity to a network can worsen performance at equilibrium under selfish routing",
+      "verbatim_quote": "This phenomenon - that adding resources to a transportation network can sometimes hurt performance at equilibrium - was first articulated by Dietrich Braess in 1968",
+      "page": "Chapter 8.2 (text lines 10054-10056)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Drivers route selfishly to minimize their own travel time; equilibrium, not optimum, is the outcome concept.", "Requires the right combination of conditions; the authors note it needs specific structure to appear and cite a Seoul highway removal that improved travel times."],
+      "breakdown_regime": "Not universal: many added edges help, and coordinated (non-selfish) routing removes the paradox; it is a property of equilibrium under congestion, not of capacity itself.",
+      "domain": "network traffic and equilibrium",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "More-inputs veto: adding a new signal family or a new data feed can degrade the engine's equilibrium read if every downstream module routes through the attractive new input; each ingestion upgrade is therefore evaluated at the system equilibrium, not by the feed's standalone quality.",
+        "source_operator": "braess_paradox",
+        "telemetry": "Before and after out-of-sample scores for the full pipeline around each major ingestion change; usage share captured by newly added inputs."
+      }
+    },
+    {
+      "primitive_id": "linear_travel_time_social_cost",
+      "name": "Linear travel-time functions and social cost: each edge's travel time is Te(x) = ae x + be, and a traffic pattern's social cost is the sum of all travel times",
+      "verbatim_quote": "We will assume that all travel-time functions are linear in the amount of traffic, so that Te (x) = ae x + be for some choice of numbers ae and be that are either positive or zero",
+      "page": "Chapter 8.3 (text lines 10136-10138)",
+      "latex": "T_e(x) = a_e x + b_e",
+      "symbol_and_unit_ledger": {"T_e(x)": "travel time on edge e when x drivers use it (time units)", "a_e": "congestion slope of edge e (time per additional driver)", "b_e": "free-flow travel time on edge e (time units)", "x": "number of drivers using edge e (count)"},
+      "assumptions": ["Linearity with nonnegative coefficients is the chapter's working assumption for the equilibrium analysis.", "The social cost of a pattern is the sum of travel times incurred by all drivers, as defined in the same section."],
+      "breakdown_regime": "Real congestion is convex and nonlinear, and equilibrium cost can exceed the optimum; the chapter cites the result that with linear travel times the equilibrium is at most 4/3 times the optimum, a bound that worsens for nonlinear latencies.",
+      "domain": "network traffic and equilibrium",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Congestion-response template for shared resources in a projection: when several projected plays draw on one constrained resource (a defender's attention, a player's workload), cost is modeled as rising with load and the split is solved at equilibrium rather than by averaging independent estimates.",
+        "source_operator": "linear_travel_time_social_cost",
+        "telemetry": "Load-response slopes fitted for shared defensive and workload resources; equilibrium versus naive-average projection deltas."
+      }
+    },
+    {
+      "primitive_id": "potential_energy_best_response_dynamics",
+      "name": "Potential energy of a traffic pattern: the sum over edges of Te(1) + Te(2) + ... + Te(x); it strictly decreases under best-response updates, certifying convergence",
+      "verbatim_quote": "The potential energy of a traffic pattern is defined edge-by-edge, as follows. If an edge e currently has x drivers on it, then we define the potential energy of this edge to be",
+      "page": "Chapter 8.3, printed p. 237 (text lines 10255-10257)",
+      "latex": "\\mathrm{Energy}(e) = \\sum_{j=1}^{x} T_e(j)",
+      "symbol_and_unit_ledger": {"Energy(e)": "potential energy of edge e (time summed over driver positions)", "T_e(j)": "travel time on edge e when j drivers use it (time units)", "x": "number of drivers currently on edge e (count)"},
+      "assumptions": ["Best-response dynamics: one driver at a time switches to a strictly better route.", "The potential of a pattern is the sum of edge potentials at current loads."],
+      "breakdown_regime": "The monotone potential exists because of the special congestion structure; simultaneous updates, ties handled carelessly, or non-congestion payoffs can break the strict decrease and with it the convergence certificate.",
+      "domain": "network traffic and equilibrium",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Convergence certificate for iterative reasoning loops: each projection-refinement loop carries a scalar potential over reasoning states that must strictly decrease per accepted revision; a revision that raises the potential is rejected as oscillation, which gives the loop a proof of termination instead of a step cap.",
+        "source_operator": "potential_energy_best_response_dynamics",
+        "telemetry": "Potential traces for iterative projection runs; count of revisions rejected for raising the potential."
+      }
+    },
+    {
+      "primitive_id": "second_price_truthful_bidding",
+      "name": "Second-price auction theorem: with independent private values, bidding your true value is a dominant strategy",
+      "verbatim_quote": "Claim: In a sealed-bid second-price auction, it is a dominant strategy for each bidder i to choose a bid bi = vi",
+      "page": "Chapter 9.4, printed p. 256 (text lines 11193-11195)",
+      "latex": "\\text{payoff}_i = v_i - b_j",
+      "symbol_and_unit_ledger": {"v_i": "bidder i's true value for the item (money units)", "b_i": "bidder i's bid (money units)", "b_j": "the highest competing bid, which the winner pays (money units)"},
+      "assumptions": ["Independent private values: each bidder knows her own value and values do not depend on others' information.", "Winner pays the second-highest bid; a loser's payoff is 0, as the chapter defines."],
+      "breakdown_regime": "Fails under common values (the winner's curse of Section 9.6), collusion, or budget constraints; the dominance argument rests on the bid affecting only winning, never the price paid.",
+      "domain": "auctions and mechanism design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Truthful elicitation design for internal estimates: modules report their confidence under a selection rule where the report decides who leads a projection but the evidential cost is set by the runner-up report, so inflating confidence cannot improve a module's terms, mirroring why truthful bidding dominates.",
+        "source_operator": "second_price_truthful_bidding",
+        "telemetry": "Calibration curves of module confidence reports; frequency with which the leading module's margin over the runner-up predicted realized error."
+      }
+    },
+    {
+      "primitive_id": "winners_curse",
+      "name": "Winner's curse: with a common value estimated with error, the winner is disproportionately the bidder who overestimated, so rational bidders shade",
+      "verbatim_quote": "each bidder i's estimate vi is defined by vi = v + xi , where xi is a random number with a mean of 0, representing the error in i's estimate",
+      "page": "Chapter 9.6, printed p. 258 (text lines 11287-11289)",
+      "latex": "v_i = v + x_i",
+      "symbol_and_unit_ledger": {"v": "the true common value of the item (money units)", "v_i": "bidder i's estimate of the common value (money units)", "x_i": "bidder i's estimation error, mean 0 (money units)"},
+      "assumptions": ["Common-value setting: one underlying value, observed by all bidders through noisy private estimates.", "Winning is itself evidence about the winner's error, which the naive bidder ignores."],
+      "breakdown_regime": "Absent under pure private values; the size of the curse grows with the number of bidders and the error variance, and experienced bidders partially correct for it by shading.",
+      "domain": "auctions and estimation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Selection-bias shrinkage in the engine: whenever the pipeline selects the most extreme of many noisy estimates (the highest projection, the most confident read), the selected value is shrunk toward the pool mean by an amount that grows with pool size and dispersion, because selection itself is evidence of positive error.",
+        "source_operator": "winners_curse",
+        "telemetry": "Shrinkage applied to selected extremes per run; realized error of selected estimates versus the unselected pool."
+      }
+    },
+    {
+      "primitive_id": "first_price_equilibrium_shading",
+      "name": "First-price equilibrium shading: two bidders with uniform values on [0,1] optimally bid half their value; shading tightens as competition grows",
+      "verbatim_quote": "If two bidders know they are competing against each other, and know that each has a private value drawn uniformly at random from the interval [0, 1], then it is an equilibrium for each to shade their bid down by a factor of 2",
+      "page": "Chapter 9.7 (text lines 11336-11339)",
+      "latex": "g(v_i) = v_i\\,(v_i - s(v_i)), \\qquad s(v) = \\frac{v}{2}",
+      "symbol_and_unit_ledger": {"s(v)": "equilibrium bidding strategy mapping a value v to a bid (money units)", "v_i": "bidder i's private value, uniform on [0,1] (money units)", "g(v_i)": "bidder i's expected payoff (money units)"},
+      "assumptions": ["Symmetric bidders, independent values uniform on [0,1], increasing differentiable strategies that never exceed value.", "Derived through the Revelation Principle device the chapter introduces for deviations."],
+      "breakdown_regime": "It is an equilibrium, not a dominant strategy, so it depends on correct beliefs about rivals; the chapter's many-bidder version changes the factor to (n-1)/n of value, and other value distributions change it again.",
+      "domain": "auctions and mechanism design",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Competitor-count discounting for contested conclusions: when many independent pipelines chase the same scarce, contested read, the engine discounts the actionable strength of its own estimate by a factor that tightens with the number of competitors, instead of committing at face value.",
+        "source_operator": "first_price_equilibrium_shading",
+        "telemetry": "Competitor counts logged for contested projections; discount factors applied and their effect on downstream accuracy."
+      }
+    },
+    {
+      "primitive_id": "constricted_set",
+      "name": "Constricted set: a set larger than its own neighbor set, the elementary obstruction to a perfect matching",
+      "verbatim_quote": "we say that a set S on the right-hand side is constricted if S is strictly larger than N (S) - that is, S contains strictly more nodes than N (S) does",
+      "page": "Chapter 10.1, printed p. 280 (text lines 12040-12043)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Bipartite graph with equal numbers of nodes on the two sides; N(S) is the set of all neighbors of S.", "A perfect matching assigns each left node a distinct adjacent right node, per the chapter's definition."],
+      "breakdown_regime": "The notion certifies impossibility only for exact one-to-one matching; capacitated or weighted variants need the valuation and price machinery developed later in the chapter.",
+      "domain": "matching markets",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Named-failure certificates for assignment problems: when the engine cannot produce a complete assignment (coverage slots to games, reviewers to claims), it must return the constricted set as the concrete reason, which turns a dead end into a specific capacity request.",
+        "source_operator": "constricted_set",
+        "telemetry": "Constricted sets returned by failed assignment runs, with the size gap between S and N(S)."
+      }
+    },
+    {
+      "primitive_id": "matching_theorem",
+      "name": "Matching Theorem (Koenig 1931, Hall 1935): a bipartite graph with no perfect matching must contain a constricted set",
+      "verbatim_quote": "Matching Theorem: If a bipartite graph (with equal numbers of nodes on the left and right) has no perfect matching, then it must contain a constricted set",
+      "page": "Chapter 10.1, printed p. 281 (text lines 12062-12064)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Bipartite graph, equal numbers of nodes on the left and right.", "The theorem is stated for the unweighted existence question."],
+      "breakdown_regime": "Existence only: the theorem is silent on assignment quality, fairness, and stability, and the constricted set it guarantees may be large and expensive to exhibit naively.",
+      "domain": "matching markets",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual-certificate discipline across the engine: every allocation answer ships either the assignment itself or a constricted-set witness of impossibility, so no allocation outcome is ever an unexplained failure and every capacity gap has a named shape.",
+        "source_operator": "matching_theorem",
+        "telemetry": "Share of allocation outcomes carrying a complete certificate (assignment or witness set)."
+      }
+    },
+    {
+      "primitive_id": "market_clearing_prices",
+      "name": "Market-clearing prices: prices whose preferred-seller graph has a perfect matching; such prices always exist and the matching they induce has maximum total valuation",
+      "verbatim_quote": "a set of prices is market-clearing if the resulting preferred-seller graph has a perfect matching",
+      "page": "Chapter 10.3, printed p. 286 (text lines 12275-12277)",
+      "latex": "\\text{payoff}_{ij} = v_{ij} - p_i",
+      "symbol_and_unit_ledger": {"v_{ij}": "buyer j's valuation for seller i's item (money units)", "p_i": "price charged by seller i (money units)", "payoff_{ij}": "buyer j's net payoff from buying from seller i (money units)"},
+      "assumptions": ["Sellers value their items at 0 and buyers maximize valuation minus price, abstaining if all payoffs are negative.", "The chapter proves existence for any set of buyer valuations and optimality of any perfect matching in the preferred-seller graph."],
+      "breakdown_regime": "Quasilinear payoffs and no cross-buyer externalities are assumed; ties in buyer payoffs can require explicit coordination to realize the clearing assignment.",
+      "domain": "matching markets",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Shadow-price allocation of scarce engine resources: verification time and model capacity are assigned to games by internal prices raised on over-demanded resources until demand clears, and the clearing prices double as a scarcity report that planning reads directly.",
+        "source_operator": "market_clearing_prices",
+        "telemetry": "Internal clearing prices per resource per week; residual unmet demand at final prices."
+      }
+    },
+    {
+      "primitive_id": "nash_bargaining_solution",
+      "name": "Nash bargaining solution: each side keeps its outside option and the surplus over the outside options is split evenly",
+      "verbatim_quote": "Consequently, the negotiation is really over how to split the surplus s = 1 − x − y (which is at least 0, given our assumption that x + y ≤ 1 in the previous paragraph)",
+      "page": "Chapter 12.5, printed p. 350 (text lines 15016-15018)",
+      "latex": "s = 1 - x - y, \\qquad A \\text{ receives } x + \\frac{s}{2} = \\frac{x + 1 - y}{2}",
+      "symbol_and_unit_ledger": {"x": "A's outside option (fraction of the unit being divided)", "y": "B's outside option (fraction of the unit being divided)", "s": "surplus above the two outside options (fraction of the unit)"},
+      "assumptions": ["The two outside options sum to at most 1; otherwise no agreement can satisfy both sides.", "Equal bargaining power in the baseline solution, as the chapter presents it."],
+      "breakdown_regime": "Status effects and unequal power move real outcomes off the equal split (the chapter's experiments), and the ultimatum-game evidence shows extreme splits get rejected even when rejection pays nothing.",
+      "domain": "bargaining and power",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Merge rule for competing analyses: when two strong analyses must be fused into one published line, each retains the value it would carry standalone (its outside option) and only the genuinely joint surplus is split evenly, which stops the more assertive analysis from capturing the whole conclusion.",
+        "source_operator": "nash_bargaining_solution",
+        "telemetry": "Outside-option values recorded for merged analyses; how joint surplus was split in published syntheses."
+      }
+    },
+    {
+      "primitive_id": "network_exchange_stability",
+      "name": "Stable outcomes in network exchange: an outcome is stable when no edge outside the matching joins two nodes whose values sum to less than 1",
+      "verbatim_quote": "Instability: Given an outcome consisting of a matching and values for the nodes, an instability in this outcome is an edge not in the matching, joining two nodes X and Y , such that the sum of X's value and Y 's value is less than 1",
+      "page": "Chapter 12.7, printed p. 356 (text lines 15285-15288)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["The 1-exchange rule: each node completes at most one exchange; matched partners' values sum to exactly 1; unmatched nodes have value 0.", "Stability is defined as the absence of any instability, per the chapter."],
+      "breakdown_regime": "Some networks admit no stable outcome at all (the triangle in the chapter cycles forever), and where stable outcomes exist they can be extreme or non-unique, which the balanced-outcome refinement addresses.",
+      "domain": "bargaining and power",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Blocking-pair audit for consensus states: a draft consensus read is rejected whenever two participants could jointly gain by breaking away from it, and the blocking pair is reported by name as the stress the consensus must answer before it can be published.",
+        "source_operator": "network_exchange_stability",
+        "telemetry": "Blocking pairs detected per consensus draft; revisions attributable to each blocking pair."
+      }
+    },
+    {
+      "primitive_id": "pagerank_scaled_update",
+      "name": "Scaled PageRank update: apply the basic update, scale all values by s, and redistribute the residual (1-s)/n to every node; iterates converge to the unique equilibrium",
+      "verbatim_quote": "Scaled PageRank Update Rule: First apply the Basic PageRank Update Rule. Then scale down all PageRank values by a factor of s. This means that the total PageRank in the network has shrunk from 1 to s. We divide the residual 1 − s units of PageRank equally over all nodes, giving (1 − s)/n to each",
+      "page": "Chapter 14.3, printed p. 410 (text lines 17540-17544)",
+      "latex": "\\mathrm{PR}_{new}(v) = s \\cdot \\mathrm{PR}^{basic}(v) + \\frac{1-s}{n}",
+      "symbol_and_unit_ledger": {"s": "scaling factor, strictly between 0 and 1 (0.8 to 0.9 in practice)", "n": "number of pages (nodes) in the network", "PR(v)": "PageRank of page v (probability mass; all values sum to 1)"},
+      "assumptions": ["The basic rule runs first: each page divides its PageRank equally over its out-links, and a page with no out-links passes all of it to itself.", "The chapter states that repeated application converges to limiting values that form the unique equilibrium of the scaled rule, for any network."],
+      "breakdown_regime": "The authors caution that on very small networks the redistribution may not fully cure leakage into dead-end regions; the limiting values also depend on the chosen s.",
+      "domain": "link analysis",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Authority propagation with a teleport floor for source weighting: credibility scores over the source graph are computed with the scaled update, so no closed cluster of mutually citing sources can absorb all authority, and the (1-s)/n floor keeps new or peripheral sources able to earn standing.",
+        "source_operator": "pagerank_scaled_update",
+        "telemetry": "Scaling factor in use; concentration of authority (top-decile share) across the source graph per week."
+      }
+    },
+    {
+      "primitive_id": "information_cascade",
+      "name": "Information cascade: sequential decision makers rationally set aside their private information in favor of inferences drawn from earlier actions",
+      "verbatim_quote": "A cascade then develops when people abandon their own information in favor of inferences based on earlier people's actions",
+      "page": "Chapter 16.1, printed p. 484 (text lines 20618-20621)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Decisions are sequential and earlier actions are observable while private signals are not.", "Agents draw rational inferences from actions, in the tradition of Banerjee and of Bikhchandani, Hirshleifer, and Welch, as the chapter credits."],
+      "breakdown_regime": "Cascades can be wrong and are fragile: because they rest on little private information, a small amount of credible public information can reverse them; pure conformity pressure produces lookalike herding with no information content.",
+      "domain": "information cascades",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Herding detector on incoming narratives: when successive reports about a player or team are inferences from earlier reports rather than new observation, the engine counts the whole cascade as one observation with a fragility flag, and treats a single primary-source item as cascade-breaking evidence.",
+        "source_operator": "information_cascade",
+        "telemetry": "Estimated cascade length behind each trending narrative; primary-source items that terminated cascades."
+      }
+    },
+    {
+      "primitive_id": "network_effects_tipping_point",
+      "name": "Tipping point in network effects: the low adoption equilibrium is an unstable critical mass; expectations above it spiral to the high equilibrium and below it to zero",
+      "verbatim_quote": "Thus, z 0 is not just an unstable equilibrium; it is really a critical point, or a tipping point, in the success of the good",
+      "page": "Chapter 17.4, printed p. 518 (text lines 22082-22084)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Consumers value the good more as the expected adopter fraction grows (the chapter's reservation-price analysis against the price line).", "Expectations are self-fulfilling at the equilibria, which is what makes the low one a critical point rather than an attractor."],
+      "breakdown_regime": "Differentiation, multi-homing, and capacity constraints soften the all-or-nothing picture; the model compresses adoption into a single fraction and ignores heterogeneity in reservation prices beyond the stated curve.",
+      "domain": "network effects",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Critical-mass reading of diffusion signals: schemes, terminology, and tools inside the sport spread with the same two-equilibrium structure, so the engine reports which side of the critical point a trend occupies instead of extrapolating its current slope in a straight line.",
+        "source_operator": "network_effects_tipping_point",
+        "telemetry": "Estimated adopter fraction versus critical point for tracked scheme and terminology trends; slope-extrapolation errors avoided."
+      }
+    },
+    {
+      "primitive_id": "rich_get_richer_power_law",
+      "name": "Rich-get-richer: copying dynamics make attachment probability proportional to current popularity and generate a power-law degree distribution",
+      "verbatim_quote": "the fraction of pages with k in-links will be distributed approximately according to a power law 1/k c , where the value of the exponent c depends on the choice of p",
+      "page": "Chapter 18.3, printed p. 547 (text lines 23273-23275)",
+      "latex": "f(k) \\approx \\frac{1}{k^{c}}",
+      "symbol_and_unit_ledger": {"k": "number of in-links of a page (count)", "f(k)": "fraction of pages with exactly k in-links (probability)", "c": "power-law exponent, determined in the model by the copying probability p"},
+      "assumptions": ["The copying model: a new page links uniformly at random with probability p and otherwise copies the link target of a random earlier page, which implements attachment proportional to current in-links.", "Also known as preferential attachment, as the chapter notes."],
+      "breakdown_regime": "The exponent and the power-law form itself depend on the growth mechanism; real distributions show finite-size cutoffs, and other mechanisms (fitness differences, aging) bend the tail.",
+      "domain": "power laws and network growth",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Heavy-tail prior for counting data: production counts, mention counts, and attention shares are modeled with power-law tails rather than Gaussian ones, so extreme observations are treated as ordinary tail events to be explained structurally, not as automatic anomalies or automatic proof of a breakout.",
+        "source_operator": "rich_get_richer_power_law",
+        "telemetry": "Fitted tail exponents for key counting distributions; anomaly flags raised under tail-aware versus Gaussian modeling."
+      }
+    },
+    {
+      "primitive_id": "threshold_rule_coordination",
+      "name": "Threshold rule for cascading behavior: adopt behavior A once at least a fraction q = b/(a+b) of your neighbors have adopted it",
+      "verbatim_quote": "This inequality describes a very simple threshold rule: it says that if at least a q = b/(a + b) fraction of your neighbors follow behavior A, then you should too",
+      "page": "Chapter 19.2, printed p. 567 (text lines 24043-24045)",
+      "latex": "q = \\frac{b}{a+b}",
+      "symbol_and_unit_ledger": {"a": "payoff per neighbor who adopts behavior A (payoff units)", "b": "payoff per neighbor who adopts behavior B (payoff units)", "q": "adoption threshold (fraction of neighbors, dimensionless)", "p": "current fraction of a node's neighbors adopting A (dimensionless)"},
+      "assumptions": ["Two-behavior coordination payoffs: a node with d neighbors earns pda from choosing A and (1-p)db from choosing B.", "Nodes best-respond myopically to the current neighborhood state."],
+      "breakdown_regime": "Heterogeneous thresholds, weighted ties, and noisy payoffs blur the sharp cutoff; forward-looking agents can jump thresholds that myopic agents cannot.",
+      "domain": "cascading behavior",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Activation gate for situational adjustments: a candidate situational rule switches on inside a projection only when the weighted fraction of supporting local evidence clears its threshold q, with a and b set from the costs of false activation versus missed activation, so weak diffuse support cannot trigger strong adjustments.",
+        "source_operator": "threshold_rule_coordination",
+        "telemetry": "Per-rule a, b, and q values; activation rates and post-activation accuracy per situational rule."
+      }
+    },
+    {
+      "primitive_id": "cascade_capacity",
+      "name": "Cascade capacity of a network: the largest threshold at which a finite set of initial adopters can still cause a complete cascade",
+      "verbatim_quote": "define the cascade capacity as the largest threshold at which a finite set of nodes can cause a complete cascade",
+      "page": "Chapter 19.7, printed p. 587 (text lines 24947-24949)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": ["Formalized on infinite networks where each node has finitely many neighbors, so that a small seed means a finite set.", "Node behavior follows the chapter's threshold model with a uniform threshold."],
+      "breakdown_regime": "Exact values are derived only for structured networks in the chapter (for example the grid, where capacity lies between 3/8 and 1/2); arbitrary finite networks require simulation and seed-specific analysis.",
+      "domain": "cascading behavior",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Receptivity bound on spread forecasts: before projecting how far a scheme change or a narrative will travel through a population, the engine bounds that population's cascade capacity from its structure and caps any spread forecast that exceeds what the carrying network can support.",
+        "source_operator": "cascade_capacity",
+        "telemetry": "Capacity estimates per tracked population graph; spread forecasts that were capped by capacity."
+      }
+    },
+    {
+      "primitive_id": "basic_reproductive_number",
+      "name": "Basic reproductive number R0 = pk: below 1 the disease dies out with probability 1; above 1 it persists with positive probability",
+      "verbatim_quote": "Claim: If R0 < 1, then with probability 1, the disease dies out after a finite number of waves. If R0 > 1, then with probability greater than 0 the disease persists by infecting at least one person in each wave",
+      "page": "Chapter 21.2, printed p. 649 (text lines 27436-27439)",
+      "latex": "R_0 = pk",
+      "symbol_and_unit_ledger": {"R_0": "basic reproductive number: expected new cases caused by one infected individual (dimensionless)", "p": "probability of infecting a given contact (dimensionless)", "k": "number of new people each individual meets (count)"},
+      "assumptions": ["Branching-process contact structure: a tree-like network with no triangles, as the chapter's first model assumes.", "Homogeneous p and k across individuals in the basic model."],
+      "breakdown_regime": "On clustered, heterogeneous contact networks the sharp dichotomy blurs; the authors present R0 there as a useful heuristic guide rather than an exact persistence condition.",
+      "domain": "epidemics on networks",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Propagation threshold test for information items: an item is forecast to spread through the tracked population only if its effective reproduction number (adoption probability per exposure times expected downstream exposures) exceeds 1; below 1 it is filed as self-extinguishing and monitored at low cost.",
+        "source_operator": "basic_reproductive_number",
+        "telemetry": "Estimated reproduction numbers for tracked narratives; die-out versus persistence outcomes scored against the threshold prediction."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fb84696d1970c3ec-t1",
+      "think": "This book is a single sustained argument that three kinds of structure explain most of what happens in a connected world: the shape of the graph itself, the strategic incentives of the people positioned in it, and the dynamics that run over both. It begins with pure structure. Components and distances say what can reach what; triadic closure, clustering, local bridges, embeddedness, and betweenness then measure how neighborhoods close, where the load-bearing joints sit, and which edges carry genuinely new information. The weak-ties claim is the hinge of the whole first half: a purely local labeling (strong versus weak) plus one closure assumption forces a global conclusion (bridges are weak), which is the book's template for how micro rules become macro facts. Signed balance extends the same idea to friend-enemy relations, and the Balance Theorem again converts a triangle-level condition into a rigid global partition. The middle of the book changes the primitive from structure to choice. Best response is the atomic operation; dominance is best response against everything; Nash equilibrium is mutual best response, a fixed point. Evolutionary stability then asks the dynamic version of the same question: not whether a profile is a fixed point, but whether it can be invaded. Traffic takes these tools back to a network and produces the book's two great warnings: Braess's Paradox, where adding capacity hurts at equilibrium, and the potential-energy method, which shows how to prove an iterative process converges by exhibiting a quantity that strictly decreases. Auctions and matching markets are mechanism design built on the same atoms: second-price truthfulness is dominance engineered on purpose, the winner's curse is what happens when the value structure changes under the same rules, market-clearing prices show a decentralized process reaching the assignment a central optimizer would choose, and the Matching Theorem guarantees that failure always has a small, nameable witness. Bargaining adds outside options and stability, turning power into a computable property of position. The final third is dynamics at scale: PageRank as iterated endorsement with a teleport correction, cascades as sequential Bayesian inference that can rationally drown private information, tipping points as unstable equilibria, power laws as the fingerprint of proportional growth, threshold cascades with a network-level capacity, and epidemics governed by a single product, R0, compared against 1. For a reasoning engine, the transfer is direct. Evidence should live on a graph, not in a list, because the book's measures are exactly the questions a reasoner must ask about its own inputs: are my sources clustered into one echo (clustering, embeddedness), does this conclusion hang on one bridge, is this narrative a cascade of inferences rather than a stack of observations, is this consensus a stable outcome or does a blocking pair exist, is the most extreme estimate in my pool a winner's-curse artifact, and will this adjustment actually propagate past the threshold structure of the population it claims to describe. Three of the book's secondary constructions deserve the same weight as its headline theorems. The Schelling model is the purest statement of emergence in the book: a threshold so mild that no agent wants segregation still produces segregated outcomes once unsatisfied agents start moving, which teaches that a system's macro state can be nobody's intention and everybody's doing, and that intervening on intentions alone will not move it. The refinement from stable to balanced outcomes in network exchange shows the authors' method at its best: stability alone permits a wide, sometimes extreme set of predictions, so they add one more principled constraint, that matched partners split in the Nash bargaining way given their outside options, and the prediction set collapses to something experiments actually track. And the first-price auction analysis contributes a technique as much as a result: the Revelation Principle move of re-expressing a deviation as a misreported type turns an intractable search over strategies into one solvable differential equation, a trick any designer of elicitation rules can reuse. The bow-tie anatomy of the Web, the small-world search results, and the voting and property-rights chapters round out the picture with a consistent moral: global form is usually the shadow of a local rule, so changing outcomes means finding and changing the rule, not exhorting the system. The book also disciplines process design: iterative refinement needs a potential function, allocation needs either an answer or a constricted-set witness, elicitation needs rules under which honesty is the dominant strategy rather than a hope, and any claim that a trend will spread must survive three separate gates, the activation threshold at each node, the cascade capacity of the network, and the reproduction number of the item itself. A reasoning engine that internalizes those gates stops making the three classic errors the book catalogs: mistaking correlated echoes for independent confirmation, mistaking an extreme selected estimate for a discovery, and mistaking a locally attractive addition for a system-level improvement. Its limits are equally clear. The models are stylized: complete or tree-like graphs, uniform thresholds, rational agents with common knowledge of payoffs, static snapshots for dynamic claims. Almost every theorem is a boundary marker rather than a forecasting formula, telling the engine what cannot happen, what must happen at the extremes, and where the interesting uncertainty lives in between. Used that way, as a library of vetoes, certificates, and structural diagnostics rather than as a prediction machine, it is one of the highest-leverage texts in the corpus: nearly every chapter converts into at least one check that a reasoning system can run on its own inputs before it is allowed to trust its outputs.",
+      "retrocausal_genealogy": "The lineage runs from Granovetter's 1973 weak-ties sociology and Heider's balance psychology (formalized by Harary in 1953) through Schelling's 1971 segregation model, the Koenig and Hall matching results of the 1930s, Nash's 1950 bargaining solution, Vickrey's auction analysis, and Braess's 1968 traffic paradox, up to the late-1990s network-science synthesis: Watts and Strogatz on small worlds, Barabasi on preferential attachment, Brin and Page on link analysis, and the cascade models of Banerjee and of Bikhchandani, Hirshleifer, and Welch. The epidemic chapter descends from branching-process theory and the Kermack and McKendrick tradition. Easley and Kleinberg's contribution is unification: one vocabulary of graphs, games, and dynamics carrying all of it.",
+      "theory_of_mind": "The authors write for a reader who is mathematically literate but not a specialist, and their model of understanding is constructive: a concept counts as understood when a small exact model of it can be stated, manipulated, and pushed to a theorem. They believe stylized networks are not toys but instruments, because real systems keep reproducing the stylized predictions (two camps, power-law tails, threshold die-out). Their model of people is deliberately double: agents are payoff maximizers with local information, yet the experiments they report (ultimatum rejections, status effects in bargaining) are there to mark exactly where the maximizing model bends. The reader is expected to hold both: use the rational model as the spine, and keep its documented failures in view.",
+      "cross_layer_veto": "Several results in this book veto conclusions that other layers might want to draw. The winner's curse vetoes trusting the maximum of a pool of noisy estimates at face value. Stability vetoes any proposed consensus that contains a blocking pair, no matter how much total support it has. Cascade capacity vetoes spread forecasts that exceed what the carrying network's structure permits, and R0 vetoes epidemic or narrative growth claims whose reproduction product sits below 1. The balance results veto narratives whose signed factor structure contains unresolved unbalanced triangles, and Braess's Paradox vetoes the assumption that adding an input, a feed, or a feature necessarily improves the system's equilibrium performance. Each veto is one-directional: it can kill a conclusion, never create one."
+    }
+  ],
+  "universal_lens": "Read as a general template, the book says: model any interconnected system as a graph, annotate the edges with strength and sign, give the nodes incentives, and then study three questions in order: what does the structure permit, what do the incentives select, and what do the dynamics amplify or extinguish. Its recurring proof pattern is the real export: a local rule (closure, best response, a threshold) is shown to force a global pattern (two camps, an equilibrium, a complete cascade or a die-out), so the way to understand a large system is to find the smallest rule whose consequences match its behavior, and to keep the theorem's assumptions listed next to every conclusion the rule produces.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the book is a methods core: it supplies the measurement vocabulary for studying how information, schemes, and beliefs move through the sport's population of teams, media, and fans. Clustering, embeddedness, and betweenness give research-grade ways to describe source ecosystems; cascades, tipping points, cascade capacity, and R0 give testable models of how narratives and tactical fashions spread or die; balance theory and bargaining give formal language for coalition and negotiation structures around the sport. Each model arrives with stated assumptions, which suits an institute: every published study can name the exact conditions under which its diffusion or consensus claims hold.",
+  "gse_mapping": "For the Galaxy Sports Edge engine, the book wires directly into the reasoning layer. The evidence graph gets component, bridge, and betweenness diagnostics before any propagation; source independence is scored with clustering and embeddedness instead of raw counts; extreme selected estimates get winner's-curse shrinkage; module confidence is elicited under dominance-shaped rules; iterative projection loops carry a decreasing potential as a termination certificate; consensus drafts must pass a blocking-pair stability audit; allocation failures must return constricted-set witnesses; and every spread or adoption claim is gated by threshold, cascade-capacity, and reproduction-number tests. The mappings are reasoning machinery only: no market or wagering content is taken from the book."
+}
