@@ -1,0 +1,78 @@
+{
+  "book_id": "50670da37c58b9bb",
+  "source_status": "COMPLETE",
+  "title": "sii-out-of-sample-2026-10-28",
+  "file_name": "sii-out-of-sample-2026-10-28.md",
+  "sha256": "50670da37c58b9bb612d357f70ac1da06055dc2ae9835bae175c2f2ec43f7025",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Stacked-box motion cost estimation via replicated EPA differentials across seasons and play buckets. Universal Lens: Rooted in sii-out-of-sample-2026-10-28 (50670da37c58b9bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian posterior inference on SII using replicated 2024/2025 box effects to constrain 2026 outlier. GSI Mapping: Rooted in sii-out-of-sample-2026-10-28 (50670da37c58b9bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps 9+ box EPA drift to state transitions in defensive alignment and motion cost dynamics. GSE Mapping: Rooted in sii-out-of-sample-2026-10-28 (50670da37c58b9bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stacked_box_motion_cost",
+      "name": "Stacked Box Motion Cost",
+      "verbatim_quote": "## Revised reading - SII at 9+: **usable, magnitude ≈ -0.20.** The 2026 sample is too thin to estimate it, but the prior seasons are not, and they agree with each other.",
+      "page": 1,
+      "latex": "\\hat{\\mu}_{\\text{SII}}^{\\text{9+}} = -0.20 \\pm \\sigma_{\\text{replication}}",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\mu}_{\\\\text{SII}}^{\\\\text{9+}}': 'Estimated motion cost in EPA per play for 9+ box', '\\\\sigma_{\\\\text{replication}}': 'Standard error from replicated seasons'}",
+      "assumptions": "Motion EPA differences are stable across seasons under identical box configurations.",
+      "breakdown_regime": "Play count <400 in 2026 renders estimate unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from replicated 2024/2025 EPA differentials, used in GSI posterior update.",
+        "source_operator": "stacked_box_motion_cost",
+        "telemetry": "EPA differential between motion and no-motion in 9+ box"
+      }
+    },
+    {
+      "primitive_id": "box_8_consistency",
+      "name": "Box 8 Consistency",
+      "verbatim_quote": "**Box 8 is consistently slightly negative** across all three seasons (-0.020, -0.014, and 2026 negative in both halves).",
+      "page": 1,
+      "latex": "\\hat{\\mu}_{\\text{Box 8}}^{\\text{season}} = -0.017 \\pm \\sigma_{\\text{season}}",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\mu}_{\\\\text{Box 8}}^{\\\\text{season}}': 'Mean EPA difference for Box 8 across seasons', '\\\\sigma_{\\\\text{season}}': 'Seasonal variance in Box 8 EPA'}",
+      "assumptions": "Consistent defensive structure across seasons allows for cross-season comparison.",
+      "breakdown_regime": "No significant change in defensive alignment or rule set.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Box 9+ but with lower magnitude; used in GSE state transition models.",
+        "source_operator": "box_8_consistency",
+        "telemetry": "EPA difference in Box 8 over time"
+      }
+    },
+    {
+      "primitive_id": "box_7_non_replication",
+      "name": "Box 7 Non-Replication",
+      "verbatim_quote": "**Box 7 does not replicate.** -0.039, +0.035, then both signs in 2026.",
+      "page": 1,
+      "latex": "\\Delta \\mu_{\\text{Box 7}}^{\\text{2026}} = \\text{sign flip}",
+      "symbol_and_unit_ledger": "{'\\\\Delta \\\\mu_{\\\\text{Box 7}}^{\\\\text{2026}}': 'Change in EPA sign for Box 7 in 2026'}",
+      "assumptions": "Box 7 behavior is sensitive to rule changes or player composition.",
+      "breakdown_regime": "Inconsistent sign implies instability or regime shift.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI to flag unstable metrics; informs GSE risk modeling.",
+        "source_operator": "box_7_non_replication",
+        "telemetry": "Sign consistency of EPA in Box 7 across seasons"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "50670da37c58b9bb_t0",
+      "think": "The stacked-box motion cost is estimated via replication of EPA differentials across 2024 and 2025 seasons in 9+ box, yielding consistent estimates of -0.20 EPA. This is robust against regime shifts, as shown by the 2026 data's thinness and sign inconsistency in Box 7. The 2026 pooled value of -0.0435 is an outlier due to insufficient sample size and potential reconstruction bias. The derived kernel of SII motion cost is used in GSI for Bayesian updating, while GSE uses it to model defensive state transitions. Box 8 shows consistent negative values, supporting the stability hypothesis. Box 7 fails replication, indicating sensitivity to external factors. The epistemic trace highlights the importance of sample size and replication in statistical inference.\n\nDeep epistemic analysis for sii-out-of-sample-2026-10-28 (50670da37c58b9bb, domain=other, pages_read=1/1): Operator 'Stacked Box Motion Cost' (page 1, domain other) captures: ## Revised reading - SII at 9+: **usable, magnitude ≈ -0.20.** The 2026 sample is too thin to estimate it, but the prior seasons are not, and they agree with each other. Assumptions: Motion EPA differences are stable across seasons under identical box configurations. Breakdown regime: Play count <400 in 2026 renders estimate unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from replicated 2024/2025 EPA differentials, used in GSI posterior update. Operator 'Box 8 Consistency' (page 1, domain other) captures: **Box 8 is consistently slightly negative** across all three seasons (-0.020, -0.014, and 2026 negative in both halves). Assumptions: Consistent defensive structure across seasons allows for cross-season comparison. Breakdown regime: No significant change in defensive alignment or rule set. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Box 9+ but with lower magnitude; used in GSE state transition models. Operator 'Box 7 Non-Replication' (page 1, domain other) captures: **Box 7 does not replicate.** -0.039, +0.035, then both signs in 2026. Assumptions: Box 7 behavior is sensitive to rule changes or player composition. Breakdown regime: Inconsistent sign implies instability or regime shift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to flag unstable metrics; informs GSE risk modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sii-out-of-sample-2026-10-28 (50670da37c58b9bb, domain=other, pages_read=1/1): Operator 'Stacked Box Motion Cost' (page 1, domain other) captures: ## Revised reading - SII at 9+: **usable, magnitude ≈ -0.20.** The 2026 sample is too thin to estimate it, but the prior seasons are not, and they agree with each other. Assumptions: Motion EPA differences are stable across seasons under identical box configurations. Breakdown regime: Play count <400 in 2026 renders estimate unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from replicated 2024/2025 EPA differentials, used in GSI posterior update. Operator 'Box 8 Consistency' (page 1, domain other) captures: **Box 8 is consistently slightly negative** across all three seasons (-0.020, -0.014, and 2026 negative in both halves). Assumptions: Consistent defensive structure across seasons allows for cross-season comparison. Breakdown regime: No significant change in defensive alignment or rule set. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Box 9+ but with lower magnitude; used in GSE state transition models. Operator 'Box 7 Non-Replication' (page 1, domain other) captures: **Box 7 does not replicate.** -0.039, +0.035, then both signs in 2026. Assumptions: Box 7 behavior is sensitive to rule changes or player composition. Breakdown regime: Inconsistent sign implies instability or regime shift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to flag unstable metrics; informs GSE risk modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference and regression diagnostics, extended through modern Bayesian frameworks and conformal prediction techniques. Retrocausal Genealogy: Rooted in sii-out-of-sample-2026-10-28 (50670da37c58b9bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sii-out-of-sample-2026-10-28 (50670da37c58b9bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may interpret 2026's low EPA as either a true decline or a methodological artifact. GSI models this uncertainty, while GSE evaluates strategic implications of inconsistent signals. Theory of Mind & Decision Maker Model: Rooted in sii-out-of-sample-2026-10-28 (50670da37c58b9bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring Box 7's instability prevents its inclusion in stable metrics. Leakage is mitigated by isolating 2026's reconstruction bias. Cross-Layer Veto & Anti-Leakage Check: Rooted in sii-out-of-sample-2026-10-28 (50670da37c58b9bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in sii-out-of-sample-2026-10-28 (50670da37c58b9bb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

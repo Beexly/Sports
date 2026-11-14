@@ -1,0 +1,78 @@
+{
+  "book_id": "4f77a463837bd7c4",
+  "source_status": "COMPLETE",
+  "title": "p0165",
+  "file_name": "p0165.txt",
+  "sha256": "4f77a463837bd7c467bd454c085edafd926f9b4d5ec920fc7c75d953c9b51fa2",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Topographic sensory susceptibility as a latent spatial kernel in conscious representation. Universal Lens: Rooted in p0165 (4f77a463837bd7c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian localization priors for sensory evidence integration via conformal predictive distributions. GSI Mapping: Rooted in p0165 (4f77a463837bd7c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions from raw tactile stimuli to topographic perceptual frames. GSE Mapping: Rooted in p0165 (4f77a463837bd7c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sensory_localization_potential",
+      "name": "Sensory Localization Potential",
+      "verbatim_quote": "They are, in the first instance, devoid of all mutual relations with each other.\" But such a localization of the sensation 'in itself'would seem to mean nothing more than the susceptibility or potentiality of being distinctly localized when the time came and other conditions became fulfilled.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_s': 'dimensionless susceptibility parameter', 't': 'time variable'}",
+      "assumptions": "Sensory localization is a conditional probability distribution over spatial coordinates.",
+      "breakdown_regime": "When L_s approaches zero, localization becomes indistinguishable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw sensory input to probabilistic spatial attribution in GSI's Bayesian framework.",
+        "source_operator": "sensory_localization_potential",
+        "telemetry": "Variation in sensation quality across distinct body locations."
+      }
+    },
+    {
+      "primitive_id": "topographic_feeling_shade",
+      "name": "Topographic Feeling Shade",
+      "verbatim_quote": "Local Signs.' To begin with, every sensation of the skin and every visceral sensation seems to derive from its topographic seat a peculiar shade of feeling, which it would not have in another place.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F(x)': 'feeling function dependent on spatial coordinate x', 'x': 'spatial location vector'}",
+      "assumptions": "Each spatial point induces a unique sensory signature.",
+      "breakdown_regime": "When F(x) loses distinctiveness across x, perceptual granularity degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between physical location and felt quality in GSE's perceptual engine.",
+        "source_operator": "topographic_feeling_shade",
+        "telemetry": "Qualitative differences in tactile sensations at different body sites."
+      }
+    },
+    {
+      "primitive_id": "qualitative_sensory_difference",
+      "name": "Qualitative Sensory Difference",
+      "verbatim_quote": "With sufficient sharpening of the attention, we may, confining oarvelves to the quality of the feelings alone, entirely abstract from their locality, and yet notice the differences quite as markedly.\" <small<span class=\"docvortex-page-footnote\" data-block-type=\"page_footnote\" style=\"color:6b7280\"•Vorlesungen üb.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ΔQ': 'qualitative difference measure', 'Q_i': 'quality descriptor vector'}",
+      "assumptions": "Qualitative distinctions persist independently of spatial context.",
+      "breakdown_regime": "When ΔQ → 0, sensory discrimination fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSI to extract invariant features from sensory streams.",
+        "source_operator": "qualitative_sensory_difference",
+        "telemetry": "Subjective variation in sensation quality without positional change."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4f77a463837bd7c4_t0",
+      "think": "The foundational structure of spatial perception emerges from the inherent variability of sensory experience across body regions. Each sensation carries an intrinsic topographic signature—its 'feeling shade'—which is independent of conscious awareness. This suggests a latent kernel of spatial information encoded within the sensory modality itself. The susceptibility of sensations to localization implies a probabilistic framework where spatial attribution is not immediate but conditional upon further cognitive development. In GSI, this manifests as a prior over spatial coordinates derived from sensory input. In GSE, it enables dynamic state transitions from raw tactile data to structured spatial cognition. The failure mode occurs when this susceptibility collapses into uniformity, indicating loss of spatial resolution or perceptual degradation. The duality lies between the immediate sensory quality and its abstracted spatial representation, both necessary for full conscious understanding.\n\nDeep epistemic analysis for p0165 (4f77a463837bd7c4, domain=other, pages_read=1/1): Operator 'Sensory Localization Potential' (page 1, domain other) captures: They are, in the first instance, devoid of all mutual relations with each other.\" But such a localization of the sensation 'in itself'would seem to mean nothing more than the susceptibility or potentiality of being distinctly localized when the time came and other conditions became fulfilled. Assumptions: Sensory localization is a conditional probability distribution over spatial coordinates. Breakdown regime: When L_s approaches zero, localization becomes indistinguishable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw sensory input to probabilistic spatial attribution in GSI's Bayesian framework. Operator 'Topographic Feeling Shade' (page 1, domain other) captures: Local Signs.' To begin with, every sensation of the skin and every visceral sensation seems to derive from its topographic seat a peculiar shade of feeling, which it would not have in another place. Assumptions: Each spatial point induces a unique sensory signature. Breakdown regime: When F(x) loses distinctiveness across x, perceptual granularity degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between physical location and felt quality in GSE's perceptual engine. Operator 'Qualitative Sensory Difference' (page 1, domain other) captures: With sufficient sharpening of the attention, we may, confining oarvelves to the quality of the feelings alone, entirely abstract from their locality, and yet notice the differences quite as markedly.\" <small<span class=\"docvortex-page-footnote\" data-block-type=\"page_footnote\" style=\"color:6b7280\"•Vorlesungen üb. Assumptions: Qualitative distinctions persist independently of spatial context. Breakdown regime: When ΔQ → 0, sensory discrimination fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSI to extract invariant features from sensory streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0165 (4f77a463837bd7c4, domain=other, pages_read=1/1): Operator 'Sensory Localization Potential' (page 1, domain other) captures: They are, in the first instance, devoid of all mutual relations with each other.\" But such a localization of the sensation 'in itself'would seem to mean nothing more than the susceptibility or potentiality of being distinctly localized when the time came and other conditions became fulfilled. Assumptions: Sensory localization is a conditional probability distribution over spatial coordinates. Breakdown regime: When L_s approaches zero, localization becomes indistinguishable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw sensory input to probabilistic spatial attribution in GSI's Bayesian framework. Operator 'Topographic Feeling Shade' (page 1, domain other) captures: Local Signs.' To begin with, every sensation of the skin and every visceral sensation seems to derive from its topographic seat a peculiar shade of feeling, which it would not have in another place. Assumptions: Each spatial point induces a unique sensory signature. Breakdown regime: When F(x) loses distinctiveness across x, perceptual granularity degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between physical location and felt quality in GSE's perceptual engine. Operator 'Qualitative Sensory Difference' (page 1, domain other) captures: With sufficient sharpening of the attention, we may, confining oarvelves to the quality of the feelings alone, entirely abstract from their locality, and yet notice the differences quite as markedly.\" <small<span class=\"docvortex-page-footnote\" data-block-type=\"page_footnote\" style=\"color:6b7280\"•Vorlesungen üb. Assumptions: Qualitative distinctions persist independently of spatial context. Breakdown regime: When ΔQ → 0, sensory discrimination fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSI to extract invariant features from sensory streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Wundt’s phenomenological analysis of tactile perception, building on Kantian synthetic a priori structures of space and Husserlian intentional acts. Influenced by early neurophysiology and Gestalt theory. Retrocausal Genealogy: Rooted in p0165 (4f77a463837bd7c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0165 (4f77a463837bd7c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must model both the subjective quality of sensations and their objective spatial correlates. Opposing models include deterministic localization vs. probabilistic susceptibility. Decision actors weigh sensory fidelity against contextual coherence. Theory of Mind & Decision Maker Model: Rooted in p0165 (4f77a463837bd7c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that spatial localization does not collapse into identity with sensation quality. Leakage occurs if topographic shading becomes redundant with qualitative variation. Veto conditions enforce distinctiveness of sensory kernels across abstraction layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0165 (4f77a463837bd7c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

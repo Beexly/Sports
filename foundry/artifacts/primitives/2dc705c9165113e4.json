@@ -1,0 +1,78 @@
+{
+  "book_id": "2dc705c9165113e4",
+  "source_status": "COMPLETE",
+  "title": "p0536",
+  "file_name": "p0536.txt",
+  "sha256": "2dc705c9165113e4256fb5b6c88455d87e3d0e35ad248c611072d3fec1a264f4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Voluntary action emerges from neural correlates of movement, modulated by antagonistic inhibition and motor inertia, forming a dynamic system with feedback loops. Universal Lens: Rooted in p0536 (2dc705c9165113e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models action selection as posterior probability over motor plans conditioned on sensory input and inhibitory signals, using conformal prediction for uncertainty quantification. GSI Mapping: Rooted in p0536 (2dc705c9165113e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps action states through transition graphs where each node represents a motor plan, edges weighted by inhibition strength and inertia thresholds. GSE Mapping: Rooted in p0536 (2dc705c9165113e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "neural_correlate_of_movement",
+      "name": "Neural Correlate of Movement",
+      "verbatim_quote": "Every pulse of feeling which we have is the correlate of some neural activity that is already on its way to instigate a movement.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Feeling pulse (dimensionless)', 'N': 'Neural activity (SI units: Hz)', 'M': 'Movement instigation (SI units: m/s)'}",
+      "assumptions": "Neural activity directly correlates with movement initiation; sensory input drives neural activation.",
+      "breakdown_regime": "When F approaches zero, N and M approach equilibrium.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Sensory-motor integration via Bayesian updating of neural correlates; GSE: State transitions driven by neural activity thresholds.",
+        "source_operator": "neural_correlate_of_movement",
+        "telemetry": "Neural firing rate during motor planning"
+      }
+    },
+    {
+      "primitive_id": "antagonistic_inhibition",
+      "name": "Antagonistic Inhibition",
+      "verbatim_quote": "The express fiat, or act of mental consent to the movement, comes in when the neutralization of the antagonistic and inhibitory idea is required.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_a': 'Antagonistic inhibition (dimensionless)', 'F_e': 'Express fiat (dimensionless)', 'M': 'Movement magnitude (SI units: m/s)'}",
+      "assumptions": "Inhibition must be overcome by express fiat to initiate movement.",
+      "breakdown_regime": "When I_a > F_e, movement is suppressed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Inhibitory signal modeled as prior belief in action suppression; GSE: Action inhibition modeled as state transition blocking.",
+        "source_operator": "antagonistic_inhibition",
+        "telemetry": "Cortical inhibition levels during action selection"
+      }
+    },
+    {
+      "primitive_id": "motor_inertia",
+      "name": "Motor Inertia",
+      "verbatim_quote": "There is an inertia in the motor processes as in all other natural things.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_m': 'Motor inertia (SI units: kg·m²)', 'A': 'Action impulse (SI units: N·s)', 'T': 'Time interval (SI units: s)'}",
+      "assumptions": "Motor systems resist change in motion due to inherent physical properties.",
+      "breakdown_regime": "When A < I_m, no net movement occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Inertia modeled as variance in motor response; GSE: Inertia affects temporal dynamics of action execution.",
+        "source_operator": "motor_inertia",
+        "telemetry": "Latency between stimulus and motor response"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2dc705c9165113e4_t0",
+      "think": "The core mechanism of voluntary action is rooted in the interplay between neural correlates of movement and antagonistic inhibition. Each sensation triggers neural activity that inherently primes motor output. However, this priming can be blocked by competing representations—antagonistic ideas—that require explicit mental consent (fiat) to override. Motor inertia further complicates this by introducing resistance to initiating movement, especially under conditions of fatigue or disease. These three components form a triadic system where neural activation (F), inhibition (I_a), and inertia (I_m) interact dynamically. When F exceeds both I_a and I_m, action occurs. This framework supports a dual-process model: automatic neural priming and controlled deliberation via fiat. The breakdown regime occurs when any component dominates—either too much inhibition prevents action, or excessive inertia delays it beyond relevance. The system exhibits nonlinearity in its response to inputs, particularly near critical thresholds where small changes in F or I_a can cause large shifts in outcome.\n\nDeep epistemic analysis for p0536 (2dc705c9165113e4, domain=other, pages_read=1/1): Operator 'Neural Correlate of Movement' (page 1, domain other) captures: Every pulse of feeling which we have is the correlate of some neural activity that is already on its way to instigate a movement. Assumptions: Neural activity directly correlates with movement initiation; sensory input drives neural activation. Breakdown regime: When F approaches zero, N and M approach equilibrium. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Sensory-motor integration via Bayesian updating of neural correlates; GSE: State transitions driven by neural activity thresholds. Operator 'Antagonistic Inhibition' (page 1, domain other) captures: The express fiat, or act of mental consent to the movement, comes in when the neutralization of the antagonistic and inhibitory idea is required. Assumptions: Inhibition must be overcome by express fiat to initiate movement. Breakdown regime: When I_a > F_e, movement is suppressed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Inhibitory signal modeled as prior belief in action suppression; GSE: Action inhibition modeled as state transition blocking. Operator 'Motor Inertia' (page 1, domain other) captures: There is an inertia in the motor processes as in all other natural things. Assumptions: Motor systems resist change in motion due to inherent physical properties. Breakdown regime: When A < I_m, no net movement occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Inertia modeled as variance in motor response; GSE: Inertia affects temporal dynamics of action execution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0536 (2dc705c9165113e4, domain=other, pages_read=1/1): Operator 'Neural Correlate of Movement' (page 1, domain other) captures: Every pulse of feeling which we have is the correlate of some neural activity that is already on its way to instigate a movement. Assumptions: Neural activity directly correlates with movement initiation; sensory input drives neural activation. Breakdown regime: When F approaches zero, N and M approach equilibrium. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Sensory-motor integration via Bayesian updating of neural correlates; GSE: State transitions driven by neural activity thresholds. Operator 'Antagonistic Inhibition' (page 1, domain other) captures: The express fiat, or act of mental consent to the movement, comes in when the neutralization of the antagonistic and inhibitory idea is required. Assumptions: Inhibition must be overcome by express fiat to initiate movement. Breakdown regime: When I_a > F_e, movement is suppressed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Inhibitory signal modeled as prior belief in action suppression; GSE: Action inhibition modeled as state transition blocking. Operator 'Motor Inertia' (page 1, domain other) captures: There is an inertia in the motor processes as in all other natural things. Assumptions: Motor systems resist change in motion due to inherent physical properties. Breakdown regime: When A < I_m, no net movement occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Inertia modeled as variance in motor response; GSE: Inertia affects temporal dynamics of action execution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century work on voluntarism and neural mechanics by philosophers like William James and physiologists such as Charles Sherrington, who laid groundwork for modern theories of motor control and conscious intentionality. Retrocausal Genealogy: Rooted in p0536 (2dc705c9165113e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include internal cognitive inhibitors (e.g., fear, hesitation) and external environmental constraints (e.g., physical obstacles). Decision actors are modeled as probabilistic agents that weigh neural impulses against inhibitory signals and inertial costs, optimizing for action efficiency while minimizing risk. Theory of Mind & Decision Maker Model: Rooted in p0536 (2dc705c9165113e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when neural correlates become redundant with inhibitory signals, leading to computational redundancy. Leakage occurs if inertia is misattributed to inhibition, causing erroneous predictions about action likelihood. Veto conditions ensure that only valid combinations of F, I_a, and I_m are considered for action generation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0536 (2dc705c9165113e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

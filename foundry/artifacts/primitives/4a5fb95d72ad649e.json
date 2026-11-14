@@ -1,0 +1,95 @@
+{
+  "book_id": "4a5fb95d72ad649e",
+  "source_status": "COMPLETE",
+  "title": "api-gating",
+  "file_name": "api-gating.md",
+  "sha256": "4a5fb95d72ad649e4693aba1dd6a51711614aed92d9b30e89151ef9b059db336",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Server-side API entitlement gating enforces tier-based access control via deterministic route handlers, where user tier is resolved from a single DB-backed source and validated before data exposure. Universal Lens: Rooted in api-gating (4a5fb95d72ad649e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models user entitlements as posterior beliefs over tier states, conditioned on database evidence; failure modes include P1001 rethrowing and fallback to FREE, aligning with conformal prediction robustness. GSI Mapping: Rooted in api-gating (4a5fb95d72ad649e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE evaluates entitlements through state transitions governed by `gateApi` and `requirePremiumApi`, ensuring rate-limited and paywalled API access with explicit 401/403 responses based on predicate checks. GSE Mapping: Rooted in api-gating (4a5fb95d72ad649e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "user_entitlement_resolver",
+      "name": "User Entitlement Resolver",
+      "verbatim_quote": "The single DB-backed source of truth for a user's tier.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'userId': 'dimensionless identifier', 'tier': 'enum{FREE, PRO, ELITE, FANTASY}', 'entitlements': 'map{userId → tier}'}",
+      "assumptions": "Database is authoritative; all errors except P1001 result in rethrow.",
+      "breakdown_regime": "When DB unreachable (P1001), defaults to FREE tier.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Resolves user tier from persistent storage into access policy kernel.",
+        "source_operator": "user_entitlement_resolver",
+        "telemetry": "Database query success/failure and returned tier"
+      }
+    },
+    {
+      "primitive_id": "api_gate_evaluator",
+      "name": "API Gate Evaluator",
+      "verbatim_quote": "It is `gateApi`'s `evaluateGate` (`apps/web/lib/api-entitlement.ts`) that wraps the `getUserEntitlements` call in its own try/catch and falls back to `FREE` on *any* thrown error — so callers that go through `gateApi`/`requirePremiumApi`/`requireFantasyApi` fail closed to `FREE` overall, but `getUserEntitlements` called directly does not.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'entitlements': 'map{userId → tier}', 'error': 'exception type', 'fallback_tier': 'enum{FREE}', 'gate_result': 'NextResponse | null'}",
+      "assumptions": "All API gates wrap `getUserEntitlements` with try/catch.",
+      "breakdown_regime": "Any exception triggers fallback to FREE tier.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps error-prone entitlement resolution to deterministic access control logic.",
+        "source_operator": "api_gate_evaluator",
+        "telemetry": "Exception count, fallback frequency, gate pass/fail ratio"
+      }
+    },
+    {
+      "primitive_id": "premium_api_gate",
+      "name": "Premium API Gate",
+      "verbatim_quote": "**`requirePremiumApi()`** — pre-built `gateApi` call for the PRO/ELITE floor (`isPremium = tier === \"PRO\" || tier === \"ELITE\"`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'tier': 'enum{FREE, PRO, ELITE, FANTASY}', 'isPremium': 'boolean', 'response': 'NextResponse | null'}",
+      "assumptions": "Only PRO and ELITE tiers pass; FANTASY is excluded.",
+      "breakdown_regime": "Returns 403 if tier < PRO, 401 if unauthenticated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforces premium tier membership via predicate on resolved entitlements.",
+        "source_operator": "premium_api_gate",
+        "telemetry": "Access denial counts, tier distribution among requests"
+      }
+    },
+    {
+      "primitive_id": "rate_limited_premium_gate",
+      "name": "Rate-Limited Premium Gate",
+      "verbatim_quote": "**`requirePremiumApiRateLimited(bucketId: string)`** — same PRO/ELITE floor as `requirePremiumApi`, plus a per-user rate limit applied *after* the entitlement check, so a 429 never masks the paywall.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'bucketId': 'string', 'rate_limit': 'integer', 'request_count': 'integer', 'response': 'NextResponse | null'}",
+      "assumptions": "Rate limiting occurs post-entitlement validation.",
+      "breakdown_regime": "Returns 429 if rate exceeded, 403/401 otherwise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Combines entitlement validation with rate-limiting logic to prevent abuse while preserving access control.",
+        "source_operator": "rate_limited_premium_gate",
+        "telemetry": "Rate limit hits, request volume, access denial types"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4a5fb95d72ad649e_t0",
+      "think": "The system implements a layered access control model where entitlements are resolved server-side from a single database-backed source. This ensures that frontend-only UI elements cannot bypass security. The `gateApi` abstraction encapsulates error handling and fallback behavior, making it resilient to transient DB failures by defaulting to FREE tier. The `requirePremiumApi` primitive applies a binary predicate to enforce tier floors (PRO/ELITE), while `requirePremiumApiRateLimited` adds a rate-limiting layer that does not mask paywall denials. These primitives form a closed-loop system where each API route must validate entitlements before accessing data, preventing unauthorized access even if UI components are bypassed. The design avoids client-side enforcement and instead relies on deterministic server-side checks. Failure modes are well-defined: P1001 errors trigger fallback, other errors propagate up unless caught by gate wrappers. The system supports both direct entitlement queries and gated API access patterns, maintaining consistency across layers.\n\nDeep epistemic analysis for api-gating (4a5fb95d72ad649e, domain=other, pages_read=2/2): Operator 'User Entitlement Resolver' (page 1, domain other) captures: The single DB-backed source of truth for a user's tier. Assumptions: Database is authoritative; all errors except P1001 result in rethrow. Breakdown regime: When DB unreachable (P1001), defaults to FREE tier. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Resolves user tier from persistent storage into access policy kernel. Operator 'API Gate Evaluator' (page 1, domain other) captures: It is `gateApi`'s `evaluateGate` (`apps/web/lib/api-entitlement.ts`) that wraps the `getUserEntitlements` call in its own try/catch and falls back to `FREE` on *any* thrown error — so callers that go through `gateApi`/`requirePremiumApi`/`requireFantasyApi` fail closed to `FREE` overall, but `getUserEntitlements` called directly does not. Assumptions: All API gates wrap `getUserEntitlements` with try/catch. Breakdown regime: Any exception triggers fallback to FREE tier. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps error-prone entitlement resolution to deterministic access control logic. Operator 'Premium API Gate' (page 1, domain other) captures: **`requirePremiumApi()`** — pre-built `gateApi` call for the PRO/ELITE floor (`isPremium = tier === \"PRO\" || tier === \"ELITE\"`). Assumptions: Only PRO and ELITE tiers pass; FANTASY is excluded. Breakdown regime: Returns 403 if tier < PRO, 401 if unauthenticated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces premium tier membership via predicate on resolved entitlements. Operator 'Rate-Limited Premium Gate' (page 1, domain other) captures: **`requirePremiumApiRateLimited(bucketId: string)`** — same PRO/ELITE floor as `requirePremiumApi`, plus a per-user rate limit applied *after* the entitlement check, so a 429 never masks the paywall. Assumptions: Rate limiting occurs post-entitlement validation. Breakdown regime: Returns 429 if rate exceeded, 403/401 otherwise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines entitlement validation with rate-limiting logic to prevent abuse while preserving access control. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for api-gating (4a5fb95d72ad649e, domain=other, pages_read=2/2): Operator 'User Entitlement Resolver' (page 1, domain other) captures: The single DB-backed source of truth for a user's tier. Assumptions: Database is authoritative; all errors except P1001 result in rethrow. Breakdown regime: When DB unreachable (P1001), defaults to FREE tier. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Resolves user tier from persistent storage into access policy kernel. Operator 'API Gate Evaluator' (page 1, domain other) captures: It is `gateApi`'s `evaluateGate` (`apps/web/lib/api-entitlement.ts`) that wraps the `getUserEntitlements` call in its own try/catch and falls back to `FREE` on *any* thrown error — so callers that go through `gateApi`/`requirePremiumApi`/`requireFantasyApi` fail closed to `FREE` overall, but `getUserEntitlements` called directly does not. Assumptions: All API gates wrap `getUserEntitlements` with try/catch. Breakdown regime: Any exception triggers fallback to FREE tier. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps error-prone entitlement resolution to deterministic access control logic. Operator 'Premium API Gate' (page 1, domain other) captures: **`requirePremiumApi()`** — pre-built `gateApi` call for the PRO/ELITE floor (`isPremium = tier === \"PRO\" || tier === \"ELITE\"`). Assumptions: Only PRO and ELITE tiers pass; FANTASY is excluded. Breakdown regime: Returns 403 if tier < PRO, 401 if unauthenticated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces premium tier membership via predicate on resolved entitlements. Operator 'Rate-Limited Premium Gate' (page 1, domain other) captures: **`requirePremiumApiRateLimited(bucketId: string)`** — same PRO/ELITE floor as `requirePremiumApi`, plus a per-user rate limit applied *after* the entitlement check, so a 429 never masks the paywall. Assumptions: Rate limiting occurs post-entitlement validation. Breakdown regime: Returns 429 if rate exceeded, 403/401 otherwise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines entitlement validation with rate-limiting logic to prevent abuse while preserving access control. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s web security paradigms emphasizing server-side validation, evolving through modern microservices architectures requiring centralized identity and access management (IAM) systems. Retrocausal Genealogy: Rooted in api-gating (4a5fb95d72ad649e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in api-gating (4a5fb95d72ad649e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious users attempting unauthorized access and system components that may misbehave due to network issues or misconfiguration. The design assumes adversarial inputs and builds resilience into the entitlement resolution pipeline. Theory of Mind & Decision Maker Model: Rooted in api-gating (4a5fb95d72ad649e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating presentation logic (feature gates) from access control (entitlements). Leakage vetoes occur when UI components attempt to expose premium features without server-side validation, which is explicitly forbidden. Cross-Layer Veto & Anti-Leakage Check: Rooted in api-gating (4a5fb95d72ad649e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

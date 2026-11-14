@@ -1,0 +1,78 @@
+{
+  "book_id": "11bfc3f88fbcca9f",
+  "source_status": "COMPLETE",
+  "title": "week3-engine-readings",
+  "file_name": "week3-engine-readings.md",
+  "sha256": "11bfc3f88fbcca9f6e6816019462b07344a9b15480ce0fd54d05c1c6b0cea2a2",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Edge as posterior belief sum over prior-times-signal; dark families nullify; on-field efficiency blends shrinkage-adjusted metrics. Universal Lens: Rooted in week3-engine-readings (11bfc3f88fbcca9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian edge integrates prior beliefs with observed signals; shrinkage-adjusted on-field efficiency maps to conformal prediction via Brier/Kelly/Bradley-Terry scoring. GSI Mapping: Rooted in week3-engine-readings (11bfc3f88fbcca9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning updates state via live-edge registry; Airwave and questionable skill wires modulate transition dynamics; 2025 prior informs 2026 observation. GSE Mapping: Rooted in week3-engine-readings (11bfc3f88fbcca9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "edge",
+      "name": "Posterior Edge Operator",
+      "verbatim_quote": "# Engine edge, week 3 The edge is the sum of prior times signal across the whole table.",
+      "page": 1,
+      "latex": "\\text{Edge} = \\sum_{i} (\\text{Prior}_i \\times \\text{Signal}_i)",
+      "symbol_and_unit_ledger": "{'Edge': 'dimensionless', 'Prior_i': 'probability', 'Signal_i': 'log-odds'}",
+      "assumptions": "Signals are conditionally independent; priors are normalized probabilities.",
+      "breakdown_regime": "When signal variance exceeds prior uncertainty, edge diverges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Edge operator mirrors Bayesian posterior update in GSI; maps to conformal prediction via Brier score.",
+        "source_operator": "edge",
+        "telemetry": "Expected log-loss reduction over time."
+      }
+    },
+    {
+      "primitive_id": "on_field_efficiency",
+      "name": "Shrinkage-Adjusted Efficiency Blend",
+      "verbatim_quote": "On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck.",
+      "page": 1,
+      "latex": "\\text{Efficiency} = 0.55 \\cdot \\text{PassEPA}_{\\text{residual}} + 0.15 \\cdot \\text{RushEPA}_{\\text{residual}} + 0.15 \\cdot \\text{CPOE} + 0.10 \\cdot \\text{ExplosivePassRate} + 0.05 \\cdot \\text{InterceptionLuck}",
+      "symbol_and_unit_ledger": "{'Efficiency': 'dimensionless', 'PassEPA_residual': 'EPA per play', 'RushEPA_residual': 'EPA per play', 'CPOE': 'percentage', 'ExplosivePassRate': 'percentage', 'InterceptionLuck': 'dimensionless'}",
+      "assumptions": "Linear combination weights reflect empirical shrinkage estimates; residuals are opponent-adjusted.",
+      "breakdown_regime": "When opponent strength varies significantly, shrinkage biases toward league average.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Efficiency blend encodes player performance under opponent adjustment; used in GSE state transitions.",
+        "source_operator": "on_field_efficiency",
+        "telemetry": "Residual variance of adjusted EPA metrics."
+      }
+    },
+    {
+      "primitive_id": "airwave",
+      "name": "Signal Prior Modifier",
+      "verbatim_quote": "Airwave is in the edge at a prior of 0.05.",
+      "page": 1,
+      "latex": "\\text{Airwave} = 0.05",
+      "symbol_and_unit_ledger": "{'Airwave': 'probability'}",
+      "assumptions": "Fixed prior value; represents latent signal strength.",
+      "breakdown_regime": "If signal strength below threshold, Airwave contributes minimal edge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Airwave acts as a fixed bias term in GSI edge computation; influences GSE transition probability.",
+        "source_operator": "airwave",
+        "telemetry": "Change in edge when Airwave is toggled."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "11bfc3f88fbcca9f_t0",
+      "think": "The edge operator aggregates prior beliefs with observed signals, forming a posterior belief structure. Dark families contribute zero, implying null hypotheses or inactive variables. The on-field efficiency blend uses shrinkage to adjust for opponent strength, combining multiple performance metrics into a single scalar. This blend is a derived kernel that reflects player skill in context. Airwave introduces a fixed prior, acting as a latent signal modifier. These primitives form a coherent Bayesian framework where GSI computes posterior beliefs and GSE transitions states based on these structured signals. Failure modes include overfitting due to shrinkage bias or misalignment between signal and prior. Dualities emerge in how prior and signal interact—when signal is strong, prior becomes less influential; when weak, prior dominates. The system's robustness depends on calibration of shrinkage and proper handling of dark families.\n\nDeep epistemic analysis for week3-engine-readings (11bfc3f88fbcca9f, domain=other, pages_read=2/2): Operator 'Posterior Edge Operator' (page 1, domain other) captures: # Engine edge, week 3 The edge is the sum of prior times signal across the whole table. Assumptions: Signals are conditionally independent; priors are normalized probabilities. Breakdown regime: When signal variance exceeds prior uncertainty, edge diverges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Edge operator mirrors Bayesian posterior update in GSI; maps to conformal prediction via Brier score. Operator 'Shrinkage-Adjusted Efficiency Blend' (page 1, domain other) captures: On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. Assumptions: Linear combination weights reflect empirical shrinkage estimates; residuals are opponent-adjusted. Breakdown regime: When opponent strength varies significantly, shrinkage biases toward league average. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Efficiency blend encodes player performance under opponent adjustment; used in GSE state transitions. Operator 'Signal Prior Modifier' (page 1, domain other) captures: Airwave is in the edge at a prior of 0.05. Assumptions: Fixed prior value; represents latent signal strength. Breakdown regime: If signal strength below threshold, Airwave contributes minimal edge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Airwave acts as a fixed bias term in GSI edge computation; influences GSE transition probability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for week3-engine-readings (11bfc3f88fbcca9f, domain=other, pages_read=2/2): Operator 'Posterior Edge Operator' (page 1, domain other) captures: # Engine edge, week 3 The edge is the sum of prior times signal across the whole table. Assumptions: Signals are conditionally independent; priors are normalized probabilities. Breakdown regime: When signal variance exceeds prior uncertainty, edge diverges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Edge operator mirrors Bayesian posterior update in GSI; maps to conformal prediction via Brier score. Operator 'Shrinkage-Adjusted Efficiency Blend' (page 1, domain other) captures: On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. Assumptions: Linear combination weights reflect empirical shrinkage estimates; residuals are opponent-adjusted. Breakdown regime: When opponent strength varies significantly, shrinkage biases toward league average. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Efficiency blend encodes player performance under opponent adjustment; used in GSE state transitions. Operator 'Signal Prior Modifier' (page 1, domain other) captures: Airwave is in the edge at a prior of 0.05. Assumptions: Fixed prior value; represents latent signal strength. Breakdown regime: If signal strength below threshold, Airwave contributes minimal edge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Airwave acts as a fixed bias term in GSI edge computation; influences GSE transition probability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian updating and shrinkage estimation; influenced by Bradley-Terry models and Brier scoring systems from statistical physics. Retrocausal Genealogy: Rooted in week3-engine-readings (11bfc3f88fbcca9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in week3-engine-readings (11bfc3f88fbcca9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may manipulate signal strength or introduce noise to obscure true edge. Decision actors model both player and opponent behavior to predict outcomes. GSI must account for adversarial signal manipulation while GSE must maintain stable transitions. Theory of Mind & Decision Maker Model: Rooted in week3-engine-readings (11bfc3f88fbcca9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires orthogonal signal components; leakage vetos prevent redundant use of same metric in multiple layers. No second copy of out list ensures independence of skill wires. Cross-Layer Veto & Anti-Leakage Check: Rooted in week3-engine-readings (11bfc3f88fbcca9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in week3-engine-readings (11bfc3f88fbcca9f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

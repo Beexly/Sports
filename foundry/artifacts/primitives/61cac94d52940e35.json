@@ -1,0 +1,78 @@
+{
+  "book_id": "61cac94d52940e35",
+  "source_status": "COMPLETE",
+  "title": "BLIND_SPOTS_AND_FIXES",
+  "file_name": "BLIND_SPOTS_AND_FIXES.md",
+  "sha256": "61cac94d52940e357aa3dffa911a48a740bf54696af065a5e7944d41e558ae91",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk-regime bifurcation maps user-perceived value to business outcome via tiered access control and trust signals. Universal Lens: Rooted in BLIND_SPOTS_AND_FIXES (61cac94d52940e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian risk valuation models pricing tiers using CLV and signal leakage metrics to infer user intent and optimize conversion paths. GSI Mapping: Rooted in BLIND_SPOTS_AND_FIXES (61cac94d52940e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates trust-state transitions through checkout integrity, refund clarity, and operator readiness to guide state-machine evolution. GSE Mapping: Rooted in BLIND_SPOTS_AND_FIXES (61cac94d52940e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "free_leakage_risk",
+      "name": "Free Leakage Risk",
+      "verbatim_quote": "| |---|---|---|---|---|---|---| | 1 | Free gives away too much | High | No reason to upgrade | Low conversion | Free is preview-only; test \"Free must not leak the paid product\" enforces it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_f': 'dimensionless leakage intensity', 'C_f': 'conversion rate from free to paid'}",
+      "assumptions": "Free tier must not expose premium features; leakage reduces C_f.",
+      "breakdown_regime": "L_f > threshold ⇒ C_f ↓",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Leakage intensity modulates conversion probability via feature access control.",
+        "source_operator": "free_leakage_risk",
+        "telemetry": "Signal count discrepancy between free and paid tiers"
+      }
+    },
+    {
+      "primitive_id": "tier_perception_gap",
+      "name": "Tier Perception Gap",
+      "verbatim_quote": "**Mitigated.** | Confirm free signal count | | 2 | Tiers feel the same | High | \"Why pay more?\" | Low Pro→Elite | \"Why each step up\" ladder + whyNextTier on /pricing.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_t': 'perceived value gap across tiers', 'R_t': 'revenue per tier'}",
+      "assumptions": "User motivation to upgrade depends on perceived benefit increase.",
+      "breakdown_regime": "P_t < threshold ⇒ R_t ↓",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Perceived utility difference mirrors revenue progression in pricing hierarchy.",
+        "source_operator": "tier_perception_gap",
+        "telemetry": "User drop-off at tier transition points"
+      }
+    },
+    {
+      "primitive_id": "elite_depth_dissonance",
+      "name": "Elite Depth Dissonance",
+      "verbatim_quote": "**Mitigated.** | — | | 3 | Elite too shallow for price | Med | Churn after upgrade | Refunds | Elite = market layer (Twin, CLV, calibration).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_e': 'depth of elite offering', 'C_e': 'churn rate post-upgrade'}",
+      "assumptions": "Elite tier must provide sufficient value to justify cost.",
+      "breakdown_regime": "D_e < threshold ⇒ C_e ↑",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Insufficient depth in elite tier correlates with increased churn due to perceived under-delivery.",
+        "source_operator": "elite_depth_dissonance",
+        "telemetry": "Post-upgrade retention and refund frequency"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "61cac94d52940e35_t0",
+      "think": "The three core primitives form a triadic risk model: leakage in free-tier undermines conversion, perceptual sameness erodes willingness to pay, and shallow elite offerings trigger churn. These risks operate in a feedback loop where each failure mode degrades the others—leakage lowers perceived value, which increases churn, weakening the business case for premium tiers. The system's resilience hinges on maintaining distinct value layers and validating each tier’s utility against user expectations. Each primitive maps to a specific regime of trust and value delivery, forming a dualistic structure: one side governs access control (free vs paid), the other governs perceived benefit (tier differentiation). This duality manifests as a risk landscape where trust and conversion are co-dependent variables. The failure modes reflect systemic vulnerabilities in pricing architecture, where misalignment between perceived and actual value leads to cascading losses in customer lifetime value and revenue stability.\n\nDeep epistemic analysis for BLIND_SPOTS_AND_FIXES (61cac94d52940e35, domain=other, pages_read=2/2): Operator 'Free Leakage Risk' (page 1, domain other) captures: | |---|---|---|---|---|---|---| | 1 | Free gives away too much | High | No reason to upgrade | Low conversion | Free is preview-only; test \"Free must not leak the paid product\" enforces it. Assumptions: Free tier must not expose premium features; leakage reduces C_f. Breakdown regime: L_f > threshold ⇒ C_f ↓ Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Leakage intensity modulates conversion probability via feature access control. Operator 'Tier Perception Gap' (page 1, domain other) captures: **Mitigated.** | Confirm free signal count | | 2 | Tiers feel the same | High | \"Why pay more?\" | Low Pro→Elite | \"Why each step up\" ladder + whyNextTier on /pricing. Assumptions: User motivation to upgrade depends on perceived benefit increase. Breakdown regime: P_t < threshold ⇒ R_t ↓ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Perceived utility difference mirrors revenue progression in pricing hierarchy. Operator 'Elite Depth Dissonance' (page 1, domain other) captures: **Mitigated.** | — | | 3 | Elite too shallow for price | Med | Churn after upgrade | Refunds | Elite = market layer (Twin, CLV, calibration). Assumptions: Elite tier must provide sufficient value to justify cost. Breakdown regime: D_e < threshold ⇒ C_e ↑ Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Insufficient depth in elite tier correlates with increased churn due to perceived under-delivery. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BLIND_SPOTS_AND_FIXES (61cac94d52940e35, domain=other, pages_read=2/2): Operator 'Free Leakage Risk' (page 1, domain other) captures: | |---|---|---|---|---|---|---| | 1 | Free gives away too much | High | No reason to upgrade | Low conversion | Free is preview-only; test \"Free must not leak the paid product\" enforces it. Assumptions: Free tier must not expose premium features; leakage reduces C_f. Breakdown regime: L_f > threshold ⇒ C_f ↓ Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Leakage intensity modulates conversion probability via feature access control. Operator 'Tier Perception Gap' (page 1, domain other) captures: **Mitigated.** | Confirm free signal count | | 2 | Tiers feel the same | High | \"Why pay more?\" | Low Pro→Elite | \"Why each step up\" ladder + whyNextTier on /pricing. Assumptions: User motivation to upgrade depends on perceived benefit increase. Breakdown regime: P_t < threshold ⇒ R_t ↓ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Perceived utility difference mirrors revenue progression in pricing hierarchy. Operator 'Elite Depth Dissonance' (page 1, domain other) captures: **Mitigated.** | — | | 3 | Elite too shallow for price | Med | Churn after upgrade | Refunds | Elite = market layer (Twin, CLV, calibration). Assumptions: Elite tier must provide sufficient value to justify cost. Breakdown regime: D_e < threshold ⇒ C_e ↑ Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Insufficient depth in elite tier correlates with increased churn due to perceived under-delivery. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical pricing theory and behavioral economics, these primitives evolve from early-stage SaaS risk models that emphasized conversion funnel optimization and user segmentation. They incorporate modern insights from game theory and information asymmetry, particularly around premium tier design and trust-based monetization. Retrocausal Genealogy: Rooted in BLIND_SPOTS_AND_FIXES (61cac94d52940e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the user seeking maximum utility for minimal cost, and the platform aiming to maximize revenue while preserving trust. The system must balance these by ensuring that each tier offers a clear, justifiable value proposition, preventing exploitation of asymmetric information. Theory of Mind & Decision Maker Model: Rooted in BLIND_SPOTS_AND_FIXES (61cac94d52940e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive operates independently to avoid redundancy. For example, if leakage is mitigated, the system should still enforce tier differentiation to prevent perception gaps. Similarly, elite depth must be validated separately from conversion metrics to ensure no single failure mode masks another. Cross-Layer Veto & Anti-Leakage Check: Rooted in BLIND_SPOTS_AND_FIXES (61cac94d52940e35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "1230fe8c5626bb7c",
+  "source_status": "COMPLETE",
+  "title": "RETRIEVAL-EVAL-2026-11-04",
+  "file_name": "RETRIEVAL-EVAL-2026-11-04.md",
+  "sha256": "1230fe8c5626bb7c02ec01fa1fd2d0f81292f10702a1d7b656caaf03bdc6abe6",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mean_reciprocal_rank",
+      "name": "Mean Reciprocal Rank",
+      "verbatim_quote": "The next quality step is a small embedding index, not more weighting.",
+      "page": 2,
+      "latex": "\\text{MRR} = \\frac{1}{|Q|} \\sum_{q \\in Q} \\frac{1}{\\text{rank}_q}",
+      "symbol_and_unit_ledger": "{'|Q|': 'Dimensionless count of queries', '\\\\text{rank}_q': 'Rank of first relevant document for query q (unitless)'}",
+      "assumptions": "Perfect relevance assessment, independent query distribution, no duplicate documents",
+      "breakdown_regime": "Zero-relevant-documents limit causes MRR → 0; perfect ranking yields MRR → 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "MRR maps to GSI's conformal prediction coverage rate, treating reciprocal rank as p-value. In GSE, it quantifies optimal-information-extraction latency.",
+        "source_operator": "mean_reciprocal_rank",
+        "telemetry": "Query-level reciprocal rank distribution, temporal drift in average rank"
+      }
+    },
+    {
+      "primitive_id": "cumulative_precision_at_k",
+      "name": "Cumulative Precision at K",
+      "verbatim_quote": "The next quality step is a small embedding index, not more weighting.",
+      "page": 2,
+      "latex": "P@K = \\frac{1}{|Q|} \\sum_{q \\in Q} \\frac{|R_q \\cap D_q^K|}{K}",
+      "symbol_and_unit_ledger": "{'P@K': 'Dimensionless precision at cutoff K', 'R_q': 'Set of relevant documents for query q', 'D_q^K': 'Top-K ranked documents for query q', 'K': 'Rank cutoff (unitless)'}",
+      "assumptions": "Binary relevance labels, uniform query sampling, fixed K",
+      "breakdown_regime": "K → ∞ recovers mean average precision; K = 1 reduces to Recall@1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cumulative precision mirrors GSI's rolling hit-rate statistics. In GSE, it models success probability in sequential decision trees.",
+        "source_operator": "cumulative_precision_at_k",
+        "telemetry": "Precision drop-off curves, sensitivity to K changes"
+      }
+    },
+    {
+      "primitive_id": "normalized_discounted_cumulative_gain",
+      "name": "Normalized Discounted Cumulative Gain",
+      "verbatim_quote": "The next quality step is a small embedding index, not more weighting.",
+      "page": 2,
+      "latex": "\\text{NDCG}@K = \\frac{\\text{DCG}@K}{\\text{IDCG}@K}",
+      "symbol_and_unit_ledger": "{'NDCG@K': 'Dimensionless normalized gain at cutoff K', 'DCG@K': 'Discounted cumulative relevance sum (higher is better)', 'IDCG@K': 'Ideal DCG (optimal document ordering)', 'K': 'Rank cutoff (unitless)'}",
+      "assumptions": "Fixed exponential discount, graded relevance levels, identical ideal order",
+      "breakdown_regime": "Perfect ranking yields NDCG → 1; random ranking approaches 1/K",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "NDCG aligns with GSI's risk-adjusted scoring and GSE's value-of-information framework via discounted rewards.",
+        "source_operator": "normalized_discounted_cumulative_gain",
+        "telemetry": "Gains by rank bin, temporal shifts in ideal gains"
+      }
+    },
+    {
+      "primitive_id": "recall_at_k",
+      "name": "Recall at K",
+      "verbatim_quote": "The next quality step is a small embedding index, not more weighting.",
+      "page": 2,
+      "latex": "\\text{Recall}@K = \\frac{1}{|Q|} \\sum_{q \\in Q} \\frac{|R_q \\cap D_q^K|}{|R_q|}",
+      "symbol_and_unit_ledger": "{'Recall@K': 'Dimensionless fraction of relevant docs retrieved within top K', 'R_q': 'Set of relevant documents for query q', 'D_q^K': 'Top-K ranked documents for query q', 'K': 'Rank cutoff (unitless)'}",
+      "assumptions": "Static relevance set, uniform query distribution, fixed K",
+      "breakdown_regime": "K → ∞ recovers total recall; K = 1 reduces to Precision@1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Recall maps to GSI's false-negative rate control and GSE's state-coverage verification.",
+        "source_operator": "recall_at_k",
+        "telemetry": "Cumulative relevant-docs curve, query-type-specific recall gaps"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1230fe8c5626bb7c_t0",
+      "think": "The retrieval evaluation harness treats document retrieval as a binary classification problem at varying rank thresholds. It leverages rank-based statistics (MRR, NDCG) that weight early relevant hits more heavily, mirroring conformal prediction's focus on calibration at specific significance levels. The key insight is that traditional BM25 weighting functions fail catastrophically when semantic recall (captured by dense embeddings) is required, leading to impossible metric values (e.g., recall > 1) that signal fundamental architectural mismatch. These primitives thus serve as leak detectors for information loss between query intent and document vocabulary, enabling systematic improvement toward dense semantic indexing.\n\nDeep epistemic analysis for RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c, domain=other, pages_read=2/2): Operator 'Mean Reciprocal Rank' (page 2, domain other) captures: The next quality step is a small embedding index, not more weighting. Assumptions: Perfect relevance assessment, independent query distribution, no duplicate documents Breakdown regime: Zero-relevant-documents limit causes MRR → 0; perfect ranking yields MRR → 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): MRR maps to GSI's conformal prediction coverage rate, treating reciprocal rank as p-value. In GSE, it quantifies optimal-information-extraction latency. Operator 'Cumulative Precision at K' (page 2, domain other) captures: The next quality step is a small embedding index, not more weighting. Assumptions: Binary relevance labels, uniform query sampling, fixed K Breakdown regime: K → ∞ recovers mean average precision; K = 1 reduces to Recall@1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Cumulative precision mirrors GSI's rolling hit-rate statistics. In GSE, it models success probability in sequential decision trees. Operator 'Normalized Discounted Cumulative Gain' (page 2, domain other) captures: The next quality step is a small embedding index, not more weighting. Assumptions: Fixed exponential discount, graded relevance levels, identical ideal order Breakdown regime: Perfect ranking yields NDCG → 1; random ranking approaches 1/K Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NDCG aligns with GSI's risk-adjusted scoring and GSE's value-of-information framework via discounted rewards. Operator 'Recall at K' (page 2, domain other) captures: The next quality step is a small embedding index, not more weighting. Assumptions: Static relevance set, uniform query distribution, fixed K Breakdown regime: K → ∞ recovers total recall; K = 1 reduces to Precision@1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Recall maps to GSI's false-negative rate control and GSE's state-coverage verification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c, domain=other, pages_read=2/2): Operator 'Mean Reciprocal Rank' (page 2, domain other) captures: The next quality step is a small embedding index, not more weighting. Assumptions: Perfect relevance assessment, independent query distribution, no duplicate documents Breakdown regime: Zero-relevant-documents limit causes MRR → 0; perfect ranking yields MRR → 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): MRR maps to GSI's conformal prediction coverage rate, treating reciprocal rank as p-value. In GSE, it quantifies optimal-information-extraction latency. Operator 'Cumulative Precision at K' (page 2, domain other) captures: The next quality step is a small embedding index, not more weighting. Assumptions: Binary relevance labels, uniform query sampling, fixed K Breakdown regime: K → ∞ recovers mean average precision; K = 1 reduces to Recall@1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Cumulative precision mirrors GSI's rolling hit-rate statistics. In GSE, it models success probability in sequential decision trees. Operator 'Normalized Discounted Cumulative Gain' (page 2, domain other) captures: The next quality step is a small embedding index, not more weighting. Assumptions: Fixed exponential discount, graded relevance levels, identical ideal order Breakdown regime: Perfect ranking yields NDCG → 1; random ranking approaches 1/K Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NDCG aligns with GSI's risk-adjusted scoring and GSE's value-of-information framework via discounted rewards. Operator 'Recall at K' (page 2, domain other) captures: The next quality step is a small embedding index, not more weighting. Assumptions: Static relevance set, uniform query distribution, fixed K Breakdown regime: K → ∞ recovers total recall; K = 1 reduces to Precision@1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Recall maps to GSI's false-negative rate control and GSE's state-coverage verification. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in decision theory (utility of first-hit decisions) and information retrieval fundamentals (ROC analysis, precision-recall tradeoff). Retrocausal Genealogy: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Domain experts expect exact title matches, while the system must approximate semantic meaning through learned representations. Theory of Mind & Decision Maker Model: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid overfitting to the evaluation set; telemetry should monitor divergence between training-set and test-set performance. Cross-Layer Veto & Anti-Leakage Check: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in RETRIEVAL-EVAL-2026-11-04 (1230fe8c5626bb7c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

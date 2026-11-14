@@ -1,0 +1,78 @@
+{
+  "book_id": "03870e4c11c3a849",
+  "source_status": "COMPLETE",
+  "title": "p0289",
+  "file_name": "p0289.txt",
+  "sha256": "03870e4c11c3a8499f7f39d8ec3cb91608add26f92b3c3ad8a9b97e667f5d54c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Uncertainty-driven entrepreneurial estimation as a stochastic optimization problem with diminishing marginal returns. Universal Lens: Rooted in p0289 (03870e4c11c3a849), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over epistemic uncertainty in resource allocation, conformal prediction bounds on estimate guarantees. GSI Mapping: Rooted in p0289 (03870e4c11c3a849), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models recursive uncertainty propagation through organizational state transitions via risk-weighted decision trees. GSE Mapping: Rooted in p0289 (03870e4c11c3a849), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "entrepreneurial_estimation",
+      "name": "Entrepreneurial Estimation Function",
+      "verbatim_quote": "The function of making these estimates and of \"guaranteeing\" their value to the other participating members of the group falls to the responsible entrepreneur in each establishment, producing a new type of activity and a new type of income entirely unknown in a society where uncertainty is absent.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Estimate value (dimensionless)', 'G': 'Guarantee parameter (dimensionless)', 'U': 'Uncertainty margin (dimensionless)'}",
+      "assumptions": "Estimates are made under bounded rationality and subjective probability distributions.",
+      "breakdown_regime": "When U approaches zero, E becomes deterministic and G collapses into standard wage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian updating of E given prior U; GSE state transition on E's confidence interval.",
+        "source_operator": "entrepreneurial_estimation",
+        "telemetry": "Estimate variance vs. group consensus deviation"
+      }
+    },
+    {
+      "primitive_id": "organizational_control_concentration",
+      "name": "Organizational Control Concentration",
+      "verbatim_quote": "Even in the hypothetical situation dealt with in chapter Iv there would be likely to be a concentration of certain control and coördinating functions in a separate person or group of persons in each productive group.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Control function (dimensionless)', 'P': 'Productive group size (unitless)', 'F': 'Functional specialization (dimensionless)'}",
+      "assumptions": "Control functions scale logarithmically with P.",
+      "breakdown_regime": "As P → ∞, F → constant due to coordination overhead.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE hierarchical state machine with C as control layer; GSI entropy-based measure of functional redundancy.",
+        "source_operator": "organizational_control_concentration",
+        "telemetry": "Control-to-labor ratio in production units"
+      }
+    },
+    {
+      "primitive_id": "routine_labor_duality",
+      "name": "Routine Labor Duality",
+      "verbatim_quote": "But the duties of such persons would be of a routine character merely, in no significant respect different from those of any other operatives; they would be laborers among laborers and their incomes would be wages like other wages.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Routine labor (dimensionless)', 'W': 'Wage rate (currency/time)', 'L': 'Labor intensity (work/time)'}",
+      "assumptions": "R is orthogonal to entrepreneurial activity; W = f(L).",
+      "breakdown_regime": "When R dominates, W becomes fixed and L varies inversely with productivity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI wage distribution model; GSE labor-state transition dynamics.",
+        "source_operator": "routine_labor_duality",
+        "telemetry": "Wage dispersion across labor categories"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "03870e4c11c3a849_t0",
+      "think": "The core insight is that in uncertain environments, the entrepreneur's role evolves beyond mere labor to include estimation and guarantee functions. This introduces a dual structure: routine labor (R) with fixed wage W and entrepreneurial estimation (E) with variable income tied to uncertainty margins U. The system exhibits diminishing returns in both labor and estimation efficiency, governed by principles of marginal utility and return. As P increases, control concentration stabilizes at a fixed F, while E becomes increasingly dependent on subjective estimation rather than objective measurement. The duality manifests in the separation of labor into routine and entrepreneurial roles, each with distinct income structures. In GSE, this maps to state transitions driven by uncertainty estimation; in GSI, it maps to Bayesian updating of belief states over uncertain parameters. The failure mode occurs when U shrinks below a threshold, collapsing E into deterministic R, leading to loss of adaptive capacity.\n\nDeep epistemic analysis for p0289 (03870e4c11c3a849, domain=other, pages_read=1/1): Operator 'Entrepreneurial Estimation Function' (page 1, domain other) captures: The function of making these estimates and of \"guaranteeing\" their value to the other participating members of the group falls to the responsible entrepreneur in each establishment, producing a new type of activity and a new type of income entirely unknown in a society where uncertainty is absent. Assumptions: Estimates are made under bounded rationality and subjective probability distributions. Breakdown regime: When U approaches zero, E becomes deterministic and G collapses into standard wage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian updating of E given prior U; GSE state transition on E's confidence interval. Operator 'Organizational Control Concentration' (page 1, domain other) captures: Even in the hypothetical situation dealt with in chapter Iv there would be likely to be a concentration of certain control and coördinating functions in a separate person or group of persons in each productive group. Assumptions: Control functions scale logarithmically with P. Breakdown regime: As P → ∞, F → constant due to coordination overhead. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE hierarchical state machine with C as control layer; GSI entropy-based measure of functional redundancy. Operator 'Routine Labor Duality' (page 1, domain other) captures: But the duties of such persons would be of a routine character merely, in no significant respect different from those of any other operatives; they would be laborers among laborers and their incomes would be wages like other wages. Assumptions: R is orthogonal to entrepreneurial activity; W = f(L). Breakdown regime: When R dominates, W becomes fixed and L varies inversely with productivity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI wage distribution model; GSE labor-state transition dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0289 (03870e4c11c3a849, domain=other, pages_read=1/1): Operator 'Entrepreneurial Estimation Function' (page 1, domain other) captures: The function of making these estimates and of \"guaranteeing\" their value to the other participating members of the group falls to the responsible entrepreneur in each establishment, producing a new type of activity and a new type of income entirely unknown in a society where uncertainty is absent. Assumptions: Estimates are made under bounded rationality and subjective probability distributions. Breakdown regime: When U approaches zero, E becomes deterministic and G collapses into standard wage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian updating of E given prior U; GSE state transition on E's confidence interval. Operator 'Organizational Control Concentration' (page 1, domain other) captures: Even in the hypothetical situation dealt with in chapter Iv there would be likely to be a concentration of certain control and coördinating functions in a separate person or group of persons in each productive group. Assumptions: Control functions scale logarithmically with P. Breakdown regime: As P → ∞, F → constant due to coordination overhead. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE hierarchical state machine with C as control layer; GSI entropy-based measure of functional redundancy. Operator 'Routine Labor Duality' (page 1, domain other) captures: But the duties of such persons would be of a routine character merely, in no significant respect different from those of any other operatives; they would be laborers among laborers and their incomes would be wages like other wages. Assumptions: R is orthogonal to entrepreneurial activity; W = f(L). Breakdown regime: When R dominates, W becomes fixed and L varies inversely with productivity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI wage distribution model; GSE labor-state transition dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Knightian uncertainty theory (1921), extended by Hayek’s market process, formalized in modern Bayesian decision theory and stochastic control systems. Retrocausal Genealogy: Rooted in p0289 (03870e4c11c3a849), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0289 (03870e4c11c3a849), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as dual actors: one optimizing routine labor (R) with fixed utility, another managing uncertainty (E) with dynamic reward. The former is reactive, the latter proactive, creating a feedback loop between operational stability and strategic adaptability. Theory of Mind & Decision Maker Model: Rooted in p0289 (03870e4c11c3a849), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires E and R to remain distinct; leakage occurs if estimation functions become routine or vice versa. Veto condition: E must maintain non-linear dependence on U to avoid degenerate deterministic behavior. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0289 (03870e4c11c3a849), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

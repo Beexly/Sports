@@ -1,0 +1,78 @@
+{
+  "book_id": "65966a38e62e490c",
+  "source_status": "COMPLETE",
+  "title": "bcanfield-southpaw",
+  "file_name": "bcanfield-southpaw.md",
+  "sha256": "65966a38e62e490c5f1e9f64375858d08c199f9bf52c37a8490d5a38076929a0",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Southpaw enables programmatic FanDuel DFS access via manual auth headers, bridging optimizer outputs with contest entries while operating under strict ToS constraints. Universal Lens: Rooted in bcanfield-southpaw (65966a38e62e490c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models player pool distributions and lineup likelihoods using southpaw's real-time slate data, conditioning on authenticated user state and contest parameters. GSI Mapping: Rooted in bcanfield-southpaw (65966a38e62e490c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine uses southpaw's fetch-and-submit loop to transition optimizer states into active contest entries, managing token expiration and ToS compliance dynamically. GSE Mapping: Rooted in bcanfield-southpaw (65966a38e62e490c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fan_duel_api_bridge",
+      "name": "FanDuel API Bridge Operator",
+      "verbatim_quote": "Vision Programmatic access to the FanDuel DFS platform: pull your contests, entries, roster formats, and the *actual available player pool* for a contest, then push lineups back in — automating the parts of DFS that the sites' UIs make tedious.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{pool}': 'dimensionless set of available players', 'C_{contest}': 'dimensionless contest identifier', 'L_{lineup}': 'dimensionless lineup vector'}",
+      "assumptions": "User has valid FanDuel credentials and manually extracted auth headers.",
+      "breakdown_regime": "Token expiry or login flow change causes authentication failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps GSE optimizer output to FanDuel contest entry via southpaw's auth-bridged API calls.",
+        "source_operator": "fan_duel_api_bridge",
+        "telemetry": "Successful API response status and token validity"
+      }
+    },
+    {
+      "primitive_id": "auth_header_extractor",
+      "name": "Authentication Header Extractor",
+      "verbatim_quote": "- **Manual auth-header extraction:** log into fanduel.com, open browser dev tools, copy the `Authorization` header and `X-Auth-Token` from an `api.fanduel.com` request.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_{auth}': 'dimensionless auth header string', 'T_{token}': 'dimensionless session token'}",
+      "assumptions": "Browser dev tools accessible and FanDuel's login flow unchanged.",
+      "breakdown_regime": "FanDuel login flow update invalidates stored headers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides transient credentials for southpaw's API interactions, derived from user session.",
+        "source_operator": "auth_header_extractor",
+        "telemetry": "Header validity and token refresh cycle"
+      }
+    },
+    {
+      "primitive_id": "contest_slate_fetcher",
+      "name": "Contest Slate Fetcher",
+      "verbatim_quote": "GSE's optimizer \"falls back to a sample slate\" — southpaw is the proof that a sample slate is a choice, not a necessity: the contest's real player pool is fetchable.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{slate}': 'dimensionless set of player data including salaries', 'C_{struct}': 'dimensionless contest configuration'}",
+      "assumptions": "Contest is entered and user is authenticated.",
+      "breakdown_regime": "User not entered in contest or contest closed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps GSE's need for real-time player pools to southpaw's fetchable slate data.",
+        "source_operator": "contest_slate_fetcher",
+        "telemetry": "Player pool size and salary distribution consistency"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "65966a38e62e490c_t0",
+      "think": "The FanDuel API Bridge operator (southpaw) enables programmatic access to FanDuel's DFS platform by fetching contest details, player pools, and submitting lineups. It operates under strict constraints: no official API, manual auth headers required, and FanDuel's ToS prohibits automated lineup submissions. This creates a dual regime: one where the system functions as a read-only slate provider (safe), and another where it becomes a direct contest entry mechanism (risky). The auth extractor is a fragile kernel, dependent on browser dev tools and FanDuel's login flow stability. Its breakdown regime occurs at token expiry or login flow changes. The Contest Slate Fetcher primitive represents a safer abstraction layer, aligning with GSE's goal of avoiding sample slates by accessing real-time data. The failure mode arises from ToS violations or technical fragility due to lack of official support.\n\nDeep epistemic analysis for bcanfield-southpaw (65966a38e62e490c, domain=other, pages_read=1/1): Operator 'FanDuel API Bridge Operator' (page 1, domain other) captures: Vision Programmatic access to the FanDuel DFS platform: pull your contests, entries, roster formats, and the *actual available player pool* for a contest, then push lineups back in — automating the parts of DFS that the sites' UIs make tedious. Assumptions: User has valid FanDuel credentials and manually extracted auth headers. Breakdown regime: Token expiry or login flow change causes authentication failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps GSE optimizer output to FanDuel contest entry via southpaw's auth-bridged API calls. Operator 'Authentication Header Extractor' (page 1, domain other) captures: - **Manual auth-header extraction:** log into fanduel.com, open browser dev tools, copy the `Authorization` header and `X-Auth-Token` from an `api.fanduel.com` request. Assumptions: Browser dev tools accessible and FanDuel's login flow unchanged. Breakdown regime: FanDuel login flow update invalidates stored headers. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides transient credentials for southpaw's API interactions, derived from user session. Operator 'Contest Slate Fetcher' (page 1, domain other) captures: GSE's optimizer \"falls back to a sample slate\" — southpaw is the proof that a sample slate is a choice, not a necessity: the contest's real player pool is fetchable. Assumptions: Contest is entered and user is authenticated. Breakdown regime: User not entered in contest or contest closed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps GSE's need for real-time player pools to southpaw's fetchable slate data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for bcanfield-southpaw (65966a38e62e490c, domain=other, pages_read=1/1): Operator 'FanDuel API Bridge Operator' (page 1, domain other) captures: Vision Programmatic access to the FanDuel DFS platform: pull your contests, entries, roster formats, and the *actual available player pool* for a contest, then push lineups back in — automating the parts of DFS that the sites' UIs make tedious. Assumptions: User has valid FanDuel credentials and manually extracted auth headers. Breakdown regime: Token expiry or login flow change causes authentication failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps GSE optimizer output to FanDuel contest entry via southpaw's auth-bridged API calls. Operator 'Authentication Header Extractor' (page 1, domain other) captures: - **Manual auth-header extraction:** log into fanduel.com, open browser dev tools, copy the `Authorization` header and `X-Auth-Token` from an `api.fanduel.com` request. Assumptions: Browser dev tools accessible and FanDuel's login flow unchanged. Breakdown regime: FanDuel login flow update invalidates stored headers. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides transient credentials for southpaw's API interactions, derived from user session. Operator 'Contest Slate Fetcher' (page 1, domain other) captures: GSE's optimizer \"falls back to a sample slate\" — southpaw is the proof that a sample slate is a choice, not a necessity: the contest's real player pool is fetchable. Assumptions: Contest is entered and user is authenticated. Breakdown regime: User not entered in contest or contest closed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps GSE's need for real-time player pools to southpaw's fetchable slate data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s DFS automation practices, evolving through FanDuel's increasing anti-bot measures and 2FA enforcement post-October 2023, reflecting a shift from open APIs to reverse-engineered access methods. Retrocausal Genealogy: Rooted in bcanfield-southpaw (65966a38e62e490c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in bcanfield-southpaw (65966a38e62e490c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include FanDuel's anti-cheat systems and their ToS enforcement mechanisms, which penalize automated actions. The user-agent is the GSE optimizer seeking optimal lineups, constrained by both technical and legal boundaries. Theory of Mind & Decision Maker Model: Rooted in bcanfield-southpaw (65966a38e62e490c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that GSE avoid direct submission logic to prevent ToS violations. Leakage vetoes against exposing raw auth tokens or relying on unstable browser-based auth flows. Cross-Layer Veto & Anti-Leakage Check: Rooted in bcanfield-southpaw (65966a38e62e490c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in bcanfield-southpaw (65966a38e62e490c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "32cb5e3080c25f38",
+  "source_status": "COMPLETE",
+  "title": "SKILL",
+  "file_name": "SKILL.md",
+  "sha256": "32cb5e3080c25f3878b1d6f079b25e79ef04abbc17d588fccd5605e34d388ba2",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Max-leverage primitives encode GSE state transitions via API key absence, secret validation, and founder-consented orbit unlocking. Universal Lens: Rooted in SKILL (32cb5e3080c25f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers free path eligibility through Bayesian checks on key presence and secret matching, aligning with GSE's operational constraints. GSI Mapping: Rooted in SKILL (32cb5e3080c25f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE navigates settlement paths using ordered conditional logic: key blanking → stripe event → credits claim → smoke unlock, under founder consent. GSE Mapping: Rooted in SKILL (32cb5e3080c25f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "max_leverage",
+      "name": "Founder Max-Leverage Unlock",
+      "verbatim_quote": "--name: max-leverage description: Founder max-leverage unlock for GSE money recovery and free capacity.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'Leverage factor (dimensionless)', 'K': 'API key status (binary: present/absent)', 'S': 'Secret match (binary: valid/invalid)', 'F': 'Founder consent flag (binary: yes/no)'}",
+      "assumptions": "Leverage is unlocked only when K=absent, S=valid, F=yes; otherwise inactive.",
+      "breakdown_regime": "When K≠absent, L=0; when K=absent and S≠valid, L=0; when K=absent, S=valid, F=no, L=0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's path selection mirrors GSI's probabilistic inference over key states and secret validity.",
+        "source_operator": "max_leverage",
+        "telemetry": "Key presence, secret match, founder approval flags"
+      }
+    },
+    {
+      "primitive_id": "free_settle_path",
+      "name": "Free Settlement Path Activation",
+      "verbatim_quote": "leverage (GSE) ## Order of operations 1. Blank Production `THE_ODDS_API_KEY` → free settle path 2. Stripe",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Production environment state (binary: blanked/not-blanked)', 'FSP': 'Free settle path activation (binary: active/inactive)'}",
+      "assumptions": "FSP activates iff P=blanked; otherwise inactive.",
+      "breakdown_regime": "P=blanked ⇒ FSP=active; P≠blanked ⇒ FSP=inactive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from max-leverage state and key blanking condition in GSE.",
+        "source_operator": "free_settle_path",
+        "telemetry": "API key blanking status in production"
+      }
+    },
+    {
+      "primitive_id": "smoke_unlock",
+      "name": "Orbital Smoke Unlock",
+      "verbatim_quote": "www + secret match 3. Credits claims (founder portals only) 4. Smoke: `npm run orbit:unlock-smoke` then",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'CRON_SECRET validity (binary: valid/invalid)', 'U': 'Smoke unlock trigger (binary: triggered/not-triggered)', 'P': 'Production mode (binary: prod/non-prod)'}",
+      "assumptions": "U triggers iff C=valid and P=prod; otherwise blocked.",
+      "breakdown_regime": "C=valid ∧ P=prod ⇒ U=triggered; else U=blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Conditional execution of smoke unlock based on secret and env state in GSE.",
+        "source_operator": "smoke_unlock",
+        "telemetry": "CRON_SECRET validity and production mode"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "32cb5e3080c25f38_t0",
+      "think": "The max-leverage primitive defines a constrained optimization problem where leverage L is a function of key state K, secret validity S, and founder consent F. The system enforces that L > 0 only when K=absent, S=valid, and F=yes. This encodes a dual-state logic: either the system is in a free-capacity mode (L>0) or locked (L=0). The free settle path is a derived kernel from this, activated when K=absent. The smoke unlock is a secondary conditional state transition, requiring both valid CRON_SECRET and prod mode. These primitives form a layered control flow where each step must satisfy a logical conjunction before proceeding. Failure modes include: key present (K≠absent), invalid secret (S≠valid), or missing founder consent (F≠yes), all leading to L=0. The system avoids adversarial states by enforcing laws such as never inventing secrets or flipping LIVE_BOARD without consent.\n\nDeep epistemic analysis for SKILL (32cb5e3080c25f38, domain=other, pages_read=1/1): Operator 'Founder Max-Leverage Unlock' (page 1, domain other) captures: --name: max-leverage description: Founder max-leverage unlock for GSE money recovery and free capacity. Assumptions: Leverage is unlocked only when K=absent, S=valid, F=yes; otherwise inactive. Breakdown regime: When K≠absent, L=0; when K=absent and S≠valid, L=0; when K=absent, S=valid, F=no, L=0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's path selection mirrors GSI's probabilistic inference over key states and secret validity. Operator 'Free Settlement Path Activation' (page 1, domain other) captures: leverage (GSE) ## Order of operations 1. Blank Production `THE_ODDS_API_KEY` → free settle path 2. Stripe Assumptions: FSP activates iff P=blanked; otherwise inactive. Breakdown regime: P=blanked ⇒ FSP=active; P≠blanked ⇒ FSP=inactive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from max-leverage state and key blanking condition in GSE. Operator 'Orbital Smoke Unlock' (page 1, domain other) captures: www + secret match 3. Credits claims (founder portals only) 4. Smoke: `npm run orbit:unlock-smoke` then Assumptions: U triggers iff C=valid and P=prod; otherwise blocked. Breakdown regime: C=valid ∧ P=prod ⇒ U=triggered; else U=blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conditional execution of smoke unlock based on secret and env state in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SKILL (32cb5e3080c25f38, domain=other, pages_read=1/1): Operator 'Founder Max-Leverage Unlock' (page 1, domain other) captures: --name: max-leverage description: Founder max-leverage unlock for GSE money recovery and free capacity. Assumptions: Leverage is unlocked only when K=absent, S=valid, F=yes; otherwise inactive. Breakdown regime: When K≠absent, L=0; when K=absent and S≠valid, L=0; when K=absent, S=valid, F=no, L=0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's path selection mirrors GSI's probabilistic inference over key states and secret validity. Operator 'Free Settlement Path Activation' (page 1, domain other) captures: leverage (GSE) ## Order of operations 1. Blank Production `THE_ODDS_API_KEY` → free settle path 2. Stripe Assumptions: FSP activates iff P=blanked; otherwise inactive. Breakdown regime: P=blanked ⇒ FSP=active; P≠blanked ⇒ FSP=inactive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from max-leverage state and key blanking condition in GSE. Operator 'Orbital Smoke Unlock' (page 1, domain other) captures: www + secret match 3. Credits claims (founder portals only) 4. Smoke: `npm run orbit:unlock-smoke` then Assumptions: U triggers iff C=valid and P=prod; otherwise blocked. Breakdown regime: C=valid ∧ P=prod ⇒ U=triggered; else U=blocked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conditional execution of smoke unlock based on secret and env state in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in control theory and constraint satisfaction systems, evolving into modern state-machine architectures with cryptographic access control. Retrocausal Genealogy: Rooted in SKILL (32cb5e3080c25f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SKILL (32cb5e3080c25f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to bypass key blanking or forge secrets. The system models these as adversarial inputs that must be rejected by design, ensuring integrity of the free path mechanism. Theory of Mind & Decision Maker Model: Rooted in SKILL (32cb5e3080c25f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no redundant or conflicting state transitions across layers. Leakage vetoes prevent unauthorized access via secret exposure or unauthorized founder flips. Cross-Layer Veto & Anti-Leakage Check: Rooted in SKILL (32cb5e3080c25f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in SKILL (32cb5e3080c25f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

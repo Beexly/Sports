@@ -1,0 +1,78 @@
+{
+  "book_id": "3fe5af99342fc2e9",
+  "source_status": "COMPLETE",
+  "title": "REVENUE_RISK_REGISTER",
+  "file_name": "REVENUE_RISK_REGISTER.md",
+  "sha256": "3fe5af99342fc2e992db58936c2dfd10ea9a6d598ca267b3762cd5131c298d14",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Revenue risk register encodes stochastic constraints on commercial claims via Bayesian belief updates, conformal prediction intervals, and state-space transitions in regulatory compliance. Universal Lens: Rooted in REVENUE_RISK_REGISTER (3fe5af99342fc2e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models risk severity as posterior belief distributions over claim validity using `claim-safety.ts` and `banned-copy.ts`, applying conformal inference to detect unsupported ROI or win-rate assertions. GSI Mapping: Rooted in REVENUE_RISK_REGISTER (3fe5af99342fc2e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions across offer eligibility and sponsor approval using `offer-eligibility.ts` and `responsible-gaming-policy.ts`, enforcing conditional logic to prevent premature API launches or undisclosed sponsor influence. GSE Mapping: Rooted in REVENUE_RISK_REGISTER (3fe5af99342fc2e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fake_audience_claim",
+      "name": "Fake Audience Claim Detector",
+      "verbatim_quote": "| --- | --- | --- | | Fake audience claim | high | block until",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'audience size (dimensionless)', 'T': 'time (s)', 'B': 'block signal (boolean)'}",
+      "assumptions": "Audience metrics must be validated by real-time analytics before acceptance.",
+      "breakdown_regime": "When A(t) < threshold due to lack of real data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Bayesian update on empirical audience validation; triggers B = true when P(A|data) < threshold.",
+        "source_operator": "fake_audience_claim",
+        "telemetry": "Real-time analytics signal quality"
+      }
+    },
+    {
+      "primitive_id": "unsupported_roi_claim",
+      "name": "Unsupported ROI Claim Gate",
+      "verbatim_quote": "exist | media pages, docs | | Unsupported ROI or win-rate claim | high | claim",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'return on investment (dimensionless)', 'E': 'evidence score (0–1)', 'S': 'scanner signal (boolean)'}",
+      "assumptions": "ROI claims require independent verification through evidence scoring.",
+      "breakdown_regime": "When E < threshold, S = false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction interval on R; gates S = true only if E > threshold.",
+        "source_operator": "unsupported_roi_claim",
+        "telemetry": "Evidence score from `claim-safety.ts`"
+      }
+    },
+    {
+      "primitive_id": "undisclosed_sponsor_mention",
+      "name": "Undisclosed Sponsor Reviewer",
+      "verbatim_quote": "manual evidence gate | `claim-safety.ts`, `banned-copy.ts` | | Undisclosed sponsor mention | high | disclosure review",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'disclosure status (boolean)', 'S': 'sponsor presence (boolean)', 'C': 'compliance check (boolean)'}",
+      "assumptions": "All sponsors must be disclosed to maintain editorial integrity.",
+      "breakdown_regime": "When S = true and D = false, C = false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binary compliance check C = D ∧ ¬S; triggers alert if false.",
+        "source_operator": "undisclosed_sponsor_mention",
+        "telemetry": "Disclosure policy enforcement via `disclosure-policy.ts`"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3fe5af99342fc2e9_t0",
+      "think": "Each primitive encodes a probabilistic constraint on commercial behavior. The 'fake audience claim' primitive operates under a Bayesian framework where belief in audience validity is updated based on real-time data. If insufficient data exists, it blocks further processing. The 'unsupported ROI claim' primitive applies conformal prediction to validate claims against empirical evidence, ensuring that only those with sufficient support proceed. The 'undisclosed sponsor mention' primitive enforces a binary compliance check, ensuring all sponsorships are disclosed. These primitives form a layered risk lattice, where each layer's failure mode propagates into downstream systems, necessitating robust state transitions in GSE and Bayesian inference in GSI.\n\nDeep epistemic analysis for REVENUE_RISK_REGISTER (3fe5af99342fc2e9, domain=other, pages_read=1/1): Operator 'Fake Audience Claim Detector' (page 1, domain other) captures: | --- | --- | --- | | Fake audience claim | high | block until Assumptions: Audience metrics must be validated by real-time analytics before acceptance. Breakdown regime: When A(t) < threshold due to lack of real data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bayesian update on empirical audience validation; triggers B = true when P(A|data) < threshold. Operator 'Unsupported ROI Claim Gate' (page 1, domain other) captures: exist | media pages, docs | | Unsupported ROI or win-rate claim | high | claim Assumptions: ROI claims require independent verification through evidence scoring. Breakdown regime: When E < threshold, S = false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction interval on R; gates S = true only if E > threshold. Operator 'Undisclosed Sponsor Reviewer' (page 1, domain other) captures: manual evidence gate | `claim-safety.ts`, `banned-copy.ts` | | Undisclosed sponsor mention | high | disclosure review Assumptions: All sponsors must be disclosed to maintain editorial integrity. Breakdown regime: When S = true and D = false, C = false. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Binary compliance check C = D ∧ ¬S; triggers alert if false. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for REVENUE_RISK_REGISTER (3fe5af99342fc2e9, domain=other, pages_read=1/1): Operator 'Fake Audience Claim Detector' (page 1, domain other) captures: | --- | --- | --- | | Fake audience claim | high | block until Assumptions: Audience metrics must be validated by real-time analytics before acceptance. Breakdown regime: When A(t) < threshold due to lack of real data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bayesian update on empirical audience validation; triggers B = true when P(A|data) < threshold. Operator 'Unsupported ROI Claim Gate' (page 1, domain other) captures: exist | media pages, docs | | Unsupported ROI or win-rate claim | high | claim Assumptions: ROI claims require independent verification through evidence scoring. Breakdown regime: When E < threshold, S = false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction interval on R; gates S = true only if E > threshold. Operator 'Undisclosed Sponsor Reviewer' (page 1, domain other) captures: manual evidence gate | `claim-safety.ts`, `banned-copy.ts` | | Undisclosed sponsor mention | high | disclosure review Assumptions: All sponsors must be disclosed to maintain editorial integrity. Breakdown regime: When S = true and D = false, C = false. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Binary compliance check C = D ∧ ¬S; triggers alert if false. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal risk theory from financial engineering and information theory, particularly the work of Cox and Rubinstein on bounded rationality and bounded truth in markets. Retrocausal Genealogy: Rooted in REVENUE_RISK_REGISTER (3fe5af99342fc2e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in REVENUE_RISK_REGISTER (3fe5af99342fc2e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include advertisers, sponsors, editors, and regulators. Each has distinct utility functions: advertisers seek ROI, sponsors desire visibility, editors uphold integrity, and regulators enforce compliance. Their interactions create a multi-agent game where primitives act as equilibrium constraints. Theory of Mind & Decision Maker Model: Rooted in REVENUE_RISK_REGISTER (3fe5af99342fc2e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no single primitive can override another’s domain. For example, a sponsor cannot override disclosure checks, and a fake audience claim cannot bypass ROI validation. Leakage is mitigated by explicit state transitions in GSE and Bayesian conditioning in GSI. Cross-Layer Veto & Anti-Leakage Check: Rooted in REVENUE_RISK_REGISTER (3fe5af99342fc2e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

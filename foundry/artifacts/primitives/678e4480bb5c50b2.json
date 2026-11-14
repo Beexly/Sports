@@ -1,0 +1,95 @@
+{
+  "book_id": "678e4480bb5c50b2",
+  "source_status": "COMPLETE",
+  "title": "twenty",
+  "file_name": "twenty.md",
+  "sha256": "678e4480bb5c50b23f27a42604103f919a6c3d2b2e585bdcbe5cdfa5cdc4b5a5",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in twenty (678e4480bb5c50b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in twenty (678e4480bb5c50b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in twenty (678e4480bb5c50b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in twenty (678e4480bb5c50b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in twenty (678e4480bb5c50b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in twenty (678e4480bb5c50b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "custom_object_schema",
+      "name": "Custom Object Schema",
+      "verbatim_quote": "Setup includes server, worker, Postgres, storage, SMTP, S3, OAuth, and recurring worker jobs.",
+      "page": 1,
+      "latex": "\\mathcal{O} = \\{o_i | i \\in I\\}",
+      "symbol_and_unit_ledger": "{o_i: custom object instance, I: index set of object types}",
+      "assumptions": "Assumes a fixed schema for each object type with pre-defined fields.",
+      "breakdown_regime": "Singular when schema evolution introduces breaking changes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a relational database table structure where each row represents an instance of a custom object type.",
+        "source_operator": "custom_object_schema",
+        "telemetry": "Schema version number and migration success rate"
+      }
+    },
+    {
+      "primitive_id": "docker_compose_deployment",
+      "name": "Docker Compose Deployment",
+      "verbatim_quote": "## Verified Capabilities - CRM records - custom objects - REST and GraphQL APIs - schema-generated API docs - webhooks - role-scoped API keys - Docker Compose self-hosting - single-workspace default with multi-workspace option ## Deployment Model Docker Compose is documented for production/self-hosting.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a Linux-based host with Docker and Docker Compose installed.",
+      "breakdown_regime": "Fails when dependency conflicts arise between services.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a microservices orchestration pattern using container images.",
+        "source_operator": "docker_compose_deployment",
+        "telemetry": "Container uptime and resource utilization metrics"
+      }
+    },
+    {
+      "primitive_id": "role_scoped_api_key",
+      "name": "Role-Scoped API Key",
+      "verbatim_quote": "## Verified Capabilities - CRM records - custom objects - REST and GraphQL APIs - schema-generated API docs - webhooks - role-scoped API keys - Docker Compose self-hosting - single-workspace default with multi-workspace option ## Deployment Model Docker Compose is documented for production/self-hosting.",
+      "page": 1,
+      "latex": "K_r = f(R)",
+      "symbol_and_unit_ledger": "{K_r: API key with role r, R: set of roles}",
+      "assumptions": "Assumes a centralized authorization service that validates keys against role permissions.",
+      "breakdown_regime": "Singular when a key bypasses its intended scope.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to JWT token validation with embedded role claims.",
+        "source_operator": "role_scoped_api_key",
+        "telemetry": "Key rotation frequency and unauthorized access attempts"
+      }
+    },
+    {
+      "primitive_id": "graphql_rest_api",
+      "name": "GraphQL REST API",
+      "verbatim_quote": "## Verified Capabilities - CRM records - custom objects - REST and GraphQL APIs - schema-generated API docs - webhooks - role-scoped API keys - Docker Compose self-hosting - single-workspace default with multi-workspace option ## Deployment Model Docker Compose is documented for production/self-hosting.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes clients understand both query languages and their respective strengths.",
+      "breakdown_regime": "Singular when query complexity leads to performance degradation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a unified API gateway that routes requests to backend services.",
+        "source_operator": "graphql_rest_api",
+        "telemetry": "Query execution time percentiles and error rates"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "678e4480bb5c50b2_t0",
+      "think": "The core sovereign primitives emerge from the architectural duality of \"Custom Object Schema\" and \"Docker Compose Deployment.\" The schema defines the invariant data structure (\\mathcal{O}), while the deployment model provides the executable infrastructure. The \"Role-Scoped API Key\" and \"GraphQL/REST API\" primitives enable controlled access and efficient data transfer, respectively. Together, they form a closed-loop system where data flows through well-defined interfaces, ensuring isolation and scalability. However, the high risk of PII exposure and the AGPL licensing terms introduce significant operational constraints, requiring rigorous privacy safeguards and legal vetting to prevent unauthorized external access.\n\nDeep epistemic analysis for twenty (678e4480bb5c50b2, domain=other, pages_read=2/2): Operator 'Custom Object Schema' (page 1, domain other) captures: Setup includes server, worker, Postgres, storage, SMTP, S3, OAuth, and recurring worker jobs. Assumptions: Assumes a fixed schema for each object type with pre-defined fields. Breakdown regime: Singular when schema evolution introduces breaking changes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a relational database table structure where each row represents an instance of a custom object type. Operator 'Docker Compose Deployment' (page 1, domain other) captures: ## Verified Capabilities - CRM records - custom objects - REST and GraphQL APIs - schema-generated API docs - webhooks - role-scoped API keys - Docker Compose self-hosting - single-workspace default with multi-workspace option ## Deployment Model Docker Compose is documented for production/self-hosting. Assumptions: Assumes a Linux-based host with Docker and Docker Compose installed. Breakdown regime: Fails when dependency conflicts arise between services. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a microservices orchestration pattern using container images. Operator 'Role-Scoped API Key' (page 1, domain other) captures: ## Verified Capabilities - CRM records - custom objects - REST and GraphQL APIs - schema-generated API docs - webhooks - role-scoped API keys - Docker Compose self-hosting - single-workspace default with multi-workspace option ## Deployment Model Docker Compose is documented for production/self-hosting. Assumptions: Assumes a centralized authorization service that validates keys against role permissions. Breakdown regime: Singular when a key bypasses its intended scope. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to JWT token validation with embedded role claims. Operator 'GraphQL REST API' (page 1, domain other) captures: ## Verified Capabilities - CRM records - custom objects - REST and GraphQL APIs - schema-generated API docs - webhooks - role-scoped API keys - Docker Compose self-hosting - single-workspace default with multi-workspace option ## Deployment Model Docker Compose is documented for production/self-hosting. Assumptions: Assumes clients understand both query languages and their respective strengths. Breakdown regime: Singular when query complexity leads to performance degradation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a unified API gateway that routes requests to backend services. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for twenty (678e4480bb5c50b2, domain=other, pages_read=2/2): Operator 'Custom Object Schema' (page 1, domain other) captures: Setup includes server, worker, Postgres, storage, SMTP, S3, OAuth, and recurring worker jobs. Assumptions: Assumes a fixed schema for each object type with pre-defined fields. Breakdown regime: Singular when schema evolution introduces breaking changes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a relational database table structure where each row represents an instance of a custom object type. Operator 'Docker Compose Deployment' (page 1, domain other) captures: ## Verified Capabilities - CRM records - custom objects - REST and GraphQL APIs - schema-generated API docs - webhooks - role-scoped API keys - Docker Compose self-hosting - single-workspace default with multi-workspace option ## Deployment Model Docker Compose is documented for production/self-hosting. Assumptions: Assumes a Linux-based host with Docker and Docker Compose installed. Breakdown regime: Fails when dependency conflicts arise between services. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a microservices orchestration pattern using container images. Operator 'Role-Scoped API Key' (page 1, domain other) captures: ## Verified Capabilities - CRM records - custom objects - REST and GraphQL APIs - schema-generated API docs - webhooks - role-scoped API keys - Docker Compose self-hosting - single-workspace default with multi-workspace option ## Deployment Model Docker Compose is documented for production/self-hosting. Assumptions: Assumes a centralized authorization service that validates keys against role permissions. Breakdown regime: Singular when a key bypasses its intended scope. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to JWT token validation with embedded role claims. Operator 'GraphQL REST API' (page 1, domain other) captures: ## Verified Capabilities - CRM records - custom objects - REST and GraphQL APIs - schema-generated API docs - webhooks - role-scoped API keys - Docker Compose self-hosting - single-workspace default with multi-workspace option ## Deployment Model Docker Compose is documented for production/self-hosting. Assumptions: Assumes clients understand both query languages and their respective strengths. Breakdown regime: Singular when query complexity leads to performance degradation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a unified API gateway that routes requests to backend services. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This framework inherits from the Service-Oriented Architecture (SOA) principles of the early 2000s, evolving into modern microservices by decoupling data models from deployment environments. The concept of role-scoped keys traces back to Role-Based Access Control (RBAC) in Unix systems. Retrocausal Genealogy: Rooted in twenty (678e4480bb5c50b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Competitors like Salesforce prioritize vendor lock-in through proprietary APIs, while Twenty aims for developer freedom but introduces open-core risks. Regulators focus on PII compliance, creating tension between innovation and privacy. Theory of Mind & Decision Maker Model: Rooted in twenty (678e4480bb5c50b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires avoiding direct database writes from external sources to prevent data corruption. Leakage vetoes include exposing raw SQL queries or enabling local code interpreters in production, which could allow arbitrary command execution. Cross-Layer Veto & Anti-Leakage Check: Rooted in twenty (678e4480bb5c50b2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

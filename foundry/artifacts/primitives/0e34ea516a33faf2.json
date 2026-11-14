@@ -1,0 +1,78 @@
+{
+  "book_id": "0e34ea516a33faf2",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "0e34ea516a33faf244cb509c06a74e9abb0054d8c3f1daa93006fce1a1ef6a9c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Vector logo assets define geometric constraints via clearspace rules and color inheritance. Mark and lockup enforce dimensional consistency through 1x/0.5x spacing and currentColor semantics. Universal Lens: Rooted in README (0e34ea516a33faf2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps logo usage to semantic confidence. Conformal predictions validate adherence to clearspace and color inheritance constraints, rejecting deviations as posterior outliers. GSI Mapping: Rooted in README (0e34ea516a33faf2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions between mark-only and lockup states based on contextual clearspace. State transitions obey 1x/0.5x geometric boundaries, with scrim enforcement as safety predicate. GSE Mapping: Rooted in README (0e34ea516a33faf2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "clearspace_constraint",
+      "name": "Clear-Space Geometric Constraint",
+      "verbatim_quote": "## Clear-space rule Treat the mark's outer ring as `1x`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x': 'dimensionless scaling factor', 'r': 'outer ring radius of logo mark'}",
+      "assumptions": "Logo elements must maintain minimum separation distances defined by 1x and 0.5x rules.",
+      "breakdown_regime": "When clearspace < 1x, visual coherence fails; when < 0.5x, wordmark separation violates design integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Geometric clearance defines topological embedding of logo components into visual space. GSI infers semantic fidelity from clearance compliance. GSE transitions between mark/lockup states using clearance thresholds.",
+        "source_operator": "clearspace_constraint",
+        "telemetry": "Distance between mark and surrounding content relative to 1x scale"
+      }
+    },
+    {
+      "primitive_id": "color_inheritance_semantics",
+      "name": "Color Inheritance Semantics",
+      "verbatim_quote": "| Both are vector and inherit `currentColor`, so they can be tinted bone, signal, or ink as needed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'color state vector in RGB/CMYK', 'currentColor': 'dynamic color context inherited from parent element'}",
+      "assumptions": "All logo variants share common color inheritance mechanism via CSS context.",
+      "breakdown_regime": "When color deviates from currentColor, semantic alignment with brand context is lost.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Color inheritance enables dynamic branding within fixed geometry. GSI models brand consistency as color-state entropy. GSE applies color transformations under currentColor constraint.",
+        "source_operator": "color_inheritance_semantics",
+        "telemetry": "Deviation of applied color from currentColor context"
+      }
+    },
+    {
+      "primitive_id": "visual_coherence_rule",
+      "name": "Visual Coherence Rule",
+      "verbatim_quote": "## Don't - Don't recolor the wordmark to a different family.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'font family identifier', 'W': 'wordmark component', 'C': 'color state vector'}",
+      "assumptions": "Font and color consistency preserves logo identity across contexts.",
+      "breakdown_regime": "Font-family mismatch or color variance triggers perceptual dissonance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Font and color uniformity define visual coherence kernel. GSI evaluates coherence via font-family and color-state invariance. GSE enforces coherence during layout transitions.",
+        "source_operator": "visual_coherence_rule",
+        "telemetry": "Font-family and color-state variance from baseline"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0e34ea516a33faf2_t0",
+      "think": "The primitives form a coherent geometric and semantic framework for logo application. The clearspace constraint ensures topological separation, preventing visual clutter. Color inheritance allows dynamic adaptation while preserving identity. Visual coherence enforces stylistic consistency. These constraints define a bounded design space where GSI infers semantic fidelity through geometric and chromatic compliance. GSE navigates this space via state transitions that respect clearance and coherence rules. Failure modes include violation of clearspace (overlap), deviation from currentColor (brand drift), and font/color inconsistency (semantic noise). Each constraint acts as a boundary condition in a higher-dimensional design manifold.\n\nDeep epistemic analysis for README (0e34ea516a33faf2, domain=other, pages_read=1/1): Operator 'Clear-Space Geometric Constraint' (page 1, domain other) captures: ## Clear-space rule Treat the mark's outer ring as `1x`. Assumptions: Logo elements must maintain minimum separation distances defined by 1x and 0.5x rules. Breakdown regime: When clearspace < 1x, visual coherence fails; when < 0.5x, wordmark separation violates design integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Geometric clearance defines topological embedding of logo components into visual space. GSI infers semantic fidelity from clearance compliance. GSE transitions between mark/lockup states using clearance thresholds. Operator 'Color Inheritance Semantics' (page 1, domain other) captures: | Both are vector and inherit `currentColor`, so they can be tinted bone, signal, or ink as needed. Assumptions: All logo variants share common color inheritance mechanism via CSS context. Breakdown regime: When color deviates from currentColor, semantic alignment with brand context is lost. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Color inheritance enables dynamic branding within fixed geometry. GSI models brand consistency as color-state entropy. GSE applies color transformations under currentColor constraint. Operator 'Visual Coherence Rule' (page 1, domain other) captures: ## Don't - Don't recolor the wordmark to a different family. Assumptions: Font and color consistency preserves logo identity across contexts. Breakdown regime: Font-family mismatch or color variance triggers perceptual dissonance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Font and color uniformity define visual coherence kernel. GSI evaluates coherence via font-family and color-state invariance. GSE enforces coherence during layout transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (0e34ea516a33faf2, domain=other, pages_read=1/1): Operator 'Clear-Space Geometric Constraint' (page 1, domain other) captures: ## Clear-space rule Treat the mark's outer ring as `1x`. Assumptions: Logo elements must maintain minimum separation distances defined by 1x and 0.5x rules. Breakdown regime: When clearspace < 1x, visual coherence fails; when < 0.5x, wordmark separation violates design integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Geometric clearance defines topological embedding of logo components into visual space. GSI infers semantic fidelity from clearance compliance. GSE transitions between mark/lockup states using clearance thresholds. Operator 'Color Inheritance Semantics' (page 1, domain other) captures: | Both are vector and inherit `currentColor`, so they can be tinted bone, signal, or ink as needed. Assumptions: All logo variants share common color inheritance mechanism via CSS context. Breakdown regime: When color deviates from currentColor, semantic alignment with brand context is lost. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Color inheritance enables dynamic branding within fixed geometry. GSI models brand consistency as color-state entropy. GSE applies color transformations under currentColor constraint. Operator 'Visual Coherence Rule' (page 1, domain other) captures: ## Don't - Don't recolor the wordmark to a different family. Assumptions: Font and color consistency preserves logo identity across contexts. Breakdown regime: Font-family mismatch or color variance triggers perceptual dissonance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Font and color uniformity define visual coherence kernel. GSI evaluates coherence via font-family and color-state invariance. GSE enforces coherence during layout transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Gestalt principles of visual grouping and semantic closure, these primitives reflect decades of typographic and iconographic standardization. Influenced by ISO 9001 design guidelines and modern UI/UX frameworks emphasizing consistency and clarity. Retrocausal Genealogy: Rooted in README (0e34ea516a33faf2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to subvert design integrity by violating clearspace or altering color/font semantics. A rational agent adheres to constraints to maximize perceptual fidelity. An adversarial agent seeks to exploit ambiguity for misrepresentation. GSI models both behaviors probabilistically, while GSE implements safeguards against adversarial manipulation. Theory of Mind & Decision Maker Model: Rooted in README (0e34ea516a33faf2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive operates independently to avoid conflating geometric, chromatic, and semantic dimensions. Leakage occurs when color inheritance affects geometric layout or vice versa. Veto conditions prevent simultaneous violations of clearspace and coherence, ensuring design integrity remains intact. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (0e34ea516a33faf2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

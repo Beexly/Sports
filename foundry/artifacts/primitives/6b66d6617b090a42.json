@@ -1,0 +1,78 @@
+{
+  "book_id": "6b66d6617b090a42",
+  "source_status": "COMPLETE",
+  "title": "p0311",
+  "file_name": "p0311.txt",
+  "sha256": "6b66d6617b090a4248947100b6b04356329f2e1e40fda33944a95f121baeb02a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of voting rights and representation in collegiate athletic governance via symmetric committee models. Universal Lens: Rooted in p0311 (6b66d6617b090a42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over institutional representation and procedural legitimacy using probabilistic logic on stakeholder participation. GSI Mapping: Rooted in p0311 (6b66d6617b090a42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in inter-university athletic committees governed by fixed and variable participant roles. GSE Mapping: Rooted in p0311 (6b66d6617b090a42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "voting_rights_structure",
+      "name": "Voting Rights Structure",
+      "verbatim_quote": "288 WALTER CAMP'S BOOK OF COLLEGE SPORTS allowed to attend the meetings of this committee and join in debate, without power to vote.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Representation authority (dimensionless)', 'V': 'Voting power (dimensionless)', 'D': 'Debate access (dimensionless)'}",
+      "assumptions": "Participants may have access to debate but not to cast votes; symmetric representation across institutions.",
+      "breakdown_regime": "When non-voting participants exceed voting quorum, leading to procedural deadlock.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a weighted voting system where certain members hold zero weight in decision-making.",
+        "source_operator": "voting_rights_structure",
+        "telemetry": "Observable participation metrics in committee meetings"
+      }
+    },
+    {
+      "primitive_id": "vacancy_filling_mechanism",
+      "name": "Vacancy Filling Mechanism",
+      "verbatim_quote": "Vacancies shall be filled by the other representatives of Yale University.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Filling mechanism (dimensionless)', 'V': 'Vacant seats (integer)', 'R': 'Representatives (integer)'}",
+      "assumptions": "Internal succession ensures continuity of representation; no external appointment allowed.",
+      "breakdown_regime": "Failure when internal consensus cannot be reached or when representative pool is exhausted.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of recursive governance structure ensuring institutional self-regulation.",
+        "source_operator": "vacancy_filling_mechanism",
+        "telemetry": "Tracking of vacancy resolution times and internal agreement rates"
+      }
+    },
+    {
+      "primitive_id": "contest_scheduling_protocol",
+      "name": "Contest Scheduling Protocol",
+      "verbatim_quote": "The annual contest shall be held on the afternoon two weeks before the last Saturday in May.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Time of contest (datetime)', 'M': 'Month of scheduling (integer)', 'W': 'Weeks before end of term (integer)'}",
+      "assumptions": "Fixed calendar alignment for all participating universities; temporal consistency enforced.",
+      "breakdown_regime": "Disruption occurs if scheduling conflicts arise due to term calendar variations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a synchronized event scheduling model in multi-agent systems.",
+        "source_operator": "contest_scheduling_protocol",
+        "telemetry": "Temporal compliance rate of scheduled contests vs. actual execution"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6b66d6617b090a42_t0",
+      "think": "The primitives reflect foundational structures in collegiate athletics governance, particularly around representation and procedural norms. The voting rights structure establishes a dual-tiered access model—wherein some members contribute to deliberation but not to final decisions. This mirrors a mathematical partitioning of influence space into active and passive domains. The vacancy filling mechanism introduces an internal recursion that maintains institutional integrity through self-referential selection. The scheduling protocol enforces temporal coherence among competing entities, akin to synchronized clocks in distributed systems. These elements together form a minimal yet robust framework for modeling institutional behavior under shared rules. Failure modes emerge at boundaries: when debate access becomes politicized, vacancies are not filled due to lack of consensus, or scheduling fails due to calendar misalignment. Each primitive contributes to a larger epistemological model of how collective action is structured through formalized procedural logic.\n\nDeep epistemic analysis for p0311 (6b66d6617b090a42, domain=other, pages_read=1/1): Operator 'Voting Rights Structure' (page 1, domain other) captures: 288 WALTER CAMP'S BOOK OF COLLEGE SPORTS allowed to attend the meetings of this committee and join in debate, without power to vote. Assumptions: Participants may have access to debate but not to cast votes; symmetric representation across institutions. Breakdown regime: When non-voting participants exceed voting quorum, leading to procedural deadlock. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a weighted voting system where certain members hold zero weight in decision-making. Operator 'Vacancy Filling Mechanism' (page 1, domain other) captures: Vacancies shall be filled by the other representatives of Yale University. Assumptions: Internal succession ensures continuity of representation; no external appointment allowed. Breakdown regime: Failure when internal consensus cannot be reached or when representative pool is exhausted. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of recursive governance structure ensuring institutional self-regulation. Operator 'Contest Scheduling Protocol' (page 1, domain other) captures: The annual contest shall be held on the afternoon two weeks before the last Saturday in May. Assumptions: Fixed calendar alignment for all participating universities; temporal consistency enforced. Breakdown regime: Disruption occurs if scheduling conflicts arise due to term calendar variations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a synchronized event scheduling model in multi-agent systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0311 (6b66d6617b090a42, domain=other, pages_read=1/1): Operator 'Voting Rights Structure' (page 1, domain other) captures: 288 WALTER CAMP'S BOOK OF COLLEGE SPORTS allowed to attend the meetings of this committee and join in debate, without power to vote. Assumptions: Participants may have access to debate but not to cast votes; symmetric representation across institutions. Breakdown regime: When non-voting participants exceed voting quorum, leading to procedural deadlock. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a weighted voting system where certain members hold zero weight in decision-making. Operator 'Vacancy Filling Mechanism' (page 1, domain other) captures: Vacancies shall be filled by the other representatives of Yale University. Assumptions: Internal succession ensures continuity of representation; no external appointment allowed. Breakdown regime: Failure when internal consensus cannot be reached or when representative pool is exhausted. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of recursive governance structure ensuring institutional self-regulation. Operator 'Contest Scheduling Protocol' (page 1, domain other) captures: The annual contest shall be held on the afternoon two weeks before the last Saturday in May. Assumptions: Fixed calendar alignment for all participating universities; temporal consistency enforced. Breakdown regime: Disruption occurs if scheduling conflicts arise due to term calendar variations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a synchronized event scheduling model in multi-agent systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in late 19th-century American collegiate athletics reform movements, particularly those led by Walter Camp and Harvard-Yale rivalry dynamics. Influenced by early institutional design principles in academic governance and sports regulation. Retrocausal Genealogy: Rooted in p0311 (6b66d6617b090a42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0311 (6b66d6617b090a42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include Yale and Harvard representatives, with Walter Camp as observer. Decision-making involves balancing procedural fairness, institutional loyalty, and competitive interests. Each agent operates within defined roles, constrained by historical precedent and evolving norms. Theory of Mind & Decision Maker Model: Rooted in p0311 (6b66d6617b090a42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when voting rights are misaligned with representation, causing veto power to shift unpredictably. Leakage occurs if procedural norms fail to constrain informal influence, undermining the kernel of formal governance. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0311 (6b66d6617b090a42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

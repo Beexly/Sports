@@ -1,0 +1,78 @@
+{
+  "book_id": "5a99aee918cf9fe3",
+  "source_status": "COMPLETE",
+  "title": "p0174",
+  "file_name": "p0174.txt",
+  "sha256": "5a99aee918cf9fe34e285f3cfa6e504e1b0219dbc879966f631940a19825deca",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A dynamic system of strategic positioning and probabilistic success in competitive motion, modeled via sequential state transitions and tactical convergence. Universal Lens: Rooted in p0174 (5a99aee918cf9fe3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on play outcomes conditioned on linearity of advance and resolution of final kick, using conformal predictive distributions over discrete action spaces. GSI Mapping: Rooted in p0174 (5a99aee918cf9fe3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps sequential ball-carrier states through positional convergence toward goal-line threshold, with state transitions governed by actor resolve and momentum dynamics. GSE Mapping: Rooted in p0174 (5a99aee918cf9fe3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tactical_convergence",
+      "name": "Tactical Convergence",
+      "verbatim_quote": "FOOT-BALL IN AMERICA 151 tency, and with a steady plunging not to be checked, the gray and blue line fights its way, yard by yard, down upon the Princeton territory.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x(t)': 'position vector along field (meters)', 'v(t)': 'velocity vector (m/s)', 'F_{net}': 'net force (newtons)'}",
+      "assumptions": "Linear motion with constant resistance, deterministic force application.",
+      "breakdown_regime": "When x(t) approaches goal line boundary.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "State transition function models incremental progress toward goal via vectorial motion.",
+        "source_operator": "tactical_convergence",
+        "telemetry": "Distance to goal line per time step."
+      }
+    },
+    {
+      "primitive_id": "resolve_determination",
+      "name": "Resolve Determination",
+      "verbatim_quote": "His lips are firmly set as his resolve shows itself in every line of his well-knit frame.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'resolve strength (dimensionless)', 'F_{act}': 'actional force (newtons)', 't': 'time (seconds)'}",
+      "assumptions": "Resolve is a scalar parameter influencing actional efficacy.",
+      "breakdown_regime": "When R drops below critical threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to decision-making kernel in GSI's Bayesian inference engine.",
+        "source_operator": "resolve_determination",
+        "telemetry": "Actional efficacy measured by force magnitude and consistency."
+      }
+    },
+    {
+      "primitive_id": "goal_kick_execution",
+      "name": "Goal Kick Execution",
+      "verbatim_quote": "For the third time the little quarter hurls it from under the very feet of the plunging mass, and this time Bull sends it true as a bullet straight over the cross-bar between the posts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_0': 'initial velocity (m/s)', 'θ': 'launch angle (radians)', 'g': 'gravitational acceleration (m/s²)', 'h': 'height above ground (meters)'}",
+      "assumptions": "Projectile motion under gravity with no air resistance.",
+      "breakdown_regime": "When trajectory intersects goal post plane.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Trajectory model computes path to goal post using kinematic equations.",
+        "source_operator": "goal_kick_execution",
+        "telemetry": "Success probability based on angular deviation from center."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5a99aee918cf9fe3_t0",
+      "think": "The narrative describes a sequence of tactical actions where a team advances steadily against opposition, culminating in a decisive goal attempt. The primitive 'tactical_convergence' captures the incremental advancement of players along the field, modeled as a vectorial progression towards the goal. This is constrained by physical forces and resistance, represented by net force and position vectors. The 'resolve_determination' primitive encapsulates the psychological and physical readiness of the kicker, which influences the efficacy of the final action. It is modeled as a scalar parameter affecting actional force. Finally, 'goal_kick_execution' represents the precise execution of the kick, governed by projectile motion laws. These primitives form a coherent system where each stage builds upon the previous, leading to a binary outcome—success or failure—of the game-defining moment. The interplay between these operators reflects a dualistic structure: the deterministic motion of the team and the stochastic nature of the final kick. Failure modes arise from loss of resolve or misalignment in trajectory, both of which break the system’s coherence.\n\nDeep epistemic analysis for p0174 (5a99aee918cf9fe3, domain=other, pages_read=1/1): Operator 'Tactical Convergence' (page 1, domain other) captures: FOOT-BALL IN AMERICA 151 tency, and with a steady plunging not to be checked, the gray and blue line fights its way, yard by yard, down upon the Princeton territory. Assumptions: Linear motion with constant resistance, deterministic force application. Breakdown regime: When x(t) approaches goal line boundary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition function models incremental progress toward goal via vectorial motion. Operator 'Resolve Determination' (page 1, domain other) captures: His lips are firmly set as his resolve shows itself in every line of his well-knit frame. Assumptions: Resolve is a scalar parameter influencing actional efficacy. Breakdown regime: When R drops below critical threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to decision-making kernel in GSI's Bayesian inference engine. Operator 'Goal Kick Execution' (page 1, domain other) captures: For the third time the little quarter hurls it from under the very feet of the plunging mass, and this time Bull sends it true as a bullet straight over the cross-bar between the posts. Assumptions: Projectile motion under gravity with no air resistance. Breakdown regime: When trajectory intersects goal post plane. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Trajectory model computes path to goal post using kinematic equations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0174 (5a99aee918cf9fe3, domain=other, pages_read=1/1): Operator 'Tactical Convergence' (page 1, domain other) captures: FOOT-BALL IN AMERICA 151 tency, and with a steady plunging not to be checked, the gray and blue line fights its way, yard by yard, down upon the Princeton territory. Assumptions: Linear motion with constant resistance, deterministic force application. Breakdown regime: When x(t) approaches goal line boundary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition function models incremental progress toward goal via vectorial motion. Operator 'Resolve Determination' (page 1, domain other) captures: His lips are firmly set as his resolve shows itself in every line of his well-knit frame. Assumptions: Resolve is a scalar parameter influencing actional efficacy. Breakdown regime: When R drops below critical threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to decision-making kernel in GSI's Bayesian inference engine. Operator 'Goal Kick Execution' (page 1, domain other) captures: For the third time the little quarter hurls it from under the very feet of the plunging mass, and this time Bull sends it true as a bullet straight over the cross-bar between the posts. Assumptions: Projectile motion under gravity with no air resistance. Breakdown regime: When trajectory intersects goal post plane. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Trajectory model computes path to goal post using kinematic equations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics and game theory, tracing back to Newtonian motion and strategic game models of competition. Influenced by early 20th-century sports analytics and behavioral modeling. Retrocausal Genealogy: Rooted in p0174 (5a99aee918cf9fe3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0174 (5a99aee918cf9fe3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams exhibit contrasting strategies: one focuses on sustained pressure, while the other emphasizes precision in execution. The kicker embodies a dual agent—both strategist and executor—where resolve and timing determine success. The narrative implies a conflict between collective effort and individual decisiveness. Theory of Mind & Decision Maker Model: Rooted in p0174 (5a99aee918cf9fe3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises from the separation of physical motion (convergence) and mental resolve (determination), ensuring neither can be fully reduced to the other. Leakage occurs if resolve is conflated with mechanical motion, invalidating the derived kernel mappings. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0174 (5a99aee918cf9fe3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

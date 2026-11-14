@@ -1,0 +1,78 @@
+{
+  "book_id": "4b4472a421425761",
+  "source_status": "COMPLETE",
+  "title": "ENGINEERING_PRINCIPLES",
+  "file_name": "ENGINEERING_PRINCIPLES.md",
+  "sha256": "4b4472a421425761ca4878e793edf1d910b304487799b1e15552c5eccb1c7518",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A probabilistic integrity framework enforcing calibrated confidence through verifiable receipt mechanisms, separating heuristic estimates from model probabilities. Universal Lens: Rooted in ENGINEERING_PRINCIPLES (4b4472a421425761), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference constrained by calibrated confidence thresholds; conformal prediction bounds ensure robust edge validation via Wilson score intervals. GSI Mapping: Rooted in ENGINEERING_PRINCIPLES (4b4472a421425761), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning grounded in state transitions validated by Merkle-digests and settlement health; probabilistic models evolve under coverage-invariant constraints. GSE Mapping: Rooted in ENGINEERING_PRINCIPLES (4b4472a421425761), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "calibrated_confidence",
+      "name": "Calibrated Confidence",
+      "verbatim_quote": "**Never claim a probability you haven't calibrated.** `confidence` is a 0–100 heuristic, not P(win).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'confidence': 'dimensionless [0, 100]', 'P(win)': 'dimensionless [0, 1]'}",
+      "assumptions": "Confidence is a calibrated heuristic, not a direct probability estimate; model probability must be independently derived.",
+      "breakdown_regime": "When confidence exceeds calibrated threshold without independent model support.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Confidence serves as a proxy for calibrated probability in GSI's Bayesian updating; used to derive posterior bounds via Wilson interval.",
+        "source_operator": "calibrated_confidence",
+        "telemetry": "Wilson 95% confidence band on beat-close rate"
+      }
+    },
+    {
+      "primitive_id": "proof_receipt_integrity",
+      "name": "Proof Receipt Integrity",
+      "verbatim_quote": "**The proof is only as strong as the injected hash.** Pure-by-injection keeps the Merkle/receipt math testable, but the *guarantee* lives in the wiring.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'hash': 'SHA256 digest', 'receipt': 'verifiable transaction log'}",
+      "assumptions": "Merkle tree integrity depends on correct hash injection; wiring ensures logical consistency of proofs.",
+      "breakdown_regime": "When injected hash does not match computed value or wiring fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Receipt integrity mirrors cryptographic commitment in GSE's state transition logic; both rely on deterministic, verifiable paths.",
+        "source_operator": "proof_receipt_integrity",
+        "telemetry": "SHA256 mismatch count in live ingestion pipeline"
+      }
+    },
+    {
+      "primitive_id": "coverage_gate_credential",
+      "name": "Coverage Gate Credibility",
+      "verbatim_quote": "**Coverage gates credibility upstream of the public gate.** A beat-close rate over <100% coverage is survivorship-biased.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'coverage': 'dimensionless [0, 1]', 'beat_close_rate': 'dimensionless [0, 1]'}",
+      "assumptions": "Coverage must exceed 100% to avoid survivorship bias; credible claims require full data inclusion.",
+      "breakdown_regime": "When beat-close rate is computed over incomplete coverage set.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Coverage gate acts as a prior constraint in GSI’s calibration process; GSE uses it to filter valid state transitions.",
+        "source_operator": "coverage_gate_credential",
+        "telemetry": "Settled picks vs total picks ratio"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4b4472a421425761_t0",
+      "think": "The core tension lies between heuristic confidence and calibrated probability. The system enforces that 'confidence' is a 0–100 heuristic, not a true probability, preventing misinterpretation as P(win). This avoids the trap of treating inferred market probabilities as calibrated ones. The receipt mechanism commits both 'confidence' and 'marketFairProb', ensuring transparency about which values are derived versus estimated. The 'fairProbability' slot remains null until an independent model provides a genuine calibration, preserving integrity. Coverage gates credibility by requiring full data inclusion to prevent survivorship bias. Settlement health acts as a leading indicator, while coverage is a lagging signal. Uncertainty is shown via Wilson 95% bands, and edges are only claimed when the lower bound exceeds 52.4%, ensuring statistical robustness. Proof integrity relies on SHA256 hashes and wiring logic, making the system verifiable at every step.\n\nDeep epistemic analysis for ENGINEERING_PRINCIPLES (4b4472a421425761, domain=other, pages_read=3/3): Operator 'Calibrated Confidence' (page 1, domain other) captures: **Never claim a probability you haven't calibrated.** `confidence` is a 0–100 heuristic, not P(win). Assumptions: Confidence is a calibrated heuristic, not a direct probability estimate; model probability must be independently derived. Breakdown regime: When confidence exceeds calibrated threshold without independent model support. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Confidence serves as a proxy for calibrated probability in GSI's Bayesian updating; used to derive posterior bounds via Wilson interval. Operator 'Proof Receipt Integrity' (page 1, domain other) captures: **The proof is only as strong as the injected hash.** Pure-by-injection keeps the Merkle/receipt math testable, but the *guarantee* lives in the wiring. Assumptions: Merkle tree integrity depends on correct hash injection; wiring ensures logical consistency of proofs. Breakdown regime: When injected hash does not match computed value or wiring fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Receipt integrity mirrors cryptographic commitment in GSE's state transition logic; both rely on deterministic, verifiable paths. Operator 'Coverage Gate Credibility' (page 1, domain other) captures: **Coverage gates credibility upstream of the public gate.** A beat-close rate over <100% coverage is survivorship-biased. Assumptions: Coverage must exceed 100% to avoid survivorship bias; credible claims require full data inclusion. Breakdown regime: When beat-close rate is computed over incomplete coverage set. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Coverage gate acts as a prior constraint in GSI’s calibration process; GSE uses it to filter valid state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ENGINEERING_PRINCIPLES (4b4472a421425761, domain=other, pages_read=3/3): Operator 'Calibrated Confidence' (page 1, domain other) captures: **Never claim a probability you haven't calibrated.** `confidence` is a 0–100 heuristic, not P(win). Assumptions: Confidence is a calibrated heuristic, not a direct probability estimate; model probability must be independently derived. Breakdown regime: When confidence exceeds calibrated threshold without independent model support. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Confidence serves as a proxy for calibrated probability in GSI's Bayesian updating; used to derive posterior bounds via Wilson interval. Operator 'Proof Receipt Integrity' (page 1, domain other) captures: **The proof is only as strong as the injected hash.** Pure-by-injection keeps the Merkle/receipt math testable, but the *guarantee* lives in the wiring. Assumptions: Merkle tree integrity depends on correct hash injection; wiring ensures logical consistency of proofs. Breakdown regime: When injected hash does not match computed value or wiring fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Receipt integrity mirrors cryptographic commitment in GSE's state transition logic; both rely on deterministic, verifiable paths. Operator 'Coverage Gate Credibility' (page 1, domain other) captures: **Coverage gates credibility upstream of the public gate.** A beat-close rate over <100% coverage is survivorship-biased. Assumptions: Coverage must exceed 100% to avoid survivorship bias; credible claims require full data inclusion. Breakdown regime: When beat-close rate is computed over incomplete coverage set. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Coverage gate acts as a prior constraint in GSI’s calibration process; GSE uses it to filter valid state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian calibration theory and cryptographic integrity principles, influenced by conformal prediction and merkle tree structures from blockchain systems. Retrocausal Genealogy: Rooted in ENGINEERING_PRINCIPLES (4b4472a421425761), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ENGINEERING_PRINCIPLES (4b4472a421425761), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to inflate confidence or obscure coverage gaps. The system counters this by enforcing explicit separation of heuristics and calibrated probabilities, and by anchoring decisions to verifiable data. Theory of Mind & Decision Maker Model: Rooted in ENGINEERING_PRINCIPLES (4b4472a421425761), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that heuristic confidence cannot substitute for calibrated probability in edge claims. Leakage is mitigated by requiring SHA256 verification and full coverage before public rendering. Cross-Layer Veto & Anti-Leakage Check: Rooted in ENGINEERING_PRINCIPLES (4b4472a421425761), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

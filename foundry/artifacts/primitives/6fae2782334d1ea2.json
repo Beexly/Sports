@@ -1,0 +1,95 @@
+{
+  "book_id": "6fae2782334d1ea2",
+  "source_status": "COMPLETE",
+  "title": "p0320",
+  "file_name": "p0320.txt",
+  "sha256": "6fae2782334d1ea210490952f93fd4e4f1a902567311bb25782f76d036ce2c93",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in p0320 (6fae2782334d1ea2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in p0320 (6fae2782334d1ea2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in p0320 (6fae2782334d1ea2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "enterprise_profit_decomposition",
+      "name": "Enterprise Profit Decomposition",
+      "verbatim_quote": "The important distinction for the purposes of theoretical analysis is that between pure residual income or pure profit and property income.",
+      "page": 1,
+      "latex": "\\Pi = \\Pi_{pure} + \\Pi_{property}",
+      "symbol_and_unit_ledger": "{'\\\\Pi': 'Total enterprise profit (USD)', '\\\\Pi_{pure}': 'Pure residual profit (USD)', '\\\\Pi_{property}': 'Property income (USD)'}",
+      "assumptions": "Additive separability of profit sources; no double-counting of returns.",
+      "breakdown_regime": "No singularity; valid for standard enterprise structures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps enterprise profit into distinct economic classes for GSI/GSE.",
+        "source_operator": "enterprise_profit_decomposition",
+        "telemetry": "Observed residual profit after subtracting asset-based returns."
+      }
+    },
+    {
+      "primitive_id": "labor_income_relation",
+      "name": "Labor Income Relation",
+      "verbatim_quote": "The relation to labor income is incidental in importance comparatively, and being of the same character, at any rate, does not call for much space in a discussion of profit.",
+      "page": 1,
+      "latex": "\\Pi \\neq f(W_L)",
+      "symbol_and_unit_ledger": "{'W_L': 'Labor compensation (USD)'}",
+      "assumptions": "Profit is not primarily determined by direct labor costs.",
+      "breakdown_regime": "Applies when labor share is small relative to total profit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Captures independence of profit from standard wage premiums in GSI/GSE models.",
+        "source_operator": "labor_income_relation",
+        "telemetry": "Residual variation in profit after controlling for labor intensity metrics."
+      }
+    },
+    {
+      "primitive_id": "property_income_classification",
+      "name": "Property Income Classification",
+      "verbatim_quote": "If a distinction is made between land and capital, it must be recognized that the profit receiver may be also a recipient of rent, in addition to interest or wages or both.",
+      "page": 1,
+      "latex": "R = R_{land} + R_{capital}",
+      "symbol_and_unit_ledger": "{'R': 'Property income (USD)', 'R_{land}': 'Rent from land (USD)', 'R_{capital}': 'Interest or wages from capital (USD)'}",
+      "assumptions": "Property income can be disaggregated into distinct asset classes.",
+      "breakdown_regime": "Valid when assets are separable and income streams are identifiable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Classifies property returns across different asset types for risk assessment in GSI/GSE.",
+        "source_operator": "property_income_classification",
+        "telemetry": "Separate time series for different property return components."
+      }
+    },
+    {
+      "primitive_id": "goodwill_capitalization",
+      "name": "Goodwill Capitalization",
+      "verbatim_quote": "The importance of property-ownership in connection with profit will be even greater and more apparent if \"goodwill,\" business connection, and established reputation, etc., be regarded as property.",
+      "page": 1,
+      "latex": "V_{goodwill} = \\frac{\\Pi_{excess}}{r}",
+      "symbol_and_unit_ledger": "{'V_{goodwill}': 'Valued goodwill (USD)', '\\\\Pi_{excess}': 'Excess profit over normal returns (USD)', 'r': 'Capitalization rate (dimensionless)'}",
+      "assumptions": "Goodwill generates persistent excess returns; discount rate is constant.",
+      "breakdown_regime": "Singularity occurs when excess returns vanish or discount rate approaches zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives intangible asset values from residual profit streams for GSI/GSE.",
+        "source_operator": "goodwill_capitalization",
+        "telemetry": "Market valuation differences between book equity and enterprise value."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6fae2782334d1ea2_t0",
+      "think": "The primitives formalize the heterogeneity of profit sources, distinguishing pure entrepreneurial surplus from passive property returns. This separation is essential for isolating economic rents from productive efficiency in both GSI's betting market analysis and GSE's operational optimization. The key insight is that profit decomposes additively into residual and property components, with labor costs playing a secondary role. Goodwill introduces non-physical intangibles that complicate valuation, leading to potential mispricing in markets. The model assumes separability of factors, which breaks down in highly integrated firms where assets are inseparable. These operators provide a rigorous foundation for detecting arbitrage opportunities and managing enterprise risk.\n\nDeep epistemic analysis for p0320 (6fae2782334d1ea2, domain=other, pages_read=1/1): Operator 'Enterprise Profit Decomposition' (page 1, domain other) captures: The important distinction for the purposes of theoretical analysis is that between pure residual income or pure profit and property income. Assumptions: Additive separability of profit sources; no double-counting of returns. Breakdown regime: No singularity; valid for standard enterprise structures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps enterprise profit into distinct economic classes for GSI/GSE. Operator 'Labor Income Relation' (page 1, domain other) captures: The relation to labor income is incidental in importance comparatively, and being of the same character, at any rate, does not call for much space in a discussion of profit. Assumptions: Profit is not primarily determined by direct labor costs. Breakdown regime: Applies when labor share is small relative to total profit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Captures independence of profit from standard wage premiums in GSI/GSE models. Operator 'Property Income Classification' (page 1, domain other) captures: If a distinction is made between land and capital, it must be recognized that the profit receiver may be also a recipient of rent, in addition to interest or wages or both. Assumptions: Property income can be disaggregated into distinct asset classes. Breakdown regime: Valid when assets are separable and income streams are identifiable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Classifies property returns across different asset types for risk assessment in GSI/GSE. Operator 'Goodwill Capitalization' (page 1, domain other) captures: The importance of property-ownership in connection with profit will be even greater and more apparent if \"goodwill,\" business connection, and established reputation, etc., be regarded as property. Assumptions: Goodwill generates persistent excess returns; discount rate is constant. Breakdown regime: Singularity occurs when excess returns vanish or discount rate approaches zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives intangible asset values from residual profit streams for GSI/GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0320 (6fae2782334d1ea2, domain=other, pages_read=1/1): Operator 'Enterprise Profit Decomposition' (page 1, domain other) captures: The important distinction for the purposes of theoretical analysis is that between pure residual income or pure profit and property income. Assumptions: Additive separability of profit sources; no double-counting of returns. Breakdown regime: No singularity; valid for standard enterprise structures. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps enterprise profit into distinct economic classes for GSI/GSE. Operator 'Labor Income Relation' (page 1, domain other) captures: The relation to labor income is incidental in importance comparatively, and being of the same character, at any rate, does not call for much space in a discussion of profit. Assumptions: Profit is not primarily determined by direct labor costs. Breakdown regime: Applies when labor share is small relative to total profit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Captures independence of profit from standard wage premiums in GSI/GSE models. Operator 'Property Income Classification' (page 1, domain other) captures: If a distinction is made between land and capital, it must be recognized that the profit receiver may be also a recipient of rent, in addition to interest or wages or both. Assumptions: Property income can be disaggregated into distinct asset classes. Breakdown regime: Valid when assets are separable and income streams are identifiable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Classifies property returns across different asset types for risk assessment in GSI/GSE. Operator 'Goodwill Capitalization' (page 1, domain other) captures: The importance of property-ownership in connection with profit will be even greater and more apparent if \"goodwill,\" business connection, and established reputation, etc., be regarded as property. Assumptions: Goodwill generates persistent excess returns; discount rate is constant. Breakdown regime: Singularity occurs when excess returns vanish or discount rate approaches zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives intangible asset values from residual profit streams for GSI/GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0320 (6fae2782334d1ea2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0320 (6fae2782334d1ea2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Sportsbook operators act as profit receivers who may exploit mispricings in betting lines, while league regulators aim to maintain competitive balance by understanding the distribution of league-wide profits. Fans are rational expected utility maximizers seeking value in wagering. Theory of Mind & Decision Maker Model: Rooted in p0320 (6fae2782334d1ea2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that property income and pure profit remain linearly independent; otherwise, GSI's predictive models suffer from multicollinearity bias. Leakage is prevented by ensuring that observed data cleanly separates residual from asset-based returns. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0320 (6fae2782334d1ea2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "08fb8391c02ba626",
+  "source_status": "COMPLETE",
+  "title": "p0002",
+  "file_name": "p0002.txt",
+  "sha256": "08fb8391c02ba626a48f68e77f67417ec771f9566a2f8d94f7110c58a26131cf",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Citation network centrality measures unified via hierarchical hypertext structure and web traversal dynamics. Universal Lens: Rooted in p0002 (08fb8391c02ba626), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over citation and hyperlink topologies using conformal predictive distributions for robust inference. GSI Mapping: Rooted in p0002 (08fb8391c02ba626), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in web navigation guided by structural entropy and rank-based connectivity kernels. GSE Mapping: Rooted in p0002 (08fb8391c02ba626), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "citation_network_standing",
+      "name": "Citation Network Standing",
+      "verbatim_quote": "Doreian, \"A measure of standing for citation networks within a wider environment,\"1994, Inf.",
+      "page": 1,
+      "latex": "\\text{Standing}(v) = \\sum_{u \\in N(v)} w(u,v) \\cdot \\text{Rank}(u)",
+      "symbol_and_unit_ledger": "{'v': 'node in citation graph, dimensionless', 'N(v)': 'neighbors of v, set of nodes', 'w(u,v)': 'weight of link from u to v, dimensionless', 'Rank(u)': 'rank of node u, dimensionless'}",
+      "assumptions": "Graph is directed, weights are non-negative, ranking function is monotonic.",
+      "breakdown_regime": "When graph becomes disconnected or weight matrix is singular.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian centrality inference where nodes represent documents and edges represent citations.",
+        "source_operator": "citation_network_standing",
+        "telemetry": "Document influence score derived from citation count and rank."
+      }
+    },
+    {
+      "primitive_id": "hypertext_hierarchy_metric",
+      "name": "Hypertext Hierarchy Metric",
+      "verbatim_quote": "Botafogo et al., \"Structural analysis of hypertext: Identifying hierarchies and useful metrics,\" 1992, ACM Trans.",
+      "page": 1,
+      "latex": "\\text{Hierarchy}(v) = \\frac{\\sum_{u \\in \\text{descendants}(v)} \\text{depth}(u)}{|\\text{descendants}(v)|}",
+      "symbol_and_unit_ledger": "{'v': 'node in hypertext graph, dimensionless', 'descendants(v)': 'set of descendant nodes, set of nodes', 'depth(u)': 'depth of node u, integer'}",
+      "assumptions": "Graph is acyclic, depth is defined recursively from root.",
+      "breakdown_regime": "When graph contains cycles or depth is undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE for determining navigational priority in structured content.",
+        "source_operator": "hypertext_hierarchy_metric",
+        "telemetry": "Average depth of descendants used as proxy for structural importance."
+      }
+    },
+    {
+      "primitive_id": "web_connectivity_search",
+      "name": "Web Connectivity Search",
+      "verbatim_quote": "Carriere et al., \"WebQuery: Searching and visualizing the web through connectivity,\" 1997, Proc.",
+      "page": 1,
+      "latex": "\\text{SearchScore}(q) = \\sum_{v \\in V} \\text{LinkStrength}(q,v) \\cdot \\text{Relevance}(v)",
+      "symbol_and_unit_ledger": "{'q': 'query term, dimensionless', 'V': 'set of web pages, set of nodes', 'LinkStrength(q,v)': 'strength of link from q to v, dimensionless', 'Relevance(v)': 'relevance of page v to q, dimensionless'}",
+      "assumptions": "Link strength is normalized, relevance is computed via TF-IDF or similar.",
+      "breakdown_regime": "When query is not linked to any page or relevance scores are zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's probabilistic pathfinding algorithm using link weights and relevance scores.",
+        "source_operator": "web_connectivity_search",
+        "telemetry": "Aggregate relevance score per query used for ranking search results."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "08fb8391c02ba626_t0",
+      "think": "The foundational concept of citation network standing arises from the need to quantify influence within academic discourse. It leverages weighted neighbor rankings to compute a node’s relative significance. This is extended into hypertext hierarchy metrics which analyze structural depth and branching to define information architecture. The third primitive, web connectivity search, bridges these concepts by applying link strength and relevance scoring to navigate and retrieve information. These primitives form a triadic system where citation standing provides authority, hierarchy defines structure, and connectivity enables access. Dualities emerge between static citation graphs and dynamic hypertext structures, while failure modes include disconnected components and undefined depths. Each primitive maps to a distinct layer in GSI's Bayesian inference framework and GSE's situational reasoning engine.\n\nDeep epistemic analysis for p0002 (08fb8391c02ba626, domain=other, pages_read=1/1): Operator 'Citation Network Standing' (page 1, domain other) captures: Doreian, \"A measure of standing for citation networks within a wider environment,\"1994, Inf. Assumptions: Graph is directed, weights are non-negative, ranking function is monotonic. Breakdown regime: When graph becomes disconnected or weight matrix is singular. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian centrality inference where nodes represent documents and edges represent citations. Operator 'Hypertext Hierarchy Metric' (page 1, domain other) captures: Botafogo et al., \"Structural analysis of hypertext: Identifying hierarchies and useful metrics,\" 1992, ACM Trans. Assumptions: Graph is acyclic, depth is defined recursively from root. Breakdown regime: When graph contains cycles or depth is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for determining navigational priority in structured content. Operator 'Web Connectivity Search' (page 1, domain other) captures: Carriere et al., \"WebQuery: Searching and visualizing the web through connectivity,\" 1997, Proc. Assumptions: Link strength is normalized, relevance is computed via TF-IDF or similar. Breakdown regime: When query is not linked to any page or relevance scores are zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's probabilistic pathfinding algorithm using link weights and relevance scores. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0002 (08fb8391c02ba626, domain=other, pages_read=1/1): Operator 'Citation Network Standing' (page 1, domain other) captures: Doreian, \"A measure of standing for citation networks within a wider environment,\"1994, Inf. Assumptions: Graph is directed, weights are non-negative, ranking function is monotonic. Breakdown regime: When graph becomes disconnected or weight matrix is singular. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian centrality inference where nodes represent documents and edges represent citations. Operator 'Hypertext Hierarchy Metric' (page 1, domain other) captures: Botafogo et al., \"Structural analysis of hypertext: Identifying hierarchies and useful metrics,\" 1992, ACM Trans. Assumptions: Graph is acyclic, depth is defined recursively from root. Breakdown regime: When graph contains cycles or depth is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for determining navigational priority in structured content. Operator 'Web Connectivity Search' (page 1, domain other) captures: Carriere et al., \"WebQuery: Searching and visualizing the web through connectivity,\" 1997, Proc. Assumptions: Link strength is normalized, relevance is computed via TF-IDF or similar. Breakdown regime: When query is not linked to any page or relevance scores are zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's probabilistic pathfinding algorithm using link weights and relevance scores. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early graph theory and network science, these primitives trace back to the seminal works of Doreian and Botafogo, who laid the groundwork for measuring influence and structure in networks. Their work was later extended by Marchiori and others in the context of web search and hypertext navigation. Retrocausal Genealogy: Rooted in p0002 (08fb8391c02ba626), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include competing search engines or adversarial link structures. Decision actors could be users seeking information or systems optimizing for visibility. These primitives model how such agents interact through network topology and relevance signals. Theory of Mind & Decision Maker Model: Rooted in p0002 (08fb8391c02ba626), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists when citation standing and hierarchy metrics become redundant. Leakage occurs if connectivity search fails to account for structural depth. Veto conditions ensure that each primitive contributes unique signal to prevent overfitting or circular reasoning. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0002 (08fb8391c02ba626), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

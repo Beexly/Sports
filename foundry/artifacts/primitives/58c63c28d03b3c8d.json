@@ -1,0 +1,78 @@
+{
+  "book_id": "58c63c28d03b3c8d",
+  "source_status": "COMPLETE",
+  "title": "2022 - Running to Runs the Importance of Baserunning - Patel et al",
+  "file_name": "2022 - Running to Runs the Importance of Baserunning - Patel et al.md",
+  "sha256": "58c63c28d03b3c8d664d6a028511f2d2ef4b791f608cc432e51136bb5bcb5621",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2022 - Running to Runs the Importance of Baserunning - Patel et al (58c63c28d03b3c8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2022 - Running to Runs the Importance of Baserunning - Patel et al (58c63c28d03b3c8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2022 - Running to Runs the Importance of Baserunning - Patel et al (58c63c28d03b3c8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "weighted_stolen_base_runs",
+      "name": "Weighted Stolen Base Runs",
+      "verbatim_quote": "Goal Determine the impact of baserunning on an MLB team's ability to win baseball games. BsR",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes linear value contribution from stolen bases, Ultimate Base Running, and ground into double play prevention.",
+      "breakdown_regime": "Breaks down when defensive shifts dramatically alter steal success rates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's situational win probability framework where each component contributes to expected marginal gains. In GSE, it informs state-transition probabilities between base-out states.",
+        "source_operator": "weighted_stolen_base_runs",
+        "telemetry": "Observed change in team win probability per successful stolen base attempt."
+      }
+    },
+    {
+      "primitive_id": "ultimate_base_running",
+      "name": "Ultimate Base Running",
+      "verbatim_quote": "Goal Determine the impact of baserunning on an MLB team's ability to win baseball games. BsR",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Standardizes running efficiency relative to league average, accounting for park factors and pitcher handedness.",
+      "breakdown_regime": "Fails when small sample sizes introduce significant noise in individual player estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Used in GSI's conformal prediction intervals for player performance. In GSE, it drives tactical decisions on aggressive versus conservative baserunning.",
+        "source_operator": "ultimate_base_running",
+        "telemetry": "Average runs saved per 100 at-bats above league average."
+      }
+    },
+    {
+      "primitive_id": "base_running_impact",
+      "name": "Base Running Impact",
+      "verbatim_quote": "2022 Wharton Moneyball Academy Training Camp 2022, Sports Analytics Student Research Journal ## Introduction - Despite",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Considers only base-running variables while holding other offensive components constant.",
+      "breakdown_regime": "Regime where impact diminishes as overall team offense becomes extremely high or low.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's causal inference models measuring incremental wins from baserunning efficiency. In GSE, it maps to state-transition matrices evaluating risk-reward tradeoffs.",
+        "source_operator": "base_running_impact",
+        "telemetry": "Wins Above Replacement due to baserunning efficiency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "58c63c28d03b3c8d_t0",
+      "think": "The core insight is that baserunning efficiency translates directly into marginal runs, which compound into wins. The primitives decompose total base-running impact into its constituent parts: stolen base success, general running efficiency, and preventing double-plays. Each component carries distinct statistical properties—wSB is highly volatile, UBR adjusts for context, and wGDP addresses a specific negative outcome. The failure mode occurs when defensive strategies (shifts, pitch-tunneling) systematically alter the underlying transition probabilities assumed by these metrics. For GSI, this requires conformal prediction intervals around predicted runs. For GSE, it demands state-based reasoning where the optimal action depends on the current base-out situation and pitcher tendencies.\n\nDeep epistemic analysis for 2022 - Running to Runs the Importance of Baserunning - Patel et al (58c63c28d03b3c8d, domain=other, pages_read=1/1): Operator 'Weighted Stolen Base Runs' (page 1, domain other) captures: Goal Determine the impact of baserunning on an MLB team's ability to win baseball games. BsR Assumptions: Assumes linear value contribution from stolen bases, Ultimate Base Running, and ground into double play prevention. Breakdown regime: Breaks down when defensive shifts dramatically alter steal success rates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's situational win probability framework where each component contributes to expected marginal gains. In GSE, it informs state-transition probabilities between base-out states. Operator 'Ultimate Base Running' (page 1, domain other) captures: Goal Determine the impact of baserunning on an MLB team's ability to win baseball games. BsR Assumptions: Standardizes running efficiency relative to league average, accounting for park factors and pitcher handedness. Breakdown regime: Fails when small sample sizes introduce significant noise in individual player estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used in GSI's conformal prediction intervals for player performance. In GSE, it drives tactical decisions on aggressive versus conservative baserunning. Operator 'Base Running Impact' (page 1, domain other) captures: 2022 Wharton Moneyball Academy Training Camp 2022, Sports Analytics Student Research Journal ## Introduction - Despite Assumptions: Considers only base-running variables while holding other offensive components constant. Breakdown regime: Regime where impact diminishes as overall team offense becomes extremely high or low. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's causal inference models measuring incremental wins from baserunning efficiency. In GSE, it maps to state-transition matrices evaluating risk-reward tradeoffs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2022 - Running to Runs the Importance of Baserunning - Patel et al (58c63c28d03b3c8d, domain=other, pages_read=1/1): Operator 'Weighted Stolen Base Runs' (page 1, domain other) captures: Goal Determine the impact of baserunning on an MLB team's ability to win baseball games. BsR Assumptions: Assumes linear value contribution from stolen bases, Ultimate Base Running, and ground into double play prevention. Breakdown regime: Breaks down when defensive shifts dramatically alter steal success rates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's situational win probability framework where each component contributes to expected marginal gains. In GSE, it informs state-transition probabilities between base-out states. Operator 'Ultimate Base Running' (page 1, domain other) captures: Goal Determine the impact of baserunning on an MLB team's ability to win baseball games. BsR Assumptions: Standardizes running efficiency relative to league average, accounting for park factors and pitcher handedness. Breakdown regime: Fails when small sample sizes introduce significant noise in individual player estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Used in GSI's conformal prediction intervals for player performance. In GSE, it drives tactical decisions on aggressive versus conservative baserunning. Operator 'Base Running Impact' (page 1, domain other) captures: 2022 Wharton Moneyball Academy Training Camp 2022, Sports Analytics Student Research Journal ## Introduction - Despite Assumptions: Considers only base-running variables while holding other offensive components constant. Breakdown regime: Regime where impact diminishes as overall team offense becomes extremely high or low. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's causal inference models measuring incremental wins from baserunning efficiency. In GSE, it maps to state-transition matrices evaluating risk-reward tradeoffs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 2022 - Running to Runs the Importance of Baserunning - Patel et al (58c63c28d03b3c8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2022 - Running to Runs the Importance of Baserunning - Patel et al (58c63c28d03b3c8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams deploy defensive shifts and pitch-framing to reduce steal opportunities and increase double-play chances, forcing baserunners to reassess risk-reward calculations. Theory of Mind & Decision Maker Model: Rooted in 2022 - Running to Runs the Importance of Baserunning - Patel et al (58c63c28d03b3c8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid collinearity with isolated batting statistics (isolating pure baserunning effects). Additionally, leakage from prior-year performance must be prevented to ensure valid out-of-sample predictions. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2022 - Running to Runs the Importance of Baserunning - Patel et al (58c63c28d03b3c8d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

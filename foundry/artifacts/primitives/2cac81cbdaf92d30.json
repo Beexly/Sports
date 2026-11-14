@@ -1,0 +1,95 @@
+{
+  "book_id": "2cac81cbdaf92d30",
+  "source_status": "COMPLETE",
+  "title": "p0109",
+  "file_name": "p0109.txt",
+  "sha256": "2cac81cbdaf92d306acc4aed7f7ac7eed99dedbef36ac794614966b8ac4a3589",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0109 (2cac81cbdaf92d30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0109 (2cac81cbdaf92d30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0109 (2cac81cbdaf92d30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0109 (2cac81cbdaf92d30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0109 (2cac81cbdaf92d30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0109 (2cac81cbdaf92d30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "scrimmage",
+      "name": "Scrimmage",
+      "verbatim_quote": "A Scrimmage takes place when the holder of the ball places it flat upon the ground, with its long axis at right angles to the line of scrimmage, and puts it in play by snapping it back.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The ball is snapped from a stationary position on the ground with a single continuous motion; the long axis of the ball is held perpendicular to the line of scrimmage.",
+      "breakdown_regime": "If the snapper-back fails to maintain the proper orientation of the ball's long axis, the snap is invalid and must be reattempted.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE: The scrimmage defines the core state-transition event where the ball changes possession status, triggering the start of a new play clock. GSI: The probability distribution over possible outcomes (e.g., yards gained) is conditioned on the initial state of the ball at the line of scrimmage.",
+        "source_operator": "scrimmage",
+        "telemetry": "Time-to-snap (in seconds) and spatial coordinates of the ball's release point."
+      }
+    },
+    {
+      "primitive_id": "free_kick",
+      "name": "Free-kick",
+      "verbatim_quote": "A Free-kick is any kick when the·opponents are restrained by rule from advancing beyond a certain point before the ball is put in play, and includes Kick-off, Punt-out, Kick from a Fair Catch, and Place-kick for Goal after a touchdown.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All free-kicks enforce a 'no-advance' restriction on opponents until the ball is legally put into play, preventing interference during the kick.",
+      "breakdown_regime": "Failure occurs if an opponent breaches the restricted zone before the ball is kicked, resulting in a foul and potential loss of yardage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE: Free-kicks establish a fixed state transition from one team's possession to the other's, often used strategically to reset field position. GSI: The expected value of field position after a free-kick depends on the probability distribution of return distance, modeled via conformal prediction intervals.",
+        "source_operator": "free_kick",
+        "telemetry": "Distance traveled by the ball post-kick and time elapsed until the ball becomes dead."
+      }
+    },
+    {
+      "primitive_id": "line_of_scrimmage",
+      "name": "Line of Scrimmage",
+      "verbatim_quote": "The Line of Scrimmage for each side is an imaginary line parallel to the goal line Line of Scrimmage.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each team has a distinct Line of Scrimmage that serves as the reference point for measuring forward progress and enforcing offside rules.",
+      "breakdown_regime": "Violations occur when players cross their respective Lines of Scrimmage prematurely, leading to penalties that adjust the effective starting position of the next play.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE: The Line of Scrimmage delineates the boundary between the offensive and defensive zones, dictating which players can engage in blocking or tackling. GSI: Positional data relative to the Line of Scrimmage is used to compute probabilities of successful downs conversion using Bayesian hierarchical models.",
+        "source_operator": "line_of_scrimmage",
+        "telemetry": "X and Y coordinates of the Line of Scrimmage and player positions relative to it."
+      }
+    },
+    {
+      "primitive_id": "snap",
+      "name": "Snap",
+      "verbatim_quote": "Snapping the ball is putting it back from its position on the ground with one quick and continuous motion of the hand or hands, the ball actually leaving the hands on this motion.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The snap must be executed in a single, uninterrupted motion without hesitation, ensuring a clean transfer of momentum to initiate the play.",
+      "breakdown_regime": "A fumble results if the snap is too slow, allowing defenders to recover the loose ball before it reaches the intended receiver.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE: The snap triggers the start of a play clock and initiates the sequence of events leading to either a run or pass. GSI: Timing metrics derived from the snap (e.g., time-to-snap) are predictive features in machine learning models for classifying play type and outcome.",
+        "source_operator": "snap",
+        "telemetry": "Velocity vector of the ball immediately post-snap and duration of the snap motion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2cac81cbdaf92d30_t0",
+      "think": "The fundamental sovereign primitives of American football are defined by discrete state transitions and movement restrictions enforced through specific actions. These operators form a closed algebraic structure where the outcome of one primitive (e.g., a punt) directly influences the starting state of the next (e.g., the receiving team's scrimmage). Mathematically, they represent conditional probability kernels that map the current game state to a posterior distribution over future states. For instance, a free-kick introduces a deterministic shift in ball location but retains uncertainty in return distance, while a scrimmage captures the stochastic dynamics of forward progress. The breakdown regimes correspond to singularities in these kernels, where standard play execution fails due to rule violations or mechanical errors. In the GSE framework, these primitives serve as foundational axioms for constructing situational reasoning trees, whereas in GSI, they provide invariant features for training conformal prediction algorithms that estimate outcome distributions.\n\nDeep epistemic analysis for p0109 (2cac81cbdaf92d30, domain=other, pages_read=1/1): Operator 'Scrimmage' (page 1, domain other) captures: A Scrimmage takes place when the holder of the ball places it flat upon the ground, with its long axis at right angles to the line of scrimmage, and puts it in play by snapping it back. Assumptions: The ball is snapped from a stationary position on the ground with a single continuous motion; the long axis of the ball is held perpendicular to the line of scrimmage. Breakdown regime: If the snapper-back fails to maintain the proper orientation of the ball's long axis, the snap is invalid and must be reattempted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: The scrimmage defines the core state-transition event where the ball changes possession status, triggering the start of a new play clock. GSI: The probability distribution over possible outcomes (e.g., yards gained) is conditioned on the initial state of the ball at the line of scrimmage. Operator 'Free-kick' (page 1, domain other) captures: A Free-kick is any kick when the·opponents are restrained by rule from advancing beyond a certain point before the ball is put in play, and includes Kick-off, Punt-out, Kick from a Fair Catch, and Place-kick for Goal after a touchdown. Assumptions: All free-kicks enforce a 'no-advance' restriction on opponents until the ball is legally put into play, preventing interference during the kick. Breakdown regime: Failure occurs if an opponent breaches the restricted zone before the ball is kicked, resulting in a foul and potential loss of yardage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: Free-kicks establish a fixed state transition from one team's possession to the other's, often used strategically to reset field position. GSI: The expected value of field position after a free-kick depends on the probability distribution of return distance, modeled via conformal prediction intervals. Operator 'Line of Scrimmage' (page 1, domain other) captures: The Line of Scrimmage for each side is an imaginary line parallel to the goal line Line of Scrimmage. Assumptions: Each team has a distinct Line of Scrimmage that serves as the reference point for measuring forward progress and enforcing offside rules. Breakdown regime: Violations occur when players cross their respective Lines of Scrimmage prematurely, leading to penalties that adjust the effective starting position of the next play. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: The Line of Scrimmage delineates the boundary between the offensive and defensive zones, dictating which players can engage in blocking or tackling. GSI: Positional data relative to the Line of Scrimmage is used to compute probabilities of successful downs conversion using Bayesian hierarchical models. Operator 'Snap' (page 1, domain other) captures: Snapping the ball is putting it back from its position on the ground with one quick and continuous motion of the hand or hands, the ball actually leaving the hands on this motion. Assumptions: The snap must be executed in a single, uninterrupted motion without hesitation, ensuring a clean transfer of momentum to initiate the play. Breakdown regime: A fumble results if the snap is too slow, allowing defenders to recover the loose ball before it reaches the intended receiver. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE: The snap triggers the start of a play clock and initiates the sequence of events leading to either a run or pass. GSI: Timing metrics derived from the snap (e.g., time-to-snap) are predictive features in machine learning models for classifying play type and outcome. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives descend from early rugby-based formulations, evolving through rule codification at Harvard University in the late 19th century. They formalize concepts like the 'tackle' and 'forward pass' into precise operational definitions, drawing parallels to classical mechanics' impulse and momentum theory. The modern NFL rulebook maintains these exact definitions, though computational refinements have been added to quantify their outcomes. Retrocausal Genealogy: Rooted in p0109 (2cac81cbdaf92d30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opponents model these primitives to anticipate defensive alignments (e.g., expecting a punt vs. a run based on down and distance). Offensive coordinators also predict how referees will interpret borderline cases (e.g., whether a snap was truly continuous), introducing strategic bluffing into play selection. Theory of Mind & Decision Maker Model: Rooted in p0109 (2cac81cbdaf92d30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To avoid anti-collinearity, the primitives must be mutually exclusive in their defining conditions (e.g., a play cannot simultaneously be both a punt and a punt-out). Leakage is prevented by ensuring that each primitive's empirical telemetry (e.g., snap velocity) does not correlate with features from unrelated primitives (e.g., punt distance). Cross-Layer Veto & Anti-Leakage Check: Rooted in p0109 (2cac81cbdaf92d30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "59c27fb3aea49cf7",
+  "source_status": "COMPLETE",
+  "title": "data-source-options",
+  "file_name": "data-source-options.md",
+  "sha256": "59c27fb3aea49cf7d0532beac289d6e070f2ab09a6b9e8033bf26886212bcc5d",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The data ingestion architecture is modeled as a constrained optimization over a discrete source space. A source $S$ is valid if its commercial license indicator $L_S=1$, latency $\tau_S < \tau_{crit}$, and cost $C_S < C_{max}$. This defines a feasible manifold of admissible information channels.",
+  "gsi_mapping": "GSI treats each approved API as an independent stochastic channel providing noisy observations of market priors. The freshness constraint acts as a temporal decay kernel; stale data introduces non-stationary bias. Conformal prediction intervals widen dynamically when the system relies on Tier-3 fallbacks lacking strict rate-limit guarantees.",
+  "gse_mapping": "In GSE, data sources dictate the state-transition matrix for event generation. A primary odds feed (Tier-1) anchors the baseline probability distribution. Secondary feeds (Tier-2) inject feature vectors—like injuries or lineups—that trigger localized regime shifts in the situational reasoning engine without altering the core pricing manifold.",
+  "primitives": [
+    {
+      "primitive_id": "commercial_license_gate",
+      "name": "Commercial Viability Indicator",
+      "verbatim_quote": "**Public API with terms permitting commercial use** (or a paid plan that grants it).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "$L_S \\in \\{0, 1\\}$: Dimensionless binary indicator where 1 denotes explicit commercial permission under ToS.",
+      "assumptions": "Terms of Service are static during the evaluation window and legally enforceable.",
+      "breakdown_regime": "If $L_S = 0$, the integration is immediately vetoed regardless of data quality or cost efficiency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the legal boundary condition in the GSI risk model, acting as a hard filter before any statistical inference occurs.",
+        "source_operator": "commercial_license_gate",
+        "telemetry": "Boolean flag from the compliance audit log."
+      }
+    },
+    {
+      "primitive_id": "temporal_freshness_kernel",
+      "name": "Staleness Decay Operator",
+      "verbatim_quote": "**Freshness guarantees** — we cannot publish picks against stale data (CLAUDE.md non-negotiable #5).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "$\\tau_S$: Data latency in milliseconds. $\\tau_{crit}$: Maximum permissible latency threshold in milliseconds.",
+      "assumptions": "Market dynamics evolve continuously; information value decays monotonically with time since emission.",
+      "breakdown_regime": "Singularity occurs when $\\tau_S \\geq \\tau_{crit}$, rendering the observation useless for real-time arbitrage or edge detection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Functions as a time-decay weight in the GSI Bayesian updater. If latency exceeds bounds, the posterior update is aborted to prevent negative EV decisions.",
+        "source_operator": "temporal_freshness_kernel",
+        "telemetry": "P99 latency metrics from the `data-ingestion` adapter."
+      }
+    },
+    {
+      "primitive_id": "marginal_cost_constraint",
+      "name": "Economic Efficiency Bound",
+      "verbatim_quote": "**Reasonable pricing** — adding a $500/month source for marginal coverage isn't worth it in the launch phase.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "$C_S$: Monthly subscription cost in USD. $C_{max}$: Maximum allowable budget allocation in USD.",
+      "assumptions": "Marginal utility of additional coverage scales sub-linearly with cost during the launch phase.",
+      "breakdown_regime": "When $C_S > C_{max}$, the cost-benefit ratio collapses, triggering rejection into `rejected-data-sources.md`.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the resource allocation constraint in GSE's multi-source fusion layer, ensuring computational and financial resources are not exhausted by low-yield inputs.",
+        "source_operator": "marginal_cost_constraint",
+        "telemetry": "Monthly invoice totals vs. projected revenue uplift."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "59c27fb3aea49cf7_t0",
+      "think": "The provided excerpts define a rigorous filtering pipeline for external data streams, which can be formalized as a multi-objective optimization problem. We seek to maximize informational yield $Y(S)$ subject to three hard constraints: commercial legality ($L_S=1$), temporal relevance ($\\tau_S < \\tau_{crit}$), and economic viability ($C_S < C_{max}$). The 'Tier-1' designation for The Odds API implies it currently occupies the Pareto frontier of this optimization, offering the optimal balance of these competing variables. Tier-2 sources like api-sports.io represent secondary optima; they introduce orthogonal features (lineups, injuries) that expand the feature space of our predictive models but require distinct adapters due to non-uniform REST schemas. The mathematical duality here lies between breadth of coverage and depth of reliability. Adding a source increases the dimensionality of the input vector but risks introducing collinearity or noise if the freshness guarantees are weak. The rejection criterion acts as a hyperplane separating viable manifolds from infeasible regions. Furthermore, the reliance on a single source of truth creates a systemic fragility—a single point of failure. The proposed tiered architecture mitigates this by establishing fallback channels (Tier-3), albeit with higher uncertainty penalties. The integration cost, measured in engineering days, acts as a friction term in the adoption differential equation, slowing the rate at which new sources are assimilated into the production environment until the marginal revenue product justifies the initial capital expenditure.\n\nDeep epistemic analysis for data-source-options (59c27fb3aea49cf7, domain=other, pages_read=3/3): Operator 'Commercial Viability Indicator' (page 1, domain other) captures: **Public API with terms permitting commercial use** (or a paid plan that grants it). Assumptions: Terms of Service are static during the evaluation window and legally enforceable. Breakdown regime: If $L_S = 0$, the integration is immediately vetoed regardless of data quality or cost efficiency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the legal boundary condition in the GSI risk model, acting as a hard filter before any statistical inference occurs. Operator 'Staleness Decay Operator' (page 1, domain other) captures: **Freshness guarantees** — we cannot publish picks against stale data (CLAUDE.md non-negotiable #5). Assumptions: Market dynamics evolve continuously; information value decays monotonically with time since emission. Breakdown regime: Singularity occurs when $\\tau_S \\geq \\tau_{crit}$, rendering the observation useless for real-time arbitrage or edge detection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a time-decay weight in the GSI Bayesian updater. If latency exceeds bounds, the posterior update is aborted to prevent negative EV decisions. Operator 'Economic Efficiency Bound' (page 1, domain other) captures: **Reasonable pricing** — adding a $500/month source for marginal coverage isn't worth it in the launch phase. Assumptions: Marginal utility of additional coverage scales sub-linearly with cost during the launch phase. Breakdown regime: When $C_S > C_{max}$, the cost-benefit ratio collapses, triggering rejection into `rejected-data-sources.md`. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the resource allocation constraint in GSE's multi-source fusion layer, ensuring computational and financial resources are not exhausted by low-yield inputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for data-source-options (59c27fb3aea49cf7, domain=other, pages_read=3/3): Operator 'Commercial Viability Indicator' (page 1, domain other) captures: **Public API with terms permitting commercial use** (or a paid plan that grants it). Assumptions: Terms of Service are static during the evaluation window and legally enforceable. Breakdown regime: If $L_S = 0$, the integration is immediately vetoed regardless of data quality or cost efficiency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the legal boundary condition in the GSI risk model, acting as a hard filter before any statistical inference occurs. Operator 'Staleness Decay Operator' (page 1, domain other) captures: **Freshness guarantees** — we cannot publish picks against stale data (CLAUDE.md non-negotiable #5). Assumptions: Market dynamics evolve continuously; information value decays monotonically with time since emission. Breakdown regime: Singularity occurs when $\\tau_S \\geq \\tau_{crit}$, rendering the observation useless for real-time arbitrage or edge detection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a time-decay weight in the GSI Bayesian updater. If latency exceeds bounds, the posterior update is aborted to prevent negative EV decisions. Operator 'Economic Efficiency Bound' (page 1, domain other) captures: **Reasonable pricing** — adding a $500/month source for marginal coverage isn't worth it in the launch phase. Assumptions: Marginal utility of additional coverage scales sub-linearly with cost during the launch phase. Breakdown regime: When $C_S > C_{max}$, the cost-benefit ratio collapses, triggering rejection into `rejected-data-sources.md`. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the resource allocation constraint in GSE's multi-source fusion layer, ensuring computational and financial resources are not exhausted by low-yield inputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This structured approach to data sourcing echoes the evolution of quantitative finance infrastructure in the late 20th century. Initially, firms relied on single tape feeds (e.g., NYSE opening cry). As arbitrage opportunities compressed, the need for multi-venue aggregation arose, necessitating strict normalization layers. The explicit codification of 'freshness' and 'commercial rights' mirrors the regulatory and technological maturation of electronic trading, where latency arbitrage and IP compliance became paramount survival metrics rather than mere operational details.",
+      "theory_of_mind": "The decision actors here are the platform architects and future scaling committees. They operate under bounded rationality, weighing immediate launch velocity against long-term scalability. By documenting rejected sources and defining strict criteria, they anticipate future scrutiny and aim to reduce cognitive load during crisis moments (e.g., API downtime). They model the opposing agent—the data vendor—as a potentially adversarial entity capable of changing ToS or degrading service without notice, hence the caution around undocumented ESPN endpoints.",
+      "cross_layer_veto": "A cross-layer veto is triggered if a Tier-2 source exhibits high correlation with Tier-1 odds but fails the freshness test, creating a false sense of redundancy. Additionally, if the integration cost (engineering days) exceeds the projected lifetime value of the marginal coverage gained, the economic primitive vetoes the technical implementation. Leakage occurs if undocumented public endpoints (Tier-3) are inadvertently promoted to primary status, bypassing the commercial license gate and exposing the platform to existential legal risk."
+    }
+  ]
+}

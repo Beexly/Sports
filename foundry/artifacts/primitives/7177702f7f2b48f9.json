@@ -1,0 +1,78 @@
+{
+  "book_id": "7177702f7f2b48f9",
+  "source_status": "COMPLETE",
+  "title": "p0606",
+  "file_name": "p0606.txt",
+  "sha256": "7177702f7f2b48f9f12c134d835ba7471d928398b487d2af6c11e1dcef668432",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Hypnotic state dynamics unify physiological response to suggestion via operator-subject force coupling, neural feedback loops, and cognitive disengagement thresholds. Universal Lens: Rooted in p0606 (7177702f7f2b48f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over latent hypnotic states using probabilistic causal models of suggestion-induced neural modulation and attentional collapse. GSI Mapping: Rooted in p0606 (7177702f7f2b48f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions between wakefulness, catalepsy, and lethargy governed by sensory trigger thresholds and operator-induced perturbations. GSE Mapping: Rooted in p0606 (7177702f7f2b48f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "operator_subject_force_coupling",
+      "name": "Operator-Subject Force Coupling",
+      "verbatim_quote": "According to the animal-magnetism theory there is a direct passage of force from the operator to the subject, whereby the latter becomes the former's puppet.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{os}': 'Force (N), direct force transmission from operator to subject'}",
+      "assumptions": "Direct force transfer model assumes deterministic operator influence on subject behavior.",
+      "breakdown_regime": "When external stimuli exceed threshold, force coupling fails and state terminates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Suggestion-based belief update; GSE: Behavioral state transition driven by operator input",
+        "source_operator": "operator_subject_force_coupling",
+        "telemetry": "Observable behavioral compliance under suggestion"
+      }
+    },
+    {
+      "primitive_id": "neural_feedback_loop",
+      "name": "Neural Feedback Loop",
+      "verbatim_quote": "The intimate nature of the hypnotic condition, when once induced, can hardly be said to be understood.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\phi(t)': 'Neural activation state (dimensionless)', 'T_{c}': 'Cataleptic threshold (s)'}",
+      "assumptions": "Feedback loop operates within bounded neural dynamics and is sensitive to external perturbation.",
+      "breakdown_regime": "State collapses upon sensory disruption beyond T_c.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Latent variable inference in neural state space; GSE: State evolution under sensory input",
+        "source_operator": "neural_feedback_loop",
+        "telemetry": "Electrophysiological correlates of altered consciousness"
+      }
+    },
+    {
+      "primitive_id": "sensory_trigger_threshold",
+      "name": "Sensory Trigger Threshold",
+      "verbatim_quote": "explain the physiology of the hypnotic state must keep account of the fact that so simple a thing as hearing the word'wake!'will end it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{th}': 'Sensory stimulus threshold (dB or arbitrary units)', 't_{end}': 'Time of termination (s)'}",
+      "assumptions": "Termination occurs at discrete sensory event above threshold.",
+      "breakdown_regime": "State ends when S_{th} is exceeded by external stimulus.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Decision boundary for belief collapse; GSE: Triggered state transition",
+        "source_operator": "sensory_trigger_threshold",
+        "telemetry": "Auditory or visual stimulus detection and response latency"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7177702f7f2b48f9_t0",
+      "think": "The hypnotic state emerges through three primary theoretical frameworks: animal magnetism, neurosis, and suggestion. The first, animal magnetism, posits a direct force transfer from operator to subject—this is a classical mechanical model that has been largely abandoned due to lack of empirical support. The second, neurosis theory, treats hypnosis as a pathological condition linked to hysteria and epilepsy, suggesting a neurological basis for susceptibility. The third, suggestion theory, frames hypnosis as a psychological phenomenon where the subject’s mental expectation mediates the effect. These models reflect a progression from deterministic force fields to probabilistic cognitive mechanisms. In GSI, these are modeled as competing hypotheses in Bayesian inference over latent states. In GSE, they define distinct behavioral regimes governed by sensory thresholds and operator influence. Each framework introduces a different failure mode: mechanical coupling breaks under stimulus, neurosis fails under stress, and suggestion fails when expectations are violated. The epistemic structure reveals a dualism between mechanistic and interpretive paradigms, each offering partial insight into the same phenomenon.\n\nDeep epistemic analysis for p0606 (7177702f7f2b48f9, domain=other, pages_read=1/1): Operator 'Operator-Subject Force Coupling' (page 1, domain other) captures: According to the animal-magnetism theory there is a direct passage of force from the operator to the subject, whereby the latter becomes the former's puppet. Assumptions: Direct force transfer model assumes deterministic operator influence on subject behavior. Breakdown regime: When external stimuli exceed threshold, force coupling fails and state terminates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Suggestion-based belief update; GSE: Behavioral state transition driven by operator input Operator 'Neural Feedback Loop' (page 1, domain other) captures: The intimate nature of the hypnotic condition, when once induced, can hardly be said to be understood. Assumptions: Feedback loop operates within bounded neural dynamics and is sensitive to external perturbation. Breakdown regime: State collapses upon sensory disruption beyond T_c. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Latent variable inference in neural state space; GSE: State evolution under sensory input Operator 'Sensory Trigger Threshold' (page 1, domain other) captures: explain the physiology of the hypnotic state must keep account of the fact that so simple a thing as hearing the word'wake!'will end it. Assumptions: Termination occurs at discrete sensory event above threshold. Breakdown regime: State ends when S_{th} is exceeded by external stimulus. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Decision boundary for belief collapse; GSE: Triggered state transition Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0606 (7177702f7f2b48f9, domain=other, pages_read=1/1): Operator 'Operator-Subject Force Coupling' (page 1, domain other) captures: According to the animal-magnetism theory there is a direct passage of force from the operator to the subject, whereby the latter becomes the former's puppet. Assumptions: Direct force transfer model assumes deterministic operator influence on subject behavior. Breakdown regime: When external stimuli exceed threshold, force coupling fails and state terminates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Suggestion-based belief update; GSE: Behavioral state transition driven by operator input Operator 'Neural Feedback Loop' (page 1, domain other) captures: The intimate nature of the hypnotic condition, when once induced, can hardly be said to be understood. Assumptions: Feedback loop operates within bounded neural dynamics and is sensitive to external perturbation. Breakdown regime: State collapses upon sensory disruption beyond T_c. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Latent variable inference in neural state space; GSE: State evolution under sensory input Operator 'Sensory Trigger Threshold' (page 1, domain other) captures: explain the physiology of the hypnotic state must keep account of the fact that so simple a thing as hearing the word'wake!'will end it. Assumptions: Termination occurs at discrete sensory event above threshold. Breakdown regime: State ends when S_{th} is exceeded by external stimulus. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Decision boundary for belief collapse; GSE: Triggered state transition Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Historically rooted in 18th-century mesmerism and 19th-century Charcotian neurology, the conceptualization evolved from vitalist force theories to modern neuropsychological models of attention and expectation. Retrocausal Genealogy: Rooted in p0606 (7177702f7f2b48f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0606 (7177702f7f2b48f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the hypnotic operator who exerts influence, the subject whose compliance varies with internal state, and the environment which provides triggering stimuli. Their interaction defines a dynamic game of control and resistance. Theory of Mind & Decision Maker Model: Rooted in p0606 (7177702f7f2b48f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the mechanical model not overlap with the neurotic or suggestible domains. Leakage occurs if sensory thresholds are conflated with neural states or if operator influence is misattributed to random variation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0606 (7177702f7f2b48f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

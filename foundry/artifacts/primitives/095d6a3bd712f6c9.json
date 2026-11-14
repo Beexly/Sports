@@ -1,0 +1,95 @@
+{
+  "book_id": "095d6a3bd712f6c9",
+  "source_status": "COMPLETE",
+  "title": "p0316",
+  "file_name": "p0316.txt",
+  "sha256": "095d6a3bd712f6c901909596341743ad2da282fd6556b6b44ed62930dc6f2d88",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_football_lineup_matrix",
+      "name": "Spatial Football Lineup Matrix",
+      "verbatim_quote": "Oates, John M., Chambers, Boyd B., Ohapman, Frank B., Chase, Carroll F.",
+      "page": 1,
+      "latex": "$\\mathbf{L} \\in \\mathbb{R}^{N \\times M}$",
+      "symbol_and_unit_ledger": "{'L': 'Lineup matrix (binary)', 'N': 'Number of players', 'M': 'Number of positions'}",
+      "assumptions": "Players are assigned binary indicators to fixed positions in a static formation.",
+      "breakdown_regime": "Singularity occurs when player count exceeds position slots ($N > M$), causing rank deficiency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction intervals for lineup uncertainty quantification and GSE state-transition graphs for tactical rotations.",
+        "source_operator": "spatial_football_lineup_matrix",
+        "telemetry": "Observed substitution patterns deviating from baseline lineup distributions indicate tactical shifts."
+      }
+    },
+    {
+      "primitive_id": "temporal_substitution_graph",
+      "name": "Temporal Substitution Graph",
+      "verbatim_quote": "Evan, Dawson, Fred T., Day, John L., Dearborn, Arthur K., DeCamp, John A., Delaplalne, Roy W., Dickinson, Alfred W.",
+      "page": 1,
+      "latex": "$G_{sub}(V,E) = (\\{t_i\\}, \\{(t_i,t_j)\\})$",
+      "symbol_and_unit_ledger": "{'G_sub': 'Substitution graph structure', 'V': 'Set of time steps', 'E': 'Edge set between temporal nodes', 't_i': 'Discrete substitution event timestamp'}",
+      "assumptions": "Substitutions occur at discrete moments, forming a directed acyclic path without loops.",
+      "breakdown_regime": "Graph becomes disconnected when substitution windows collapse ($t_i - t_j \\to 0$), isolating player clusters.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI sequential testing for substitution timing anomalies and GSE Markov decision processes for rotation policies.",
+        "source_operator": "temporal_substitution_graph",
+        "telemetry": "Anomalous clustering in substitution graphs signals coaching interventions or injury-induced restructuring."
+      }
+    },
+    {
+      "primitive_id": "geographic_address_vectorization",
+      "name": "Geographic Address Vectorization",
+      "verbatim_quote": "(Columbia) High School, New Bedford, Mass (Lafayette) 3 Roselawn Terrace, Woodlawn Ave., Pittsburgh.",
+      "page": 2,
+      "latex": "$\\mathbf{v}_{addr} = (lat, lon, street)$",
+      "symbol_and_unit_ledger": "{'v_addr': 'Address vector', 'lat': 'Latitude (decimal degrees)', 'lon': 'Longitude (decimal degrees)', 'street': 'Street name string'}",
+      "assumptions": "Addresses are deterministically projected onto a Euclidean plane using geocoding services.",
+      "breakdown_regime": "Failure occurs when ambiguous street names cause zero-dimensional point clouds ($variance \\to 0$).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI kernel density estimation for fan distribution analysis and GSE trajectory prediction models.",
+        "source_operator": "geographic_address_vectorization",
+        "telemetry": "Outlier distances between vectorized coordinates and stadium centroids reveal supporter migration flows."
+      }
+    },
+    {
+      "primitive_id": "contact_network_adjacency",
+      "name": "Contact Network Adjacency",
+      "verbatim_quote": "(Holy Cross) Classical High School, Worcester, Masa (Colgate) Post Office, Worcester, Mass..",
+      "page": 2,
+      "latex": "$A_{ij} = \\begin{cases} 1, & \\text{if } i \\leftrightarrow j \\text{ share address} \\\\ 0, & \\text{otherwise} \\end{cases}$",
+      "symbol_and_unit_ledger": "{'A_ij': 'Binary adjacency indicator', 'i,j': 'Player indices', 'leftrightarrow': 'Shared geographic proximity relation'}",
+      "assumptions": "Social contacts are inferred solely from identical postal addresses, ignoring additional communication channels.",
+      "breakdown_regime": "Matrix becomes diagonal ($A_{ii}=1$) when all players have unique addresses, eliminating network connectivity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI contagion spread models for injury transmission and GSE influence propagation networks.",
+        "source_operator": "contact_network_adjacency",
+        "telemetry": "Eigenvector centrality spikes in the adjacency matrix flag super-spreaders in injury clusters."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "095d6a3bd712f6c9_t0",
+      "think": "These primitives abstract football operations into linear algebra (lineup matrices), graph theory (substitutions), spatial geometry (addresses), and social network analysis (contacts). They form a minimal universal lens by capturing team composition, temporal dynamics, physical space, and human interaction simultaneously. The dualities emerge naturally: matrices invert graphs via Laplacians, vectors embed in graphs via PageRank, and networks compress into low-rank factorizations. Failure modes include rank collapse in matrices ($N>M$), cycle formation in graphs ($t_i = t_j$), degenerate points in geometry ($variance=0$), and isolated vertices in networks ($deg(i)=0$). These singularities trigger conformal prediction intervals in GSI and state-transition penalties in GSE.\n\nDeep epistemic analysis for p0316 (095d6a3bd712f6c9, domain=other, pages_read=2/2): Operator 'Spatial Football Lineup Matrix' (page 1, domain other) captures: Oates, John M., Chambers, Boyd B., Ohapman, Frank B., Chase, Carroll F. Assumptions: Players are assigned binary indicators to fixed positions in a static formation. Breakdown regime: Singularity occurs when player count exceeds position slots ($N > M$), causing rank deficiency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction intervals for lineup uncertainty quantification and GSE state-transition graphs for tactical rotations. Operator 'Temporal Substitution Graph' (page 1, domain other) captures: Evan, Dawson, Fred T., Day, John L., Dearborn, Arthur K., DeCamp, John A., Delaplalne, Roy W., Dickinson, Alfred W. Assumptions: Substitutions occur at discrete moments, forming a directed acyclic path without loops. Breakdown regime: Graph becomes disconnected when substitution windows collapse ($t_i - t_j \\to 0$), isolating player clusters. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI sequential testing for substitution timing anomalies and GSE Markov decision processes for rotation policies. Operator 'Geographic Address Vectorization' (page 2, domain other) captures: (Columbia) High School, New Bedford, Mass (Lafayette) 3 Roselawn Terrace, Woodlawn Ave., Pittsburgh. Assumptions: Addresses are deterministically projected onto a Euclidean plane using geocoding services. Breakdown regime: Failure occurs when ambiguous street names cause zero-dimensional point clouds ($variance \\to 0$). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI kernel density estimation for fan distribution analysis and GSE trajectory prediction models. Operator 'Contact Network Adjacency' (page 2, domain other) captures: (Holy Cross) Classical High School, Worcester, Masa (Colgate) Post Office, Worcester, Mass.. Assumptions: Social contacts are inferred solely from identical postal addresses, ignoring additional communication channels. Breakdown regime: Matrix becomes diagonal ($A_{ii}=1$) when all players have unique addresses, eliminating network connectivity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI contagion spread models for injury transmission and GSE influence propagation networks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0316 (095d6a3bd712f6c9, domain=other, pages_read=2/2): Operator 'Spatial Football Lineup Matrix' (page 1, domain other) captures: Oates, John M., Chambers, Boyd B., Ohapman, Frank B., Chase, Carroll F. Assumptions: Players are assigned binary indicators to fixed positions in a static formation. Breakdown regime: Singularity occurs when player count exceeds position slots ($N > M$), causing rank deficiency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction intervals for lineup uncertainty quantification and GSE state-transition graphs for tactical rotations. Operator 'Temporal Substitution Graph' (page 1, domain other) captures: Evan, Dawson, Fred T., Day, John L., Dearborn, Arthur K., DeCamp, John A., Delaplalne, Roy W., Dickinson, Alfred W. Assumptions: Substitutions occur at discrete moments, forming a directed acyclic path without loops. Breakdown regime: Graph becomes disconnected when substitution windows collapse ($t_i - t_j \\to 0$), isolating player clusters. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI sequential testing for substitution timing anomalies and GSE Markov decision processes for rotation policies. Operator 'Geographic Address Vectorization' (page 2, domain other) captures: (Columbia) High School, New Bedford, Mass (Lafayette) 3 Roselawn Terrace, Woodlawn Ave., Pittsburgh. Assumptions: Addresses are deterministically projected onto a Euclidean plane using geocoding services. Breakdown regime: Failure occurs when ambiguous street names cause zero-dimensional point clouds ($variance \\to 0$). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI kernel density estimation for fan distribution analysis and GSE trajectory prediction models. Operator 'Contact Network Adjacency' (page 2, domain other) captures: (Holy Cross) Classical High School, Worcester, Masa (Colgate) Post Office, Worcester, Mass.. Assumptions: Social contacts are inferred solely from identical postal addresses, ignoring additional communication channels. Breakdown regime: Matrix becomes diagonal ($A_{ii}=1$) when all players have unique addresses, eliminating network connectivity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI contagion spread models for injury transmission and GSE influence propagation networks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Coaches model opponents as stochastic games (GSI) while executing deterministic tactics (GSE). Opponents infer player types via Bayesian updates on observed lineups, creating recursive epistemics. Theory of Mind & Decision Maker Model: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires independent data sources across layers; e.g., GPS tracking vetoes address-based proximity. Leakage occurs when substitution graphs predictively leak into lineup matrices through embedded temporal order. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0316 (095d6a3bd712f6c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

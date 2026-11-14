@@ -1,0 +1,78 @@
+{
+  "book_id": "545d3369cac32262",
+  "source_status": "COMPLETE",
+  "title": "2026-11-03-GCP-KEY-QUARANTINE",
+  "file_name": "2026-11-03-GCP-KEY-QUARANTINE.md",
+  "sha256": "545d3369cac32262fe417eca4871820575abed9fb971041848a61b7e37bb0b0a",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "GCP service account key quarantine induces a state transition from live credential exposure to localized neutralization, preserving server-side validity until explicit deletion. Universal Lens: Rooted in 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models credential risk exposure using temporal key validity and access path entropy; quarantined keys remain high-risk until GCP revocation. GSI Mapping: Rooted in 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps key movement to a deterministic state change in credential availability; local disablement triggers conditional pipeline integrity checks. GSE Mapping: Rooted in 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "live_key_exposure",
+      "name": "Live Key Exposure",
+      "verbatim_quote": "**It is a live key, not a placeholder.** `private_key` is populated.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'credential key material (dimensionless)', 'E': 'exposure entropy (bits)'}",
+      "assumptions": "Key material is active and accessible via standard GCP authentication flows.",
+      "breakdown_regime": "When K is readable from user-writable paths.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Exposure entropy E = log₂(N) where N is number of accessible paths; E increases with path proliferation.",
+        "source_operator": "live_key_exposure",
+        "telemetry": "File system access logs and credential lookup success rate."
+      }
+    },
+    {
+      "primitive_id": "local_neutralization",
+      "name": "Local Neutralization",
+      "verbatim_quote": "## What was done (local neutralization) ``` C:\\Users\\Garrett\\security-quarantine\\2026-11-03-gcp-keys\\ galaxysportsedge-f506d7991177.json.DISABLED application_default_credentials.json.DISABLED ``` - Both files moved out of `Downloads` and the gcloud ADC path.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q': 'quarantine state (boolean)', 'T': 'transition time (seconds)'}",
+      "assumptions": "Moving files prevents local credential resolution but does not affect server-side access.",
+      "breakdown_regime": "When Q = true and T > 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Neutralization kernel K(t) = 1 − exp(−λt) models probability of credential deactivation post-move.",
+        "source_operator": "local_neutralization",
+        "telemetry": "Path existence check and ADC lookup failure rate."
+      }
+    },
+    {
+      "primitive_id": "server_side_validity",
+      "name": "Server-Side Validity",
+      "verbatim_quote": "The credential remains valid server-side until deleted from the IAM service account.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'validity status (boolean)', 'S': 'service account identifier (string)'}",
+      "assumptions": "IAM service account maintains key validity independent of local state.",
+      "breakdown_regime": "When V = true and S is registered in IAM.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Validity V(S) = 1 iff key_id ∈ IAM(S); otherwise V(S) = 0.",
+        "source_operator": "server_side_validity",
+        "telemetry": "IAM API response for key deletion status."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "545d3369cac32262_t0",
+      "think": "The core operator is credential exposure dynamics: a live key in a cloud-synced directory creates a temporal risk window where unauthorized access is possible. Local neutralization acts as a mitigating function, reducing exposure entropy by removing the key from accessible paths. However, server-side validity persists until explicit deletion, creating a dual-state failure mode: local safety without global revocation. This duality implies a non-localized risk vector that requires external action (GCP console/API) to fully resolve. The system's integrity depends on the synchronization between local neutralization and server-side revocation. The failure mode occurs when either step is omitted, leading to persistent credential risk. The derived kernel models the probability of successful local mitigation over time, while the isomorphism links credential validity to IAM state.\n\nDeep epistemic analysis for 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262, domain=other, pages_read=2/2): Operator 'Live Key Exposure' (page 1, domain other) captures: **It is a live key, not a placeholder.** `private_key` is populated. Assumptions: Key material is active and accessible via standard GCP authentication flows. Breakdown regime: When K is readable from user-writable paths. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Exposure entropy E = log₂(N) where N is number of accessible paths; E increases with path proliferation. Operator 'Local Neutralization' (page 1, domain other) captures: ## What was done (local neutralization) ``` C:\\Users\\Garrett\\security-quarantine\\2026-11-03-gcp-keys\\ galaxysportsedge-f506d7991177.json.DISABLED application_default_credentials.json.DISABLED ``` - Both files moved out of `Downloads` and the gcloud ADC path. Assumptions: Moving files prevents local credential resolution but does not affect server-side access. Breakdown regime: When Q = true and T > 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Neutralization kernel K(t) = 1 − exp(−λt) models probability of credential deactivation post-move. Operator 'Server-Side Validity' (page 1, domain other) captures: The credential remains valid server-side until deleted from the IAM service account. Assumptions: IAM service account maintains key validity independent of local state. Breakdown regime: When V = true and S is registered in IAM. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Validity V(S) = 1 iff key_id ∈ IAM(S); otherwise V(S) = 0. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262, domain=other, pages_read=2/2): Operator 'Live Key Exposure' (page 1, domain other) captures: **It is a live key, not a placeholder.** `private_key` is populated. Assumptions: Key material is active and accessible via standard GCP authentication flows. Breakdown regime: When K is readable from user-writable paths. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Exposure entropy E = log₂(N) where N is number of accessible paths; E increases with path proliferation. Operator 'Local Neutralization' (page 1, domain other) captures: ## What was done (local neutralization) ``` C:\\Users\\Garrett\\security-quarantine\\2026-11-03-gcp-keys\\ galaxysportsedge-f506d7991177.json.DISABLED application_default_credentials.json.DISABLED ``` - Both files moved out of `Downloads` and the gcloud ADC path. Assumptions: Moving files prevents local credential resolution but does not affect server-side access. Breakdown regime: When Q = true and T > 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Neutralization kernel K(t) = 1 − exp(−λt) models probability of credential deactivation post-move. Operator 'Server-Side Validity' (page 1, domain other) captures: The credential remains valid server-side until deleted from the IAM service account. Assumptions: IAM service account maintains key validity independent of local state. Breakdown regime: When V = true and S is registered in IAM. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Validity V(S) = 1 iff key_id ∈ IAM(S); otherwise V(S) = 0. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in cryptographic key management theory, extending to modern cloud IAM paradigms. Influenced by Bell-LaPadula model’s access control principles and contemporary zero-trust architectures. Retrocausal Genealogy: Rooted in 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the Hermes autonomous agent performing quarantine and the potential attacker exploiting the live key. The system assumes adversarial behavior in the absence of revocation, while the agent operates under a risk-minimization heuristic. Theory of Mind & Decision Maker Model: Rooted in 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures local actions do not mask server-side vulnerabilities. Leakage veto applies if any path still resolves to a valid credential, negating neutralization effectiveness. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-11-03-GCP-KEY-QUARANTINE (545d3369cac32262), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

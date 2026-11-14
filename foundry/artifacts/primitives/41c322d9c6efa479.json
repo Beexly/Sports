@@ -1,0 +1,78 @@
+{
+  "book_id": "41c322d9c6efa479",
+  "source_status": "COMPLETE",
+  "title": "p0173",
+  "file_name": "p0173.txt",
+  "sha256": "41c322d9c6efa479afac4bb8e43f9202e02b22c8faaca0c894c4016e373f9900",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fixation as cognitive rigidity in learning dynamics; mathematically modeled as attractor basin collapse in probabilistic decision spaces. Universal Lens: Rooted in p0173 (41c322d9c6efa479), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating fails when prior expectations become entrenched; manifests as posterior drift in sequential inference frameworks. GSI Mapping: Rooted in p0173 (41c322d9c6efa479), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions governed by sign-gestalt readiness evolve into fixed-point attractors; mechanized via reinforcement feedback loops with delayed reaction penalties. GSE Mapping: Rooted in p0173 (41c322d9c6efa479), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sign_gestalt_fixation",
+      "name": "Sign-Gestalt Fixation",
+      "verbatim_quote": "Such fixation we would conceive as a relatively mechanical sort of attachment to a specific means-activity which sometimes seems to set in on top of, or in place of, a true sign-gestalt-expectation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Fixation strength (dimensionless)', 'S': 'Sign-gestalt readiness (dimensionless)', 'T': 'Trial index (integer)'}",
+      "assumptions": "Animal behavior follows stochastic process with memory-dependent transition probabilities.",
+      "breakdown_regime": "When S(T) < threshold, F(T) becomes dominant over adaptive signaling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Modeling fixation as emergent attractor in policy space; GSI tracks deviation from expected utility; GSE simulates behavioral inertia.",
+        "source_operator": "sign_gestalt_fixation",
+        "telemetry": "Deviation from optimal path in trial sequence"
+      }
+    },
+    {
+      "primitive_id": "position_habit",
+      "name": "Position Habit",
+      "verbatim_quote": "A familiar example of such fixation, in the case of rats, is the socalled \"position-habits\" which are prone to appear in discrimination-box experiments and which are such a nuisance to an experimenter.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'Habitual preference (dimensionless)', 'R': 'Right-hand alley reward (dimensionless)', 'L': 'Left-hand alley reward (dimensionless)'}",
+      "assumptions": "Habitual selection persists despite diminishing returns due to environmental shifts.",
+      "breakdown_regime": "When R(L) - R(R) > ε, habit persists beyond rationality threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to fixed-point iteration in dynamical systems; GSI evaluates convergence rate; GSE models persistent state transitions.",
+        "source_operator": "position_habit",
+        "telemetry": "Frequency of repeated alley choice after cue reversal"
+      }
+    },
+    {
+      "primitive_id": "delayed_reaction",
+      "name": "Delayed Reaction",
+      "verbatim_quote": "Learning and Delayed Reaction 153 phenomenon has been largely ignored.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Delay time (seconds)', 'E': 'Environmental change event (boolean)', 'B': 'Behavioral response (dimensionless)'}",
+      "assumptions": "Reaction delay D increases with complexity of sign-gestalt formation.",
+      "breakdown_regime": "When D > τ, B becomes decoupled from E, leading to suboptimal outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Delayed reaction introduces temporal lag in feedback loop; GSI computes causal delay metrics; GSE simulates temporal decision latency.",
+        "source_operator": "delayed_reaction",
+        "telemetry": "Time between stimulus presentation and behavioral response"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "41c322d9c6efa479_t0",
+      "think": "The core mechanism of sign-gestalt fixation arises from a shift in probabilistic decision-making where initial cognitive flexibility (docile sign-gestalt) degenerates into rigid adherence (mechanical attachment). This transition can be formalized through a Markovian model where transition probabilities P(s_i → s_j) depend on prior success history. As the animal accumulates evidence favoring one action (e.g., right-hand alley), the probability distribution shifts toward a peak at that action, eventually becoming a fixed point. The emergence of position-habit exemplifies this by showing how repeated reinforcement leads to a stable attractor in policy space, even when external cues suggest otherwise. Delayed reaction further complicates this by introducing a temporal dimension where immediate feedback is insufficient to update beliefs quickly enough. In GSI, this manifests as Bayesian belief drift under delayed observation; in GSE, it appears as persistent state transitions that resist change until sufficient counter-evidence accumulates.\n\nDeep epistemic analysis for p0173 (41c322d9c6efa479, domain=other, pages_read=1/1): Operator 'Sign-Gestalt Fixation' (page 1, domain other) captures: Such fixation we would conceive as a relatively mechanical sort of attachment to a specific means-activity which sometimes seems to set in on top of, or in place of, a true sign-gestalt-expectation. Assumptions: Animal behavior follows stochastic process with memory-dependent transition probabilities. Breakdown regime: When S(T) < threshold, F(T) becomes dominant over adaptive signaling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Modeling fixation as emergent attractor in policy space; GSI tracks deviation from expected utility; GSE simulates behavioral inertia. Operator 'Position Habit' (page 1, domain other) captures: A familiar example of such fixation, in the case of rats, is the socalled \"position-habits\" which are prone to appear in discrimination-box experiments and which are such a nuisance to an experimenter. Assumptions: Habitual selection persists despite diminishing returns due to environmental shifts. Breakdown regime: When R(L) - R(R) > ε, habit persists beyond rationality threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to fixed-point iteration in dynamical systems; GSI evaluates convergence rate; GSE models persistent state transitions. Operator 'Delayed Reaction' (page 1, domain other) captures: Learning and Delayed Reaction 153 phenomenon has been largely ignored. Assumptions: Reaction delay D increases with complexity of sign-gestalt formation. Breakdown regime: When D > τ, B becomes decoupled from E, leading to suboptimal outcomes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Delayed reaction introduces temporal lag in feedback loop; GSI computes causal delay metrics; GSE simulates temporal decision latency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0173 (41c322d9c6efa479, domain=other, pages_read=1/1): Operator 'Sign-Gestalt Fixation' (page 1, domain other) captures: Such fixation we would conceive as a relatively mechanical sort of attachment to a specific means-activity which sometimes seems to set in on top of, or in place of, a true sign-gestalt-expectation. Assumptions: Animal behavior follows stochastic process with memory-dependent transition probabilities. Breakdown regime: When S(T) < threshold, F(T) becomes dominant over adaptive signaling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Modeling fixation as emergent attractor in policy space; GSI tracks deviation from expected utility; GSE simulates behavioral inertia. Operator 'Position Habit' (page 1, domain other) captures: A familiar example of such fixation, in the case of rats, is the socalled \"position-habits\" which are prone to appear in discrimination-box experiments and which are such a nuisance to an experimenter. Assumptions: Habitual selection persists despite diminishing returns due to environmental shifts. Breakdown regime: When R(L) - R(R) > ε, habit persists beyond rationality threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to fixed-point iteration in dynamical systems; GSI evaluates convergence rate; GSE models persistent state transitions. Operator 'Delayed Reaction' (page 1, domain other) captures: Learning and Delayed Reaction 153 phenomenon has been largely ignored. Assumptions: Reaction delay D increases with complexity of sign-gestalt formation. Breakdown regime: When D > τ, B becomes decoupled from E, leading to suboptimal outcomes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Delayed reaction introduces temporal lag in feedback loop; GSI computes causal delay metrics; GSE simulates temporal decision latency. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early learning theory (Thorndike, Skinner) and Gestalt psychology (Köhler). Formalized in modern reinforcement learning as policy staleness and temporal credit assignment problems. Retrocausal Genealogy: Rooted in p0173 (41c322d9c6efa479), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0173 (41c322d9c6efa479), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents exhibit bounded rationality: they form expectations based on past experience but fail to adapt when environments shift. Opposing agents might optimize for exploration vs exploitation trade-offs, creating conflict between short-term gains and long-term adaptability. Theory of Mind & Decision Maker Model: Rooted in p0173 (41c322d9c6efa479), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that fixation does not coalesce with optimal policy paths; leakage occurs when delayed reaction masks true signal changes. Veto conditions enforce separation between learned habits and dynamic environmental demands. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0173 (41c322d9c6efa479), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "62bcda30f1efc903",
+  "source_status": "COMPLETE",
+  "title": "c1-edge-hunt",
+  "file_name": "c1-edge-hunt.txt",
+  "sha256": "62bcda30f1efc903b4f51c3dc7f115eefb072c48f734d0fa94de3ca3708a6763",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A deterministic factor model across major sports leagues, validated via historical replay and live production, with calibrated confidence thresholds and market-slice invariance. Universal Lens: Rooted in c1-edge-hunt (62bcda30f1efc903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian conformal prediction framework using isotonic calibration on spread, total, and moneyline outcomes, with confidence-based rejection sampling for ROI optimization. GSI Mapping: Rooted in c1-edge-hunt (62bcda30f1efc903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates market states through closed-loop feedback of line walk-forward and outcome resolution, transitioning between deterministic and probabilistic regimes. GSE Mapping: Rooted in c1-edge-hunt (62bcda30f1efc903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "market_closing_line_walk_forward",
+      "name": "Market Closing Line Walk-Forward",
+      "verbatim_quote": "- Market closing line walk-forward: pooled Brier 0.2106, CI [0.2050, 0.2172], n=2,750.",
+      "page": 1,
+      "latex": "\\mathcal{B}(p, y) = \\frac{1}{n} \\sum_{i=1}^{n} (p_i - y_i)^2",
+      "symbol_and_unit_ledger": "{'p': 'predicted probability of outcome (dimensionless)', 'y': 'actual outcome (0 or 1)', 'n': 'number of observations (unitless)'}",
+      "assumptions": "Predictions are probabilistic, outcomes binary, sample size sufficient for confidence interval estimation.",
+      "breakdown_regime": "When Brier score exceeds 0.25, indicates overconfidence or model misalignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used to evaluate predictive accuracy of model outputs against actual closing lines in real-time.",
+        "source_operator": "market_closing_line_walk_forward",
+        "telemetry": "Brier score and confidence intervals"
+      }
+    },
+    {
+      "primitive_id": "confidence_tail_inversion",
+      "name": "Confidence Tail Inversion",
+      "verbatim_quote": "- Independently corroborated on LIVE production picks: the >=80 confidence tail is 152 graded picks, 61 wins, 40%, INVERTED; resolution 0.005 on 1,663 graded picks.",
+      "page": 1,
+      "latex": "\\text{Inverted ROI} = \\frac{W}{N} \\cdot \\left(\\frac{1}{C} \\right), \\quad C \\geq 0.8",
+      "symbol_and_unit_ledger": "{'W': 'wins in high-confidence tail (unitless)', 'N': 'total picks in tail (unitless)', 'C': 'confidence threshold (unitless)'}",
+      "assumptions": "High-confidence predictions are inversely correlated with performance, indicating overconfidence bias.",
+      "breakdown_regime": "When confidence exceeds 0.8 but ROI drops below 50%, suggests model failure in calibration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps confidence thresholds to inverse performance metrics, identifying calibration issues.",
+        "source_operator": "confidence_tail_inversion",
+        "telemetry": "Win rate vs. confidence threshold"
+      }
+    },
+    {
+      "primitive_id": "line_walk_forward_calibration",
+      "name": "Line Walk-Forward Calibration",
+      "verbatim_quote": "Best calibrator isotonic, +0.00007 — the close is already near-perfectly calibrated, there is essentially nothing to recalibrate.",
+      "page": 1,
+      "latex": "\\hat{p}_{\\text{cal}} = \\text{Isotonic}(\\hat{p}_{\\text{raw}}), \\quad \\Delta = \\max |\\hat{p}_{\\text{raw}} - \\hat{p}_{\\text{cal}}|",
+      "symbol_and_unit_ledger": "{'\\\\hat{p}_{\\\\text{raw}}': 'raw predicted probability (dimensionless)', '\\\\hat{p}_{\\\\text{cal}}': 'calibrated probability (dimensionless)', '\\\\Delta': 'maximum deviation from isotonic calibration (dimensionless)'}",
+      "assumptions": "Raw predictions are non-calibrated, isotonic regression improves alignment with observed frequencies.",
+      "breakdown_regime": "When \\Delta < 0.001, model is effectively calibrated and further adjustment is unnecessary.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ensures model outputs align with empirical outcome distributions, reducing miscalibration.",
+        "source_operator": "line_walk_forward_calibration",
+        "telemetry": "Isotonic calibration error and convergence diagnostics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "62bcda30f1efc903_t0",
+      "think": "The core insight is that the model operates under a deterministic factor framework across multiple sports, with no lookahead bias and full historical replay validation. The key operators are the Brier score for calibration, confidence inversion for detecting overconfidence, and isotonic calibration for ensuring predictive validity. The failure mode lies in assuming that closing lines do not already incorporate the signal, which is addressed by testing market slices and confirming zero break-even results. The model's inability to improve beyond baseline indicates that the edge, if any, is either non-existent or already priced in. The most promising untested area is the behavioral or institutional dynamics of betting markets—specifically, how asymmetric information or agent heterogeneity affects line-setting behavior. This would require datasets capturing trader identities, order flow, or betting volume by side, which are not currently available in public datasets like nflverse.\n\nDeep epistemic analysis for c1-edge-hunt (62bcda30f1efc903, domain=other, pages_read=2/2): Operator 'Market Closing Line Walk-Forward' (page 1, domain other) captures: - Market closing line walk-forward: pooled Brier 0.2106, CI [0.2050, 0.2172], n=2,750. Assumptions: Predictions are probabilistic, outcomes binary, sample size sufficient for confidence interval estimation. Breakdown regime: When Brier score exceeds 0.25, indicates overconfidence or model misalignment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used to evaluate predictive accuracy of model outputs against actual closing lines in real-time. Operator 'Confidence Tail Inversion' (page 1, domain other) captures: - Independently corroborated on LIVE production picks: the >=80 confidence tail is 152 graded picks, 61 wins, 40%, INVERTED; resolution 0.005 on 1,663 graded picks. Assumptions: High-confidence predictions are inversely correlated with performance, indicating overconfidence bias. Breakdown regime: When confidence exceeds 0.8 but ROI drops below 50%, suggests model failure in calibration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps confidence thresholds to inverse performance metrics, identifying calibration issues. Operator 'Line Walk-Forward Calibration' (page 1, domain other) captures: Best calibrator isotonic, +0.00007 — the close is already near-perfectly calibrated, there is essentially nothing to recalibrate. Assumptions: Raw predictions are non-calibrated, isotonic regression improves alignment with observed frequencies. Breakdown regime: When \\Delta < 0.001, model is effectively calibrated and further adjustment is unnecessary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures model outputs align with empirical outcome distributions, reducing miscalibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for c1-edge-hunt (62bcda30f1efc903, domain=other, pages_read=2/2): Operator 'Market Closing Line Walk-Forward' (page 1, domain other) captures: - Market closing line walk-forward: pooled Brier 0.2106, CI [0.2050, 0.2172], n=2,750. Assumptions: Predictions are probabilistic, outcomes binary, sample size sufficient for confidence interval estimation. Breakdown regime: When Brier score exceeds 0.25, indicates overconfidence or model misalignment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used to evaluate predictive accuracy of model outputs against actual closing lines in real-time. Operator 'Confidence Tail Inversion' (page 1, domain other) captures: - Independently corroborated on LIVE production picks: the >=80 confidence tail is 152 graded picks, 61 wins, 40%, INVERTED; resolution 0.005 on 1,663 graded picks. Assumptions: High-confidence predictions are inversely correlated with performance, indicating overconfidence bias. Breakdown regime: When confidence exceeds 0.8 but ROI drops below 50%, suggests model failure in calibration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps confidence thresholds to inverse performance metrics, identifying calibration issues. Operator 'Line Walk-Forward Calibration' (page 1, domain other) captures: Best calibrator isotonic, +0.00007 — the close is already near-perfectly calibrated, there is essentially nothing to recalibrate. Assumptions: Raw predictions are non-calibrated, isotonic regression improves alignment with observed frequencies. Breakdown regime: When \\Delta < 0.001, model is effectively calibrated and further adjustment is unnecessary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ensures model outputs align with empirical outcome distributions, reducing miscalibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical learning theory and modern conformal prediction, building upon work in probabilistic forecasting and calibration by Vovk, Shafer, and others. Retrocausal Genealogy: Rooted in c1-edge-hunt (62bcda30f1efc903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in c1-edge-hunt (62bcda30f1efc903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bookmakers who set closing lines based on aggregate market sentiment and risk management, and traders who may act on inefficiencies. The model assumes these agents are rational but not perfectly informed, creating potential for exploitation through superior information processing. Theory of Mind & Decision Maker Model: Rooted in c1-edge-hunt (62bcda30f1efc903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that features used in the deterministic model do not redundantly encode the same signal as the closing line. Leakage veto ensures that any derived variable does not directly reflect the outcome or line itself, maintaining independence. Cross-Layer Veto & Anti-Leakage Check: Rooted in c1-edge-hunt (62bcda30f1efc903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

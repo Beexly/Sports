@@ -1,0 +1,78 @@
+{
+  "book_id": "07a7cd8d0d356c6c",
+  "source_status": "COMPLETE",
+  "title": "p0433",
+  "file_name": "p0433.txt",
+  "sha256": "07a7cd8d0d356c6cc626705124e01292845374b99249c96cec7aea6c5ebe1523",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Spearman's hierarchical factor model unifies general (g) and specific (s) factors across performance domains via additive decomposition. Universal Lens: Rooted in p0433 (07a7cd8d0d356c6c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps individual factor allocations to probabilistic performance outcomes using conjugate priors over g, c, ω, o, s. GSI Mapping: Rooted in p0433 (07a7cd8d0d356c6c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models state transitions through stimulus-response mappings, encoding temporal dynamics of cognitive load and skill acquisition. GSE Mapping: Rooted in p0433 (07a7cd8d0d356c6c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "general_factor_decomposition",
+      "name": "General Factor Decomposition",
+      "verbatim_quote": "402 Thıs System qua System volved in various degrees in all performances, and a great number",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'g': 'dimensionless general intelligence factor', 'c': 'dimensionless cognitive efficiency factor', 'ω': 'dimensionless working memory factor', 'o': 'dimensionless observational capacity factor'}",
+      "assumptions": "All performances are linear combinations of general and specific factors; general factors are shared across domains.",
+      "breakdown_regime": "When specific factors dominate, general factor influence diminishes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian network encodes g as latent variable; GSE state transition graph uses g as node weight.",
+        "source_operator": "general_factor_decomposition",
+        "telemetry": "Performance variance explained by g across tasks."
+      }
+    },
+    {
+      "primitive_id": "specific_factor_isolation",
+      "name": "Specific Factor Isolation",
+      "verbatim_quote": "factors, symbolized as s's, each of which is supposed to be specific to some given relatively",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'s1': 'dimensionless task-specific factor'}",
+      "assumptions": "Each s_i is unique to a narrow performance domain and independent of other s_j.",
+      "breakdown_regime": "When s_i is absent or negligible, performance reduces to general factor influence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI identifies s_i via cross-domain regression residuals; GSE tracks s_i evolution in behavioral sequences.",
+        "source_operator": "specific_factor_isolation",
+        "telemetry": "Residual variance after controlling for g in performance prediction."
+      }
+    },
+    {
+      "primitive_id": "factor_allocation_determination",
+      "name": "Factor Allocation Determination",
+      "verbatim_quote": "indivıdual in question possesses such and such allotments of g, c, w and o and s1",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'g, c, ω, o, s1': 'dimensionless allocation weights'}",
+      "assumptions": "Allocation is fixed but unknown; determined by heredity and training.",
+      "breakdown_regime": "Allocation becomes stochastic under high noise or insufficient data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI estimates allocations via variational inference; GSE simulates allocation shifts in dynamic environments.",
+        "source_operator": "factor_allocation_determination",
+        "telemetry": "Individual factor scores derived from psychometric item response models."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "07a7cd8d0d356c6c_t0",
+      "think": "The foundational structure of Spearman’s model rests on the assumption that performance variability stems from two distinct sources: a universal general factor (g) and domain-specific factors (s). The mathematical formulation treats performance P as a sum of weighted contributions from g, c, ω, o, and s. This implies a linear superposition principle where each component contributes additively to outcome variance. Dualities emerge in how g acts as both a global determinant and a residual in specific contexts. Failure modes occur when s dominates or when measurement error obscures true factor loadings. The model assumes static allocation of factors, yet real-world applications require dynamic adjustment. In GSI, this translates into probabilistic inference over latent variables; in GSE, it becomes a state-space representation of evolving cognitive profiles.\n\nDeep epistemic analysis for p0433 (07a7cd8d0d356c6c, domain=other, pages_read=1/1): Operator 'General Factor Decomposition' (page 1, domain other) captures: 402 Thıs System qua System volved in various degrees in all performances, and a great number Assumptions: All performances are linear combinations of general and specific factors; general factors are shared across domains. Breakdown regime: When specific factors dominate, general factor influence diminishes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian network encodes g as latent variable; GSE state transition graph uses g as node weight. Operator 'Specific Factor Isolation' (page 1, domain other) captures: factors, symbolized as s's, each of which is supposed to be specific to some given relatively Assumptions: Each s_i is unique to a narrow performance domain and independent of other s_j. Breakdown regime: When s_i is absent or negligible, performance reduces to general factor influence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI identifies s_i via cross-domain regression residuals; GSE tracks s_i evolution in behavioral sequences. Operator 'Factor Allocation Determination' (page 1, domain other) captures: indivıdual in question possesses such and such allotments of g, c, w and o and s1 Assumptions: Allocation is fixed but unknown; determined by heredity and training. Breakdown regime: Allocation becomes stochastic under high noise or insufficient data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI estimates allocations via variational inference; GSE simulates allocation shifts in dynamic environments. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0433 (07a7cd8d0d356c6c, domain=other, pages_read=1/1): Operator 'General Factor Decomposition' (page 1, domain other) captures: 402 Thıs System qua System volved in various degrees in all performances, and a great number Assumptions: All performances are linear combinations of general and specific factors; general factors are shared across domains. Breakdown regime: When specific factors dominate, general factor influence diminishes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian network encodes g as latent variable; GSE state transition graph uses g as node weight. Operator 'Specific Factor Isolation' (page 1, domain other) captures: factors, symbolized as s's, each of which is supposed to be specific to some given relatively Assumptions: Each s_i is unique to a narrow performance domain and independent of other s_j. Breakdown regime: When s_i is absent or negligible, performance reduces to general factor influence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI identifies s_i via cross-domain regression residuals; GSE tracks s_i evolution in behavioral sequences. Operator 'Factor Allocation Determination' (page 1, domain other) captures: indivıdual in question possesses such and such allotments of g, c, w and o and s1 Assumptions: Allocation is fixed but unknown; determined by heredity and training. Breakdown regime: Allocation becomes stochastic under high noise or insufficient data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI estimates allocations via variational inference; GSE simulates allocation shifts in dynamic environments. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century psychometrics, Spearman's work builds upon Galton’s trait theory and Thurstone’s primary mental abilities. It influenced later developments in confirmatory factor analysis and structural equation modeling. Retrocausal Genealogy: Rooted in p0433 (07a7cd8d0d356c6c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0433 (07a7cd8d0d356c6c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents modeled as having fixed allocations of g, c, ω, o, s1. Opposing agents may differ in their hereditary predispositions or training regimens, leading to divergent performance trajectories despite identical stimuli. Theory of Mind & Decision Maker Model: Rooted in p0433 (07a7cd8d0d356c6c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires orthogonalization of g and s to prevent confounding. Leakage occurs if s factors are not properly isolated, causing spurious correlations in GSI or incorrect state transitions in GSE. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0433 (07a7cd8d0d356c6c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

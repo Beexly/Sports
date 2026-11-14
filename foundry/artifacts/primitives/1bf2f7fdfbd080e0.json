@@ -1,0 +1,78 @@
+{
+  "book_id": "1bf2f7fdfbd080e0",
+  "source_status": "COMPLETE",
+  "title": "RECOVERY_NOTES",
+  "file_name": "RECOVERY_NOTES.md",
+  "sha256": "1bf2f7fdfbd080e090d5218d92c8280a33cef263d79fa4fbe22189196499ab36",
+  "primary_domain": "physiology",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Kernel recovery fidelity maps to a deterministic codebase twin invariant under branch rebasing and SHA256 verification. Universal Lens: Rooted in RECOVERY_NOTES (1bf2f7fdfbd080e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on recovery traces uses structural test invariants to validate plan purity and exclude model dependencies. GSI Mapping: Rooted in RECOVERY_NOTES (1bf2f7fdfbd080e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE employs state transitions guided by deterministic CLI shells and pure kernel functions for plan execution. GSE Mapping: Rooted in RECOVERY_NOTES (1bf2f7fdfbd080e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "recovery_fidelity",
+      "name": "Codebase Recovery Fidelity",
+      "verbatim_quote": "## Extraction fidelity 17 of 18 package files are byte-identical (sha256-verified) to the #127 blobs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{\\\\text{fidelity}}': '\\\\text{dimensionless ratio of preserved bytes}', 'N_{\\\\text{files}}': '\\\\text{total number of files}', 'N_{\\\\text{identical}}': '\\\\text{number of identical files}'}",
+      "assumptions": "All files except one match exactly; extraction preserves SHA256 integrity.",
+      "breakdown_regime": "When $ N_{\\text{identical}} < N_{\\text{files}} $, recovery is compromised.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Recovery fidelity ensures isomorphic mapping between original and extracted package trees.",
+        "source_operator": "recovery_fidelity",
+        "telemetry": "SHA256 checksums of package files"
+      }
+    },
+    {
+      "primitive_id": "kernel_purity",
+      "name": "Kernel Purity Invariant",
+      "verbatim_quote": "- Zero hidden clocks in the kernel: `generatedAt` / `repositoryCommit` are injected parameters (`plan-receipt.ts`, `BuildPlanReceiptInput`); the receipt hash excludes `generatedAt`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{pure}}': '\\\\text{boolean purity flag}', 'T_{\\\\text{clock}}': '\\\\text{time-dependent parameter}', 'H_{\\\\text{receipt}}': '\\\\text{hash of receipt excluding time}'}",
+      "assumptions": "Time-sensitive parameters are externally injected, not derived internally.",
+      "breakdown_regime": "If $ T_{\\text{clock}} \\in \\text{kernel} $, then $ P_{\\text{pure}} = \\text{false} $.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel purity enables deterministic plan generation without temporal leakage.",
+        "source_operator": "kernel_purity",
+        "telemetry": "Clock injection verification in plan receipts"
+      }
+    },
+    {
+      "primitive_id": "twin_determinism",
+      "name": "Codebase Twin Determinism",
+      "verbatim_quote": "## Codebase Twin The Twin contracts and implementation (`contracts.ts`, `codebase-twin.ts`, `repo-evidence.ts`) are pure — a deterministic function over the committed evidence table — and were recovered in full, not as types-only stubs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{twin}}': '\\\\text{deterministic function of committed evidence}', 'E_{\\\\text{evidence}}': '\\\\text{committed evidence table}', 'F_{\\\\text{contract}}': '\\\\text{contract interface}'}",
+      "assumptions": "Evidence table is complete and deterministic; twin logic is pure.",
+      "breakdown_regime": "If $ D_{\\text{twin}}(E_{\\text{evidence}}) \\neq F_{\\text{contract}} $, then twin is inconsistent.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Deterministic twin logic allows reproducible plan compilation from evidence.",
+        "source_operator": "twin_determinism",
+        "telemetry": "Consistency check of twin against evidence table"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1bf2f7fdfbd080e0_t0",
+      "think": "The recovery process establishes a deterministic kernel through SHA256 fidelity checks and exclusion of impure elements such as hidden clocks or model calls. The kernel's purity is enforced by injecting time-sensitive parameters externally rather than deriving them internally. This ensures that plan generation remains reproducible and free from temporal variance. The codebase twin is a deterministic mapping from committed evidence to functional contracts, enabling consistent plan compilation across environments. Failure occurs when fidelity drops below threshold or when impurities leak into the kernel. The system's robustness stems from its reliance on immutable evidence tables and explicit parameter injection.\n\nDeep epistemic analysis for RECOVERY_NOTES (1bf2f7fdfbd080e0, domain=physiology, pages_read=1/1): Operator 'Codebase Recovery Fidelity' (page 1, domain physiology) captures: ## Extraction fidelity 17 of 18 package files are byte-identical (sha256-verified) to the #127 blobs. Assumptions: All files except one match exactly; extraction preserves SHA256 integrity. Breakdown regime: When $ N_{\\text{identical}} < N_{\\text{files}} $, recovery is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Recovery fidelity ensures isomorphic mapping between original and extracted package trees. Operator 'Kernel Purity Invariant' (page 1, domain physiology) captures: - Zero hidden clocks in the kernel: `generatedAt` / `repositoryCommit` are injected parameters (`plan-receipt.ts`, `BuildPlanReceiptInput`); the receipt hash excludes `generatedAt`. Assumptions: Time-sensitive parameters are externally injected, not derived internally. Breakdown regime: If $ T_{\\text{clock}} \\in \\text{kernel} $, then $ P_{\\text{pure}} = \\text{false} $. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel purity enables deterministic plan generation without temporal leakage. Operator 'Codebase Twin Determinism' (page 1, domain physiology) captures: ## Codebase Twin The Twin contracts and implementation (`contracts.ts`, `codebase-twin.ts`, `repo-evidence.ts`) are pure — a deterministic function over the committed evidence table — and were recovered in full, not as types-only stubs. Assumptions: Evidence table is complete and deterministic; twin logic is pure. Breakdown regime: If $ D_{\\text{twin}}(E_{\\text{evidence}}) \\neq F_{\\text{contract}} $, then twin is inconsistent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Deterministic twin logic allows reproducible plan compilation from evidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RECOVERY_NOTES (1bf2f7fdfbd080e0, domain=physiology, pages_read=1/1): Operator 'Codebase Recovery Fidelity' (page 1, domain physiology) captures: ## Extraction fidelity 17 of 18 package files are byte-identical (sha256-verified) to the #127 blobs. Assumptions: All files except one match exactly; extraction preserves SHA256 integrity. Breakdown regime: When $ N_{\\text{identical}} < N_{\\text{files}} $, recovery is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Recovery fidelity ensures isomorphic mapping between original and extracted package trees. Operator 'Kernel Purity Invariant' (page 1, domain physiology) captures: - Zero hidden clocks in the kernel: `generatedAt` / `repositoryCommit` are injected parameters (`plan-receipt.ts`, `BuildPlanReceiptInput`); the receipt hash excludes `generatedAt`. Assumptions: Time-sensitive parameters are externally injected, not derived internally. Breakdown regime: If $ T_{\\text{clock}} \\in \\text{kernel} $, then $ P_{\\text{pure}} = \\text{false} $. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel purity enables deterministic plan generation without temporal leakage. Operator 'Codebase Twin Determinism' (page 1, domain physiology) captures: ## Codebase Twin The Twin contracts and implementation (`contracts.ts`, `codebase-twin.ts`, `repo-evidence.ts`) are pure — a deterministic function over the committed evidence table — and were recovered in full, not as types-only stubs. Assumptions: Evidence table is complete and deterministic; twin logic is pure. Breakdown regime: If $ D_{\\text{twin}}(E_{\\text{evidence}}) \\neq F_{\\text{contract}} $, then twin is inconsistent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Deterministic twin logic allows reproducible plan compilation from evidence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Historically rooted in formal verification principles from software engineering and mathematical logic, tracing back to early notions of deterministic computation and purity in functional programming. Retrocausal Genealogy: Rooted in RECOVERY_NOTES (1bf2f7fdfbd080e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RECOVERY_NOTES (1bf2f7fdfbd080e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to introduce temporal variance or model dependencies to compromise plan integrity. The kernel's design assumes adversarial inputs but maintains invariants through explicit parameterization and deterministic logic. Theory of Mind & Decision Maker Model: Rooted in RECOVERY_NOTES (1bf2f7fdfbd080e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by enforcing zero-prisma, zero-model-call, and zero-clock policies. Leakage vetoes occur if any impure element enters the kernel or if evidence table integrity is violated. Cross-Layer Veto & Anti-Leakage Check: Rooted in RECOVERY_NOTES (1bf2f7fdfbd080e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in RECOVERY_NOTES (1bf2f7fdfbd080e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

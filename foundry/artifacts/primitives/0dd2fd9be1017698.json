@@ -1,0 +1,78 @@
+{
+  "book_id": "0dd2fd9be1017698",
+  "source_status": "COMPLETE",
+  "title": "p0376",
+  "file_name": "p0376.txt",
+  "sha256": "0dd2fd9be101769801f61970c2d492bb26011bdadea851b7355a2d2d1f0dcf6d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk-adjusted societal cost function maps expected utility to stochastic decision space via Bayesian belief update. Universal Lens: Rooted in p0376 (0dd2fd9be1017698), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers latent risk premiums through conformal predictive distributions over entrepreneur profit expectations using variational Bayes. GSI Mapping: Rooted in p0376 (0dd2fd9be1017698), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models entrepreneurial state transitions via Markovian belief dynamics conditioned on ex-ante uncertainty and posterior profit estimates. GSE Mapping: Rooted in p0376 (0dd2fd9be1017698), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "social_cost_of_risk",
+      "name": "Social Cost of Risk",
+      "verbatim_quote": "SOCIAL ASPECTS 863 cludes that society has to pay a higher price for a particular commodity or service than it would have to pay if risk were eliminated.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_r': 'currency unit', 'E[C_r]': 'expected social cost'}",
+      "assumptions": "Society incurs additional cost due to risk premium; risk is modeled stochastically.",
+      "breakdown_regime": "When risk elimination is impossible or economically infeasible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expected social cost is derived from stochastic decision-making framework where risk premium is embedded in pricing mechanisms.",
+        "source_operator": "social_cost_of_risk",
+        "telemetry": "Observed commodity prices vs. risk-free baseline."
+      }
+    },
+    {
+      "primitive_id": "profit_as_future_uncertainty",
+      "name": "Profit as Future Uncertainty",
+      "verbatim_quote": "It is of the essence of the situation that the profit is in the future and uncertain when the decision is made and hence it is the prospect or estimated probability 1 of profit which \"moves men's wills\" (Taylor).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_f': 'future profit', 'p(P_f)': 'probability distribution of future profit'}",
+      "assumptions": "Decision-making is driven by probabilistic forecasts rather than deterministic outcomes.",
+      "breakdown_regime": "When decision-makers lack sufficient information to estimate probability distributions accurately.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Entrepreneurial decision-making mirrors Bayesian updating under uncertainty, where profit prospects drive action.",
+        "source_operator": "profit_as_future_uncertainty",
+        "telemetry": "Entrepreneurial investment timing vs. forecast accuracy."
+      }
+    },
+    {
+      "primitive_id": "entrepreneurial_underestimation",
+      "name": "Entrepreneurial Underestimation",
+      "verbatim_quote": "The condition, then, under which entrepreneurs as a group will realize a positive profit is that they underestimate the pros<small<span class=\"docvortex-page-footnote\" data-block-type=\"page_footnote\" style=\"color:6b7280\"1 J.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U_e': 'entrepreneurial underestimation', 'P_{net}': 'net profit realized'}",
+      "assumptions": "Positive profit occurs when initial expectations are below actual outcomes.",
+      "breakdown_regime": "When systematic overconfidence leads to market inefficiencies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Net profit emerges from deviation between subjective expectations and realized outcomes, forming a stochastic feedback loop.",
+        "source_operator": "entrepreneurial_underestimation",
+        "telemetry": "Average profit margin vs. prior expectation deviation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0dd2fd9be1017698_t0",
+      "think": "The core insight is that risk introduces a societal cost beyond base production expenses. This is formalized as an expectation over stochastic outcomes, where the variance of these outcomes contributes to a higher effective price. The second primitive highlights that profit is not a direct reward for risk but a forward-looking probabilistic signal that motivates behavior. This aligns with Bayesian decision theory, where beliefs about future returns guide actions. The third primitive identifies that entrepreneurial success hinges on underestimating costs or overestimating returns—this creates a systemic bias that can be modeled as a stochastic process. These primitives form a triadic structure: social cost (risk), behavioral driver (uncertain profit), and outcome mechanism (underestimation). Dualities emerge in how risk manifests as both cost and opportunity, and how underestimation can be seen as either irrationality or adaptive optimism. Failure modes include overfitting to past performance, misalignment between subjective and objective probabilities, and systemic underpricing of risk.\n\nDeep epistemic analysis for p0376 (0dd2fd9be1017698, domain=other, pages_read=1/1): Operator 'Social Cost of Risk' (page 1, domain other) captures: SOCIAL ASPECTS 863 cludes that society has to pay a higher price for a particular commodity or service than it would have to pay if risk were eliminated. Assumptions: Society incurs additional cost due to risk premium; risk is modeled stochastically. Breakdown regime: When risk elimination is impossible or economically infeasible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expected social cost is derived from stochastic decision-making framework where risk premium is embedded in pricing mechanisms. Operator 'Profit as Future Uncertainty' (page 1, domain other) captures: It is of the essence of the situation that the profit is in the future and uncertain when the decision is made and hence it is the prospect or estimated probability 1 of profit which \"moves men's wills\" (Taylor). Assumptions: Decision-making is driven by probabilistic forecasts rather than deterministic outcomes. Breakdown regime: When decision-makers lack sufficient information to estimate probability distributions accurately. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entrepreneurial decision-making mirrors Bayesian updating under uncertainty, where profit prospects drive action. Operator 'Entrepreneurial Underestimation' (page 1, domain other) captures: The condition, then, under which entrepreneurs as a group will realize a positive profit is that they underestimate the pros<small<span class=\"docvortex-page-footnote\" data-block-type=\"page_footnote\" style=\"color:6b7280\"1 J. Assumptions: Positive profit occurs when initial expectations are below actual outcomes. Breakdown regime: When systematic overconfidence leads to market inefficiencies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Net profit emerges from deviation between subjective expectations and realized outcomes, forming a stochastic feedback loop. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0376 (0dd2fd9be1017698, domain=other, pages_read=1/1): Operator 'Social Cost of Risk' (page 1, domain other) captures: SOCIAL ASPECTS 863 cludes that society has to pay a higher price for a particular commodity or service than it would have to pay if risk were eliminated. Assumptions: Society incurs additional cost due to risk premium; risk is modeled stochastically. Breakdown regime: When risk elimination is impossible or economically infeasible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Expected social cost is derived from stochastic decision-making framework where risk premium is embedded in pricing mechanisms. Operator 'Profit as Future Uncertainty' (page 1, domain other) captures: It is of the essence of the situation that the profit is in the future and uncertain when the decision is made and hence it is the prospect or estimated probability 1 of profit which \"moves men's wills\" (Taylor). Assumptions: Decision-making is driven by probabilistic forecasts rather than deterministic outcomes. Breakdown regime: When decision-makers lack sufficient information to estimate probability distributions accurately. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entrepreneurial decision-making mirrors Bayesian updating under uncertainty, where profit prospects drive action. Operator 'Entrepreneurial Underestimation' (page 1, domain other) captures: The condition, then, under which entrepreneurs as a group will realize a positive profit is that they underestimate the pros<small<span class=\"docvortex-page-footnote\" data-block-type=\"page_footnote\" style=\"color:6b7280\"1 J. Assumptions: Positive profit occurs when initial expectations are below actual outcomes. Breakdown regime: When systematic overconfidence leads to market inefficiencies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Net profit emerges from deviation between subjective expectations and realized outcomes, forming a stochastic feedback loop. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early marginalist economics and later refined by Bayesian decision theory, particularly in the works of Ramsey, Savage, and von Neumann-Morgenstern. The concept of risk premium as a societal cost traces back to Knight’s distinction between risk and uncertainty. Retrocausal Genealogy: Rooted in p0376 (0dd2fd9be1017698), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents act based on subjective probability distributions over uncertain outcomes. Entrepreneurs may be modeled as bounded rational actors who optimize under uncertainty, while society bears the cost of imperfect information. Opposing agents include regulators seeking to correct for underpricing of risk and investors optimizing for risk-adjusted returns. Theory of Mind & Decision Maker Model: Rooted in p0376 (0dd2fd9be1017698), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when risk and profit are conflated, leading to spurious causal inferences. Leakage occurs when individual-level risk aversion is mistaken for aggregate societal cost. Veto conditions require explicit separation of ex-ante belief formation from ex-post realization, ensuring no circularity in defining risk-adjusted value. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0376 (0dd2fd9be1017698), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

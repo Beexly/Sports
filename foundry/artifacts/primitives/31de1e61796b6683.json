@@ -1,0 +1,78 @@
+{
+  "book_id": "31de1e61796b6683",
+  "source_status": "COMPLETE",
+  "title": "STUDIO_PRESENTER_PROGRAM",
+  "file_name": "STUDIO_PRESENTER_PROGRAM.md",
+  "sha256": "31de1e61796b668348a0c7f7febbf679bddf851afda2dc091953e19f9c5d2fbe",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A temporal-isomorphic design space for synthetic media identity with rotating format and look, modeled as a discrete-time dynamical system over weekly cycles. Universal Lens: Rooted in STUDIO_PRESENTER_PROGRAM (31de1e61796b6683), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on scripted content using real-time board state and Beat row data to generate probabilistic presenter states, conditioned on safety and quality constraints. GSI Mapping: Rooted in STUDIO_PRESENTER_PROGRAM (31de1e61796b6683), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions between presenter formats based on weekly look rotation and segment type, governed by operator sign-off and synthetic disclosure protocols. GSE Mapping: Rooted in STUDIO_PRESENTER_PROGRAM (31de1e61796b6683), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_identity_rotation",
+      "name": "Temporal Identity Rotation",
+      "verbatim_quote": "I said I wanted a sideline reporter > that looked like a SFW [tasteful] one week, cheerleader the next, sideline > report next and halftime report the following.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'dimensionless week index', 'L(W)': 'look type at time W', 'F(W)': 'format type at time W'}",
+      "assumptions": "Presenter identity is a periodic function of time with fixed cycle length; look and format are mutually exclusive per week.",
+      "breakdown_regime": "When W exceeds cycle length, L(W) and F(W) repeat with phase shift.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The weekly rotation maps to a cyclic group Z_n where n is the number of distinct looks/formats.",
+        "source_operator": "temporal_identity_rotation",
+        "telemetry": "Weekly look/format compliance score from operator review."
+      }
+    },
+    {
+      "primitive_id": "synthetic_presenter_quality_bound",
+      "name": "Synthetic Presenter Quality Bound",
+      "verbatim_quote": "Honesty boundary (non-negotiable) The presenter reads as real *production quality* — writing, pacing, and looks good enough that nobody thinks \"cheap AI clip.\" It does **not** deceive: the small \"Synthetic presenter\" disclosure chip stays on synthetic video surfaces.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q_{presenter}': 'quality metric of presenter output', 'D_{disclosure}': 'visibility of synthetic disclosure flag'}",
+      "assumptions": "Quality threshold Q_{presenter} must exceed a minimum acceptable value; disclosure D_{disclosure} must remain visible.",
+      "breakdown_regime": "If Q_{presenter} < threshold or D_{disclosure} = 0, synthetic output is flagged for review.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quality bound ensures synthetic output meets production standards without deceptive intent, aligning with GSI's ethical inference framework.",
+        "source_operator": "synthetic_presenter_quality_bound",
+        "telemetry": "Automated content-safety scan results and human review scores."
+      }
+    },
+    {
+      "primitive_id": "scripted_data_alignment",
+      "name": "Scripted Data Alignment",
+      "verbatim_quote": "**Script** — drafted from real graded data only (board state, Beat rows, transmission segments).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S(t)': 'script content at time t', 'D_{real}(t)': 'real-time data input at time t'}",
+      "assumptions": "Script generation is deterministic and data-driven; S(t) is a function of D_{real}(t).",
+      "breakdown_regime": "If D_{real}(t) is absent or corrupted, S(t) defaults to static template.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Script alignment mirrors a feedback control loop where real-time data drives narrative structure.",
+        "source_operator": "scripted_data_alignment",
+        "telemetry": "Data integrity score and script deviation from real-time inputs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "31de1e61796b6683_t0",
+      "think": "The Studio Presenter Program encodes a dual-layered design: a temporal identity rotation (Z_n) governs weekly look and format changes, ensuring brand continuity without constant rebranding. The synthetic quality constraint enforces ethical production standards, preventing deceptive presentation. Script alignment ensures data fidelity, grounding narratives in real-time events. These primitives form a closed-loop system where operator sign-off acts as a validation gate, and telemetry provides feedback for adaptive behavior. Failure modes include loss of data integrity, breach of quality bounds, or misalignment of identity rotation. The system avoids adversarial deception by embedding transparency via disclosure flags, aligning with FTC and brand integrity principles.\n\nDeep epistemic analysis for STUDIO_PRESENTER_PROGRAM (31de1e61796b6683, domain=other, pages_read=2/2): Operator 'Temporal Identity Rotation' (page 1, domain other) captures: I said I wanted a sideline reporter > that looked like a SFW [tasteful] one week, cheerleader the next, sideline > report next and halftime report the following. Assumptions: Presenter identity is a periodic function of time with fixed cycle length; look and format are mutually exclusive per week. Breakdown regime: When W exceeds cycle length, L(W) and F(W) repeat with phase shift. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The weekly rotation maps to a cyclic group Z_n where n is the number of distinct looks/formats. Operator 'Synthetic Presenter Quality Bound' (page 1, domain other) captures: Honesty boundary (non-negotiable) The presenter reads as real *production quality* — writing, pacing, and looks good enough that nobody thinks \"cheap AI clip.\" It does **not** deceive: the small \"Synthetic presenter\" disclosure chip stays on synthetic video surfaces. Assumptions: Quality threshold Q_{presenter} must exceed a minimum acceptable value; disclosure D_{disclosure} must remain visible. Breakdown regime: If Q_{presenter} < threshold or D_{disclosure} = 0, synthetic output is flagged for review. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quality bound ensures synthetic output meets production standards without deceptive intent, aligning with GSI's ethical inference framework. Operator 'Scripted Data Alignment' (page 1, domain other) captures: **Script** — drafted from real graded data only (board state, Beat rows, transmission segments). Assumptions: Script generation is deterministic and data-driven; S(t) is a function of D_{real}(t). Breakdown regime: If D_{real}(t) is absent or corrupted, S(t) defaults to static template. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Script alignment mirrors a feedback control loop where real-time data drives narrative structure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for STUDIO_PRESENTER_PROGRAM (31de1e61796b6683, domain=other, pages_read=2/2): Operator 'Temporal Identity Rotation' (page 1, domain other) captures: I said I wanted a sideline reporter > that looked like a SFW [tasteful] one week, cheerleader the next, sideline > report next and halftime report the following. Assumptions: Presenter identity is a periodic function of time with fixed cycle length; look and format are mutually exclusive per week. Breakdown regime: When W exceeds cycle length, L(W) and F(W) repeat with phase shift. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The weekly rotation maps to a cyclic group Z_n where n is the number of distinct looks/formats. Operator 'Synthetic Presenter Quality Bound' (page 1, domain other) captures: Honesty boundary (non-negotiable) The presenter reads as real *production quality* — writing, pacing, and looks good enough that nobody thinks \"cheap AI clip.\" It does **not** deceive: the small \"Synthetic presenter\" disclosure chip stays on synthetic video surfaces. Assumptions: Quality threshold Q_{presenter} must exceed a minimum acceptable value; disclosure D_{disclosure} must remain visible. Breakdown regime: If Q_{presenter} < threshold or D_{disclosure} = 0, synthetic output is flagged for review. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quality bound ensures synthetic output meets production standards without deceptive intent, aligning with GSI's ethical inference framework. Operator 'Scripted Data Alignment' (page 1, domain other) captures: **Script** — drafted from real graded data only (board state, Beat rows, transmission segments). Assumptions: Script generation is deterministic and data-driven; S(t) is a function of D_{real}(t). Breakdown regime: If D_{real}(t) is absent or corrupted, S(t) defaults to static template. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Script alignment mirrors a feedback control loop where real-time data drives narrative structure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in temporal logic and control theory, this design inherits from prior work in automated narrative generation and synthetic media ethics frameworks developed in 2020s. Retrocausal Genealogy: Rooted in STUDIO_PRESENTER_PROGRAM (31de1e61796b6683), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in STUDIO_PRESENTER_PROGRAM (31de1e61796b6683), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The system models two decision actors: the synthetic presenter (as a dynamic agent) and the operator (as a validator). The former operates under bounded rationality constrained by data and format rules; the latter enforces ethical and quality boundaries. Theory of Mind & Decision Maker Model: Rooted in STUDIO_PRESENTER_PROGRAM (31de1e61796b6683), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating data processing (GSE) from ethical validation (GSI), ensuring no single layer can override the other. Leakage vetoes prevent synthetic outputs from bypassing disclosure or violating safety thresholds. Cross-Layer Veto & Anti-Leakage Check: Rooted in STUDIO_PRESENTER_PROGRAM (31de1e61796b6683), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

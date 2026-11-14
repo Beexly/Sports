@@ -1,0 +1,78 @@
+{
+  "book_id": "50f5d85991fe221e",
+  "source_status": "COMPLETE",
+  "title": "p0180",
+  "file_name": "p0180.txt",
+  "sha256": "50f5d85991fe221e6ac2ed06ec7cdc05b4dfcc0d67ad4a59d856c5d6d16743cf",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Interest rate equilibrium as ratio of capital income to sacrifice, tending toward static supply-demand balance under uncertainty. Universal Lens: Rooted in p0180 (50f5d85991fe221e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on interest rate trends using stochastic priors over capital stock and consumption flows. GSI Mapping: Rooted in p0180 (50f5d85991fe221e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in capital accumulation driven by dynamic savings-investment feedback loops. GSE Mapping: Rooted in p0180 (50f5d85991fe221e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "equilibrium_interest_ratio",
+      "name": "Equilibrium Interest Ratio",
+      "verbatim_quote": "The equilibrium ratio of the annual value income yielded by the capital goods created to the present value sacrificed in creating them — that ratio at which no further net conversion (saving and investment) takes place — is the theoretical long-time rate of interest.",
+      "page": 1,
+      "latex": "\\frac{\\dot{K}}{K_0} = r^*",
+      "symbol_and_unit_ledger": "{'\\\\dot{K}': 'annual capital income (currency/year)', 'K_0': 'present value of capital stock (currency)', 'r^*': 'equilibrium interest rate (dimensionless)'}",
+      "assumptions": "Static capital structure, constant returns to scale, perfect foresight.",
+      "breakdown_regime": "When \\dot{K}/K_0 \\neq r^*, net conversion persists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Bayesian posterior on r^*; GSE: state transition to new capital stock.",
+        "source_operator": "equilibrium_interest_ratio",
+        "telemetry": "Observed capital yield vs. interest rate deviation."
+      }
+    },
+    {
+      "primitive_id": "tendency_toward_equilibrium",
+      "name": "Tendency Toward Equilibrium",
+      "verbatim_quote": "It is the magnitude toward which, as Marshall says,1 the interest rate constantly \"tends.\"Of course, \"other things\" must be assumed to be \"equal.\" But in the nature of the case other things are not and cannot be equal.",
+      "page": 1,
+      "latex": "\\lim_{t \\to \\infty} r(t) \\to r^*",
+      "symbol_and_unit_ledger": "{'r(t)': 'interest rate at time t (dimensionless)', 'r^*': 'equilibrium rate (dimensionless)'}",
+      "assumptions": "Marshallian convergence dynamics, bounded perturbations.",
+      "breakdown_regime": "Non-convergence when external shocks dominate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Conformal prediction intervals for r(t); GSE: policy feedback loop convergence.",
+        "source_operator": "tendency_toward_equilibrium",
+        "telemetry": "Deviation from r^* over time series."
+      }
+    },
+    {
+      "primitive_id": "dynamic_capital_supply",
+      "name": "Dynamic Capital Supply",
+      "verbatim_quote": "As investment takes place, the new income derived from it makes the saving of any given amount constantly easier, thus progressively changing the conditions of supply of new capital.",
+      "page": 1,
+      "latex": "\\frac{dS}{dt} = f(I(t), \\eta(S))",
+      "symbol_and_unit_ledger": "{'S': 'savings level (currency)', 'I(t)': 'investment flow (currency/year)', '\\\\eta(S)': 'efficiency function of savings (dimensionless)'}",
+      "assumptions": "Investment generates income, increasing marginal utility of saving.",
+      "breakdown_regime": "When I(t) < 0 or \\eta(S) < 0, supply contracts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Stochastic volatility model of S(t); GSE: capital stock evolution.",
+        "source_operator": "dynamic_capital_supply",
+        "telemetry": "Change in savings rate relative to investment."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "50f5d85991fe221e_t0",
+      "think": "The equilibrium interest ratio defines a steady-state condition where capital income equals sacrifice, implying a fixed point in the capital accumulation process. This is modeled via a ratio \\dot{K}/K_0 = r^*. The tendency toward equilibrium implies convergence dynamics, expressed as \\lim_{t \\to \\infty} r(t) \\to r^*, suggesting a stable attractor in interest rate behavior. However, this assumes constant conditions, which fail under uncertainty. Dynamic capital supply introduces feedback through \\frac{dS}{dt} = f(I(t), \\eta(S)), where investment increases savings ease, altering capital availability. These primitives form a triadic system: equilibrium rate, convergence tendency, and dynamic supply—each dependent on the others but subject to exogenous shocks. Failure modes include non-convergence due to external disturbances or misalignment between \\dot{K} and K_0. The system's robustness depends on bounded perturbations and consistent utility functions.\n\nDeep epistemic analysis for p0180 (50f5d85991fe221e, domain=other, pages_read=1/1): Operator 'Equilibrium Interest Ratio' (page 1, domain other) captures: The equilibrium ratio of the annual value income yielded by the capital goods created to the present value sacrificed in creating them — that ratio at which no further net conversion (saving and investment) takes place — is the theoretical long-time rate of interest. Assumptions: Static capital structure, constant returns to scale, perfect foresight. Breakdown regime: When \\dot{K}/K_0 \\neq r^*, net conversion persists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Bayesian posterior on r^*; GSE: state transition to new capital stock. Operator 'Tendency Toward Equilibrium' (page 1, domain other) captures: It is the magnitude toward which, as Marshall says,1 the interest rate constantly \"tends.\"Of course, \"other things\" must be assumed to be \"equal.\" But in the nature of the case other things are not and cannot be equal. Assumptions: Marshallian convergence dynamics, bounded perturbations. Breakdown regime: Non-convergence when external shocks dominate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conformal prediction intervals for r(t); GSE: policy feedback loop convergence. Operator 'Dynamic Capital Supply' (page 1, domain other) captures: As investment takes place, the new income derived from it makes the saving of any given amount constantly easier, thus progressively changing the conditions of supply of new capital. Assumptions: Investment generates income, increasing marginal utility of saving. Breakdown regime: When I(t) < 0 or \\eta(S) < 0, supply contracts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Stochastic volatility model of S(t); GSE: capital stock evolution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0180 (50f5d85991fe221e, domain=other, pages_read=1/1): Operator 'Equilibrium Interest Ratio' (page 1, domain other) captures: The equilibrium ratio of the annual value income yielded by the capital goods created to the present value sacrificed in creating them — that ratio at which no further net conversion (saving and investment) takes place — is the theoretical long-time rate of interest. Assumptions: Static capital structure, constant returns to scale, perfect foresight. Breakdown regime: When \\dot{K}/K_0 \\neq r^*, net conversion persists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Bayesian posterior on r^*; GSE: state transition to new capital stock. Operator 'Tendency Toward Equilibrium' (page 1, domain other) captures: It is the magnitude toward which, as Marshall says,1 the interest rate constantly \"tends.\"Of course, \"other things\" must be assumed to be \"equal.\" But in the nature of the case other things are not and cannot be equal. Assumptions: Marshallian convergence dynamics, bounded perturbations. Breakdown regime: Non-convergence when external shocks dominate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conformal prediction intervals for r(t); GSE: policy feedback loop convergence. Operator 'Dynamic Capital Supply' (page 1, domain other) captures: As investment takes place, the new income derived from it makes the saving of any given amount constantly easier, thus progressively changing the conditions of supply of new capital. Assumptions: Investment generates income, increasing marginal utility of saving. Breakdown regime: When I(t) < 0 or \\eta(S) < 0, supply contracts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Stochastic volatility model of S(t); GSE: capital stock evolution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Marshall’s marginal productivity theory, extended by Keynesian liquidity preference and modern stochastic interest rate models. Retrocausal Genealogy: Rooted in p0180 (50f5d85991fe221e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0180 (50f5d85991fe221e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents optimize across time, balancing current consumption against future returns, with heterogeneous beliefs about capital productivity and risk. Theory of Mind & Decision Maker Model: Rooted in p0180 (50f5d85991fe221e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0180 (50f5d85991fe221e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when GSI and GSE models assume independent stochastic processes, yet both depend on shared capital dynamics. Leakage occurs if \\dot{K} is misestimated, invalidating r^* and destabilizing state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0180 (50f5d85991fe221e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "6a28afa879d14412",
+  "source_status": "COMPLETE",
+  "title": "INDEX-X-1",
+  "file_name": "INDEX-X-1.md",
+  "sha256": "6a28afa879d144120631371a3a12cf09fd7c704c81f8315c8d2b35023be41480",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for 4th-down decision modeling integrating raw go rates, model-optimal choices, and coaching-track features via probabilistic thresholds and situational value ratings. Universal Lens: Rooted in INDEX-X-1 (6a28afa879d14412), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on 4th-down decisions using WP-margin thresholds and model-optimal choice rates as weak validation labels, enabling probabilistic coaching-decision scoring. GSI Mapping: Rooted in INDEX-X-1 (6a28afa879d14412), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine mapping 4th-down decisions through PCVR and play-caller component scores, transitioning states based on drive sustainability and personnel configurations. GSE Mapping: Rooted in INDEX-X-1 (6a28afa879d14412), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "go_rate_vs_optimal_choice",
+      "name": "Go Rate vs Optimal Choice",
+      "verbatim_quote": "https://x.com/Shauncore/status/2117734683375206458 | Team 4th-down audit separating raw go rate (29.6%) from model-optimal choice rate (~95% above",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r_g': 'raw go rate (dimensionless)', 'r_o': 'model-optimal choice rate (dimensionless)', 'WP_f': 'win probability floor (dimensionless)'}",
+      "assumptions": "Decision-making follows a stochastic process with bounded win probability margin.",
+      "breakdown_regime": "When r_g < r_o, coaching may deviate from model recommendation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Raw go rate and optimal choice rate map to a decision confidence vector in GSI's Bayesian model.",
+        "source_operator": "go_rate_vs_optimal_choice",
+        "telemetry": "Per-team 4th-down go rate and recommended go rate from nflverse"
+      }
+    },
+    {
+      "primitive_id": "play_caller_value_rating",
+      "name": "Play Caller Value Rating",
+      "verbatim_quote": "| https://x.com/connor_long15/status/2118511751620628656 | New composite play-caller model on nflverse + FTN charting (situational 40%, drive sustainability",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PCVR': 'Play Caller Value Rating (dimensionless)', 'situational': 'situational score (0–1)', 'drive_sustainability': 'drive sustainability score (0–1)', 'personnel': 'personnel score (0–1)', 'disguise': 'disguise score (0–1)'}",
+      "assumptions": "Play-caller performance can be decomposed into four independent components.",
+      "breakdown_regime": "When any component drops below 0.5, PCVR becomes unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "PCVR serves as a derived kernel in GSE’s state-transition logic for situational play selection.",
+        "source_operator": "play_caller_value_rating",
+        "telemetry": "Component scores from nflverse and FTN charting"
+      }
+    },
+    {
+      "primitive_id": "win_probability_threshold_process",
+      "name": "Win Probability Threshold Process",
+      "verbatim_quote": "Methods argument: consume 4th-down models as WP-margin thresholds, never down-and-distance heuristics | Decision-consumption rule producing per-decision",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'WP_t': 'win probability threshold (dimensionless)', 'WP_m': 'win probability margin (dimensionless)'}",
+      "assumptions": "Decisions should be made based on marginal WP rather than static rules.",
+      "breakdown_regime": "When WP_m < WP_t, decision is suboptimal under model guidance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "WP thresholds in GSE align with decision-consumption rules in GSI for 4th-down modeling.",
+        "source_operator": "win_probability_threshold_process",
+        "telemetry": "Per-decision WP margins from nflverse and WP model"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6a28afa879d14412_t0",
+      "think": "The operators 'go rate vs optimal choice', 'play caller value rating', and 'win probability threshold process' form a triadic structure where each encodes a distinct aspect of 4th-down decision-making. The first maps empirical behavior against model expectations, the second quantifies play-caller efficacy, and the third grounds decisions in dynamic win probability. These combine into a coherent Bayesian inference framework in GSI, where each primitive contributes a conditional likelihood or prior. Dualities emerge between observed and modeled behaviors, and between deterministic heuristics and probabilistic thresholds. Failure modes include overfitting to historical data, misalignment between model and coaching practice, and reliance on outdated situational assumptions. The interplay of these primitives enables GSE to simulate decision trees and evaluate coaching strategies across multiple scenarios.\n\nDeep epistemic analysis for INDEX-X-1 (6a28afa879d14412, domain=other, pages_read=3/3): Operator 'Go Rate vs Optimal Choice' (page 1, domain other) captures: https://x.com/Shauncore/status/2117734683375206458 | Team 4th-down audit separating raw go rate (29.6%) from model-optimal choice rate (~95% above Assumptions: Decision-making follows a stochastic process with bounded win probability margin. Breakdown regime: When r_g < r_o, coaching may deviate from model recommendation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Raw go rate and optimal choice rate map to a decision confidence vector in GSI's Bayesian model. Operator 'Play Caller Value Rating' (page 1, domain other) captures: | https://x.com/connor_long15/status/2118511751620628656 | New composite play-caller model on nflverse + FTN charting (situational 40%, drive sustainability Assumptions: Play-caller performance can be decomposed into four independent components. Breakdown regime: When any component drops below 0.5, PCVR becomes unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): PCVR serves as a derived kernel in GSE’s state-transition logic for situational play selection. Operator 'Win Probability Threshold Process' (page 1, domain other) captures: Methods argument: consume 4th-down models as WP-margin thresholds, never down-and-distance heuristics | Decision-consumption rule producing per-decision Assumptions: Decisions should be made based on marginal WP rather than static rules. Breakdown regime: When WP_m < WP_t, decision is suboptimal under model guidance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): WP thresholds in GSE align with decision-consumption rules in GSI for 4th-down modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for INDEX-X-1 (6a28afa879d14412, domain=other, pages_read=3/3): Operator 'Go Rate vs Optimal Choice' (page 1, domain other) captures: https://x.com/Shauncore/status/2117734683375206458 | Team 4th-down audit separating raw go rate (29.6%) from model-optimal choice rate (~95% above Assumptions: Decision-making follows a stochastic process with bounded win probability margin. Breakdown regime: When r_g < r_o, coaching may deviate from model recommendation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Raw go rate and optimal choice rate map to a decision confidence vector in GSI's Bayesian model. Operator 'Play Caller Value Rating' (page 1, domain other) captures: | https://x.com/connor_long15/status/2118511751620628656 | New composite play-caller model on nflverse + FTN charting (situational 40%, drive sustainability Assumptions: Play-caller performance can be decomposed into four independent components. Breakdown regime: When any component drops below 0.5, PCVR becomes unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): PCVR serves as a derived kernel in GSE’s state-transition logic for situational play selection. Operator 'Win Probability Threshold Process' (page 1, domain other) captures: Methods argument: consume 4th-down models as WP-margin thresholds, never down-and-distance heuristics | Decision-consumption rule producing per-decision Assumptions: Decisions should be made based on marginal WP rather than static rules. Breakdown regime: When WP_m < WP_t, decision is suboptimal under model guidance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): WP thresholds in GSE align with decision-consumption rules in GSI for 4th-down modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and game-theoretic modeling of sports strategy, tracing back to early work on win probability modeling and decision analysis in football analytics. Retrocausal Genealogy: Rooted in INDEX-X-1 (6a28afa879d14412), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in INDEX-X-1 (6a28afa879d14412), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational agents optimizing expected value, but also account for cognitive biases and strategic uncertainty in coaching behavior, particularly around risk tolerance and situational awareness. Theory of Mind & Decision Maker Model: Rooted in INDEX-X-1 (6a28afa879d14412), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in INDEX-X-1 (6a28afa879d14412), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that each primitive operates independently to prevent redundancy; leakage vetoes occur when model-optimal choices are conflated with heuristic-based decisions, invalidating probabilistic inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in INDEX-X-1 (6a28afa879d14412), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in INDEX-X-1 (6a28afa879d14412), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

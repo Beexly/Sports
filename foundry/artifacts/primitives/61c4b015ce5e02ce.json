@@ -1,0 +1,78 @@
+{
+  "book_id": "61c4b015ce5e02ce",
+  "source_status": "COMPLETE",
+  "title": "CONTRIBUTING",
+  "file_name": "CONTRIBUTING.md",
+  "sha256": "61c4b015ce5e02cebb8c0309ee16aa464077a8575303339b760e39afa0fc96cf",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Axiomatic trust-invariants define a categorical framework where customer-facing data integrity is enforced via policy-driven evaluation and gated access. Universal Lens: Rooted in CONTRIBUTING (61c4b015ce5e02ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over performance claims is conditioned on public policy compliance; trust-claims are prior distributions validated through CI-enforced observables. GSI Mapping: Rooted in CONTRIBUTING (61c4b015ce5e02ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE are governed by readiness gates and admin-access controls, ensuring that public-facing performance metrics evolve only under verified operational constraints. GSE Mapping: Rooted in CONTRIBUTING (61c4b015ce5e02ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fabricated_data_guardrail",
+      "name": "Fabricated Data Guardrail",
+      "verbatim_quote": "**No fabricated data on customer surfaces.** Every customer-facing page that shows a record, win-rate, or claim must source it from `evaluatePublicPerformancePolicy()` in `apps/web/lib/performance/public-performance-policy.ts` (or be server-side gated by `getReadinessGates()`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'data record (dimensionless)', 'P': 'policy function (dimensionless)', 'S': 'server-side gate (boolean)'}",
+      "assumptions": "All customer-facing data originates from a deterministic policy evaluation or is gated by readiness logic.",
+      "breakdown_regime": "When D ∉ P or ¬S, data integrity is compromised.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Customer data integrity maps to a policy-checking automaton in GSI; GSE enforces readiness gates as state transitions.",
+        "source_operator": "fabricated_data_guardrail",
+        "telemetry": "CI failure on unauthorized data exposure."
+      }
+    },
+    {
+      "primitive_id": "banned_phrase_registry",
+      "name": "Banned Phrase Registry",
+      "verbatim_quote": "**No banned phrases on public copy.** The trust-claim registry in `apps/web/lib/trust-claims.ts` lists every banned phrase.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'phrase (dimensionless)', 'R': 'registry (set)', 'T': 'test suite (boolean)'}",
+      "assumptions": "Every public copy is checked against a static registry of prohibited language.",
+      "breakdown_regime": "When F ∈ R, T evaluates to false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Registry-based filtering in GSI mirrors kernel-level input sanitization in GSE.",
+        "source_operator": "banned_phrase_registry",
+        "telemetry": "CI test failure on banned phrase detection."
+      }
+    },
+    {
+      "primitive_id": "bootstrap_pick_isolation",
+      "name": "Bootstrap Pick Isolation",
+      "verbatim_quote": "**Bootstrap picks never count toward public performance.** Pick queries that feed customer surfaces must include `isBootstrap: false`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'bootstrap flag (boolean)', 'P': 'performance metric (dimensionless)', 'C': 'customer surface (boolean)'}",
+      "assumptions": "Only non-bootstrap picks contribute to public performance records.",
+      "breakdown_regime": "When B = true, P is excluded from C.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bootstrap isolation in GSI corresponds to data exclusion in GSE’s state transition engine.",
+        "source_operator": "bootstrap_pick_isolation",
+        "telemetry": "API response validation for `isBootstrap: false`."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "61c4b015ce5e02ce_t0",
+      "think": "These primitives form a closed-loop trust architecture where data integrity, content safety, and operational control are enforced at multiple abstraction layers. Fabricated data guardrails ensure that all public-facing data is derived from verifiable policies. Banned phrase registries act as linguistic filters that prevent reputational risk. Bootstrap pick isolation prevents synthetic data skewing performance metrics. Together, they constitute a formalized epistemological barrier against misinformation and unauthorized publishing. Each primitive operates under a shared invariant: public exposure requires explicit validation. Failure modes include bypassing policy checks, introducing banned language, or including bootstrap data in public views. These are detected via CI enforcement and runtime telemetry.\n\nDeep epistemic analysis for CONTRIBUTING (61c4b015ce5e02ce, domain=other, pages_read=2/2): Operator 'Fabricated Data Guardrail' (page 1, domain other) captures: **No fabricated data on customer surfaces.** Every customer-facing page that shows a record, win-rate, or claim must source it from `evaluatePublicPerformancePolicy()` in `apps/web/lib/performance/public-performance-policy.ts` (or be server-side gated by `getReadinessGates()`). Assumptions: All customer-facing data originates from a deterministic policy evaluation or is gated by readiness logic. Breakdown regime: When D ∉ P or ¬S, data integrity is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Customer data integrity maps to a policy-checking automaton in GSI; GSE enforces readiness gates as state transitions. Operator 'Banned Phrase Registry' (page 1, domain other) captures: **No banned phrases on public copy.** The trust-claim registry in `apps/web/lib/trust-claims.ts` lists every banned phrase. Assumptions: Every public copy is checked against a static registry of prohibited language. Breakdown regime: When F ∈ R, T evaluates to false. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Registry-based filtering in GSI mirrors kernel-level input sanitization in GSE. Operator 'Bootstrap Pick Isolation' (page 1, domain other) captures: **Bootstrap picks never count toward public performance.** Pick queries that feed customer surfaces must include `isBootstrap: false`. Assumptions: Only non-bootstrap picks contribute to public performance records. Breakdown regime: When B = true, P is excluded from C. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bootstrap isolation in GSI corresponds to data exclusion in GSE’s state transition engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CONTRIBUTING (61c4b015ce5e02ce, domain=other, pages_read=2/2): Operator 'Fabricated Data Guardrail' (page 1, domain other) captures: **No fabricated data on customer surfaces.** Every customer-facing page that shows a record, win-rate, or claim must source it from `evaluatePublicPerformancePolicy()` in `apps/web/lib/performance/public-performance-policy.ts` (or be server-side gated by `getReadinessGates()`). Assumptions: All customer-facing data originates from a deterministic policy evaluation or is gated by readiness logic. Breakdown regime: When D ∉ P or ¬S, data integrity is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Customer data integrity maps to a policy-checking automaton in GSI; GSE enforces readiness gates as state transitions. Operator 'Banned Phrase Registry' (page 1, domain other) captures: **No banned phrases on public copy.** The trust-claim registry in `apps/web/lib/trust-claims.ts` lists every banned phrase. Assumptions: Every public copy is checked against a static registry of prohibited language. Breakdown regime: When F ∈ R, T evaluates to false. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Registry-based filtering in GSI mirrors kernel-level input sanitization in GSE. Operator 'Bootstrap Pick Isolation' (page 1, domain other) captures: **Bootstrap picks never count toward public performance.** Pick queries that feed customer surfaces must include `isBootstrap: false`. Assumptions: Only non-bootstrap picks contribute to public performance records. Breakdown regime: When B = true, P is excluded from C. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bootstrap isolation in GSI corresponds to data exclusion in GSE’s state transition engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles of secure software engineering, drawing from access-control models and data integrity frameworks established in systems security literature. Retrocausal Genealogy: Rooted in CONTRIBUTING (61c4b015ce5e02ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CONTRIBUTING (61c4b015ce5e02ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to circumvent these guards through unauthorized data injection or falsified claims. The system models adversarial behavior by enforcing strict audit trails and automated testing. Theory of Mind & Decision Maker Model: Rooted in CONTRIBUTING (61c4b015ce5e02ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by decoupling data generation from presentation logic. Leakage vetoes occur when bootstrap data or banned phrases appear in public-facing contexts, triggering CI failures. Cross-Layer Veto & Anti-Leakage Check: Rooted in CONTRIBUTING (61c4b015ce5e02ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CONTRIBUTING (61c4b015ce5e02ce), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

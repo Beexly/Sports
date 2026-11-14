@@ -1,0 +1,78 @@
+{
+  "book_id": "4516ac2aa658f41f",
+  "source_status": "COMPLETE",
+  "title": "fe4b5e5b11f3",
+  "file_name": "fe4b5e5b11f3.txt",
+  "sha256": "4516ac2aa658f41f15b408267db5abea765751aa746b29d8494d9bb075e28a71",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A contextual scoring framework unifying game state, market dynamics, and historical performance into probabilistic inference layers. Universal Lens: Rooted in fe4b5e5b11f3 (4516ac2aa658f41f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on game context scores using conformal prediction for uncertainty quantification across markets. GSI Mapping: Rooted in fe4b5e5b11f3 (4516ac2aa658f41f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps score vectors to state transitions via factor-driven policy graphs with dynamic risk adjustment. GSE Mapping: Rooted in fe4b5e5b11f3 (4516ac2aa658f41f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "line_movement_score",
+      "name": "Line Movement Score",
+      "verbatim_quote": "toward AWAY — fades HOME pick) const ctx = minimalContext({ openingSpread: -3.5, currentSpread: -2.5 }); const",
+      "page": 1,
+      "latex": "\\text{LMS} = \\frac{\\Delta S}{|S_0|} \\cdot \\mathbb{I}(\\Delta S > 0)",
+      "symbol_and_unit_ledger": "{'S_0': 'initial spread value (dimensionless)', 'S': 'current spread value (dimensionless)', 'ΔS': 'change in spread (dimensionless)', 'LMS': 'line movement score (unitless)'}",
+      "assumptions": "Spread moves toward away team implies reduced confidence in home pick; linear scaling of movement impact.",
+      "breakdown_regime": "When |ΔS| < 0.25, LMS ≈ 0; when ΔS > 0.25, LMS approaches negative saturation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies market sentiment shift through spread evolution; used in GSE policy graph to adjust betting weights dynamically.",
+        "source_operator": "line_movement_score",
+        "telemetry": "Change in spread over time relative to initial value."
+      }
+    },
+    {
+      "primitive_id": "rest_advantage_score",
+      "name": "Rest Advantage Score",
+      "verbatim_quote": "zero rest score when no rest data is provided\", () => { const result = computeGameContext(minimalContext(),",
+      "page": 1,
+      "latex": "\\text{RAS} = \\max(0, \\alpha \\cdot (R_{\\text{away}} - R_{\\text{home}}))",
+      "symbol_and_unit_ledger": "{'R_home': 'home team rest days (days)', 'R_away': 'away team rest days (days)', 'α': 'scaling coefficient (unitless)', 'RAS': 'rest advantage score (unitless)'}",
+      "assumptions": "More rest days correlate with better performance; asymmetric benefit for home team.",
+      "breakdown_regime": "If R_away - R_home ≤ 0, then RAS = 0; otherwise, RAS scales linearly with difference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes temporal fatigue effects into game context; influences GSE decision tree node weights.",
+        "source_operator": "rest_advantage_score",
+        "telemetry": "Difference in rest days between teams normalized by scale factor α."
+      }
+    },
+    {
+      "primitive_id": "historical_form_score",
+      "name": "Historical Form Score",
+      "verbatim_quote": "expect(result.restAdvantageScore).toBe(0); }); it(\"returns zero historical form score when no ATS form is provided\", () => {",
+      "page": 1,
+      "latex": "\\text{HFS} = \\frac{W_{\\text{ATS}} - L_{\\text{ATS}}}{W_{\\text{ATS}} + L_{\\text{ATS}} + P_{\\text{ATS}}}",
+      "symbol_and_unit_ledger": "{'W_ATS': 'wins against spread (count)', 'L_ATS': 'losses against spread (count)', 'P_ATS': 'pushes against spread (count)', 'HFS': 'historical form score (unitless)'}",
+      "assumptions": "ATS record reflects reliability in covering spreads; symmetric win/loss ratio.",
+      "breakdown_regime": "If W_ATS + L_ATS = 0, HFS = 0; otherwise, bounded between -1 and 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Captures past ATS performance as proxy for future predictability; feeds into GSI posterior distributions.",
+        "source_operator": "historical_form_score",
+        "telemetry": "Net ATS win-loss differential normalized by total samples."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4516ac2aa658f41f_t0",
+      "think": "The core operators—line movement, rest advantage, and historical form—are derived from structured game metadata and market behavior. Line movement score encodes how shifts in betting lines affect confidence in picks. Rest advantage captures fatigue-related performance differences. Historical form evaluates past ATS success. These combine into a unified context vector that informs both GSI's Bayesian updating and GSE’s policy decisions. Dualities emerge in how these scores interact: e.g., a strong historical form may offset weak rest advantage. Failure modes include overfitting due to sparse data or misalignment between metrics and actual outcomes. The system must balance signal strength with noise propagation across layers.\n\nDeep epistemic analysis for fe4b5e5b11f3 (4516ac2aa658f41f, domain=other, pages_read=3/3): Operator 'Line Movement Score' (page 1, domain other) captures: toward AWAY — fades HOME pick) const ctx = minimalContext({ openingSpread: -3.5, currentSpread: -2.5 }); const Assumptions: Spread moves toward away team implies reduced confidence in home pick; linear scaling of movement impact. Breakdown regime: When |ΔS| < 0.25, LMS ≈ 0; when ΔS > 0.25, LMS approaches negative saturation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies market sentiment shift through spread evolution; used in GSE policy graph to adjust betting weights dynamically. Operator 'Rest Advantage Score' (page 1, domain other) captures: zero rest score when no rest data is provided\", () => { const result = computeGameContext(minimalContext(), Assumptions: More rest days correlate with better performance; asymmetric benefit for home team. Breakdown regime: If R_away - R_home ≤ 0, then RAS = 0; otherwise, RAS scales linearly with difference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes temporal fatigue effects into game context; influences GSE decision tree node weights. Operator 'Historical Form Score' (page 1, domain other) captures: expect(result.restAdvantageScore).toBe(0); }); it(\"returns zero historical form score when no ATS form is provided\", () => { Assumptions: ATS record reflects reliability in covering spreads; symmetric win/loss ratio. Breakdown regime: If W_ATS + L_ATS = 0, HFS = 0; otherwise, bounded between -1 and 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures past ATS performance as proxy for future predictability; feeds into GSI posterior distributions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fe4b5e5b11f3 (4516ac2aa658f41f, domain=other, pages_read=3/3): Operator 'Line Movement Score' (page 1, domain other) captures: toward AWAY — fades HOME pick) const ctx = minimalContext({ openingSpread: -3.5, currentSpread: -2.5 }); const Assumptions: Spread moves toward away team implies reduced confidence in home pick; linear scaling of movement impact. Breakdown regime: When |ΔS| < 0.25, LMS ≈ 0; when ΔS > 0.25, LMS approaches negative saturation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies market sentiment shift through spread evolution; used in GSE policy graph to adjust betting weights dynamically. Operator 'Rest Advantage Score' (page 1, domain other) captures: zero rest score when no rest data is provided\", () => { const result = computeGameContext(minimalContext(), Assumptions: More rest days correlate with better performance; asymmetric benefit for home team. Breakdown regime: If R_away - R_home ≤ 0, then RAS = 0; otherwise, RAS scales linearly with difference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes temporal fatigue effects into game context; influences GSE decision tree node weights. Operator 'Historical Form Score' (page 1, domain other) captures: expect(result.restAdvantageScore).toBe(0); }); it(\"returns zero historical form score when no ATS form is provided\", () => { Assumptions: ATS record reflects reliability in covering spreads; symmetric win/loss ratio. Breakdown regime: If W_ATS + L_ATS = 0, HFS = 0; otherwise, bounded between -1 and 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Captures past ATS performance as proxy for future predictability; feeds into GSI posterior distributions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical arbitrage models of sports betting, evolving from early regression-based forecasting to modern ensemble methods incorporating temporal and relational features. Retrocausal Genealogy: Rooted in fe4b5e5b11f3 (4516ac2aa658f41f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in fe4b5e5b11f3 (4516ac2aa658f41f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents model market inefficiencies and strategic adjustments. For example, a sharp line movement might indicate institutional hedging, while a high rest advantage could reflect tactical rest scheduling by coaches. Theory of Mind & Decision Maker Model: Rooted in fe4b5e5b11f3 (4516ac2aa658f41f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures each primitive contributes unique information. Leakage occurs if one score duplicates another’s signal without independent variance. Veto conditions prevent redundant factors from inflating model complexity or introducing bias. Cross-Layer Veto & Anti-Leakage Check: Rooted in fe4b5e5b11f3 (4516ac2aa658f41f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

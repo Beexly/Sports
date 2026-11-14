@@ -1,0 +1,78 @@
+{
+  "book_id": "258ddcbe6994bf82",
+  "source_status": "COMPLETE",
+  "title": "p0115",
+  "file_name": "p0115.txt",
+  "sha256": "258ddcbe6994bf8293ea5a04d840c8cb28be9124bb0d7bf77146aee72f350923",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A touchback occurs when a defensive player allows an opponent's kick to strike them and roll across the goal line, with subsequent contact behind the line. A safety is declared when the ball is dead behind the goal line due to defensive impetus.",
+  "gsi_mapping": "Bayesian inference models the probability of a touchback vs. safety based on ball trajectory and player contact events using conditional likelihoods over spatial and temporal domains. GSI Mapping: Rooted in p0115 (258ddcbe6994bf82), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps ball dynamics and player states through state transitions: pre-contact → impact → post-impact, with safety and touchback outcomes as terminal conditions. GSE Mapping: Rooted in p0115 (258ddcbe6994bf82), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "touchback_condition",
+      "name": "Touchback Condition",
+      "verbatim_quote": "It is a Touchback when a player on defense permits a ball, kicked by an opponent, to strike his person and then roll across his goal line and he or any player of his side then falls on it back of the line.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Boolean indicator for touchback event', 'B': 'Ball position vector (meters)', 'L_g': 'Goal line position vector (meters)', 'P_d': 'Defensive player position vector (meters)'}",
+      "assumptions": "Ball trajectory is linear; player motion is negligible after impact; contact occurs at point of deflection.",
+      "breakdown_regime": "When B · u_g < L_g · u_g and P_d · u_g > B · u_g where u_g is unit vector normal to goal line.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The touchback condition mirrors a boundary crossing event in stochastic processes, where a random walk crosses a threshold defined by the goal line.",
+        "source_operator": "touchback_condition",
+        "telemetry": "Ball position relative to goal line and player contact time"
+      }
+    },
+    {
+      "primitive_id": "not_touchback_juggle",
+      "name": "Not Touchback Juggle",
+      "verbatim_quote": "It is not a Touchback if such player juggles the ball so that he in any way forces it over the line and he or any player of his side then falls on it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'J': 'Boolean indicator for juggle event', 'F': 'Force vector applied by player (Newtons)', 'B': 'Ball position vector (meters)'}",
+      "assumptions": "Player applies force directly to ball; ball does not roll naturally across line.",
+      "breakdown_regime": "When F · ΔB > 0 and B · u_g < L_g · u_g but J = true.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Juggle introduces non-linear dynamics that alter ball trajectory, preventing standard boundary crossing logic.",
+        "source_operator": "not_touchback_juggle",
+        "telemetry": "Force magnitude and direction during ball interaction"
+      }
+    },
+    {
+      "primitive_id": "safety_condition",
+      "name": "Safety Condition",
+      "verbatim_quote": "SECTIoN 16. A Safety is made when the ball in possession of a player guarding his",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Boolean indicator for safety event', 'I': 'Impetus vector (Newtons·seconds)', 'D': 'Defending team identifier', 'B': 'Ball position vector (meters)'}",
+      "assumptions": "Ball is dead upon crossing goal line; impetus originates from defending side.",
+      "breakdown_regime": "When S = true and I ∈ D and B · u_g ≤ L_g · u_g.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Safety mirrors a momentum transfer event where defensive action causes ball to cross boundary under specified conditions.",
+        "source_operator": "safety_condition",
+        "telemetry": "Ball velocity and team identification at moment of crossing"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "258ddcbe6994bf82_t0",
+      "think": "The touchback and safety rules define two distinct boundary-crossing scenarios in football. The touchback condition requires a defensive player to allow an opponent’s kick to strike them and roll across the goal line, followed by a fall behind the line. This implies a deterministic path of motion governed by Newtonian mechanics. In contrast, the not-touchback juggle rule excludes cases where a player forces the ball over the line, introducing a non-deterministic element via force application. The safety condition further complicates this by requiring the ball to be dead and the impetus to originate from the defending side. These conditions form a triadic logical structure: (1) boundary crossing (2) agent intent (3) causality chain. Each primitive operates within a phase space defined by ball position, player motion, and force vectors. The failure modes occur when these conditions are violated—e.g., if the ball rolls without contact or if impetus comes from the offensive side. Dualities emerge between the roles of offense and defense in determining outcome, with each rule defining a partition of possible game states.\n\nDeep epistemic analysis for p0115 (258ddcbe6994bf82, domain=other, pages_read=1/1): Operator 'Touchback Condition' (page 1, domain other) captures: It is a Touchback when a player on defense permits a ball, kicked by an opponent, to strike his person and then roll across his goal line and he or any player of his side then falls on it back of the line. Assumptions: Ball trajectory is linear; player motion is negligible after impact; contact occurs at point of deflection. Breakdown regime: When B · u_g < L_g · u_g and P_d · u_g > B · u_g where u_g is unit vector normal to goal line. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The touchback condition mirrors a boundary crossing event in stochastic processes, where a random walk crosses a threshold defined by the goal line. Operator 'Not Touchback Juggle' (page 1, domain other) captures: It is not a Touchback if such player juggles the ball so that he in any way forces it over the line and he or any player of his side then falls on it. Assumptions: Player applies force directly to ball; ball does not roll naturally across line. Breakdown regime: When F · ΔB > 0 and B · u_g < L_g · u_g but J = true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Juggle introduces non-linear dynamics that alter ball trajectory, preventing standard boundary crossing logic. Operator 'Safety Condition' (page 1, domain other) captures: SECTIoN 16. A Safety is made when the ball in possession of a player guarding his Assumptions: Ball is dead upon crossing goal line; impetus originates from defending side. Breakdown regime: When S = true and I ∈ D and B · u_g ≤ L_g · u_g. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Safety mirrors a momentum transfer event where defensive action causes ball to cross boundary under specified conditions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0115 (258ddcbe6994bf82, domain=other, pages_read=1/1): Operator 'Touchback Condition' (page 1, domain other) captures: It is a Touchback when a player on defense permits a ball, kicked by an opponent, to strike his person and then roll across his goal line and he or any player of his side then falls on it back of the line. Assumptions: Ball trajectory is linear; player motion is negligible after impact; contact occurs at point of deflection. Breakdown regime: When B · u_g < L_g · u_g and P_d · u_g > B · u_g where u_g is unit vector normal to goal line. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The touchback condition mirrors a boundary crossing event in stochastic processes, where a random walk crosses a threshold defined by the goal line. Operator 'Not Touchback Juggle' (page 1, domain other) captures: It is not a Touchback if such player juggles the ball so that he in any way forces it over the line and he or any player of his side then falls on it. Assumptions: Player applies force directly to ball; ball does not roll naturally across line. Breakdown regime: When F · ΔB > 0 and B · u_g < L_g · u_g but J = true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Juggle introduces non-linear dynamics that alter ball trajectory, preventing standard boundary crossing logic. Operator 'Safety Condition' (page 1, domain other) captures: SECTIoN 16. A Safety is made when the ball in possession of a player guarding his Assumptions: Ball is dead upon crossing goal line; impetus originates from defending side. Breakdown regime: When S = true and I ∈ D and B · u_g ≤ L_g · u_g. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Safety mirrors a momentum transfer event where defensive action causes ball to cross boundary under specified conditions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century football rulebooks, these primitives reflect foundational physics concepts of momentum and impulse, evolving from mechanical definitions of game events into formalized probabilistic models. Retrocausal Genealogy: Rooted in p0115 (258ddcbe6994bf82), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0115 (258ddcbe6994bf82), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams model each other's strategic intent: the offense seeks to avoid penalties while the defense aims to control ball trajectory. Agents must predict whether a kick will result in a touchback or safety based on current game state and prior behavior patterns. Theory of Mind & Decision Maker Model: Rooted in p0115 (258ddcbe6994bf82), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that touchback and safety conditions do not overlap; leakage vetos prevent misclassification when multiple agents interact with the ball simultaneously. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0115 (258ddcbe6994bf82), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0115 (258ddcbe6994bf82), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

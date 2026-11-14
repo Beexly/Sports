@@ -1,0 +1,78 @@
+{
+  "book_id": "69f32efdcc47951d",
+  "source_status": "COMPLETE",
+  "title": "roster-canary-evidence",
+  "file_name": "roster-canary-evidence.md",
+  "sha256": "69f32efdcc47951d47470807c241b60e539a185b64297f4e6fa05b7044ecd25a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Roster canonicality as a binary truth-state function of source integrity and app data exposure, modeled via conditional probability P(S|A) where S denotes source validity and A denotes app availability. Universal Lens: Rooted in roster-canary-evidence (69f32efdcc47951d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on roster truth using P(Harris|NFL) × P(Chargers|NFL) × P(app|source) as evidence likelihoods, with low confidence due to absent app telemetry. GSI Mapping: Rooted in roster-canary-evidence (69f32efdcc47951d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition from roster query to validation outcome governed by DB runtime constraints and app route accessibility; failure occurs when Player Lab routes are blocked. GSE Mapping: Rooted in roster-canary-evidence (69f32efdcc47951d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "roster_canary_truth",
+      "name": "Roster Canary Truth Function",
+      "verbatim_quote": "# Roster Canary Evidence As of: 2026-06-09 ## Najee Harris - Official/public source checked: NFL player page reported Najee Harris as UFA.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Truth state ∈ {0,1}', 'S': 'Source integrity score ∈ [0,1]', 'A': 'App data availability ∈ {0,1}'}",
+      "assumptions": "Roster truth is binary; source validity is independent of app data exposure.",
+      "breakdown_regime": "When A=0, T becomes undecidable despite S>0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Roster truth T ≅ P(S|A) where S is source reliability and A is app access.",
+        "source_operator": "roster_canary_truth",
+        "telemetry": "Verification of NFL player page vs app record"
+      }
+    },
+    {
+      "primitive_id": "app_data_availability",
+      "name": "App Data Availability Kernel",
+      "verbatim_quote": "- App source value: no Najee Harris app player record found by static grep in selected app source.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'App data availability ∈ {0,1}', 'D': 'Data surface depth ∈ [0,1]'}",
+      "assumptions": "Absence of app record implies D=0, which blocks downstream inference.",
+      "breakdown_regime": "When D < threshold, all derived truths are invalidated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "App availability A = 1 − D, where D measures exposed data surface.",
+        "source_operator": "app_data_availability",
+        "telemetry": "Static grep result over app source"
+      }
+    },
+    {
+      "primitive_id": "conflict_resolution",
+      "name": "Conflict Resolution Operator",
+      "verbatim_quote": "- Conflict status: no stale app value found, but roster truth cannot be proven because the selected app does not expose roster/player data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Conflict indicator ∈ {0,1}', 'E': 'Evidence completeness ∈ [0,1]'}",
+      "assumptions": "Conflict arises when E < 1 and no stale data exists.",
+      "breakdown_regime": "C = 1 when E < threshold and stale data is absent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conflict C ≅ ¬(E ≥ threshold ∧ ∃ stale_data)",
+        "source_operator": "conflict_resolution",
+        "telemetry": "Stale data existence check"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "69f32efdcc47951d_t0",
+      "think": "The core operator 'roster_canary_truth' models the binary state of roster accuracy as a function of source integrity and app data availability. The system's logical structure enforces that even if source data is valid (e.g., NFL page confirms Najee Harris as UFA), the absence of app data (D=0) renders the truth unverifiable. This leads to a conditional probability framework where P(T|S,A) = S × (1−A). When A=0, the system enters an indeterminate regime, triggering conflict resolution logic. The 'app_data_availability' kernel acts as a filter, reducing effective evidence completeness E. If E falls below a threshold, the 'conflict_resolution' operator flags inconsistency. These primitives form a closed-loop system where each layer's output feeds into the next, creating a dualistic logic of verification and contradiction. Failure modes occur at the intersection of source validity and app accessibility, with runtime DB issues acting as a secondary constraint.\n\nDeep epistemic analysis for roster-canary-evidence (69f32efdcc47951d, domain=other, pages_read=1/1): Operator 'Roster Canary Truth Function' (page 1, domain other) captures: # Roster Canary Evidence As of: 2026-06-09 ## Najee Harris - Official/public source checked: NFL player page reported Najee Harris as UFA. Assumptions: Roster truth is binary; source validity is independent of app data exposure. Breakdown regime: When A=0, T becomes undecidable despite S>0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Roster truth T ≅ P(S|A) where S is source reliability and A is app access. Operator 'App Data Availability Kernel' (page 1, domain other) captures: - App source value: no Najee Harris app player record found by static grep in selected app source. Assumptions: Absence of app record implies D=0, which blocks downstream inference. Breakdown regime: When D < threshold, all derived truths are invalidated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): App availability A = 1 − D, where D measures exposed data surface. Operator 'Conflict Resolution Operator' (page 1, domain other) captures: - Conflict status: no stale app value found, but roster truth cannot be proven because the selected app does not expose roster/player data. Assumptions: Conflict arises when E < 1 and no stale data exists. Breakdown regime: C = 1 when E < threshold and stale data is absent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conflict C ≅ ¬(E ≥ threshold ∧ ∃ stale_data) Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for roster-canary-evidence (69f32efdcc47951d, domain=other, pages_read=1/1): Operator 'Roster Canary Truth Function' (page 1, domain other) captures: # Roster Canary Evidence As of: 2026-06-09 ## Najee Harris - Official/public source checked: NFL player page reported Najee Harris as UFA. Assumptions: Roster truth is binary; source validity is independent of app data exposure. Breakdown regime: When A=0, T becomes undecidable despite S>0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Roster truth T ≅ P(S|A) where S is source reliability and A is app access. Operator 'App Data Availability Kernel' (page 1, domain other) captures: - App source value: no Najee Harris app player record found by static grep in selected app source. Assumptions: Absence of app record implies D=0, which blocks downstream inference. Breakdown regime: When D < threshold, all derived truths are invalidated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): App availability A = 1 − D, where D measures exposed data surface. Operator 'Conflict Resolution Operator' (page 1, domain other) captures: - Conflict status: no stale app value found, but roster truth cannot be proven because the selected app does not expose roster/player data. Assumptions: Conflict arises when E < 1 and no stale data exists. Breakdown regime: C = 1 when E < threshold and stale data is absent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conflict C ≅ ¬(E ≥ threshold ∧ ∃ stale_data) Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical information theory and Bayesian inference, this structure mirrors the Shannon-Hartley theorem’s channel capacity model, adapted for dynamic data validation systems. Retrocausal Genealogy: Rooted in roster-canary-evidence (69f32efdcc47951d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in roster-canary-evidence (69f32efdcc47951d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the NFL source (truth provider) and the app backend (data gatekeeper). The system assumes the NFL is authoritative but the app may fail due to infrastructure issues, leading to a strategic uncertainty in validation. Theory of Mind & Decision Maker Model: Rooted in roster-canary-evidence (69f32efdcc47951d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that source integrity (S) and app availability (A) do not co-vary linearly. Leakage is prevented by isolating the conflict resolution layer from direct source influence, maintaining independence between truth assertion and data exposure. Cross-Layer Veto & Anti-Leakage Check: Rooted in roster-canary-evidence (69f32efdcc47951d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

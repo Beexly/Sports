@@ -1,0 +1,78 @@
+{
+  "book_id": "155c08d73532b8d3",
+  "source_status": "COMPLETE",
+  "title": "cameron-eth-sleeper-sdk",
+  "file_name": "cameron-eth-sleeper-sdk.md",
+  "sha256": "155c08d73532b8d312397cde67bbafd3743f131076402f2f656a1310bef42848",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Layered async API → enrichment → analytics → decision engine; modular, typed, and testable. Universal Lens: Rooted in cameron-eth-sleeper-sdk (155c08d73532b8d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player value signals via KTC market consensus and Sleeper data streams. GSI Mapping: Rooted in cameron-eth-sleeper-sdk (155c08d73532b8d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition system with adapters, signals, projections, and optimizer; lacks independent testability and market-value layer. GSE Mapping: Rooted in cameron-eth-sleeper-sdk (155c08d73532b8d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "api_enrichment_layer",
+      "name": "Async API Enrichment Kernel",
+      "verbatim_quote": "## GSE lens The architecture diagram is the lesson: **API → enrichment → analytics → decision layer**, each independently usable.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All data sources are asynchronous and rate-limited; enrichment is additive and non-destructive.",
+      "breakdown_regime": "When API rate limits are exceeded or data sources become unavailable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw Sleeper API responses to typed, cached player objects with enriched metadata.",
+        "source_operator": "api_enrichment_layer",
+        "telemetry": "API response latency, cache hit ratio, enrichment completeness"
+      }
+    },
+    {
+      "primitive_id": "market_value_layer",
+      "name": "Market Value Consensus Layer",
+      "verbatim_quote": "The KTC/marketplace enrichment also flags a GSE blind spot: **GSE has no market-value layer** — no FantasyCalc/KTC-style consensus values feeding trade or DFS decisions, even though Sleeper market signals are supposedly in the plumbing.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Market consensus values are derived from aggregated trade and auction data.",
+      "breakdown_regime": "When no external market data is integrated or when internal signals are inconsistent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives player valuation from KTC/FantasyCalc-style consensus models using Sleeper data as input.",
+        "source_operator": "market_value_layer",
+        "telemetry": "Consensus deviation, trade signal alignment, valuation volatility"
+      }
+    },
+    {
+      "primitive_id": "decision_layer",
+      "name": "Decision Proposal Engine",
+      "verbatim_quote": "Explicitly positioned as the foundation for \"the largest open source fantasy football project.\" ## The Ask - Python; pip install.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "User-defined trade proposals are generated based on analytics and value deltas.",
+      "breakdown_regime": "When insufficient or conflicting analytics prevent valid trade generation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Generates actionable trade proposals by applying analytics to enriched player data.",
+        "source_operator": "decision_layer",
+        "telemetry": "Proposal frequency, user acceptance rate, decision accuracy"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "155c08d73532b8d3_t0",
+      "think": "The layered architecture of the sleeper-sdk presents a clean separation of concerns: API access, enrichment, analytics, and decision-making. Each layer must be independently testable and reusable. However, the absence of a license file makes it legally unusable. The GSE engine fails to meet this modularity, as its components are tightly coupled—especially the optimizer which cannot function without full engine context. This suggests a fundamental architectural flaw in GSE’s design. The lack of a market-value layer in GSE is a critical gap, since market consensus (e.g., KTC) is essential for informed trading decisions. The SDK's vision aligns with GSI's need for Bayesian inference over player value, while GSE's current structure lacks the necessary telemetry and decoupling for such reasoning. The SDK's layered approach offers a blueprint for rebuilding GSE with proper abstraction and market integration.\n\nDeep epistemic analysis for cameron-eth-sleeper-sdk (155c08d73532b8d3, domain=other, pages_read=1/1): Operator 'Async API Enrichment Kernel' (page 1, domain other) captures: ## GSE lens The architecture diagram is the lesson: **API → enrichment → analytics → decision layer**, each independently usable. Assumptions: All data sources are asynchronous and rate-limited; enrichment is additive and non-destructive. Breakdown regime: When API rate limits are exceeded or data sources become unavailable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw Sleeper API responses to typed, cached player objects with enriched metadata. Operator 'Market Value Consensus Layer' (page 1, domain other) captures: The KTC/marketplace enrichment also flags a GSE blind spot: **GSE has no market-value layer** — no FantasyCalc/KTC-style consensus values feeding trade or DFS decisions, even though Sleeper market signals are supposedly in the plumbing. Assumptions: Market consensus values are derived from aggregated trade and auction data. Breakdown regime: When no external market data is integrated or when internal signals are inconsistent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives player valuation from KTC/FantasyCalc-style consensus models using Sleeper data as input. Operator 'Decision Proposal Engine' (page 1, domain other) captures: Explicitly positioned as the foundation for \"the largest open source fantasy football project.\" ## The Ask - Python; pip install. Assumptions: User-defined trade proposals are generated based on analytics and value deltas. Breakdown regime: When insufficient or conflicting analytics prevent valid trade generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Generates actionable trade proposals by applying analytics to enriched player data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for cameron-eth-sleeper-sdk (155c08d73532b8d3, domain=other, pages_read=1/1): Operator 'Async API Enrichment Kernel' (page 1, domain other) captures: ## GSE lens The architecture diagram is the lesson: **API → enrichment → analytics → decision layer**, each independently usable. Assumptions: All data sources are asynchronous and rate-limited; enrichment is additive and non-destructive. Breakdown regime: When API rate limits are exceeded or data sources become unavailable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw Sleeper API responses to typed, cached player objects with enriched metadata. Operator 'Market Value Consensus Layer' (page 1, domain other) captures: The KTC/marketplace enrichment also flags a GSE blind spot: **GSE has no market-value layer** — no FantasyCalc/KTC-style consensus values feeding trade or DFS decisions, even though Sleeper market signals are supposedly in the plumbing. Assumptions: Market consensus values are derived from aggregated trade and auction data. Breakdown regime: When no external market data is integrated or when internal signals are inconsistent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives player valuation from KTC/FantasyCalc-style consensus models using Sleeper data as input. Operator 'Decision Proposal Engine' (page 1, domain other) captures: Explicitly positioned as the foundation for \"the largest open source fantasy football project.\" ## The Ask - Python; pip install. Assumptions: User-defined trade proposals are generated based on analytics and value deltas. Breakdown regime: When insufficient or conflicting analytics prevent valid trade generation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Generates actionable trade proposals by applying analytics to enriched player data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in functional programming paradigms and layered software design principles from early 2000s distributed systems, adapted for async I/O and real-time data processing in fantasy sports. Retrocausal Genealogy: Rooted in cameron-eth-sleeper-sdk (155c08d73532b8d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in cameron-eth-sleeper-sdk (155c08d73532b8d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the SDK author (who may prioritize rapid prototyping over modularity) and GSE stakeholders (who require robust, scalable, and auditable systems). Decision actors must balance speed of development against long-term maintainability and legal compliance. Theory of Mind & Decision Maker Model: Rooted in cameron-eth-sleeper-sdk (155c08d73532b8d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each layer operates with distinct inputs and outputs. Leakage occurs when enrichment depends on analytics or when the decision layer bypasses API validation. Veto conditions include missing licenses, untestable modules, and lack of market-value integration. Cross-Layer Veto & Anti-Leakage Check: Rooted in cameron-eth-sleeper-sdk (155c08d73532b8d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

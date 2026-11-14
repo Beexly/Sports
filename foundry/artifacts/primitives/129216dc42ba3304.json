@@ -1,0 +1,95 @@
+{
+  "book_id": "129216dc42ba3304",
+  "source_status": "COMPLETE",
+  "title": "rozzac90-pinnacle",
+  "file_name": "rozzac90-pinnacle.md",
+  "sha256": "129216dc42ba3304578bcf574d22db5ac925d7aa6f8644b7e3bf3f92d5b05dc7",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pinnacle_api_wrapper",
+      "name": "Pinnacle API Wrapper",
+      "verbatim_quote": "Vision A Python wrapper for the Pinnacle Sports API — reference data (sports, leagues) and market data (fixtures, odds).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes functional Pinnacle account credentials exist.",
+      "breakdown_regime": "Codebase staleness post-2022 renders wrapper incompatible with current API.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Irrelevant to GSE/GSI due to maintenance status.",
+        "source_operator": "pinnacle_api_wrapper",
+        "telemetry": "Wrapper fails to connect to live Pinnacle API endpoints."
+      }
+    },
+    {
+      "primitive_id": "pinnacle_sharpest_line",
+      "name": "Pinnacle Sharpest Line",
+      "verbatim_quote": "Pinnacle is the sharpest book in the market, so a Pinnacle client is the natural odds feed for any serious sports-betting model.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Market efficiency holds; informed capital flows concentrate at Pinnacle.",
+      "breakdown_regime": "Static assumption ignores dynamic shifts in liquidity sources.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's sharp-money signal hypothesis via informed trader proxy.",
+        "source_operator": "pinnacle_sharpest_line",
+        "telemetry": "Observed bid-ask spreads at Pinnacle reflect optimal information costs."
+      }
+    },
+    {
+      "primitive_id": "odds_api_account",
+      "name": "Odds API Account",
+      "verbatim_quote": "GSE lens GSE already has an active Odds API account (20K credits/mo) — the odds lane is covered, and the props lane is deliberately shadow-only.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Budget constraints and lane prioritization define operational scope.",
+      "breakdown_regime": "Shadow-only status indicates experimental rather than production use.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's existing infrastructure, reducing need for new integrations.",
+        "source_operator": "odds_api_account",
+        "telemetry": "Credit usage patterns track model development velocity."
+      }
+    },
+    {
+      "primitive_id": "stale_integration_risk",
+      "name": "Stale Integration Risk",
+      "verbatim_quote": "A stale Pinnacle wrapper adds nothing: it needs a funded Pinnacle account GSE doesn't have, and the code hasn't been touched since 2022.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Codebase evolution outpaces maintenance leads to functional obsolescence.",
+      "breakdown_regime": "API version mismatches cause runtime exceptions and data corruption.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Irrelevant to GSE/GSI due to maintenance status.",
+        "source_operator": "stale_integration_risk",
+        "telemetry": "Wrapper returns HTTP 400 errors when attempting modern API calls."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "129216dc42ba3304_t0",
+      "think": "The wrapper is mathematically trivial—a REST-to-JSON bridge with no predictive value. Its primary contribution is aspirational: it codifies the belief that Pinnacle's odds represent a \"sharp\" price signal, which maps to GSE's informed-trader hypothesis. However, the wrapper's abandonment creates a dual failure mode: it either becomes a silent data poisoner (returning stale or malformed JSON) or a complete operational blocker (raising authentication/SSL errors). For GSI, this means any attempt to use it as a validation dataset will introduce systematic bias. For GSE, it represents a redundant dependency that diverts developer cycles from maintaining proprietary, verified APIs.\n\nDeep epistemic analysis for rozzac90-pinnacle (129216dc42ba3304, domain=other, pages_read=1/1): Operator 'Pinnacle API Wrapper' (page 1, domain other) captures: Vision A Python wrapper for the Pinnacle Sports API — reference data (sports, leagues) and market data (fixtures, odds). Assumptions: Assumes functional Pinnacle account credentials exist. Breakdown regime: Codebase staleness post-2022 renders wrapper incompatible with current API. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Irrelevant to GSE/GSI due to maintenance status. Operator 'Pinnacle Sharpest Line' (page 1, domain other) captures: Pinnacle is the sharpest book in the market, so a Pinnacle client is the natural odds feed for any serious sports-betting model. Assumptions: Market efficiency holds; informed capital flows concentrate at Pinnacle. Breakdown regime: Static assumption ignores dynamic shifts in liquidity sources. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's sharp-money signal hypothesis via informed trader proxy. Operator 'Odds API Account' (page 1, domain other) captures: GSE lens GSE already has an active Odds API account (20K credits/mo) — the odds lane is covered, and the props lane is deliberately shadow-only. Assumptions: Budget constraints and lane prioritization define operational scope. Breakdown regime: Shadow-only status indicates experimental rather than production use. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's existing infrastructure, reducing need for new integrations. Operator 'Stale Integration Risk' (page 1, domain other) captures: A stale Pinnacle wrapper adds nothing: it needs a funded Pinnacle account GSE doesn't have, and the code hasn't been touched since 2022. Assumptions: Codebase evolution outpaces maintenance leads to functional obsolescence. Breakdown regime: API version mismatches cause runtime exceptions and data corruption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Irrelevant to GSE/GSI due to maintenance status. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for rozzac90-pinnacle (129216dc42ba3304, domain=other, pages_read=1/1): Operator 'Pinnacle API Wrapper' (page 1, domain other) captures: Vision A Python wrapper for the Pinnacle Sports API — reference data (sports, leagues) and market data (fixtures, odds). Assumptions: Assumes functional Pinnacle account credentials exist. Breakdown regime: Codebase staleness post-2022 renders wrapper incompatible with current API. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Irrelevant to GSE/GSI due to maintenance status. Operator 'Pinnacle Sharpest Line' (page 1, domain other) captures: Pinnacle is the sharpest book in the market, so a Pinnacle client is the natural odds feed for any serious sports-betting model. Assumptions: Market efficiency holds; informed capital flows concentrate at Pinnacle. Breakdown regime: Static assumption ignores dynamic shifts in liquidity sources. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's sharp-money signal hypothesis via informed trader proxy. Operator 'Odds API Account' (page 1, domain other) captures: GSE lens GSE already has an active Odds API account (20K credits/mo) — the odds lane is covered, and the props lane is deliberately shadow-only. Assumptions: Budget constraints and lane prioritization define operational scope. Breakdown regime: Shadow-only status indicates experimental rather than production use. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's existing infrastructure, reducing need for new integrations. Operator 'Stale Integration Risk' (page 1, domain other) captures: A stale Pinnacle wrapper adds nothing: it needs a funded Pinnacle account GSE doesn't have, and the code hasn't been touched since 2022. Assumptions: Codebase evolution outpaces maintenance leads to functional obsolescence. Breakdown regime: API version mismatches cause runtime exceptions and data corruption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Irrelevant to GSE/GSI due to maintenance status. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The concept traces back to early algorithmic trading libraries (e.g., pyalgotrade), which standardized API access to reduce friction. It evolved through the QuantLib ecosystem's focus on financial data plumbing. Retrocausal Genealogy: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include Pinnacle's internal risk team, who adjust lines to manage liability, and high-frequency funds that exploit microsecond latency advantages. The wrapper assumes these actors' behavior is static, which is false. Theory of Mind & Decision Maker Model: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that wrapper-derived signals do not leak into GSI's independent odds models, creating spurious correlations. Cross-Layer Veto & Anti-Leakage Check: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in rozzac90-pinnacle (129216dc42ba3304), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

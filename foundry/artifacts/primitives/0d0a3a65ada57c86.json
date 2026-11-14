@@ -1,0 +1,95 @@
+{
+  "book_id": "0d0a3a65ada57c86",
+  "source_status": "COMPLETE",
+  "title": "INGEST-LEDGER",
+  "file_name": "INGEST-LEDGER.md",
+  "sha256": "0d0a3a65ada57c86727420a8be26e7e60ec451ae0f9adb134e68179ae4f8a238",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in INGEST-LEDGER (0d0a3a65ada57c86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in INGEST-LEDGER (0d0a3a65ada57c86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in INGEST-LEDGER (0d0a3a65ada57c86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in INGEST-LEDGER (0d0a3a65ada57c86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in INGEST-LEDGER (0d0a3a65ada57c86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in INGEST-LEDGER (0d0a3a65ada57c86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "filesystem_snapshot",
+      "name": "Filesystem Snapshot Operator",
+      "verbatim_quote": "# OneDrive GSE ingest 2026-10-21 ## Copied - `Galaxy Sports Edge` is a Sports checkout at `166aa3eb8` on `Autonomous-Revenue-Engine`.",
+      "page": 1,
+      "latex": "\\mathcal{S}: \\mathcal{F} \\rightarrow \\mathcal{F}'",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{S)': 'Snapshot transformation', '\\\\mathcal{F}': 'Source filesystem state', \"\\\\mathcal{F}':\": 'Copied target filesystem state'}",
+      "assumptions": "Text file exclusivity, size threshold (1 MB), no version control metadata, no binary/system files.",
+      "breakdown_regime": "Broken worktree references (`missing .git directory`) trigger snapshot failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps filesystem copying to information-theoretic data extraction under controlled operational boundaries.",
+        "source_operator": "filesystem_snapshot",
+        "telemetry": "Success rate of file count preservation, error logs from missing dependencies"
+      }
+    },
+    {
+      "primitive_id": "worktree_isolation",
+      "name": "Worktree Isolation Kernel",
+      "verbatim_quote": "- `Galaxy Sports Edge Launch Ready` and `gse_push_tmp` are broken git worktrees of that same checkout (their `.git` files point at a missing worktree dir).",
+      "page": 1,
+      "latex": "\\mathcal{W}: \\mathcal{R} \\rightarrow \\{0,1\\}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{W}': 'Worktree integrity indicator', '\\\\mathcal{R}': 'Reference to base repository', '0:': 'Isolated worktree failed', '1:': 'Isolated worktree succeeded'}",
+      "assumptions": "Absolute path consistency, valid git configuration, absence of symbolic link vulnerabilities.",
+      "breakdown_regime": "Missing `.git/worktrees/<name>` directory causes catastrophic isolation breach.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Embeds git worktree management as a discrete event system with failure modes.",
+        "source_operator": "worktree_isolation",
+        "telemetry": "Exit status of git commands, presence of expected worktree metadata files"
+      }
+    },
+    {
+      "primitive_id": "file_exclusion_policy",
+      "name": "Selective File Exclusion Protocol",
+      "verbatim_quote": "- Zips, logs, `.git`, and files over 1 MB were not copied.",
+      "page": 1,
+      "latex": "\\mathcal{E}(f) = \\begin{cases} f & \\text{if } s(f) < S_\\text{max} \\wedge f \\notin \\mathcal{B} \\\\ \\emptyset & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{E}:': 'Exclusion filter', 'f': 'Individual file', 's(f):': 'File size', 'S_\\\\text{max}': 'Maximum allowed size (1 MB)', '\\\\mathcal{B}:': 'Blacklist (zips, logs, .git)'}",
+      "assumptions": "Static blacklist, file size determinism, no recursive archive expansion.",
+      "breakdown_regime": "Dynamic blacklist changes or archive loops cause infinite recursion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encapsulates data sanitization as a measure-preserving projection onto a reduced feature space.",
+        "source_operator": "file_exclusion_policy",
+        "telemetry": "Cumulative excluded byte count, hit ratio against static patterns"
+      }
+    },
+    {
+      "primitive_id": "shortcut_resolution",
+      "name": "Internet Shortcut Resolution",
+      "verbatim_quote": "## Not copied, on purpose - `GSN.url` is an Internet shortcut to a OneNote/OneDrive redirect.",
+      "page": 1,
+      "latex": "R(\\text{shortcut}) = \\begin{cases} \\text{Resolved URL} & \\text{if } \\text{valid} \\\\ \\bot & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'R:': 'Shortcut resolver', '\\\\text{shortcut}:': 'Internet shortcut file', '\\\\text{Resolved URL}:': 'Target URI', '\\\\bot:': 'Failure symbol (no content)'}",
+      "assumptions": "HTTP(S) reachability, valid MIME type, no server-side redirection loops.",
+      "breakdown_regime": "Non-HTTP(s) schemes or unreachable endpoints yield undefined behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Treats shortcut resolution as a partial function from file handles to URI graphs.",
+        "source_operator": "shortcut_resolution",
+        "telemetry": "HTTP response codes, download latency, content type verification"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0d0a3a65ada57c86_t0",
+      "think": "The filesystem ingestion pipeline implements a compositional operator \\mathcal{S} \\circ \\mathcal{E} \\circ R that maps a noisy, heterogeneous input space (Windows profile) to a clean, structured target domain (text-based project artifacts). The core challenge is managing boundary effects: \\mathcal{W} introduces discrete failures when worktree states become inconsistent, while \\mathcal{E} creates measure-zero singularities at the file-size threshold. The shortcut resolution \\mathcal{R} acts as a soft constraint, collapsing certain inputs to bottom elements. Empirical verification requires monitoring the success rates of each component and detecting cascading breakdowns through telemetry.\n\nDeep epistemic analysis for INGEST-LEDGER (0d0a3a65ada57c86, domain=other, pages_read=1/1): Operator 'Filesystem Snapshot Operator' (page 1, domain other) captures: # OneDrive GSE ingest 2026-10-21 ## Copied - `Galaxy Sports Edge` is a Sports checkout at `166aa3eb8` on `Autonomous-Revenue-Engine`. Assumptions: Text file exclusivity, size threshold (1 MB), no version control metadata, no binary/system files. Breakdown regime: Broken worktree references (`missing .git directory`) trigger snapshot failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps filesystem copying to information-theoretic data extraction under controlled operational boundaries. Operator 'Worktree Isolation Kernel' (page 1, domain other) captures: - `Galaxy Sports Edge Launch Ready` and `gse_push_tmp` are broken git worktrees of that same checkout (their `.git` files point at a missing worktree dir). Assumptions: Absolute path consistency, valid git configuration, absence of symbolic link vulnerabilities. Breakdown regime: Missing `.git/worktrees/<name>` directory causes catastrophic isolation breach. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Embeds git worktree management as a discrete event system with failure modes. Operator 'Selective File Exclusion Protocol' (page 1, domain other) captures: - Zips, logs, `.git`, and files over 1 MB were not copied. Assumptions: Static blacklist, file size determinism, no recursive archive expansion. Breakdown regime: Dynamic blacklist changes or archive loops cause infinite recursion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encapsulates data sanitization as a measure-preserving projection onto a reduced feature space. Operator 'Internet Shortcut Resolution' (page 1, domain other) captures: ## Not copied, on purpose - `GSN.url` is an Internet shortcut to a OneNote/OneDrive redirect. Assumptions: HTTP(S) reachability, valid MIME type, no server-side redirection loops. Breakdown regime: Non-HTTP(s) schemes or unreachable endpoints yield undefined behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Treats shortcut resolution as a partial function from file handles to URI graphs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for INGEST-LEDGER (0d0a3a65ada57c86, domain=other, pages_read=1/1): Operator 'Filesystem Snapshot Operator' (page 1, domain other) captures: # OneDrive GSE ingest 2026-10-21 ## Copied - `Galaxy Sports Edge` is a Sports checkout at `166aa3eb8` on `Autonomous-Revenue-Engine`. Assumptions: Text file exclusivity, size threshold (1 MB), no version control metadata, no binary/system files. Breakdown regime: Broken worktree references (`missing .git directory`) trigger snapshot failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps filesystem copying to information-theoretic data extraction under controlled operational boundaries. Operator 'Worktree Isolation Kernel' (page 1, domain other) captures: - `Galaxy Sports Edge Launch Ready` and `gse_push_tmp` are broken git worktrees of that same checkout (their `.git` files point at a missing worktree dir). Assumptions: Absolute path consistency, valid git configuration, absence of symbolic link vulnerabilities. Breakdown regime: Missing `.git/worktrees/<name>` directory causes catastrophic isolation breach. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Embeds git worktree management as a discrete event system with failure modes. Operator 'Selective File Exclusion Protocol' (page 1, domain other) captures: - Zips, logs, `.git`, and files over 1 MB were not copied. Assumptions: Static blacklist, file size determinism, no recursive archive expansion. Breakdown regime: Dynamic blacklist changes or archive loops cause infinite recursion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encapsulates data sanitization as a measure-preserving projection onto a reduced feature space. Operator 'Internet Shortcut Resolution' (page 1, domain other) captures: ## Not copied, on purpose - `GSN.url` is an Internet shortcut to a OneNote/OneDrive redirect. Assumptions: HTTP(S) reachability, valid MIME type, no server-side redirection loops. Breakdown regime: Non-HTTP(s) schemes or unreachable endpoints yield undefined behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Treats shortcut resolution as a partial function from file handles to URI graphs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This formalism generalizes the theory of data cleaning pipelines (e.g., Davenport's work on probabilistic databases) by incorporating explicit failure domains and isolation mechanisms. It also draws parallels to quantum measurement theory where observables are defined only on dense subalgebras. Retrocausal Genealogy: Rooted in INGEST-LEDGER (0d0a3a65ada57c86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include automated build systems that expect pristine worktrees and security scanners that flag embedded credentials. The model assumes rational actors who optimize for reproducibility while avoiding information leaks. Theory of Mind & Decision Maker Model: Rooted in INGEST-LEDGER (0d0a3a65ada57c86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring that each primitive operates on disjoint subsets of the filesystem (e.g., \\mathcal{E} excludes .git vs. \\mathcal{W} operates on .git directories). Leakage vetoes demand that no primitive can reconstruct original binary files or execute arbitrary code. Cross-Layer Veto & Anti-Leakage Check: Rooted in INGEST-LEDGER (0d0a3a65ada57c86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

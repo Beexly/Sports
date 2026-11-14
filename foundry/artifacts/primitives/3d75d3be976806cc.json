@@ -1,0 +1,95 @@
+{
+  "book_id": "3d75d3be976806cc",
+  "source_status": "COMPLETE",
+  "title": "gpleiss-temperature_scaling",
+  "file_name": "gpleiss-temperature_scaling.md",
+  "sha256": "3d75d3be976806cc3d9c7045da1f237d2b07c47177c85abd4086b0325b6429b7",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in gpleiss-temperature_scaling (3d75d3be976806cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in gpleiss-temperature_scaling (3d75d3be976806cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in gpleiss-temperature_scaling (3d75d3be976806cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "temperature_scaling",
+      "name": "Temperature Scaling",
+      "verbatim_quote": "Vision Prove that a neural net's overconfident softmax outputs can be fixed post-hoc by dividing logits by a single learned scalar T (chosen to minimize NLL on a validation set) — from \"On Calibration of Modern Neural Networks\" (arXiv 1706.04599).",
+      "page": 1,
+      "latex": "p_i^T = \\frac{\\exp(z_i/T)}{\\sum_j \\exp(z_j/T)}",
+      "symbol_and_unit_ledger": "z_i = logit (dimensionless), T = temperature (dimensionless)",
+      "assumptions": "Softmax output miscalibration is a uniform scaling across all logits and classes.",
+      "breakdown_regime": "Fails when calibration error is class-specific or input-dependent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to Bayesian posterior rescaling via logistic loss maximization.",
+        "source_operator": "temperature_scaling",
+        "telemetry": "Expected Calibration Error (ECE) on held-out data."
+      }
+    },
+    {
+      "primitive_id": "logistic_calibration",
+      "name": "Logistic Posterior Rescaling",
+      "verbatim_quote": "The *idea* (one-parameter recalibration as the minimum-viable calibration row) is the right default for signals with tiny held-out samples — a 1-parameter map cannot overfit the way isotonic can — but do not wire this repo's code.",
+      "page": 1,
+      "latex": "p_{post}(y|x) = \\sigma(\\sigma^{-1}(p_{pre}) + \\Delta)",
+      "symbol_and_unit_ledger": "p_{pre} = pre-calibrated probability (unit interval), Δ = shift (log-odds scale)",
+      "assumptions": "Pre-existing calibrated logits, linear relationship between prior odds and posterior odds shift.",
+      "breakdown_regime": "Degenerates when prior probabilities are sparse or extreme (near 0 or 1)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Temperature Scaling under the logit link function.",
+        "source_operator": "logistic_calibration",
+        "telemetry": "Brier score reduction relative to raw model output."
+      }
+    },
+    {
+      "primitive_id": "isotonic_calibration",
+      "name": "Isotonic Probability Calibration",
+      "verbatim_quote": "The *idea* (one-parameter recalibration as the minimum-viable calibration row) is the right default for signals with tiny held-out samples — a 1-parameter map cannot overfit the way isotonic can — but do not wire this repo's code.",
+      "page": 1,
+      "latex": "f : [0,1] \\rightarrow [0,1] \\text{ monotonic non-decreasing }",
+      "symbol_and_unit_ledger": "None (output is a probability estimate)",
+      "assumptions": "No parametric form assumed, only order preservation; requires sufficient calibration data.",
+      "breakdown_regime": "Overfits with small validation sets, leading to piecewise constant approximations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Non-parametric maximum likelihood estimator under stochastic ordering constraints.",
+        "source_operator": "isotonic_calibration",
+        "telemetry": "Maximum likelihood fit on validation set, cross-entropy loss."
+      }
+    },
+    {
+      "primitive_id": "rank_calibration",
+      "name": "Rank-Based Probability Estimation",
+      "verbatim_quote": "The *idea* (one-parameter recalibration as the minimum-viable calibration row) is the right default for signals with tiny held-out samples — a 1-parameter map cannot overfit the way isotonic can — but do not wire this repo's code.",
+      "page": 1,
+      "latex": "p(y=1 | rank) = \\frac{\\text{mean}(y_i \\mid rank_i)}{n_{bin}}",
+      "symbol_and_unit_ledger": "rank_i = rank of sample i in sorted predicted probability (dimensionless)",
+      "assumptions": "Labels are exchangeable given ranks, binning averages approximate conditional expectations.",
+      "breakdown_regime": "High variance due to coarse binning when sample size per rank bucket is small.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Equivalence to histogram binning of scores under empirical distribution.",
+        "source_operator": "rank_calibration",
+        "telemetry": "Histogram-based ECE computed over ranked predictions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3d75d3be976806cc_t0",
+      "think": "The core challenge is correcting overconfident neural network outputs that violate proper scoring rules. Temperature Scaling (T=1) assumes uniform overconfidence across all classes and inputs, which is often inadequate. Isotonic Calibration relaxes this homoscedasticity assumption but risks overfitting with limited data. Rank-based methods further simplify by only using the ordering of predictions, discarding magnitude information. All four primitives share the goal of learning a calibration map f(p) ≈ P(Y|p) from a held-out validation set, but differ in their inductive biases: parametric vs. nonparametric, monotonicity vs. shape constraints. In high-stakes applications like sports betting, where calibration errors lead to systematic mispricing, the choice between these methods hinges on the trade-off between expressiveness and robustness to small sample sizes.\n\nDeep epistemic analysis for gpleiss-temperature_scaling (3d75d3be976806cc, domain=other, pages_read=1/1): Operator 'Temperature Scaling' (page 1, domain other) captures: Vision Prove that a neural net's overconfident softmax outputs can be fixed post-hoc by dividing logits by a single learned scalar T (chosen to minimize NLL on a validation set) — from \"On Calibration of Modern Neural Networks\" (arXiv 1706.04599). Assumptions: Softmax output miscalibration is a uniform scaling across all logits and classes. Breakdown regime: Fails when calibration error is class-specific or input-dependent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to Bayesian posterior rescaling via logistic loss maximization. Operator 'Logistic Posterior Rescaling' (page 1, domain other) captures: The *idea* (one-parameter recalibration as the minimum-viable calibration row) is the right default for signals with tiny held-out samples — a 1-parameter map cannot overfit the way isotonic can — but do not wire this repo's code. Assumptions: Pre-existing calibrated logits, linear relationship between prior odds and posterior odds shift. Breakdown regime: Degenerates when prior probabilities are sparse or extreme (near 0 or 1) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Temperature Scaling under the logit link function. Operator 'Isotonic Probability Calibration' (page 1, domain other) captures: The *idea* (one-parameter recalibration as the minimum-viable calibration row) is the right default for signals with tiny held-out samples — a 1-parameter map cannot overfit the way isotonic can — but do not wire this repo's code. Assumptions: No parametric form assumed, only order preservation; requires sufficient calibration data. Breakdown regime: Overfits with small validation sets, leading to piecewise constant approximations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Non-parametric maximum likelihood estimator under stochastic ordering constraints. Operator 'Rank-Based Probability Estimation' (page 1, domain other) captures: The *idea* (one-parameter recalibration as the minimum-viable calibration row) is the right default for signals with tiny held-out samples — a 1-parameter map cannot overfit the way isotonic can — but do not wire this repo's code. Assumptions: Labels are exchangeable given ranks, binning averages approximate conditional expectations. Breakdown regime: High variance due to coarse binning when sample size per rank bucket is small. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Equivalence to histogram binning of scores under empirical distribution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gpleiss-temperature_scaling (3d75d3be976806cc, domain=other, pages_read=1/1): Operator 'Temperature Scaling' (page 1, domain other) captures: Vision Prove that a neural net's overconfident softmax outputs can be fixed post-hoc by dividing logits by a single learned scalar T (chosen to minimize NLL on a validation set) — from \"On Calibration of Modern Neural Networks\" (arXiv 1706.04599). Assumptions: Softmax output miscalibration is a uniform scaling across all logits and classes. Breakdown regime: Fails when calibration error is class-specific or input-dependent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to Bayesian posterior rescaling via logistic loss maximization. Operator 'Logistic Posterior Rescaling' (page 1, domain other) captures: The *idea* (one-parameter recalibration as the minimum-viable calibration row) is the right default for signals with tiny held-out samples — a 1-parameter map cannot overfit the way isotonic can — but do not wire this repo's code. Assumptions: Pre-existing calibrated logits, linear relationship between prior odds and posterior odds shift. Breakdown regime: Degenerates when prior probabilities are sparse or extreme (near 0 or 1) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Temperature Scaling under the logit link function. Operator 'Isotonic Probability Calibration' (page 1, domain other) captures: The *idea* (one-parameter recalibration as the minimum-viable calibration row) is the right default for signals with tiny held-out samples — a 1-parameter map cannot overfit the way isotonic can — but do not wire this repo's code. Assumptions: No parametric form assumed, only order preservation; requires sufficient calibration data. Breakdown regime: Overfits with small validation sets, leading to piecewise constant approximations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Non-parametric maximum likelihood estimator under stochastic ordering constraints. Operator 'Rank-Based Probability Estimation' (page 1, domain other) captures: The *idea* (one-parameter recalibration as the minimum-viable calibration row) is the right default for signals with tiny held-out samples — a 1-parameter map cannot overfit the way isotonic can — but do not wire this repo's code. Assumptions: Labels are exchangeable given ranks, binning averages approximate conditional expectations. Breakdown regime: High variance due to coarse binning when sample size per rank bucket is small. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Equivalence to histogram binning of scores under empirical distribution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Edwards' 1965 Bayesian updating with informative priors, extended to logistic regression by McCullagh & Nelder (1989). Platt's 1999 kernel SVM probability estimates introduced the sigmoid post-hoc correction. Zadrozny & Elkan's 2001 histogram binning formalized nonparametric calibration. Guo et al.'s 2017 analysis unified these approaches under a frequentist risk minimization framework. Retrocausal Genealogy: Rooted in gpleiss-temperature_scaling (3d75d3be976806cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Market makers and bookmakers seek well-calibrated probabilities to manage risk and exploit model inefficiencies. They may resist complex recalibration procedures due to interpretability concerns and the potential for introducing new biases. A simple, interpretable method like Temperature Scaling aligns with their preference for transparent, low-maintenance solutions. Theory of Mind & Decision Maker Model: Rooted in gpleiss-temperature_scaling (3d75d3be976806cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Avoid mixing primitives across layers: e.g., use Temperature Scaling at the model output layer but apply Isotonic Regression on top of ensemble predictions. Ensure that validation data is independent of both training and test sets to prevent leakage, especially when combining multiple calibration steps. Cross-Layer Veto & Anti-Leakage Check: Rooted in gpleiss-temperature_scaling (3d75d3be976806cc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

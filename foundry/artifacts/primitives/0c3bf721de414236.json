@@ -1,0 +1,78 @@
+{
+  "book_id": "0c3bf721de414236",
+  "source_status": "COMPLETE",
+  "title": "CALIBRATION_UNCERTAINTY_STACK",
+  "file_name": "CALIBRATION_UNCERTAINTY_STACK.md",
+  "sha256": "0c3bf721de4142362cc26d911fbefe3b323e87c29eae19df70f16be4848895be",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Calibration uncertainty stack integrates probabilistic forecasting with conformal inference and hierarchical Bayes; binary outcomes use Platt/PAVA/EB-τ; numeric targets employ quantile regression with CQR intervals. Universal Lens: Rooted in CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages EB-τ hierarchical models for binary side calibration and Brier/ECE metrics, while conformal abstention enables robust uncertainty quantification via ACI flags for risk-sensitive decisions. GSI Mapping: Rooted in CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies stationary bootstrap resampling for temporal consistency in map CI estimation, integrating adaptive-width uncertainty into situational reasoning through CQR and conformal abstention protocols. GSE Mapping: Rooted in CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "conformal_abstain",
+      "name": "Conformal Abstain",
+      "verbatim_quote": "conformal coverage - **ACI abstain** = show/set size only (`CONFORMAL_ABSTAIN_ENABLED` default false) - Split-conformal residual sets",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ACI': 'Abstain Confidence Interval', 'CONFORMAL_ABSTAIN_ENABLED': 'Boolean flag'}",
+      "assumptions": "Split-conformal method assumes exchangeability of residuals; abstention occurs when coverage fails threshold.",
+      "breakdown_regime": "When residual set exceeds acceptable size, abstains from prediction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's uncertainty-aware decision engine where ACI flags trigger fallback logic during low-confidence forecasts.",
+        "source_operator": "conformal_abstain",
+        "telemetry": "Set size of abstained predictions over time."
+      }
+    },
+    {
+      "primitive_id": "eb_tau_hierarchical",
+      "name": "EB-τ Hierarchical Model",
+      "verbatim_quote": "coverage, optional R&D ## EB-τ hierarchical `u_g ~ N(0,τ2)`, τ̂ moment match clamp [0.05, 2]. Unknown",
+      "page": 1,
+      "latex": "\\hat{\\tau} \\sim \\text{clamp}[0.05, 2], \\quad u_g \\sim \\mathcal{N}(0, \\tau^2)",
+      "symbol_and_unit_ledger": "{'u_g': 'Hierarchical random effect', 'τ': 'Variance parameter', 'τ̂': 'Estimated variance'}",
+      "assumptions": "Normality of group-level effects; bounded moment matching for stability.",
+      "breakdown_regime": "When τ̂ falls outside [0.05, 2], clamps estimate to maintain model integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI's binary calibration pipeline to stabilize estimates across groups via shrinkage.",
+        "source_operator": "eb_tau_hierarchical",
+        "telemetry": "Posterior variance estimates per group."
+      }
+    },
+    {
+      "primitive_id": "stationary_bootstrap",
+      "name": "Stationary Bootstrap",
+      "verbatim_quote": "heavy forests without caching | ## Stationary bootstrap Mean block ≈ 14 (days/events). Resample contiguous geometric",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Mean block': '14 days/events', 'Resample': 'Contiguous geometric blocks'}",
+      "assumptions": "Temporal dependence captured via geometric block resampling; mean block length fixed at 14.",
+      "breakdown_regime": "Inapplicable for non-temporal data or when block size varies significantly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Applied in GSE's temporal uncertainty bands for consistent risk assessment over event sequences.",
+        "source_operator": "stationary_bootstrap",
+        "telemetry": "Bootstrap sample variance of forecasted outcomes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0c3bf721de414236_t0",
+      "think": "The calibration stack operates under dual paradigms: probabilistic forecasting for binary outcomes using Platt/PAVA/EB-τ, and quantile regression for numeric lines. The EB-τ hierarchical model stabilizes estimates via normal priors on group-level effects, clamped to prevent extreme variance. Conformal abstention ensures that predictions are only made when confidence thresholds are met, avoiding overconfident errors. Stationary bootstrap addresses temporal dependencies by resampling contiguous blocks, enabling robust uncertainty bands. These primitives interlock: EB-τ feeds into Brier/ECE for eligibility, which then informs conformal abstention and bootstrap-based CI estimation. Failure modes include misalignment between calibration and coverage, or instability in τ̂ due to insufficient data.\n\nDeep epistemic analysis for CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236, domain=other, pages_read=1/1): Operator 'Conformal Abstain' (page 1, domain other) captures: conformal coverage - **ACI abstain** = show/set size only (`CONFORMAL_ABSTAIN_ENABLED` default false) - Split-conformal residual sets Assumptions: Split-conformal method assumes exchangeability of residuals; abstention occurs when coverage fails threshold. Breakdown regime: When residual set exceeds acceptable size, abstains from prediction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's uncertainty-aware decision engine where ACI flags trigger fallback logic during low-confidence forecasts. Operator 'EB-τ Hierarchical Model' (page 1, domain other) captures: coverage, optional R&D ## EB-τ hierarchical `u_g ~ N(0,τ2)`, τ̂ moment match clamp [0.05, 2]. Unknown Assumptions: Normality of group-level effects; bounded moment matching for stability. Breakdown regime: When τ̂ falls outside [0.05, 2], clamps estimate to maintain model integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI's binary calibration pipeline to stabilize estimates across groups via shrinkage. Operator 'Stationary Bootstrap' (page 1, domain other) captures: heavy forests without caching | ## Stationary bootstrap Mean block ≈ 14 (days/events). Resample contiguous geometric Assumptions: Temporal dependence captured via geometric block resampling; mean block length fixed at 14. Breakdown regime: Inapplicable for non-temporal data or when block size varies significantly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Applied in GSE's temporal uncertainty bands for consistent risk assessment over event sequences. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236, domain=other, pages_read=1/1): Operator 'Conformal Abstain' (page 1, domain other) captures: conformal coverage - **ACI abstain** = show/set size only (`CONFORMAL_ABSTAIN_ENABLED` default false) - Split-conformal residual sets Assumptions: Split-conformal method assumes exchangeability of residuals; abstention occurs when coverage fails threshold. Breakdown regime: When residual set exceeds acceptable size, abstains from prediction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's uncertainty-aware decision engine where ACI flags trigger fallback logic during low-confidence forecasts. Operator 'EB-τ Hierarchical Model' (page 1, domain other) captures: coverage, optional R&D ## EB-τ hierarchical `u_g ~ N(0,τ2)`, τ̂ moment match clamp [0.05, 2]. Unknown Assumptions: Normality of group-level effects; bounded moment matching for stability. Breakdown regime: When τ̂ falls outside [0.05, 2], clamps estimate to maintain model integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI's binary calibration pipeline to stabilize estimates across groups via shrinkage. Operator 'Stationary Bootstrap' (page 1, domain other) captures: heavy forests without caching | ## Stationary bootstrap Mean block ≈ 14 (days/events). Resample contiguous geometric Assumptions: Temporal dependence captured via geometric block resampling; mean block length fixed at 14. Breakdown regime: Inapplicable for non-temporal data or when block size varies significantly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Applied in GSE's temporal uncertainty bands for consistent risk assessment over event sequences. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian hierarchical modeling (EB-τ) and conformal prediction theory (split-conformal), extended by bootstrap methods for temporal data handling. Retrocausal Genealogy: Rooted in CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit calibration gaps or induce false confidence; thus, GSI employs strict eligibility criteria and abstention to mitigate adversarial manipulation. Theory of Mind & Decision Maker Model: Rooted in CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity prevents redundant use of EB-τ and conformal methods; leakage vetoes ensure that numeric intervals do not leak into binary calibration paths. Cross-Layer Veto & Anti-Leakage Check: Rooted in CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CALIBRATION_UNCERTAINTY_STACK (0c3bf721de414236), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

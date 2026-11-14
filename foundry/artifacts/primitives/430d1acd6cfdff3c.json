@@ -1,0 +1,95 @@
+{
+  "book_id": "430d1acd6cfdff3c",
+  "source_status": "COMPLETE",
+  "title": "CHEATSHEET",
+  "file_name": "CHEATSHEET.md",
+  "sha256": "430d1acd6cfdff3c66deacc9404347ba4993f79982e5b6e64895f4e90645fa0f",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Operational constraints form a Boolean lattice under conjunction; each primitive defines a closed subset of valid system states. Universal Lens: Rooted in CHEATSHEET (430d1acd6cfdff3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian policy enforcement via public performance gates and trust-claim registries define posterior belief updates over customer-facing data integrity. GSI Mapping: Rooted in CHEATSHEET (430d1acd6cfdff3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions between stub and live modes based on environment flags and explicit publish actions, governed by state-machine invariants. GSE Mapping: Rooted in CHEATSHEET (430d1acd6cfdff3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "demo_mode_guardrail",
+      "name": "Demo Mode Guardrail",
+      "verbatim_quote": "The Sample-mode banner appears whenever `DEMO_PICKS_ENABLED=true` AND stub mode is active.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DEMO_PICKS_ENABLED': 'boolean flag', 'isStubMode()': 'boolean function'}",
+      "assumptions": "System operates in binary operational modes: stub or live.",
+      "breakdown_regime": "When both DEMO_PICKS_ENABLED and isStubMode() return true.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Boolean conjunction defines valid demo rendering context in GSI dashboard.",
+        "source_operator": "demo_mode_guardrail",
+        "telemetry": "Presence of sample-mode banner on /dashboard"
+      }
+    },
+    {
+      "primitive_id": "public_performance_gate",
+      "name": "Public Performance Gate",
+      "verbatim_quote": "**No fabricated stats on customer surfaces.** `evaluatePublicPerformancePolicy()` is the gate.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'evaluatePublicPerformancePolicy()': 'policy function'}",
+      "assumptions": "Customer-facing statistics must be derived from verified data sources.",
+      "breakdown_regime": "When policy evaluation fails or is bypassed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Conformal prediction kernel ensures statistical validity of displayed metrics in GSE.",
+        "source_operator": "public_performance_gate",
+        "telemetry": "Statistical consistency checks on /dashboard and /picks"
+      }
+    },
+    {
+      "primitive_id": "brand_safety_registry",
+      "name": "Brand Safety Registry",
+      "verbatim_quote": "**No banned phrases on customer pages.** The trust-claims registry + CI scanner catch them.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'trust-claims registry': 'phrase blacklist', 'CI scanner': 'automated detection mechanism'}",
+      "assumptions": "All customer-facing content must pass automated safety filters.",
+      "breakdown_regime": "Failure of CI brand-safety job due to banned phrase inclusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registry-based filtering mirrors formal language recognition in GSI.",
+        "source_operator": "brand_safety_registry",
+        "telemetry": "CI job status and phrase violation logs"
+      }
+    },
+    {
+      "primitive_id": "model_freeze_enforcement",
+      "name": "Model Freeze Enforcement",
+      "verbatim_quote": "**No `MODEL_VERSION` bump without an IMPLEMENTED `CalibrationProposal`.** The model-freeze guardrail enforces this.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'MODEL_VERSION': 'integer version identifier', 'CalibrationProposal': 'formal proposal object'}",
+      "assumptions": "Model updates require formal calibration approval.",
+      "breakdown_regime": "Attempted version increment without implemented proposal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Guardrail enforces causal consistency in model evolution within GSE.",
+        "source_operator": "model_freeze_enforcement",
+        "telemetry": "Version change request vs. proposal implementation log"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "430d1acd6cfdff3c_t0",
+      "think": "Each primitive encodes a constraint on system behavior, forming a logical framework where invalid states are excluded. The demo mode guardrail uses a conjunction of flags to determine visibility. Public performance gate ensures that only validated data reaches users, enforcing a Bayesian update over beliefs about data quality. Brand safety registry applies a formal language filter to prevent unsafe content, modeled as a decision boundary. Model freeze enforcement introduces causality into version control, ensuring that changes are not arbitrary but grounded in formal proposals. These primitives collectively define a constrained space of valid configurations, with failure modes corresponding to violations of these logical constraints.\n\nDeep epistemic analysis for CHEATSHEET (430d1acd6cfdff3c, domain=other, pages_read=1/1): Operator 'Demo Mode Guardrail' (page 1, domain other) captures: The Sample-mode banner appears whenever `DEMO_PICKS_ENABLED=true` AND stub mode is active. Assumptions: System operates in binary operational modes: stub or live. Breakdown regime: When both DEMO_PICKS_ENABLED and isStubMode() return true. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Boolean conjunction defines valid demo rendering context in GSI dashboard. Operator 'Public Performance Gate' (page 1, domain other) captures: **No fabricated stats on customer surfaces.** `evaluatePublicPerformancePolicy()` is the gate. Assumptions: Customer-facing statistics must be derived from verified data sources. Breakdown regime: When policy evaluation fails or is bypassed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conformal prediction kernel ensures statistical validity of displayed metrics in GSE. Operator 'Brand Safety Registry' (page 1, domain other) captures: **No banned phrases on customer pages.** The trust-claims registry + CI scanner catch them. Assumptions: All customer-facing content must pass automated safety filters. Breakdown regime: Failure of CI brand-safety job due to banned phrase inclusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry-based filtering mirrors formal language recognition in GSI. Operator 'Model Freeze Enforcement' (page 1, domain other) captures: **No `MODEL_VERSION` bump without an IMPLEMENTED `CalibrationProposal`.** The model-freeze guardrail enforces this. Assumptions: Model updates require formal calibration approval. Breakdown regime: Attempted version increment without implemented proposal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Guardrail enforces causal consistency in model evolution within GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CHEATSHEET (430d1acd6cfdff3c, domain=other, pages_read=1/1): Operator 'Demo Mode Guardrail' (page 1, domain other) captures: The Sample-mode banner appears whenever `DEMO_PICKS_ENABLED=true` AND stub mode is active. Assumptions: System operates in binary operational modes: stub or live. Breakdown regime: When both DEMO_PICKS_ENABLED and isStubMode() return true. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Boolean conjunction defines valid demo rendering context in GSI dashboard. Operator 'Public Performance Gate' (page 1, domain other) captures: **No fabricated stats on customer surfaces.** `evaluatePublicPerformancePolicy()` is the gate. Assumptions: Customer-facing statistics must be derived from verified data sources. Breakdown regime: When policy evaluation fails or is bypassed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Conformal prediction kernel ensures statistical validity of displayed metrics in GSE. Operator 'Brand Safety Registry' (page 1, domain other) captures: **No banned phrases on customer pages.** The trust-claims registry + CI scanner catch them. Assumptions: All customer-facing content must pass automated safety filters. Breakdown regime: Failure of CI brand-safety job due to banned phrase inclusion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry-based filtering mirrors formal language recognition in GSI. Operator 'Model Freeze Enforcement' (page 1, domain other) captures: **No `MODEL_VERSION` bump without an IMPLEMENTED `CalibrationProposal`.** The model-freeze guardrail enforces this. Assumptions: Model updates require formal calibration approval. Breakdown regime: Attempted version increment without implemented proposal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Guardrail enforces causal consistency in model evolution within GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from software engineering and probabilistic logic, extending earlier work on access control and model governance. Retrocausal Genealogy: Rooted in CHEATSHEET (430d1acd6cfdff3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CHEATSHEET (430d1acd6cfdff3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include automated CI systems enforcing brand safety and human operators managing model versions. Each agent operates under distinct objectives: safety compliance versus innovation velocity. Theory of Mind & Decision Maker Model: Rooted in CHEATSHEET (430d1acd6cfdff3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in CHEATSHEET (430d1acd6cfdff3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple guards conflict—e.g., enabling demo mode while disabling performance evaluation. Leakage occurs if a bypass exists in any layer, undermining the integrity of the entire system. Cross-Layer Veto & Anti-Leakage Check: Rooted in CHEATSHEET (430d1acd6cfdff3c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

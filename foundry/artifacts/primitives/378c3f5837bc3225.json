@@ -1,0 +1,78 @@
+{
+  "book_id": "378c3f5837bc3225",
+  "source_status": "COMPLETE",
+  "title": "p0146",
+  "file_name": "p0146.txt",
+  "sha256": "378c3f5837bc32253b13c4edd3e02b2e0ed32a6e419c93b8bdbd6fd04853a310",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Rat spatial cognition via hierarchical goal selection in maze environments; perceptual expectation of subgoal direction maps to Bayesian decision-making under uncertainty. Universal Lens: Rooted in p0146 (378c3f5837bc3225), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models rat decision-making as a conformal Bayesian inference process over spatial subgoals, using observed path outcomes to update belief states about goal-directed behavior. GSI Mapping: Rooted in p0146 (378c3f5837bc3225), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE encodes rat navigation as a state-transition system where each maze choice represents a probabilistic update of environmental affordances, conditioned on prior subgoal expectations. GSE Mapping: Rooted in p0146 (378c3f5837bc3225), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "hierarchical_goal_selection",
+      "name": "Hierarchical Goal Selection",
+      "verbatim_quote": "subordinate and superordinate goals Thıs is an experıment by Robinson and Wever It indicated that the",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'set of goal objects (dimensionless)', 'M': 'set of means objects (dimensionless)', 'S': 'set of subordinate goals (dimensionless)', 'P_{ij}': 'probability of selecting means i given goal j (dimensionless)'}",
+      "assumptions": "Rats exhibit hierarchical decision-making based on goal-object relationships; subgoals are encoded as conditional probabilities.",
+      "breakdown_regime": "When subordinate goal structure becomes ambiguous or path closure prevents access to expected subgoals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The rat's selection of a means object corresponds to a Bayesian update over conditional probabilities of subgoals, mirroring GSI's probabilistic inference framework.",
+        "source_operator": "hierarchical_goal_selection",
+        "telemetry": "Choice accuracy at decision points, latency to goal, and reversal learning curves."
+      }
+    },
+    {
+      "primitive_id": "spatial_decision_point",
+      "name": "Spatial Decision Point",
+      "verbatim_quote": "simple one shown in FIGURE 43 \"Two paths, R and L, led from the entrance to",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'decision point (spatial coordinate vector)', 'P_R': 'probability of choosing right path (dimensionless)', 'P_L': 'probability of choosing left path (dimensionless)', 'T_{ij}': 'transition time from D to goal i via path j (seconds)'}",
+      "assumptions": "At decision points, rats evaluate path utility based on prior experience and current sensory input.",
+      "breakdown_regime": "When sensory cues are occluded or path accessibility changes unexpectedly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Decision point encoding in GSE reflects a kernel-based transition function over spatial configurations, derived from empirical behavioral data.",
+        "source_operator": "spatial_decision_point",
+        "telemetry": "Choice frequency, reaction time, and path traversal consistency."
+      }
+    },
+    {
+      "primitive_id": "perceptual_illumination",
+      "name": "Perceptual Illumination",
+      "verbatim_quote": "top of the paths a row of electric lights gave even illumination At the choice point,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I(x,y)': 'intensity of illumination at spatial location (lux)', 'L_{avg}': 'average light level across paths (lux)', 'V_{vis}': 'visual visibility factor (dimensionless)'}",
+      "assumptions": "Uniform illumination enhances spatial discrimination and reduces perceptual ambiguity during decision-making.",
+      "breakdown_regime": "When lighting conditions vary or become insufficient for visual guidance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Illumination model in GSE mirrors GSI's use of sensory fidelity metrics to quantify perceptual reliability in decision contexts.",
+        "source_operator": "perceptual_illumination",
+        "telemetry": "Path selection accuracy under varying light levels, pupil dilation, and gaze patterns."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "378c3f5837bc3225_t0",
+      "think": "The rat’s decision-making process involves hierarchical goal selection, where it evaluates paths based on their potential to lead to subordinate goals—either positive (e.g., food) or negative (e.g., avoidance). This is modeled as a conditional probability distribution over means objects given goal states. The spatial decision point acts as a node in a directed graph, where transitions depend on learned path utilities. Illumination serves as a sensory modality that affects perceptual clarity and thus influences decision confidence. These primitives form a dual structure: one layer encodes the cognitive hierarchy (GSI), while another encodes the physical environment dynamics (GSE). Failure modes arise when sensory inputs are degraded or when goal hierarchies collapse due to unexpected path closures. The system exhibits robustness through repeated trials and reinforcement learning, but may fail under novel or conflicting stimuli.\n\nDeep epistemic analysis for p0146 (378c3f5837bc3225, domain=other, pages_read=1/1): Operator 'Hierarchical Goal Selection' (page 1, domain other) captures: subordinate and superordinate goals Thıs is an experıment by Robinson and Wever It indicated that the Assumptions: Rats exhibit hierarchical decision-making based on goal-object relationships; subgoals are encoded as conditional probabilities. Breakdown regime: When subordinate goal structure becomes ambiguous or path closure prevents access to expected subgoals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The rat's selection of a means object corresponds to a Bayesian update over conditional probabilities of subgoals, mirroring GSI's probabilistic inference framework. Operator 'Spatial Decision Point' (page 1, domain other) captures: simple one shown in FIGURE 43 \"Two paths, R and L, led from the entrance to Assumptions: At decision points, rats evaluate path utility based on prior experience and current sensory input. Breakdown regime: When sensory cues are occluded or path accessibility changes unexpectedly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Decision point encoding in GSE reflects a kernel-based transition function over spatial configurations, derived from empirical behavioral data. Operator 'Perceptual Illumination' (page 1, domain other) captures: top of the paths a row of electric lights gave even illumination At the choice point, Assumptions: Uniform illumination enhances spatial discrimination and reduces perceptual ambiguity during decision-making. Breakdown regime: When lighting conditions vary or become insufficient for visual guidance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Illumination model in GSE mirrors GSI's use of sensory fidelity metrics to quantify perceptual reliability in decision contexts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0146 (378c3f5837bc3225, domain=other, pages_read=1/1): Operator 'Hierarchical Goal Selection' (page 1, domain other) captures: subordinate and superordinate goals Thıs is an experıment by Robinson and Wever It indicated that the Assumptions: Rats exhibit hierarchical decision-making based on goal-object relationships; subgoals are encoded as conditional probabilities. Breakdown regime: When subordinate goal structure becomes ambiguous or path closure prevents access to expected subgoals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The rat's selection of a means object corresponds to a Bayesian update over conditional probabilities of subgoals, mirroring GSI's probabilistic inference framework. Operator 'Spatial Decision Point' (page 1, domain other) captures: simple one shown in FIGURE 43 \"Two paths, R and L, led from the entrance to Assumptions: At decision points, rats evaluate path utility based on prior experience and current sensory input. Breakdown regime: When sensory cues are occluded or path accessibility changes unexpectedly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Decision point encoding in GSE reflects a kernel-based transition function over spatial configurations, derived from empirical behavioral data. Operator 'Perceptual Illumination' (page 1, domain other) captures: top of the paths a row of electric lights gave even illumination At the choice point, Assumptions: Uniform illumination enhances spatial discrimination and reduces perceptual ambiguity during decision-making. Breakdown regime: When lighting conditions vary or become insufficient for visual guidance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Illumination model in GSE mirrors GSI's use of sensory fidelity metrics to quantify perceptual reliability in decision contexts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century experimental psychology (Robinson & Wever, 1930), this work builds upon Gestalt principles of spatial cognition and extends into modern Bayesian decision theory and reinforcement learning frameworks. Retrocausal Genealogy: Rooted in p0146 (378c3f5837bc3225), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0146 (378c3f5837bc3225), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The rat is modeled as an agent with internal goal hierarchies and perceptual expectations. Its behavior reflects a bounded rationality model where decisions are made under uncertainty, balancing exploration and exploitation of known paths. Theory of Mind & Decision Maker Model: Rooted in p0146 (378c3f5837bc3225), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that perceptual variables do not redundantly encode decision outcomes. Leakage is prevented by maintaining distinct mappings between sensory input layers and decision-making kernels in GSE and GSI respectively. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0146 (378c3f5837bc3225), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

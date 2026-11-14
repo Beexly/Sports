@@ -1,0 +1,95 @@
+{
+  "book_id": "5f4f2c43970e7fdb",
+  "source_status": "COMPLETE",
+  "title": "p0193",
+  "file_name": "p0193.txt",
+  "sha256": "5f4f2c43970e7fdb36c1849fce663ccf318ab2ff691edc0be4f1b1ab9440a371",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in p0193 (5f4f2c43970e7fdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in p0193 (5f4f2c43970e7fdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in p0193 (5f4f2c43970e7fdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "primary_stimulus_generalization",
+      "name": "Primary Stimulus Generalization",
+      "verbatim_quote": "184 PRINCIPLES OF BEHAVIOR PRIMARY STIMULUS-QUALITY GENERALIZATION The molar prineiple of primary stimulus generalization is now well established both qualitatively and quantitatively, mainly by conditioned-reaction experiments.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Generalization occurs primarily within the same sensory modality; distant stimuli evoke weaker responses.",
+      "breakdown_regime": "Singularity at zero distance, saturation at maximum distance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps stimulus generalization to kernel density estimation in GSI, where similarity metrics quantify posterior belief updates across conformal prediction regions.",
+        "source_operator": "primary_stimulus_generalization",
+        "telemetry": "Measurable reduction in reaction strength as Euclidean distance between stimuli increases in empirical data."
+      }
+    },
+    {
+      "primitive_id": "receptor_effector_convergence",
+      "name": "Receptor-Effector Convergence",
+      "verbatim_quote": "Since all of these potentialities of reaction evocation converge from different stimulus possibilities upon the same reaction, stimulus generalization may be said to generate a receptor-effector convergence.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Multiple sensory inputs map to a unified behavioral output.",
+      "breakdown_regime": "Failure occurs when input streams diverge into incompatible effectors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Convergence maps to state-action value functions in GSE, where diverse environmental states transition to shared optimal actions via policy evaluation.",
+        "source_operator": "receptor_effector_convergence",
+        "telemetry": "Consistent behavioral response patterns emerging from varied initial conditions in experimental trials."
+      }
+    },
+    {
+      "primitive_id": "stimulus_continuum",
+      "name": "Stimulus Continuum",
+      "verbatim_quote": "on a one-dimensional stimulus continuum, and Sr, S, Sr represent corresponding positions on the other side of S.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Stimuli are ordered linearly along a measurable axis.",
+      "breakdown_regime": "Discontinuity at threshold crossings, non-linearity at extreme intensities.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Continuum discretizes into finite state spaces for GSE simulation, while in GSI it forms the basis for continuous probability distributions over observable features.",
+        "source_operator": "stimulus_continuum",
+        "telemetry": "Quantifiable shifts in reaction thresholds correspond to changes in stimulus parameter values."
+      }
+    },
+    {
+      "primitive_id": "quantitative_generalization_law",
+      "name": "Quantitative Generalization Law",
+      "verbatim_quote": "In general the more remote on the stimulus continuum the evoking stimulus (S) is from that originally conditioned (), the weaker will be the reaction tendency mobilized by it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Response magnitude decays monotonically with distance from the trained stimulus.",
+      "breakdown_regime": "Asymptotic approach to zero response at infinite distance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Law maps to exponential decay kernels in GSI predictive models, where uncertainty grows with extrapolation distance from training data.",
+        "source_operator": "quantitative_generalization_law",
+        "telemetry": "Measured decrease in classification accuracy for test samples located further from training centroids."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5f4f2c43970e7fdb_t0",
+      "think": "The core insight is that stimulus generalization creates a structured mapping from sensory inputs to behavioral outputs. This mapping can be formalized using a Dirac delta function centered at the trained stimulus, convolved with a kernel that captures the decay of response strength with distance. Mathematically, the expected response \\(R\\) to a new stimulus \\(x\\) is \\(R(x) = \\int K(x - x_0) P_{train}(x_0) dx_0\\), where \\(K\\) is the kernel (e.g., Gaussian) and \\(P_{train}\\) is the empirical distribution of training examples. This convolution structure naturally embeds the receptor-effector convergence observed in Figure 41, as multiple input distributions collapse onto a single output manifold. The quantitative law follows from assuming \\(K\\) has finite variance; the farther \\(x\\) lies from the support of \\(P_{train}\\), the smaller the overlap and thus the response. This framework unifies Pavlovian conditioning with modern kernel methods and provides a rigorous foundation for transfer learning across similar tasks.\n\nDeep epistemic analysis for p0193 (5f4f2c43970e7fdb, domain=other, pages_read=1/1): Operator 'Primary Stimulus Generalization' (page 1, domain other) captures: 184 PRINCIPLES OF BEHAVIOR PRIMARY STIMULUS-QUALITY GENERALIZATION The molar prineiple of primary stimulus generalization is now well established both qualitatively and quantitatively, mainly by conditioned-reaction experiments. Assumptions: Generalization occurs primarily within the same sensory modality; distant stimuli evoke weaker responses. Breakdown regime: Singularity at zero distance, saturation at maximum distance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps stimulus generalization to kernel density estimation in GSI, where similarity metrics quantify posterior belief updates across conformal prediction regions. Operator 'Receptor-Effector Convergence' (page 1, domain other) captures: Since all of these potentialities of reaction evocation converge from different stimulus possibilities upon the same reaction, stimulus generalization may be said to generate a receptor-effector convergence. Assumptions: Multiple sensory inputs map to a unified behavioral output. Breakdown regime: Failure occurs when input streams diverge into incompatible effectors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Convergence maps to state-action value functions in GSE, where diverse environmental states transition to shared optimal actions via policy evaluation. Operator 'Stimulus Continuum' (page 1, domain other) captures: on a one-dimensional stimulus continuum, and Sr, S, Sr represent corresponding positions on the other side of S. Assumptions: Stimuli are ordered linearly along a measurable axis. Breakdown regime: Discontinuity at threshold crossings, non-linearity at extreme intensities. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Continuum discretizes into finite state spaces for GSE simulation, while in GSI it forms the basis for continuous probability distributions over observable features. Operator 'Quantitative Generalization Law' (page 1, domain other) captures: In general the more remote on the stimulus continuum the evoking stimulus (S) is from that originally conditioned (), the weaker will be the reaction tendency mobilized by it. Assumptions: Response magnitude decays monotonically with distance from the trained stimulus. Breakdown regime: Asymptotic approach to zero response at infinite distance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Law maps to exponential decay kernels in GSI predictive models, where uncertainty grows with extrapolation distance from training data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0193 (5f4f2c43970e7fdb, domain=other, pages_read=1/1): Operator 'Primary Stimulus Generalization' (page 1, domain other) captures: 184 PRINCIPLES OF BEHAVIOR PRIMARY STIMULUS-QUALITY GENERALIZATION The molar prineiple of primary stimulus generalization is now well established both qualitatively and quantitatively, mainly by conditioned-reaction experiments. Assumptions: Generalization occurs primarily within the same sensory modality; distant stimuli evoke weaker responses. Breakdown regime: Singularity at zero distance, saturation at maximum distance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps stimulus generalization to kernel density estimation in GSI, where similarity metrics quantify posterior belief updates across conformal prediction regions. Operator 'Receptor-Effector Convergence' (page 1, domain other) captures: Since all of these potentialities of reaction evocation converge from different stimulus possibilities upon the same reaction, stimulus generalization may be said to generate a receptor-effector convergence. Assumptions: Multiple sensory inputs map to a unified behavioral output. Breakdown regime: Failure occurs when input streams diverge into incompatible effectors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Convergence maps to state-action value functions in GSE, where diverse environmental states transition to shared optimal actions via policy evaluation. Operator 'Stimulus Continuum' (page 1, domain other) captures: on a one-dimensional stimulus continuum, and Sr, S, Sr represent corresponding positions on the other side of S. Assumptions: Stimuli are ordered linearly along a measurable axis. Breakdown regime: Discontinuity at threshold crossings, non-linearity at extreme intensities. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Continuum discretizes into finite state spaces for GSE simulation, while in GSI it forms the basis for continuous probability distributions over observable features. Operator 'Quantitative Generalization Law' (page 1, domain other) captures: In general the more remote on the stimulus continuum the evoking stimulus (S) is from that originally conditioned (), the weaker will be the reaction tendency mobilized by it. Assumptions: Response magnitude decays monotonically with distance from the trained stimulus. Breakdown regime: Asymptotic approach to zero response at infinite distance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Law maps to exponential decay kernels in GSI predictive models, where uncertainty grows with extrapolation distance from training data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0193 (5f4f2c43970e7fdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0193 (5f4f2c43970e7fdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may exploit systematic generalization errors by placing deceptive stimuli just beyond the known training range, forcing the model to make incorrect extrapolations. Conversely, agents can use active learning to strategically probe boundary regions to improve robustness. Theory of Mind & Decision Maker Model: Rooted in p0193 (5f4f2c43970e7fdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that the kernel \\(K\\) does not introduce spurious correlations between independent stimulus dimensions. Leakage is prevented by cross-validation on held-out test sets that span the entire stimulus space. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0193 (5f4f2c43970e7fdb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

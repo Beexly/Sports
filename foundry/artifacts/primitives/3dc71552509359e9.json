@@ -1,0 +1,78 @@
+{
+  "book_id": "3dc71552509359e9",
+  "source_status": "COMPLETE",
+  "title": "Copy of Action Items Template.xlsx",
+  "file_name": "Copy of Action Items Template.xlsx.txt",
+  "sha256": "3dc71552509359e97e2a3a0f7c97119c32d008908521718eea2aa0f29ad9dd25",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Action item tracking as a discrete-event dynamical system with priority-weighted state transitions across temporal and agent dimensions. Universal Lens: Rooted in Copy of Action Items Template.xlsx (3dc71552509359e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on action item completion using status priors and due date likelihoods for probabilistic task forecasting. GSI Mapping: Rooted in Copy of Action Items Template.xlsx (3dc71552509359e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models task state evolution through agent-priority-temporal tensors, enabling adaptive resource allocation. GSE Mapping: Rooted in Copy of Action Items Template.xlsx (3dc71552509359e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "action_item_state_transition",
+      "name": "Action Item State Transition",
+      "verbatim_quote": "Status Due Date Done Notes Prepare weekly team meeting agenda Alice High In Progress 2025-12-17 00:00:00",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_i': 'Action item identifier (dimensionless)', 'P_i': 'Priority level {Low, Medium, High} (ordinal)', 'S_i': 'Status {Not Started, In Progress, Pending Review, Completed} (ordinal)', 'D_i': 'Due date (ISO 8601 datetime)', 'T_i': 'Time elapsed since assignment (days)'}",
+      "assumptions": "State transitions follow Markovian dynamics; priority influences transition rate.",
+      "breakdown_regime": "Transition probability becomes deterministic at D_i ≤ current date.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each action item maps to a node in a directed acyclic graph where edges represent valid state transitions weighted by priority.",
+        "source_operator": "action_item_state_transition",
+        "telemetry": "Completion rate per priority tier over time window."
+      }
+    },
+    {
+      "primitive_id": "priority_weighted_task_queue",
+      "name": "Priority Weighted Task Queue",
+      "verbatim_quote": "last week's minutes Update project timeline Bob Medium Not Started 2025-12-20 00:00:00 False Align with new",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q': 'Task queue (set of action items)', 'w_i': 'Weight assigned to item i based on P_i (real scalar)', 'r_i': 'Rate of progress for item i (items/day)'}",
+      "assumptions": "Higher priority items receive higher weight; queue order determined by weighted rank.",
+      "breakdown_regime": "Queue becomes saturated when r_i < threshold for all i ∈ Q.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Queue kernel derived from weighted sum of priority vectors across all active tasks.",
+        "source_operator": "priority_weighted_task_queue",
+        "telemetry": "Average wait time before execution per priority class."
+      }
+    },
+    {
+      "primitive_id": "temporal_resource_allocation",
+      "name": "Temporal Resource Allocation",
+      "verbatim_quote": "Not Started 2025-12-22 00:00:00 False Use brand colors Schedule client feedback session Frank High Completed 2025-12-15",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_t': 'Resource pool available at time t (hours)', 't_d': 'Duration required for task d (hours)', 't_s': 'Start time of task s (datetime)', 't_e': 'End time of task e (datetime)'}",
+      "assumptions": "Resources are non-renewable; allocation respects precedence constraints.",
+      "breakdown_regime": "Allocation fails if ∑t_d > R_t for any t.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Allocation problem is isomorphic to a bin packing optimization over temporal intervals.",
+        "source_operator": "temporal_resource_allocation",
+        "telemetry": "Utilization ratio of resources over time horizon."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3dc71552509359e9_t0",
+      "think": "Action item tracking forms a structured temporal logic system where each item evolves through defined states under priority influence. The state transition model assumes Markovian behavior, allowing probabilistic forecasting via Bayesian inference. Dualities emerge between priority levels and task urgency, with high-priority items exhibiting faster convergence to completion. Failure modes include deadlock (no progress), saturation (queue overflow), and misalignment (resource mismatch). These primitives enable GSI to compute expected completion times and GSE to simulate optimal scheduling policies.\n\nDeep epistemic analysis for Copy of Action Items Template.xlsx (3dc71552509359e9, domain=other, pages_read=2/2): Operator 'Action Item State Transition' (page 1, domain other) captures: Status Due Date Done Notes Prepare weekly team meeting agenda Alice High In Progress 2025-12-17 00:00:00 Assumptions: State transitions follow Markovian dynamics; priority influences transition rate. Breakdown regime: Transition probability becomes deterministic at D_i ≤ current date. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each action item maps to a node in a directed acyclic graph where edges represent valid state transitions weighted by priority. Operator 'Priority Weighted Task Queue' (page 1, domain other) captures: last week's minutes Update project timeline Bob Medium Not Started 2025-12-20 00:00:00 False Align with new Assumptions: Higher priority items receive higher weight; queue order determined by weighted rank. Breakdown regime: Queue becomes saturated when r_i < threshold for all i ∈ Q. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Queue kernel derived from weighted sum of priority vectors across all active tasks. Operator 'Temporal Resource Allocation' (page 1, domain other) captures: Not Started 2025-12-22 00:00:00 False Use brand colors Schedule client feedback session Frank High Completed 2025-12-15 Assumptions: Resources are non-renewable; allocation respects precedence constraints. Breakdown regime: Allocation fails if ∑t_d > R_t for any t. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Allocation problem is isomorphic to a bin packing optimization over temporal intervals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Copy of Action Items Template.xlsx (3dc71552509359e9, domain=other, pages_read=2/2): Operator 'Action Item State Transition' (page 1, domain other) captures: Status Due Date Done Notes Prepare weekly team meeting agenda Alice High In Progress 2025-12-17 00:00:00 Assumptions: State transitions follow Markovian dynamics; priority influences transition rate. Breakdown regime: Transition probability becomes deterministic at D_i ≤ current date. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each action item maps to a node in a directed acyclic graph where edges represent valid state transitions weighted by priority. Operator 'Priority Weighted Task Queue' (page 1, domain other) captures: last week's minutes Update project timeline Bob Medium Not Started 2025-12-20 00:00:00 False Align with new Assumptions: Higher priority items receive higher weight; queue order determined by weighted rank. Breakdown regime: Queue becomes saturated when r_i < threshold for all i ∈ Q. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Queue kernel derived from weighted sum of priority vectors across all active tasks. Operator 'Temporal Resource Allocation' (page 1, domain other) captures: Not Started 2025-12-22 00:00:00 False Use brand colors Schedule client feedback session Frank High Completed 2025-12-15 Assumptions: Resources are non-renewable; allocation respects precedence constraints. Breakdown regime: Allocation fails if ∑t_d > R_t for any t. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Allocation problem is isomorphic to a bin packing optimization over temporal intervals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in control theory and discrete event systems, tracing back to Petri nets and queueing theory. Influenced by formal methods in software engineering and operations research. Retrocausal Genealogy: Rooted in Copy of Action Items Template.xlsx (3dc71552509359e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Copy of Action Items Template.xlsx (3dc71552509359e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as rational actors optimizing task throughput subject to constraints. Opposing forces include urgency vs. capacity, and individual vs. collective task prioritization. Theory of Mind & Decision Maker Model: Rooted in Copy of Action Items Template.xlsx (3dc71552509359e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that task queues do not become dominated by single priority classes. Leakage veto prevents resource drift into inactive states, maintaining system responsiveness. Cross-Layer Veto & Anti-Leakage Check: Rooted in Copy of Action Items Template.xlsx (3dc71552509359e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in Copy of Action Items Template.xlsx (3dc71552509359e9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

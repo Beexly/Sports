@@ -1,0 +1,78 @@
+{
+  "book_id": "4f5e8789f83b595d",
+  "source_status": "COMPLETE",
+  "title": "p0305",
+  "file_name": "p0305.txt",
+  "sha256": "4f5e8789f83b595db7b930fbcd82ea4ffb50f4d099b3923fd23efd8f8f41c7fc",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Effective reaction potential sER = reaction potential - inhibitory potential; models behavioral actuation under dual influence of excitation and inhibition. Universal Lens: Rooted in p0305 (4f5e8789f83b595d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of behavioral states using sER as posterior likelihood; conditional on reinforcement history and inhibitory decay rates. GSI Mapping: Rooted in p0305 (4f5e8789f83b595d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions governed by sER dynamics; extinction emerges when sER drops below threshold due to inhibitory accumulation. GSE Mapping: Rooted in p0305 (4f5e8789f83b595d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "effective_reaction_potential",
+      "name": "Effective Reaction Potential",
+      "verbatim_quote": "298 PRINCIPLES OF BEHAVIOR effective reaction potential (sER), the potential actually available for the evocation of action, is the reaction potential less the inhibitory potential.",
+      "page": 1,
+      "latex": "sER = R - I",
+      "symbol_and_unit_ledger": "{'sER': 'dimensionless effective reaction potential', 'R': 'dimensionless reaction potential', 'I': 'dimensionless inhibitory potential'}",
+      "assumptions": "Linear superposition of excitation and inhibition; temporal independence of R and I components.",
+      "breakdown_regime": "When sER < 0, no action is evoked; when sER → 0, behavioral threshold is crossed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "sER drives GSE action selection; GSI infers latent R and I from observed behavior.",
+        "source_operator": "effective_reaction_potential",
+        "telemetry": "Observable behavioral latency and response frequency."
+      }
+    },
+    {
+      "primitive_id": "extinctive_inhibition",
+      "name": "Extinctive Inhibition",
+      "verbatim_quote": "In case little or no reinforcement follows the reaction evocations, extinctive inhibition soon neutralizes the reaction potential, the stimulus gradually ceases to evoke the response, and there ensues the state known as experimental extinction which thus appears as a secondary or derived phenomenon.",
+      "page": 1,
+      "latex": "I_{ext} \\propto \\frac{1}{t}",
+      "symbol_and_unit_ledger": "{'I_{ext}': 'dimensionless extinctive inhibition rate', 't': 'time in seconds'}",
+      "assumptions": "Inhibition accumulates inversely with time since last reinforcement.",
+      "breakdown_regime": "When I_{ext} > R, sER becomes negative; extinction is complete.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE models extinction as sER decay; GSI tracks inverse reinforcement timing.",
+        "source_operator": "extinctive_inhibition",
+        "telemetry": "Rate of stimulus-response dissociation over time."
+      }
+    },
+    {
+      "primitive_id": "reactive_inhibition",
+      "name": "Reactive Inhibition",
+      "verbatim_quote": "The Mowrer-Miller hypothesis regards reactive inhibition as essentially a need to cease action, i.e., a need for rest; it follows that anything which reduces this need should serve as a reinforcing state of affairs.",
+      "page": 1,
+      "latex": "I_{react} = f(need\\_for\\_rest)",
+      "symbol_and_unit_ledger": "{'I_{react}': 'dimensionless reactive inhibition', 'need_for_rest': 'dimensionless psychological state'}",
+      "assumptions": "Reactive inhibition is a motivational state; inversely related to rest need.",
+      "breakdown_regime": "When need_for_rest is low, I_{react} approaches zero; action is more likely.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps I_{react} to internal energy state; GSI interprets as reward modulation.",
+        "source_operator": "reactive_inhibition",
+        "telemetry": "Behavioral pause duration and post-action recovery metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4f5e8789f83b595d_t0",
+      "think": "The core operator sER = R - I defines the net capacity for action. When reinforcement is sparse, I_{ext} grows, reducing sER until extinction occurs. Reactive inhibition I_{react} arises from motivational states, such as need for rest, and can be modulated by environmental rewards. These primitives form a dual dynamic: one driven by external reinforcement and one by internal motivation. The failure mode of sER is its collapse below zero, leading to behavioral silence. Extinction is not a primary cause but a derived effect of sustained inhibition. The Mowrer-Miller model suggests that reactive inhibition is not just suppression but a functional need for rest, implying a feedback loop where reduced need increases action probability. This duality underpins both GSE's state transition logic and GSI’s probabilistic inference of latent behavioral states.\n\nDeep epistemic analysis for p0305 (4f5e8789f83b595d, domain=other, pages_read=1/1): Operator 'Effective Reaction Potential' (page 1, domain other) captures: 298 PRINCIPLES OF BEHAVIOR effective reaction potential (sER), the potential actually available for the evocation of action, is the reaction potential less the inhibitory potential. Assumptions: Linear superposition of excitation and inhibition; temporal independence of R and I components. Breakdown regime: When sER < 0, no action is evoked; when sER → 0, behavioral threshold is crossed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): sER drives GSE action selection; GSI infers latent R and I from observed behavior. Operator 'Extinctive Inhibition' (page 1, domain other) captures: In case little or no reinforcement follows the reaction evocations, extinctive inhibition soon neutralizes the reaction potential, the stimulus gradually ceases to evoke the response, and there ensues the state known as experimental extinction which thus appears as a secondary or derived phenomenon. Assumptions: Inhibition accumulates inversely with time since last reinforcement. Breakdown regime: When I_{ext} > R, sER becomes negative; extinction is complete. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE models extinction as sER decay; GSI tracks inverse reinforcement timing. Operator 'Reactive Inhibition' (page 1, domain other) captures: The Mowrer-Miller hypothesis regards reactive inhibition as essentially a need to cease action, i.e., a need for rest; it follows that anything which reduces this need should serve as a reinforcing state of affairs. Assumptions: Reactive inhibition is a motivational state; inversely related to rest need. Breakdown regime: When need_for_rest is low, I_{react} approaches zero; action is more likely. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps I_{react} to internal energy state; GSI interprets as reward modulation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0305 (4f5e8789f83b595d, domain=other, pages_read=1/1): Operator 'Effective Reaction Potential' (page 1, domain other) captures: 298 PRINCIPLES OF BEHAVIOR effective reaction potential (sER), the potential actually available for the evocation of action, is the reaction potential less the inhibitory potential. Assumptions: Linear superposition of excitation and inhibition; temporal independence of R and I components. Breakdown regime: When sER < 0, no action is evoked; when sER → 0, behavioral threshold is crossed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): sER drives GSE action selection; GSI infers latent R and I from observed behavior. Operator 'Extinctive Inhibition' (page 1, domain other) captures: In case little or no reinforcement follows the reaction evocations, extinctive inhibition soon neutralizes the reaction potential, the stimulus gradually ceases to evoke the response, and there ensues the state known as experimental extinction which thus appears as a secondary or derived phenomenon. Assumptions: Inhibition accumulates inversely with time since last reinforcement. Breakdown regime: When I_{ext} > R, sER becomes negative; extinction is complete. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE models extinction as sER decay; GSI tracks inverse reinforcement timing. Operator 'Reactive Inhibition' (page 1, domain other) captures: The Mowrer-Miller hypothesis regards reactive inhibition as essentially a need to cease action, i.e., a need for rest; it follows that anything which reduces this need should serve as a reinforcing state of affairs. Assumptions: Reactive inhibition is a motivational state; inversely related to rest need. Breakdown regime: When need_for_rest is low, I_{react} approaches zero; action is more likely. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps I_{react} to internal energy state; GSI interprets as reward modulation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Hull's drive theory and Mowrer's two-process theory; later formalized in operant conditioning frameworks. Influenced by early cybernetics and systems theory. Retrocausal Genealogy: Rooted in p0305 (4f5e8789f83b595d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0305 (4f5e8789f83b595d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model themselves as optimizing sER while balancing internal needs (I_{react}) and external cues (R). Opposing agents may reduce sER through interference or increase I_{react} via stressors, creating strategic behavioral dilemmas. Theory of Mind & Decision Maker Model: Rooted in p0305 (4f5e8789f83b595d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If sER is misestimated due to delayed reinforcement, GSE may commit to suboptimal actions. If I_{react} is misclassified as I_{ext}, GSI may incorrectly infer reward absence. Anti-collinearity requires distinct telemetry for each inhibition type to avoid conflating internal and external causes. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0305 (4f5e8789f83b595d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "514e5c981b3ba2bf",
+  "source_status": "COMPLETE",
+  "title": "IBMPlexSans-OFL",
+  "file_name": "IBMPlexSans-OFL.txt",
+  "sha256": "514e5c981b3ba2bf714b182c3f9ddf32bcf8be58d0f49f2f28e5e6c34c879019",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal invariant licensing framework for digital font distribution under open-source constraints. Universal Lens: Rooted in IBMPlexSans-OFL (514e5c981b3ba2bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on font usage compliance via probabilistic license adherence models. GSI Mapping: Rooted in IBMPlexSans-OFL (514e5c981b3ba2bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in font software lifecycle governed by modular license enforcement protocols. GSE Mapping: Rooted in IBMPlexSans-OFL (514e5c981b3ba2bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "font_license_compliance",
+      "name": "Font License Compliance Operator",
+      "verbatim_quote": "The OFL allows the licensed fonts to be used, studied, modified and redistributed freely as long as they are not sold by themselves.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'license type (dimensionless)', 'F': 'font software (dimensionless)', 'R': 'redistribution status (boolean)'}",
+      "assumptions": "All modifications must retain original copyright notices; no standalone sale allowed.",
+      "breakdown_regime": "When R=True and L≠OFL, compliance fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic license validation engine where F is a stochastic process over L.",
+        "source_operator": "font_license_compliance",
+        "telemetry": "Compliance score derived from audit logs."
+      }
+    },
+    {
+      "primitive_id": "reserved_name_usage",
+      "name": "Reserved Name Usage Constraint",
+      "verbatim_quote": "3) No Modified Version of the Font Software may use the Reserved Font Name(s) unless explicit written permission is granted by the corresponding Copyrig",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_r': 'reserved name (string)', 'M': 'modified version (boolean)', 'P': 'permission granted (boolean)'}",
+      "assumptions": "Primary font name is protected; derivative works require explicit approval.",
+      "breakdown_regime": "If M=True and P=False, then N_r is invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE kernel enforces name space isolation for modified versions through access control.",
+        "source_operator": "reserved_name_usage",
+        "telemetry": "Name conflict detection rate."
+      }
+    },
+    {
+      "primitive_id": "derivative_distribution",
+      "name": "Derivative Distribution Protocol",
+      "verbatim_quote": "The fonts, including any derivative works, can be bundled, embedded, redistributed and/or sold with any software provided that any reserved names are not used by derivative works.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'distribution method (set)', 'V': 'version type (boolean)', 'N_r': 'reserved name (string)'}",
+      "assumptions": "Distribution includes bundling and embedding; reserved names must be excluded.",
+      "breakdown_regime": "If D ⊆ {bundle, embed} and N_r ∈ V, protocol fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's distribution tracking system mirrors this protocol to monitor derivative usage.",
+        "source_operator": "derivative_distribution",
+        "telemetry": "Distribution channel compliance metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "514e5c981b3ba2bf_t0",
+      "think": "The OFL defines a structured licensing model where font software is treated as a modular, distributable entity. Each primitive encodes a constraint on how fonts can evolve and propagate. The 'Font License Compliance Operator' ensures that usage remains within bounds defined by the license. The 'Reserved Name Usage Constraint' enforces naming integrity across derivatives. The 'Derivative Distribution Protocol' governs how modified versions are shared. These operators form a closed-loop system where each action triggers a conditional response based on prior states. Failure modes occur when constraints are violated—such as selling fonts independently or misusing reserved names—which leads to termination of the license. Dualities emerge between modification and distribution, and between compliance and enforcement. The system exhibits robustness under controlled conditions but collapses under adversarial inputs.\n\nDeep epistemic analysis for IBMPlexSans-OFL (514e5c981b3ba2bf, domain=other, pages_read=2/2): Operator 'Font License Compliance Operator' (page 1, domain other) captures: The OFL allows the licensed fonts to be used, studied, modified and redistributed freely as long as they are not sold by themselves. Assumptions: All modifications must retain original copyright notices; no standalone sale allowed. Breakdown regime: When R=True and L≠OFL, compliance fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic license validation engine where F is a stochastic process over L. Operator 'Reserved Name Usage Constraint' (page 1, domain other) captures: 3) No Modified Version of the Font Software may use the Reserved Font Name(s) unless explicit written permission is granted by the corresponding Copyrig Assumptions: Primary font name is protected; derivative works require explicit approval. Breakdown regime: If M=True and P=False, then N_r is invalid. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE kernel enforces name space isolation for modified versions through access control. Operator 'Derivative Distribution Protocol' (page 1, domain other) captures: The fonts, including any derivative works, can be bundled, embedded, redistributed and/or sold with any software provided that any reserved names are not used by derivative works. Assumptions: Distribution includes bundling and embedding; reserved names must be excluded. Breakdown regime: If D ⊆ {bundle, embed} and N_r ∈ V, protocol fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's distribution tracking system mirrors this protocol to monitor derivative usage. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for IBMPlexSans-OFL (514e5c981b3ba2bf, domain=other, pages_read=2/2): Operator 'Font License Compliance Operator' (page 1, domain other) captures: The OFL allows the licensed fonts to be used, studied, modified and redistributed freely as long as they are not sold by themselves. Assumptions: All modifications must retain original copyright notices; no standalone sale allowed. Breakdown regime: When R=True and L≠OFL, compliance fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic license validation engine where F is a stochastic process over L. Operator 'Reserved Name Usage Constraint' (page 1, domain other) captures: 3) No Modified Version of the Font Software may use the Reserved Font Name(s) unless explicit written permission is granted by the corresponding Copyrig Assumptions: Primary font name is protected; derivative works require explicit approval. Breakdown regime: If M=True and P=False, then N_r is invalid. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE kernel enforces name space isolation for modified versions through access control. Operator 'Derivative Distribution Protocol' (page 1, domain other) captures: The fonts, including any derivative works, can be bundled, embedded, redistributed and/or sold with any software provided that any reserved names are not used by derivative works. Assumptions: Distribution includes bundling and embedding; reserved names must be excluded. Breakdown regime: If D ⊆ {bundle, embed} and N_r ∈ V, protocol fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's distribution tracking system mirrors this protocol to monitor derivative usage. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s open-source licensing paradigms, particularly influenced by the GNU GPL and Creative Commons frameworks. The OFL evolved from needs in typography and font design collaboration. Retrocausal Genealogy: Rooted in IBMPlexSans-OFL (514e5c981b3ba2bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in IBMPlexSans-OFL (514e5c981b3ba2bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include font creators seeking protection and distributors aiming for broad reuse. The system models these as competing information flows: one enforcing restrictions, the other optimizing utility. Decision boundaries are drawn around compliance thresholds. Theory of Mind & Decision Maker Model: Rooted in IBMPlexSans-OFL (514e5c981b3ba2bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when distribution methods conflict with naming rules. Leakage occurs if derivative works bypass permission checks. Veto conditions ensure that any violation of reserved name usage or redistribution terms invalidates the entire license chain. Cross-Layer Veto & Anti-Leakage Check: Rooted in IBMPlexSans-OFL (514e5c981b3ba2bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

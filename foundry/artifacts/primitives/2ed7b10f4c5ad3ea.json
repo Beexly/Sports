@@ -1,0 +1,78 @@
+{
+  "book_id": "2ed7b10f4c5ad3ea",
+  "source_status": "COMPLETE",
+  "title": "WAVE_6_contradictions",
+  "file_name": "WAVE_6_contradictions.txt",
+  "sha256": "2ed7b10f4c5ad3ea4c88ca64bfd57f5fd16204c1a5b5c2f4180fede981b711a2",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Wave-6 contradiction analysis maps factual assertions to empirical validation via document correlation and contextual disambiguation. Universal Lens: Rooted in WAVE_6_contradictions (2ed7b10f4c5ad3ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian fact-checking engine applies likelihood ratios to assertional support/conflict using GSI's conformal predictive inference framework. GSI Mapping: Rooted in WAVE_6_contradictions (2ed7b10f4c5ad3ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning module evaluates state transitions between assertion validity and document context through GSE's dynamic belief updating protocol. GSE Mapping: Rooted in WAVE_6_contradictions (2ed7b10f4c5ad3ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "assertion_validation_kernel",
+      "name": "Assertion Validation Kernel",
+      "verbatim_quote": "This wave only works if the Pruzansky letter is in the workspace.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Workspace integrity ensures document availability; assertion validity depends on cross-document alignment.",
+      "breakdown_regime": "Failure occurs when target document is absent or misfiled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps assertion list to GSI's probabilistic fact-checking model where each assertion becomes a hypothesis subject to evidence.",
+        "source_operator": "assertion_validation_kernel",
+        "telemetry": "Document presence and assertion count per file."
+      }
+    },
+    {
+      "primitive_id": "fact_vs_argument_separation",
+      "name": "Fact vs Argument Separation",
+      "verbatim_quote": "Do not include their legal arguments — only assertions of fact.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Legal argumentation is distinct from factual claims; separation enables objective evaluation.",
+      "breakdown_regime": "Confusion arises when legal reasoning is conflated with empirical facts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives GSE's truth-state filtering mechanism by isolating factual assertions from normative or strategic discourse.",
+        "source_operator": "fact_vs_argument_separation",
+        "telemetry": "Ratio of factual to non-factual statements in assertion list."
+      }
+    },
+    {
+      "primitive_id": "verdict_classification_engine",
+      "name": "Verdict Classification Engine",
+      "verbatim_quote": "For each numbered assertion, search the rest of this workspace and report one of exactly four verdicts: SUPPORTED — another document agrees with it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each assertion can be classified into one of four discrete categories based on evidence consistency.",
+      "breakdown_regime": "Classification fails if no supporting or contradicting evidence exists within workspace.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically aligns with GSI’s multi-class classification logic, assigning each assertion a verdict based on inter-document agreement.",
+        "source_operator": "verdict_classification_engine",
+        "telemetry": "Distribution of verdict types (SUPPORTED, CONTRADICTED, NO EVIDENCE, UNDECIDED)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2ed7b10f4c5ad3ea_t0",
+      "think": "The core operation of Wave 6 involves constructing a formalized assertion list from the Pruzansky letter, then applying a binary validation process across the workspace. Each assertion is mapped to a truth value via GSI's Bayesian inference engine, which computes posterior probabilities conditioned on available evidence. The GSE module evaluates these assertions as states in a belief transition graph, where transitions occur upon new evidence. The system enforces a strict separation between legal argumentation and factual claims, ensuring that only verifiable assertions are considered. Contextual disambiguation is enforced by requiring full paragraph review before labeling contradictions, preventing spurious conflicts. This dual-layered approach ensures robustness against false positives while maintaining high fidelity to source material.\n\nDeep epistemic analysis for WAVE_6_contradictions (2ed7b10f4c5ad3ea, domain=other, pages_read=1/1): Operator 'Assertion Validation Kernel' (page 1, domain other) captures: This wave only works if the Pruzansky letter is in the workspace. Assumptions: Workspace integrity ensures document availability; assertion validity depends on cross-document alignment. Breakdown regime: Failure occurs when target document is absent or misfiled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps assertion list to GSI's probabilistic fact-checking model where each assertion becomes a hypothesis subject to evidence. Operator 'Fact vs Argument Separation' (page 1, domain other) captures: Do not include their legal arguments — only assertions of fact. Assumptions: Legal argumentation is distinct from factual claims; separation enables objective evaluation. Breakdown regime: Confusion arises when legal reasoning is conflated with empirical facts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSE's truth-state filtering mechanism by isolating factual assertions from normative or strategic discourse. Operator 'Verdict Classification Engine' (page 1, domain other) captures: For each numbered assertion, search the rest of this workspace and report one of exactly four verdicts: SUPPORTED — another document agrees with it. Assumptions: Each assertion can be classified into one of four discrete categories based on evidence consistency. Breakdown regime: Classification fails if no supporting or contradicting evidence exists within workspace. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically aligns with GSI’s multi-class classification logic, assigning each assertion a verdict based on inter-document agreement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for WAVE_6_contradictions (2ed7b10f4c5ad3ea, domain=other, pages_read=1/1): Operator 'Assertion Validation Kernel' (page 1, domain other) captures: This wave only works if the Pruzansky letter is in the workspace. Assumptions: Workspace integrity ensures document availability; assertion validity depends on cross-document alignment. Breakdown regime: Failure occurs when target document is absent or misfiled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps assertion list to GSI's probabilistic fact-checking model where each assertion becomes a hypothesis subject to evidence. Operator 'Fact vs Argument Separation' (page 1, domain other) captures: Do not include their legal arguments — only assertions of fact. Assumptions: Legal argumentation is distinct from factual claims; separation enables objective evaluation. Breakdown regime: Confusion arises when legal reasoning is conflated with empirical facts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSE's truth-state filtering mechanism by isolating factual assertions from normative or strategic discourse. Operator 'Verdict Classification Engine' (page 1, domain other) captures: For each numbered assertion, search the rest of this workspace and report one of exactly four verdicts: SUPPORTED — another document agrees with it. Assumptions: Each assertion can be classified into one of four discrete categories based on evidence consistency. Breakdown regime: Classification fails if no supporting or contradicting evidence exists within workspace. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically aligns with GSI’s multi-class classification logic, assigning each assertion a verdict based on inter-document agreement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in formal logic and epistemology, particularly Tarski's semantic theory of truth and Carnap's distinction between internal and external questions. Influenced by Bayesian probability theory and formal concept analysis. Retrocausal Genealogy: Rooted in WAVE_6_contradictions (2ed7b10f4c5ad3ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in WAVE_6_contradictions (2ed7b10f4c5ad3ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents involved include the evaluator (GSI), the document author (Pruzansky), and the legal team (Gilbert). The evaluator must model the intent behind assertions and distinguish between intentional misrepresentation and honest disagreement. Theory of Mind & Decision Maker Model: Rooted in WAVE_6_contradictions (2ed7b10f4c5ad3ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by enforcing independent verification paths for each assertion. Leakage is prevented by ensuring that no single document dominates the verdict space. Veto conditions apply when contextual ambiguity exceeds threshold, requiring manual override. Cross-Layer Veto & Anti-Leakage Check: Rooted in WAVE_6_contradictions (2ed7b10f4c5ad3ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

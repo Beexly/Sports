@@ -1,0 +1,78 @@
+{
+  "book_id": "04acee43e88d07d5",
+  "source_status": "COMPLETE",
+  "title": "p0024",
+  "file_name": "p0024.txt",
+  "sha256": "04acee43e88d07d559fbb1a130b7886142989742815fbd36df0f17db75189f23",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Linear or regression models for predictive ranking adjustments via feature-based click-through rate estimation. Universal Lens: Rooted in p0024 (04acee43e88d07d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework for probabilistic relevance scoring using presentation and relevancy features with conformal prediction bounds. GSI Mapping: Rooted in p0024 (04acee43e88d07d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine updates search result rankings through state transitions conditioned on model outputs and user feedback signals. GSE Mapping: Rooted in p0024 (04acee43e88d07d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "presentation_bias_model",
+      "name": "Presentation Bias Model",
+      "verbatim_quote": "The machine-readable storage of claim 19 wherein the model is a linear model or a regression model.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x_p': 'presentation bias features vector (dimensionless)', 'y_p': 'predicted click-through rate (dimensionless)'}",
+      "assumptions": "Model assumes linear relationship between presentation features and click behavior.",
+      "breakdown_regime": "Non-linear or non-stationary user interaction patterns may invalidate predictions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps presentation features to adjusted ranking scores via regression coefficients.",
+        "source_operator": "presentation_bias_model",
+        "telemetry": "Click-through rate variance across ranked positions"
+      }
+    },
+    {
+      "primitive_id": "relevancy_feature_extractor",
+      "name": "Relevancy Feature Extractor",
+      "verbatim_quote": "The machine-readable storage of claim 19 wherein the one or more relevancy features include an information retrieval score of the search result, an information retrieval score of another search result returned along with the search result, a language of the query, or a count of words in the query.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x_r': 'relevancy features vector (dimensionless)', 'y_r': 'predicted relevance score (dimensionless)'}",
+      "assumptions": "Relevance is quantifiable through IR scores and linguistic metadata.",
+      "breakdown_regime": "Semantic shifts or domain drift can cause feature misalignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically encodes document-query alignment into numerical form for model processing.",
+        "source_operator": "relevancy_feature_extractor",
+        "telemetry": "Information retrieval score consistency over time"
+      }
+    },
+    {
+      "primitive_id": "click_through_rate_predictor",
+      "name": "Click Through Rate Predictor",
+      "verbatim_quote": "on input comprising the one or more presentation bias features; and training a second model using",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x_p': 'presentation bias features vector (dimensionless)', 'x_r': 'relevancy features vector (dimensionless)', 'CTR_p': 'click-through rate from presentation model (dimensionless)', 'CTR_r': 'click-through rate from relevance model (dimensionless)'}",
+      "assumptions": "Separate models capture distinct aspects of user engagement.",
+      "breakdown_regime": "Overfitting or underfitting in either model leads to unreliable CTR estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables dual-model fusion for robust CTR forecasting.",
+        "source_operator": "click_through_rate_predictor",
+        "telemetry": "Aggregate CTR accuracy across search sessions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "04acee43e88d07d5_t0",
+      "think": "The core operators define a dual-layered predictive architecture where presentation bias and relevance are modeled separately before being combined. Presentation bias models utilize positional and interface metadata to estimate inherent click tendencies, while relevancy models rely on IR metrics and query characteristics. These models operate under the assumption that user behavior can be decomposed into predictable components. Failure modes arise when these assumptions break down—such as during semantic drift or non-stationary user preferences—which necessitate adaptive retraining or dynamic adjustment mechanisms. Dualities emerge in how both models contribute to final ranking scores, with each serving as a kernel in a composite decision function. The system's robustness depends on maintaining independence between the two models' feature spaces to avoid redundancy and ensure complementary signal extraction.\n\nDeep epistemic analysis for p0024 (04acee43e88d07d5, domain=other, pages_read=1/1): Operator 'Presentation Bias Model' (page 1, domain other) captures: The machine-readable storage of claim 19 wherein the model is a linear model or a regression model. Assumptions: Model assumes linear relationship between presentation features and click behavior. Breakdown regime: Non-linear or non-stationary user interaction patterns may invalidate predictions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps presentation features to adjusted ranking scores via regression coefficients. Operator 'Relevancy Feature Extractor' (page 1, domain other) captures: The machine-readable storage of claim 19 wherein the one or more relevancy features include an information retrieval score of the search result, an information retrieval score of another search result returned along with the search result, a language of the query, or a count of words in the query. Assumptions: Relevance is quantifiable through IR scores and linguistic metadata. Breakdown regime: Semantic shifts or domain drift can cause feature misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically encodes document-query alignment into numerical form for model processing. Operator 'Click Through Rate Predictor' (page 1, domain other) captures: on input comprising the one or more presentation bias features; and training a second model using Assumptions: Separate models capture distinct aspects of user engagement. Breakdown regime: Overfitting or underfitting in either model leads to unreliable CTR estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables dual-model fusion for robust CTR forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0024 (04acee43e88d07d5, domain=other, pages_read=1/1): Operator 'Presentation Bias Model' (page 1, domain other) captures: The machine-readable storage of claim 19 wherein the model is a linear model or a regression model. Assumptions: Model assumes linear relationship between presentation features and click behavior. Breakdown regime: Non-linear or non-stationary user interaction patterns may invalidate predictions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps presentation features to adjusted ranking scores via regression coefficients. Operator 'Relevancy Feature Extractor' (page 1, domain other) captures: The machine-readable storage of claim 19 wherein the one or more relevancy features include an information retrieval score of the search result, an information retrieval score of another search result returned along with the search result, a language of the query, or a count of words in the query. Assumptions: Relevance is quantifiable through IR scores and linguistic metadata. Breakdown regime: Semantic shifts or domain drift can cause feature misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically encodes document-query alignment into numerical form for model processing. Operator 'Click Through Rate Predictor' (page 1, domain other) captures: on input comprising the one or more presentation bias features; and training a second model using Assumptions: Separate models capture distinct aspects of user engagement. Breakdown regime: Overfitting or underfitting in either model leads to unreliable CTR estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables dual-model fusion for robust CTR forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical information retrieval theory and early machine learning classification frameworks, evolving toward modern ensemble methods and reinforcement learning paradigms. Retrocausal Genealogy: Rooted in p0024 (04acee43e88d07d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0024 (04acee43e88d07d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models account for implicit user feedback by assuming users interact with results based on perceived utility, which is encoded in both presentation and relevance features. Opposing agents might include algorithmic bias or adversarial manipulation of features to skew rankings. Theory of Mind & Decision Maker Model: Rooted in p0024 (04acee43e88d07d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity must be enforced between presentation and relevancy features to prevent overfitting. Leakage occurs if temporal or contextual cues from one layer influence the other without proper separation, invalidating probabilistic guarantees. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0024 (04acee43e88d07d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

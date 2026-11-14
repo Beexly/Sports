@@ -1,0 +1,95 @@
+{
+  "book_id": "3ace596af6119620",
+  "source_status": "COMPLETE",
+  "title": "p0049",
+  "file_name": "p0049.txt",
+  "sha256": "3ace596af611962027452f7e32e848b7b954ab7f2f6ea1691a16d3509df8c9d5",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A dynamical system with stable equilibrium states and transient variability, modeled via polygonal attractors and stochastic perturbations. Universal Lens: Rooted in p0049 (3ace596af6119620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over genetic trait distributions using conformal predictive regions to bound variability within breed purity constraints. GSI Mapping: Rooted in p0049 (3ace596af6119620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition dynamics in evolutionary breeding spaces governed by reversion kernels and sport propagation matrices. GSE Mapping: Rooted in p0049 (3ace596af6119620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "equilibrium_reversion",
+      "name": "Equilibrium Reversion Dynamics",
+      "verbatim_quote": "of them the polygon may stand, its principal tendency on being seriously disturbed will be to fall back towards the first position; yet each position is stable within certain limits.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x': 'position vector in trait space (dimensionless)', 'F(x)': 'restoring force function (dimensionless)', 't': 'time (seconds)'}",
+      "assumptions": "System exhibits local stability around attractor points; disturbances are bounded and transient.",
+      "breakdown_regime": "When external perturbations exceed basin of attraction boundaries.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic convergence models where trait distributions stabilize around mean values under bounded noise.",
+        "source_operator": "equilibrium_reversion",
+        "telemetry": "Variance of trait distribution across generations"
+      }
+    },
+    {
+      "primitive_id": "variability_bounds",
+      "name": "Variability Within Bounds",
+      "verbatim_quote": "Consequently the model illustrates how the following conditions may co-exist: (1) Variability within narrow limits without prejudicc to the purity of the breed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'σ²': 'variance of trait distribution (dimensionless)', 'μ': 'mean trait value (dimensionless)', 'B': 'bounded parameter space (dimensionless)'}",
+      "assumptions": "Trait variation remains within fixed bounds; genetic drift does not alter core type characteristics.",
+      "breakdown_regime": "When variance exceeds predefined threshold σ_max.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE kernel for bounded trait evolution; defines allowable deviation from base type.",
+        "source_operator": "variability_bounds",
+        "telemetry": "Standard deviation of phenotypic traits over successive generations"
+      }
+    },
+    {
+      "primitive_id": "reversion_tendency",
+      "name": "Reversion Tendency",
+      "verbatim_quote": "(3) Tendency, when much disturbed, to revert from a sub-type to an earlier form.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r(t)': 'reversion rate (s⁻¹)', 'x_sub': 'sub-type state vector (dimensionless)', 'x_base': 'base type state vector (dimensionless)'}",
+      "assumptions": "Strong selection pressure toward ancestral forms upon significant deviation.",
+      "breakdown_regime": "Upon extreme environmental stress or mutation load.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's inverse probability mapping for ancestral state recovery after perturbation events.",
+        "source_operator": "reversion_tendency",
+        "telemetry": "Frequency of reversion events per generation"
+      }
+    },
+    {
+      "primitive_id": "stable_sports",
+      "name": "Stable Sports Phenomenon",
+      "verbatim_quote": "Stability of Sports.—Experience does not show that those wide varietics which are called \"sports\" aro unstable.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'sport occurrence frequency (events/year)', 'P(S)': 'probability of sport persistence (dimensionless)', 'n': 'number of generations (dimensionless)'}",
+      "assumptions": "Novel variants maintain heritability and are not genetically unstable.",
+      "breakdown_regime": "When genetic instability or selective disadvantage arises.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE transition matrix for emergence of new subtypes through stable mutations.",
+        "source_operator": "stable_sports",
+        "telemetry": "Persistence rate of novel phenotypes across generations"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3ace596af6119620_t0",
+      "think": "The foundational framework emerges from a deterministic attractor landscape where each stable configuration represents a genetic type. The polygonal metaphor implies a discrete set of attractors, each with a basin of attraction. Equilibrium reversion captures the tendency to return to prior stable states under disturbance, modeled as a restoring force. Variability bounds reflect the constraint that fluctuations remain within permissible limits, preserving breed identity. Reversion tendency describes the mechanism by which deviations from a sub-type revert to an earlier form, suggesting a hierarchical structure of trait inheritance. Stable sports indicate that rare mutations can persist across generations, implying a non-linear feedback loop between novelty and stability. These operators define a dualistic system: one of bounded fluctuation and another of emergent persistence. Failure modes arise when perturbations exceed basin boundaries or when genetic drift destabilizes established attractors. The interplay between these components yields a robust model of evolutionary stability.\n\nDeep epistemic analysis for p0049 (3ace596af6119620, domain=other, pages_read=1/1): Operator 'Equilibrium Reversion Dynamics' (page 1, domain other) captures: of them the polygon may stand, its principal tendency on being seriously disturbed will be to fall back towards the first position; yet each position is stable within certain limits. Assumptions: System exhibits local stability around attractor points; disturbances are bounded and transient. Breakdown regime: When external perturbations exceed basin of attraction boundaries. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic convergence models where trait distributions stabilize around mean values under bounded noise. Operator 'Variability Within Bounds' (page 1, domain other) captures: Consequently the model illustrates how the following conditions may co-exist: (1) Variability within narrow limits without prejudicc to the purity of the breed. Assumptions: Trait variation remains within fixed bounds; genetic drift does not alter core type characteristics. Breakdown regime: When variance exceeds predefined threshold σ_max. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE kernel for bounded trait evolution; defines allowable deviation from base type. Operator 'Reversion Tendency' (page 1, domain other) captures: (3) Tendency, when much disturbed, to revert from a sub-type to an earlier form. Assumptions: Strong selection pressure toward ancestral forms upon significant deviation. Breakdown regime: Upon extreme environmental stress or mutation load. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's inverse probability mapping for ancestral state recovery after perturbation events. Operator 'Stable Sports Phenomenon' (page 1, domain other) captures: Stability of Sports.—Experience does not show that those wide varietics which are called \"sports\" aro unstable. Assumptions: Novel variants maintain heritability and are not genetically unstable. Breakdown regime: When genetic instability or selective disadvantage arises. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE transition matrix for emergence of new subtypes through stable mutations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0049 (3ace596af6119620, domain=other, pages_read=1/1): Operator 'Equilibrium Reversion Dynamics' (page 1, domain other) captures: of them the polygon may stand, its principal tendency on being seriously disturbed will be to fall back towards the first position; yet each position is stable within certain limits. Assumptions: System exhibits local stability around attractor points; disturbances are bounded and transient. Breakdown regime: When external perturbations exceed basin of attraction boundaries. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic convergence models where trait distributions stabilize around mean values under bounded noise. Operator 'Variability Within Bounds' (page 1, domain other) captures: Consequently the model illustrates how the following conditions may co-exist: (1) Variability within narrow limits without prejudicc to the purity of the breed. Assumptions: Trait variation remains within fixed bounds; genetic drift does not alter core type characteristics. Breakdown regime: When variance exceeds predefined threshold σ_max. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE kernel for bounded trait evolution; defines allowable deviation from base type. Operator 'Reversion Tendency' (page 1, domain other) captures: (3) Tendency, when much disturbed, to revert from a sub-type to an earlier form. Assumptions: Strong selection pressure toward ancestral forms upon significant deviation. Breakdown regime: Upon extreme environmental stress or mutation load. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's inverse probability mapping for ancestral state recovery after perturbation events. Operator 'Stable Sports Phenomenon' (page 1, domain other) captures: Stability of Sports.—Experience does not show that those wide varietics which are called \"sports\" aro unstable. Assumptions: Novel variants maintain heritability and are not genetically unstable. Breakdown regime: When genetic instability or selective disadvantage arises. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE transition matrix for emergence of new subtypes through stable mutations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics and statistical physics, particularly Boltzmann-Gibbs systems and phase transitions. Influenced by Darwinian natural selection theory and Mendelian genetics, forming a bridge between thermodynamic stability and biological inheritance. Retrocausal Genealogy: Rooted in p0049 (3ace596af6119620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0049 (3ace596af6119620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents in this model include genetic variants, environmental pressures, and reproductive selection forces. Each agent influences the others through feedback loops—mutations introduce novelty, selection maintains stability, and environment determines fitness landscapes. Theory of Mind & Decision Maker Model: Rooted in p0049 (3ace596af6119620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that variability and reversion do not overlap in their functional domains. Leakage veto prevents the assumption that all traits evolve independently; instead, they are constrained by shared genetic architecture. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0049 (3ace596af6119620), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

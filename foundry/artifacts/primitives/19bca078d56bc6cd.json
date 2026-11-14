@@ -1,0 +1,78 @@
+{
+  "book_id": "19bca078d56bc6cd",
+  "source_status": "COMPLETE",
+  "title": "p0290",
+  "file_name": "p0290.txt",
+  "sha256": "19bca078d56bc6cdbef00b62139634cc8d8bbee5d068ac911a53b062ded42e00",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Topological groups with Baire measures exhibit closed subgroup structures under invariant set transformations, linking boundedness, compactness, and measure-theoretic invariance. Universal Lens: Rooted in p0290 (19bca078d56bc6cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on locally bounded groups leverages closed subgroup invariants to constrain posterior support via measure-preserving transformations. GSI Mapping: Rooted in p0290 (19bca078d56bc6cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in GSE utilize subgroup closure properties to maintain causal consistency under topological group actions. GSE Mapping: Rooted in p0290 (19bca078d56bc6cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "closed_subgroup_invariance",
+      "name": "Closed Subgroup Invariance",
+      "verbatim_quote": "If μ is any Baire measure in a locally compact topological group X, and if Y is the set of all those elements y for which μ(yE) = μ(E) for all Baire sets E, then Y is a closed subgroup of X.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'μ': 'Baire measure on topological group X', 'Y': 'subset of X, elements satisfying μ(yE) = μ(E)', 'E': 'Baire set in X'}",
+      "assumptions": "X is a locally compact topological group, μ is a Baire measure, E is a Baire set.",
+      "breakdown_regime": "When μ fails to be regular or E is not Baire measurable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The set Y represents the kernel of measure-preserving automorphisms within X, enabling GSI to define invariant likelihoods.",
+        "source_operator": "closed_subgroup_invariance",
+        "telemetry": "Measure equality μ(yE) = μ(E) across all Baire sets E."
+      }
+    },
+    {
+      "primitive_id": "locally_bounded_embedding",
+      "name": "Locally Bounded Group Embedding",
+      "verbatim_quote": "If, however, we make use of the fact that every locally bounded group may be viewed as a dense subgroup of a locally compact group, then we may reformulate our results in a somewhat more useful way.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'locally bounded group', 'H': 'locally compact group containing G as dense subgroup'}",
+      "assumptions": "G is locally bounded, H is locally compact, G ⊆ H densely.",
+      "breakdown_regime": "When embedding fails due to non-Hausdorff or non-second-countable structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Embedding allows GSE to extend local boundedness into global compactness for state transition modeling.",
+        "source_operator": "locally_bounded_embedding",
+        "telemetry": "Density of G in H and preservation of topological properties."
+      }
+    },
+    {
+      "primitive_id": "measure_preservation_closure",
+      "name": "Measure Preservation Closure",
+      "verbatim_quote": "Applying this conclusion to yo-1 and y0C in place of yo and C we obtain the reverse inequality, and hence the identity, μ(C) = μ(yoC) for all C.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'yo': 'element of Y, fixed point in subgroup', 'C': 'compact Baire set', 'μ': 'regular Baire measure'}",
+      "assumptions": "μ is regular, C is compact Baire set, Y is defined by μ-invariance.",
+      "breakdown_regime": "Failure of regularity or compactness of C.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Closure of Y ensures μ-invariance holds globally, enabling GSI to model stable probabilistic dynamics.",
+        "source_operator": "measure_preservation_closure",
+        "telemetry": "Equality μ(C) = μ(yoC) for all compact Baire sets C."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "19bca078d56bc6cd_t0",
+      "think": "The derivation begins with the foundational notion of a Baire measure μ on a locally compact topological group X. For any subset Y ⊆ X, the condition μ(yE) = μ(E) for all Baire sets E defines a subgroup structure. The proof proceeds by showing that Y is closed under group operations and inverses, establishing it as a closed subgroup. This closure property hinges on the regularity of μ and the compactness of Baire sets. The key insight is that measure invariance under left translation implies a structural constraint on the group's topology. When extended to locally bounded groups, these results can be embedded into larger compact groups, allowing for richer topological and measure-theoretic analysis. The failure mode occurs when μ lacks regularity or when E is not Baire measurable, breaking the equivalence μ(yE) = μ(E). These primitives form the basis for constructing conformal mappings in GSI and for defining state transitions in GSE where topological invariance is preserved.\n\nDeep epistemic analysis for p0290 (19bca078d56bc6cd, domain=other, pages_read=1/1): Operator 'Closed Subgroup Invariance' (page 1, domain other) captures: If μ is any Baire measure in a locally compact topological group X, and if Y is the set of all those elements y for which μ(yE) = μ(E) for all Baire sets E, then Y is a closed subgroup of X. Assumptions: X is a locally compact topological group, μ is a Baire measure, E is a Baire set. Breakdown regime: When μ fails to be regular or E is not Baire measurable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The set Y represents the kernel of measure-preserving automorphisms within X, enabling GSI to define invariant likelihoods. Operator 'Locally Bounded Group Embedding' (page 1, domain other) captures: If, however, we make use of the fact that every locally bounded group may be viewed as a dense subgroup of a locally compact group, then we may reformulate our results in a somewhat more useful way. Assumptions: G is locally bounded, H is locally compact, G ⊆ H densely. Breakdown regime: When embedding fails due to non-Hausdorff or non-second-countable structure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding allows GSE to extend local boundedness into global compactness for state transition modeling. Operator 'Measure Preservation Closure' (page 1, domain other) captures: Applying this conclusion to yo-1 and y0C in place of yo and C we obtain the reverse inequality, and hence the identity, μ(C) = μ(yoC) for all C. Assumptions: μ is regular, C is compact Baire set, Y is defined by μ-invariance. Breakdown regime: Failure of regularity or compactness of C. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Closure of Y ensures μ-invariance holds globally, enabling GSI to model stable probabilistic dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0290 (19bca078d56bc6cd, domain=other, pages_read=1/1): Operator 'Closed Subgroup Invariance' (page 1, domain other) captures: If μ is any Baire measure in a locally compact topological group X, and if Y is the set of all those elements y for which μ(yE) = μ(E) for all Baire sets E, then Y is a closed subgroup of X. Assumptions: X is a locally compact topological group, μ is a Baire measure, E is a Baire set. Breakdown regime: When μ fails to be regular or E is not Baire measurable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The set Y represents the kernel of measure-preserving automorphisms within X, enabling GSI to define invariant likelihoods. Operator 'Locally Bounded Group Embedding' (page 1, domain other) captures: If, however, we make use of the fact that every locally bounded group may be viewed as a dense subgroup of a locally compact group, then we may reformulate our results in a somewhat more useful way. Assumptions: G is locally bounded, H is locally compact, G ⊆ H densely. Breakdown regime: When embedding fails due to non-Hausdorff or non-second-countable structure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding allows GSE to extend local boundedness into global compactness for state transition modeling. Operator 'Measure Preservation Closure' (page 1, domain other) captures: Applying this conclusion to yo-1 and y0C in place of yo and C we obtain the reverse inequality, and hence the identity, μ(C) = μ(yoC) for all C. Assumptions: μ is regular, C is compact Baire set, Y is defined by μ-invariance. Breakdown regime: Failure of regularity or compactness of C. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Closure of Y ensures μ-invariance holds globally, enabling GSI to model stable probabilistic dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Haar measure theory and Baire category theorem, with foundational contributions from von Neumann and Weil in topological group theory. Retrocausal Genealogy: Rooted in p0290 (19bca078d56bc6cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0290 (19bca078d56bc6cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to exploit measure irregularity or non-Baire sets to disrupt invariance, but structural closure prevents such failures. Theory of Mind & Decision Maker Model: Rooted in p0290 (19bca078d56bc6cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0290 (19bca078d56bc6cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if μ is not regular or if Y is not closed; leakage occurs when embeddings fail to preserve topological properties. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0290 (19bca078d56bc6cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0290 (19bca078d56bc6cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

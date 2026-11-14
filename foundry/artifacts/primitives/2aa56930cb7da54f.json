@@ -1,0 +1,78 @@
+{
+  "book_id": "2aa56930cb7da54f",
+  "source_status": "COMPLETE",
+  "title": "STATKING_STILL_DARK",
+  "file_name": "STATKING_STILL_DARK.md",
+  "sha256": "2aa56930cb7da54fb61cc191508a3ea3d1d6b4f538fba14327ee67a60dc67216",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The StatKing dark state represents a constrained optimization over a multi-dimensional rights and telemetry manifold. The product flip is governed by a logical AND of independent boolean gates: legal redistribution rights, live feed SLA compliance, settlement oxygenation, and bootstrap readiness.",
+  "gsi_mapping": "In GSI, the absence of runtime fetch evidence forces the posterior probability of live stats to zero. Conformal prediction intervals for player performance remain uncalibrated until `STATS_PUBLIC` is explicitly enabled, preventing any probabilistic inference on the underlying stat surfaces.",
+  "gse_mapping": "GSE models the platform as a finite state machine where the transition from DARK to LIVE requires simultaneous satisfaction of all gate predicates. If `canExposePerformanceStats` evaluates false or settlement outcomes are overdue, the engine enforces a hard block on UI rendering.",
+  "primitives": [
+    {
+      "primitive_id": "statking_visibility_gate",
+      "name": "StatKing Visibility Gate Operator",
+      "verbatim_quote": "**Bootstrap / readiness** — performance API still refuses under gates (`canExposePerformanceStats`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "V: visibility (boolean), R: rights clearance (boolean), F: feed health (boolean), S: settlement status (boolean)",
+      "assumptions": "All subsystems operate independently; default state is OFF unless explicitly overridden by founder authorization.",
+      "breakdown_regime": "Singularity occurs if V=1 while any prerequisite (R, F, or S) = 0, resulting in illegal data exposure or hallucinated live UI.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE state-transition guards, ensuring no edge traversal occurs without full telemetry validation.",
+        "source_operator": "statking_visibility_gate",
+        "telemetry": "HTTP 404 on `/stats` and explicit `Disallow` in robots.txt."
+      }
+    },
+    {
+      "primitive_id": "settlement_clv_oxygen",
+      "name": "Settlement CLV Oxygen Constraint",
+      "verbatim_quote": "**Settlement/CLV oxygen** — public proof must not outrun graded outcomes (0 overdue HEALTHY is necessary, not sufficient for StatKing rights).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "O: overdue outcomes (integer count), H: system health (categorical enum)",
+      "assumptions": "Public statistical proofs require a fully resolved outcome ledger to maintain epistemic integrity.",
+      "breakdown_regime": "Breakdown when O > 0, causing a decoupling between displayed statistics and verifiable reality, invalidating the CLV metric.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as a GSI conformal calibration anchor; predictions cannot be issued if the ground truth ledger contains unresolved states.",
+        "source_operator": "settlement_clv_oxygen",
+        "telemetry": "Count of overdue graded outcomes in the settlement database."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "STATKING_STILL_DARK Grounded Principle 3",
+      "verbatim_quote": "**Rights** — player/team stat surfaces need clear redistribution rights; free scoreboards ≠ full StatKing product rights.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2aa56930cb7da54f_t0",
+      "think": "The StatKing dark state is mathematically formalized as a high-dimensional constraint satisfaction problem. We define a composite indicator function \\( \\mathbb{I}_{live} \\) which dictates the rendering of the statistical surface. This operator is the logical conjunction of four distinct sub-manifolds: Legal Rights (\\( \\mathcal{M}_R \\)), Live Feed Telemetry (\\( \\mathcal{M}_F \\)), Settlement Integrity (\\( \\mathcal{M}_S \\)), and Bootstrap Readiness (\\( \\mathcal{M}_B \\)). \n\nThe duality here lies between the *epistemic potential* of the data (the raw numbers exist in the nflverse) and the *ontological permission* to expose them. Even if \\( \\mathcal{M}_F \\) detects a pulse, if \\( \\mathcal{M}_R \\) lacks a signed redistribution memo, the projection onto the user interface must collapse to a 404 state. \n\nFailure modes emerge primarily from asynchronous updates. If \\( \\mathcal{M}_S \\) experiences a lag—meaning graded outcomes are overdue—the 'oxygen' required for Customer Lifetime Value (CLV) calculations suffocates. Exposing stats during this regime creates a hallucination: the UI claims liveness while the backend cannot verify the ground truth. Thus, the `canExposePerformanceStats` gate acts as a rigorous filter, enforcing that the observable algebra of the frontend strictly respects the hidden constraints of the backend settlement engines.\n\nDeep epistemic analysis for STATKING_STILL_DARK (2aa56930cb7da54f, domain=other, pages_read=1/1): Operator 'StatKing Visibility Gate Operator' (page 1, domain other) captures: **Bootstrap / readiness** — performance API still refuses under gates (`canExposePerformanceStats`). Assumptions: All subsystems operate independently; default state is OFF unless explicitly overridden by founder authorization. Breakdown regime: Singularity occurs if V=1 while any prerequisite (R, F, or S) = 0, resulting in illegal data exposure or hallucinated live UI. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE state-transition guards, ensuring no edge traversal occurs without full telemetry validation. Operator 'Settlement CLV Oxygen Constraint' (page 1, domain other) captures: **Settlement/CLV oxygen** — public proof must not outrun graded outcomes (0 overdue HEALTHY is necessary, not sufficient for StatKing rights). Assumptions: Public statistical proofs require a fully resolved outcome ledger to maintain epistemic integrity. Breakdown regime: Breakdown when O > 0, causing a decoupling between displayed statistics and verifiable reality, invalidating the CLV metric. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as a GSI conformal calibration anchor; predictions cannot be issued if the ground truth ledger contains unresolved states. Operator 'STATKING_STILL_DARK Grounded Principle 3' (page 1, domain other) captures: **Rights** — player/team stat surfaces need clear redistribution rights; free scoreboards ≠ full StatKing product rights. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for STATKING_STILL_DARK (2aa56930cb7da54f, domain=other, pages_read=1/1): Operator 'StatKing Visibility Gate Operator' (page 1, domain other) captures: **Bootstrap / readiness** — performance API still refuses under gates (`canExposePerformanceStats`). Assumptions: All subsystems operate independently; default state is OFF unless explicitly overridden by founder authorization. Breakdown regime: Singularity occurs if V=1 while any prerequisite (R, F, or S) = 0, resulting in illegal data exposure or hallucinated live UI. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE state-transition guards, ensuring no edge traversal occurs without full telemetry validation. Operator 'Settlement CLV Oxygen Constraint' (page 1, domain other) captures: **Settlement/CLV oxygen** — public proof must not outrun graded outcomes (0 overdue HEALTHY is necessary, not sufficient for StatKing rights). Assumptions: Public statistical proofs require a fully resolved outcome ledger to maintain epistemic integrity. Breakdown regime: Breakdown when O > 0, causing a decoupling between displayed statistics and verifiable reality, invalidating the CLV metric. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as a GSI conformal calibration anchor; predictions cannot be issued if the ground truth ledger contains unresolved states. Operator 'STATKING_STILL_DARK Grounded Principle 3' (page 1, domain other) captures: **Rights** — player/team stat surfaces need clear redistribution rights; free scoreboards ≠ full StatKing product rights. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive traces its lineage to early 20th-century control theory and relay logic, specifically the design of fail-safe interlocks in industrial automation. Mathematically, it mirrors the development of guarded command languages in computer science, where state transitions are strictly bounded by pre-condition predicates. In modern quantitative finance, this echoes the circuit breakers used to halt trading when market microstructure data becomes unreliable or legally contested.",
+      "theory_of_mind": "We model two primary agents: the Founder (system architect) and the Consumer (data seeker). The Founder operates under a risk-averse utility function, heavily penalizing legal exposure and reputational damage from fake live UIs. The Consumer, conversely, seeks immediate informational arbitrage. The StatKing dark state is the equilibrium point where the Founder's veto power overrides the Consumer's demand, prioritizing long-term structural integrity over short-term engagement metrics.",
+      "cross_layer_veto": "To prevent leakage, we enforce strict anti-collinearity between the scoreboard layer and the statistical layer. A free public scoreboard (often licensed broadly) must not act as a proxy to infer full StatKing product rights. If the settlement layer flags a CRITICAL state, a cross-layer veto immediately propagates a `STATS_PUBLIC=0` signal, overriding any local cache hits or optimistic UI updates. This ensures that no partial truth leaks through the cracks of the gating mechanism."
+    }
+  ]
+}

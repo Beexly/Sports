@@ -1,0 +1,78 @@
+{
+  "book_id": "51633a93dfff1405",
+  "source_status": "COMPLETE",
+  "title": "pre-mortem-compose-happy",
+  "file_name": "pre-mortem-compose-happy.md",
+  "sha256": "51633a93dfff1405e5a229e5f339a69054bedab6793bc0bd07aaebcff9f0511c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A compositional logic engine maps probabilistic factor triggers to ranked failure-mode bullets via thresholded conditionals, preserving input invariance under pure functional transformation. Universal Lens: Rooted in pre-mortem-compose-happy (51633a93dfff1405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework applies conditional likelihoods from factor scores to generate posterior risk bullet sets, maintaining conformal validity through deterministic trigger logic. GSI Mapping: Rooted in pre-mortem-compose-happy (51633a93dfff1405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states based on ranked failure-mode priorities, using immutable factor snapshots to drive action selection without mutation or external state drift. GSE Mapping: Rooted in pre-mortem-compose-happy (51633a93dfff1405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "trigger_condition",
+      "name": "Thresholded Factor Activation",
+      "verbatim_quote": "# Expected behavior The composer iterates the 9 failure-mode templates and collects bullets where `triggerCondition` returns true: - consensus (0.72 > 0.6) → fires.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'factor_score': 'dimensionless', 'threshold': 'dimensionless'}",
+      "assumptions": "Each factor has a scalar score and fixed threshold; activation occurs iff score exceeds threshold.",
+      "breakdown_regime": "Discrete binary event: factor_score > threshold",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Factor activation mirrors Bayesian evidence accumulation, where each trigger is a likelihood ratio exceeding a decision boundary.",
+        "source_operator": "trigger_condition",
+        "telemetry": "Boolean indicator of factor inclusion in output bullet set"
+      }
+    },
+    {
+      "primitive_id": "severity_ranking",
+      "name": "Priority-Weighted Failure Mode Sorting",
+      "verbatim_quote": "After sorting by severityRank ascending (1 = highest priority): - rank 1: restAdvantage - rank 2: lineMovement - rank 2: scheduleStress - rank 3: consensus - rank 4: depth - rank 4: venueForm Capped at 4 bullets, so the composer returns: 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'severity_rank': 'ordinal integer', 'priority_order': 'ordinal integer'}",
+      "assumptions": "Severity ranks are assigned a priori and used to sort failure modes by descending impact weight.",
+      "breakdown_regime": "Ordinal ranking with ties resolved by declaration order",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Severity ranking acts as a kernel-weighted selector in a multi-objective optimization over risk factors.",
+        "source_operator": "severity_ranking",
+        "telemetry": "Top-k ranked bullet identifiers in output"
+      }
+    },
+    {
+      "primitive_id": "immutable_snapshot",
+      "name": "Pure Functional State Preservation",
+      "verbatim_quote": "The input snapshot and pick objects are unchanged after the call (referential equality preserved on factor reads — composer is pure).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'input_snapshot': 'reference object', 'output_bullet_set': 'list of strings'}",
+      "assumptions": "Function application does not modify inputs; referential integrity is maintained throughout.",
+      "breakdown_regime": "Functional purity enforced via immutability constraints",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Immutable snapshot ensures causal consistency between model state and observed data, aligning with symplectic phase-space preservation in dynamical systems.",
+        "source_operator": "immutable_snapshot",
+        "telemetry": "Input/output reference equality check"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "51633a93dfff1405_t0",
+      "think": "The system operates under a compositional logic paradigm where each failure-mode template evaluates a scalar factor against a fixed threshold. This produces a binary trigger outcome per template. These outcomes are then ranked according to a predefined severity hierarchy, capped at four entries. The final bullet list is derived from this filtered and ordered subset. The process is deterministic and pure, ensuring referential integrity of all inputs. The mathematical structure resembles a Boolean lattice with thresholded projections onto a ranked ordinal space. Each trigger is a conditional probability event, and the ranking introduces a partial ordering over these events. The immutability constraint enforces a functional semantics akin to category theory's morphism preservation. The system avoids information leakage by excluding non-triggered factors, thus maintaining a minimal sufficient statistic for downstream reasoning.\n\nDeep epistemic analysis for pre-mortem-compose-happy (51633a93dfff1405, domain=other, pages_read=1/1): Operator 'Thresholded Factor Activation' (page 1, domain other) captures: # Expected behavior The composer iterates the 9 failure-mode templates and collects bullets where `triggerCondition` returns true: - consensus (0.72 > 0.6) → fires. Assumptions: Each factor has a scalar score and fixed threshold; activation occurs iff score exceeds threshold. Breakdown regime: Discrete binary event: factor_score > threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Factor activation mirrors Bayesian evidence accumulation, where each trigger is a likelihood ratio exceeding a decision boundary. Operator 'Priority-Weighted Failure Mode Sorting' (page 1, domain other) captures: After sorting by severityRank ascending (1 = highest priority): - rank 1: restAdvantage - rank 2: lineMovement - rank 2: scheduleStress - rank 3: consensus - rank 4: depth - rank 4: venueForm Capped at 4 bullets, so the composer returns: 1. Assumptions: Severity ranks are assigned a priori and used to sort failure modes by descending impact weight. Breakdown regime: Ordinal ranking with ties resolved by declaration order Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Severity ranking acts as a kernel-weighted selector in a multi-objective optimization over risk factors. Operator 'Pure Functional State Preservation' (page 1, domain other) captures: The input snapshot and pick objects are unchanged after the call (referential equality preserved on factor reads — composer is pure). Assumptions: Function application does not modify inputs; referential integrity is maintained throughout. Breakdown regime: Functional purity enforced via immutability constraints Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Immutable snapshot ensures causal consistency between model state and observed data, aligning with symplectic phase-space preservation in dynamical systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for pre-mortem-compose-happy (51633a93dfff1405, domain=other, pages_read=1/1): Operator 'Thresholded Factor Activation' (page 1, domain other) captures: # Expected behavior The composer iterates the 9 failure-mode templates and collects bullets where `triggerCondition` returns true: - consensus (0.72 > 0.6) → fires. Assumptions: Each factor has a scalar score and fixed threshold; activation occurs iff score exceeds threshold. Breakdown regime: Discrete binary event: factor_score > threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Factor activation mirrors Bayesian evidence accumulation, where each trigger is a likelihood ratio exceeding a decision boundary. Operator 'Priority-Weighted Failure Mode Sorting' (page 1, domain other) captures: After sorting by severityRank ascending (1 = highest priority): - rank 1: restAdvantage - rank 2: lineMovement - rank 2: scheduleStress - rank 3: consensus - rank 4: depth - rank 4: venueForm Capped at 4 bullets, so the composer returns: 1. Assumptions: Severity ranks are assigned a priori and used to sort failure modes by descending impact weight. Breakdown regime: Ordinal ranking with ties resolved by declaration order Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Severity ranking acts as a kernel-weighted selector in a multi-objective optimization over risk factors. Operator 'Pure Functional State Preservation' (page 1, domain other) captures: The input snapshot and pick objects are unchanged after the call (referential equality preserved on factor reads — composer is pure). Assumptions: Function application does not modify inputs; referential integrity is maintained throughout. Breakdown regime: Functional purity enforced via immutability constraints Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Immutable snapshot ensures causal consistency between model state and observed data, aligning with symplectic phase-space preservation in dynamical systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical propositional logic and Bayesian belief networks, extended into modern functional programming paradigms with emphasis on purity and referential transparency. Retrocausal Genealogy: Rooted in pre-mortem-compose-happy (51633a93dfff1405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in pre-mortem-compose-happy (51633a93dfff1405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate factor scores or introduce noise to obscure true triggers. The system counters this by enforcing deterministic thresholds and immutable state handling, assuming rational adversaries who cannot alter the logical structure of the trigger conditions. Theory of Mind & Decision Maker Model: Rooted in pre-mortem-compose-happy (51633a93dfff1405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by strict exclusion of non-triggered factors, preventing redundancy in the bullet set. Leakage is mitigated through immutability and explicit forbidden behavior rules, which prevent mutation and inclusion of irrelevant variables. Cross-Layer Veto & Anti-Leakage Check: Rooted in pre-mortem-compose-happy (51633a93dfff1405), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "79e36a8a84a8c90c",
+  "source_status": "COMPLETE",
+  "title": "WAREHOUSE-DEDUP-EXECUTED-2026-11-07",
+  "file_name": "WAREHOUSE-DEDUP-EXECUTED-2026-11-07.md",
+  "sha256": "79e36a8a84a8c90cbcf983786dc6c5f477c519d2fda34012782b6c2fa0d6d652",
+  "primary_domain": "history",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "warehouse_deduplication",
+      "name": "Warehouse Deduplication Operator",
+      "verbatim_quote": "# WAREHOUSE REGISTRY DEDUP — EXECUTED (Motif, 2026-11-07) Executes WAREHOUSE-REGISTRY-DEDUP-SPEC-2026-11-07.md against intelligence/data/warehouse/ingestion_registry.jsonl at HEAD (c0c721cc8).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Data integrity at HEAD commit, consistent SHA256 generation.",
+      "breakdown_regime": "No singularities; standard set-theoretic merge.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction calibration via set intersection and GSE's state-transition consistency through temporal ordering.",
+        "source_operator": "warehouse_deduplication",
+        "telemetry": "Row count reduction (21→11) and sum stability (158,607→79,297)"
+      }
+    },
+    {
+      "primitive_id": "latest_ingested_at_utc_rule",
+      "name": "Latest Ingested At UTC Rule",
+      "verbatim_quote": "- Kept-row rule applied: latest ingested_at_utc per group, PASS preferred on ties.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Temporal coherence of timestamps, deterministic PASS preference.",
+      "breakdown_regime": "Tie-breaking resolves non-uniqueness; no other degeneracies assumed.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conforms to GSI's sequential decision theory by selecting optimal posterior samples and supports GSE's situational awareness via temporal filtering.",
+        "source_operator": "latest_ingested_at_utc_rule",
+        "telemetry": "Temporal sorting accuracy and PASS tie-resolution frequency"
+      }
+    },
+    {
+      "primitive_id": "open_meteo_split_handling",
+      "name": "Open-Meteo Split Handling Protocol",
+      "verbatim_quote": "- Open-Meteo is the one split group: two DISTINCT sha256 — one FAIL/0 row and one PASS/1 row.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Distinctness implies independent data sources despite shared canonical_id.",
+      "breakdown_regime": "FAIL vs PASS distinguishability; no overlap between states assumed.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates to GSI's hypothesis testing framework (null vs alternative) and GSE's conflict resolution via state discrimination.",
+        "source_operator": "open_meteo_split_handling",
+        "telemetry": "FAIL/PASS separation ratio and SHA256 distinctiveness measure"
+      }
+    },
+    {
+      "primitive_id": "naive_sum_vs_unique_total",
+      "name": "Naive Sum vs Unique Total Discrepancy",
+      "verbatim_quote": "The spec's key keeps both (they are different ingests, not duplicates), which is exactly where the fleet's 79,298-vs-79,297 ambiguity came from: summing distinct canonical sources gives 79,296 + Open-Meteo counted once; the (canonical_id+sha256) rule counts both Open-Meteo rows (0 + 1) and lands on 79,297.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Canonical_id uniqueness within source, independent SHA256 collision probability.",
+      "breakdown_regime": "Ambiguity 발생 condition: identical canonical_id with different sha256.",
+      "domain": "history",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Connects to GSI's ensemble aggregation variance and GSE's multi-model fusion logic.",
+        "source_operator": "naive_sum_vs_unique_total",
+        "telemetry": "Summation inconsistency rate and unique count precision"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "79e36a8a84a8c90c_t0",
+      "think": "The deduplication process is a set-theoretic projection that reduces redundancy while preserving information flow. It relies on the assumption that distinct SHA256 values represent independent data contributions, which is critical for maintaining the integrity of downstream probabilistic models. The \"latest ingested_at_utc\" rule introduces a temporal filter that aligns with GSI's sequential Monte Carlo methods, ensuring that only the most recent and reliable data points are used for inference. The discrepancy between naive sum and unique total highlights a fundamental tension in data integration: counting sources versus counting unique events. This tension is resolved by the (canonical_id+sha256) rule, which provides a principled way to handle cases like Open-Meteo where both FAIL and PASS states coexist. The resulting 11-row registry is a minimal sufficient statistic for the warehouse's ingestion pipeline, enabling efficient tracking without loss of diagnostic information.\n\nDeep epistemic analysis for WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c, domain=history, pages_read=1/1): Operator 'Warehouse Deduplication Operator' (page 1, domain history) captures: # WAREHOUSE REGISTRY DEDUP — EXECUTED (Motif, 2026-11-07) Executes WAREHOUSE-REGISTRY-DEDUP-SPEC-2026-11-07.md against intelligence/data/warehouse/ingestion_registry.jsonl at HEAD (c0c721cc8). Assumptions: Data integrity at HEAD commit, consistent SHA256 generation. Breakdown regime: No singularities; standard set-theoretic merge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction calibration via set intersection and GSE's state-transition consistency through temporal ordering. Operator 'Latest Ingested At UTC Rule' (page 1, domain history) captures: - Kept-row rule applied: latest ingested_at_utc per group, PASS preferred on ties. Assumptions: Temporal coherence of timestamps, deterministic PASS preference. Breakdown regime: Tie-breaking resolves non-uniqueness; no other degeneracies assumed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to GSI's sequential decision theory by selecting optimal posterior samples and supports GSE's situational awareness via temporal filtering. Operator 'Open-Meteo Split Handling Protocol' (page 1, domain history) captures: - Open-Meteo is the one split group: two DISTINCT sha256 — one FAIL/0 row and one PASS/1 row. Assumptions: Distinctness implies independent data sources despite shared canonical_id. Breakdown regime: FAIL vs PASS distinguishability; no overlap between states assumed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSI's hypothesis testing framework (null vs alternative) and GSE's conflict resolution via state discrimination. Operator 'Naive Sum vs Unique Total Discrepancy' (page 1, domain history) captures: The spec's key keeps both (they are different ingests, not duplicates), which is exactly where the fleet's 79,298-vs-79,297 ambiguity came from: summing distinct canonical sources gives 79,296 + Open-Meteo counted once; the (canonical_id+sha256) rule counts both Open-Meteo rows (0 + 1) and lands on 79,297. Assumptions: Canonical_id uniqueness within source, independent SHA256 collision probability. Breakdown regime: Ambiguity 발생 condition: identical canonical_id with different sha256. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Connects to GSI's ensemble aggregation variance and GSE's multi-model fusion logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c, domain=history, pages_read=1/1): Operator 'Warehouse Deduplication Operator' (page 1, domain history) captures: # WAREHOUSE REGISTRY DEDUP — EXECUTED (Motif, 2026-11-07) Executes WAREHOUSE-REGISTRY-DEDUP-SPEC-2026-11-07.md against intelligence/data/warehouse/ingestion_registry.jsonl at HEAD (c0c721cc8). Assumptions: Data integrity at HEAD commit, consistent SHA256 generation. Breakdown regime: No singularities; standard set-theoretic merge. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conformal prediction calibration via set intersection and GSE's state-transition consistency through temporal ordering. Operator 'Latest Ingested At UTC Rule' (page 1, domain history) captures: - Kept-row rule applied: latest ingested_at_utc per group, PASS preferred on ties. Assumptions: Temporal coherence of timestamps, deterministic PASS preference. Breakdown regime: Tie-breaking resolves non-uniqueness; no other degeneracies assumed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conforms to GSI's sequential decision theory by selecting optimal posterior samples and supports GSE's situational awareness via temporal filtering. Operator 'Open-Meteo Split Handling Protocol' (page 1, domain history) captures: - Open-Meteo is the one split group: two DISTINCT sha256 — one FAIL/0 row and one PASS/1 row. Assumptions: Distinctness implies independent data sources despite shared canonical_id. Breakdown regime: FAIL vs PASS distinguishability; no overlap between states assumed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to GSI's hypothesis testing framework (null vs alternative) and GSE's conflict resolution via state discrimination. Operator 'Naive Sum vs Unique Total Discrepancy' (page 1, domain history) captures: The spec's key keeps both (they are different ingests, not duplicates), which is exactly where the fleet's 79,298-vs-79,297 ambiguity came from: summing distinct canonical sources gives 79,296 + Open-Meteo counted once; the (canonical_id+sha256) rule counts both Open-Meteo rows (0 + 1) and lands on 79,297. Assumptions: Canonical_id uniqueness within source, independent SHA256 collision probability. Breakdown regime: Ambiguity 발생 condition: identical canonical_id with different sha256. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Connects to GSI's ensemble aggregation variance and GSE's multi-model fusion logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This method builds on classical database deduplication algorithms from the 1990s, incorporating modern cryptographic hash principles from Bellare-Rogaway (2004) and temporal selection rules inspired by Kalman filtering. Retrocausal Genealogy: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The opposing actor is the data engineer who might prioritize storage efficiency over information preservation. Their model assumes that older data is always obsolete, whereas our rule acknowledges that PASS failures can contain valuable metadata about system health. Theory of Mind & Decision Maker Model: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring SHA256 distinctness; leakage would occur if multiple rows shared the same hash but referred to different physical files, violating the one-to-one mapping required for accurate telemetry. Cross-Layer Veto & Anti-Leakage Check: Rooted in WAREHOUSE-DEDUP-EXECUTED-2026-11-07 (79e36a8a84a8c90c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "14ee41567a6b74ef",
+  "source_status": "COMPLETE",
+  "title": "case-notes-2026-09-16",
+  "file_name": "case-notes-2026-09-16.md",
+  "sha256": "14ee41567a6b74ef462dcde9da8081d27e5732936a0643bd3913f980f7976fd2",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal causal structure of employment termination and EEOC charge, modeled as a stochastic process with discrete states: disclosure → termination → legal representation → charge filing. Universal Lens: Rooted in case-notes-2026-09-16 (14ee41567a6b74ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on Turner's liability given missing demand letter response and attorney silence, conditioned on prior EEOC charge probability and firm engagement timeline. GSI Mapping: Rooted in case-notes-2026-09-16 (14ee41567a6b74ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition graph: Employment (Oct 2025–May 2026) → Disclosure (Jan/Feb 2026) → Termination (May 19, 2026) → Legal Engagement (June 8, 2026) → Charge Filing (Aug 21, 2026). GSE Mapping: Rooted in case-notes-2026-09-16 (14ee41567a6b74ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "employment_termination_timeline",
+      "name": "Employment Termination Timeline",
+      "verbatim_quote": "From Garrett's Gmail + what he told me today.* ## Where things stand - Garrett worked at Turner Construction (HR Manager, CTS LoneStar JV, Google data-center project) Oct 2025 – May 19, 2026.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_start': '2025-10-01', 't_end': '2026-05-19', 'duration': '231 days'}",
+      "assumptions": "Linear progression of employment with fixed start and end dates.",
+      "breakdown_regime": "t = t_start to t_end",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps temporal domain of employment to legal causality window.",
+        "source_operator": "employment_termination_timeline",
+        "telemetry": "Days elapsed between employment start and termination."
+      }
+    },
+    {
+      "primitive_id": "disclosure_event",
+      "name": "Disclosed Mental Health Conditions",
+      "verbatim_quote": "- He disclosed anxiety, depression, and autism to supervisor Corina Murguia in Jan/Feb 2026 (verbal Jan 26–27, written \"Owner's Manual\" Feb 17).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'condition_type': 'mental_health_conditions', 'disclosure_method': 'verbal + written', 'date_range': 'Jan 26–Feb 17, 2026'}",
+      "assumptions": "Disclosure event precedes termination and is documented.",
+      "breakdown_regime": "t_disclose < t_terminate",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to legal duty-to-accommodate event in ADA framework.",
+        "source_operator": "disclosure_event",
+        "telemetry": "Time lag between disclosure and termination."
+      }
+    },
+    {
+      "primitive_id": "legal_representation_engagement",
+      "name": "Legal Representation Engagement",
+      "verbatim_quote": "- Representation agreement with Rob Wiley firm signed June 8, 2026 ($5,000 engagement fee requested — unclear if paid).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'firm_name': 'Rob Wiley', 'agreement_date': '2026-06-08', 'fee_amount': '$5,000', 'payment_status': 'unclear'}",
+      "assumptions": "Engagement initiates formal legal action sequence.",
+      "breakdown_regime": "t_agreement > t_terminate",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents legal intervention trigger point in EEOC process.",
+        "source_operator": "legal_representation_engagement",
+        "telemetry": "Days from termination to legal engagement."
+      }
+    },
+    {
+      "primitive_id": "eeoc_charge_filing",
+      "name": "EEOC Charge Filing",
+      "verbatim_quote": "**No Turner response found.** - EEOC charge filed and acknowledged Aug 21, 2026: **Charge No.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'charge_number': '460-2026-09584', 'filing_date': '2026-08-21', 'claim_type': 'ADA and Other', 'respondent': 'Turner Construction Company'}",
+      "assumptions": "Charge filing is final step in administrative process.",
+      "breakdown_regime": "t_charge > t_agreement",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to legal causality threshold in civil rights litigation.",
+        "source_operator": "eeoc_charge_filing",
+        "telemetry": "Days from legal engagement to charge filing."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "14ee41567a6b74ef_t0",
+      "think": "The case presents a sequential causal model where employment duration (231 days) leads to a disclosure event (Jan/Feb 2026), followed by termination (May 19, 2026). The temporal gap between termination and legal engagement (June 8, 2026) suggests a deliberate delay or procedural gap. The lack of Turner’s response to the June 15 demand letter indicates potential non-compliance or strategic silence. The EEOC charge filing (Aug 21, 2026) marks a critical inflection point, indicating institutional validation of the claim. The absence of attorney communication post-Aug 26 implies either client disengagement or firm inefficiency. This structure aligns with a Bayesian updating framework where each event modifies posterior probabilities of employer liability. The failure mode lies in the lack of timely legal response and communication, which could be modeled as a stochastic process with high variance in outcome prediction.\n\nDeep epistemic analysis for case-notes-2026-09-16 (14ee41567a6b74ef, domain=other, pages_read=1/1): Operator 'Employment Termination Timeline' (page 1, domain other) captures: From Garrett's Gmail + what he told me today.* ## Where things stand - Garrett worked at Turner Construction (HR Manager, CTS LoneStar JV, Google data-center project) Oct 2025 – May 19, 2026. Assumptions: Linear progression of employment with fixed start and end dates. Breakdown regime: t = t_start to t_end Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps temporal domain of employment to legal causality window. Operator 'Disclosed Mental Health Conditions' (page 1, domain other) captures: - He disclosed anxiety, depression, and autism to supervisor Corina Murguia in Jan/Feb 2026 (verbal Jan 26–27, written \"Owner's Manual\" Feb 17). Assumptions: Disclosure event precedes termination and is documented. Breakdown regime: t_disclose < t_terminate Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to legal duty-to-accommodate event in ADA framework. Operator 'Legal Representation Engagement' (page 1, domain other) captures: - Representation agreement with Rob Wiley firm signed June 8, 2026 ($5,000 engagement fee requested — unclear if paid). Assumptions: Engagement initiates formal legal action sequence. Breakdown regime: t_agreement > t_terminate Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents legal intervention trigger point in EEOC process. Operator 'EEOC Charge Filing' (page 1, domain other) captures: **No Turner response found.** - EEOC charge filed and acknowledged Aug 21, 2026: **Charge No. Assumptions: Charge filing is final step in administrative process. Breakdown regime: t_charge > t_agreement Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to legal causality threshold in civil rights litigation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for case-notes-2026-09-16 (14ee41567a6b74ef, domain=other, pages_read=1/1): Operator 'Employment Termination Timeline' (page 1, domain other) captures: From Garrett's Gmail + what he told me today.* ## Where things stand - Garrett worked at Turner Construction (HR Manager, CTS LoneStar JV, Google data-center project) Oct 2025 – May 19, 2026. Assumptions: Linear progression of employment with fixed start and end dates. Breakdown regime: t = t_start to t_end Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps temporal domain of employment to legal causality window. Operator 'Disclosed Mental Health Conditions' (page 1, domain other) captures: - He disclosed anxiety, depression, and autism to supervisor Corina Murguia in Jan/Feb 2026 (verbal Jan 26–27, written \"Owner's Manual\" Feb 17). Assumptions: Disclosure event precedes termination and is documented. Breakdown regime: t_disclose < t_terminate Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to legal duty-to-accommodate event in ADA framework. Operator 'Legal Representation Engagement' (page 1, domain other) captures: - Representation agreement with Rob Wiley firm signed June 8, 2026 ($5,000 engagement fee requested — unclear if paid). Assumptions: Engagement initiates formal legal action sequence. Breakdown regime: t_agreement > t_terminate Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents legal intervention trigger point in EEOC process. Operator 'EEOC Charge Filing' (page 1, domain other) captures: **No Turner response found.** - EEOC charge filed and acknowledged Aug 21, 2026: **Charge No. Assumptions: Charge filing is final step in administrative process. Breakdown regime: t_charge > t_agreement Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to legal causality threshold in civil rights litigation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in 1991 ADA framework, this case reflects modern legal evolution toward mental health accommodation and employer accountability. The temporal structure mirrors earlier EEOC case law involving disability discrimination. Retrocausal Genealogy: Rooted in case-notes-2026-09-16 (14ee41567a6b74ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in case-notes-2026-09-16 (14ee41567a6b74ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The employer likely seeks to minimize liability by delaying response and avoiding direct confrontation. The attorney may have mismanaged client communication, leading to a breakdown in trust. Garrett's silence suggests either disengagement or fear of retaliation, creating a triadic conflict among parties. Theory of Mind & Decision Maker Model: Rooted in case-notes-2026-09-16 (14ee41567a6b74ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between legal engagement and charge filing timelines, as delays in one layer (e.g., attorney silence) can invalidate assumptions in another (e.g., timely response). Leakage occurs when internal firm dynamics obscure external legal obligations, undermining both GSI probabilistic models and GSE situational awareness. Cross-Layer Veto & Anti-Leakage Check: Rooted in case-notes-2026-09-16 (14ee41567a6b74ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

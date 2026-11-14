@@ -1,0 +1,78 @@
+{
+  "book_id": "61ce6311351e81bf",
+  "source_status": "COMPLETE",
+  "title": "p0349",
+  "file_name": "p0349.txt",
+  "sha256": "61ce6311351e81bf2b4ba672ba9ed1fc7f3cbe8698616b00cdfc23bb12738ea4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0349 (61ce6311351e81bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0349 (61ce6311351e81bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0349 (61ce6311351e81bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0349 (61ce6311351e81bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0349 (61ce6311351e81bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0349 (61ce6311351e81bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "markovian_conditioned_reflex",
+      "name": "Markovian Conditioned Reflex",
+      "verbatim_quote": "At the outset of the experiment, the bell did not excite any flow of saliva, but as the bell-food combination was repeated time after time, the bell began to give a small flow and then a progressively larger amount.",
+      "page": 1,
+      "latex": "P(S_{t+1} | S_t) = f(S_t, I)",
+      "symbol_and_unit_ledger": "S_t - internal state (dimensionless); I - input stimulus (dimensionless)",
+      "assumptions": "Memoryless transition probability; discrete time steps; fixed stimulus-response mapping.",
+      "breakdown_regime": "Non-stationary environments where stimulus correlations break ergodicity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian filtering framework for belief-state updates in GSI.",
+        "source_operator": "markovian_conditioned_reflex",
+        "telemetry": "Likelihood ratio drift in posterior predictive checks."
+      }
+    },
+    {
+      "primitive_id": "salivary_gland_response",
+      "name": "Salivary Gland Response Dynamics",
+      "verbatim_quote": "Pavlov's attention was directed mostly to the glandular part of this total response, because it could be measured by measuring the flow of saliva.",
+      "page": 1,
+      "latex": "\\frac{dV}{dt} = k_1 I - k_2 V",
+      "symbol_and_unit_ledger": "V - saliva volume (liters); I - food stimulus indicator (binary); k_1, k_2 - rate constants (per second)",
+      "assumptions": "First-order linear kinetics; instantaneous stimulus response; constant clearance.",
+      "breakdown_regime": "Saturation at high stimulus frequency leading to diminishing returns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction intervals for physiological baseline deviations in GSI.",
+        "source_operator": "salivary_gland_response",
+        "telemetry": "Residual variance in kinetic fits as anomaly detector."
+      }
+    },
+    {
+      "primitive_id": "reversibility_threshold",
+      "name": "Reversibility Threshold",
+      "verbatim_quote": "No saliva at the first sounding of the bell, but the bell-food combination needed only to be repeated a few times before the conditioned reflex was reestablished.",
+      "page": 1,
+      "latex": "N_{thresh} = \\log_{\\alpha}(\\epsilon) / \\log(\\beta)",
+      "symbol_and_unit_ledger": "N_{thresh} - minimum trials (dimensionless); α, β - learning rates (dimensionless); ε - target error (dimensionless)",
+      "assumptions": "Exponential learning curve; binary outcome; identical trial conditions.",
+      "breakdown_regime": "Overtraining导致 phản応强度下降或消退。",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State-transition models for model reinitialization in GSE.",
+        "source_operator": "reversibility_threshold",
+        "telemetry": "Cross-validation error spikes indicating catastrophic forgetting."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "61ce6311351e81bf_t0",
+      "think": "The foundational Markovian assumption underpins both GSI's sequential Bayesian updating and GSE's state-transition engines. However, the empirical data reveals non-Markovian higher-order dependencies: the salivary response depends not just on the immediate stimulus but on the history of Bell-Food pairings. This leads to a breakdown when environmental statistics shift, causing catastrophic forgetting in machine learning analogues. The reversibility threshold quantifies the sample complexity required for stable learning, but excessive repetition can induce overfitting to the training regimen, creating a failure mode where the system becomes brittle to novel contexts. In multi-agent settings, opponents may exploit predictable reversal patterns, necessitating adaptive regularization.\n\nDeep epistemic analysis for p0349 (61ce6311351e81bf, domain=other, pages_read=1/1): Operator 'Markovian Conditioned Reflex' (page 1, domain other) captures: At the outset of the experiment, the bell did not excite any flow of saliva, but as the bell-food combination was repeated time after time, the bell began to give a small flow and then a progressively larger amount. Assumptions: Memoryless transition probability; discrete time steps; fixed stimulus-response mapping. Breakdown regime: Non-stationary environments where stimulus correlations break ergodicity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian filtering framework for belief-state updates in GSI. Operator 'Salivary Gland Response Dynamics' (page 1, domain other) captures: Pavlov's attention was directed mostly to the glandular part of this total response, because it could be measured by measuring the flow of saliva. Assumptions: First-order linear kinetics; instantaneous stimulus response; constant clearance. Breakdown regime: Saturation at high stimulus frequency leading to diminishing returns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for physiological baseline deviations in GSI. Operator 'Reversibility Threshold' (page 1, domain other) captures: No saliva at the first sounding of the bell, but the bell-food combination needed only to be repeated a few times before the conditioned reflex was reestablished. Assumptions: Exponential learning curve; binary outcome; identical trial conditions. Breakdown regime: Overtraining导致 phản応强度下降或消退。 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition models for model reinitialization in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0349 (61ce6311351e81bf, domain=other, pages_read=1/1): Operator 'Markovian Conditioned Reflex' (page 1, domain other) captures: At the outset of the experiment, the bell did not excite any flow of saliva, but as the bell-food combination was repeated time after time, the bell began to give a small flow and then a progressively larger amount. Assumptions: Memoryless transition probability; discrete time steps; fixed stimulus-response mapping. Breakdown regime: Non-stationary environments where stimulus correlations break ergodicity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian filtering framework for belief-state updates in GSI. Operator 'Salivary Gland Response Dynamics' (page 1, domain other) captures: Pavlov's attention was directed mostly to the glandular part of this total response, because it could be measured by measuring the flow of saliva. Assumptions: First-order linear kinetics; instantaneous stimulus response; constant clearance. Breakdown regime: Saturation at high stimulus frequency leading to diminishing returns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction intervals for physiological baseline deviations in GSI. Operator 'Reversibility Threshold' (page 1, domain other) captures: No saliva at the first sounding of the bell, but the bell-food combination needed only to be repeated a few times before the conditioned reflex was reestablished. Assumptions: Exponential learning curve; binary outcome; identical trial conditions. Breakdown regime: Overtraining导致 phản応强度下降或消退。 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition models for model reinitialization in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The Markovian reduction traces back to Boltzmann's H-theorem and the ergodic hypothesis, later formalized in information theory by Shannon. The concept of reversibility thresholds emerged from statistical mechanics phase transitions and was adapted to learning theory via the PAC framework. Retrocausal Genealogy: Rooted in p0349 (61ce6311351e81bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "An adversarial agent might model the experimenter's conditioning protocol as a known signal, predicting the timing of conditioned responses to disrupt the experiment. Conversely, the experimenter assumes the subject lacks theory-of-mind, treating the animal as a passive statistical learner. Theory of Mind & Decision Maker Model: Rooted in p0349 (61ce6311351e81bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent anti-collinearity, telemetry metrics must be cross-validated across layers: GSI's posterior predictive checks should align with GSE's state-transition residuals, ensuring that physiological signals do not leak into behavioral priors. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0349 (61ce6311351e81bf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

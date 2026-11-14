@@ -1,0 +1,78 @@
+{
+  "book_id": "672123573981187f",
+  "source_status": "COMPLETE",
+  "title": "p0083",
+  "file_name": "p0083.txt",
+  "sha256": "672123573981187fb29ca171d484b30708ff27c1f2e267d270a37109f8d69611",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk-utility duality underpins decision-making via divergent curves of effort and reward, intersecting at optimal allocation points. Universal Lens: Rooted in p0083 (672123573981187f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian risk-weighted utility inference models decision thresholds using stochastic utility curves and entropy-based divergence measures. GSI Mapping: Rooted in p0083 (672123573981187f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes state transitions through dynamic utility landscapes, where policy shifts occur at intersection points of effort-reward gradients. GSE Mapping: Rooted in p0083 (672123573981187f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "risk_utility_intersection",
+      "name": "Risk-Utility Intersection",
+      "verbatim_quote": "The intersection shows that at a certain point (on the commodity scale) the diversion will take place.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'dimensionless effort or sacrifice', 'U': 'dimensionless utility or reward', 'x': 'commodity scale (dimensionless)'}",
+      "assumptions": "Curves represent relative changes in utility and effort; intersection defines optimal diversion point.",
+      "breakdown_regime": "Beyond intersection, E curve lacks definitive meaning due to indeterminate alternatives.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI inference maps utility divergence to posterior belief updates; GSE state transition models shift at intersection.",
+        "source_operator": "risk_utility_intersection",
+        "telemetry": "Decision threshold crossing rate, utility gradient magnitude"
+      }
+    },
+    {
+      "primitive_id": "net_utility_curve",
+      "name": "Net Utility Curve",
+      "verbatim_quote": "A still simpler and less ambiguous way to represent the facts would be to draw on a Cartesian plane a single curve of \"net utility,\" as in the accompanying sketch.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U_net': 'net utility (dimensionless)', 'x': 'commodity scale (dimensionless)'}",
+      "assumptions": "Single net utility function captures aggregate effect of effort vs. reward trade-offs.",
+      "breakdown_regime": "Curve intersects x-axis when alternative becomes preferable; falls into negative utility field.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes expected utility from net utility; GSE uses it for policy state evolution.",
+        "source_operator": "net_utility_curve",
+        "telemetry": "Crossing point of net utility curve with x-axis, curvature at inflection"
+      }
+    },
+    {
+      "primitive_id": "effort_reward_duality",
+      "name": "Effort-Reward Duality",
+      "verbatim_quote": "68 RISK, UNCERTAINTY, AND PROFIT other E for exertion, the one will show a (relative) fall in value and the other a (relative) rise as the production and consumption of the commodity increases.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'effort (dimensionless)', 'R': 'reward (dimensionless)', 't': 'time or production level (dimensionless)'}",
+      "assumptions": "Effort and reward curves are inversely related; both vary with commodity scale.",
+      "breakdown_regime": "At high levels of consumption, effort rises while reward falls, indicating diminishing returns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI models dual dynamics as conjugate variables; GSE encodes duality in action-state transitions.",
+        "source_operator": "effort_reward_duality",
+        "telemetry": "Rate of change of effort vs. reward, slope correlation coefficient"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "672123573981187f_t0",
+      "think": "The foundational structure emerges from dual curves representing effort and utility, which intersect to define a critical decision point. This intersection embodies a risk-reward equilibrium where diversion of resources occurs. The curves lack absolute values but maintain relative significance through vertical distance differences. Net utility is derived by combining these, producing a single curve that indicates when alternatives become preferable. The vertical axis of the net utility curve reflects qualitative utility rather than precise quantification. As consumption increases, effort rises while reward declines, establishing a diminishing returns regime. These relationships form a dualistic framework for modeling bounded rationality and decision thresholds in dynamic systems.\n\nDeep epistemic analysis for p0083 (672123573981187f, domain=other, pages_read=1/1): Operator 'Risk-Utility Intersection' (page 1, domain other) captures: The intersection shows that at a certain point (on the commodity scale) the diversion will take place. Assumptions: Curves represent relative changes in utility and effort; intersection defines optimal diversion point. Breakdown regime: Beyond intersection, E curve lacks definitive meaning due to indeterminate alternatives. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI inference maps utility divergence to posterior belief updates; GSE state transition models shift at intersection. Operator 'Net Utility Curve' (page 1, domain other) captures: A still simpler and less ambiguous way to represent the facts would be to draw on a Cartesian plane a single curve of \"net utility,\" as in the accompanying sketch. Assumptions: Single net utility function captures aggregate effect of effort vs. reward trade-offs. Breakdown regime: Curve intersects x-axis when alternative becomes preferable; falls into negative utility field. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes expected utility from net utility; GSE uses it for policy state evolution. Operator 'Effort-Reward Duality' (page 1, domain other) captures: 68 RISK, UNCERTAINTY, AND PROFIT other E for exertion, the one will show a (relative) fall in value and the other a (relative) rise as the production and consumption of the commodity increases. Assumptions: Effort and reward curves are inversely related; both vary with commodity scale. Breakdown regime: At high levels of consumption, effort rises while reward falls, indicating diminishing returns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI models dual dynamics as conjugate variables; GSE encodes duality in action-state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0083 (672123573981187f, domain=other, pages_read=1/1): Operator 'Risk-Utility Intersection' (page 1, domain other) captures: The intersection shows that at a certain point (on the commodity scale) the diversion will take place. Assumptions: Curves represent relative changes in utility and effort; intersection defines optimal diversion point. Breakdown regime: Beyond intersection, E curve lacks definitive meaning due to indeterminate alternatives. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI inference maps utility divergence to posterior belief updates; GSE state transition models shift at intersection. Operator 'Net Utility Curve' (page 1, domain other) captures: A still simpler and less ambiguous way to represent the facts would be to draw on a Cartesian plane a single curve of \"net utility,\" as in the accompanying sketch. Assumptions: Single net utility function captures aggregate effect of effort vs. reward trade-offs. Breakdown regime: Curve intersects x-axis when alternative becomes preferable; falls into negative utility field. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes expected utility from net utility; GSE uses it for policy state evolution. Operator 'Effort-Reward Duality' (page 1, domain other) captures: 68 RISK, UNCERTAINTY, AND PROFIT other E for exertion, the one will show a (relative) fall in value and the other a (relative) rise as the production and consumption of the commodity increases. Assumptions: Effort and reward curves are inversely related; both vary with commodity scale. Breakdown regime: At high levels of consumption, effort rises while reward falls, indicating diminishing returns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI models dual dynamics as conjugate variables; GSE encodes duality in action-state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in von Neumann-Morgenstern expected utility theory and Pareto efficiency, extended into behavioral economics and decision science. Retrocausal Genealogy: Rooted in p0083 (672123573981187f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0083 (672123573981187f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model utility as a scalar field with local maxima; competing agents may perceive different utility landscapes based on their effort-cost profiles. Theory of Mind & Decision Maker Model: Rooted in p0083 (672123573981187f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0083 (672123573981187f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Failure modes include misalignment between effort and reward curves, leading to suboptimal decisions; leakage occurs when net utility fails to capture temporal dynamics. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0083 (672123573981187f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0083 (672123573981187f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

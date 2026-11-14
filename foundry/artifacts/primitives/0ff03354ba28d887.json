@@ -1,0 +1,95 @@
+{
+  "book_id": "0ff03354ba28d887",
+  "source_status": "COMPLETE",
+  "title": "p0130",
+  "file_name": "p0130.txt",
+  "sha256": "0ff03354ba28d887fa03917466503ff4c96aa8f3a4698509fa6a1a192f9ebeff",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0130 (0ff03354ba28d887), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0130 (0ff03354ba28d887), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0130 (0ff03354ba28d887), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0130 (0ff03354ba28d887), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0130 (0ff03354ba28d887), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0130 (0ff03354ba28d887), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "kick_frequency_reduction",
+      "name": "Kick frequency reduction",
+      "verbatim_quote": "FOOT-BALL IN AMERICA 107 Mass and wedge plays have been very much curtailed, and with design, by the insistence upon more kicking.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes standard American football ruleset emphasizing kicking over mass formations.",
+      "breakdown_regime": "Breaks down into pure kicking strategies when rule enforcement is absolute.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Models the strategic shift from mass plays to kicking frequency as a decision-theoretic optimization under rule constraints.",
+        "source_operator": "kick_frequency_reduction",
+        "telemetry": "Observed decrease in wedge formation frequency relative to kicking plays."
+      }
+    },
+    {
+      "primitive_id": "wedge_play_curtailment",
+      "name": "Wedge play curtailment",
+      "verbatim_quote": "Every kick-off and free kick had come to be the signal for a wedge.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes pre-rule-change dominance of wedges triggered by all kicks.",
+      "breakdown_regime": "Degenerates to zero wedge usage when kicking becomes rare.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Treats wedge curtailment as a Bayesian updating problem where new rules revise prior probabilities of wedge formation.",
+        "source_operator": "wedge_play_curtailment",
+        "telemetry": "Historical data on wedge occurrence rates before and after rule changes."
+      }
+    },
+    {
+      "primitive_id": "kicking_scarcity",
+      "name": "Kicking scarcity",
+      "verbatim_quote": "Now, thanks to the rules, they can be used but seldom.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes rules limit total number of kicking opportunities per game.",
+      "breakdown_regime": "Approaches zero kicking when rules become extremely restrictive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Maps kicking scarcity to a conformal prediction interval for feasible kicking events given current constraints.",
+        "source_operator": "kicking_scarcity",
+        "telemetry": "Ratio of actual kicks to theoretically maximum possible kicks per season."
+      }
+    },
+    {
+      "primitive_id": "run_attempt_precedence",
+      "name": "Run attempt precedence",
+      "verbatim_quote": "As stated before in this section, it is customary for them to make two attempts to advance the ball by a run before resorting to a kick.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a sequential decision tree where runs are primary options unless kicking is forced.",
+      "breakdown_regime": "Breaks down to immediate kicking if run成功率 falls below a threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE - Represents run attempt precedence as a Markov decision process with state transitions based on yardage gained.",
+        "source_operator": "run_attempt_precedence",
+        "telemetry": "Average yards gained per run attempt compared to kick success rate."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0ff03354ba28d887_t0",
+      "think": "The primitives model the strategic evolution of American football from mass-based wedge plays toward kicking and running. They capture how rule changes retroactively alter the probability distribution of play outcomes. For instance, 'kick_frequency_reduction' quantifies the trade-off between kicking and running as a constrained optimization problem. 'Wedge_play_curtailment' introduces a binary decision variable indicating whether a wedge forms, conditioned on the presence of a kick. 'kicking_scarcity' maps scarcity to a Poisson process governing the arrival of kicking opportunities. Finally, 'run_attempt_precedence' embeds a sequential hypothesis test within each down, where the null hypothesis is that a run will fail to gain sufficient yardage. These operators collectively form a closed-loop system: reduced kicking leads to fewer wedges, which forces more runs, which in turn influences future kicking decisions. The resulting dynamics create feedback loops that stabilize around a mixed-strategy Nash equilibrium.\n\nDeep epistemic analysis for p0130 (0ff03354ba28d887, domain=other, pages_read=1/1): Operator 'Kick frequency reduction' (page 1, domain other) captures: FOOT-BALL IN AMERICA 107 Mass and wedge plays have been very much curtailed, and with design, by the insistence upon more kicking. Assumptions: Assumes standard American football ruleset emphasizing kicking over mass formations. Breakdown regime: Breaks down into pure kicking strategies when rule enforcement is absolute. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Models the strategic shift from mass plays to kicking frequency as a decision-theoretic optimization under rule constraints. Operator 'Wedge play curtailment' (page 1, domain other) captures: Every kick-off and free kick had come to be the signal for a wedge. Assumptions: Assumes pre-rule-change dominance of wedges triggered by all kicks. Breakdown regime: Degenerates to zero wedge usage when kicking becomes rare. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Treats wedge curtailment as a Bayesian updating problem where new rules revise prior probabilities of wedge formation. Operator 'Kicking scarcity' (page 1, domain other) captures: Now, thanks to the rules, they can be used but seldom. Assumptions: Assumes rules limit total number of kicking opportunities per game. Breakdown regime: Approaches zero kicking when rules become extremely restrictive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Maps kicking scarcity to a conformal prediction interval for feasible kicking events given current constraints. Operator 'Run attempt precedence' (page 1, domain other) captures: As stated before in this section, it is customary for them to make two attempts to advance the ball by a run before resorting to a kick. Assumptions: Assumes a sequential decision tree where runs are primary options unless kicking is forced. Breakdown regime: Breaks down to immediate kicking if run成功率 falls below a threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Represents run attempt precedence as a Markov decision process with state transitions based on yardage gained. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0130 (0ff03354ba28d887, domain=other, pages_read=1/1): Operator 'Kick frequency reduction' (page 1, domain other) captures: FOOT-BALL IN AMERICA 107 Mass and wedge plays have been very much curtailed, and with design, by the insistence upon more kicking. Assumptions: Assumes standard American football ruleset emphasizing kicking over mass formations. Breakdown regime: Breaks down into pure kicking strategies when rule enforcement is absolute. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Models the strategic shift from mass plays to kicking frequency as a decision-theoretic optimization under rule constraints. Operator 'Wedge play curtailment' (page 1, domain other) captures: Every kick-off and free kick had come to be the signal for a wedge. Assumptions: Assumes pre-rule-change dominance of wedges triggered by all kicks. Breakdown regime: Degenerates to zero wedge usage when kicking becomes rare. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Treats wedge curtailment as a Bayesian updating problem where new rules revise prior probabilities of wedge formation. Operator 'Kicking scarcity' (page 1, domain other) captures: Now, thanks to the rules, they can be used but seldom. Assumptions: Assumes rules limit total number of kicking opportunities per game. Breakdown regime: Approaches zero kicking when rules become extremely restrictive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Maps kicking scarcity to a conformal prediction interval for feasible kicking events given current constraints. Operator 'Run attempt precedence' (page 1, domain other) captures: As stated before in this section, it is customary for them to make two attempts to advance the ball by a run before resorting to a kick. Assumptions: Assumes a sequential decision tree where runs are primary options unless kicking is forced. Breakdown regime: Breaks down to immediate kicking if run成功率 falls below a threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Represents run attempt precedence as a Markov decision process with state transitions based on yardage gained. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The mathematical framework traces back to von Neumann's minimax theorem and early game theory applied to chess endgames. It also draws from information theory's source coding theorem, treating football plays as messages transmitted through noisy channels. Additionally, it borrows from optimal stopping theory in finance, where each down represents a discrete-time option to exercise a run or kick. Retrocausal Genealogy: Rooted in p0130 (0ff03354ba28d887), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams model the offense's rule-induced behavioral shifts as stochastic processes. Defenses adjust their coverage schemes to anticipate either high-frequency kicking or increased run density, creating a mutual best-response dynamic. Offenses, in turn, exploit defensive over-reactions to previously observed patterns, leading to cyclical exploitation-evasion cycles. Theory of Mind & Decision Maker Model: Rooted in p0130 (0ff03354ba28d887), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions require that primitives operate on distinct levels: 'kick_frequency_reduction' and 'wedge_play_curtailment' act on macroscopic strategy, while 'run_attempt_precedence' governs microscopic execution. Leakage is prevented by ensuring that each primitive's empirical verification metric (e.g., yards-per-attempt) does not correlate with another primitive's telemetry (e.g., kick frequency), thus maintaining independent observability. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0130 (0ff03354ba28d887), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

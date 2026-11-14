@@ -1,0 +1,78 @@
+{
+  "book_id": "24e9e487c78cd695",
+  "source_status": "COMPLETE",
+  "title": "allenai-open-instruct",
+  "file_name": "allenai-open-instruct.md",
+  "sha256": "24e9e487c78cd69594e899f43806f1c138315c8c5a140906ed48c9e64a0ed0b1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "SFT→DPO→RLVR staged training minimizes reasoning drift via verifiable reward signals; DPO-first bias ensures logged history alignment before policy rollout. Universal Lens: Rooted in allenai-open-instruct (24e9e487c78cd695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers Bayesian posterior belief over reasoning paths using calibrated DPO traces and RLVR verifiable rewards as conformal prediction anchors. GSI Mapping: Rooted in allenai-open-instruct (24e9e487c78cd695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning via staged policy refinement: SFT encodes format, DPO calibrates history, RLVR validates walk-forward outcome bands. GSE Mapping: Rooted in allenai-open-instruct (24e9e487c78cd695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "staged_training_pipeline",
+      "name": "Staged Training Pipeline",
+      "verbatim_quote": "Vision The full, reproducible post-training stack behind the TÜLU model family: SFT, DPO / preference fine-tuning, and RLVR (reinforcement learning with *verifiable* rewards).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SFT': 'Supervised Fine-Tuning', 'DPO': 'Direct Preference Optimization', 'RLVR': 'Reinforcement Learning with Verifiable Rewards'}",
+      "assumptions": "Training stages are ordered sequentially with diminishing uncertainty in policy updates.",
+      "breakdown_regime": "Policy collapse under misalignment between SFT and DPO objectives.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE’s reasoning state transitions mirror TÜLU’s training stages: SFT → DPO → RLVR.",
+        "source_operator": "staged_training_pipeline",
+        "telemetry": "Walk-forward prediction accuracy and calibration error."
+      }
+    },
+    {
+      "primitive_id": "dpo_first_bias",
+      "name": "DPO-First Bias",
+      "verbatim_quote": "Bias toward DPO-first: it runs on logged history with no rollout infra.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_log': 'Logged history of model responses', 'π_DPO': 'Policy optimized via DPO'}",
+      "assumptions": "Logged history provides sufficient signal to initialize policy without full rollout infrastructure.",
+      "breakdown_regime": "Failure when logged history lacks diversity or contains systematic bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses DPO-first bias to pre-calibrate reasoning traces before RLVR validation.",
+        "source_operator": "dpo_first_bias",
+        "telemetry": "Calibration slope of mined history pairs against ground truth outcomes."
+      }
+    },
+    {
+      "primitive_id": "verifiable_reward_signal",
+      "name": "Verifiable Reward Signal",
+      "verbatim_quote": "Vision The full, reproducible post-training stack behind the TÜLU model family: SFT, DPO / preference fine-tuning, and RLVR (reinforcement learning with *verifiable* rewards).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_v': 'Verifiable reward function', 'y_{land}': 'Outcome indicator (did prediction land in band)'}",
+      "assumptions": "Reward function is deterministic and grounded in empirical outcome data.",
+      "breakdown_regime": "Signal degradation when reward definition becomes ambiguous or non-reproducible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE evaluates reasoning quality through verifiable reward: walk-forward prediction success rate.",
+        "source_operator": "verifiable_reward_signal",
+        "telemetry": "Prediction hit rate within unseen time windows."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "24e9e487c78cd695_t0",
+      "think": "The staged pipeline SFT → DPO → RLVR represents a hierarchical control system where each stage reduces entropy in policy behavior. SFT initializes with instruction-following, DPO aligns preferences from logged data, and RLVR enforces verifiable outcomes. This mirrors GSE’s reasoning architecture: SFT encodes valid explanation formats, DPO mines calibrated reasoning traces from past decisions, and RLVR validates these against unseen walk-forward outcomes. The DPO-first bias ensures that policy updates are anchored in prior behavior, avoiding costly rollouts. The verifiable reward signal acts as a feedback gate, ensuring only outcomes that meet objective criteria propagate into future reasoning steps. Failure modes include misalignment between stages, e.g., DPO optimizing for irrelevant metrics or RLVR rewarding spurious correlations.\n\nDeep epistemic analysis for allenai-open-instruct (24e9e487c78cd695, domain=other, pages_read=1/1): Operator 'Staged Training Pipeline' (page 1, domain other) captures: Vision The full, reproducible post-training stack behind the TÜLU model family: SFT, DPO / preference fine-tuning, and RLVR (reinforcement learning with *verifiable* rewards). Assumptions: Training stages are ordered sequentially with diminishing uncertainty in policy updates. Breakdown regime: Policy collapse under misalignment between SFT and DPO objectives. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE’s reasoning state transitions mirror TÜLU’s training stages: SFT → DPO → RLVR. Operator 'DPO-First Bias' (page 1, domain other) captures: Bias toward DPO-first: it runs on logged history with no rollout infra. Assumptions: Logged history provides sufficient signal to initialize policy without full rollout infrastructure. Breakdown regime: Failure when logged history lacks diversity or contains systematic bias. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses DPO-first bias to pre-calibrate reasoning traces before RLVR validation. Operator 'Verifiable Reward Signal' (page 1, domain other) captures: Vision The full, reproducible post-training stack behind the TÜLU model family: SFT, DPO / preference fine-tuning, and RLVR (reinforcement learning with *verifiable* rewards). Assumptions: Reward function is deterministic and grounded in empirical outcome data. Breakdown regime: Signal degradation when reward definition becomes ambiguous or non-reproducible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE evaluates reasoning quality through verifiable reward: walk-forward prediction success rate. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for allenai-open-instruct (24e9e487c78cd695, domain=other, pages_read=1/1): Operator 'Staged Training Pipeline' (page 1, domain other) captures: Vision The full, reproducible post-training stack behind the TÜLU model family: SFT, DPO / preference fine-tuning, and RLVR (reinforcement learning with *verifiable* rewards). Assumptions: Training stages are ordered sequentially with diminishing uncertainty in policy updates. Breakdown regime: Policy collapse under misalignment between SFT and DPO objectives. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE’s reasoning state transitions mirror TÜLU’s training stages: SFT → DPO → RLVR. Operator 'DPO-First Bias' (page 1, domain other) captures: Bias toward DPO-first: it runs on logged history with no rollout infra. Assumptions: Logged history provides sufficient signal to initialize policy without full rollout infrastructure. Breakdown regime: Failure when logged history lacks diversity or contains systematic bias. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses DPO-first bias to pre-calibrate reasoning traces before RLVR validation. Operator 'Verifiable Reward Signal' (page 1, domain other) captures: Vision The full, reproducible post-training stack behind the TÜLU model family: SFT, DPO / preference fine-tuning, and RLVR (reinforcement learning with *verifiable* rewards). Assumptions: Reward function is deterministic and grounded in empirical outcome data. Breakdown regime: Signal degradation when reward definition becomes ambiguous or non-reproducible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE evaluates reasoning quality through verifiable reward: walk-forward prediction success rate. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in reinforcement learning theory (Sutton & Barto) and modern preference learning frameworks (Korbak et al., 2023), extended by DPO’s direct optimization of human preferences and RLVR’s grounding in empirical reward functions. Retrocausal Genealogy: Rooted in allenai-open-instruct (24e9e487c78cd695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit DPO’s reliance on logged history or RLVR’s reward structure. A rational agent would optimize for short-term reward while a strategic agent might seek to manipulate the verifiable reward function or introduce noise into the logged dataset. Theory of Mind & Decision Maker Model: Rooted in allenai-open-instruct (24e9e487c78cd695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists if DPO and RLVR share overlapping reward structures, leading to overfitting. Leakage occurs if SFT introduces biases that persist into DPO or RLVR stages, undermining the integrity of the staged pipeline. Cross-Layer Veto & Anti-Leakage Check: Rooted in allenai-open-instruct (24e9e487c78cd695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

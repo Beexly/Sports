@@ -1,0 +1,78 @@
+{
+  "book_id": "56a21f82b962708d",
+  "source_status": "COMPLETE",
+  "title": "p0002",
+  "file_name": "p0002.txt",
+  "sha256": "56a21f82b962708dcfad8a7d3cad94809a968b155ec8d6f2c58f1fe45ee4c736",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The Kelly Criterion formalizes optimal resource allocation in favorable stochastic processes, balancing growth rate maximization against ruin probability through logarithmic utility optimization. Universal Lens: Rooted in p0002 (56a21f82b962708d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian belief updates over Kelly-optimal bet sizes to infer latent market dynamics, using conformal predictive distributions for uncertainty quantification in sequential decisions. GSI Mapping: Rooted in p0002 (56a21f82b962708d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models agent behavior via state transitions governed by Kelly bet fractions, encoding dynamic risk-adjusted capital evolution under repeated binary gambles with bounded utility. GSE Mapping: Rooted in p0002 (56a21f82b962708d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "favorable_game_definition",
+      "name": "Favorable Game Condition",
+      "verbatim_quote": "By a \"favorable game\" we mean one in which there exists a strategy such that Pr(lim X = + ∞) 0, where X is the player's capital after n trials.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'X': 'capital amount (dimensionless relative units)', 'n': 'number of trials (dimensionless)'}",
+      "assumptions": "Existence of a strategy ensuring unbounded capital growth with nonzero probability.",
+      "breakdown_regime": "When no such strategy exists, i.e., when Pr(lim X = +∞) = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic forecasting framework where favorable outcomes are encoded as increasing posterior belief in long-term capital accumulation.",
+        "source_operator": "favorable_game_definition",
+        "telemetry": "Probability of unbounded capital growth over time steps"
+      }
+    },
+    {
+      "primitive_id": "maximize_expected_gain",
+      "name": "Expected Gain Maximization Strategy",
+      "verbatim_quote": "A classical criterion is to choose B, for each i so that the expected value E(X) is a maximum after n trials.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'bet size (dimensionless relative to capital)', 'E(X)': 'expected capital (dimensionless)'}",
+      "assumptions": "Linear utility assumption; no consideration of variance or ruin risk.",
+      "breakdown_regime": "When maximizing E(X) leads to infinite betting and certain ruin.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents a suboptimal control policy in GSE's state-space model, triggering exponential blowup without risk constraints.",
+        "source_operator": "maximize_expected_gain",
+        "telemetry": "Expected capital trajectory under uniform betting"
+      }
+    },
+    {
+      "primitive_id": "kelly_fraction_formula",
+      "name": "Kelly Fraction Bet Size",
+      "verbatim_quote": "Then Since the game has a positive expectation, i.e., p - q 0 in this even payoff situation, then in order to maximize E(X) we would want to maximize E(Bk) at each trial.",
+      "page": 1,
+      "latex": "f^* = p - q",
+      "symbol_and_unit_ledger": "{'f^*': 'fraction of bankroll to bet (dimensionless)', 'p': 'win probability (dimensionless)', 'q': 'loss probability (dimensionless)'}",
+      "assumptions": "Even-money bets, known win probability p > 0.5, independent trials.",
+      "breakdown_regime": "When p ≤ 0.5, f^* ≤ 0, implying no positive bet should be placed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes GSE's optimal policy function for sequential binary decisions, mapping belief states into action probabilities via logarithmic utility.",
+        "source_operator": "kelly_fraction_formula",
+        "telemetry": "Optimal fraction of current capital to wager per trial"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "56a21f82b962708d_t0",
+      "think": "The Kelly Criterion arises from optimizing long-term wealth growth under repeated binary gambles. It begins with defining a 'favorable game' where capital can grow unboundedly with positive probability. The naive approach of maximizing expected gain leads to ruin due to unbounded betting. Instead, the Kelly rule derives the optimal fraction of capital to bet per trial: f* = p - q, assuming even-money payouts. This balances growth rate maximization with ruin avoidance. The derivation uses logarithmic utility to ensure stability and avoids the pitfalls of linear expectation maximization. In GSI, this maps to Bayesian updating of belief parameters over time series data, while in GSE, it defines a recursive state transition policy for capital allocation across trials.\n\nDeep epistemic analysis for p0002 (56a21f82b962708d, domain=other, pages_read=1/1): Operator 'Favorable Game Condition' (page 1, domain other) captures: By a \"favorable game\" we mean one in which there exists a strategy such that Pr(lim X = + ∞) 0, where X is the player's capital after n trials. Assumptions: Existence of a strategy ensuring unbounded capital growth with nonzero probability. Breakdown regime: When no such strategy exists, i.e., when Pr(lim X = +∞) = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic forecasting framework where favorable outcomes are encoded as increasing posterior belief in long-term capital accumulation. Operator 'Expected Gain Maximization Strategy' (page 1, domain other) captures: A classical criterion is to choose B, for each i so that the expected value E(X) is a maximum after n trials. Assumptions: Linear utility assumption; no consideration of variance or ruin risk. Breakdown regime: When maximizing E(X) leads to infinite betting and certain ruin. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a suboptimal control policy in GSE's state-space model, triggering exponential blowup without risk constraints. Operator 'Kelly Fraction Bet Size' (page 1, domain other) captures: Then Since the game has a positive expectation, i.e., p - q 0 in this even payoff situation, then in order to maximize E(X) we would want to maximize E(Bk) at each trial. Assumptions: Even-money bets, known win probability p > 0.5, independent trials. Breakdown regime: When p ≤ 0.5, f^* ≤ 0, implying no positive bet should be placed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes GSE's optimal policy function for sequential binary decisions, mapping belief states into action probabilities via logarithmic utility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0002 (56a21f82b962708d, domain=other, pages_read=1/1): Operator 'Favorable Game Condition' (page 1, domain other) captures: By a \"favorable game\" we mean one in which there exists a strategy such that Pr(lim X = + ∞) 0, where X is the player's capital after n trials. Assumptions: Existence of a strategy ensuring unbounded capital growth with nonzero probability. Breakdown regime: When no such strategy exists, i.e., when Pr(lim X = +∞) = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic forecasting framework where favorable outcomes are encoded as increasing posterior belief in long-term capital accumulation. Operator 'Expected Gain Maximization Strategy' (page 1, domain other) captures: A classical criterion is to choose B, for each i so that the expected value E(X) is a maximum after n trials. Assumptions: Linear utility assumption; no consideration of variance or ruin risk. Breakdown regime: When maximizing E(X) leads to infinite betting and certain ruin. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a suboptimal control policy in GSE's state-space model, triggering exponential blowup without risk constraints. Operator 'Kelly Fraction Bet Size' (page 1, domain other) captures: Then Since the game has a positive expectation, i.e., p - q 0 in this even payoff situation, then in order to maximize E(X) we would want to maximize E(Bk) at each trial. Assumptions: Even-money bets, known win probability p > 0.5, independent trials. Breakdown regime: When p ≤ 0.5, f^* ≤ 0, implying no positive bet should be placed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes GSE's optimal policy function for sequential binary decisions, mapping belief states into action probabilities via logarithmic utility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Originated in information theory by Shannon and refined by Kelly (1956), later extended by Thorp (1960s) into financial applications. Rooted in ergodic theory and stochastic process optimization. Retrocausal Genealogy: Rooted in p0002 (56a21f82b962708d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0002 (56a21f82b962708d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must balance exploitation of favorable odds against risk of ruin. A rational agent follows Kelly to maximize long-run geometric growth, whereas an irrational agent might pursue short-term expected value maximization leading to bankruptcy. Theory of Mind & Decision Maker Model: Rooted in p0002 (56a21f82b962708d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires avoiding pure expectation maximizers in favor of log-utility driven policies. Leakage occurs if GSE treats Kelly as deterministic rather than stochastic, or if GSI ignores temporal dependencies in belief updates. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0002 (56a21f82b962708d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

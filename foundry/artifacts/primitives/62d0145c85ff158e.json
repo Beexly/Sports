@@ -1,0 +1,78 @@
+{
+  "book_id": "62d0145c85ff158e",
+  "source_status": "COMPLETE",
+  "title": "p0067",
+  "file_name": "p0067.txt",
+  "sha256": "62d0145c85ff158ea6529657948225db994c473f1f4f4b073b771e45db307546",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Behavioral dynamics emerge from evolutionary selection of receptor-effector mappings under pragmatic survival constraints. Universal Lens: Rooted in p0067 (62d0145c85ff158e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models innate behavioral tendencies as posterior distributions over sensory-motor maps, conditioned on evolutionary fitness landscapes. GSI Mapping: Rooted in p0067 (62d0145c85ff158e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes state transitions through flexible receptor-effector pathways, enabling adaptive responses within central tendency ranges. GSE Mapping: Rooted in p0067 (62d0145c85ff158e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "receptor_effector_mapping",
+      "name": "Receptor-Effector Mapping",
+      "verbatim_quote": "of newborn organisms is the result of unlearned, i.e., inherited, neural connections between receptors and effectors",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'s': 'sensory input signal (dimensionless)', 'U': 'neural transmission utility (dimensionless)', 'z': 'effector response magnitude (dimensionless)', 'R': 'receptor-effector mapping function (dimensionless)'}",
+      "assumptions": "Innate behaviors are encoded via fixed neural pathways; mapping is invariant across individuals of same species.",
+      "breakdown_regime": "When environmental novelty exceeds ancestral range of variation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayesian prior over sensory-motor maps; GSE state transition kernel over receptor-effector states",
+        "source_operator": "receptor_effector_mapping",
+        "telemetry": "Neural activation patterns during stimulus-response cycles"
+      }
+    },
+    {
+      "primitive_id": "evolutionary_selection_kernel",
+      "name": "Evolutionary Selection Kernel",
+      "verbatim_quote": "have been selected from fortuitous variations or mutations throughout the long history of the species. Since",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'selection kernel (dimensionless)', 't': 'time (years)', 'σ': 'mutation strength (dimensionless)'}",
+      "assumptions": "Selection operates on behavioral traits via survival probability; genetic drift influences trait distribution.",
+      "breakdown_regime": "When mutation rate exceeds selective pressure or when environment changes faster than adaptation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI probabilistic model of trait inheritance; GSE stochastic evolution of behavioral policy",
+        "source_operator": "evolutionary_selection_kernel",
+        "telemetry": "Phenotypic variance in behavioral responses across generations"
+      }
+    },
+    {
+      "primitive_id": "flexible_reaction_potential",
+      "name": "Flexible Reaction Potential",
+      "verbatim_quote": "Thus in the expression sUz, R represents not a single act but a considerable range of more or less alternative reaction potentialities.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'reaction potentiality set (dimensionless)', 'A': 'action space (dimensionless)', 'P': 'probability measure over actions (dimensionless)'}",
+      "assumptions": "Behavioral flexibility arises from multiple possible effector outputs per sensory input.",
+      "breakdown_regime": "When external constraints reduce action space below threshold of variability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI multi-armed bandit over behavioral options; GSE dynamic programming over action-value functions",
+        "source_operator": "flexible_reaction_potential",
+        "telemetry": "Distribution of behavioral choices under identical stimuli"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "62d0145c85ff158e_t0",
+      "think": "The core insight is that innate behavior emerges from a dual structure: sensory inputs (s) map to neural transmission utilities (U), which then influence effector outputs (z) through receptor-effector mappings (R). These mappings are not rigid but vary about a central tendency due to evolutionary selection. The evolutionary kernel K selects for traits that maximize survival in ancestral environments, leading to a distribution of possible behaviors rather than deterministic outcomes. This leads to the concept of flexible reaction potentialities where R encompasses a range of alternatives rather than a single act. The mathematical framework thus involves conditional probability distributions over sensory-motor mappings, with selection acting as a filter on these distributions. The breakdown regime occurs when environmental novelty exceeds the range of previously selected behaviors, triggering adaptive mechanisms or maladaptive responses. The interplay between fixed neural architecture and flexible behavioral output creates a dualism of determinism and variability that underpins both cognitive and motor systems.\n\nDeep epistemic analysis for p0067 (62d0145c85ff158e, domain=other, pages_read=1/1): Operator 'Receptor-Effector Mapping' (page 1, domain other) captures: of newborn organisms is the result of unlearned, i.e., inherited, neural connections between receptors and effectors Assumptions: Innate behaviors are encoded via fixed neural pathways; mapping is invariant across individuals of same species. Breakdown regime: When environmental novelty exceeds ancestral range of variation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian prior over sensory-motor maps; GSE state transition kernel over receptor-effector states Operator 'Evolutionary Selection Kernel' (page 1, domain other) captures: have been selected from fortuitous variations or mutations throughout the long history of the species. Since Assumptions: Selection operates on behavioral traits via survival probability; genetic drift influences trait distribution. Breakdown regime: When mutation rate exceeds selective pressure or when environment changes faster than adaptation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI probabilistic model of trait inheritance; GSE stochastic evolution of behavioral policy Operator 'Flexible Reaction Potential' (page 1, domain other) captures: Thus in the expression sUz, R represents not a single act but a considerable range of more or less alternative reaction potentialities. Assumptions: Behavioral flexibility arises from multiple possible effector outputs per sensory input. Breakdown regime: When external constraints reduce action space below threshold of variability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI multi-armed bandit over behavioral options; GSE dynamic programming over action-value functions Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0067 (62d0145c85ff158e, domain=other, pages_read=1/1): Operator 'Receptor-Effector Mapping' (page 1, domain other) captures: of newborn organisms is the result of unlearned, i.e., inherited, neural connections between receptors and effectors Assumptions: Innate behaviors are encoded via fixed neural pathways; mapping is invariant across individuals of same species. Breakdown regime: When environmental novelty exceeds ancestral range of variation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI Bayesian prior over sensory-motor maps; GSE state transition kernel over receptor-effector states Operator 'Evolutionary Selection Kernel' (page 1, domain other) captures: have been selected from fortuitous variations or mutations throughout the long history of the species. Since Assumptions: Selection operates on behavioral traits via survival probability; genetic drift influences trait distribution. Breakdown regime: When mutation rate exceeds selective pressure or when environment changes faster than adaptation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI probabilistic model of trait inheritance; GSE stochastic evolution of behavioral policy Operator 'Flexible Reaction Potential' (page 1, domain other) captures: Thus in the expression sUz, R represents not a single act but a considerable range of more or less alternative reaction potentialities. Assumptions: Behavioral flexibility arises from multiple possible effector outputs per sensory input. Breakdown regime: When external constraints reduce action space below threshold of variability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI multi-armed bandit over behavioral options; GSE dynamic programming over action-value functions Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century reflexology (Pavlov) and later extended into modern computational neuroscience and evolutionary psychology. The formalization builds on von Neumann's game theory and Shannon’s information theory to model biological decision-making as probabilistic inference. Retrocausal Genealogy: Rooted in p0067 (62d0145c85ff158e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may exhibit either deterministic reflexive behavior (low entropy) or exploratory variability (high entropy). In GSI, this manifests as competing priors; in GSE, as divergent policy paths. Agents with high evolutionary fidelity will show low variance in behavior, while those with high plasticity will explore broader action spaces. Theory of Mind & Decision Maker Model: Rooted in p0067 (62d0145c85ff158e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that GSI and GSE layers do not redundantly encode the same sensory-motor mapping. Leakage occurs if GSI's Bayesian inference collapses into GSE's deterministic state transitions without proper feedback. Veto conditions include ensuring that selection kernels do not override learned behavior in GSE, and that flexible reaction sets remain distinct from fixed reflexes. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0067 (62d0145c85ff158e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

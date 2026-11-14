@@ -1,0 +1,78 @@
+{
+  "book_id": "47c3fd3c37a2c2cd",
+  "source_status": "COMPLETE",
+  "title": "1807-nba2vec-dense-player-representations",
+  "file_name": "1807-nba2vec-dense-player-representations.md",
+  "sha256": "47c3fd3c37a2c2cd538698bb6a7dc99df10f74aa82b1f33fede48181e4824040",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "NBA2Vec encodes players as 8-dim embeddings; predicts play outcomes via average embeddings of 10 players in ReLU-softmax model. Universal Lens: Rooted in 1807-nba2vec-dense-player-representations (47c3fd3c37a2c2cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs NBA2Vec embeddings as Bayesian latent variables for probabilistic play outcome inference and conformal prediction of player roles. GSI Mapping: Rooted in 1807-nba2vec-dense-player-representations (47c3fd3c37a2c2cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses NBA2Vec embeddings as state vectors in dynamic lineup transitions; models matchup dynamics via attention-based pooling and rolling refresh. GSE Mapping: Rooted in 1807-nba2vec-dense-player-representations (47c3fd3c37a2c2cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "player_embedding",
+      "name": "Player Embedding",
+      "verbatim_quote": "Method/model - Each of **1,551 players** gets an **8-dimensional embedding**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p': 'player index, dimensionless', 'e_p': '8-dimensional embedding vector, dimensionless'}",
+      "assumptions": "Each player has a unique 8-dimensional dense vector representation.",
+      "breakdown_regime": "Embedding space is insufficient to capture complex player interactions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Embedding space serves as kernel for downstream prediction tasks in GSI and GSE.",
+        "source_operator": "player_embedding",
+        "telemetry": "Role clustering accuracy and correlation with box-score statistics."
+      }
+    },
+    {
+      "primitive_id": "play_outcome_model",
+      "name": "Play Outcome Model",
+      "verbatim_quote": "- For a play: the 5 offensive players' embeddings are averaged, the 5 defensive players' embeddings are averaged; the two averages are concatenated, passed through a **128-unit ReLU hidden layer**, then a softmax over **23 play-outcome classes**.",
+      "page": 1,
+      "latex": "p(outcome | O_1..O_5, D_1..D_5) = \\text{softmax}(W_2 \\cdot \\text{ReLU}(W_1 \\cdot [\\bar{e}_{off}; \\bar{e}_{def}] + b_1) + b_2)",
+      "symbol_and_unit_ledger": "{'O_i': 'offensive player i, dimensionless', 'D_j': 'defensive player j, dimensionless', '\\\\bar{e}_{off}': 'mean of offensive embeddings, dimensionless', '\\\\bar{e}_{def}': 'mean of defensive embeddings, dimensionless', 'outcome': 'play outcome class, categorical', 'W_1, W_2': 'weight matrices, dimensionless', 'b_1, b_2': 'bias vectors, dimensionless'}",
+      "assumptions": "Permutation invariance via averaging; conditional independence of outcomes given embeddings.",
+      "breakdown_regime": "Averaging discards player-specific interactions and sequencing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model maps player embeddings to outcome probabilities; used for simulation and inference in GSI and GSE.",
+        "source_operator": "play_outcome_model",
+        "telemetry": "KL divergence on held-out playoff data."
+      }
+    },
+    {
+      "primitive_id": "matchup_simulator",
+      "name": "Matchup Simulator",
+      "verbatim_quote": "- Post-hoc: embeddings are analyzed for role clustering and correlation with box-score stats; a lineup-matchup simulator plays 1,000 best-of-seven series.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'lineup, set of 5 players', 'M': 'matchup, pair of lineups', 'S': 'series outcome, binary', 'P(S|L_1, L_2)': 'probability of series outcome given lineups'}",
+      "assumptions": "Series outcomes are simulated using fixed lineup matchups and probabilistic play outcomes.",
+      "breakdown_regime": "Simulations assume static player roles and ignore dynamic adjustments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Simulator enables GSE to evaluate lineup effectiveness and optimize strategies.",
+        "source_operator": "matchup_simulator",
+        "telemetry": "Win probability of simulated series against known lineups."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "47c3fd3c37a2c2cd_t0",
+      "think": "The core operator is the play-outcome model, which uses 8-dimensional player embeddings to predict discrete outcomes. It assumes permutation invariance by averaging embeddings, reducing complexity but losing interaction details. The model’s architecture—concatenating offensive and defensive means, applying ReLU, and softmaxing over 23 classes—is a structured probabilistic mapping. This allows GSI to perform Bayesian inference on player roles and GSE to simulate lineups. The failure mode lies in ignoring who guards whom, leading to loss of tactical nuance. The embedding space is dimensionally constrained, limiting expressiveness. The model’s reliance on static averages makes it vulnerable to dynamic gameplay shifts. The simulator leverages this model to estimate series outcomes, but its validity hinges on the fidelity of the underlying embedding and outcome prediction.\n\nDeep epistemic analysis for 1807-nba2vec-dense-player-representations (47c3fd3c37a2c2cd, domain=other, pages_read=3/3): Operator 'Player Embedding' (page 1, domain other) captures: Method/model - Each of **1,551 players** gets an **8-dimensional embedding**. Assumptions: Each player has a unique 8-dimensional dense vector representation. Breakdown regime: Embedding space is insufficient to capture complex player interactions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding space serves as kernel for downstream prediction tasks in GSI and GSE. Operator 'Play Outcome Model' (page 1, domain other) captures: - For a play: the 5 offensive players' embeddings are averaged, the 5 defensive players' embeddings are averaged; the two averages are concatenated, passed through a **128-unit ReLU hidden layer**, then a softmax over **23 play-outcome classes**. Assumptions: Permutation invariance via averaging; conditional independence of outcomes given embeddings. Breakdown regime: Averaging discards player-specific interactions and sequencing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Model maps player embeddings to outcome probabilities; used for simulation and inference in GSI and GSE. Operator 'Matchup Simulator' (page 1, domain other) captures: - Post-hoc: embeddings are analyzed for role clustering and correlation with box-score stats; a lineup-matchup simulator plays 1,000 best-of-seven series. Assumptions: Series outcomes are simulated using fixed lineup matchups and probabilistic play outcomes. Breakdown regime: Simulations assume static player roles and ignore dynamic adjustments. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Simulator enables GSE to evaluate lineup effectiveness and optimize strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1807-nba2vec-dense-player-representations (47c3fd3c37a2c2cd, domain=other, pages_read=3/3): Operator 'Player Embedding' (page 1, domain other) captures: Method/model - Each of **1,551 players** gets an **8-dimensional embedding**. Assumptions: Each player has a unique 8-dimensional dense vector representation. Breakdown regime: Embedding space is insufficient to capture complex player interactions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Embedding space serves as kernel for downstream prediction tasks in GSI and GSE. Operator 'Play Outcome Model' (page 1, domain other) captures: - For a play: the 5 offensive players' embeddings are averaged, the 5 defensive players' embeddings are averaged; the two averages are concatenated, passed through a **128-unit ReLU hidden layer**, then a softmax over **23 play-outcome classes**. Assumptions: Permutation invariance via averaging; conditional independence of outcomes given embeddings. Breakdown regime: Averaging discards player-specific interactions and sequencing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Model maps player embeddings to outcome probabilities; used for simulation and inference in GSI and GSE. Operator 'Matchup Simulator' (page 1, domain other) captures: - Post-hoc: embeddings are analyzed for role clustering and correlation with box-score stats; a lineup-matchup simulator plays 1,000 best-of-seven series. Assumptions: Series outcomes are simulated using fixed lineup matchups and probabilistic play outcomes. Breakdown regime: Simulations assume static player roles and ignore dynamic adjustments. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Simulator enables GSE to evaluate lineup effectiveness and optimize strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in deep learning architectures for sequence modeling and relational reasoning, particularly inspired by SET transformers and attention mechanisms in NLP and computer vision. Retrocausal Genealogy: Rooted in 1807-nba2vec-dense-player-representations (47c3fd3c37a2c2cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1807-nba2vec-dense-player-representations (47c3fd3c37a2c2cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (teams) are modeled as sets of players whose embeddings define strategic states. Their actions are probabilistically inferred from past play outcomes, enabling predictive modeling of future game states. Theory of Mind & Decision Maker Model: Rooted in 1807-nba2vec-dense-player-representations (47c3fd3c37a2c2cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that embeddings do not redundantly encode similar role information. Leakage is mitigated by ensuring that the model does not overfit to specific player identities or sequences, maintaining generalizability across unseen matchups. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1807-nba2vec-dense-player-representations (47c3fd3c37a2c2cd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

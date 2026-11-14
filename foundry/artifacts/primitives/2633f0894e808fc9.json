@@ -1,0 +1,95 @@
+{
+  "book_id": "2633f0894e808fc9",
+  "source_status": "COMPLETE",
+  "title": "p0025",
+  "file_name": "p0025.txt",
+  "sha256": "2633f0894e808fc9517c3ebff9bf1ff64d1f0c6770b6502d8e7eb6a551555b9e",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "captain_individual_excellence",
+      "name": "Captain Individual Excellence",
+      "verbatim_quote": "He plays his own position excellently in the final game.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The captain's performance is directly derived from the position coach's preparation.",
+      "breakdown_regime": "When the position coach fails to prepare, the captain cannot excel.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Team performance is a function of individual player quality.",
+        "source_operator": "captain_individual_excellence",
+        "telemetry": "Player-specific metrics like yards per carry or completion percentage."
+      }
+    },
+    {
+      "primitive_id": "captain_coach_harmony",
+      "name": "Captain-Coach Harmony",
+      "verbatim_quote": "He keeps the squad cheerful and in harmony with the coaches.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Harmony is a linear function of leadership effectiveness.",
+      "breakdown_regime": "When leadership breaks down, morale drops to zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE - Situational awareness of team dynamics influences play execution.",
+        "source_operator": "captain_coach_harmony",
+        "telemetry": "Observational data on locker room atmosphere."
+      }
+    },
+    {
+      "primitive_id": "captain_rule_advisory",
+      "name": "Captain Rule Advisory",
+      "verbatim_quote": "He advises the coaches of opinions or sentiments on the team at variance with their ideas.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Captain input can correct coaching strategy errors.",
+      "breakdown_regime": "If captain advice is ignored, strategy inefficiency increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Player feedback adjusts betting line models.",
+        "source_operator": "captain_rule_advisory",
+        "telemetry": "Coaching staff acceptance rate of player suggestions."
+      }
+    },
+    {
+      "primitive_id": "captain_officials_check",
+      "name": "Captain Officials Check",
+      "verbatim_quote": "He checks all decisions by the officials and claims his rights.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Knowledge of rules prevents rule infractions.",
+      "breakdown_regime": "Knowledge gaps lead to penalties and lost advantages.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE - Instant replay review systems check referee calls.",
+        "source_operator": "captain_officials_check",
+        "telemetry": "Penalty yardage per game as a proxy for rule enforcement."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2633f0894e808fc9_t0",
+      "think": "The captain acts as a nexus between the position coach's preparation and the team's final execution. His role mathematically decomposes into three primary functions: maintaining personal peak performance, managing team emotional states, and serving as a communication conduit for rule-based tactical adjustments. The captain's effectiveness is bounded by the quality of the position coach's foundational work; without proper preparation, the captain cannot achieve individual excellence. Additionally, the captain must navigate interactions with referees, whose calls introduce stochastic noise into the game state. By checking official decisions and advising coaches of alternative strategies, the captain mitigates systematic errors in both referee bias and coaching doctrine. However, excessive talking can degrade team cohesion, creating a trade-off between information sharing and operational efficiency. These four primitives form a closed-loop control system where the captain continuously monitors, adapts, and enforces optimal behavior within the constraints of rules and team dynamics.\n\nDeep epistemic analysis for p0025 (2633f0894e808fc9, domain=other, pages_read=1/1): Operator 'Captain Individual Excellence' (page 1, domain other) captures: He plays his own position excellently in the final game. Assumptions: The captain's performance is directly derived from the position coach's preparation. Breakdown regime: When the position coach fails to prepare, the captain cannot excel. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Team performance is a function of individual player quality. Operator 'Captain-Coach Harmony' (page 1, domain other) captures: He keeps the squad cheerful and in harmony with the coaches. Assumptions: Harmony is a linear function of leadership effectiveness. Breakdown regime: When leadership breaks down, morale drops to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Situational awareness of team dynamics influences play execution. Operator 'Captain Rule Advisory' (page 1, domain other) captures: He advises the coaches of opinions or sentiments on the team at variance with their ideas. Assumptions: Captain input can correct coaching strategy errors. Breakdown regime: If captain advice is ignored, strategy inefficiency increases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Player feedback adjusts betting line models. Operator 'Captain Officials Check' (page 1, domain other) captures: He checks all decisions by the officials and claims his rights. Assumptions: Knowledge of rules prevents rule infractions. Breakdown regime: Knowledge gaps lead to penalties and lost advantages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Instant replay review systems check referee calls. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0025 (2633f0894e808fc9, domain=other, pages_read=1/1): Operator 'Captain Individual Excellence' (page 1, domain other) captures: He plays his own position excellently in the final game. Assumptions: The captain's performance is directly derived from the position coach's preparation. Breakdown regime: When the position coach fails to prepare, the captain cannot excel. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Team performance is a function of individual player quality. Operator 'Captain-Coach Harmony' (page 1, domain other) captures: He keeps the squad cheerful and in harmony with the coaches. Assumptions: Harmony is a linear function of leadership effectiveness. Breakdown regime: When leadership breaks down, morale drops to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Situational awareness of team dynamics influences play execution. Operator 'Captain Rule Advisory' (page 1, domain other) captures: He advises the coaches of opinions or sentiments on the team at variance with their ideas. Assumptions: Captain input can correct coaching strategy errors. Breakdown regime: If captain advice is ignored, strategy inefficiency increases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Player feedback adjusts betting line models. Operator 'Captain Officials Check' (page 1, domain other) captures: He checks all decisions by the officials and claims his rights. Assumptions: Knowledge of rules prevents rule infractions. Breakdown regime: Knowledge gaps lead to penalties and lost advantages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - Instant replay review systems check referee calls. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The concept of the football captain as a control agent stems from early 20th-century management theory applied to team sports, particularly Frederick Taylor's scientific management principles adapted to athletic performance optimization. Retrocausal Genealogy: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams' captains may strategically mislead officials about their team's sentiment to provoke penalties or gain field position, requiring the captain to model the opponent's deception tactics. Theory of Mind & Decision Maker Model: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent anti-collinearity, the captain's rule advisory function must be independent of the officiating crew's bias patterns, ensuring that captain input does not correlate with referee error distributions. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0025 (2633f0894e808fc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

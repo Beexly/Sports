@@ -1,0 +1,78 @@
+{
+  "book_id": "7acf1072b9c452f2",
+  "source_status": "COMPLETE",
+  "title": "p0294",
+  "file_name": "p0294.txt",
+  "sha256": "7acf1072b9c452f2328ab8660e1246df419a3b0d0dac2d6b46a5c9661506b480",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Football kick-out and free-kick dynamics under constraint-based play regulation and spatial boundary conditions. Universal Lens: Rooted in p0294 (7acf1072b9c452f2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models kick-out and free-kick outcomes using spatial constraints, wind vectors, and opponent positioning as probabilistic variables. GSI Mapping: Rooted in p0294 (7acf1072b9c452f2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine encodes kick-out and free-kick state transitions via boundary conditions, player roles, and field geometry for tactical decision-making. GSE Mapping: Rooted in p0294 (7acf1072b9c452f2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "kick_out",
+      "name": "Kick-Out Dynamics",
+      "verbatim_quote": "(c) A Kick-out is a drop-kick, place-kick or punt made by a player of the side which has made a safety or a touchback.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'kick type (dimensionless)', 'S': 'side making safety or touchback (dimensionless)', 'P': 'player executing kick (dimensionless)'}",
+      "assumptions": "Kick-out occurs only after safety or touchback; kick is executed by defending side.",
+      "breakdown_regime": "When ball is dead or called down before return to field.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a controlled stochastic process where K ∈ {drop, place, punt} and S determines initial field state.",
+        "source_operator": "kick_out",
+        "telemetry": "Ball trajectory, field position, and outcome classification"
+      }
+    },
+    {
+      "primitive_id": "free_kick",
+      "name": "Free-Kick Constraint",
+      "verbatim_quote": "(f) A Frce-kick is a term used to designate any kick when the opponents are restrained by rule from advancing beyond a certain point before the ball is put in play.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'free-kick event (dimensionless)', 'R': 'restraint rule applied (dimensionless)', 'O': 'opponent advancement limit (yards)'}",
+      "assumptions": "Opponents must remain behind a defined line until ball is in play.",
+      "breakdown_regime": "When rule enforcement restricts opponent movement prior to kick.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of constraint-based motion where O defines a temporal and spatial boundary for opponent behavior.",
+        "source_operator": "free_kick",
+        "telemetry": "Opponent positioning relative to line of scrimmage"
+      }
+    },
+    {
+      "primitive_id": "out_of_bounds",
+      "name": "Boundary Condition",
+      "verbatim_quote": "(a) The ball is Out of Bounds when it touches the ground on or outside the side line or side line extended, or when any part of the player who hplds the ball touches the ground on or outside the side line or side line extended.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'ball position vector (meters)', 'L': 'side line coordinate (meters)', 'P': 'player contact point (meters)'}",
+      "assumptions": "Ball or player contact with boundary triggers out-of-bounds condition.",
+      "breakdown_regime": "When B or P exceeds L in either direction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a geometric boundary function where B ∈ ℝ² and L defines a hyperplane.",
+        "source_operator": "out_of_bounds",
+        "telemetry": "Positional data indicating boundary violation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7acf1072b9c452f2_t0",
+      "think": "Kick-out and free-kick primitives define regulated spatial and temporal constraints within football's dynamic model. Kick-out is a reactive action post-safety or touchback, governed by player-side rules and field positioning. Free-kick introduces a strategic constraint where opponents are restricted, enabling tactical kicks. Out-of-bounds acts as a hard boundary condition that terminates play. These operators form a closed-loop system where each action modifies game state through defined boundaries and constraints. Dualities emerge between offensive and defensive control: kick-out allows re-entry, while free-kick enforces positional discipline. Failure modes include improper execution leading to penalties or loss of possession. Each primitive maps to a kernel of state transition logic in GSE and a probabilistic inference layer in GSI.\n\nDeep epistemic analysis for p0294 (7acf1072b9c452f2, domain=other, pages_read=1/1): Operator 'Kick-Out Dynamics' (page 1, domain other) captures: (c) A Kick-out is a drop-kick, place-kick or punt made by a player of the side which has made a safety or a touchback. Assumptions: Kick-out occurs only after safety or touchback; kick is executed by defending side. Breakdown regime: When ball is dead or called down before return to field. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a controlled stochastic process where K ∈ {drop, place, punt} and S determines initial field state. Operator 'Free-Kick Constraint' (page 1, domain other) captures: (f) A Frce-kick is a term used to designate any kick when the opponents are restrained by rule from advancing beyond a certain point before the ball is put in play. Assumptions: Opponents must remain behind a defined line until ball is in play. Breakdown regime: When rule enforcement restricts opponent movement prior to kick. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of constraint-based motion where O defines a temporal and spatial boundary for opponent behavior. Operator 'Boundary Condition' (page 1, domain other) captures: (a) The ball is Out of Bounds when it touches the ground on or outside the side line or side line extended, or when any part of the player who hplds the ball touches the ground on or outside the side line or side line extended. Assumptions: Ball or player contact with boundary triggers out-of-bounds condition. Breakdown regime: When B or P exceeds L in either direction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a geometric boundary function where B ∈ ℝ² and L defines a hyperplane. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0294 (7acf1072b9c452f2, domain=other, pages_read=1/1): Operator 'Kick-Out Dynamics' (page 1, domain other) captures: (c) A Kick-out is a drop-kick, place-kick or punt made by a player of the side which has made a safety or a touchback. Assumptions: Kick-out occurs only after safety or touchback; kick is executed by defending side. Breakdown regime: When ball is dead or called down before return to field. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a controlled stochastic process where K ∈ {drop, place, punt} and S determines initial field state. Operator 'Free-Kick Constraint' (page 1, domain other) captures: (f) A Frce-kick is a term used to designate any kick when the opponents are restrained by rule from advancing beyond a certain point before the ball is put in play. Assumptions: Opponents must remain behind a defined line until ball is in play. Breakdown regime: When rule enforcement restricts opponent movement prior to kick. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of constraint-based motion where O defines a temporal and spatial boundary for opponent behavior. Operator 'Boundary Condition' (page 1, domain other) captures: (a) The ball is Out of Bounds when it touches the ground on or outside the side line or side line extended, or when any part of the player who hplds the ball touches the ground on or outside the side line or side line extended. Assumptions: Ball or player contact with boundary triggers out-of-bounds condition. Breakdown regime: When B or P exceeds L in either direction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a geometric boundary function where B ∈ ℝ² and L defines a hyperplane. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century rule codification, these primitives reflect foundational game theory and constraint mechanics derived from physical laws of motion and spatial partitioning. Retrocausal Genealogy: Rooted in p0294 (7acf1072b9c452f2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0294 (7acf1072b9c452f2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams model each other’s decision trees around kick-out timing and free-kick positioning. Players optimize for wind, distance, and opponent reaction time, forming a zero-sum strategic space. Theory of Mind & Decision Maker Model: Rooted in p0294 (7acf1072b9c452f2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures kick-out and free-kick primitives do not overlap in logical domain. Leakage vetos prevent boundary violations from being misclassified as valid plays. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0294 (7acf1072b9c452f2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0294 (7acf1072b9c452f2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "40db2a3822a0fb1c",
+  "source_status": "COMPLETE",
+  "title": "2026-09-18-ngs-replacement-spec",
+  "file_name": "2026-09-18-ngs-replacement-spec.md",
+  "sha256": "40db2a3822a0fb1c1017921f93cb85b1e83207bd35c61a3931e37fbfcc364577",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The structural unification maps discrete rule-based constants to continuous, measured kinematic states. By replacing heuristic timing profiles and dummy data with empirical player-week aggregates (e.g., average cushion, separation), the system establishes a rigorous isomorphism between defensive exposure metrics and offensive spatial yield.",
+  "gsi_mapping": "GSI employs conformal inference over these measured weekly aggregates. The `rightsSnapshot` acts as a strict epistemic prior, while ensemble methods quantify uncertainty when transitioning from deterministic constants to probabilistic distributions of defender behavior and time-to-throw.",
+  "gse_mapping": "GSE utilizes these primitives for state-transition modeling. Defensive pressure is no longer a fixed delay but a dynamic variable derived from sack-and-hit rates and measured time-to-line-of-scrimmage, enabling precise situational reasoning about quarterback pocket collapse.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_exposure_kernel",
+      "name": "Spatial Exposure Kernel",
+      "verbatim_quote": "**With:** `avgCushion` and `avgSeparation` per receiver-week, joined to the opponent by schedule.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "avgCushion: meters (defender distance); avgSeparation: meters (receiver clearance)",
+      "assumptions": "Defensive coverage quality is accurately represented by aggregate spatial distances at the catch point.",
+      "breakdown_regime": "Fails at the per-play level; cannot resolve individual assignment or frame-by-frame kinematics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps raw tracking outcomes to a defensive exposure scalar used in GSI Bayesian priors.",
+        "source_operator": "spatial_exposure_kernel",
+        "telemetry": "Weekly variance in avgSeparation against scheduled opponents."
+      }
+    },
+    {
+      "primitive_id": "temporal_pressure_operator",
+      "name": "Temporal Pressure Operator",
+      "verbatim_quote": "## Gap 2: time to pressure **Replace:** heuristic timing profiles of deep 2.5s, short 3.0s, intermediate 4.0s.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Time: seconds (s); Depth: yards/meters (m)",
+      "assumptions": "Measured time-to-throw and time-to-LOS strictly supersede static heuristic profiles.",
+      "breakdown_regime": "Singular when play-by-play logs lack explicit hurry tags, forcing reliance on sack-and-hit FLOOR proxies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping of temporal constraints to GSE pocket-collapse state transitions.",
+        "source_operator": "temporal_pressure_operator",
+        "telemetry": "Discrepancy between heuristic 4.0s and measured avgTimeToThrow."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "2026-09-18-ngs-replacement-spec Grounded Principle 3",
+      "verbatim_quote": "It is a drop-in target, not a critique: every field below is already written to a migrated table on a daily cron in this repository.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "40db2a3822a0fb1c_t0",
+      "think": "The transition from rule-based enrichers to measured Next Gen Stats represents a fundamental shift from deterministic heuristics to stochastic, empirically grounded operators. Historically, systems relied on fixed constants—such as assuming an intermediate throw takes exactly 4.0 seconds—to approximate complex physical interactions. This document explicitly rejects those approximations, substituting them with `avgTimeToThrow` and `avgCushion`, which are aggregated at the player-week grain. Mathematically, this elevates the model's fidelity by treating defensive pressure and spatial yield as continuous random variables rather than static inputs. However, this introduces specific failure modes. Because the data lacks granular assignment information (exposure, not assignment), we cannot isolate individual defender-receiver matchups. Furthermore, the absence of explicit 'hurry' tags in standard play-by-play feeds necessitates the use of sack-and-hit rates as a lower-bound proxy for pressure. The derivation of these operators requires careful handling of missing data and rights constraints, ensuring that the resulting conformal prediction intervals remain valid despite the coarse granularity of the underlying tracking feed.\n\nDeep epistemic analysis for 2026-09-18-ngs-replacement-spec (40db2a3822a0fb1c, domain=other, pages_read=3/3): Operator 'Spatial Exposure Kernel' (page 1, domain other) captures: **With:** `avgCushion` and `avgSeparation` per receiver-week, joined to the opponent by schedule. Assumptions: Defensive coverage quality is accurately represented by aggregate spatial distances at the catch point. Breakdown regime: Fails at the per-play level; cannot resolve individual assignment or frame-by-frame kinematics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw tracking outcomes to a defensive exposure scalar used in GSI Bayesian priors. Operator 'Temporal Pressure Operator' (page 2, domain other) captures: ## Gap 2: time to pressure **Replace:** heuristic timing profiles of deep 2.5s, short 3.0s, intermediate 4.0s. Assumptions: Measured time-to-throw and time-to-LOS strictly supersede static heuristic profiles. Breakdown regime: Singular when play-by-play logs lack explicit hurry tags, forcing reliance on sack-and-hit FLOOR proxies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping of temporal constraints to GSE pocket-collapse state transitions. Operator '2026-09-18-ngs-replacement-spec Grounded Principle 3' (page 1, domain other) captures: It is a drop-in target, not a critique: every field below is already written to a migrated table on a daily cron in this repository. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-09-18-ngs-replacement-spec (40db2a3822a0fb1c, domain=other, pages_read=3/3): Operator 'Spatial Exposure Kernel' (page 1, domain other) captures: **With:** `avgCushion` and `avgSeparation` per receiver-week, joined to the opponent by schedule. Assumptions: Defensive coverage quality is accurately represented by aggregate spatial distances at the catch point. Breakdown regime: Fails at the per-play level; cannot resolve individual assignment or frame-by-frame kinematics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps raw tracking outcomes to a defensive exposure scalar used in GSI Bayesian priors. Operator 'Temporal Pressure Operator' (page 2, domain other) captures: ## Gap 2: time to pressure **Replace:** heuristic timing profiles of deep 2.5s, short 3.0s, intermediate 4.0s. Assumptions: Measured time-to-throw and time-to-LOS strictly supersede static heuristic profiles. Breakdown regime: Singular when play-by-play logs lack explicit hurry tags, forcing reliance on sack-and-hit FLOOR proxies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping of temporal constraints to GSE pocket-collapse state transitions. Operator '2026-09-18-ngs-replacement-spec Grounded Principle 3' (page 1, domain other) captures: It is a drop-in target, not a critique: every field below is already written to a migrated table on a daily cron in this repository. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This evolution traces back to early statistical mechanics, where macroscopic observables replaced microscopic assumptions. In sports analytics, it mirrors the shift from box-score determinism to tracking-data stochastics. The rejection of hardcoded timing profiles reflects a broader mathematical maturation, acknowledging that human kinematics defy rigid linear equations and require empirical, context-aware measurement. Retrocausal Genealogy: Rooted in 2026-09-18-ngs-replacement-spec (40db2a3822a0fb1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling opposing agents here involves inferring defensive intent through spatial outcomes. A low `avgCushion` implies a defensive strategy prioritizing aggressive closing speed, while high `avgSeparation` indicates successful offensive route execution. The system models the quarterback's decision-making under dynamically shrinking temporal windows (`avgTimeToLos`), capturing the cognitive load imposed by the defense without requiring explicit mind-reading algorithms. Theory of Mind & Decision Maker Model: Rooted in 2026-09-18-ngs-replacement-spec (40db2a3822a0fb1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "A strict veto condition applies to any attempt to reverse-engineer individual defensive assignments from these aggregate metrics. Since the table explicitly lacks play-level pairing data, inventing a priority grade for specific defenders would introduce severe collinearity and unverifiable noise. Additionally, any feature requiring frame-by-frame acceleration must be blocked, as this platform only persists weekly aggregates, not enterprise-grade tracking streams. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-09-18-ngs-replacement-spec (40db2a3822a0fb1c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

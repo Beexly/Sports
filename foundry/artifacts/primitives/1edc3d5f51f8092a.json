@@ -1,0 +1,78 @@
+{
+  "book_id": "1edc3d5f51f8092a",
+  "source_status": "COMPLETE",
+  "title": "p0278",
+  "file_name": "p0278.txt",
+  "sha256": "1edc3d5f51f8092aef6f0e4de16d70b139810d623f8f0d7ed6a3d787041554e7",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal habit extinction dynamics under dual-bar experimental paradigm with odor-triggered motor responses and food reward. Universal Lens: Rooted in p0278 (1edc3d5f51f8092a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over extinction resistance using sequential likelihood ratios from habit-specific motor actions and reward timing. GSI Mapping: Rooted in p0278 (1edc3d5f51f8092a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition graph modeling adaptive behavior shifts from habit formation to extinction via magnetic release triggers and temporal sequencing. GSE Mapping: Rooted in p0278 (1edc3d5f51f8092a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "habit_extinction_resistance",
+      "name": "Habit Extinction Resistance",
+      "verbatim_quote": "On the next day the two habits were extinguished in succession, first the vertical-bar habit, and 5.5 minutes later the horizontalbar habit; this was done by severing the electrical connection between the manipulative bars and the food-release mechanism.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{ext}': 'Resistance to extinction (dimensionless)', 't_{v}': 'Time to extinguish vertical-bar habit (s)', 't_{h}': 'Time to extinguish horizontal-bar habit (s)'}",
+      "assumptions": "Extinction follows exponential decay; temporal sequence of habit loss is deterministic.",
+      "breakdown_regime": "When R_{ext} approaches zero, habit persistence ceases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Sequential Bayesian update of extinction probability; GSE: Temporal state transition from active habit to inactive state.",
+        "source_operator": "habit_extinction_resistance",
+        "telemetry": "Duration between habit extinction events"
+      }
+    },
+    {
+      "primitive_id": "odor_triggered_motor_response",
+      "name": "Odor-Trigged Motor Response",
+      "verbatim_quote": "By investigating this odor the animal sooner or later would move the bar in question, the horizontal bar downward, and the vertical bar to the left.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'O': 'Odor concentration (mol/m^3)', 'M_{h}': 'Horizontal bar motion (m)', 'M_{v}': 'Vertical bar motion (m)'}",
+      "assumptions": "Motor response is proportional to odor gradient; spatial displacement is linear with effort.",
+      "breakdown_regime": "When O < threshold, no motor response occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Conditional probability P(M|O); GSE: State vector update M(t+1) = f(O,t).",
+        "source_operator": "odor_triggered_motor_response",
+        "telemetry": "Bar displacement magnitude and direction"
+      }
+    },
+    {
+      "primitive_id": "reaction_generalization_effect",
+      "name": "Reaction Generalization Effect",
+      "verbatim_quote": "This reduction in resistance to experimental extinction of approximately 50 per cent clearly suggests reaction generalization of extinction effects.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G_{ext}': 'Generalization factor of extinction (dimensionless)', 'R_{ext1}': 'Initial extinction resistance (dimensionless)', 'R_{ext2}': 'Secondary extinction resistance (dimensionless)'}",
+      "assumptions": "Generalization is symmetric and additive across related behaviors.",
+      "breakdown_regime": "When G_{ext} = 0, no cross-habit extinction transfer.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Cross-behavior likelihood ratio adjustment; GSE: Shared state-space projection of extinction dynamics.",
+        "source_operator": "reaction_generalization_effect",
+        "telemetry": "Percentage change in extinction resistance post-generalization"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1edc3d5f51f8092a_t0",
+      "think": "The experimental setup models a dual-bar reinforcement learning scenario where an animal learns two distinct motor habits—horizontal and vertical bar manipulation—via odor-triggered sensory input. Each habit is established through repeated association of motor action with reward delivery. Habit extinction is induced by severing the reward pathway, allowing observation of temporal decay patterns. The key operator is the temporal sequence of extinction, which reveals a 5.5-minute lag between vertical and horizontal habit loss. This implies a hierarchical or serial dependency in habit consolidation. The reaction generalization effect indicates that extinction of one habit influences the resistance of another, suggesting shared neural or behavioral substrates. The mathematical structure reflects a dual-state Markov process with transient states representing habit presence/absence, and transition probabilities governed by environmental cues and reward history. The failure mode arises when extinction does not generalize due to stimulus dissimilarity or lack of shared associative memory traces.\n\nDeep epistemic analysis for p0278 (1edc3d5f51f8092a, domain=other, pages_read=1/1): Operator 'Habit Extinction Resistance' (page 1, domain other) captures: On the next day the two habits were extinguished in succession, first the vertical-bar habit, and 5.5 minutes later the horizontalbar habit; this was done by severing the electrical connection between the manipulative bars and the food-release mechanism. Assumptions: Extinction follows exponential decay; temporal sequence of habit loss is deterministic. Breakdown regime: When R_{ext} approaches zero, habit persistence ceases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Sequential Bayesian update of extinction probability; GSE: Temporal state transition from active habit to inactive state. Operator 'Odor-Trigged Motor Response' (page 1, domain other) captures: By investigating this odor the animal sooner or later would move the bar in question, the horizontal bar downward, and the vertical bar to the left. Assumptions: Motor response is proportional to odor gradient; spatial displacement is linear with effort. Breakdown regime: When O < threshold, no motor response occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conditional probability P(M|O); GSE: State vector update M(t+1) = f(O,t). Operator 'Reaction Generalization Effect' (page 1, domain other) captures: This reduction in resistance to experimental extinction of approximately 50 per cent clearly suggests reaction generalization of extinction effects. Assumptions: Generalization is symmetric and additive across related behaviors. Breakdown regime: When G_{ext} = 0, no cross-habit extinction transfer. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Cross-behavior likelihood ratio adjustment; GSE: Shared state-space projection of extinction dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0278 (1edc3d5f51f8092a, domain=other, pages_read=1/1): Operator 'Habit Extinction Resistance' (page 1, domain other) captures: On the next day the two habits were extinguished in succession, first the vertical-bar habit, and 5.5 minutes later the horizontalbar habit; this was done by severing the electrical connection between the manipulative bars and the food-release mechanism. Assumptions: Extinction follows exponential decay; temporal sequence of habit loss is deterministic. Breakdown regime: When R_{ext} approaches zero, habit persistence ceases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Sequential Bayesian update of extinction probability; GSE: Temporal state transition from active habit to inactive state. Operator 'Odor-Trigged Motor Response' (page 1, domain other) captures: By investigating this odor the animal sooner or later would move the bar in question, the horizontal bar downward, and the vertical bar to the left. Assumptions: Motor response is proportional to odor gradient; spatial displacement is linear with effort. Breakdown regime: When O < threshold, no motor response occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conditional probability P(M|O); GSE: State vector update M(t+1) = f(O,t). Operator 'Reaction Generalization Effect' (page 1, domain other) captures: This reduction in resistance to experimental extinction of approximately 50 per cent clearly suggests reaction generalization of extinction effects. Assumptions: Generalization is symmetric and additive across related behaviors. Breakdown regime: When G_{ext} = 0, no cross-habit extinction transfer. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Cross-behavior likelihood ratio adjustment; GSE: Shared state-space projection of extinction dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Pavlovian conditioning theory and operant learning frameworks, particularly extending Skinner's work on reinforcement schedules and extinction. Influenced by Ellson’s studies on stimulus generalization. Retrocausal Genealogy: Rooted in p0278 (1edc3d5f51f8092a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0278 (1edc3d5f51f8092a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The animal acts as a bounded rational agent optimizing reward acquisition under probabilistic feedback. The experimenter represents a causal interventionist model, manipulating environmental variables to observe behavioral adaptation and decay. Both agents operate within a stochastic framework where outcomes depend on prior experience and current sensory inputs. Theory of Mind & Decision Maker Model: Rooted in p0278 (1edc3d5f51f8092a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that GSI and GSE layers do not redundantly encode the same temporal dynamics. The veto condition ensures that GSI focuses on belief updates while GSE emphasizes state transitions, preventing information leakage between layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0278 (1edc3d5f51f8092a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

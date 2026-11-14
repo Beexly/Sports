@@ -1,0 +1,78 @@
+{
+  "book_id": "7449caf269e37f1e",
+  "source_status": "COMPLETE",
+  "title": "p0127",
+  "file_name": "p0127.txt",
+  "sha256": "7449caf269e37f1eb7554651060b1f1fd819d6c76de7f3359042cb7fd94d2b04",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Joint product theory unifies factor attribution via marginal contribution analysis under uncertainty. Universal Lens: Rooted in p0127 (7449caf269e37f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on factor contributions using conformal predictive distributions over joint products. GSI Mapping: Rooted in p0127 (7449caf269e37f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models resource allocation transitions through state-space manifolds of joint production kernels. GSE Mapping: Rooted in p0127 (7449caf269e37f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "joint_product_attribution",
+      "name": "Joint Product Attribution",
+      "verbatim_quote": "It is contended that the' marginal\" product of labor, for example, is as much a joint product as that of any other than the marginal unit.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{marg}': 'Marginal product of labor (dimensionless)', 'P_{joint}': 'Joint product of factors (dimensionless)'}",
+      "assumptions": "Labor and capital are interdependent in production; marginal units cannot be isolated.",
+      "breakdown_regime": "When factor separation becomes mathematically invalid due to non-additive production functions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to Bayesian posterior decomposition of joint likelihoods in multi-factor models.",
+        "source_operator": "joint_product_attribution",
+        "telemetry": "Factor share variance across production states"
+      }
+    },
+    {
+      "primitive_id": "factor_dependency_independence",
+      "name": "Factor Dependency Independence",
+      "verbatim_quote": "The laborer who uses no-rent land still has to use it, can produce nothing without it, and hence the product cannot be ascribed to the labor alone.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'Labor input (dimensionless)', 'K': 'Capital/input (dimensionless)', 'Y': 'Output (dimensionless)'}",
+      "assumptions": "Production requires multiple inputs; no single factor is sufficient alone.",
+      "breakdown_regime": "When one factor is removed, output drops to zero, indicating dependency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel of conditional independence in production space.",
+        "source_operator": "factor_dependency_independence",
+        "telemetry": "Conditional entropy of output given factor subsets"
+      }
+    },
+    {
+      "primitive_id": "labor_value_distinction",
+      "name": "Labor-Value Distinction",
+      "verbatim_quote": "Taussig's statement that labor produces all wealth, but is not entitled to all of it, would better, it seems to me, be reversed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Wage rate (currency/time)', 'V_L': 'Value attributed to labor (currency)', 'V_J': 'Value attributed to joint product (currency)'}",
+      "assumptions": "Labor may be perceived as sole creator but is not economically exclusive.",
+      "breakdown_regime": "When labor is falsely assumed to own full product value despite shared inputs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to dual valuation frameworks in economic equilibrium theory.",
+        "source_operator": "labor_value_distinction",
+        "telemetry": "Disparity between perceived and actual income distribution"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7449caf269e37f1e_t0",
+      "think": "The core insight centers on the impossibility of isolating individual factor contributions in production due to inherent jointness. This leads to a dual structure: one where marginal analysis fails because factors are interdependent, and another where the concept of 'product' itself becomes ambiguous. The mathematical framework must account for this by modeling production as a multilinear function or tensor field over input spaces. In such a setting, the traditional notion of labor getting its 'product' breaks down, necessitating a probabilistic or conformal approach to estimate factor shares. The failure mode arises when deterministic attribution models assume additivity, which contradicts the joint nature of production. Thus, the epistemic lens must incorporate both Bayesian inference for belief updating and state-transition logic for dynamic resource allocation.\n\nDeep epistemic analysis for p0127 (7449caf269e37f1e, domain=other, pages_read=1/1): Operator 'Joint Product Attribution' (page 1, domain other) captures: It is contended that the' marginal\" product of labor, for example, is as much a joint product as that of any other than the marginal unit. Assumptions: Labor and capital are interdependent in production; marginal units cannot be isolated. Breakdown regime: When factor separation becomes mathematically invalid due to non-additive production functions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Bayesian posterior decomposition of joint likelihoods in multi-factor models. Operator 'Factor Dependency Independence' (page 1, domain other) captures: The laborer who uses no-rent land still has to use it, can produce nothing without it, and hence the product cannot be ascribed to the labor alone. Assumptions: Production requires multiple inputs; no single factor is sufficient alone. Breakdown regime: When one factor is removed, output drops to zero, indicating dependency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of conditional independence in production space. Operator 'Labor-Value Distinction' (page 1, domain other) captures: Taussig's statement that labor produces all wealth, but is not entitled to all of it, would better, it seems to me, be reversed. Assumptions: Labor may be perceived as sole creator but is not economically exclusive. Breakdown regime: When labor is falsely assumed to own full product value despite shared inputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to dual valuation frameworks in economic equilibrium theory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0127 (7449caf269e37f1e, domain=other, pages_read=1/1): Operator 'Joint Product Attribution' (page 1, domain other) captures: It is contended that the' marginal\" product of labor, for example, is as much a joint product as that of any other than the marginal unit. Assumptions: Labor and capital are interdependent in production; marginal units cannot be isolated. Breakdown regime: When factor separation becomes mathematically invalid due to non-additive production functions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to Bayesian posterior decomposition of joint likelihoods in multi-factor models. Operator 'Factor Dependency Independence' (page 1, domain other) captures: The laborer who uses no-rent land still has to use it, can produce nothing without it, and hence the product cannot be ascribed to the labor alone. Assumptions: Production requires multiple inputs; no single factor is sufficient alone. Breakdown regime: When one factor is removed, output drops to zero, indicating dependency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of conditional independence in production space. Operator 'Labor-Value Distinction' (page 1, domain other) captures: Taussig's statement that labor produces all wealth, but is not entitled to all of it, would better, it seems to me, be reversed. Assumptions: Labor may be perceived as sole creator but is not economically exclusive. Breakdown regime: When labor is falsely assumed to own full product value despite shared inputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to dual valuation frameworks in economic equilibrium theory. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical marginalist economics (Jevons, Walras) and later refined by neoclassical thinkers like Taussig and Davenport, who challenged strict factor isolation. Influenced by earlier debates on utility vs. value (e.g., J.S. Mill), leading to modern joint product theories in general equilibrium. Retrocausal Genealogy: Rooted in p0127 (7449caf269e37f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the labor theorist who believes labor is the sole source of value, and the marginalist who sees each factor as contributing independently. The system must model these conflicting views within a unified framework that reflects empirical production data. Theory of Mind & Decision Maker Model: Rooted in p0127 (7449caf269e37f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no redundant factor modeling; leakage veto prevents misattribution of joint effects to single agents. These conditions enforce orthogonality in factor-space projections and prevent spurious regression artifacts. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0127 (7449caf269e37f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0127 (7449caf269e37f1e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

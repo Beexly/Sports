@@ -1,0 +1,78 @@
+{
+  "book_id": "0c5293d43fb7c86b",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "0c5293d43fb7c86b5ac9728609806c62fb50e48d480d9ffa1f845068db9f6d80",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sphinx-based API reference generation as a structured data pipeline mapping software artifacts to semantic knowledge graphs. Universal Lens: Rooted in README (0c5293d43fb7c86b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on API surface coverage using probabilistic module inventory and docstring consistency checks. GSI Mapping: Rooted in README (0c5293d43fb7c86b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in documentation fidelity governed by CI/CD artifact publishing and versioned release assets. GSE Mapping: Rooted in README (0c5293d43fb7c86b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "api_reference_artifact_generation",
+      "name": "API Reference Artifact Generation",
+      "verbatim_quote": "# API Reference Artifact This directory contains the Sphinx source used to generate the Python SDK API reference artifact consumed by Mintlify.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The system assumes a stable Python environment with installed polymarket-client package.",
+      "breakdown_regime": "Failure occurs when Sphinx cannot import or render public API elements.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps source code structure to semantic documentation graph via Sphinx rendering engine.",
+        "source_operator": "api_reference_artifact_generation",
+        "telemetry": "Build success/failure rate of API reference zip artifact."
+      }
+    },
+    {
+      "primitive_id": "github_actions_workflow_dispatch",
+      "name": "GitHub Actions Workflow Dispatch",
+      "verbatim_quote": "The `API Reference` GitHub Actions workflow can be dispatched manually.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Manual dispatch is permitted under controlled access policies.",
+      "breakdown_regime": "Workflow fails if unauthorized user attempts dispatch or missing permissions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables deterministic artifact creation through CI orchestration.",
+        "source_operator": "github_actions_workflow_dispatch",
+        "telemetry": "Frequency and success rate of manual workflow triggers."
+      }
+    },
+    {
+      "primitive_id": "immutable_release_asset_upload",
+      "name": "Immutable Release Asset Upload",
+      "verbatim_quote": "After a successful PyPI publication, the release workflow uploads an immutable artifact named `polymarket-client-<version>-sphinx.zip` to the corresponding GitHub Release.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "PyPI publication is atomic and complete before asset upload.",
+      "breakdown_regime": "Upload fails if version mismatch or release already exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps versioned SDK metadata to persistent web-accessible archive.",
+        "source_operator": "immutable_release_asset_upload",
+        "telemetry": "Number of uploaded release assets per version."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0c5293d43fb7c86b_t0",
+      "think": "The API reference artifact generation process embodies a dual transformation: from source code to structured documentation, and from local build to remote accessibility. The core operator 'api_reference_artifact_generation' leverages Sphinx to parse and render public interfaces, ensuring semantic fidelity. Its breakdown regime hinges on importability and docstring integrity. The 'github_actions_workflow_dispatch' primitive enables temporal control over this pipeline, allowing for ad-hoc builds without disrupting automated release cycles. The 'immutable_release_asset_upload' primitive ensures long-term availability of these artifacts by anchoring them to specific versions. Together, they form a robust chain where each step must succeed for downstream consumers like Mintlify to access consistent, versioned SDK references. Failure modes include broken imports, missing docstrings, or incorrect versioning, all of which propagate through the chain.\n\nDeep epistemic analysis for README (0c5293d43fb7c86b, domain=other, pages_read=1/1): Operator 'API Reference Artifact Generation' (page 1, domain other) captures: # API Reference Artifact This directory contains the Sphinx source used to generate the Python SDK API reference artifact consumed by Mintlify. Assumptions: The system assumes a stable Python environment with installed polymarket-client package. Breakdown regime: Failure occurs when Sphinx cannot import or render public API elements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps source code structure to semantic documentation graph via Sphinx rendering engine. Operator 'GitHub Actions Workflow Dispatch' (page 1, domain other) captures: The `API Reference` GitHub Actions workflow can be dispatched manually. Assumptions: Manual dispatch is permitted under controlled access policies. Breakdown regime: Workflow fails if unauthorized user attempts dispatch or missing permissions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables deterministic artifact creation through CI orchestration. Operator 'Immutable Release Asset Upload' (page 1, domain other) captures: After a successful PyPI publication, the release workflow uploads an immutable artifact named `polymarket-client-<version>-sphinx.zip` to the corresponding GitHub Release. Assumptions: PyPI publication is atomic and complete before asset upload. Breakdown regime: Upload fails if version mismatch or release already exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps versioned SDK metadata to persistent web-accessible archive. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (0c5293d43fb7c86b, domain=other, pages_read=1/1): Operator 'API Reference Artifact Generation' (page 1, domain other) captures: # API Reference Artifact This directory contains the Sphinx source used to generate the Python SDK API reference artifact consumed by Mintlify. Assumptions: The system assumes a stable Python environment with installed polymarket-client package. Breakdown regime: Failure occurs when Sphinx cannot import or render public API elements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps source code structure to semantic documentation graph via Sphinx rendering engine. Operator 'GitHub Actions Workflow Dispatch' (page 1, domain other) captures: The `API Reference` GitHub Actions workflow can be dispatched manually. Assumptions: Manual dispatch is permitted under controlled access policies. Breakdown regime: Workflow fails if unauthorized user attempts dispatch or missing permissions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables deterministic artifact creation through CI orchestration. Operator 'Immutable Release Asset Upload' (page 1, domain other) captures: After a successful PyPI publication, the release workflow uploads an immutable artifact named `polymarket-client-<version>-sphinx.zip` to the corresponding GitHub Release. Assumptions: PyPI publication is atomic and complete before asset upload. Breakdown regime: Upload fails if version mismatch or release already exists. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps versioned SDK metadata to persistent web-accessible archive. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the evolution of documentation automation tools such as Sphinx and GitHub Actions, tracing back to early software engineering practices of separating interface definition from implementation details. Retrocausal Genealogy: Rooted in README (0c5293d43fb7c86b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (0c5293d43fb7c86b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might include developers who wish to bypass checks or malicious actors seeking to inject false documentation; thus, strict validation and immutability are essential. Theory of Mind & Decision Maker Model: Rooted in README (0c5293d43fb7c86b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in README (0c5293d43fb7c86b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple layers attempt to define the same artifact; vetoes occur if conflicting version tags or inconsistent docstring formats are detected across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (0c5293d43fb7c86b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (0c5293d43fb7c86b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

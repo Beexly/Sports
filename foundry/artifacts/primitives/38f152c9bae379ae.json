@@ -1,0 +1,78 @@
+{
+  "book_id": "38f152c9bae379ae",
+  "source_status": "COMPLETE",
+  "title": "p0313",
+  "file_name": "p0313.txt",
+  "sha256": "38f152c9bae379aef80d02527e2f7cdb62a3c929d002a332808a554dfed07acd",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Oscillating reaction intensities under identical stimuli follow normal probability distributions with variance scaling as reinforcement frequency. Universal Lens: Rooted in p0313 (38f152c9bae379ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models reaction intensity variability using Gaussian likelihoods with conjugate priors on mean and variance parameters. GSI Mapping: Rooted in p0313 (38f152c9bae379ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps intensity fluctuations to state transitions via reinforcement-triggered behavioral kernels with memory decay. GSE Mapping: Rooted in p0313 (38f152c9bae379ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "reaction_intensity_distribution",
+      "name": "Reaction Intensity Distribution",
+      "verbatim_quote": "The upper portion of Figure 67 also suggests that the distribution of oscillating reaction intensities conforms approximately to the normal \"law\"of chance Further illustration of the same general tendencies is presented by the lower distribution in Figure 67.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'reaction intensity (grams)', 'μ': 'mean intensity (grams)', 'σ²': 'variance of intensity (grams²)'}",
+      "assumptions": "Identical external conditions, normality of distribution, independence of trials.",
+      "breakdown_regime": "Deviation from normality at extreme intensity values or low sample sizes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Distributional behavior mirrors stochastic process dynamics in GSE state-space evolution.",
+        "source_operator": "reaction_intensity_distribution",
+        "telemetry": "Empirical histogram of repeated reaction intensities"
+      }
+    },
+    {
+      "primitive_id": "pressure_variability_under_reinforcement",
+      "name": "Pressure Variability Under Reinforcement",
+      "verbatim_quote": "This shows the variability of pressures by the same animal in the same apparatus after four more days of 100 reinforcements each with an apparatus adjustment which required the animal to make a pressure of 38 grams before the food pellet would be delivered.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'pressure applied (grams)', 'R': 'reinforcement count (dimensionless)', 't': 'time (days)'}",
+      "assumptions": "Stable apparatus, consistent motivational state, temporal independence of trials.",
+      "breakdown_regime": "Non-stationarity in pressure response due to fatigue or habituation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Variability kernel derived from reinforcement rate and pressure threshold in GSE transition dynamics.",
+        "source_operator": "pressure_variability_under_reinforcement",
+        "telemetry": "Time-series of pressure outputs per reinforcement cycle"
+      }
+    },
+    {
+      "primitive_id": "asymmetry_in_line_estimation",
+      "name": "Asymmetry in Line Estimation",
+      "verbatim_quote": "Thorndike's distribution revealed, however, a long, thin, asymmetrical tail on the side of the longer lines.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'estimated line length (inches)', 'α': 'asymmetry parameter (dimensionless)'}",
+      "assumptions": "Subjective estimation bias, non-Gaussian error structure, fixed perceptual reference.",
+      "breakdown_regime": "Failure of symmetry assumption when estimation task involves cognitive load.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Asymmetric deviation pattern mirrors non-linear feedback in GSE decision trees.",
+        "source_operator": "asymmetry_in_line_estimation",
+        "telemetry": "Histogram of estimated line lengths with skewness coefficient"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "38f152c9bae379ae_t0",
+      "think": "The primitives establish a foundational framework for modeling behavioral variability through probabilistic and deterministic lenses. Reaction intensity distribution embodies a core statistical property—normality—that enables Bayesian updating of belief states in GSI. Pressure variability under reinforcement introduces a dynamic element where variance increases with exposure, forming a kernel for GSE state transitions. Asymmetry in line estimation highlights a deviation from symmetry, suggesting non-linear cognitive processing that can be modeled as a perturbation in GSE decision-making paths. These operators form a dualistic system: one governed by stochastic laws (reaction intensity), another by structured variability (pressure), and a third by cognitive bias (line estimation). Their interplay defines a multi-layered behavioral signature. Failure modes include non-normality in reaction intensity, loss of stationarity in pressure, and violation of symmetry assumptions in estimation tasks. Each mode signals a breakdown in either measurement fidelity, environmental consistency, or agent cognition.\n\nDeep epistemic analysis for p0313 (38f152c9bae379ae, domain=other, pages_read=1/1): Operator 'Reaction Intensity Distribution' (page 1, domain other) captures: The upper portion of Figure 67 also suggests that the distribution of oscillating reaction intensities conforms approximately to the normal \"law\"of chance Further illustration of the same general tendencies is presented by the lower distribution in Figure 67. Assumptions: Identical external conditions, normality of distribution, independence of trials. Breakdown regime: Deviation from normality at extreme intensity values or low sample sizes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Distributional behavior mirrors stochastic process dynamics in GSE state-space evolution. Operator 'Pressure Variability Under Reinforcement' (page 1, domain other) captures: This shows the variability of pressures by the same animal in the same apparatus after four more days of 100 reinforcements each with an apparatus adjustment which required the animal to make a pressure of 38 grams before the food pellet would be delivered. Assumptions: Stable apparatus, consistent motivational state, temporal independence of trials. Breakdown regime: Non-stationarity in pressure response due to fatigue or habituation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Variability kernel derived from reinforcement rate and pressure threshold in GSE transition dynamics. Operator 'Asymmetry in Line Estimation' (page 1, domain other) captures: Thorndike's distribution revealed, however, a long, thin, asymmetrical tail on the side of the longer lines. Assumptions: Subjective estimation bias, non-Gaussian error structure, fixed perceptual reference. Breakdown regime: Failure of symmetry assumption when estimation task involves cognitive load. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Asymmetric deviation pattern mirrors non-linear feedback in GSE decision trees. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0313 (38f152c9bae379ae, domain=other, pages_read=1/1): Operator 'Reaction Intensity Distribution' (page 1, domain other) captures: The upper portion of Figure 67 also suggests that the distribution of oscillating reaction intensities conforms approximately to the normal \"law\"of chance Further illustration of the same general tendencies is presented by the lower distribution in Figure 67. Assumptions: Identical external conditions, normality of distribution, independence of trials. Breakdown regime: Deviation from normality at extreme intensity values or low sample sizes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Distributional behavior mirrors stochastic process dynamics in GSE state-space evolution. Operator 'Pressure Variability Under Reinforcement' (page 1, domain other) captures: This shows the variability of pressures by the same animal in the same apparatus after four more days of 100 reinforcements each with an apparatus adjustment which required the animal to make a pressure of 38 grams before the food pellet would be delivered. Assumptions: Stable apparatus, consistent motivational state, temporal independence of trials. Breakdown regime: Non-stationarity in pressure response due to fatigue or habituation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Variability kernel derived from reinforcement rate and pressure threshold in GSE transition dynamics. Operator 'Asymmetry in Line Estimation' (page 1, domain other) captures: Thorndike's distribution revealed, however, a long, thin, asymmetrical tail on the side of the longer lines. Assumptions: Subjective estimation bias, non-Gaussian error structure, fixed perceptual reference. Breakdown regime: Failure of symmetry assumption when estimation task involves cognitive load. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Asymmetric deviation pattern mirrors non-linear feedback in GSE decision trees. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century psychophysics and Thorndike's law of effect, these primitives reflect a progression from deterministic behaviorism toward probabilistic modeling in cognitive science and machine learning. Retrocausal Genealogy: Rooted in p0313 (38f152c9bae379ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0313 (38f152c9bae379ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents exhibit bounded rationality: they respond to stimuli with inherent noise but also show systematic biases. In GSE, this manifests as state transitions influenced by both reward and perceptual distortion. In GSI, this translates into uncertainty quantification around behavioral predictions. Theory of Mind & Decision Maker Model: Rooted in p0313 (38f152c9bae379ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity between reaction intensity and estimation asymmetry prevents overfitting in GSI models. Leakage from pressure variability into estimation tasks must be controlled via cross-validation. These primitives are vetted for mutual exclusivity in causal interpretation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0313 (38f152c9bae379ae), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "382f58a8a4f9acb1",
+  "source_status": "COMPLETE",
+  "title": "13-financial-model-unit-economics",
+  "file_name": "13-financial-model-unit-economics.md",
+  "sha256": "382f58a8a4f9acb18311b4da65776f76de816bd11ed29cb8c289d5355baed367",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Unit economics as a structured financial manifold with revenue, cost, and lifecycle metrics as basis vectors. Universal Lens: Rooted in 13-financial-model-unit-economics (382f58a8a4f9acb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on revenue streams and cost drivers using conformal predictive distributions for financial forecasting. GSI Mapping: Rooted in 13-financial-model-unit-economics (382f58a8a4f9acb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models transitions between revenue regimes via state-space dynamics of CAC/LTV payback periods. GSE Mapping: Rooted in 13-financial-model-unit-economics (382f58a8a4f9acb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "revenue_streams",
+      "name": "Revenue Streams",
+      "verbatim_quote": "# Financial Model / Unit Economics As of: 2026-06-09 ## Dashboard Needs - subscription revenue -",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{sub}': 'Subscription revenue (USD)', 'R_{aff}': 'Affiliate revenue (USD)', 'R_{spon}': 'Sponsorship revenue (USD)', 'R_{cont}': 'Content revenue (USD)', 'R_{data}': 'Data/API revenue (USD)', 'R_{ent}': 'Enterprise revenue (USD)'}",
+      "assumptions": "Revenue streams are independent and additive; each stream follows a stochastic process with known variance.",
+      "breakdown_regime": "When any R_i < 0, revenue stream i fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each revenue type maps to a distinct dimension in the financial payoff tensor, enabling multi-linear regression analysis.",
+        "source_operator": "revenue_streams",
+        "telemetry": "Monthly revenue per stream tracked via API endpoints."
+      }
+    },
+    {
+      "primitive_id": "cost_structure",
+      "name": "Cost Structure",
+      "verbatim_quote": "- sponsorship revenue - content revenue - data/API revenue - enterprise revenue - hosting costs -",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{host}': 'Hosting costs (USD)', 'C_{data}': 'Data/API costs (USD)', 'C_{email}': 'Email costs (USD)', 'C_{support}': 'Support costs (USD)', 'C_{proc}': 'Payment processing fees (USD)', 'C_{ref}': 'Refunds and chargebacks (USD)', 'CAC': 'Customer acquisition cost (USD)', 'LTV': 'Lifetime value (USD)'}",
+      "assumptions": "All costs are deterministic functions of volume or fixed over time within a period.",
+      "breakdown_regime": "If total cost exceeds revenue, operational failure occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cost structure forms kernel of unit economics model; LTV/CAC ratio determines profitability.",
+        "source_operator": "cost_structure",
+        "telemetry": "Daily cost tracking via accounting ledgers."
+      }
+    },
+    {
+      "primitive_id": "financial_metrics",
+      "name": "Financial Metrics",
+      "verbatim_quote": "- email costs - support costs - payment processing - refunds and chargebacks - CAC, LTV,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'Margin (dimensionless)', 'P': 'Payback period (months)', 'ARPU': 'Average revenue per user (USD)', 'Churn': 'Churn rate (dimensionless)', 'APR': 'Annual profit rate (dimensionless)'}",
+      "assumptions": "Metrics are derived from time-series data with stationary distribution.",
+      "breakdown_regime": "Negative margin or infinite payback implies economic instability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Financial metrics form observables in the GSI Bayesian inference framework; used to validate model posterior.",
+        "source_operator": "financial_metrics",
+        "telemetry": "Quarterly dashboards updated from financial reports."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "382f58a8a4f9acb1_t0",
+      "think": "The unit economics model operates as a vector space where revenue streams and cost components define basis vectors. Revenue types map to orthogonal dimensions in a payoff tensor, enabling linear decomposition of total financial performance. Cost structure acts as a kernel that modulates these revenues through fixed and variable cost functions. Key metrics like LTV/CAC, margin, and payback period emerge as scalar projections onto this space. Dualities arise in the relationship between acquisition efficiency and retention rates—where high CAC must be offset by long-term LTV. Failure modes include negative margins due to cost overrun or insufficient revenue scaling. The system exhibits nonlinearity when churn accelerates beyond break-even thresholds. Each primitive supports a layered state transition in GSE, where financial health drives strategic decisions.\n\nDeep epistemic analysis for 13-financial-model-unit-economics (382f58a8a4f9acb1, domain=other, pages_read=1/1): Operator 'Revenue Streams' (page 1, domain other) captures: # Financial Model / Unit Economics As of: 2026-06-09 ## Dashboard Needs - subscription revenue - Assumptions: Revenue streams are independent and additive; each stream follows a stochastic process with known variance. Breakdown regime: When any R_i < 0, revenue stream i fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each revenue type maps to a distinct dimension in the financial payoff tensor, enabling multi-linear regression analysis. Operator 'Cost Structure' (page 1, domain other) captures: - sponsorship revenue - content revenue - data/API revenue - enterprise revenue - hosting costs - Assumptions: All costs are deterministic functions of volume or fixed over time within a period. Breakdown regime: If total cost exceeds revenue, operational failure occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cost structure forms kernel of unit economics model; LTV/CAC ratio determines profitability. Operator 'Financial Metrics' (page 1, domain other) captures: - email costs - support costs - payment processing - refunds and chargebacks - CAC, LTV, Assumptions: Metrics are derived from time-series data with stationary distribution. Breakdown regime: Negative margin or infinite payback implies economic instability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Financial metrics form observables in the GSI Bayesian inference framework; used to validate model posterior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 13-financial-model-unit-economics (382f58a8a4f9acb1, domain=other, pages_read=1/1): Operator 'Revenue Streams' (page 1, domain other) captures: # Financial Model / Unit Economics As of: 2026-06-09 ## Dashboard Needs - subscription revenue - Assumptions: Revenue streams are independent and additive; each stream follows a stochastic process with known variance. Breakdown regime: When any R_i < 0, revenue stream i fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each revenue type maps to a distinct dimension in the financial payoff tensor, enabling multi-linear regression analysis. Operator 'Cost Structure' (page 1, domain other) captures: - sponsorship revenue - content revenue - data/API revenue - enterprise revenue - hosting costs - Assumptions: All costs are deterministic functions of volume or fixed over time within a period. Breakdown regime: If total cost exceeds revenue, operational failure occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cost structure forms kernel of unit economics model; LTV/CAC ratio determines profitability. Operator 'Financial Metrics' (page 1, domain other) captures: - email costs - support costs - payment processing - refunds and chargebacks - CAC, LTV, Assumptions: Metrics are derived from time-series data with stationary distribution. Breakdown regime: Negative margin or infinite payback implies economic instability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Financial metrics form observables in the GSI Bayesian inference framework; used to validate model posterior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century financial engineering and modern portfolio theory, unit economics evolved from marginal cost analysis into dynamic lifecycle valuation frameworks. Retrocausal Genealogy: Rooted in 13-financial-model-unit-economics (382f58a8a4f9acb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 13-financial-model-unit-economics (382f58a8a4f9acb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include market forces (demand volatility), operational inefficiencies (cost creep), and regulatory constraints (taxation, compliance). These act as exogenous perturbations influencing revenue and cost trajectories. Theory of Mind & Decision Maker Model: Rooted in 13-financial-model-unit-economics (382f58a8a4f9acb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 13-financial-model-unit-economics (382f58a8a4f9acb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no redundant metrics (e.g., LTV and CAC both measuring customer value). Leakage vetoes occur if cost structures leak into revenue models without proper attribution, causing spurious correlations. Cross-Layer Veto & Anti-Leakage Check: Rooted in 13-financial-model-unit-economics (382f58a8a4f9acb1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

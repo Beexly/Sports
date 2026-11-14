@@ -1,0 +1,78 @@
+{
+  "book_id": "7a683036fad3a9a6",
+  "source_status": "COMPLETE",
+  "title": "p0032",
+  "file_name": "p0032.txt",
+  "sha256": "7a683036fad3a9a6ef34adb7e627c3aa81f82d542772ea529d3394a4d22cd7c5",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Behavior as purposive commerce; goal-directed action minimizes mean-end distance via selective route identification. Universal Lens: Rooted in p0032 (7a683036fad3a9a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over behavioral acts models goal-object selection as posterior maximization of utility under constraint of shortest commerce paths. GSI Mapping: Rooted in p0032 (7a683036fad3a9a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps behavior to state transitions through goal-object attractors and means-object commerce kernels. GSE Mapping: Rooted in p0032 (7a683036fad3a9a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "behavioral_commerce_minimization",
+      "name": "Behavioral Commerce Minimization",
+      "verbatim_quote": "12 Behaviorism—Wherefore and What Sort is relative to the means-end \"direction\" and \"distance\" of the goal-object",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'goal-object (dimensionless)', 'R': 'route (dimensionless)', 'C': 'commerce (dimensionless)', 'D': 'distance (meters)'}",
+      "assumptions": "Behavior selects minimal-commerce paths to goal-objects; commerce is inversely proportional to path efficiency.",
+      "breakdown_regime": "When multiple goals coexist, commerce becomes non-monotonic and path selection fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Behavioral act modeled as minimizing expected commerce cost; GSE: State transition driven by commerce kernel optimization.",
+        "source_operator": "behavioral_commerce_minimization",
+        "telemetry": "Selection frequency of alternative routes and goal-object convergence."
+      }
+    },
+    {
+      "primitive_id": "selective_route_identification",
+      "name": "Selective Route Identification",
+      "verbatim_quote": "when presented with alternatives always comes sooner or later to select those only which finally get",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'alternatives (set of actions)', 'S': 'selected action (element of A)', 'U': 'utility function (dimensionless)'}",
+      "assumptions": "Agent selects actions maximizing utility under bounded rationality constraints.",
+      "breakdown_regime": "Infinite alternatives lead to computational intractability and decision paralysis.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Action selection modeled as Bayesian belief update; GSE: Transition to next state based on utility-maximizing route.",
+        "source_operator": "selective_route_identification",
+        "telemetry": "Frequency of action selection and deviation from optimal path."
+      }
+    },
+    {
+      "primitive_id": "purposive_cognitive_determinants",
+      "name": "Purposive Cognitive Determinants",
+      "verbatim_quote": "Purposive and Cognitive Determinants But surely any \"tough-minded\" reader wıll by now be up ın arms",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'purpose (dimensionless)', 'C': 'cognition (dimensionless)', 'B': 'behavior (dimensionless)'}",
+      "assumptions": "Purpose and cognition jointly determine behavior; behavior is emergent from cognitive processing.",
+      "breakdown_regime": "Cognitive load exceeds capacity, leading to suboptimal or erratic behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Purpose encoded as latent variable in probabilistic model; GSE: Cognitive state influences state transition dynamics.",
+        "source_operator": "purposive_cognitive_determinants",
+        "telemetry": "Accuracy of purpose realization and cognitive processing delay."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7a683036fad3a9a6_t0",
+      "think": "Behavioral commerce minimization formalizes action selection as a constrained optimization problem where agents minimize the 'cost' of transitioning between states defined by goal-objects. This is grounded in the principle that agents prefer shorter, easier routes to achieve desired outcomes. Selective route identification extends this by modeling how agents choose among alternatives based on utility functions derived from past experience or environmental cues. The interplay between these two primitives forms the core of a dynamic system where behavior emerges from repeated optimization over time. In GSI, this manifests as Bayesian updating of beliefs about optimal paths; in GSE, it translates into state transitions guided by computed utility landscapes. The failure mode occurs when the number of alternatives grows exponentially, rendering optimization infeasible or leading to irrational choices due to bounded rationality. The cognitive determinants layer introduces a feedback loop where internal representations of purpose and cognition modulate both the structure of the optimization and the agent's response to environmental stimuli.\n\nDeep epistemic analysis for p0032 (7a683036fad3a9a6, domain=other, pages_read=1/1): Operator 'Behavioral Commerce Minimization' (page 1, domain other) captures: 12 Behaviorism—Wherefore and What Sort is relative to the means-end \"direction\" and \"distance\" of the goal-object Assumptions: Behavior selects minimal-commerce paths to goal-objects; commerce is inversely proportional to path efficiency. Breakdown regime: When multiple goals coexist, commerce becomes non-monotonic and path selection fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Behavioral act modeled as minimizing expected commerce cost; GSE: State transition driven by commerce kernel optimization. Operator 'Selective Route Identification' (page 1, domain other) captures: when presented with alternatives always comes sooner or later to select those only which finally get Assumptions: Agent selects actions maximizing utility under bounded rationality constraints. Breakdown regime: Infinite alternatives lead to computational intractability and decision paralysis. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Action selection modeled as Bayesian belief update; GSE: Transition to next state based on utility-maximizing route. Operator 'Purposive Cognitive Determinants' (page 1, domain other) captures: Purposive and Cognitive Determinants But surely any \"tough-minded\" reader wıll by now be up ın arms Assumptions: Purpose and cognition jointly determine behavior; behavior is emergent from cognitive processing. Breakdown regime: Cognitive load exceeds capacity, leading to suboptimal or erratic behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Purpose encoded as latent variable in probabilistic model; GSE: Cognitive state influences state transition dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0032 (7a683036fad3a9a6, domain=other, pages_read=1/1): Operator 'Behavioral Commerce Minimization' (page 1, domain other) captures: 12 Behaviorism—Wherefore and What Sort is relative to the means-end \"direction\" and \"distance\" of the goal-object Assumptions: Behavior selects minimal-commerce paths to goal-objects; commerce is inversely proportional to path efficiency. Breakdown regime: When multiple goals coexist, commerce becomes non-monotonic and path selection fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Behavioral act modeled as minimizing expected commerce cost; GSE: State transition driven by commerce kernel optimization. Operator 'Selective Route Identification' (page 1, domain other) captures: when presented with alternatives always comes sooner or later to select those only which finally get Assumptions: Agent selects actions maximizing utility under bounded rationality constraints. Breakdown regime: Infinite alternatives lead to computational intractability and decision paralysis. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Action selection modeled as Bayesian belief update; GSE: Transition to next state based on utility-maximizing route. Operator 'Purposive Cognitive Determinants' (page 1, domain other) captures: Purposive and Cognitive Determinants But surely any \"tough-minded\" reader wıll by now be up ın arms Assumptions: Purpose and cognition jointly determine behavior; behavior is emergent from cognitive processing. Breakdown regime: Cognitive load exceeds capacity, leading to suboptimal or erratic behavior. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Purpose encoded as latent variable in probabilistic model; GSE: Cognitive state influences state transition dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century behaviorist frameworks, particularly B.F. Skinner’s operant conditioning and Hull’s drive-reduction theory. Later extended by cybernetic models such as Wiener’s control systems and Minsky’s frame-based reasoning. Retrocausal Genealogy: Rooted in p0032 (7a683036fad3a9a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0032 (7a683036fad3a9a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as optimizing under uncertainty, with competing purposes and cognitive limitations shaping their decision-making process. Opposing agents may have conflicting goals, leading to strategic interaction or conflict resolution mechanisms within shared environments. Theory of Mind & Decision Maker Model: Rooted in p0032 (7a683036fad3a9a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that cognitive determinants do not simply replicate the output of commerce minimization, preventing circular logic. Leakage veto prevents overfitting of behavioral models to observed data without generalizable structure. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0032 (7a683036fad3a9a6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

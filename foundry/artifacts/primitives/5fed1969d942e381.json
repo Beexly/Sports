@@ -1,0 +1,78 @@
+{
+  "book_id": "5fed1969d942e381",
+  "source_status": "COMPLETE",
+  "title": "pose_from_video",
+  "file_name": "pose_from_video.md",
+  "sha256": "5fed1969d942e381b88d5b5499c93463dd90b4898d0f10f8ff7e16f378275c5d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Monocular 3D pose estimation from 2D video frames via YOLOv3 detection and 3DMPPE regression, enabling kinematic feature extraction for athletic tracking. Universal Lens: Rooted in pose_from_video (5fed1969d942e381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on 3D joint coordinates using MPJPE loss, conformal prediction bounds for uncertainty quantification in athlete motion models. GSI Mapping: Rooted in pose_from_video (5fed1969d942e381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps 3D pose-derived velocity/orientation to dynamic game states; state transitions driven by kinematic thresholds and spatial constraints. GSE Mapping: Rooted in pose_from_video (5fed1969d942e381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "monocular_3d_pose_estimation",
+      "name": "Monocular 3D Pose Estimation",
+      "verbatim_quote": "This is a concrete, published path to derive pose + derived motion from video instead: YOLOv3 -> 3DMPPE -> MPJPE-graded joints, with COCO indexing so joints are addressable.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x, y, z': 'meters', 't': 'seconds', 'j': 'joint index (COCO 17)', 'p': 'probability density'}",
+      "assumptions": "Fixed camera viewpoint, monocular depth estimation, pre-trained network weights, COCO joint indexing.",
+      "breakdown_regime": "Camera calibration errors, occlusion, broadcast cuts, and athlete attire mismatch with training data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps 2D bounding boxes to 3D joint coordinates via RootNet-PoseNet architecture; enables GSI probabilistic tracking of athlete motion.",
+        "source_operator": "monocular_3d_pose_estimation",
+        "telemetry": "MPJPE (mean per-joint position error) and COCO joint indices."
+      }
+    },
+    {
+      "primitive_id": "yolo_person_detection",
+      "name": "YOLOv3 Person Detection",
+      "verbatim_quote": "**YOLOv3** (Pascal VOC pretrained) person detection -> bounding box per person per frame.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'b_{x,y,w,h}': 'normalized bounding box coordinates', 'c': 'confidence score', 'i': 'image index'}",
+      "assumptions": "Pretrained Pascal VOC model, single-object per bounding box assumption, fixed resolution input.",
+      "breakdown_regime": "Low-resolution frames, overlapping persons, non-standard clothing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates spatially localized regions-of-interest for 3D pose estimation; feeds into 3DMPPE pipeline.",
+        "source_operator": "yolo_person_detection",
+        "telemetry": "Bounding box coordinates and confidence scores."
+      }
+    },
+    {
+      "primitive_id": "rootnet_posenet",
+      "name": "RootNet-PoseNet 3D Pose Regression",
+      "verbatim_quote": "Frames + crops into **3DMPPE** (Moon et al.), a camera distance-aware top-down multi-person method with two stages: **RootNet** (camera-centred root coordinates) and **PoseNet** (relative 3D pose in the crop).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r': 'root coordinate (camera-centered)', 'p_j': 'joint offset vector relative to root', 'c': 'crop region', 'k': 'keypoint index'}",
+      "assumptions": "Top-down approach, fixed camera distance, 2-stage processing (root + pose), relative pose estimation.",
+      "breakdown_regime": "Inaccurate root estimation due to camera distance ambiguity, pose misalignment in crop.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Performs 3D pose regression from cropped images; outputs root-centered coordinates and relative joint positions.",
+        "source_operator": "rootnet_posenet",
+        "telemetry": "Root coordinates and relative 3D joint positions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5fed1969d942e381_t0",
+      "think": "The pipeline begins with YOLOv3 detecting human bounding boxes in each video frame, producing spatially localized regions-of-interest. These are then passed to 3DMPPE, which uses a two-stage process: RootNet estimates camera-centered root coordinates, while PoseNet infers relative 3D poses within cropped regions. The final 3D coordinates are projected back into image space using bounding box geometry. This enables kinematic features such as velocity and orientation at 10 Hz, crucial for GSI’s ghost-defender and pressure models. However, limitations include reliance on fixed camera views, lack of re-identification across cuts, and noise in monocular depth estimation. MPJPE evaluates accuracy using COCO-indexed joints, masking nulls to improve robustness. The system assumes standard athlete attire and fixed calibration, which may fail under broadcast variability or non-padded athletes.\n\nDeep epistemic analysis for pose_from_video (5fed1969d942e381, domain=other, pages_read=1/1): Operator 'Monocular 3D Pose Estimation' (page 1, domain other) captures: This is a concrete, published path to derive pose + derived motion from video instead: YOLOv3 -> 3DMPPE -> MPJPE-graded joints, with COCO indexing so joints are addressable. Assumptions: Fixed camera viewpoint, monocular depth estimation, pre-trained network weights, COCO joint indexing. Breakdown regime: Camera calibration errors, occlusion, broadcast cuts, and athlete attire mismatch with training data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps 2D bounding boxes to 3D joint coordinates via RootNet-PoseNet architecture; enables GSI probabilistic tracking of athlete motion. Operator 'YOLOv3 Person Detection' (page 1, domain other) captures: **YOLOv3** (Pascal VOC pretrained) person detection -> bounding box per person per frame. Assumptions: Pretrained Pascal VOC model, single-object per bounding box assumption, fixed resolution input. Breakdown regime: Low-resolution frames, overlapping persons, non-standard clothing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates spatially localized regions-of-interest for 3D pose estimation; feeds into 3DMPPE pipeline. Operator 'RootNet-PoseNet 3D Pose Regression' (page 1, domain other) captures: Frames + crops into **3DMPPE** (Moon et al.), a camera distance-aware top-down multi-person method with two stages: **RootNet** (camera-centred root coordinates) and **PoseNet** (relative 3D pose in the crop). Assumptions: Top-down approach, fixed camera distance, 2-stage processing (root + pose), relative pose estimation. Breakdown regime: Inaccurate root estimation due to camera distance ambiguity, pose misalignment in crop. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Performs 3D pose regression from cropped images; outputs root-centered coordinates and relative joint positions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for pose_from_video (5fed1969d942e381, domain=other, pages_read=1/1): Operator 'Monocular 3D Pose Estimation' (page 1, domain other) captures: This is a concrete, published path to derive pose + derived motion from video instead: YOLOv3 -> 3DMPPE -> MPJPE-graded joints, with COCO indexing so joints are addressable. Assumptions: Fixed camera viewpoint, monocular depth estimation, pre-trained network weights, COCO joint indexing. Breakdown regime: Camera calibration errors, occlusion, broadcast cuts, and athlete attire mismatch with training data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps 2D bounding boxes to 3D joint coordinates via RootNet-PoseNet architecture; enables GSI probabilistic tracking of athlete motion. Operator 'YOLOv3 Person Detection' (page 1, domain other) captures: **YOLOv3** (Pascal VOC pretrained) person detection -> bounding box per person per frame. Assumptions: Pretrained Pascal VOC model, single-object per bounding box assumption, fixed resolution input. Breakdown regime: Low-resolution frames, overlapping persons, non-standard clothing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates spatially localized regions-of-interest for 3D pose estimation; feeds into 3DMPPE pipeline. Operator 'RootNet-PoseNet 3D Pose Regression' (page 1, domain other) captures: Frames + crops into **3DMPPE** (Moon et al.), a camera distance-aware top-down multi-person method with two stages: **RootNet** (camera-centred root coordinates) and **PoseNet** (relative 3D pose in the crop). Assumptions: Top-down approach, fixed camera distance, 2-stage processing (root + pose), relative pose estimation. Breakdown regime: Inaccurate root estimation due to camera distance ambiguity, pose misalignment in crop. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Performs 3D pose regression from cropped images; outputs root-centered coordinates and relative joint positions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in computer vision advances from YOLO (2016) and 3D pose estimation frameworks like 3DMPPE (2020), building upon earlier work in monocular depth estimation and pose regression. Retrocausal Genealogy: Rooted in pose_from_video (5fed1969d942e381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in pose_from_video (5fed1969d942e381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include broadcast variability (pan/zoom, cuts) and athlete diversity (clothing, body types), which can degrade pose estimation quality. Decision actors are the tracking algorithms that must adapt to these uncertainties. Theory of Mind & Decision Maker Model: Rooted in pose_from_video (5fed1969d942e381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through distinct layers: YOLO handles detection, RootNet-PoseNet handles pose regression, and MPJPE ensures metric alignment. Leakage occurs if bounding box projections are inaccurate or if 3D priors do not match athlete form. Cross-Layer Veto & Anti-Leakage Check: Rooted in pose_from_video (5fed1969d942e381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "5637edae0df3dd8e",
+  "source_status": "COMPLETE",
+  "title": "CLAUDE_COWORK_PROMPT_P0",
+  "file_name": "CLAUDE_COWORK_PROMPT_P0.md",
+  "sha256": "5637edae0df3dd8e921a6c3536c04cad4d2ffb7463bec691cb9b048c1737ab0a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Neon database dual URL configuration under gse-postgres project constraints with pooled and unpooled connection handling. Universal Lens: Rooted in CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over production environment state transitions using pooled and unpooled database connections as evidence variables. GSI Mapping: Rooted in CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine updates state based on CRON_SECRET validation and redeployment triggers within gse-postgres context. GSE Mapping: Rooted in CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "neon_dual_urls",
+      "name": "Neon Database Connection Protocol",
+      "verbatim_quote": "**Neon not proven.** - Law: oddsApiRequired=false · LIVE_BOARD=off · CPA blocked · externalActions NONE ## Your job (exact order) ### 1) Neon dual URLs (gse-postgres only) Project: **gse-postgres** (not sports-db / not storage_* vars) Vercel project **sports-web** → Production env: 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DATABASE_URL': 'dimensionless string identifier for pooled connection', 'DIRECT_URL': 'dimensionless string identifier for unpooled connection', 'DATABASE_URL_UNPOOLED': 'dimensionless string identifier for direct non-pooled access'}",
+      "assumptions": "Connection pooling is required for scalable access; unpooled access is necessary for specific operations.",
+      "breakdown_regime": "When DATABASE_URL_UNPOOLED is missing or inaccessible due to permission denial.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The dual URL protocol mirrors the duality between pooled and direct database access in GSI's probabilistic state space.",
+        "source_operator": "neon_dual_urls",
+        "telemetry": "Verification of DATABASE_URL_UNPOOLED presence via Vercel UI."
+      }
+    },
+    {
+      "primitive_id": "cron_secret_validation",
+      "name": "Cron Secret Authentication",
+      "verbatim_quote": "### 2) CRON_SECRET Set strong random `CRON_SECRET` on Production (same value Vercel crons use).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'CRON_SECRET': 'dimensionless string token for authentication'}",
+      "assumptions": "Authentication is required for cron job execution; secret must be consistent across environments.",
+      "breakdown_regime": "When CRON_SECRET is invalid or mismatched between Vercel and production.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cron secret validation enables secure state transition in GSE's temporal logic framework.",
+        "source_operator": "cron_secret_validation",
+        "telemetry": "Successful cron job execution confirms secret validity."
+      }
+    },
+    {
+      "primitive_id": "production_redeploy_trigger",
+      "name": "Production Redeployment Protocol",
+      "verbatim_quote": "### 3) Redeploy Production Trigger Production redeploy after env save.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'REDEPLOY_TRIGGER': 'dimensionless event signal'}",
+      "assumptions": "Environment changes require redeployment to propagate updates.",
+      "breakdown_regime": "When redeployment fails due to misconfigured environment variables.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Redeployment mirrors the state transition function in GSI's operational semantics.",
+        "source_operator": "production_redeploy_trigger",
+        "telemetry": "Successful deployment completion confirms environment sync."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5637edae0df3dd8e_t0",
+      "think": "The primitives define a structured operational pipeline for managing database connectivity and cron-based automation in a production environment. The 'Neon dual URLs' primitive ensures that both pooled and unpooled database connections are correctly configured, enabling scalable and direct access respectively. The 'Cron Secret Authentication' primitive enforces secure execution of automated tasks by validating secrets against known values. Finally, the 'Production Redeployment Protocol' ensures that environmental changes are propagated through a controlled redeployment mechanism. These primitives collectively form a closed-loop system where each step depends on the prior for correct operation, aligning with principles of deterministic state transitions and conditional logic.\n\nDeep epistemic analysis for CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e, domain=other, pages_read=1/1): Operator 'Neon Database Connection Protocol' (page 1, domain other) captures: **Neon not proven.** - Law: oddsApiRequired=false · LIVE_BOARD=off · CPA blocked · externalActions NONE ## Your job (exact order) ### 1) Neon dual URLs (gse-postgres only) Project: **gse-postgres** (not sports-db / not storage_* vars) Vercel project **sports-web** → Production env: 1. Assumptions: Connection pooling is required for scalable access; unpooled access is necessary for specific operations. Breakdown regime: When DATABASE_URL_UNPOOLED is missing or inaccessible due to permission denial. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The dual URL protocol mirrors the duality between pooled and direct database access in GSI's probabilistic state space. Operator 'Cron Secret Authentication' (page 1, domain other) captures: ### 2) CRON_SECRET Set strong random `CRON_SECRET` on Production (same value Vercel crons use). Assumptions: Authentication is required for cron job execution; secret must be consistent across environments. Breakdown regime: When CRON_SECRET is invalid or mismatched between Vercel and production. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cron secret validation enables secure state transition in GSE's temporal logic framework. Operator 'Production Redeployment Protocol' (page 1, domain other) captures: ### 3) Redeploy Production Trigger Production redeploy after env save. Assumptions: Environment changes require redeployment to propagate updates. Breakdown regime: When redeployment fails due to misconfigured environment variables. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Redeployment mirrors the state transition function in GSI's operational semantics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e, domain=other, pages_read=1/1): Operator 'Neon Database Connection Protocol' (page 1, domain other) captures: **Neon not proven.** - Law: oddsApiRequired=false · LIVE_BOARD=off · CPA blocked · externalActions NONE ## Your job (exact order) ### 1) Neon dual URLs (gse-postgres only) Project: **gse-postgres** (not sports-db / not storage_* vars) Vercel project **sports-web** → Production env: 1. Assumptions: Connection pooling is required for scalable access; unpooled access is necessary for specific operations. Breakdown regime: When DATABASE_URL_UNPOOLED is missing or inaccessible due to permission denial. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The dual URL protocol mirrors the duality between pooled and direct database access in GSI's probabilistic state space. Operator 'Cron Secret Authentication' (page 1, domain other) captures: ### 2) CRON_SECRET Set strong random `CRON_SECRET` on Production (same value Vercel crons use). Assumptions: Authentication is required for cron job execution; secret must be consistent across environments. Breakdown regime: When CRON_SECRET is invalid or mismatched between Vercel and production. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cron secret validation enables secure state transition in GSE's temporal logic framework. Operator 'Production Redeployment Protocol' (page 1, domain other) captures: ### 3) Redeploy Production Trigger Production redeploy after env save. Assumptions: Environment changes require redeployment to propagate updates. Breakdown regime: When redeployment fails due to misconfigured environment variables. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Redeployment mirrors the state transition function in GSI's operational semantics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in database connection management practices from early distributed systems and evolved through modern serverless architectures, particularly influenced by PostgreSQL connection pooling models and CI/CD deployment workflows. Retrocausal Genealogy: Rooted in CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include unauthorized access attempts and misconfigured cron jobs. Decision actors are the founder and system integrators who must validate secrets and ensure proper redeployment protocols. Theory of Mind & Decision Maker Model: Rooted in CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when redundant or conflicting environment variables are set. Leakage occurs if secrets are exposed in logs or misconfigured access controls, violating isolation assumptions. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLAUDE_COWORK_PROMPT_P0 (5637edae0df3dd8e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

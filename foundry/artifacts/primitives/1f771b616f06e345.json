@@ -1,0 +1,78 @@
+{
+  "book_id": "1f771b616f06e345",
+  "source_status": "COMPLETE",
+  "title": "p0127",
+  "file_name": "p0127.txt",
+  "sha256": "1f771b616f06e345e7d035887ce487eea3d12395cf7df4f19e0b7494fa1d362b",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The phenomenological transition from imagination to hallucination is modeled as a bifurcation in an autonomous dynamical system. The loss of volitional agency corresponds to the vanishing of a control parameter, driving the cognitive state toward a spontaneous symmetry-breaking limit cycle.",
+  "gsi_mapping": "In GSI, pseudo-hallucinations represent high-conviction latent features emerging spontaneously from noisy telemetry without explicit agent input. Bayesian inference treats these 'inner voices' as unmodeled priors that must be conformally calibrated against objective reality metrics to prevent delusional overfitting.",
+  "gse_mapping": "GSE maps this to autonomous situational reasoning where the engine generates unprompted tactical alerts. The state-transition model tracks the drift from controlled simulation (imagination) to involuntary execution (hallucination), requiring strict boundary conditions at the distinctest vision limit.",
+  "primitives": [
+    {
+      "primitive_id": "volitional_loss_operator",
+      "name": "Volitional Loss Operator",
+      "verbatim_quote": "117 tailed, steady, abrupt, and spontaneous, in the sense that all feeling of our own activity in producing them is lacking.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "u: Volitional control input (dimensionless). \\tau: Temporal scale (s). \\mathcal{L}: Likelihood of subjective agency (dimensionless).",
+      "assumptions": "Cognitive generation can be decomposed into voluntary and spontaneous manifolds.",
+      "breakdown_regime": "Regime where u \\rightarrow 0 and \\mathcal{L} < \\epsilon, indicating complete dissociation from executive function.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to the GSE autonomous trigger module, identifying states where the system acts without external prompting.",
+        "source_operator": "volitional_loss_operator",
+        "telemetry": "Variance reduction in user-input streams coinciding with high-confidence internal state updates."
+      }
+    },
+    {
+      "primitive_id": "reality_metric_gradient",
+      "name": "Reality Metric Gradient",
+      "verbatim_quote": "Although projected outwards (usually not farther than the limit of distinctest vision, a foot or so) the pseudo-hallucinations lacked the character of objective reality which the hallucinations possessed, but, unlike the pictures of imagination, it was almost impossible to produce them at will.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "r: Projection distance (m). R: Objective reality scalar (dimensionless). \\nabla_u: Gradient with respect to volition.",
+      "assumptions": "Objective reality is a continuous metric bounded by spatial projection limits.",
+      "breakdown_regime": "Singularity occurs when \\nabla_u \\rightarrow \\infty while R approaches hallucinatory thresholds, breaking standard predictive models.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines the GSI confidence interval boundary between simulated projections and actual observed events.",
+        "source_operator": "reality_metric_gradient",
+        "telemetry": "Spatial decay rates of projected sensory data versus ground-truth sensor fusion outputs."
+      }
+    },
+    {
+      "primitive_id": "spontaneous_voice_emergence",
+      "name": "Spontaneous Voice Emergence",
+      "verbatim_quote": "I know two persons who hear such inner voices making unforeseen remarks whenever they grow quiet and listen for them.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: System noise floor (dB). V: Voice amplitude (Pa). \\lambda: Spontaneous emergence rate (Hz).",
+      "assumptions": "Quiet environments reduce masking noise, allowing latent generative processes to cross activation thresholds.",
+      "breakdown_regime": "When S drops below a critical threshold, \\lambda spikes, causing uncontrollable feedback loops of inner speech.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE background process anomalies surfacing during low-load computational cycles.",
+        "source_operator": "spontaneous_voice_emergence",
+        "telemetry": "Frequency of unprompted algorithmic suggestions during periods of minimal data ingestion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1f771b616f06e345_t0",
+      "think": "The derivation begins by formalizing the phenomenological space of perception as a topological manifold \\mathcal{M}. We define three distinct sub-manifolds: Imagination (\\mathcal{I}), Pseudo-hallucination (\\mathcal{P}), and Hallucination (\\mathcal{H}). The primary operator governing transitions between these states is the Volitional Control Vector, \\vec{v}. In \\mathcal{I}, \\vec{v} is maximal; the subject actively constructs the imagery. As we transition to \\mathcal{P}, the text notes that phenomena are 'almost impossible to produce them at will,' implying \\vec{v} \\rightarrow 0. However, \\mathcal{P} lacks the 'character of objective reality' found in \\mathcal{H}. This introduces a secondary metric, the Reality Scalar, \\rho. Thus, \\mathcal{P} is defined by the dual constraints: \\vec{v} \\approx 0 and \\rho < \\rho_{critical}. The duality emerges in the spatial projection: \\mathcal{P} projects outward only to the 'limit of distinctest vision,' acting as a localized boundary layer before full externalization into \\mathcal{H}. The failure mode, or singularity, occurs when the system attempts to apply volitional operators to a state already residing in \\mathcal{P}; the lack of agency causes a catastrophic collapse of the predictive model, manifesting as the 'unforeseen remarks' of the inner voices. Mathematically, this is a bifurcation point where the eigenvalues of the cognitive stability matrix cross into the right half-plane, driven entirely by endogenous noise rather than exogenous stimuli.\n\nDeep epistemic analysis for p0127 (1f771b616f06e345, domain=other, pages_read=1/1): Operator 'Volitional Loss Operator' (page 1, domain other) captures: 117 tailed, steady, abrupt, and spontaneous, in the sense that all feeling of our own activity in producing them is lacking. Assumptions: Cognitive generation can be decomposed into voluntary and spontaneous manifolds. Breakdown regime: Regime where u \\rightarrow 0 and \\mathcal{L} < \\epsilon, indicating complete dissociation from executive function. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSE autonomous trigger module, identifying states where the system acts without external prompting. Operator 'Reality Metric Gradient' (page 1, domain other) captures: Although projected outwards (usually not farther than the limit of distinctest vision, a foot or so) the pseudo-hallucinations lacked the character of objective reality which the hallucinations possessed, but, unlike the pictures of imagination, it was almost impossible to produce them at will. Assumptions: Objective reality is a continuous metric bounded by spatial projection limits. Breakdown regime: Singularity occurs when \\nabla_u \\rightarrow \\infty while R approaches hallucinatory thresholds, breaking standard predictive models. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the GSI confidence interval boundary between simulated projections and actual observed events. Operator 'Spontaneous Voice Emergence' (page 1, domain other) captures: I know two persons who hear such inner voices making unforeseen remarks whenever they grow quiet and listen for them. Assumptions: Quiet environments reduce masking noise, allowing latent generative processes to cross activation thresholds. Breakdown regime: When S drops below a critical threshold, \\lambda spikes, causing uncontrollable feedback loops of inner speech. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE background process anomalies surfacing during low-load computational cycles. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0127 (1f771b616f06e345, domain=other, pages_read=1/1): Operator 'Volitional Loss Operator' (page 1, domain other) captures: 117 tailed, steady, abrupt, and spontaneous, in the sense that all feeling of our own activity in producing them is lacking. Assumptions: Cognitive generation can be decomposed into voluntary and spontaneous manifolds. Breakdown regime: Regime where u \\rightarrow 0 and \\mathcal{L} < \\epsilon, indicating complete dissociation from executive function. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to the GSE autonomous trigger module, identifying states where the system acts without external prompting. Operator 'Reality Metric Gradient' (page 1, domain other) captures: Although projected outwards (usually not farther than the limit of distinctest vision, a foot or so) the pseudo-hallucinations lacked the character of objective reality which the hallucinations possessed, but, unlike the pictures of imagination, it was almost impossible to produce them at will. Assumptions: Objective reality is a continuous metric bounded by spatial projection limits. Breakdown regime: Singularity occurs when \\nabla_u \\rightarrow \\infty while R approaches hallucinatory thresholds, breaking standard predictive models. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Defines the GSI confidence interval boundary between simulated projections and actual observed events. Operator 'Spontaneous Voice Emergence' (page 1, domain other) captures: I know two persons who hear such inner voices making unforeseen remarks whenever they grow quiet and listen for them. Assumptions: Quiet environments reduce masking noise, allowing latent generative processes to cross activation thresholds. Breakdown regime: When S drops below a critical threshold, \\lambda spikes, causing uncontrollable feedback loops of inner speech. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE background process anomalies surfacing during low-load computational cycles. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This primitive lineage traces back to William James's foundational work on the stream of consciousness, specifically his categorization of ideational states. It mathematically prefigures modern predictive coding theories, where top-down priors (hallucinations) clash with bottom-up sensory evidence. Historically, it bridges 19th-century experimental psychology with contemporary dynamical systems theory applied to cognitive science, establishing the rigorous separation between agency and perception.",
+      "theory_of_mind": "Modeling the subject requires treating the mind as a multi-agent system. The 'executive self' attempts to maintain control via \\vec{v}, while a latent, autonomous generator produces the 'inner voices.' When the environment grows quiet, the executive self lowers its vigilance, inadvertently granting the autonomous generator access to the phonological loop. The opposing actor here is the subconscious pattern matcher, which hijacks the perceptual apparatus under low-noise conditions.",
+      "cross_layer_veto": "To prevent anti-collinearity, we must veto any mapping that equates pseudo-hallucinations purely with imagination. The leakage condition arises if the GSE interprets spontaneous internal alerts as user commands. A strict veto is required: if \\vec{v} is absent, the output must be flagged as an observational anomaly rather than an actionable directive, preserving the integrity of the objective reality metric \\rho."
+    }
+  ]
+}

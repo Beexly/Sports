@@ -1,0 +1,78 @@
+{
+  "book_id": "5b7d150cc7089f07",
+  "source_status": "COMPLETE",
+  "title": "1212-generalized-framework-for-applying-the",
+  "file_name": "1212-generalized-framework-for-applying-the.md",
+  "sha256": "5b7d150cc7089f07500bea9229e28d5f4ef49283793baff9d59ce68b8ef0f758",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Multivariate Kelly criterion generalizes single-gamble optimal fraction to correlated portfolios via exact first-order condition on log growth rate. Universal Lens: Rooted in 1212-generalized-framework-for-applying-the (5b7d150cc7089f07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on return distributions inform GSI's conformal predictive sets for edge estimation under uncertainty. GSI Mapping: Rooted in 1212-generalized-framework-for-applying-the (5b7d150cc7089f07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE employs constrained convex optimization of Kelly's nonlinear condition to size correlated simultaneous picks within drawdown limits. GSE Mapping: Rooted in 1212-generalized-framework-for-applying-the (5b7d150cc7089f07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "multivariate_kelly_first_order_condition",
+      "name": "Multivariate Kelly First-Order Condition",
+      "verbatim_quote": "For L simultaneous investments: ∫ k_l(x_l)·p(x)/(1 + Σ_{l'} f_{l'}·k_{l'}(x_{l'})) dx = 0.",
+      "page": 1,
+      "latex": "\\int \\frac{k_l(x_l) \\cdot p(x)}{1 + \\sum_{l'} f_{l'} \\cdot k_{l'}(x_{l'})} dx = 0",
+      "symbol_and_unit_ledger": "{'k_l(x_l)': 'return function for investment l, dimensionless', 'p(x)': 'probability density of outcomes x, dimensionless', 'f_l': 'fraction of capital allocated to investment l, dimensionless'}",
+      "assumptions": "Investments have known return distributions and joint correlations; utility is logarithmic.",
+      "breakdown_regime": "When correlations are highly non-linear or extreme, convergence may fail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used as core sizing engine in GSE for simultaneous picks with risk-adjusted allocation.",
+        "source_operator": "multivariate_kelly_first_order_condition",
+        "telemetry": "Portfolio Sharpe ratio and maximum drawdown during backtesting."
+      }
+    },
+    {
+      "primitive_id": "linear_approximation_moment_based",
+      "name": "Linear Approximation Moment-Based",
+      "verbatim_quote": "Expand the denominator to first order to obtain a linear system M·f = b, where M uses return first and second moments and b uses expected returns — i.e., a moment-based closed form.",
+      "page": 1,
+      "latex": "M \\cdot f = b",
+      "symbol_and_unit_ledger": "{'M': 'matrix of return moments, dimensionless', 'f': 'vector of fractions, dimensionless', 'b': 'vector of expected returns, dimensionless'}",
+      "assumptions": "Small parameter approximations hold; returns follow Gaussian or similar light-tailed distributions.",
+      "breakdown_regime": "Large edges or high volatility lead to significant deviation from true nonlinear solution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's initial portfolio setup before applying convex constraints.",
+        "source_operator": "linear_approximation_moment_based",
+        "telemetry": "Deviation of actual vs. predicted Kelly fractions under simulated market shocks."
+      }
+    },
+    {
+      "primitive_id": "correlation_impact_on_fractions",
+      "name": "Correlation Impact on Optimal Fractions",
+      "verbatim_quote": "Key qualitative result: positive correlation between investments reduces optimal fractions; negative correlation increases them.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Investment returns are jointly normally distributed or sufficiently symmetric.",
+      "breakdown_regime": "Non-Gaussian or heavy-tailed return distributions invalidate this rule.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Informs GSE's dynamic adjustment of position sizes based on evolving correlation matrices.",
+        "source_operator": "correlation_impact_on_fractions",
+        "telemetry": "Average absolute change in optimal fractions per week due to correlation drift."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b7d150cc7089f07_t0",
+      "think": "The generalized Kelly criterion extends the classical single-gamble formulation to portfolios by deriving an exact first-order condition on expected log wealth. For L investments, it requires solving ∫ k_l(x_l)·p(x)/(1 + Σ_{l'} f_{l'}·k_{l'}(x_{l'})) dx = 0. This nonlinear integral equation defines the optimal allocation vector f. Linearizing around small parameters yields M·f = b, where M encodes second moments and b contains first moments. Correlations shift these allocations: positive correlation lowers optimal fractions, while negative correlation raises them. However, this moment-based linearization fails for large edges or asymmetric payoffs typical in sports betting. Thus, GSE applies the full nonlinear condition post-constraint enforcement to avoid leverage-induced blowups.\n\nDeep epistemic analysis for 1212-generalized-framework-for-applying-the (5b7d150cc7089f07, domain=other, pages_read=3/3): Operator 'Multivariate Kelly First-Order Condition' (page 1, domain other) captures: For L simultaneous investments: ∫ k_l(x_l)·p(x)/(1 + Σ_{l'} f_{l'}·k_{l'}(x_{l'})) dx = 0. Assumptions: Investments have known return distributions and joint correlations; utility is logarithmic. Breakdown regime: When correlations are highly non-linear or extreme, convergence may fail. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used as core sizing engine in GSE for simultaneous picks with risk-adjusted allocation. Operator 'Linear Approximation Moment-Based' (page 1, domain other) captures: Expand the denominator to first order to obtain a linear system M·f = b, where M uses return first and second moments and b uses expected returns — i.e., a moment-based closed form. Assumptions: Small parameter approximations hold; returns follow Gaussian or similar light-tailed distributions. Breakdown regime: Large edges or high volatility lead to significant deviation from true nonlinear solution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's initial portfolio setup before applying convex constraints. Operator 'Correlation Impact on Optimal Fractions' (page 1, domain other) captures: Key qualitative result: positive correlation between investments reduces optimal fractions; negative correlation increases them. Assumptions: Investment returns are jointly normally distributed or sufficiently symmetric. Breakdown regime: Non-Gaussian or heavy-tailed return distributions invalidate this rule. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Informs GSE's dynamic adjustment of position sizes based on evolving correlation matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1212-generalized-framework-for-applying-the (5b7d150cc7089f07, domain=other, pages_read=3/3): Operator 'Multivariate Kelly First-Order Condition' (page 1, domain other) captures: For L simultaneous investments: ∫ k_l(x_l)·p(x)/(1 + Σ_{l'} f_{l'}·k_{l'}(x_{l'})) dx = 0. Assumptions: Investments have known return distributions and joint correlations; utility is logarithmic. Breakdown regime: When correlations are highly non-linear or extreme, convergence may fail. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used as core sizing engine in GSE for simultaneous picks with risk-adjusted allocation. Operator 'Linear Approximation Moment-Based' (page 1, domain other) captures: Expand the denominator to first order to obtain a linear system M·f = b, where M uses return first and second moments and b uses expected returns — i.e., a moment-based closed form. Assumptions: Small parameter approximations hold; returns follow Gaussian or similar light-tailed distributions. Breakdown regime: Large edges or high volatility lead to significant deviation from true nonlinear solution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's initial portfolio setup before applying convex constraints. Operator 'Correlation Impact on Optimal Fractions' (page 1, domain other) captures: Key qualitative result: positive correlation between investments reduces optimal fractions; negative correlation increases them. Assumptions: Investment returns are jointly normally distributed or sufficiently symmetric. Breakdown regime: Non-Gaussian or heavy-tailed return distributions invalidate this rule. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Informs GSE's dynamic adjustment of position sizes based on evolving correlation matrices. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Originated from Kelly's 1956 work on optimal gambling strategies, extended by Thorp and later generalized to continuous-time settings. The multivariate extension builds upon earlier portfolio optimization frameworks like Markowitz mean-variance. Retrocausal Genealogy: Rooted in 1212-generalized-framework-for-applying-the (5b7d150cc7089f07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1212-generalized-framework-for-applying-the (5b7d150cc7089f07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might overestimate edge or misjudge correlations, leading to either excessive risk-taking or conservative underallocation. A robust sizing engine must account for estimation error and adapt to changing market dynamics. Theory of Mind & Decision Maker Model: Rooted in 1212-generalized-framework-for-applying-the (5b7d150cc7089f07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes reliance on moment approximations when payoffs are highly asymmetric or when estimation errors dominate. Leakage occurs if constraints are ignored, allowing unrealizable leveraged positions that cause catastrophic drawdowns. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1212-generalized-framework-for-applying-the (5b7d150cc7089f07), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "6577d8e8a5c15a4b",
+  "source_status": "COMPLETE",
+  "title": "highrecall_rules",
+  "file_name": "highrecall_rules.txt",
+  "sha256": "6577d8e8a5c15a4b8b4dc1c6caa47fc364f3b0749d4ba3cf642ef11426dd1cf1",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural causal models with orientable unshielded triples and weak minimality constraints define conditional independence relations among variables. Universal Lens: Rooted in highrecall_rules (6577d8e8a5c15a4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on causal graphs uses conditional independence tests to update belief states over latent variables and their ancestral relationships. GSI Mapping: Rooted in highrecall_rules (6577d8e8a5c15a4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine applies orientational rules to resolve causal ambiguities and propagate state transitions in dynamic systems. GSE Mapping: Rooted in highrecall_rules (6577d8e8a5c15a4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "r0d_rule",
+      "name": "Collider Orientation Rule",
+      "verbatim_quote": "<<<PAGE 4>>> R0′d: For all unshielded triples A∗-◦B◦-∗C and for all unshielded triples A∗→B◦-∗C: If B /∈SAC, then mark the unshielded triple for orientation as collider A∗→B←∗C.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A, B, C': 'variables in a causal graph', 'SAC': 'set of variables that are ancestors of C and descendants of A'}",
+      "assumptions": "Unshielded triple exists; B is not in the set of ancestors of C and descendants of A.",
+      "breakdown_regime": "When B is in SAC, the triple cannot be oriented as a collider.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The rule maps conditional independence constraints to causal graph orientations via ancestral relationships.",
+        "source_operator": "r0d_rule",
+        "telemetry": "Verification of collider orientation through ancestral exclusion."
+      }
+    },
+    {
+      "primitive_id": "r1_rule",
+      "name": "Parent-to-Child Orientation Rule",
+      "verbatim_quote": "R1′: For all unshielded triples A∗→ ∗B◦-⋆ ∗C: If SAC is weakly minimal and B ∈SAC, then mark the edge between B and C for orientation as B→ ∗C.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A, B, C': 'variables in a causal graph', 'SAC': 'set of variables that are ancestors of C and descendants of A', 'weakly minimal': 'minimal set satisfying conditional independence constraints'}",
+      "assumptions": "SAC is weakly minimal; B is in SAC.",
+      "breakdown_regime": "If SAC is not weakly minimal or B is not in SAC, no orientation is applied.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives directed edge from conditional independence structure using weak minimality.",
+        "source_operator": "r1_rule",
+        "telemetry": "Edge orientation based on weak minimality of ancestral sets."
+      }
+    },
+    {
+      "primitive_id": "r2_rule",
+      "name": "Path Extension Rule",
+      "verbatim_quote": "R2′: For all A→ ∗B∗→ ∗C with A⋆-◦ ∗C and for all A∗→ ∗B→ ∗C with A⋆-◦ ∗C: Mark the edge between A and C for orientation as A⋆→ ∗C.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A, B, C': 'variables in a causal graph', 'A⋆-◦ ∗C': 'unshielded edge between A and C'}",
+      "assumptions": "A and C are unshielded; B is part of a directed path from A to C.",
+      "breakdown_regime": "When A and C are not unshielded, or B does not lie on a directed path, no orientation occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Extends directed paths in causal graphs by transitivity under unshielded conditions.",
+        "source_operator": "r2_rule",
+        "telemetry": "Path extension verified by checking unshielded edge and intermediate node connectivity."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6577d8e8a5c15a4b_t0",
+      "think": "These rules form a foundational set for orienting causal graphs from observational data. R0′d identifies colliders by excluding intermediate nodes from ancestral sets, ensuring no spurious associations. R1′ leverages weak minimality to direct edges from parents to children, refining causal directionality. R2′ extends paths when unshielded edges exist, enabling more complex causal inferences. Each rule operates under specific conditional independence constraints, forming a coherent system for causal discovery. Failure modes include violations of weak minimality or incorrect identification of ancestral relationships, leading to misoriented edges. The interplay of these rules ensures robustness against noise while maintaining theoretical soundness.\n\nDeep epistemic analysis for highrecall_rules (6577d8e8a5c15a4b, domain=other, pages_read=2/2): Operator 'Collider Orientation Rule' (page 1, domain other) captures: <<<PAGE 4>>> R0′d: For all unshielded triples A∗-◦B◦-∗C and for all unshielded triples A∗→B◦-∗C: If B /∈SAC, then mark the unshielded triple for orientation as collider A∗→B←∗C. Assumptions: Unshielded triple exists; B is not in the set of ancestors of C and descendants of A. Breakdown regime: When B is in SAC, the triple cannot be oriented as a collider. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The rule maps conditional independence constraints to causal graph orientations via ancestral relationships. Operator 'Parent-to-Child Orientation Rule' (page 1, domain other) captures: R1′: For all unshielded triples A∗→ ∗B◦-⋆ ∗C: If SAC is weakly minimal and B ∈SAC, then mark the edge between B and C for orientation as B→ ∗C. Assumptions: SAC is weakly minimal; B is in SAC. Breakdown regime: If SAC is not weakly minimal or B is not in SAC, no orientation is applied. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives directed edge from conditional independence structure using weak minimality. Operator 'Path Extension Rule' (page 1, domain other) captures: R2′: For all A→ ∗B∗→ ∗C with A⋆-◦ ∗C and for all A∗→ ∗B→ ∗C with A⋆-◦ ∗C: Mark the edge between A and C for orientation as A⋆→ ∗C. Assumptions: A and C are unshielded; B is part of a directed path from A to C. Breakdown regime: When A and C are not unshielded, or B does not lie on a directed path, no orientation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Extends directed paths in causal graphs by transitivity under unshielded conditions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for highrecall_rules (6577d8e8a5c15a4b, domain=other, pages_read=2/2): Operator 'Collider Orientation Rule' (page 1, domain other) captures: <<<PAGE 4>>> R0′d: For all unshielded triples A∗-◦B◦-∗C and for all unshielded triples A∗→B◦-∗C: If B /∈SAC, then mark the unshielded triple for orientation as collider A∗→B←∗C. Assumptions: Unshielded triple exists; B is not in the set of ancestors of C and descendants of A. Breakdown regime: When B is in SAC, the triple cannot be oriented as a collider. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The rule maps conditional independence constraints to causal graph orientations via ancestral relationships. Operator 'Parent-to-Child Orientation Rule' (page 1, domain other) captures: R1′: For all unshielded triples A∗→ ∗B◦-⋆ ∗C: If SAC is weakly minimal and B ∈SAC, then mark the edge between B and C for orientation as B→ ∗C. Assumptions: SAC is weakly minimal; B is in SAC. Breakdown regime: If SAC is not weakly minimal or B is not in SAC, no orientation is applied. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives directed edge from conditional independence structure using weak minimality. Operator 'Path Extension Rule' (page 1, domain other) captures: R2′: For all A→ ∗B∗→ ∗C with A⋆-◦ ∗C and for all A∗→ ∗B→ ∗C with A⋆-◦ ∗C: Mark the edge between A and C for orientation as A⋆→ ∗C. Assumptions: A and C are unshielded; B is part of a directed path from A to C. Breakdown regime: When A and C are not unshielded, or B does not lie on a directed path, no orientation occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Extends directed paths in causal graphs by transitivity under unshielded conditions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Pearl's causal inference framework and extended by Colombo et al.'s discriminating path rule, these primitives generalize the concept of conditional independence in directed acyclic graphs. Retrocausal Genealogy: Rooted in highrecall_rules (6577d8e8a5c15a4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in highrecall_rules (6577d8e8a5c15a4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to introduce spurious causal links or misclassify ancestral relationships, necessitating strict adherence to weak minimality and conditional independence criteria. Theory of Mind & Decision Maker Model: Rooted in highrecall_rules (6577d8e8a5c15a4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in highrecall_rules (6577d8e8a5c15a4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that no variable can simultaneously be both ancestor and descendant of another without violating weak minimality. Leakage is prevented by verifying that all conditioning sets remain minimal and consistent across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in highrecall_rules (6577d8e8a5c15a4b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

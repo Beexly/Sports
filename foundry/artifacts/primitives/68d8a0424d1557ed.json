@@ -1,0 +1,78 @@
+{
+  "book_id": "68d8a0424d1557ed",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "68d8a0424d1557edd07958c9c821eea3ea40c2072c1776215dd1e625d19407e4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The system is a constrained optimization manifold where the state space is bounded by hard resource limits (ZeroGPU quotas). The transition dynamics are governed by a deterministic contract, mapping stochastic model proposals to validated outputs through hierarchical adversarial review layers.",
+  "gsi_mapping": "GSI maps the daily GPU quota as a strict budget constraint on Bayesian posterior updates. Overage acts as a conformal prediction boundary; if the computational cost exceeds the free tier, the inference fails gracefully rather than incurring hidden financial priors.",
+  "gse_mapping": "GSE situational reasoning operates via a multi-layer causal chain (L3-L5). The deterministic contract ensures that while the underlying LLM proposes probabilistic states, the final engine output strictly adheres to verified numerical citations and explicit inference labels.",
+  "primitives": [
+    {
+      "primitive_id": "zero_gpu_quota_constraint",
+      "name": "ZeroGPU Daily Quota Constraint",
+      "verbatim_quote": "- **Daily GPU quotas:** unauthenticated 2 min · free 5 min · PRO 40 min (highest queue priority).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "t_quota: Time duration in minutes (min); Tier: Categorical variable {unauthenticated, free, PRO}",
+      "assumptions": "Quotas reset exactly 24 hours after the first GPU invocation within the rolling window.",
+      "breakdown_regime": "When requested inference time t_req > t_quota, the system enters a failure/queue state without billing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a hard budget constraint in dynamic resource allocation. The tier dictates the maximum allowable computational energy before hitting a singularity.",
+        "source_operator": "zero_gpu_quota_constraint",
+        "telemetry": "Queue wait times and rejected request counts per 24h cycle."
+      }
+    },
+    {
+      "primitive_id": "deterministic_gse_contract",
+      "name": "Deterministic GSE Contract",
+      "verbatim_quote": "The deterministic GSE contract (adversary_review, correlated_theses, checklist) still disposes — the model proposes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "H_current: Current hardware configuration; H_pinned: Target ZeroGPU configuration; delta_H: Hardware drift metric",
+      "assumptions": "The infrastructure provider maintains a stable API for hardware pinning and monitoring.",
+      "breakdown_regime": "If delta_H > threshold, the drift monitor triggers a loud alert, halting standard operations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to an invariant preservation operator in GSE. It ensures the physical substrate does not introduce unauthorized financial or latency variables into the intelligence loop.",
+        "source_operator": "deterministic_gse_contract",
+        "telemetry": "Hardware configuration hash checks and alert frequency logs."
+      }
+    },
+    {
+      "primitive_id": "hierarchical_reasoning_layers",
+      "name": "Hierarchical Reasoning Layers",
+      "verbatim_quote": "The model reasons (L3 causal chains, L4 adversarial review, L5 synthesis) under hard rules: cite provided numbers, label inference as INFERENCE with a breaking condition, output the requested JSON schema.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "L_n: Logical reasoning layer index (n=3,4,5); R_out: Structured JSON output; B_cond: Breaking condition flag",
+      "assumptions": "Each successive layer has access to the full context and outputs of the preceding layer.",
+      "breakdown_regime": "Failure occurs if L4 rejects all L3 proposals, triggering the B_cond and aborting synthesis.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly isomorphic to the GSE multi-agent verification pipeline. L3 generates hypotheses, L4 applies adversarial stress-testing, and L5 performs conformal aggregation.",
+        "source_operator": "hierarchical_reasoning_layers",
+        "telemetry": "Rate of L4 rejections and frequency of INFERENCE tags in final outputs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "68d8a0424d1557ed_t0",
+      "think": "The mathematical foundation of this system rests on the intersection of constrained optimization and hierarchical logic. We define the operational state S as a vector comprising the current GPU time consumed (t), the active hardware configuration (H), and the logical depth of the current inference (L). The ZeroGPU policy introduces a hard boundary condition: t must remain less than or equal to t_quota(tier). If t approaches t_quota, the system transitions into a queuing state Q, effectively acting as a low-pass filter on high-frequency inference requests. This prevents runaway costs, formalizing the 'no card charged' rule as a strict inequality constraint in the objective function.\n\nSimultaneously, the reasoning process is modeled as a Markov Decision Process across three distinct layers (L3, L4, L5). L3 proposes a set of causal chains C. L4 acts as an adversarial validator, applying a rejection kernel K_adv(C) that filters out unsupported claims. Only surviving chains proceed to L5 for synthesis. The 'deterministic GSE contract' ensures that despite the stochastic nature of the underlying MiMo-V2.6 transformer, the final output Y is strictly typed and adheres to a predefined JSON schema. This creates a duality between the probabilistic internal state and the deterministic external interface. Failure modes arise primarily from quota exhaustion (hard stop) or complete adversarial rejection (logical dead end), both of which are explicitly handled by the system's breaking conditions.\n\nDeep epistemic analysis for README (68d8a0424d1557ed, domain=other, pages_read=1/1): Operator 'ZeroGPU Daily Quota Constraint' (page 1, domain other) captures: - **Daily GPU quotas:** unauthenticated 2 min · free 5 min · PRO 40 min (highest queue priority). Assumptions: Quotas reset exactly 24 hours after the first GPU invocation within the rolling window. Breakdown regime: When requested inference time t_req > t_quota, the system enters a failure/queue state without billing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a hard budget constraint in dynamic resource allocation. The tier dictates the maximum allowable computational energy before hitting a singularity. Operator 'Deterministic GSE Contract' (page 1, domain other) captures: The deterministic GSE contract (adversary_review, correlated_theses, checklist) still disposes — the model proposes. Assumptions: The infrastructure provider maintains a stable API for hardware pinning and monitoring. Breakdown regime: If delta_H > threshold, the drift monitor triggers a loud alert, halting standard operations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to an invariant preservation operator in GSE. It ensures the physical substrate does not introduce unauthorized financial or latency variables into the intelligence loop. Operator 'Hierarchical Reasoning Layers' (page 1, domain other) captures: The model reasons (L3 causal chains, L4 adversarial review, L5 synthesis) under hard rules: cite provided numbers, label inference as INFERENCE with a breaking condition, output the requested JSON schema. Assumptions: Each successive layer has access to the full context and outputs of the preceding layer. Breakdown regime: Failure occurs if L4 rejects all L3 proposals, triggering the B_cond and aborting synthesis. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly isomorphic to the GSE multi-agent verification pipeline. L3 generates hypotheses, L4 applies adversarial stress-testing, and L5 performs conformal aggregation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (68d8a0424d1557ed, domain=other, pages_read=1/1): Operator 'ZeroGPU Daily Quota Constraint' (page 1, domain other) captures: - **Daily GPU quotas:** unauthenticated 2 min · free 5 min · PRO 40 min (highest queue priority). Assumptions: Quotas reset exactly 24 hours after the first GPU invocation within the rolling window. Breakdown regime: When requested inference time t_req > t_quota, the system enters a failure/queue state without billing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a hard budget constraint in dynamic resource allocation. The tier dictates the maximum allowable computational energy before hitting a singularity. Operator 'Deterministic GSE Contract' (page 1, domain other) captures: The deterministic GSE contract (adversary_review, correlated_theses, checklist) still disposes — the model proposes. Assumptions: The infrastructure provider maintains a stable API for hardware pinning and monitoring. Breakdown regime: If delta_H > threshold, the drift monitor triggers a loud alert, halting standard operations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to an invariant preservation operator in GSE. It ensures the physical substrate does not introduce unauthorized financial or latency variables into the intelligence loop. Operator 'Hierarchical Reasoning Layers' (page 1, domain other) captures: The model reasons (L3 causal chains, L4 adversarial review, L5 synthesis) under hard rules: cite provided numbers, label inference as INFERENCE with a breaking condition, output the requested JSON schema. Assumptions: Each successive layer has access to the full context and outputs of the preceding layer. Breakdown regime: Failure occurs if L4 rejects all L3 proposals, triggering the B_cond and aborting synthesis. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly isomorphic to the GSE multi-agent verification pipeline. L3 generates hypotheses, L4 applies adversarial stress-testing, and L5 performs conformal aggregation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture inherits from classical control theory's hard constraints and modern mechanistic interpretability. The tiered quota system mirrors early mainframe job scheduling (JCL), while the L3-L5 pipeline reflects the evolution of adversarial training in deep learning, specifically echoing the generator-discriminator dynamics of GANs but applied to logical consistency rather than data generation. Retrocausal Genealogy: Rooted in README (68d8a0424d1557ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "We model the user as an agent seeking maximum analytical depth within a zero-cost boundary. The system anticipates the user's desire for rigorous, cited outputs and pre-empts hallucination via the L4 adversary. Conversely, the system models the infrastructure provider (HF) as a resource-constrained actor, necessitating the strict pinning to ZeroGPU to avoid unexpected financial leakage. Theory of Mind & Decision Maker Model: Rooted in README (68d8a0424d1557ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by the L4 adversarial review, which actively vetoes any L3 proposal that lacks direct citation from the provided numerical context. Leakage is prevented by the hard JSON schema requirement at L5; even if the internal reasoning is profound, it cannot leak unstructured prose into the final API response, ensuring strict type safety across the GSI/GSE integration layers."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "453d33c603f3e086",
+  "source_status": "COMPLETE",
+  "title": "surface-exposure-sweep",
+  "file_name": "surface-exposure-sweep.md",
+  "sha256": "453d33c603f3e086cba4c2bcbbf6c98d6d5a0f8c39be8b3c835fc37e929fe990",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The surface exposure sweep formalizes a topological audit of an application's public boundary. By mapping the file tree to a discrete metric space, it applies pattern-matching operators to detect forbidden vocabulary. This establishes a rigorous duality between static code structure and dynamic information leakage.",
+  "gsi_mapping": "In GSI, this sweep acts as a conformal inference guard on the observation manifold. It ensures that the public data stream does not leak high-dimensional latent factors (like raw WOPR or calibration weights), preserving the epistemic integrity of the Bayesian posterior against adversarial reverse-engineering.",
+  "gse_mapping": "For GSE, the sweep is a state-transition validator on the situational reasoning graph. It verifies that the exposed API endpoints only emit permissible projections of the game state, preventing unauthorized agents from accessing the underlying adjustment-layer magnitudes that drive optimal decision-making.",
+  "primitives": [
+    {
+      "primitive_id": "surface_exposure_sweep",
+      "name": "Static Surface Exposure Sweep",
+      "verbatim_quote": "# Surface exposure sweep — full repo, measured 2026-09-28 **Method: measure, do not trust the hand-written list.** The exposure audit (`docs/research/2026-09-28/orchestration/public-private-surface-doctrine.md`) listed 13 items.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N_routes: integer count of public routes; N_patterns: integer count of forbidden lexical signatures.",
+      "assumptions": "The application routing tree accurately reflects the runtime HTTP surface; forbidden metrics are strictly identifiable via static string matching.",
+      "breakdown_regime": "Fails when dynamic route generation occurs at runtime, or when sensitive data is obfuscated/composed from non-triggering payloads.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE boundary condition checks, ensuring the public interface does not expose internal state vectors.",
+        "source_operator": "surface_exposure_sweep",
+        "telemetry": "Count of flagged routes vs. total public routes."
+      }
+    },
+    {
+      "primitive_id": "lexical_fence_verification",
+      "name": "Lexical Fence Verification",
+      "verbatim_quote": "**Patterns searched** (the doctrine's keep-out list, as code): raw signal/ledger reads · `next_gen_stats`/NGS metrics · WOPR and target share · QBR · calibration internals · adjustment-layer weights/magnitudes · truth-catalog topology · methodology factor lists · raw player-week rows · edge internals (`expectedClv`, `factorBreakdown`, `independentEdge`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P_keepout: set of forbidden string patterns; R_public: set of public route files.",
+      "assumptions": "All sensitive intellectual property is encapsulated within specific, enumerable lexical tokens.",
+      "breakdown_regime": "Singularity occurs if developers refactor variable names to bypass the lexical filter without altering the underlying data payload.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the GSI 'clean' dataset by filtering out any route intersecting with the P_keepout kernel.",
+        "source_operator": "lexical_fence_verification",
+        "telemetry": "Boolean pass/fail for each route against the keep-out list."
+      }
+    },
+    {
+      "primitive_id": "epistemic_limitation_boundary",
+      "name": "Epistemic Limitation Boundary",
+      "verbatim_quote": "**What this does NOT prove.** The sweep is a static text-pattern match.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "L_static: logical strength of static analysis; L_dynamic: logical strength of runtime verification.",
+      "assumptions": "Static analysis provides a necessary but insufficient condition for security.",
+      "breakdown_regime": "Complete failure to detect logic-bomb leaks or compositional vulnerabilities where two safe endpoints combine to reveal a secret.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors the GSE uncertainty quantification, explicitly bounding the confidence interval of the security audit.",
+        "source_operator": "epistemic_limitation_boundary",
+        "telemetry": "Coverage percentage of lib/** components excluded from the sweep."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "453d33c603f3e086_t0",
+      "think": "The surface exposure sweep represents a critical shift from manual, document-based auditing to algorithmic, tree-derived verification. Mathematically, we define the application's public surface as a discrete set of nodes $R$ in a directed acyclic graph representing the file system. The 'doctrine' defines a subset of forbidden attributes $F$ (e.g., WOPR, calibration weights). The sweep operator $\\mathcal{S}$ maps each node $r \\in R$ to a boolean value based on the presence of substrings from $F$. The core insight is that manual inventories are prone to staleness; they represent a snapshot $I(t_0)$ that diverges from reality $R(t)$ as development proceeds. By re-deriving the inventory from the tree, we enforce $I(t) = R(t)$ at measurement time. However, the epistemic limitation is profound: $\\mathcal{S}$ operates on syntax, not semantics. It cannot detect a leak where $f(x) + g(y) = \\text{secret}$, nor can it see into compiled binaries or dynamically generated queries. Thus, a 'green sweep' is a lower bound on security, not a proof. The standing recommendation to integrate this into CI transforms $\\mathcal{S}$ from a periodic diagnostic into a continuous constraint on the state space of the repository, effectively pruning any commit that introduces a forbidden token into the public branch.\n\nDeep epistemic analysis for surface-exposure-sweep (453d33c603f3e086, domain=other, pages_read=2/2): Operator 'Static Surface Exposure Sweep' (page 1, domain other) captures: # Surface exposure sweep — full repo, measured 2026-09-28 **Method: measure, do not trust the hand-written list.** The exposure audit (`docs/research/2026-09-28/orchestration/public-private-surface-doctrine.md`) listed 13 items. Assumptions: The application routing tree accurately reflects the runtime HTTP surface; forbidden metrics are strictly identifiable via static string matching. Breakdown regime: Fails when dynamic route generation occurs at runtime, or when sensitive data is obfuscated/composed from non-triggering payloads. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE boundary condition checks, ensuring the public interface does not expose internal state vectors. Operator 'Lexical Fence Verification' (page 1, domain other) captures: **Patterns searched** (the doctrine's keep-out list, as code): raw signal/ledger reads · `next_gen_stats`/NGS metrics · WOPR and target share · QBR · calibration internals · adjustment-layer weights/magnitudes · truth-catalog topology · methodology factor lists · raw player-week rows · edge internals (`expectedClv`, `factorBreakdown`, `independentEdge`). Assumptions: All sensitive intellectual property is encapsulated within specific, enumerable lexical tokens. Breakdown regime: Singularity occurs if developers refactor variable names to bypass the lexical filter without altering the underlying data payload. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the GSI 'clean' dataset by filtering out any route intersecting with the P_keepout kernel. Operator 'Epistemic Limitation Boundary' (page 1, domain other) captures: **What this does NOT prove.** The sweep is a static text-pattern match. Assumptions: Static analysis provides a necessary but insufficient condition for security. Breakdown regime: Complete failure to detect logic-bomb leaks or compositional vulnerabilities where two safe endpoints combine to reveal a secret. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors the GSE uncertainty quantification, explicitly bounding the confidence interval of the security audit. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for surface-exposure-sweep (453d33c603f3e086, domain=other, pages_read=2/2): Operator 'Static Surface Exposure Sweep' (page 1, domain other) captures: # Surface exposure sweep — full repo, measured 2026-09-28 **Method: measure, do not trust the hand-written list.** The exposure audit (`docs/research/2026-09-28/orchestration/public-private-surface-doctrine.md`) listed 13 items. Assumptions: The application routing tree accurately reflects the runtime HTTP surface; forbidden metrics are strictly identifiable via static string matching. Breakdown regime: Fails when dynamic route generation occurs at runtime, or when sensitive data is obfuscated/composed from non-triggering payloads. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE boundary condition checks, ensuring the public interface does not expose internal state vectors. Operator 'Lexical Fence Verification' (page 1, domain other) captures: **Patterns searched** (the doctrine's keep-out list, as code): raw signal/ledger reads · `next_gen_stats`/NGS metrics · WOPR and target share · QBR · calibration internals · adjustment-layer weights/magnitudes · truth-catalog topology · methodology factor lists · raw player-week rows · edge internals (`expectedClv`, `factorBreakdown`, `independentEdge`). Assumptions: All sensitive intellectual property is encapsulated within specific, enumerable lexical tokens. Breakdown regime: Singularity occurs if developers refactor variable names to bypass the lexical filter without altering the underlying data payload. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the GSI 'clean' dataset by filtering out any route intersecting with the P_keepout kernel. Operator 'Epistemic Limitation Boundary' (page 1, domain other) captures: **What this does NOT prove.** The sweep is a static text-pattern match. Assumptions: Static analysis provides a necessary but insufficient condition for security. Breakdown regime: Complete failure to detect logic-bomb leaks or compositional vulnerabilities where two safe endpoints combine to reveal a secret. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors the GSE uncertainty quantification, explicitly bounding the confidence interval of the security audit. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This methodology traces back to early static analysis tools in compiler theory, specifically taint tracking and symbol table audits. In cybersecurity, it mirrors the principle of 'defense in depth' by adding a syntactic layer of verification atop runtime authentication. The shift from hand-written lists to automated sweeps reflects the broader computational trend of replacing human memory with deterministic, reproducible scripts, ensuring that security policies are enforced by code rather than documentation.",
+      "theory_of_mind": "The primary actor is the development team, who may inadvertently expose sensitive metrics due to complexity or fatigue. The opposing agent is an adversarial analyst attempting to reverse-engineer proprietary models (like WOPR) from public APIs. The sweep assumes the developer intends to follow the doctrine but might slip; it does not assume malicious insider threat. By automating the check, we model the developer as a stochastic process prone to error, and the sweep as a corrective feedback loop that immediately penalizes deviations from the allowed vocabulary.",
+      "cross_layer_veto": "A veto is triggered if the sweep detects a forbidden pattern in an ungated route. Crucially, this veto must be cross-checked against the product layer: some exposures might be intentional for premium tiers. The 'left as-is on purpose' clause indicates a hierarchical veto system where business logic can override security heuristics, but only with explicit founder approval. This prevents the security tool from becoming a bottleneck while maintaining strict control over core IP."
+    }
+  ]
+}

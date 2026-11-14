@@ -1,0 +1,78 @@
+{
+  "book_id": "372ee644f2c19e12",
+  "source_status": "COMPLETE",
+  "title": "EXCLUDED",
+  "file_name": "EXCLUDED.md",
+  "sha256": "372ee644f2c19e1295926b09f1a681de2d4740d7608e01af42903dc9be0da7d9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Credential exposure and data integrity in derived feeds via secret detection and rejection protocols. Universal Lens: Rooted in EXCLUDED (372ee644f2c19e12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on feed validity using secret detection likelihood and repository rule compliance as evidence variables. GSI Mapping: Rooted in EXCLUDED (372ee644f2c19e12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally aware state transitions in feed ingestion governed by credential scrubbing and push rejection thresholds. GSE Mapping: Rooted in EXCLUDED (372ee644f2c19e12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "credential_exposure_assessment",
+      "name": "Live Credential Exposure Detector",
+      "verbatim_quote": "**It carries live credentials.** GitHub push protection rejected the first two attempts to push this feed with GH013 (repository rule violations) pointing at this exact row: a GitHub personal access token, a GCP API key bound to a service account, and further entries its classifier did not enumerate.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'credential family identifier (dimensionless)', 'R': 'repository rule violation flag (binary)'}",
+      "assumptions": "Credentials are detectable via pattern-matching; repository rules enforce credential exclusion.",
+      "breakdown_regime": "When R=1, feed ingestion is halted.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Secret detection in GSE maps to Bayesian evidence update in GSI where C influences P(R|C).",
+        "source_operator": "credential_exposure_assessment",
+        "telemetry": "Push rejection count per feed batch"
+      }
+    },
+    {
+      "primitive_id": "feed_integrity_violation",
+      "name": "Feed Integrity Violation Monitor",
+      "verbatim_quote": "**It is a 4.85 MB raw conversation transcript** — roughly 5% of the entire feed in a single row, and it duplicates material already on disk at its source path.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'feed size (bytes)', 'T': 'transcript size (bytes)', 'D': 'duplicate material indicator (binary)'}",
+      "assumptions": "Feed size and duplication indicate redundancy and potential corruption.",
+      "breakdown_regime": "When T/F > 0.05 or D=1, feed is flagged for exclusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Feed integrity in GSE corresponds to probabilistic redundancy in GSI through P(D|T,F).",
+        "source_operator": "feed_integrity_violation",
+        "telemetry": "Percentage of redundant rows per feed"
+      }
+    },
+    {
+      "primitive_id": "secret_scanner_reliability",
+      "name": "Pre-commit Secret Scanner Reliability Index",
+      "verbatim_quote": "The repo's own pre-commit secret scanner passed this file (\"no secrets detected\") both times, so it is not a detector worth trusting for this class of content.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'scanner reliability index (dimensionless)', 'M': 'model coverage (percentage)'}",
+      "assumptions": "Scanner accuracy depends on model coverage of credential types.",
+      "breakdown_regime": "When M < threshold, S approaches zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scanner reliability in GSE maps to confidence bounds in GSI where S affects P(¬detect|secret).",
+        "source_operator": "secret_scanner_reliability",
+        "telemetry": "False negative rate of secret detection"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "372ee644f2c19e12_t0",
+      "think": "The core operators define a layered integrity protocol: credential exposure triggers immediate rejection (R=1), while feed size and duplication indicate redundancy (D=1). These are modeled as binary events in a Bayesian framework where P(feed_valid | evidence) = P(evidence | feed_valid) * P(feed_valid) / P(evidence). The secret scanner's reliability (S) acts as a prior modifier, influencing belief updates when new credentials are encountered. The system fails if S is low and credential families exceed model coverage (M). This leads to a dual failure mode: false negatives in credential detection and false positives in feed inclusion due to redundancy. The epistemic trace reflects a recursive logic: if a feed is ingested, it must be validated against both credential and integrity criteria, otherwise it is excluded. The retrocausal genealogy traces back to early software security practices and modern CI/CD pipeline enforcement. Agents include the automated scanner, the repository policy engine, and the ingestion module. Anti-collinearity ensures that credential and integrity checks operate independently to prevent cascading failures.\n\nDeep epistemic analysis for EXCLUDED (372ee644f2c19e12, domain=other, pages_read=1/1): Operator 'Live Credential Exposure Detector' (page 1, domain other) captures: **It carries live credentials.** GitHub push protection rejected the first two attempts to push this feed with GH013 (repository rule violations) pointing at this exact row: a GitHub personal access token, a GCP API key bound to a service account, and further entries its classifier did not enumerate. Assumptions: Credentials are detectable via pattern-matching; repository rules enforce credential exclusion. Breakdown regime: When R=1, feed ingestion is halted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Secret detection in GSE maps to Bayesian evidence update in GSI where C influences P(R|C). Operator 'Feed Integrity Violation Monitor' (page 1, domain other) captures: **It is a 4.85 MB raw conversation transcript** — roughly 5% of the entire feed in a single row, and it duplicates material already on disk at its source path. Assumptions: Feed size and duplication indicate redundancy and potential corruption. Breakdown regime: When T/F > 0.05 or D=1, feed is flagged for exclusion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Feed integrity in GSE corresponds to probabilistic redundancy in GSI through P(D|T,F). Operator 'Pre-commit Secret Scanner Reliability Index' (page 1, domain other) captures: The repo's own pre-commit secret scanner passed this file (\"no secrets detected\") both times, so it is not a detector worth trusting for this class of content. Assumptions: Scanner accuracy depends on model coverage of credential types. Breakdown regime: When M < threshold, S approaches zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scanner reliability in GSE maps to confidence bounds in GSI where S affects P(¬detect|secret). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for EXCLUDED (372ee644f2c19e12, domain=other, pages_read=1/1): Operator 'Live Credential Exposure Detector' (page 1, domain other) captures: **It carries live credentials.** GitHub push protection rejected the first two attempts to push this feed with GH013 (repository rule violations) pointing at this exact row: a GitHub personal access token, a GCP API key bound to a service account, and further entries its classifier did not enumerate. Assumptions: Credentials are detectable via pattern-matching; repository rules enforce credential exclusion. Breakdown regime: When R=1, feed ingestion is halted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Secret detection in GSE maps to Bayesian evidence update in GSI where C influences P(R|C). Operator 'Feed Integrity Violation Monitor' (page 1, domain other) captures: **It is a 4.85 MB raw conversation transcript** — roughly 5% of the entire feed in a single row, and it duplicates material already on disk at its source path. Assumptions: Feed size and duplication indicate redundancy and potential corruption. Breakdown regime: When T/F > 0.05 or D=1, feed is flagged for exclusion. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Feed integrity in GSE corresponds to probabilistic redundancy in GSI through P(D|T,F). Operator 'Pre-commit Secret Scanner Reliability Index' (page 1, domain other) captures: The repo's own pre-commit secret scanner passed this file (\"no secrets detected\") both times, so it is not a detector worth trusting for this class of content. Assumptions: Scanner accuracy depends on model coverage of credential types. Breakdown regime: When M < threshold, S approaches zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scanner reliability in GSE maps to confidence bounds in GSI where S affects P(¬detect|secret). Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early software security models and CI/CD pipeline design, evolving through modern secret scanning and repository rule enforcement systems. Retrocausal Genealogy: Rooted in EXCLUDED (372ee644f2c19e12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in EXCLUDED (372ee644f2c19e12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include automated scanners, repository policies, and ingestion modules. Each agent operates under distinct constraints: scanners aim for completeness, policies enforce exclusions, and ingestion prioritizes data fidelity. Theory of Mind & Decision Maker Model: Rooted in EXCLUDED (372ee644f2c19e12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If credential exposure is undetected, integrity checks may fail to catch redundancy. If scanner reliability is low, both layers become collinear, leading to systemic failure. Cross-Layer Veto & Anti-Leakage Check: Rooted in EXCLUDED (372ee644f2c19e12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in EXCLUDED (372ee644f2c19e12), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

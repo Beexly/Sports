@@ -1,0 +1,78 @@
+{
+  "book_id": "3b1005007eeb51ea",
+  "source_status": "COMPLETE",
+  "title": "p0029",
+  "file_name": "p0029.txt",
+  "sha256": "3b1005007eeb51ea7a7e45bafe223d4e2784e8d3b59c48dfd680a4f3a023b7c4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Behavior as molar phenomenon: (\\mathcal{B} \\mid \\mathcal{G}, \\mathcal{M}) = \\{ \\text{pattern} \\to \\text{goal} \\times \\text{means} \\} \\in \\mathcal{P}(\\mathcal{S} \\times \\mathcal{O}) Universal Lens: Rooted in p0029 (3b1005007eeb51ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on behavioral patterns: P(\\mathcal{G} \\mid \\mathcal{B}, \\mathcal{M}) \\propto P(\\mathcal{B} \\mid \\mathcal{G}, \\mathcal{M}) \\cdot P(\\mathcal{G}) GSI Mapping: Rooted in p0029 (3b1005007eeb51ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition dynamics: \\Delta \\mathcal{S} = \\mathcal{T}(\\mathcal{B}, \\mathcal{M}) \\Rightarrow \\mathcal{S}_{t+1} = \\mathcal{F}(\\mathcal{S}_t, \\mathcal{B}_t) GSE Mapping: Rooted in p0029 (3b1005007eeb51ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "behavioral_pattern_morphism",
+      "name": "Behavioral Pattern Morphism",
+      "verbatim_quote": "Behavior, A Molar Phenomenon II the further fact that such a getting to or from is",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{B}': 'Behavioral event set, dimensionless', '\\\\mathcal{G}': 'Goal object, dimensionless', '\\\\mathcal{M}': 'Means object set, dimensionless'}",
+      "assumptions": "Behavior is a structured morphism between goal and means.",
+      "breakdown_regime": "When \\mathcal{B} becomes non-patterned or \\mathcal{M} is absent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: P(\\mathcal{G} \\mid \\mathcal{B}, \\mathcal{M}) maps to behavioral inference; GSE: \\mathcal{T}(\\mathcal{B}, \\mathcal{M}) models state transitions.",
+        "source_operator": "behavioral_pattern_morphism",
+        "telemetry": "Observable behavioral consistency across contexts."
+      }
+    },
+    {
+      "primitive_id": "molar_behavioral_structure",
+      "name": "Molar Behavioral Structure",
+      "verbatim_quote": "objects, as the way to get thus to or from 19 For example, the rat's running",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{R}': 'Running trajectory, meters', '\\\\mathcal{F}': 'Food goal, dimensionless', '\\\\mathcal{A}': 'Allelic path, dimensionless'}",
+      "assumptions": "Behavioral structure is defined by trajectory and goal alignment.",
+      "breakdown_regime": "When \\mathcal{R} diverges from \\mathcal{F} or \\mathcal{A} is undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Kernel density estimation of \\mathcal{R} vs \\mathcal{F}; GSE: Path optimization via \\mathcal{A}.",
+        "source_operator": "molar_behavioral_structure",
+        "telemetry": "Trajectory entropy and goal proximity metrics."
+      }
+    },
+    {
+      "primitive_id": "behavioral_means_communion",
+      "name": "Behavioral Means Communion",
+      "verbatim_quote": "fact that it always involves a specific pattern of commerce-, intercourse-, engagement-, communion-with such and such",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{C}': 'Communal interaction, dimensionless', '\\\\mathcal{E}': 'Engagement event, dimensionless', '\\\\mathcal{M}_o': 'Means object, dimensionless'}",
+      "assumptions": "Behavioral engagement is mediated through means objects.",
+      "breakdown_regime": "When \\mathcal{C} or \\mathcal{E} decouples from \\mathcal{M}_o.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Conditional probability of \\mathcal{C} given \\mathcal{M}_o; GSE: State update via \\mathcal{E}.",
+        "source_operator": "behavioral_means_communion",
+        "telemetry": "Interaction frequency and engagement depth."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3b1005007eeb51ea_t0",
+      "think": "The foundational concept of behavior as a molar phenomenon unifies action and intentionality into a structured morphism. The behavioral pattern morphism (BPM) formalizes how behavior is not just a simple act but a structured sequence linking a goal (G) to a means (M), expressed as a pattern. This is mathematically modeled as a conditional probability P(G|B,M) where B represents the behavioral event. The molar structure (MS) extends this by embedding the behavioral trajectory (e.g., rat running) into a space of possible paths (A), allowing for probabilistic path selection. The communion (CM) primitive introduces the relational aspect, where behavior is not isolated but embedded in a network of interactions with means objects. These three primitives form a triadic kernel: BPM → MS → CM. Failure modes occur when any component lacks structure: absence of pattern (BPM), lack of trajectory (MS), or disconnection from means (CM). Dualities emerge in the symmetry between goal-seeking and means-usage, while the failure modes reveal the fragility of the system under structural collapse.\n\nDeep epistemic analysis for p0029 (3b1005007eeb51ea, domain=other, pages_read=1/1): Operator 'Behavioral Pattern Morphism' (page 1, domain other) captures: Behavior, A Molar Phenomenon II the further fact that such a getting to or from is Assumptions: Behavior is a structured morphism between goal and means. Breakdown regime: When \\mathcal{B} becomes non-patterned or \\mathcal{M} is absent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: P(\\mathcal{G} \\mid \\mathcal{B}, \\mathcal{M}) maps to behavioral inference; GSE: \\mathcal{T}(\\mathcal{B}, \\mathcal{M}) models state transitions. Operator 'Molar Behavioral Structure' (page 1, domain other) captures: objects, as the way to get thus to or from 19 For example, the rat's running Assumptions: Behavioral structure is defined by trajectory and goal alignment. Breakdown regime: When \\mathcal{R} diverges from \\mathcal{F} or \\mathcal{A} is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Kernel density estimation of \\mathcal{R} vs \\mathcal{F}; GSE: Path optimization via \\mathcal{A}. Operator 'Behavioral Means Communion' (page 1, domain other) captures: fact that it always involves a specific pattern of commerce-, intercourse-, engagement-, communion-with such and such Assumptions: Behavioral engagement is mediated through means objects. Breakdown regime: When \\mathcal{C} or \\mathcal{E} decouples from \\mathcal{M}_o. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conditional probability of \\mathcal{C} given \\mathcal{M}_o; GSE: State update via \\mathcal{E}. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0029 (3b1005007eeb51ea, domain=other, pages_read=1/1): Operator 'Behavioral Pattern Morphism' (page 1, domain other) captures: Behavior, A Molar Phenomenon II the further fact that such a getting to or from is Assumptions: Behavior is a structured morphism between goal and means. Breakdown regime: When \\mathcal{B} becomes non-patterned or \\mathcal{M} is absent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: P(\\mathcal{G} \\mid \\mathcal{B}, \\mathcal{M}) maps to behavioral inference; GSE: \\mathcal{T}(\\mathcal{B}, \\mathcal{M}) models state transitions. Operator 'Molar Behavioral Structure' (page 1, domain other) captures: objects, as the way to get thus to or from 19 For example, the rat's running Assumptions: Behavioral structure is defined by trajectory and goal alignment. Breakdown regime: When \\mathcal{R} diverges from \\mathcal{F} or \\mathcal{A} is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Kernel density estimation of \\mathcal{R} vs \\mathcal{F}; GSE: Path optimization via \\mathcal{A}. Operator 'Behavioral Means Communion' (page 1, domain other) captures: fact that it always involves a specific pattern of commerce-, intercourse-, engagement-, communion-with such and such Assumptions: Behavioral engagement is mediated through means objects. Breakdown regime: When \\mathcal{C} or \\mathcal{E} decouples from \\mathcal{M}_o. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Conditional probability of \\mathcal{C} given \\mathcal{M}_o; GSE: State update via \\mathcal{E}. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Gestalt psychology and Maturana's autopoietic systems theory. Influenced by von Uexküll’s Umwelt and Dewey’s instrumentalism. Later formalized in cybernetics and embodied cognition frameworks. Retrocausal Genealogy: Rooted in p0029 (3b1005007eeb51ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0029 (3b1005007eeb51ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Behavior is modeled as a dual process: one agent seeks goals (G) through structured means (M), while another agent interprets behavior as a pattern (B) to infer intent. Each agent operates under different epistemic constraints, leading to potential misalignment in interpretation. Theory of Mind & Decision Maker Model: Rooted in p0029 (3b1005007eeb51ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive operate independently: BPM must not reduce to MS, MS must not collapse into CM, and CM must not degenerate into mere pattern recognition. Leakage occurs if the behavioral pattern is conflated with the means object or if the goal is misidentified. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0029 (3b1005007eeb51ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

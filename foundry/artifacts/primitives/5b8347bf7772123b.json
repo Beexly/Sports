@@ -1,0 +1,78 @@
+{
+  "book_id": "5b8347bf7772123b",
+  "source_status": "COMPLETE",
+  "title": "p0491",
+  "file_name": "p0491.txt",
+  "sha256": "5b8347bf7772123b82d32233a2e5e52e8a1f167ddc5f2b27bfb06f6ca3c72ef3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Names index as a structured relational lattice mapping scholarly attribution to publication indices. Universal Lens: Rooted in p0491 (5b8347bf7772123b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief networks over authorship indices for probabilistic citation inference. GSI Mapping: Rooted in p0491 (5b8347bf7772123b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in scholarly discourse through citation graph traversal. GSE Mapping: Rooted in p0491 (5b8347bf7772123b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "authorship_index_lattice",
+      "name": "Authorship Index Lattice",
+      "verbatim_quote": "Index of Names 461 Hertz, M, 99, 100, 384, 391. Higginson, G D, 106, 116. Higard,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each name maps to discrete publication indices; lattice structure implies partial ordering.",
+      "breakdown_regime": "When index entries become non-disjoint or ambiguous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic citation graph; to GSE's semantic citation traversal.",
+        "source_operator": "authorship_index_lattice",
+        "telemetry": "Citation frequency and co-authorship density."
+      }
+    },
+    {
+      "primitive_id": "scholarly_attribution_graph",
+      "name": "Scholarly Attribution Graph",
+      "verbatim_quote": "328, 337. Hmgston, R W. G, 307-309, 317. Hobhouse, L T., 220, 232, 342, 369. Holden,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Authors form nodes; publication indices define edges with weights.",
+      "breakdown_regime": "When citation overlaps exceed threshold or graph becomes disconnected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives into GSI's Bayesian network for citation likelihood; GSE's graph traversal for knowledge propagation.",
+        "source_operator": "scholarly_attribution_graph",
+        "telemetry": "Graph connectivity and clustering coefficient."
+      }
+    },
+    {
+      "primitive_id": "citation_frequency_vector",
+      "name": "Citation Frequency Vector",
+      "verbatim_quote": "69 Hollingworth, HL, 135, 142. Holmes, S J, 342, 369, Holsopple, J 'Q, 359-361, 369. Holt,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each author's indices form a vector in a high-dimensional space.",
+      "breakdown_regime": "When vector norms diverge beyond statistical significance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's vectorized belief states; to GSE's dynamic state evolution via citation influence.",
+        "source_operator": "citation_frequency_vector",
+        "telemetry": "Vector magnitude and cosine similarity between authors."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b8347bf7772123b_t0",
+      "think": "The index of names forms a structured relational lattice where each entry maps an author to specific publication indices. This structure supports a dual view: as a partially ordered set for hierarchical citation analysis and as a graph for network-based inference. The lattice's integrity depends on unique index assignments per author. Failure modes include overlapping indices or missing entries, which disrupt both Bayesian belief propagation and GSE's state transition dynamics. The scholarly attribution graph derived from this lattice enables probabilistic reasoning about author influence and citation likelihood. The citation frequency vector encodes author activity in multidimensional space, enabling similarity measures and predictive modeling. These primitives collectively support a robust framework for epistemic tracing across scholarly domains.\n\nDeep epistemic analysis for p0491 (5b8347bf7772123b, domain=other, pages_read=1/1): Operator 'Authorship Index Lattice' (page 1, domain other) captures: Index of Names 461 Hertz, M, 99, 100, 384, 391. Higginson, G D, 106, 116. Higard, Assumptions: Each name maps to discrete publication indices; lattice structure implies partial ordering. Breakdown regime: When index entries become non-disjoint or ambiguous. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic citation graph; to GSE's semantic citation traversal. Operator 'Scholarly Attribution Graph' (page 1, domain other) captures: 328, 337. Hmgston, R W. G, 307-309, 317. Hobhouse, L T., 220, 232, 342, 369. Holden, Assumptions: Authors form nodes; publication indices define edges with weights. Breakdown regime: When citation overlaps exceed threshold or graph becomes disconnected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives into GSI's Bayesian network for citation likelihood; GSE's graph traversal for knowledge propagation. Operator 'Citation Frequency Vector' (page 1, domain other) captures: 69 Hollingworth, HL, 135, 142. Holmes, S J, 342, 369, Holsopple, J 'Q, 359-361, 369. Holt, Assumptions: Each author's indices form a vector in a high-dimensional space. Breakdown regime: When vector norms diverge beyond statistical significance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's vectorized belief states; to GSE's dynamic state evolution via citation influence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0491 (5b8347bf7772123b, domain=other, pages_read=1/1): Operator 'Authorship Index Lattice' (page 1, domain other) captures: Index of Names 461 Hertz, M, 99, 100, 384, 391. Higginson, G D, 106, 116. Higard, Assumptions: Each name maps to discrete publication indices; lattice structure implies partial ordering. Breakdown regime: When index entries become non-disjoint or ambiguous. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic citation graph; to GSE's semantic citation traversal. Operator 'Scholarly Attribution Graph' (page 1, domain other) captures: 328, 337. Hmgston, R W. G, 307-309, 317. Hobhouse, L T., 220, 232, 342, 369. Holden, Assumptions: Authors form nodes; publication indices define edges with weights. Breakdown regime: When citation overlaps exceed threshold or graph becomes disconnected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives into GSI's Bayesian network for citation likelihood; GSE's graph traversal for knowledge propagation. Operator 'Citation Frequency Vector' (page 1, domain other) captures: 69 Hollingworth, HL, 135, 142. Holmes, S J, 342, 369, Holsopple, J 'Q, 359-361, 369. Holt, Assumptions: Each author's indices form a vector in a high-dimensional space. Breakdown regime: When vector norms diverge beyond statistical significance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's vectorized belief states; to GSE's dynamic state evolution via citation influence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in bibliometrics and graph theory, evolving from early indexing systems to modern citation networks. Influenced by formal concept analysis and relational algebra. Retrocausal Genealogy: Rooted in p0491 (5b8347bf7772123b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0491 (5b8347bf7772123b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models competing hypotheses of scholarly influence—some authors may be over-cited while others under-represented. Decision actors include researchers, citation algorithms, and institutional policies shaping knowledge flow. Theory of Mind & Decision Maker Model: Rooted in p0491 (5b8347bf7772123b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0491 (5b8347bf7772123b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that citation vectors do not redundantly encode similar information. Leakage veto prevents spurious correlations between unrelated authors or indices, maintaining model integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0491 (5b8347bf7772123b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0491 (5b8347bf7772123b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

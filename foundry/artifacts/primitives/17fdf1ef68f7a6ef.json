@@ -1,0 +1,95 @@
+{
+  "book_id": "17fdf1ef68f7a6ef",
+  "source_status": "COMPLETE",
+  "title": "CONTEST-016-rules-and-scoring-source-of-truth",
+  "file_name": "CONTEST-016-rules-and-scoring-source-of-truth.md",
+  "sha256": "17fdf1ef68f7a6eff2d8702f8c19fce3c670672d426aa558a93518ff9930894a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "contest_rules_source_of_truth",
+      "name": "Contest Rules Source-of-Truth",
+      "verbatim_quote": "# CONTEST-016: Rules and scoring source-of-truth ## Duplicate Gate duplicate_check_status: NET_NEW matched_existing_ids: none relation_to_existing: Net-new contest lab work.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Immutable contest rules, scoring logic, and correction policies must be auditable and verifiable.",
+      "breakdown_regime": "No runtime rule changes during active contests; disputes require deterministic replay.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Matches GSI's conformal prediction framework for probabilistic scoring calibration and GSE's state-transition automata for dispute resolution.",
+        "source_operator": "contest_rules_source_of_truth",
+        "telemetry": "Number of rule violations per contest cycle, deterministic replay success rate"
+      }
+    },
+    {
+      "primitive_id": "legal_compliance_boundary",
+      "name": "Legal Compliance Boundary",
+      "verbatim_quote": "Do not launch paid contests, prizes, entry fees, live leaderboards, geofenced eligibility, or user deposits without founder/legal approval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "High legal risk threshold enforces separation between development and live operations.",
+      "breakdown_regime": "Regulatory sandbox environment where financial transactions are mocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's permissioned deployment pipeline that segregates compliance-bound features from production.",
+        "source_operator": "legal_compliance_boundary",
+        "telemetry": "Compliance check failures per build, mock transaction volume"
+      }
+    },
+    {
+      "primitive_id": "docs_first_implementation",
+      "name": "Docs-First Implementation",
+      "verbatim_quote": "parent_id: none dependency_ids: none ## Goal Create a safe, docs-first or fake-data-first implementation packet for Rules and scoring source-of-truth.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Production code is generated from comprehensive documentation rather than direct coding.",
+      "breakdown_regime": "Specification-driven development where artifacts are first-class citizens.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives from Growth OS v2's iterative specification cycles and integrates with GSI's model registry patterns.",
+        "source_operator": "docs_first_implementation",
+        "telemetry": "Documentation coverage percentage, test-pass rate against specs"
+      }
+    },
+    {
+      "primitive_id": "acceptance_criteria",
+      "name": "Acceptance Criteria",
+      "verbatim_quote": "## Acceptance Criteria - No production code or live contest launched.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Final product must be a deliverable artifact, not an operational service.",
+      "breakdown_regime": "Delivery gate where runtime execution is prohibited.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's validation protocols for statistical models and GSE's staging environments.",
+        "source_operator": "acceptance_criteria",
+        "telemetry": "Artifact completion percentage, compliance audit pass rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "17fdf1ef68f7a6ef_t0",
+      "think": "The core challenge is creating a formal system for contest governance that prevents disputes through mathematical rigidity. The \"Rules Source-of-Truth\" primitive enforces a monolithic, read-only ledger of contest parameters, ensuring that any scoring calculation is a deterministic function of the input data and the stored rules. This is analogous to a conformal predictor in GSI, which provides distribution-free predictive intervals by calibrating against a separate calibration set. Here, the calibration set is the immutable rule document itself. The \"Legal Compliance Boundary\" acts as a high-threshold constraint, similar to a regularization term that penalizes solutions violating regulatory constraints. It ensures that the optimization problem (designing contest mechanics) remains feasible. The \"Docs-First Implementation\" aligns with the principle of maximum entropy priors in GSI, where we use the least informative specification consistent with known constraints. Finally, the \"Acceptance Criteria\" defines the solution space as the set of all possible documentation packages that satisfy the non-execution requirement, effectively creating a safety filter around the development process. Together, these primitives form a compositional architecture that decouples contest design from execution risk.\n\nDeep epistemic analysis for CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef, domain=other, pages_read=1/1): Operator 'Contest Rules Source-of-Truth' (page 1, domain other) captures: # CONTEST-016: Rules and scoring source-of-truth ## Duplicate Gate duplicate_check_status: NET_NEW matched_existing_ids: none relation_to_existing: Net-new contest lab work. Assumptions: Immutable contest rules, scoring logic, and correction policies must be auditable and verifiable. Breakdown regime: No runtime rule changes during active contests; disputes require deterministic replay. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Matches GSI's conformal prediction framework for probabilistic scoring calibration and GSE's state-transition automata for dispute resolution. Operator 'Legal Compliance Boundary' (page 1, domain other) captures: Do not launch paid contests, prizes, entry fees, live leaderboards, geofenced eligibility, or user deposits without founder/legal approval. Assumptions: High legal risk threshold enforces separation between development and live operations. Breakdown regime: Regulatory sandbox environment where financial transactions are mocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's permissioned deployment pipeline that segregates compliance-bound features from production. Operator 'Docs-First Implementation' (page 1, domain other) captures: parent_id: none dependency_ids: none ## Goal Create a safe, docs-first or fake-data-first implementation packet for Rules and scoring source-of-truth. Assumptions: Production code is generated from comprehensive documentation rather than direct coding. Breakdown regime: Specification-driven development where artifacts are first-class citizens. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from Growth OS v2's iterative specification cycles and integrates with GSI's model registry patterns. Operator 'Acceptance Criteria' (page 1, domain other) captures: ## Acceptance Criteria - No production code or live contest launched. Assumptions: Final product must be a deliverable artifact, not an operational service. Breakdown regime: Delivery gate where runtime execution is prohibited. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's validation protocols for statistical models and GSE's staging environments. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef, domain=other, pages_read=1/1): Operator 'Contest Rules Source-of-Truth' (page 1, domain other) captures: # CONTEST-016: Rules and scoring source-of-truth ## Duplicate Gate duplicate_check_status: NET_NEW matched_existing_ids: none relation_to_existing: Net-new contest lab work. Assumptions: Immutable contest rules, scoring logic, and correction policies must be auditable and verifiable. Breakdown regime: No runtime rule changes during active contests; disputes require deterministic replay. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Matches GSI's conformal prediction framework for probabilistic scoring calibration and GSE's state-transition automata for dispute resolution. Operator 'Legal Compliance Boundary' (page 1, domain other) captures: Do not launch paid contests, prizes, entry fees, live leaderboards, geofenced eligibility, or user deposits without founder/legal approval. Assumptions: High legal risk threshold enforces separation between development and live operations. Breakdown regime: Regulatory sandbox environment where financial transactions are mocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's permissioned deployment pipeline that segregates compliance-bound features from production. Operator 'Docs-First Implementation' (page 1, domain other) captures: parent_id: none dependency_ids: none ## Goal Create a safe, docs-first or fake-data-first implementation packet for Rules and scoring source-of-truth. Assumptions: Production code is generated from comprehensive documentation rather than direct coding. Breakdown regime: Specification-driven development where artifacts are first-class citizens. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from Growth OS v2's iterative specification cycles and integrates with GSI's model registry patterns. Operator 'Acceptance Criteria' (page 1, domain other) captures: ## Acceptance Criteria - No production code or live contest launched. Assumptions: Final product must be a deliverable artifact, not an operational service. Breakdown regime: Delivery gate where runtime execution is prohibited. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's validation protocols for statistical models and GSE's staging environments. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in formal verification methods from the 1970s, evolving through modern contract law and smart-contract theory, with influences from information theory's source coding theorem. Retrocausal Genealogy: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Founders and legal teams act as rational agents seeking to minimize liability while maximizing innovation. They model the contest system as a black box with uncertain parameters, requiring transparent and verifiable internal structure to gain trust. Theory of Mind & Decision Maker Model: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents leakage from GSI's probabilistic scoring models into the deterministic contest rules, ensuring that uncertainty quantification does not corrupt the compliance boundary. Cross-Layer Veto & Anti-Leakage Check: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CONTEST-016-rules-and-scoring-source-of-truth (17fdf1ef68f7a6ef), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

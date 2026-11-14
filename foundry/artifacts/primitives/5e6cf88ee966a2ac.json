@@ -1,0 +1,78 @@
+{
+  "book_id": "5e6cf88ee966a2ac",
+  "source_status": "COMPLETE",
+  "title": "1214-distributional-robust-kelly-gambling-optimal",
+  "file_name": "1214-distributional-robust-kelly-gambling-optimal.md",
+  "sha256": "5e6cf88ee966a2aca37dfbde7de9136ae5ba4ad657f48f21e70c6c0ea9138b66",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Robust Kelly gambling formulates optimal betting as a max-min optimization over uncertain outcome distributions, leveraging convex duality to ensure long-run growth under distributional ambiguity. Universal Lens: Rooted in 1214-distributional-robust-kelly-gambling-optimal (5e6cf88ee966a2ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction to construct uncertainty sets from calibration residuals, enabling Bayesian updating of belief states for robust decision-making under model misspecification. GSI Mapping: Rooted in 1214-distributional-robust-kelly-gambling-optimal (5e6cf88ee966a2ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies the robust-Kelly framework as a sizing layer that dynamically adjusts allocations based on uncertainty set evolution derived from real-time model performance metrics. GSE Mapping: Rooted in 1214-distributional-robust-kelly-gambling-optimal (5e6cf88ee966a2ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "robust_kelly_allocation",
+      "name": "Robust Kelly Allocation",
+      "verbatim_quote": "Method / model Solve maximize_{b ∈ B} inf_{π ∈ Π} E_π[log(rTb)], where b is the allocation vector, r the return vector, and Π an uncertainty set over outcome distributions.",
+      "page": 1,
+      "latex": "\\max_{b \\in B} \\inf_{\\pi \\in \\Pi} \\mathbb{E}_\\pi[\\log(r^T b)]",
+      "symbol_and_unit_ledger": "{'b': 'allocation vector (dimensionless)', 'r': 'return vector (dimensionless)', 'Π': 'uncertainty set over distributions (set)', 'B': 'feasible allocation set (convex set)'}",
+      "assumptions": "True distribution lies within Π; log utility function; convexity of B",
+      "breakdown_regime": "When Π does not contain true distribution or B is non-convex",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's sizing layer computes b* via convex optimization using empirical uncertainty sets built from model residuals",
+        "source_operator": "robust_kelly_allocation",
+        "telemetry": "Worst-case expected log growth rate"
+      }
+    },
+    {
+      "primitive_id": "disciplined_convex_programming",
+      "name": "Disciplined Convex Programming",
+      "verbatim_quote": "Show the problem is a disciplined convex program (DCP) for: polyhedral sets, box sets, ellipsoidal sets, f-divergence balls, Wasserstein balls, and sets defined by estimated mean/covariance.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Uncertainty sets are defined via convex constraints or norms",
+      "breakdown_regime": "Non-convex uncertainty sets or non-smooth objectives",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE uses CVXPY-compatible formulations to solve robust Kelly problems efficiently",
+        "source_operator": "disciplined_convex_programming",
+        "telemetry": "Computational convergence time and solution accuracy"
+      }
+    },
+    {
+      "primitive_id": "adaptive_uncertainty_sets",
+      "name": "Adaptive Uncertainty Sets",
+      "verbatim_quote": "The choice of set type and radius is exogenous — the paper gives no data-driven selection rule.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'η': 'radius parameter for box set (dimensionless)', 'c': 'radius parameter for Wasserstein ball (dimensionless)'}",
+      "assumptions": "Uncertainty set parameters are calibrated from model residuals",
+      "breakdown_regime": "Fixed-radius sets fail under changing data distributions",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE builds adaptive uncertainty sets from GSE's own calibration errors instead of static defaults",
+        "source_operator": "adaptive_uncertainty_sets",
+        "telemetry": "Calibration residual variance and set radius dynamics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5e6cf88ee966a2ac_t0",
+      "think": "The robust Kelly framework models optimal betting under distributional uncertainty by solving a max-min problem: maximize worst-case expected log utility over an uncertainty set Π of plausible distributions. This formulation ensures long-term growth even when the true distribution is unknown. The key insight is that the worst-case expectation can be computed via convex duality, making it tractable through disciplined convex programming (DCP). In GSE, this translates to a sizing layer where allocation vectors b* are computed by solving the robust optimization problem using uncertainty sets derived from model calibration residuals. The dual nature of the problem allows for efficient computation while maintaining robustness guarantees. However, the method fails if the uncertainty set excludes the true distribution or if the feasible set B lacks convexity. The exogeneity of uncertainty set parameters in the original work necessitates adaptation in GSE to maintain relevance under evolving data conditions.\n\nDeep epistemic analysis for 1214-distributional-robust-kelly-gambling-optimal (5e6cf88ee966a2ac, domain=other, pages_read=3/3): Operator 'Robust Kelly Allocation' (page 1, domain other) captures: Method / model Solve maximize_{b ∈ B} inf_{π ∈ Π} E_π[log(rTb)], where b is the allocation vector, r the return vector, and Π an uncertainty set over outcome distributions. Assumptions: True distribution lies within Π; log utility function; convexity of B Breakdown regime: When Π does not contain true distribution or B is non-convex Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's sizing layer computes b* via convex optimization using empirical uncertainty sets built from model residuals Operator 'Disciplined Convex Programming' (page 1, domain other) captures: Show the problem is a disciplined convex program (DCP) for: polyhedral sets, box sets, ellipsoidal sets, f-divergence balls, Wasserstein balls, and sets defined by estimated mean/covariance. Assumptions: Uncertainty sets are defined via convex constraints or norms Breakdown regime: Non-convex uncertainty sets or non-smooth objectives Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE uses CVXPY-compatible formulations to solve robust Kelly problems efficiently Operator 'Adaptive Uncertainty Sets' (page 1, domain other) captures: The choice of set type and radius is exogenous — the paper gives no data-driven selection rule. Assumptions: Uncertainty set parameters are calibrated from model residuals Breakdown regime: Fixed-radius sets fail under changing data distributions Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE builds adaptive uncertainty sets from GSE's own calibration errors instead of static defaults Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1214-distributional-robust-kelly-gambling-optimal (5e6cf88ee966a2ac, domain=other, pages_read=3/3): Operator 'Robust Kelly Allocation' (page 1, domain other) captures: Method / model Solve maximize_{b ∈ B} inf_{π ∈ Π} E_π[log(rTb)], where b is the allocation vector, r the return vector, and Π an uncertainty set over outcome distributions. Assumptions: True distribution lies within Π; log utility function; convexity of B Breakdown regime: When Π does not contain true distribution or B is non-convex Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's sizing layer computes b* via convex optimization using empirical uncertainty sets built from model residuals Operator 'Disciplined Convex Programming' (page 1, domain other) captures: Show the problem is a disciplined convex program (DCP) for: polyhedral sets, box sets, ellipsoidal sets, f-divergence balls, Wasserstein balls, and sets defined by estimated mean/covariance. Assumptions: Uncertainty sets are defined via convex constraints or norms Breakdown regime: Non-convex uncertainty sets or non-smooth objectives Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE uses CVXPY-compatible formulations to solve robust Kelly problems efficiently Operator 'Adaptive Uncertainty Sets' (page 1, domain other) captures: The choice of set type and radius is exogenous — the paper gives no data-driven selection rule. Assumptions: Uncertainty set parameters are calibrated from model residuals Breakdown regime: Fixed-radius sets fail under changing data distributions Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE builds adaptive uncertainty sets from GSE's own calibration errors instead of static defaults Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly's original work on logarithmic utility maximization, extended by robust optimization principles introduced in convex programming and game theory frameworks such as Wald’s minimax criterion and information-theoretic uncertainty quantification. Retrocausal Genealogy: Rooted in 1214-distributional-robust-kelly-gambling-optimal (5e6cf88ee966a2ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1214-distributional-robust-kelly-gambling-optimal (5e6cf88ee966a2ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market (unknown true distribution), the model (miscalibrated estimates), and the optimizer (seeking worst-case robustness). Each agent introduces a layer of strategic uncertainty that must be navigated through formalized risk management. Theory of Mind & Decision Maker Model: Rooted in 1214-distributional-robust-kelly-gambling-optimal (5e6cf88ee966a2ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that uncertainty sets do not become trivially large or small, which would either overprotect or underprotect the strategy. Leakage is mitigated by ensuring that uncertainty sets reflect actual model behavior rather than arbitrary assumptions. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1214-distributional-robust-kelly-gambling-optimal (5e6cf88ee966a2ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

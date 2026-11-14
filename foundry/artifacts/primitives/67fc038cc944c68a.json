@@ -1,0 +1,78 @@
+{
+  "book_id": "67fc038cc944c68a",
+  "source_status": "COMPLETE",
+  "title": "p0204",
+  "file_name": "p0204.txt",
+  "sha256": "67fc038cc944c68adfa7c566230edf9768b0b717e1ea677c3ab85d795a0179fd",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Conditional probability unifies subjective belief with objective frequency through Bayesian update mechanisms. Universal Lens: Rooted in p0204 (67fc038cc944c68a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conditional probability for Bayesian inference, updating prior beliefs using observed data to compute posterior distributions over hypotheses. GSI Mapping: Rooted in p0204 (67fc038cc944c68a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models dynamic state transitions via conditional probability distributions, enabling predictive reasoning under uncertainty in situational contexts. GSE Mapping: Rooted in p0204 (67fc038cc944c68a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "conditional_probability",
+      "name": "Conditional Probability",
+      "verbatim_quote": "We are led therefore to define the conditional probability of E, given that F has already occurred, in symbols μF(E), as the ratio μ(E ∩ F)/μ(F).",
+      "page": 1,
+      "latex": "\\mu_F(E) = \\frac{\\mu(E \\cap F)}{\\mu(F)}",
+      "symbol_and_unit_ledger": "{'E': 'event space, dimensionless', 'F': 'conditioning event, dimensionless', '\\\\mu(E \\\\cap F)': 'joint measure of E and F, dimensionless', '\\\\mu(F)': 'measure of F, dimensionless', '\\\\mu_F(E)': 'conditional probability of E given F, dimensionless'}",
+      "assumptions": "Events E and F are measurable sets within a probability space with finite, non-zero measure μ(F).",
+      "breakdown_regime": "When μ(F) = 0, conditional probability is undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI for Bayesian updating and in GSE for state transition modeling based on evidence.",
+        "source_operator": "conditional_probability",
+        "telemetry": "Posterior belief update accuracy in Bayesian networks."
+      }
+    },
+    {
+      "primitive_id": "intersection_measure",
+      "name": "Intersection Measure",
+      "verbatim_quote": "Phrased in this way, the question almost suggests its own answer: the extent to which F is contained in E can be measured by the extent to which E and F are likely to occur simultaneously, that is by μ(E ∩ F).",
+      "page": 1,
+      "latex": "\\mu(E \\cap F)",
+      "symbol_and_unit_ledger": "{'E': 'event space, dimensionless', 'F': 'event space, dimensionless', '\\\\mu(E \\\\cap F)': 'joint occurrence measure, dimensionless'}",
+      "assumptions": "E and F are subsets of a common measurable space with probability measure μ.",
+      "breakdown_regime": "When E and F are mutually exclusive, μ(E ∩ F) = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's joint state-space intersection for concurrent event detection.",
+        "source_operator": "intersection_measure",
+        "telemetry": "Overlap between predicted and actual event trajectories."
+      }
+    },
+    {
+      "primitive_id": "containment_ratio",
+      "name": "Containment Ratio",
+      "verbatim_quote": "In other words it is not merely the absolute size of E ∩ F that matters: it is the relation or proportion of this size to the size of F that is relevant.",
+      "page": 1,
+      "latex": "\\frac{\\mu(E \\cap F)}{\\mu(F)}",
+      "symbol_and_unit_ledger": "{'E': 'event space, dimensionless', 'F': 'conditioning event, dimensionless', '\\\\mu(E \\\\cap F)': 'joint measure, dimensionless', '\\\\mu(F)': 'measure of conditioning event, dimensionless'}",
+      "assumptions": "μ(F) > 0 ensures well-defined ratio; E ⊆ Ω where Ω is sample space.",
+      "breakdown_regime": "Undefined when μ(F) = 0; degenerates to zero when E ∩ F = ∅.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Forms basis for GSE's probabilistic containment logic in action planning.",
+        "source_operator": "containment_ratio",
+        "telemetry": "Ratio of expected to observed co-occurrence in sequential actions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "67fc038cc944c68a_t0",
+      "think": "Conditional probability μF(E) = μ(E ∩ F)/μ(F) arises from the need to quantify how much of an event E is contained within another event F, normalized by F’s likelihood. This definition resolves ambiguity in interpreting overlapping events by focusing on relative proportions rather than absolute sizes. It enables formal treatment of 'given' information in probabilistic reasoning. The derivation begins with intuitive cases like G ⊂ E, where μG(E) = 1, and extends to general cases via proportionality. The key insight is that μ(E ∩ F) alone does not suffice due to potential scaling issues—only the ratio μ(E ∩ F)/μ(F) captures the true degree of inclusion. This structure supports both Bayesian inference (GSI) and dynamic system modeling (GSE) by providing a principled method for updating beliefs or predicting outcomes conditioned on new data. Failure modes include division by zero when μ(F)=0 or ill-defined measures, which require careful handling in computational frameworks.\n\nDeep epistemic analysis for p0204 (67fc038cc944c68a, domain=other, pages_read=1/1): Operator 'Conditional Probability' (page 1, domain other) captures: We are led therefore to define the conditional probability of E, given that F has already occurred, in symbols μF(E), as the ratio μ(E ∩ F)/μ(F). Assumptions: Events E and F are measurable sets within a probability space with finite, non-zero measure μ(F). Breakdown regime: When μ(F) = 0, conditional probability is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for Bayesian updating and in GSE for state transition modeling based on evidence. Operator 'Intersection Measure' (page 1, domain other) captures: Phrased in this way, the question almost suggests its own answer: the extent to which F is contained in E can be measured by the extent to which E and F are likely to occur simultaneously, that is by μ(E ∩ F). Assumptions: E and F are subsets of a common measurable space with probability measure μ. Breakdown regime: When E and F are mutually exclusive, μ(E ∩ F) = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's joint state-space intersection for concurrent event detection. Operator 'Containment Ratio' (page 1, domain other) captures: In other words it is not merely the absolute size of E ∩ F that matters: it is the relation or proportion of this size to the size of F that is relevant. Assumptions: μ(F) > 0 ensures well-defined ratio; E ⊆ Ω where Ω is sample space. Breakdown regime: Undefined when μ(F) = 0; degenerates to zero when E ∩ F = ∅. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Forms basis for GSE's probabilistic containment logic in action planning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0204 (67fc038cc944c68a, domain=other, pages_read=1/1): Operator 'Conditional Probability' (page 1, domain other) captures: We are led therefore to define the conditional probability of E, given that F has already occurred, in symbols μF(E), as the ratio μ(E ∩ F)/μ(F). Assumptions: Events E and F are measurable sets within a probability space with finite, non-zero measure μ(F). Breakdown regime: When μ(F) = 0, conditional probability is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI for Bayesian updating and in GSE for state transition modeling based on evidence. Operator 'Intersection Measure' (page 1, domain other) captures: Phrased in this way, the question almost suggests its own answer: the extent to which F is contained in E can be measured by the extent to which E and F are likely to occur simultaneously, that is by μ(E ∩ F). Assumptions: E and F are subsets of a common measurable space with probability measure μ. Breakdown regime: When E and F are mutually exclusive, μ(E ∩ F) = 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's joint state-space intersection for concurrent event detection. Operator 'Containment Ratio' (page 1, domain other) captures: In other words it is not merely the absolute size of E ∩ F that matters: it is the relation or proportion of this size to the size of F that is relevant. Assumptions: μ(F) > 0 ensures well-defined ratio; E ⊆ Ω where Ω is sample space. Breakdown regime: Undefined when μ(F) = 0; degenerates to zero when E ∩ F = ∅. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Forms basis for GSE's probabilistic containment logic in action planning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kolmogorov's axiomatic probability theory (1933), conditional probability emerged from attempts to formalize intuitive notions of 'given' information in statistical inference and stochastic processes. Retrocausal Genealogy: Rooted in p0204 (67fc038cc944c68a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0204 (67fc038cc944c68a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model each other's beliefs through conditional probability updates, assuming rationality and shared knowledge. Misaligned priors or incomplete conditionings lead to divergent predictions and strategic misinterpretations. Theory of Mind & Decision Maker Model: Rooted in p0204 (67fc038cc944c68a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0204 (67fc038cc944c68a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that conditional probability not be conflated with causal dependence; leakage occurs if μ(E ∩ F) is interpreted as implying causality rather than mere association. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0204 (67fc038cc944c68a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0204 (67fc038cc944c68a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

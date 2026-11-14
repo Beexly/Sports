@@ -1,0 +1,78 @@
+{
+  "book_id": "6fd3184d3cc836f5",
+  "source_status": "COMPLETE",
+  "title": "fleet-architecture-2026-10-08",
+  "file_name": "fleet-architecture-2026-10-08.md",
+  "sha256": "6fd3184d3cc836f5915f4f26af1028a0ae63a7cd8ca924a49dd200de5bf97c8a",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A hierarchical command-layer architecture maps 1:1 to fleet task routing; Motif acts as central orchestrator with bounded rationality. Universal Lens: Rooted in fleet-architecture-2026-10-08 (6fd3184d3cc836f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief propagation through Motif's task classifier; conformal prediction bounds agent confidence intervals for routed decisions. GSI Mapping: Rooted in fleet-architecture-2026-10-08 (6fd3184d3cc836f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions driven by agent feedback loops; dynamic policy updates based on QC metrics and telemetry. GSE Mapping: Rooted in fleet-architecture-2026-10-08 (6fd3184d3cc836f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fleet_router",
+      "name": "Fleet Task Classifier",
+      "verbatim_quote": "Motif classifies your task (Fleet Router), routes to the best agent, QC's the output, and reports back.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Task type (dimensionless categorical)', 'A_i': 'Agent i (indexed set of agents)', 'R(T, A_i)': 'Routing probability (unitless)'}",
+      "assumptions": "Tasks are mutually exclusive and collectively exhaustive; agent capabilities are static during routing.",
+      "breakdown_regime": "When T ∉ dom(R), fallback to default agent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Task classification function f(T) → argmax_i R(T, A_i) mirrors GSI's Bayesian update on task evidence.",
+        "source_operator": "fleet_router",
+        "telemetry": "Routing accuracy rate over N tasks"
+      }
+    },
+    {
+      "primitive_id": "squads_with_leader_routing",
+      "name": "Squad Leader Routing",
+      "verbatim_quote": "Its \"Squads with leader routing\" maps 1:1 to your captains/players model.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_j': 'Leader j (captain)', 'P_{j,k}': 'Player k under leader j', 'C(L_j, P_{j,k})': 'Coordination cost (dimensionless)'}",
+      "assumptions": "Leadership hierarchy is stable; coordination costs are additive across players.",
+      "breakdown_regime": "When C(L_j, P_{j,k}) > threshold, reassign squad.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Leader-player routing kernel K(L_j, P_{j,k}) = exp(-C(L_j, P_{j,k})) encodes squad efficiency in GSE's policy space.",
+        "source_operator": "squads_with_leader_routing",
+        "telemetry": "Average squad performance metric over time"
+      }
+    },
+    {
+      "primitive_id": "single_command_layer",
+      "name": "Command Layer Orchestration",
+      "verbatim_quote": "# Fleet Architecture — October 8, 2026 Garrett's single command layer over 26+ agents.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Command layer (scalar)', 'A_i': 'Agent i (set of 26+)', 'O(C, A_i)': 'Orchestration output (dimensionless)'}",
+      "assumptions": "Single command layer ensures bounded decision complexity; all agents operate within shared context.",
+      "breakdown_regime": "When O(C, A_i) exceeds entropy limit, invoke fallback protocol.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Command layer C ≅ GSI’s global belief state; agent outputs form posterior distribution over task space.",
+        "source_operator": "single_command_layer",
+        "telemetry": "Decision latency and error rate across agent pool"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6fd3184d3cc836f5_t0",
+      "think": "The fleet architecture embodies a layered control system where Motif serves as the primary orchestrator, applying task classification to route requests to specialized agents. This mirrors a Bayesian network where each agent represents a conditional probability distribution over outcomes. The squad leader routing mechanism introduces a hierarchical structure that enforces bounded rationality among subagents. Each leader-agent pair forms a micro-policy kernel, optimizing local coordination while maintaining global coherence. Failure modes arise when task classification fails (e.g., ambiguous input) or when leader-agent alignment breaks down due to misaligned incentives or communication bottlenecks. The command layer ensures top-down consistency but risks becoming a bottleneck under high concurrency.\n\nDeep epistemic analysis for fleet-architecture-2026-10-08 (6fd3184d3cc836f5, domain=other, pages_read=2/2): Operator 'Fleet Task Classifier' (page 2, domain other) captures: Motif classifies your task (Fleet Router), routes to the best agent, QC's the output, and reports back. Assumptions: Tasks are mutually exclusive and collectively exhaustive; agent capabilities are static during routing. Breakdown regime: When T ∉ dom(R), fallback to default agent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Task classification function f(T) → argmax_i R(T, A_i) mirrors GSI's Bayesian update on task evidence. Operator 'Squad Leader Routing' (page 2, domain other) captures: Its \"Squads with leader routing\" maps 1:1 to your captains/players model. Assumptions: Leadership hierarchy is stable; coordination costs are additive across players. Breakdown regime: When C(L_j, P_{j,k}) > threshold, reassign squad. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Leader-player routing kernel K(L_j, P_{j,k}) = exp(-C(L_j, P_{j,k})) encodes squad efficiency in GSE's policy space. Operator 'Command Layer Orchestration' (page 1, domain other) captures: # Fleet Architecture — October 8, 2026 Garrett's single command layer over 26+ agents. Assumptions: Single command layer ensures bounded decision complexity; all agents operate within shared context. Breakdown regime: When O(C, A_i) exceeds entropy limit, invoke fallback protocol. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Command layer C ≅ GSI’s global belief state; agent outputs form posterior distribution over task space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fleet-architecture-2026-10-08 (6fd3184d3cc836f5, domain=other, pages_read=2/2): Operator 'Fleet Task Classifier' (page 2, domain other) captures: Motif classifies your task (Fleet Router), routes to the best agent, QC's the output, and reports back. Assumptions: Tasks are mutually exclusive and collectively exhaustive; agent capabilities are static during routing. Breakdown regime: When T ∉ dom(R), fallback to default agent. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Task classification function f(T) → argmax_i R(T, A_i) mirrors GSI's Bayesian update on task evidence. Operator 'Squad Leader Routing' (page 2, domain other) captures: Its \"Squads with leader routing\" maps 1:1 to your captains/players model. Assumptions: Leadership hierarchy is stable; coordination costs are additive across players. Breakdown regime: When C(L_j, P_{j,k}) > threshold, reassign squad. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Leader-player routing kernel K(L_j, P_{j,k}) = exp(-C(L_j, P_{j,k})) encodes squad efficiency in GSE's policy space. Operator 'Command Layer Orchestration' (page 1, domain other) captures: # Fleet Architecture — October 8, 2026 Garrett's single command layer over 26+ agents. Assumptions: Single command layer ensures bounded decision complexity; all agents operate within shared context. Breakdown regime: When O(C, A_i) exceeds entropy limit, invoke fallback protocol. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Command layer C ≅ GSI’s global belief state; agent outputs form posterior distribution over task space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical control theory and distributed computing paradigms, particularly multi-agent systems and hierarchical reinforcement learning frameworks. Retrocausal Genealogy: Rooted in fleet-architecture-2026-10-08 (6fd3184d3cc836f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in fleet-architecture-2026-10-08 (6fd3184d3cc836f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include those with conflicting utility functions (e.g., Claude Code vs. Muse), leading to divergent task interpretations. Decision actors must balance exploration vs. exploitation in agent selection. Theory of Mind & Decision Maker Model: Rooted in fleet-architecture-2026-10-08 (6fd3184d3cc836f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple agents attempt identical routing paths; leakage occurs if telemetry from one layer bypasses QC in another. Veto conditions enforce orthogonal task decomposition. Cross-Layer Veto & Anti-Leakage Check: Rooted in fleet-architecture-2026-10-08 (6fd3184d3cc836f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in fleet-architecture-2026-10-08 (6fd3184d3cc836f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

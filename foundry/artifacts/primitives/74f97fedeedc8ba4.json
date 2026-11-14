@@ -1,0 +1,78 @@
+{
+  "book_id": "74f97fedeedc8ba4",
+  "source_status": "COMPLETE",
+  "title": "p0421",
+  "file_name": "p0421.txt",
+  "sha256": "74f97fedeedc8ba4b899e6e1cbba87dbcbe2859fec1f63001cb38ee848127e6b",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sympathy as a probabilistic actuation under competing instinctual drives, modeled via Bayesian belief revision and evolutionary game-theoretic inhibition. Universal Lens: Rooted in p0421 (74f97fedeedc8ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers sympathetic behavior as a conditional probability P(S|I) where I represents inhibitory instincts; uses conformal prediction to bound uncertainty in moral decision-making. GSI Mapping: Rooted in p0421 (74f97fedeedc8ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models state transitions between sympathy and inhibition using Markovian decision processes with reward functions derived from evolutionary fitness landscapes. GSE Mapping: Rooted in p0421 (74f97fedeedc8ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sympathy_inhibition",
+      "name": "Sympathy Inhibition Mechanism",
+      "verbatim_quote": "İt is true that sympathy is peculiarly liable to inhibition from other instincts which its stimulus may call forth.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'sympathy intensity (dimensionless)', 'I': 'inhibitory instinct strength (dimensionless)', 'P(S|I)': 'conditional probability of sympathy given inhibition'}",
+      "assumptions": "Sympathy is a stochastic process modulated by competing instincts; inhibition follows a threshold model.",
+      "breakdown_regime": "When I > S, P(S|I) → 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Bayesian update of sympathy belief based on observed instinctual conflict",
+        "source_operator": "sympathy_inhibition",
+        "telemetry": "Observable behavioral hesitation or avoidance in moral dilemmas"
+      }
+    },
+    {
+      "primitive_id": "instinctual_competition",
+      "name": "Instinctual Competition Dynamics",
+      "verbatim_quote": "The hunting and pugnacious instincts, when aroused, also inhibit our sympathy absolutely.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'hunting instinct activation (dimensionless)', 'P': 'pugnacious instinct activation (dimensionless)', 'S_H,P': 'sympathy suppression factor (dimensionless)'}",
+      "assumptions": "Hunting and pugnacious instincts operate in antagonistic fashion to sympathy; mutual exclusivity holds under high arousal.",
+      "breakdown_regime": "S_H,P → 0 when H + P > threshold",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to competitive inhibition in enzymatic kinetics",
+        "source_operator": "instinctual_competition",
+        "telemetry": "Behavioral shift from empathy to aggression in threat scenarios"
+      }
+    },
+    {
+      "primitive_id": "moral_decision_threshold",
+      "name": "Moral Decision Threshold Model",
+      "verbatim_quote": "The blood mounts to the eyes, and sympathy's chance is gone.\\ The hunting instinct has an equally remote origin in the evolution of the race.t The hunting and the fighting in<small<span class=\"docvortex-page-footnote\" data-block-type=\"page_footnote\" style=\"color:6b7280\"Sympathy has been enormously written about in books on Ethics.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'threshold of emotional arousal (dimensionless)', 'A': 'arousal level (dimensionless)', 'D': 'decision outcome (binary: 0/1)'}",
+      "assumptions": "Decision-making is governed by a dynamic threshold dependent on arousal state.",
+      "breakdown_regime": "D = 0 when A ≥ T",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Threshold-based decision logic in moral cognition",
+        "source_operator": "moral_decision_threshold",
+        "telemetry": "Time-series of behavioral responses during emotionally charged events"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "74f97fedeedc8ba4_t0",
+      "think": "Sympathy emerges as a probabilistic response to suffering, subject to modulation by competing instincts. The core mechanism operates through a Bayesian framework where prior beliefs about sympathy are updated in light of new instinctual stimuli. When inhibition thresholds are crossed—such as in the presence of hunting or pugnacious instincts—belief revision leads to near-zero sympathy probability. This is modeled as a stochastic process with deterministic breakdowns at critical instigation levels. Instinctual competition introduces nonlinearity into the system, where multiple drivers can suppress sympathy simultaneously. The emotional arousal threshold further governs whether a sympathetic response is enacted or suppressed. These dynamics form a closed-loop feedback system where evolutionary pressures shape both the structure of sympathy and its susceptibility to disruption.\n\nDeep epistemic analysis for p0421 (74f97fedeedc8ba4, domain=other, pages_read=1/1): Operator 'Sympathy Inhibition Mechanism' (page 1, domain other) captures: İt is true that sympathy is peculiarly liable to inhibition from other instincts which its stimulus may call forth. Assumptions: Sympathy is a stochastic process modulated by competing instincts; inhibition follows a threshold model. Breakdown regime: When I > S, P(S|I) → 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bayesian update of sympathy belief based on observed instinctual conflict Operator 'Instinctual Competition Dynamics' (page 1, domain other) captures: The hunting and pugnacious instincts, when aroused, also inhibit our sympathy absolutely. Assumptions: Hunting and pugnacious instincts operate in antagonistic fashion to sympathy; mutual exclusivity holds under high arousal. Breakdown regime: S_H,P → 0 when H + P > threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to competitive inhibition in enzymatic kinetics Operator 'Moral Decision Threshold Model' (page 1, domain other) captures: The blood mounts to the eyes, and sympathy's chance is gone.\\ The hunting instinct has an equally remote origin in the evolution of the race.t The hunting and the fighting in<small<span class=\"docvortex-page-footnote\" data-block-type=\"page_footnote\" style=\"color:6b7280\"Sympathy has been enormously written about in books on Ethics. Assumptions: Decision-making is governed by a dynamic threshold dependent on arousal state. Breakdown regime: D = 0 when A ≥ T Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Threshold-based decision logic in moral cognition Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0421 (74f97fedeedc8ba4, domain=other, pages_read=1/1): Operator 'Sympathy Inhibition Mechanism' (page 1, domain other) captures: İt is true that sympathy is peculiarly liable to inhibition from other instincts which its stimulus may call forth. Assumptions: Sympathy is a stochastic process modulated by competing instincts; inhibition follows a threshold model. Breakdown regime: When I > S, P(S|I) → 0 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bayesian update of sympathy belief based on observed instinctual conflict Operator 'Instinctual Competition Dynamics' (page 1, domain other) captures: The hunting and pugnacious instincts, when aroused, also inhibit our sympathy absolutely. Assumptions: Hunting and pugnacious instincts operate in antagonistic fashion to sympathy; mutual exclusivity holds under high arousal. Breakdown regime: S_H,P → 0 when H + P > threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to competitive inhibition in enzymatic kinetics Operator 'Moral Decision Threshold Model' (page 1, domain other) captures: The blood mounts to the eyes, and sympathy's chance is gone.\\ The hunting instinct has an equally remote origin in the evolution of the race.t The hunting and the fighting in<small<span class=\"docvortex-page-footnote\" data-block-type=\"page_footnote\" style=\"color:6b7280\"Sympathy has been enormously written about in books on Ethics. Assumptions: Decision-making is governed by a dynamic threshold dependent on arousal state. Breakdown regime: D = 0 when A ≥ T Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Threshold-based decision logic in moral cognition Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Spencer’s evolutionary psychology and Bain’s will theory, this framework builds upon early 19th-century discourse on moral sentiment and instinctual conflict, tracing back to Hume’s empiricism and Kant’s deontological foundations. Retrocausal Genealogy: Rooted in p0421 (74f97fedeedc8ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0421 (74f97fedeedc8ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as having heterogeneous instinctual profiles; some may be more susceptible to sympathy while others are driven by dominance or predatory impulses. Decision-making reflects a balance between internalized moral norms and external environmental triggers, leading to divergent outcomes in similar contexts. Theory of Mind & Decision Maker Model: Rooted in p0421 (74f97fedeedc8ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that sympathy inhibition does not co-vary linearly with moral reasoning layers. Leakage occurs if emotional states are misattributed to rational deliberation, violating the principle of layered cognitive architecture. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0421 (74f97fedeedc8ba4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

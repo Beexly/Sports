@@ -1,0 +1,78 @@
+{
+  "book_id": "2ed79260d2a63d37",
+  "source_status": "COMPLETE",
+  "title": "EDGE-002-existing-contest-work-ledger",
+  "file_name": "EDGE-002-existing-contest-work-ledger.md",
+  "sha256": "2ed79260d2a63d37f077f9b31507ffe542cf25d4ce53fb10d8fae0c13e4d2c4a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A dependency-driven deduplication lattice governs contest artifact instantiation via matched IDs and upstream gates. Universal Lens: Rooted in EDGE-002-existing-contest-work-ledger (2ed79260d2a63d37), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian evidence accumulation over contest ID space constrains duplicate artifact generation using prior likelihoods. GSI Mapping: Rooted in EDGE-002-existing-contest-work-ledger (2ed79260d2a63d37), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition system enforces feature flag disablement and fake-data-first validation for contest ledger artifacts. GSE Mapping: Rooted in EDGE-002-existing-contest-work-ledger (2ed79260d2a63d37), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "duplicate_gate",
+      "name": "Dependency-Based Duplicate Prevention",
+      "verbatim_quote": "# EDGE-002: Existing contest work ledger ## Duplicate Gate duplicate_check_status: DEPENDENCY matched_existing_ids: BUILD-GV2-029, BUILD-GV2-030, BUILD-GV2-031, CONTEST-003 relation_to_existing: Required gate before downstream contest work.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'dependency status (boolean)', 'M': 'matched existing IDs (set)', 'G': 'gate condition (boolean)'}",
+      "assumptions": "All dependencies must be resolved before downstream work proceeds; duplication is prevented by set intersection.",
+      "breakdown_regime": "When |M| > 0 and D = false, system enters failure mode.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The duplicate gate maps to a causal dependency graph where each node represents an artifact and edges denote required execution order.",
+        "source_operator": "duplicate_gate",
+        "telemetry": "Verification of matched IDs against existing artifact registry."
+      }
+    },
+    {
+      "primitive_id": "fake_data_constraint",
+      "name": "Fake Data Enforcement Protocol",
+      "verbatim_quote": "parent_id: none dependency_ids: BUILD-GV2-029, BUILD-GV2-030, BUILD-GV2-031, CONTEST-003 ## Category dedupe ## Goal Create a docs-first, fake-data-first, or disabled-by-default EdgeBall artifact for Existing contest work ledger.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'fake data usage flag (boolean)', 'R': 'real data import control (boolean)'}",
+      "assumptions": "Only synthetic data may be used unless explicit consent is obtained.",
+      "breakdown_regime": "If R = true and F = false, system violates data boundary.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces a kernel constraint on data flow that ensures all contest artifacts are initialized with mock data.",
+        "source_operator": "fake_data_constraint",
+        "telemetry": "Audit log of data source origins for each artifact."
+      }
+    },
+    {
+      "primitive_id": "legal_boundary_enforcement",
+      "name": "Legal Risk Mitigation Layer",
+      "verbatim_quote": "Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'legal approval flag (boolean)', 'C': 'contest type (enum)', 'R': 'risk level (low/medium/high)'}",
+      "assumptions": "Any high-risk contest activity requires L = true.",
+      "breakdown_regime": "If C ∈ {paid, prize, deposit} and L = false, system triggers veto.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a legal compliance automaton where each state corresponds to a contest type and its associated risk profile.",
+        "source_operator": "legal_boundary_enforcement",
+        "telemetry": "Compliance check result for each contest module."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2ed79260d2a63d37_t0",
+      "think": "The core operators form a layered logical architecture: the duplicate gate (D) ensures no redundant contest artifacts are created by checking against a set of matched IDs (M), enforcing a dependency chain. The fake data constraint (F) isolates the system from real-world data contamination through a boolean flag. The legal boundary enforcement (L) acts as a risk filter that blocks high-impact contest types unless explicit approval is granted. These primitives interact in a hierarchical manner: D must resolve before F can be applied, and both must satisfy L before any real-world interaction occurs. Failure modes arise when dependencies are ignored (D=false), real data is imported without consent (R=true, F=false), or high-risk activities proceed without approval (L=false). The system's robustness depends on these constraints forming a closed-loop feedback mechanism.\n\nDeep epistemic analysis for EDGE-002-existing-contest-work-ledger (2ed79260d2a63d37, domain=other, pages_read=1/1): Operator 'Dependency-Based Duplicate Prevention' (page 1, domain other) captures: # EDGE-002: Existing contest work ledger ## Duplicate Gate duplicate_check_status: DEPENDENCY matched_existing_ids: BUILD-GV2-029, BUILD-GV2-030, BUILD-GV2-031, CONTEST-003 relation_to_existing: Required gate before downstream contest work. Assumptions: All dependencies must be resolved before downstream work proceeds; duplication is prevented by set intersection. Breakdown regime: When |M| > 0 and D = false, system enters failure mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The duplicate gate maps to a causal dependency graph where each node represents an artifact and edges denote required execution order. Operator 'Fake Data Enforcement Protocol' (page 1, domain other) captures: parent_id: none dependency_ids: BUILD-GV2-029, BUILD-GV2-030, BUILD-GV2-031, CONTEST-003 ## Category dedupe ## Goal Create a docs-first, fake-data-first, or disabled-by-default EdgeBall artifact for Existing contest work ledger. Assumptions: Only synthetic data may be used unless explicit consent is obtained. Breakdown regime: If R = true and F = false, system violates data boundary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a kernel constraint on data flow that ensures all contest artifacts are initialized with mock data. Operator 'Legal Risk Mitigation Layer' (page 1, domain other) captures: Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval. Assumptions: Any high-risk contest activity requires L = true. Breakdown regime: If C ∈ {paid, prize, deposit} and L = false, system triggers veto. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a legal compliance automaton where each state corresponds to a contest type and its associated risk profile. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for EDGE-002-existing-contest-work-ledger (2ed79260d2a63d37, domain=other, pages_read=1/1): Operator 'Dependency-Based Duplicate Prevention' (page 1, domain other) captures: # EDGE-002: Existing contest work ledger ## Duplicate Gate duplicate_check_status: DEPENDENCY matched_existing_ids: BUILD-GV2-029, BUILD-GV2-030, BUILD-GV2-031, CONTEST-003 relation_to_existing: Required gate before downstream contest work. Assumptions: All dependencies must be resolved before downstream work proceeds; duplication is prevented by set intersection. Breakdown regime: When |M| > 0 and D = false, system enters failure mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The duplicate gate maps to a causal dependency graph where each node represents an artifact and edges denote required execution order. Operator 'Fake Data Enforcement Protocol' (page 1, domain other) captures: parent_id: none dependency_ids: BUILD-GV2-029, BUILD-GV2-030, BUILD-GV2-031, CONTEST-003 ## Category dedupe ## Goal Create a docs-first, fake-data-first, or disabled-by-default EdgeBall artifact for Existing contest work ledger. Assumptions: Only synthetic data may be used unless explicit consent is obtained. Breakdown regime: If R = true and F = false, system violates data boundary. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces a kernel constraint on data flow that ensures all contest artifacts are initialized with mock data. Operator 'Legal Risk Mitigation Layer' (page 1, domain other) captures: Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval. Assumptions: Any high-risk contest activity requires L = true. Breakdown regime: If C ∈ {paid, prize, deposit} and L = false, system triggers veto. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a legal compliance automaton where each state corresponds to a contest type and its associated risk profile. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles and dependency graphs from software engineering, extended into adversarial risk modeling and data governance frameworks. Retrocausal Genealogy: Rooted in EDGE-002-existing-contest-work-ledger (2ed79260d2a63d37), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in EDGE-002-existing-contest-work-ledger (2ed79260d2a63d37), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include unauthorized developers who might bypass checks and malicious actors seeking to exploit real-money flows. The system models these through conditional logic and access control layers. Theory of Mind & Decision Maker Model: Rooted in EDGE-002-existing-contest-work-ledger (2ed79260d2a63d37), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each primitive operates independently on distinct domains—dependencies, data integrity, and legal compliance. Leakage vetoes occur if any layer fails to isolate its domain, e.g., if real data leaks into a fake-data-only context. Cross-Layer Veto & Anti-Leakage Check: Rooted in EDGE-002-existing-contest-work-ledger (2ed79260d2a63d37), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

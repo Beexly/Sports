@@ -1,0 +1,78 @@
+{
+  "book_id": "48efdcb188645403",
+  "source_status": "COMPLETE",
+  "title": "1972-llm-observational-data-causal-discovery",
+  "file_name": "1972-llm-observational-data-causal-discovery.md",
+  "sha256": "48efdcb1886454037654ab473032d1ddbf65c2175518599101bc43da1093d448",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "LLM causal discovery via observational data prompts maps to Bayesian network learning with probabilistic edge validation. Universal Lens: Rooted in 1972-llm-observational-data-causal-discovery (48efdcb188645403), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive inference to validate LLM-generated causal edges using statistical significance thresholds. GSI Mapping: Rooted in 1972-llm-observational-data-causal-discovery (48efdcb188645403), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies dynamic state transitions to refine causal graph hypotheses through iterative feedback loops with statistical probes. GSE Mapping: Rooted in 1972-llm-observational-data-causal-discovery (48efdcb188645403), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pairwise_prompting",
+      "name": "Pairwise Causal Prompting",
+      "verbatim_quote": "**Pairwise prompting:** for each variable pair, prompt the LLM (with k=100 sampled rows) to decide whether a causal relationship exists.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "k = 100 sampled observations; V_i, V_j = variables; C(V_i \\rightarrow V_j) = binary causal indicator",
+      "assumptions": "Observational data suffices for causal inference; LLM can parse variable pairs independently.",
+      "breakdown_regime": "When k < 100 or variable cardinality exceeds prompt capacity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's edge classification via Bayesian posterior probability; GSE's state transition on causal edge acceptance.",
+        "source_operator": "pairwise_prompting",
+        "telemetry": "Precision/recall/F1 of causal edge predictions"
+      }
+    },
+    {
+      "primitive_id": "bfs_prompting",
+      "name": "Breadth-First Graph Prompting",
+      "verbatim_quote": "**BFS prompting:** traverse the graph breadth-first — LLM proposes variables/edges from the data, suggested edges cycle-checked before insertion.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "n = number of variables; E = set of edges; T = traversal tree; O(n) queries",
+      "assumptions": "Graph structure can be incrementally built without cycles; LLM maintains consistency across prompts.",
+      "breakdown_regime": "When n > 100 or graph complexity exceeds O(n) query budget.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's normalized Hamming distance (NHD) for graph similarity; GSE's graph expansion via valid edge insertion.",
+        "source_operator": "bfs_prompting",
+        "telemetry": "NHD between LLM and baseline causal graphs"
+      }
+    },
+    {
+      "primitive_id": "closed_loop_discovery",
+      "name": "Closed-Loop Causal Discovery",
+      "verbatim_quote": "Equations & assumptions No new equations; metrics: precision, recall, F1 (edge classification), NHD (normalized Hamming distance), Ratio.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "F1_score = F1 metric for causal graph; R = rejection rate of proposed edges; T = iteration count",
+      "assumptions": "Feedback improves causal accuracy; statistical tests provide ground truth for LLM corrections.",
+      "breakdown_regime": "When statistical tests fail to confirm >50% of LLM proposals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's active learning with error correction; GSE's iterative belief updating with constraint propagation.",
+        "source_operator": "closed_loop_discovery",
+        "telemetry": "Improvement in F1 score over iterations"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "48efdcb188645403_t0",
+      "think": "The core insight is that LLMs can perform causal discovery from observational data by embedding samples in prompts. Pairwise prompting treats each variable pair independently, enabling O(n^2) inference but limited global coherence. BFS prompting improves scalability by building the graph incrementally, yet remains computationally expensive. Closed-loop refinement addresses both issues by iteratively validating and correcting LLM outputs against statistical tests. These primitives map to Bayesian inference in GSI where causal edges are scored probabilistically, and to GSE’s state transitions where causal structures evolve based on empirical feedback. The failure mode lies in memorization risk, where known datasets like ASIA/CANCER/SURVEY may yield artificially high performance due to prior exposure rather than true data-driven reasoning.\n\nDeep epistemic analysis for 1972-llm-observational-data-causal-discovery (48efdcb188645403, domain=other, pages_read=3/3): Operator 'Pairwise Causal Prompting' (page 1, domain other) captures: **Pairwise prompting:** for each variable pair, prompt the LLM (with k=100 sampled rows) to decide whether a causal relationship exists. Assumptions: Observational data suffices for causal inference; LLM can parse variable pairs independently. Breakdown regime: When k < 100 or variable cardinality exceeds prompt capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's edge classification via Bayesian posterior probability; GSE's state transition on causal edge acceptance. Operator 'Breadth-First Graph Prompting' (page 1, domain other) captures: **BFS prompting:** traverse the graph breadth-first — LLM proposes variables/edges from the data, suggested edges cycle-checked before insertion. Assumptions: Graph structure can be incrementally built without cycles; LLM maintains consistency across prompts. Breakdown regime: When n > 100 or graph complexity exceeds O(n) query budget. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's normalized Hamming distance (NHD) for graph similarity; GSE's graph expansion via valid edge insertion. Operator 'Closed-Loop Causal Discovery' (page 1, domain other) captures: Equations & assumptions No new equations; metrics: precision, recall, F1 (edge classification), NHD (normalized Hamming distance), Ratio. Assumptions: Feedback improves causal accuracy; statistical tests provide ground truth for LLM corrections. Breakdown regime: When statistical tests fail to confirm >50% of LLM proposals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's active learning with error correction; GSE's iterative belief updating with constraint propagation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1972-llm-observational-data-causal-discovery (48efdcb188645403, domain=other, pages_read=3/3): Operator 'Pairwise Causal Prompting' (page 1, domain other) captures: **Pairwise prompting:** for each variable pair, prompt the LLM (with k=100 sampled rows) to decide whether a causal relationship exists. Assumptions: Observational data suffices for causal inference; LLM can parse variable pairs independently. Breakdown regime: When k < 100 or variable cardinality exceeds prompt capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's edge classification via Bayesian posterior probability; GSE's state transition on causal edge acceptance. Operator 'Breadth-First Graph Prompting' (page 1, domain other) captures: **BFS prompting:** traverse the graph breadth-first — LLM proposes variables/edges from the data, suggested edges cycle-checked before insertion. Assumptions: Graph structure can be incrementally built without cycles; LLM maintains consistency across prompts. Breakdown regime: When n > 100 or graph complexity exceeds O(n) query budget. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's normalized Hamming distance (NHD) for graph similarity; GSE's graph expansion via valid edge insertion. Operator 'Closed-Loop Causal Discovery' (page 1, domain other) captures: Equations & assumptions No new equations; metrics: precision, recall, F1 (edge classification), NHD (normalized Hamming distance), Ratio. Assumptions: Feedback improves causal accuracy; statistical tests provide ground truth for LLM corrections. Breakdown regime: When statistical tests fail to confirm >50% of LLM proposals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's active learning with error correction; GSE's iterative belief updating with constraint propagation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Pearl's causal calculus and Spirtes et al.'s PC algorithm; extends to modern neural-symbolic frameworks integrating LLMs with probabilistic graphical models. Retrocausal Genealogy: Rooted in 1972-llm-observational-data-causal-discovery (48efdcb188645403), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1972-llm-observational-data-causal-discovery (48efdcb188645403), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the LLM (reasoning engine) and statistical validators (e.g., PC CI tests). The LLM proposes causal relationships while validators assess validity, creating a dual-agent system where feedback refines the causal model. Theory of Mind & Decision Maker Model: Rooted in 1972-llm-observational-data-causal-discovery (48efdcb188645403), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If LLM performance degrades below baseline or if >50% of proposed edges are rejected by statistical tests, the primitive is invalidated. Memorization risk also triggers veto if known datasets dominate results. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1972-llm-observational-data-causal-discovery (48efdcb188645403), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

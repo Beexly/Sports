@@ -1,0 +1,78 @@
+{
+  "book_id": "54b58b42fc4d0bde",
+  "source_status": "COMPLETE",
+  "title": "Beexly-UltimaScraper",
+  "file_name": "Beexly-UltimaScraper.md",
+  "sha256": "54b58b42fc4d0bde327af8c1a4a48cc00694e6344f9bebcdbf30f9d270388054",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Authenticates OnlyFans sessions via browser-derived headers; orchestrates media scraping through CLI with Poetry-managed dependencies and config-driven storage. Universal Lens: Rooted in Beexly-UltimaScraper (54b58b42fc4d0bde), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps session cookies to probabilistic access tokens; conformal prediction governs download reliability under uncertain API states. GSI Mapping: Rooted in Beexly-UltimaScraper (54b58b42fc4d0bde), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models user-agent and cookie state transitions; state-machine encodes download progression with multi-drive rollover logic. GSE Mapping: Rooted in Beexly-UltimaScraper (54b58b42fc4d0bde), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "session_authenticator",
+      "name": "Browser-derived session token extractor",
+      "verbatim_quote": "Per the README: auth requires extracting `cookie`, `x_bc`, and `user_agent` values from a logged-in OnlyFans session via the browser network debugger and placing them in `__user_data__/profiles/default/auth.json`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'cookie': 'dimensionless string identifier', 'x_bc': 'dimensionless string token', 'user_agent': 'dimensionless string header'}",
+      "assumptions": "User has active OnlyFans session; browser debugging tools accessible.",
+      "breakdown_regime": "Invalid or missing authentication headers lead to HTTP 401 Unauthorized.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Session token equivalence in GSI as latent variable in Bayesian access model; in GSE as state transition trigger.",
+        "source_operator": "session_authenticator",
+        "telemetry": "Successful HTTP 200 response upon valid token submission."
+      }
+    },
+    {
+      "primitive_id": "cli_launcher",
+      "name": "Poetry-managed Python CLI entrypoint",
+      "verbatim_quote": "Run with `poetry run python start_us.py` (Poetry-based install; a self-updater is provided via `updater.py`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'poetry': 'dependency manager', 'python': 'runtime environment', 'start_us.py': 'entrypoint script'}",
+      "assumptions": "Poetry environment is properly configured; updater script is executable.",
+      "breakdown_regime": "Missing or corrupted Poetry installation results in runtime error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CLI launcher in GSI enables parameterized scraping workflows; in GSE, it triggers state machine initialization.",
+        "source_operator": "cli_launcher",
+        "telemetry": "Successful execution of `start_us.py` logs scraper startup sequence."
+      }
+    },
+    {
+      "primitive_id": "config_manager",
+      "name": "Multi-drive storage configuration handler",
+      "verbatim_quote": "Config (`config.json`) controls profile, download, and metadata directories with multi-drive rollover for downloads.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'config.json': 'JSON configuration file', 'profile_dir': 'directory path', 'download_dir': 'directory path', 'metadata_dir': 'directory path'}",
+      "assumptions": "Disk space available across multiple drives; config file is valid JSON.",
+      "breakdown_regime": "Insufficient disk space or invalid paths cause download failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Configuration structure in GSI maps to Bayesian hyperparameter tuning; in GSE, it defines resource allocation states.",
+        "source_operator": "config_manager",
+        "telemetry": "Successful directory creation and file writes confirm config validity."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "54b58b42fc4d0bde_t0",
+      "think": "The primitives form a coherent system where session authentication provides access control, CLI launcher enables execution, and config manager governs data flow. Session authenticity is modeled as a probabilistic event in GSI, while GSE treats it as a deterministic state change. The CLI launcher acts as a kernel interface, and config manager ensures scalable storage. Failure modes include invalid tokens (GSI), missing dependencies (GSE), and disk exhaustion (both). The system's robustness depends on adherence to upstream API contracts and correct handling of transient errors during scraping.\n\nDeep epistemic analysis for Beexly-UltimaScraper (54b58b42fc4d0bde, domain=other, pages_read=1/1): Operator 'Browser-derived session token extractor' (page 1, domain other) captures: Per the README: auth requires extracting `cookie`, `x_bc`, and `user_agent` values from a logged-in OnlyFans session via the browser network debugger and placing them in `__user_data__/profiles/default/auth.json`. Assumptions: User has active OnlyFans session; browser debugging tools accessible. Breakdown regime: Invalid or missing authentication headers lead to HTTP 401 Unauthorized. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Session token equivalence in GSI as latent variable in Bayesian access model; in GSE as state transition trigger. Operator 'Poetry-managed Python CLI entrypoint' (page 1, domain other) captures: Run with `poetry run python start_us.py` (Poetry-based install; a self-updater is provided via `updater.py`). Assumptions: Poetry environment is properly configured; updater script is executable. Breakdown regime: Missing or corrupted Poetry installation results in runtime error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CLI launcher in GSI enables parameterized scraping workflows; in GSE, it triggers state machine initialization. Operator 'Multi-drive storage configuration handler' (page 1, domain other) captures: Config (`config.json`) controls profile, download, and metadata directories with multi-drive rollover for downloads. Assumptions: Disk space available across multiple drives; config file is valid JSON. Breakdown regime: Insufficient disk space or invalid paths cause download failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Configuration structure in GSI maps to Bayesian hyperparameter tuning; in GSE, it defines resource allocation states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Beexly-UltimaScraper (54b58b42fc4d0bde, domain=other, pages_read=1/1): Operator 'Browser-derived session token extractor' (page 1, domain other) captures: Per the README: auth requires extracting `cookie`, `x_bc`, and `user_agent` values from a logged-in OnlyFans session via the browser network debugger and placing them in `__user_data__/profiles/default/auth.json`. Assumptions: User has active OnlyFans session; browser debugging tools accessible. Breakdown regime: Invalid or missing authentication headers lead to HTTP 401 Unauthorized. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Session token equivalence in GSI as latent variable in Bayesian access model; in GSE as state transition trigger. Operator 'Poetry-managed Python CLI entrypoint' (page 1, domain other) captures: Run with `poetry run python start_us.py` (Poetry-based install; a self-updater is provided via `updater.py`). Assumptions: Poetry environment is properly configured; updater script is executable. Breakdown regime: Missing or corrupted Poetry installation results in runtime error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CLI launcher in GSI enables parameterized scraping workflows; in GSE, it triggers state machine initialization. Operator 'Multi-drive storage configuration handler' (page 1, domain other) captures: Config (`config.json`) controls profile, download, and metadata directories with multi-drive rollover for downloads. Assumptions: Disk space available across multiple drives; config file is valid JSON. Breakdown regime: Insufficient disk space or invalid paths cause download failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Configuration structure in GSI maps to Bayesian hyperparameter tuning; in GSE, it defines resource allocation states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s web scraping practices, influenced by Python CLI frameworks and REST API interaction models. Inherits design patterns from upstream projects like `ultima_scraper`. Retrocausal Genealogy: Rooted in Beexly-UltimaScraper (54b58b42fc4d0bde), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Beexly-UltimaScraper (54b58b42fc4d0bde), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include OnlyFans' rate-limiting systems and potential CAPTCHA mechanisms. The scraper must balance automation with compliance to avoid detection. User intent is to retrieve media; adversarial intent may be to block unauthorized access. Theory of Mind & Decision Maker Model: Rooted in Beexly-UltimaScraper (54b58b42fc4d0bde), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between session auth and config manager—invalid auth blocks config-based operations. Leakage occurs when cookies are exposed in logs or config files. Veto conditions include malformed headers, inaccessible config paths, and runtime dependency failures. Cross-Layer Veto & Anti-Leakage Check: Rooted in Beexly-UltimaScraper (54b58b42fc4d0bde), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

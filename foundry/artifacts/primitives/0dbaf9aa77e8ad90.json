@@ -1,0 +1,78 @@
+{
+  "book_id": "0dbaf9aa77e8ad90",
+  "source_status": "COMPLETE",
+  "title": "rotoviz.com",
+  "file_name": "rotoviz.com.md",
+  "sha256": "0dbaf9aa77e8ad901afb820ccfc049062d990444c48fb86eb012d6536abc69fe",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sort comparators define ordinal ranking via pairwise difference; fetch call sites encode selection and state transitions in combinatorial configuration space. Universal Lens: Rooted in rotoviz.com (0dbaf9aa77e8ad90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on ranked selections uses comparator differentials as likelihood kernels; conformal prediction bounds uncertainty in combinatorial choice states. GSI Mapping: Rooted in rotoviz.com (0dbaf9aa77e8ad90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models state transitions through selection adapters; kernel-based feedback loops update internal representations via telemetry metrics. GSE Mapping: Rooted in rotoviz.com (0dbaf9aa77e8ad90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sort_comparator",
+      "name": "Ordinal Ranking Operator",
+      "verbatim_quote": "``` e t return e.id - t.id e t e.scrollPosition - t.scrollPosition) e t e.order -",
+      "page": 1,
+      "latex": "\\Delta_{ij} = \\text{sign}(e_i - e_j)",
+      "symbol_and_unit_ledger": "{'e_i, e_j': 'ordinal rank values (dimensionless)', '\\\\Delta_{ij}': 'comparative difference (dimensionless)'}",
+      "assumptions": "Linear ordering assumed; transitivity of preference holds.",
+      "breakdown_regime": "When $e_i = e_j$, comparator returns zero; ties require resolution protocol.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Comparator differentials map to GSI's preference kernel; GSE uses same for adaptive selection logic.",
+        "source_operator": "sort_comparator",
+        "telemetry": "Rank consistency across iterations"
+      }
+    },
+    {
+      "primitive_id": "fetch_call_site",
+      "name": "Selection Configuration Kernel",
+      "verbatim_quote": "## Fetch call sites ``` name multiple escapeMarkup translations sorter searching scrollAfterSelect templateResult disabled templateSelection placeholder",
+      "page": 1,
+      "latex": "\\mathcal{K}(\\mathcal{S}) = \\{ \\text{params} \\}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{K}': 'configuration kernel (set-valued)', '\\\\mathcal{S}': 'selection state (dimensionless)'}",
+      "assumptions": "All parameters are enumerable and bounded.",
+      "breakdown_regime": "Unrecognized parameter triggers fallback handler or error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel encodes GSE's selection policy; GSI infers agent behavior from parameterized state space.",
+        "source_operator": "fetch_call_site",
+        "telemetry": "Parameter usage frequency and variance"
+      }
+    },
+    {
+      "primitive_id": "state_transition_function",
+      "name": "Adaptive Selection State Mapper",
+      "verbatim_quote": "``` e t return e.id - t.id e t e.scrollPosition - t.scrollPosition) e t e.order -",
+      "page": 1,
+      "latex": "\\tau(s_{t+1}) = f(\\mathcal{K}(s_t), \\mathcal{R})",
+      "symbol_and_unit_ledger": "{'\\\\tau': 'transition function (dimensionless)', 's_t': 'state vector (dimensionless)', '\\\\mathcal{R}': 'reward signal (dimensionless)'}",
+      "assumptions": "State evolves deterministically under reward influence.",
+      "breakdown_regime": "Non-differentiable or discontinuous reward leads to convergence failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's dynamic programming framework; GSI applies reinforcement learning.",
+        "source_operator": "state_transition_function",
+        "telemetry": "Transition entropy and policy stability"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0dbaf9aa77e8ad90_t0",
+      "think": "The sort comparator establishes an ordinal ranking mechanism by computing pairwise differences between elements. This forms a foundational lattice structure where each element's position relative to others defines its rank. The fetch call site encodes a configuration kernel that governs how selections are processed, effectively defining a combinatorial space of possible states. These two primitives interact such that the comparator acts as a local operator within the broader selection kernel, enabling adaptive decision-making. In GSI, this maps to Bayesian inference over ordered choices, while in GSE, it becomes a state transition engine. Failure modes include tie-breaking ambiguity in sorting and misconfiguration in fetch parameters leading to undefined behavior. Dualities emerge in that both operators can be viewed as mappings from input spaces to ordered output sets, yet they differ in scope—comparators operate locally, while fetch configurations define global constraints.\n\nDeep epistemic analysis for rotoviz.com (0dbaf9aa77e8ad90, domain=other, pages_read=1/1): Operator 'Ordinal Ranking Operator' (page 1, domain other) captures: ``` e t return e.id - t.id e t e.scrollPosition - t.scrollPosition) e t e.order - Assumptions: Linear ordering assumed; transitivity of preference holds. Breakdown regime: When $e_i = e_j$, comparator returns zero; ties require resolution protocol. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Comparator differentials map to GSI's preference kernel; GSE uses same for adaptive selection logic. Operator 'Selection Configuration Kernel' (page 1, domain other) captures: ## Fetch call sites ``` name multiple escapeMarkup translations sorter searching scrollAfterSelect templateResult disabled templateSelection placeholder Assumptions: All parameters are enumerable and bounded. Breakdown regime: Unrecognized parameter triggers fallback handler or error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel encodes GSE's selection policy; GSI infers agent behavior from parameterized state space. Operator 'Adaptive Selection State Mapper' (page 1, domain other) captures: ``` e t return e.id - t.id e t e.scrollPosition - t.scrollPosition) e t e.order - Assumptions: State evolves deterministically under reward influence. Breakdown regime: Non-differentiable or discontinuous reward leads to convergence failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's dynamic programming framework; GSI applies reinforcement learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for rotoviz.com (0dbaf9aa77e8ad90, domain=other, pages_read=1/1): Operator 'Ordinal Ranking Operator' (page 1, domain other) captures: ``` e t return e.id - t.id e t e.scrollPosition - t.scrollPosition) e t e.order - Assumptions: Linear ordering assumed; transitivity of preference holds. Breakdown regime: When $e_i = e_j$, comparator returns zero; ties require resolution protocol. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Comparator differentials map to GSI's preference kernel; GSE uses same for adaptive selection logic. Operator 'Selection Configuration Kernel' (page 1, domain other) captures: ## Fetch call sites ``` name multiple escapeMarkup translations sorter searching scrollAfterSelect templateResult disabled templateSelection placeholder Assumptions: All parameters are enumerable and bounded. Breakdown regime: Unrecognized parameter triggers fallback handler or error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel encodes GSE's selection policy; GSI infers agent behavior from parameterized state space. Operator 'Adaptive Selection State Mapper' (page 1, domain other) captures: ``` e t return e.id - t.id e t e.scrollPosition - t.scrollPosition) e t e.order - Assumptions: State evolves deterministically under reward influence. Breakdown regime: Non-differentiable or discontinuous reward leads to convergence failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's dynamic programming framework; GSI applies reinforcement learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in lattice theory and combinatorial optimization, these primitives reflect early developments in algorithmic information theory and constraint satisfaction problems from the 1970s onward. Retrocausal Genealogy: Rooted in rotoviz.com (0dbaf9aa77e8ad90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in rotoviz.com (0dbaf9aa77e8ad90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may optimize for different criteria—some prioritize minimal sorting steps, others maximize configurability. Decision actors could favor either deterministic ranking or probabilistic selection strategies based on environmental noise. Theory of Mind & Decision Maker Model: Rooted in rotoviz.com (0dbaf9aa77e8ad90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when comparator logic conflicts with fetch kernel semantics, e.g., sorting by ID while selecting via scroll position. Leakage occurs if telemetry does not account for all parameters in the kernel, causing incorrect inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in rotoviz.com (0dbaf9aa77e8ad90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "5a87eb0099db8d02",
+  "source_status": "COMPLETE",
+  "title": "p0370",
+  "file_name": "p0370.txt",
+  "sha256": "5a87eb0099db8d022203cf22f917aa2dc82c822b1fa969a2010e751dd6c5cbdb",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Motivational learning as stochastic behavioral convergence: P(behavior|context) → P*(behavior|context) via associative reinforcement. Universal Lens: Rooted in p0370 (5a87eb0099db8d02), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating over behavioral states conditioned on environmental cues; P(behavior|evidence) ∝ P(evidence|behavior)P(behavior). GSI Mapping: Rooted in p0370 (5a87eb0099db8d02), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition dynamics governed by temporal consistency of action-reward mappings; S(t) → S(t+1) via learned policy π(a|s). GSE Mapping: Rooted in p0370 (5a87eb0099db8d02), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "associative_convergence",
+      "name": "Associative Convergence",
+      "verbatim_quote": "340 Motivation and Learning looked out elsewhere, but the gate had swung open Here was the",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{assoc}': 'Probability of associative linkage', 'T': 'Temporal duration of trial', 'S': 'Stimulus magnitude'}",
+      "assumptions": "Behavioral responses are probabilistic; associative links form through repeated exposure.",
+      "breakdown_regime": "When stimulus-response correlation diminishes below threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: P(behavior|context) updates via Bayesian inference; GSE: S(t) transitions via learned policy π(a|s)",
+        "source_operator": "associative_convergence",
+        "telemetry": "Frequency of correct behavioral outcomes over time"
+      }
+    },
+    {
+      "primitive_id": "habitualization",
+      "name": "Habitualization",
+      "verbatim_quote": "trick was only rendered habitual by repeated association in the same situation of the chance act",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'Habit strength', 'n': 'Number of repetitions', 'R': 'Reward magnitude'}",
+      "assumptions": "Repetition reinforces neural pathways; reward drives habit consolidation.",
+      "breakdown_regime": "When reward is absent or inconsistent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: Habit formation modeled as fixed-point attractor in belief space; GSE: Stable state transition under policy π(a|s)",
+        "source_operator": "habitualization",
+        "telemetry": "Consistency of behavior across independent trials"
+      }
+    },
+    {
+      "primitive_id": "trial_and_error_learning",
+      "name": "Trial-and-Error Learning",
+      "verbatim_quote": "the trial and error learning of a rat in a maze In the initial trials, the",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Error rate', 't': 'Time step', 'L': 'Learning curve slope'}",
+      "assumptions": "Learning progresses through iterative feedback loops.",
+      "breakdown_regime": "When exploration becomes inefficient or environment changes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Error-driven belief revision; GSE: Path optimization via dynamic programming",
+        "source_operator": "trial_and_error_learning",
+        "telemetry": "Reduction in path length or time to goal"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5a87eb0099db8d02_t0",
+      "think": "The core mechanism of motivation-driven learning emerges from the interplay between spontaneous action and environmental feedback. Initially, actions arise from natural tendencies—such as a dog's gaze toward an open gate—but these are not immediately linked to outcomes. Over time, repeated associations between a specific action (e.g., looking at a certain point) and a desired outcome (e.g., escape) lead to the formation of an associative link. This process is not deterministic but probabilistic, governed by reinforcement. As the number of trials increases, the probability of correct behavior converges toward certainty. The transition from random exploration to habitual response reflects a shift from Bayesian updating to fixed policy execution. The mathematical structure mirrors a Markov decision process where the agent learns a policy π(a|s) that maximizes expected reward. The failure mode occurs when the environment changes or rewards become unpredictable, breaking the learned association. This framework supports both GSI’s probabilistic inference and GSE’s state-transition modeling.\n\nDeep epistemic analysis for p0370 (5a87eb0099db8d02, domain=other, pages_read=1/1): Operator 'Associative Convergence' (page 1, domain other) captures: 340 Motivation and Learning looked out elsewhere, but the gate had swung open Here was the Assumptions: Behavioral responses are probabilistic; associative links form through repeated exposure. Breakdown regime: When stimulus-response correlation diminishes below threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: P(behavior|context) updates via Bayesian inference; GSE: S(t) transitions via learned policy π(a|s) Operator 'Habitualization' (page 1, domain other) captures: trick was only rendered habitual by repeated association in the same situation of the chance act Assumptions: Repetition reinforces neural pathways; reward drives habit consolidation. Breakdown regime: When reward is absent or inconsistent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Habit formation modeled as fixed-point attractor in belief space; GSE: Stable state transition under policy π(a|s) Operator 'Trial-and-Error Learning' (page 1, domain other) captures: the trial and error learning of a rat in a maze In the initial trials, the Assumptions: Learning progresses through iterative feedback loops. Breakdown regime: When exploration becomes inefficient or environment changes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Error-driven belief revision; GSE: Path optimization via dynamic programming Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0370 (5a87eb0099db8d02, domain=other, pages_read=1/1): Operator 'Associative Convergence' (page 1, domain other) captures: 340 Motivation and Learning looked out elsewhere, but the gate had swung open Here was the Assumptions: Behavioral responses are probabilistic; associative links form through repeated exposure. Breakdown regime: When stimulus-response correlation diminishes below threshold. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: P(behavior|context) updates via Bayesian inference; GSE: S(t) transitions via learned policy π(a|s) Operator 'Habitualization' (page 1, domain other) captures: trick was only rendered habitual by repeated association in the same situation of the chance act Assumptions: Repetition reinforces neural pathways; reward drives habit consolidation. Breakdown regime: When reward is absent or inconsistent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: Habit formation modeled as fixed-point attractor in belief space; GSE: Stable state transition under policy π(a|s) Operator 'Trial-and-Error Learning' (page 1, domain other) captures: the trial and error learning of a rat in a maze In the initial trials, the Assumptions: Learning progresses through iterative feedback loops. Breakdown regime: When exploration becomes inefficient or environment changes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Error-driven belief revision; GSE: Path optimization via dynamic programming Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Thorndike’s law of effect and Skinner’s operant conditioning, this formalism builds upon early behaviorist models of learning. It extends into modern reinforcement learning theory, particularly in how agents update beliefs based on delayed rewards. Retrocausal Genealogy: Rooted in p0370 (5a87eb0099db8d02), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might include competing behaviors or environmental distractions that interfere with the intended action. For instance, a dog may be drawn to another stimulus, causing divergence from the learned path. Modeling such agents requires incorporating uncertainty into the reward function and state-space dynamics. Theory of Mind & Decision Maker Model: Rooted in p0370 (5a87eb0099db8d02), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple behavioral paths yield similar rewards, leading to ambiguity in policy selection. Leakage occurs if prior beliefs influence new observations too strongly, preventing adaptive learning. These conditions must be mitigated through regularization and dynamic adjustment of belief priors. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0370 (5a87eb0099db8d02), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

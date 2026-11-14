@@ -1,0 +1,78 @@
+{
+  "book_id": "50f411a55f7b1aa7",
+  "source_status": "COMPLETE",
+  "title": "subscriptions-and-paywall",
+  "file_name": "subscriptions-and-paywall.md",
+  "sha256": "50f411a55f7b1aa7e043996bcb7d967eb5f4902dccecd59654e6f638f56bf181",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Subscription tiers form a partially ordered set under entitlement inclusion; pricing phases define a discrete valuation lattice; daily pick limits are bounded cardinality constraints. Universal Lens: Rooted in subscriptions-and-paywall (50f411a55f7b1aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers user tier via Bayesian belief update on entitlement flags; conformal prediction bounds confidence intervals over pick allowances and feature access. GSI Mapping: Rooted in subscriptions-and-paywall (50f411a55f7b1aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states through server-side entitlement checks; state updates occur at subscription lifecycle events with deterministic access control logic. GSE Mapping: Rooted in subscriptions-and-paywall (50f411a55f7b1aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pricing_phase_lattice",
+      "name": "Pricing Phase Lattice",
+      "verbatim_quote": "The single source of truth for every amount is `apps/web/lib/pricing/pricing-phases.ts`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{phase}}': 'price per phase in USD', 'T': 'tier identifier'}",
+      "assumptions": "Each tier maps to a unique phase with fixed pricing; all prices are validated against the canonical source.",
+      "breakdown_regime": "When a phase's price diverges from canonical, system fails closed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Lattice structure of pricing phases mirrors the hierarchy of entitlements; each node represents a valid subscription tier.",
+        "source_operator": "pricing_phase_lattice",
+        "telemetry": "Stripe price mismatch triggers 503 error."
+      }
+    },
+    {
+      "primitive_id": "daily_pick_limit_constraint",
+      "name": "Daily Pick Limit Constraint",
+      "verbatim_quote": "The free daily pick allowance is owned by `packages/types/src/index.ts` (`dailyPickLimit`) — read it there rather than from prose.",
+      "page": 1,
+      "latex": "\\mathcal{L}_{\\text{daily}}(t) \\leq L_{\\text{max}}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{L}_{\\\\text{daily}}(t)': 'daily pick count at time t', 'L_{\\\\text{max}}': 'maximum allowed picks per day'}",
+      "assumptions": "Daily limit is a bounded integer; null implies unlimited access.",
+      "breakdown_regime": "Exceeding limit results in restricted access to picks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from entitlement flags; enforced via server-side access control.",
+        "source_operator": "daily_pick_limit_constraint",
+        "telemetry": "Access denied when \\mathcal{L}_{\\text{daily}}(t) > L_{\\text{max}}."
+      }
+    },
+    {
+      "primitive_id": "server_side_enforcement",
+      "name": "Server-Side Enforcement",
+      "verbatim_quote": "## Architecture: Server-Side Enforcement ONLY **The paywall is NEVER enforced on the client.** Premium content is filtered on the server before it reaches the client.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{client}}': 'client-side content request', 'C_{\\\\text{server}}': 'server-filtered content response'}",
+      "assumptions": "Client receives only authorized content; enforcement is centralized.",
+      "breakdown_regime": "Client-side bypass attempts result in unauthorized access denial.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Content flow is a morphism from client request to server response; access control is a kernel of this map.",
+        "source_operator": "server_side_enforcement",
+        "telemetry": "Unauthorized client requests return 403 or 401."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "50f411a55f7b1aa7_t0",
+      "think": "The subscription model defines a hierarchical lattice of entitlements, where each tier corresponds to a distinct valuation phase. Pricing integrity is maintained through strict validation in `pricing-phases.ts`, ensuring that Stripe prices match advertised values. A mismatch triggers a closed failure mode (503), preventing undercharging. Daily pick limits are enforced as bounded constraints, with null indicating unlimited access. Server-side filtering ensures that clients receive only content they are entitled to, enforcing a strict separation between client and server logic. This architecture supports a robust, tamper-proof subscription lifecycle with deterministic state transitions.\n\nDeep epistemic analysis for subscriptions-and-paywall (50f411a55f7b1aa7, domain=other, pages_read=2/2): Operator 'Pricing Phase Lattice' (page 1, domain other) captures: The single source of truth for every amount is `apps/web/lib/pricing/pricing-phases.ts`. Assumptions: Each tier maps to a unique phase with fixed pricing; all prices are validated against the canonical source. Breakdown regime: When a phase's price diverges from canonical, system fails closed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Lattice structure of pricing phases mirrors the hierarchy of entitlements; each node represents a valid subscription tier. Operator 'Daily Pick Limit Constraint' (page 1, domain other) captures: The free daily pick allowance is owned by `packages/types/src/index.ts` (`dailyPickLimit`) — read it there rather than from prose. Assumptions: Daily limit is a bounded integer; null implies unlimited access. Breakdown regime: Exceeding limit results in restricted access to picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from entitlement flags; enforced via server-side access control. Operator 'Server-Side Enforcement' (page 1, domain other) captures: ## Architecture: Server-Side Enforcement ONLY **The paywall is NEVER enforced on the client.** Premium content is filtered on the server before it reaches the client. Assumptions: Client receives only authorized content; enforcement is centralized. Breakdown regime: Client-side bypass attempts result in unauthorized access denial. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Content flow is a morphism from client request to server response; access control is a kernel of this map. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for subscriptions-and-paywall (50f411a55f7b1aa7, domain=other, pages_read=2/2): Operator 'Pricing Phase Lattice' (page 1, domain other) captures: The single source of truth for every amount is `apps/web/lib/pricing/pricing-phases.ts`. Assumptions: Each tier maps to a unique phase with fixed pricing; all prices are validated against the canonical source. Breakdown regime: When a phase's price diverges from canonical, system fails closed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Lattice structure of pricing phases mirrors the hierarchy of entitlements; each node represents a valid subscription tier. Operator 'Daily Pick Limit Constraint' (page 1, domain other) captures: The free daily pick allowance is owned by `packages/types/src/index.ts` (`dailyPickLimit`) — read it there rather than from prose. Assumptions: Daily limit is a bounded integer; null implies unlimited access. Breakdown regime: Exceeding limit results in restricted access to picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from entitlement flags; enforced via server-side access control. Operator 'Server-Side Enforcement' (page 1, domain other) captures: ## Architecture: Server-Side Enforcement ONLY **The paywall is NEVER enforced on the client.** Premium content is filtered on the server before it reaches the client. Assumptions: Client receives only authorized content; enforcement is centralized. Breakdown regime: Client-side bypass attempts result in unauthorized access denial. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Content flow is a morphism from client request to server response; access control is a kernel of this map. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classic access control models, extended by modern server-side enforcement paradigms and bounded resource allocation principles. Retrocausal Genealogy: Rooted in subscriptions-and-paywall (50f411a55f7b1aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in subscriptions-and-paywall (50f411a55f7b1aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious users attempting client-side bypasses and system components enforcing compliance. The design assumes adversarial behavior and mitigates it through centralized enforcement. Theory of Mind & Decision Maker Model: Rooted in subscriptions-and-paywall (50f411a55f7b1aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in subscriptions-and-paywall (50f411a55f7b1aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by separating client-side UX from server-side logic. Leakage is prevented by strict data filtering and validation at each layer. Cross-Layer Veto & Anti-Leakage Check: Rooted in subscriptions-and-paywall (50f411a55f7b1aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in subscriptions-and-paywall (50f411a55f7b1aa7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

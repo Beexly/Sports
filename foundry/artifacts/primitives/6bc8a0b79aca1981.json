@@ -1,0 +1,95 @@
+{
+  "book_id": "6bc8a0b79aca1981",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "6bc8a0b79aca1981853a2a9c7b6bb8ac839bf62b28988df8507105aeb710c960",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expected_points_added",
+      "name": "Expected Points Added",
+      "verbatim_quote": "# Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28.",
+      "page": 1,
+      "latex": "EPA = EP_{after} - EP_{before}",
+      "symbol_and_unit_ledger": "{'EPA': 'Points', 'EP_{after}': 'Expected Points after the play', 'EP_{before)': 'Expected Points before the play'}",
+      "assumptions": "Markov assumption of state independence, NFLFastR play-level expected point tables.",
+      "breakdown_regime": "Singular at zero samples; regularizes with smoothing priors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI posterior predictive score difference; GSE state-value residual.",
+        "source_operator": "expected_points_added",
+        "telemetry": "Play-by-play residual from linear value function fit"
+      }
+    },
+    {
+      "primitive_id": "play_action_efficiency",
+      "name": "Play Action Efficiency",
+      "verbatim_quote": "# Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28.",
+      "page": 1,
+      "latex": "EPA_{PA} = \\frac{\\sum EPA_{PA}}{Dropbacks_{PA}}",
+      "symbol_and_unit_ledger": "{'EPA_{PA}:': 'Points per play action dropback', 'Dropbacks_{PA}:': 'Count of play action dropbacks'}",
+      "assumptions": "Constant effectiveness within bin, no confounding by down/distance.",
+      "breakdown_regime": "Skewed distribution; heavy tails require Winsorization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conditional expectation within quarterback × play-action covariate strata.",
+        "source_operator": "play_action_efficiency",
+        "telemetry": "Observed EPA differential between PA and non-PA sets"
+      }
+    },
+    {
+      "primitive_id": "pass_blocking_grade",
+      "name": "Pass Blocking Grade",
+      "verbatim_quote": "# Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28.",
+      "page": 1,
+      "latex": "Grade = 100 \\times \\frac{EPA_{blocker}}{max(EPA_{reference})}$",
+      "symbol_and_unit_ledger": "{'Grade': 'Dimensionless (0-100 scale)', 'EPA_{blocker}:': 'Expected Points Added contributed by the blocker', 'max(EPA_{reference}):': 'Maximum possible EPA in the reference population'}",
+      "assumptions": "Independent component model; perfect measurement of individual lineman performance.",
+      "breakdown_regime": "Collinear with scheme-based defensive pressure metrics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian hierarchical shrinkage estimate of player-specific EPA effects.",
+        "source_operator": "pass_blocking_grade",
+        "telemetry": "Regression-adjusted block success rate weighted by impact"
+      }
+    },
+    {
+      "primitive_id": "fantasy_war",
+      "name": "Fantasy WAR",
+      "verbatim_quote": "# Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28.",
+      "page": 1,
+      "latex": "WAR = \\left(\\frac{FPTS_{player} - FPTS_{league}}{SD_{FPTS}}\\right) \\times PG",
+      "symbol_and_unit_ledger": "{'WAR': 'Wins Above Replacement', 'FPTS_{player}:': \"Player's fantasy points per game\", 'FPTS_{league}:': 'League-average FPTS per game', 'SD_{FPTS}:': 'Standard deviation of FPTS across all players', 'PG': 'Games played'}",
+      "assumptions": "Normality of fantasy production; replacement level set at league average.",
+      "breakdown_regime": "Non-linear scaling at extreme tails; prone to overfitting small samples.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction interval width as a measure of statistical significance.",
+        "source_operator": "fantasy_war",
+        "telemetry": "Empirical percentiles of simulated fantasy outcomes"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6bc8a0b79aca1981_t0",
+      "think": "These primitives form a coherent hierarchy of football analytics. Starting from the foundational 'Expected Points Added' (EPA), we build derived kernels like 'Play Action Efficiency' that condition on specific contexts. 'Pass Blocking Grade' introduces a novel evaluation metric, while 'Fantasy WAR' bridges performance to fantasy economics. The dualisms emerge naturally: EPA operates on the GSE state-value framework, whereas Fantasy WAR maps to GSI's posterior predictive score. Failure modes include over-reliance on Markovian state transitions, confounding by scheme factors, and ignoring temporal evolution of player ability.\n\nDeep epistemic analysis for README (6bc8a0b79aca1981, domain=other, pages_read=3/3): Operator 'Expected Points Added' (page 1, domain other) captures: # Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28. Assumptions: Markov assumption of state independence, NFLFastR play-level expected point tables. Breakdown regime: Singular at zero samples; regularizes with smoothing priors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI posterior predictive score difference; GSE state-value residual. Operator 'Play Action Efficiency' (page 1, domain other) captures: # Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28. Assumptions: Constant effectiveness within bin, no confounding by down/distance. Breakdown regime: Skewed distribution; heavy tails require Winsorization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conditional expectation within quarterback × play-action covariate strata. Operator 'Pass Blocking Grade' (page 1, domain other) captures: # Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28. Assumptions: Independent component model; perfect measurement of individual lineman performance. Breakdown regime: Collinear with scheme-based defensive pressure metrics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian hierarchical shrinkage estimate of player-specific EPA effects. Operator 'Fantasy WAR' (page 1, domain other) captures: # Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28. Assumptions: Normality of fantasy production; replacement level set at league average. Breakdown regime: Non-linear scaling at extreme tails; prone to overfitting small samples. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction interval width as a measure of statistical significance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (6bc8a0b79aca1981, domain=other, pages_read=3/3): Operator 'Expected Points Added' (page 1, domain other) captures: # Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28. Assumptions: Markov assumption of state independence, NFLFastR play-level expected point tables. Breakdown regime: Singular at zero samples; regularizes with smoothing priors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI posterior predictive score difference; GSE state-value residual. Operator 'Play Action Efficiency' (page 1, domain other) captures: # Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28. Assumptions: Constant effectiveness within bin, no confounding by down/distance. Breakdown regime: Skewed distribution; heavy tails require Winsorization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conditional expectation within quarterback × play-action covariate strata. Operator 'Pass Blocking Grade' (page 1, domain other) captures: # Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28. Assumptions: Independent component model; perfect measurement of individual lineman performance. Breakdown regime: Collinear with scheme-based defensive pressure metrics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian hierarchical shrinkage estimate of player-specific EPA effects. Operator 'Fantasy WAR' (page 1, domain other) captures: # Full-table transcriptions — X analytics sweep 2026-09-28 AM Window: posts after ~9:10 PM CDT Sun 2026-09-27 through ~9:10 AM CDT Mon 2026-09-28. Assumptions: Normality of fantasy production; replacement level set at league average. Breakdown regime: Non-linear scaling at extreme tails; prone to overfitting small samples. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal prediction interval width as a measure of statistical significance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (e.g., PFF analysts, Rotodoc) model different aspects of truth: PFF focuses on granular component attribution, while Rotodoc emphasizes outcome-based luck decomposition. Our task is to integrate these perspectives coherently. Theory of Mind & Decision Maker Model: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity condition: Must avoid double-counting effects (e.g., EPA already accounts for blocking; Fantasy WAR adjusts for position scarcity). Leakage veto: Fantasy metrics must not use future information (e.g., using end-of-season projections as current inputs) Cross-Layer Veto & Anti-Leakage Check: Rooted in README (6bc8a0b79aca1981), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

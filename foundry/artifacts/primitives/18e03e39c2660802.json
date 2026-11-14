@@ -1,0 +1,78 @@
+{
+  "book_id": "18e03e39c2660802",
+  "source_status": "COMPLETE",
+  "title": "EDGE-023-age-and-geo-eligibility-placeholder",
+  "file_name": "EDGE-023-age-and-geo-eligibility-placeholder.md",
+  "sha256": "18e03e39c2660802710c62b06241c6c15767f259a31d5cac8d04547910833d71",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Age and geo eligibility as a compliance kernel constraining contest state-space via dependency gates and fake-data protocols. Universal Lens: Rooted in EDGE-023-age-and-geo-eligibility-placeholder (18e03e39c2660802), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on eligibility constraints maps to risk-weighted posterior over contestant validity using discrete compliance states. GSI Mapping: Rooted in EDGE-023-age-and-geo-eligibility-placeholder (18e03e39c2660802), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in GSE enforce eligibility boundaries through feature-flagged artifact disabling and mock-data validation. GSE Mapping: Rooted in EDGE-023-age-and-geo-eligibility-placeholder (18e03e39c2660802), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "eligibility_gate",
+      "name": "Compliance Dependency Gate",
+      "verbatim_quote": "# EDGE-023: Age and geo eligibility placeholder ## Duplicate Gate duplicate_check_status: DEPENDENCY matched_existing_ids: EDGE-001 relation_to_existing: Required gate before downstream contest work.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Gate status (boolean)', 'D': 'Dependency match (boolean)'}",
+      "assumptions": "Eligibility requires prior validation of dependency ID EDGE-001.",
+      "breakdown_regime": "When D = false, G = false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's probabilistic eligibility check mirrors GSE's conditional artifact activation.",
+        "source_operator": "eligibility_gate",
+        "telemetry": "Verification of matched_existing_ids against known dependencies."
+      }
+    },
+    {
+      "primitive_id": "fake_data_protocol",
+      "name": "Fake Data Protocol",
+      "verbatim_quote": "parent_id: none dependency_ids: EDGE-001 ## Category risk / compliance ## Goal Create a docs-first, fake-data-first, or disabled-by-default EdgeBall artifact for Age and geo eligibility placeholder.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Fake data flag (boolean)', 'A': 'Artifact state (binary)'}",
+      "assumptions": "MVP must avoid real data usage until legal approval.",
+      "breakdown_regime": "When F = true, A = disabled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's artifact state is derived from GSI's data fidelity kernel.",
+        "source_operator": "fake_data_protocol",
+        "telemetry": "Enforcement of fake-data-only mode in contest creation."
+      }
+    },
+    {
+      "primitive_id": "legal_boundary",
+      "name": "Legal Risk Boundary",
+      "verbatim_quote": "Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Risk level (high|medium|low)', 'L': 'Legal approval (boolean)'}",
+      "assumptions": "Paid features require L = true.",
+      "breakdown_regime": "When R = high and L = false, feature = blocked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's risk scoring aligns with GSE's feature access control logic.",
+        "source_operator": "legal_boundary",
+        "telemetry": "Feature flag enforcement based on legal approval status."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "18e03e39c2660802_t0",
+      "think": "The primitives form a layered compliance kernel where eligibility is enforced via dependency checks, fake data protocols, and legal risk boundaries. The kernel ensures that downstream artifacts (contests, leaderboards) are gated by prior validation of age and geo eligibility. This creates a dual structure: one in GSI for probabilistic risk inference, another in GSE for deterministic feature access. Failure modes include bypassing dependency checks, leaking real data into fake environments, or enabling paid features without legal approval. Each primitive operates under a shared constraint: all must remain in a disabled or mock state until legal and operational readiness is confirmed.\n\nDeep epistemic analysis for EDGE-023-age-and-geo-eligibility-placeholder (18e03e39c2660802, domain=other, pages_read=1/1): Operator 'Compliance Dependency Gate' (page 1, domain other) captures: # EDGE-023: Age and geo eligibility placeholder ## Duplicate Gate duplicate_check_status: DEPENDENCY matched_existing_ids: EDGE-001 relation_to_existing: Required gate before downstream contest work. Assumptions: Eligibility requires prior validation of dependency ID EDGE-001. Breakdown regime: When D = false, G = false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic eligibility check mirrors GSE's conditional artifact activation. Operator 'Fake Data Protocol' (page 1, domain other) captures: parent_id: none dependency_ids: EDGE-001 ## Category risk / compliance ## Goal Create a docs-first, fake-data-first, or disabled-by-default EdgeBall artifact for Age and geo eligibility placeholder. Assumptions: MVP must avoid real data usage until legal approval. Breakdown regime: When F = true, A = disabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's artifact state is derived from GSI's data fidelity kernel. Operator 'Legal Risk Boundary' (page 1, domain other) captures: Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval. Assumptions: Paid features require L = true. Breakdown regime: When R = high and L = false, feature = blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's risk scoring aligns with GSE's feature access control logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for EDGE-023-age-and-geo-eligibility-placeholder (18e03e39c2660802, domain=other, pages_read=1/1): Operator 'Compliance Dependency Gate' (page 1, domain other) captures: # EDGE-023: Age and geo eligibility placeholder ## Duplicate Gate duplicate_check_status: DEPENDENCY matched_existing_ids: EDGE-001 relation_to_existing: Required gate before downstream contest work. Assumptions: Eligibility requires prior validation of dependency ID EDGE-001. Breakdown regime: When D = false, G = false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic eligibility check mirrors GSE's conditional artifact activation. Operator 'Fake Data Protocol' (page 1, domain other) captures: parent_id: none dependency_ids: EDGE-001 ## Category risk / compliance ## Goal Create a docs-first, fake-data-first, or disabled-by-default EdgeBall artifact for Age and geo eligibility placeholder. Assumptions: MVP must avoid real data usage until legal approval. Breakdown regime: When F = true, A = disabled. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's artifact state is derived from GSI's data fidelity kernel. Operator 'Legal Risk Boundary' (page 1, domain other) captures: Do not launch paid contests, prizes, deposits, payouts, live leaderboards, sportsbook/DFS affiliate flows, or real-money entries without founder/legal approval. Assumptions: Paid features require L = true. Breakdown regime: When R = high and L = false, feature = blocked. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's risk scoring aligns with GSE's feature access control logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles of secure software engineering, tracing back to early access-control models in distributed systems and risk-based decision theory. Retrocausal Genealogy: Rooted in EDGE-023-age-and-geo-eligibility-placeholder (18e03e39c2660802), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in EDGE-023-age-and-geo-eligibility-placeholder (18e03e39c2660802), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include legal stakeholders seeking compliance and product engineers aiming for rapid iteration. The system models both as competing information flows within a bounded rationality framework. Theory of Mind & Decision Maker Model: Rooted in EDGE-023-age-and-geo-eligibility-placeholder (18e03e39c2660802), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring GSI's probabilistic risk does not leak into GSE's deterministic state machine. Leakage vetoes occur when real data enters mock environments or paid features activate without legal sign-off. Cross-Layer Veto & Anti-Leakage Check: Rooted in EDGE-023-age-and-geo-eligibility-placeholder (18e03e39c2660802), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

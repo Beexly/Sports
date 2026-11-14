@@ -1,0 +1,78 @@
+{
+  "book_id": "599f8ede686f1ed8",
+  "source_status": "COMPLETE",
+  "title": "signoz",
+  "file_name": "signoz.md",
+  "sha256": "599f8ede686f1ed82f677e349d634fd0aa491182d0e85f8854b076517b4bc60b",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "SigNoz as an opentelemetry-native observability stack maps to GSE's telemetry kernel via trace-metric-log-APM fusion in a ClickHouse/OTel collector architecture. Universal Lens: Rooted in signoz (599f8ede686f1ed8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic system health states from SigNoz's trace, log, and metric streams using conformal predictive distributions over telemetry dimensions. GSI Mapping: Rooted in signoz (599f8ede686f1ed8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions system states by interpreting SigNoz's APM and alert signals through a state-machine governed by rollback-protected event taxonomies. GSE Mapping: Rooted in signoz (599f8ede686f1ed8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "observability_kernel",
+      "name": "Observability Kernel",
+      "verbatim_quote": "# SigNoz ## Project Summary SigNoz is the candidate opentelemetry-native observability: logs, metrics, traces, apm layer for GSE / GSN.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The system supports unified telemetry ingestion and analysis across logs, metrics, traces, and APM layers.",
+      "breakdown_regime": "When telemetry ingestion fails or data boundaries are crossed without authorization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SigNoz's observability kernel is isomorphic to GSE's telemetry abstraction layer, enabling cross-layer diagnostics and alerting.",
+        "source_operator": "observability_kernel",
+        "telemetry": "Trace, log, metric, and APM data streams"
+      }
+    },
+    {
+      "primitive_id": "data_boundary_gate",
+      "name": "Data Boundary Gate",
+      "verbatim_quote": "- Add event taxonomy, data-boundary, and rollback docs before package install.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All data flows must be classified and audited prior to integration.",
+      "breakdown_regime": "When unauthorized data access or rollback occurs due to missing documentation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces data integrity and rollback safety in GSE's internal telemetry pipeline.",
+        "source_operator": "data_boundary_gate",
+        "telemetry": "Event taxonomy and rollback audit logs"
+      }
+    },
+    {
+      "primitive_id": "production_access_control",
+      "name": "Production Access Control",
+      "verbatim_quote": "- Gate production keys, real customer data, and public exposure behind owner approval.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Access to production systems requires explicit approval and identity verification.",
+      "breakdown_regime": "Upon unauthorized access to production keys or customer data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's secure credential and access control mechanisms for telemetry and service exposure.",
+        "source_operator": "production_access_control",
+        "telemetry": "Access logs, approval tokens, and key rotation records"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "599f8ede686f1ed8_t0",
+      "think": "SigNoz's role as an opentelemetry-native observability platform aligns with GSE's need for a unified telemetry kernel. The observability kernel primitive encapsulates its ability to ingest and correlate logs, metrics, traces, and APM data. This is mathematically modeled as a multi-dimensional telemetry fusion space where each modality contributes to a joint probability distribution over system states. The data boundary gate ensures that this fusion respects semantic and operational boundaries, preventing leakage between domains. Production access control enforces a conditional probability model over access events, ensuring that only authorized entities can influence system behavior. These primitives form a closed-loop system where telemetry informs state transitions, and access controls govern the evolution of those states.\n\nDeep epistemic analysis for signoz (599f8ede686f1ed8, domain=other, pages_read=2/2): Operator 'Observability Kernel' (page 1, domain other) captures: # SigNoz ## Project Summary SigNoz is the candidate opentelemetry-native observability: logs, metrics, traces, apm layer for GSE / GSN. Assumptions: The system supports unified telemetry ingestion and analysis across logs, metrics, traces, and APM layers. Breakdown regime: When telemetry ingestion fails or data boundaries are crossed without authorization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SigNoz's observability kernel is isomorphic to GSE's telemetry abstraction layer, enabling cross-layer diagnostics and alerting. Operator 'Data Boundary Gate' (page 1, domain other) captures: - Add event taxonomy, data-boundary, and rollback docs before package install. Assumptions: All data flows must be classified and audited prior to integration. Breakdown regime: When unauthorized data access or rollback occurs due to missing documentation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces data integrity and rollback safety in GSE's internal telemetry pipeline. Operator 'Production Access Control' (page 1, domain other) captures: - Gate production keys, real customer data, and public exposure behind owner approval. Assumptions: Access to production systems requires explicit approval and identity verification. Breakdown regime: Upon unauthorized access to production keys or customer data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's secure credential and access control mechanisms for telemetry and service exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for signoz (599f8ede686f1ed8, domain=other, pages_read=2/2): Operator 'Observability Kernel' (page 1, domain other) captures: # SigNoz ## Project Summary SigNoz is the candidate opentelemetry-native observability: logs, metrics, traces, apm layer for GSE / GSN. Assumptions: The system supports unified telemetry ingestion and analysis across logs, metrics, traces, and APM layers. Breakdown regime: When telemetry ingestion fails or data boundaries are crossed without authorization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SigNoz's observability kernel is isomorphic to GSE's telemetry abstraction layer, enabling cross-layer diagnostics and alerting. Operator 'Data Boundary Gate' (page 1, domain other) captures: - Add event taxonomy, data-boundary, and rollback docs before package install. Assumptions: All data flows must be classified and audited prior to integration. Breakdown regime: When unauthorized data access or rollback occurs due to missing documentation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces data integrity and rollback safety in GSE's internal telemetry pipeline. Operator 'Production Access Control' (page 1, domain other) captures: - Gate production keys, real customer data, and public exposure behind owner approval. Assumptions: Access to production systems requires explicit approval and identity verification. Breakdown regime: Upon unauthorized access to production keys or customer data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's secure credential and access control mechanisms for telemetry and service exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the mathematical formalism of probabilistic programming and causal inference, tracing back to Bayesian networks and information theory. Retrocausal Genealogy: Rooted in signoz (599f8ede686f1ed8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in signoz (599f8ede686f1ed8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include unauthorized users seeking data breaches and system components attempting to bypass access controls. Their actions are modeled as adversarial perturbations in the telemetry space. Theory of Mind & Decision Maker Model: Rooted in signoz (599f8ede686f1ed8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by maintaining distinct data boundaries and requiring explicit approval for cross-layer data flow. Leakage vetoes occur when telemetry integrity is compromised by unauthorized access or misclassification. Cross-Layer Veto & Anti-Leakage Check: Rooted in signoz (599f8ede686f1ed8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

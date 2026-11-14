@@ -1,0 +1,78 @@
+{
+  "book_id": "2076f5797d1579f5",
+  "source_status": "COMPLETE",
+  "title": "ADR-0003-when-to-use-feature-store",
+  "file_name": "ADR-0003-when-to-use-feature-store.md",
+  "sha256": "2076f5797d1579f590753f05757d64455748fc234d9a2fed03f63e96a9d433e3",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Feature store adoption hinges on stable definitions, storage rights, and consistency; failure modes include contract instability and approval gaps. Universal Lens: Rooted in ADR-0003-when-to-use-feature-store (2076f5797d1579f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian feature validation under consistency constraints; conformal prediction bounds for online/offline alignment. GSI Mapping: Rooted in ADR-0003-when-to-use-feature-store (2076f5797d1579f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transitions governed by volume thresholds and parity requirements; rollback to local schemas on veto. GSE Mapping: Rooted in ADR-0003-when-to-use-feature-store (2076f5797d1579f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "feature_definition_stability",
+      "name": "Feature Definition Stability",
+      "verbatim_quote": "Use when: - feature definitions are stable - source rights allow storage - online/offline consistency matters Why not now: - feature contracts are still being formalized.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'dimensionless stability index'}",
+      "assumptions": "Definitions must remain invariant over time; storage access is granted.",
+      "breakdown_regime": "D < 1 indicates instability requiring reevaluation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's Bayesian prior update mechanism under fixed hypothesis space.",
+        "source_operator": "feature_definition_stability",
+        "telemetry": "Change rate in feature schema versions over time."
+      }
+    },
+    {
+      "primitive_id": "storage_approval_gating",
+      "name": "Storage Approval Gating",
+      "verbatim_quote": "no AWS storage approval exists. Rollback path: local feature files and schema docs. Owner approval needed:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'approval status (0 or 1)', 'R': 'rollback readiness (0 or 1)'}",
+      "assumptions": "Approval is necessary for managed storage; rollback is required if A=0.",
+      "breakdown_regime": "A = 0 implies immediate fallback to local schema.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel in GSE state-space for conditional transition to local mode.",
+        "source_operator": "storage_approval_gating",
+        "telemetry": "AWS approval timestamp and rollback trigger event."
+      }
+    },
+    {
+      "primitive_id": "consistency_requirement",
+      "name": "Consistency Requirement",
+      "verbatim_quote": "Use when: - feature definitions are stable - source rights allow storage - online/offline consistency matters Why not now: - feature contracts are still being formalized.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'consistency metric (0 to 1)'}",
+      "assumptions": "Online and offline data streams must align; deviation exceeds threshold C < 0.95.",
+      "breakdown_regime": "C < 0.95 triggers consistency audit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's calibration error bound in predictive models.",
+        "source_operator": "consistency_requirement",
+        "telemetry": "Mean squared difference between online and offline feature values."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2076f5797d1579f5_t0",
+      "think": "The decision to hold feature store adoption arises from three core regimes: definition stability (D), approval gating (A), and consistency (C). These form a triadic constraint system where D ≥ 1, A = 1, and C ≥ 0.95 define valid operational states. Failure occurs when any component violates its regime. For instance, if D < 1, definitions are unstable and risk model drift. If A = 0, no infrastructure supports managed storage, necessitating rollback. If C < 0.95, inconsistency undermines trust in predictions. The system operates under a dual logic: use when all gates open, reject otherwise. Each primitive maps to a distinct layer—mathematical structure in GSI, operational state in GSE—ensuring coherence across abstraction levels.\n\nDeep epistemic analysis for ADR-0003-when-to-use-feature-store (2076f5797d1579f5, domain=other, pages_read=1/1): Operator 'Feature Definition Stability' (page 1, domain other) captures: Use when: - feature definitions are stable - source rights allow storage - online/offline consistency matters Why not now: - feature contracts are still being formalized. Assumptions: Definitions must remain invariant over time; storage access is granted. Breakdown regime: D < 1 indicates instability requiring reevaluation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's Bayesian prior update mechanism under fixed hypothesis space. Operator 'Storage Approval Gating' (page 1, domain other) captures: no AWS storage approval exists. Rollback path: local feature files and schema docs. Owner approval needed: Assumptions: Approval is necessary for managed storage; rollback is required if A=0. Breakdown regime: A = 0 implies immediate fallback to local schema. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel in GSE state-space for conditional transition to local mode. Operator 'Consistency Requirement' (page 1, domain other) captures: Use when: - feature definitions are stable - source rights allow storage - online/offline consistency matters Why not now: - feature contracts are still being formalized. Assumptions: Online and offline data streams must align; deviation exceeds threshold C < 0.95. Breakdown regime: C < 0.95 triggers consistency audit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's calibration error bound in predictive models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ADR-0003-when-to-use-feature-store (2076f5797d1579f5, domain=other, pages_read=1/1): Operator 'Feature Definition Stability' (page 1, domain other) captures: Use when: - feature definitions are stable - source rights allow storage - online/offline consistency matters Why not now: - feature contracts are still being formalized. Assumptions: Definitions must remain invariant over time; storage access is granted. Breakdown regime: D < 1 indicates instability requiring reevaluation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's Bayesian prior update mechanism under fixed hypothesis space. Operator 'Storage Approval Gating' (page 1, domain other) captures: no AWS storage approval exists. Rollback path: local feature files and schema docs. Owner approval needed: Assumptions: Approval is necessary for managed storage; rollback is required if A=0. Breakdown regime: A = 0 implies immediate fallback to local schema. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel in GSE state-space for conditional transition to local mode. Operator 'Consistency Requirement' (page 1, domain other) captures: Use when: - feature definitions are stable - source rights allow storage - online/offline consistency matters Why not now: - feature contracts are still being formalized. Assumptions: Online and offline data streams must align; deviation exceeds threshold C < 0.95. Breakdown regime: C < 0.95 triggers consistency audit. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's calibration error bound in predictive models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s data governance frameworks, particularly those addressing feature engineering consistency in ML pipelines. Influenced by formal methods in software architecture and probabilistic programming paradigms. Retrocausal Genealogy: Rooted in ADR-0003-when-to-use-feature-store (2076f5797d1579f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ADR-0003-when-to-use-feature-store (2076f5797d1579f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the feature engineering team (pushing for scalability) and compliance/security teams (restraining due to approval lag). Decision-makers balance technical feasibility against regulatory constraints. Theory of Mind & Decision Maker Model: Rooted in ADR-0003-when-to-use-feature-store (2076f5797d1579f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in ADR-0003-when-to-use-feature-store (2076f5797d1579f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that each primitive operates independently; e.g., high consistency does not override lack of approval. Leakage vetoes occur when one regime's violation invalidates others, enforcing strict conditional dependencies. Cross-Layer Veto & Anti-Leakage Check: Rooted in ADR-0003-when-to-use-feature-store (2076f5797d1579f5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

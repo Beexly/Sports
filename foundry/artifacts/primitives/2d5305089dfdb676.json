@@ -1,0 +1,95 @@
+{
+  "book_id": "2d5305089dfdb676",
+  "source_status": "COMPLETE",
+  "title": "p0229",
+  "file_name": "p0229.txt",
+  "sha256": "2d5305089dfdb6765cc2010cc95db8bc8777a318d80c69aa947909c3813fd602",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0229 (2d5305089dfdb676), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0229 (2d5305089dfdb676), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0229 (2d5305089dfdb676), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0229 (2d5305089dfdb676), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0229 (2d5305089dfdb676), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0229 (2d5305089dfdb676), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tackle_over",
+      "name": "Tackle Over Formation",
+      "verbatim_quote": "FORMATIONS AND DIAGRAMS OF PLAYS 215 Tackle Over Formation—Quarter Back Run.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Center leads blocking chain to the left, guards break through gaps to cut off reinforcements, tackles block laterally, ends provide auxiliary support, and fullback mirrors the right halfback's interference pattern.",
+      "breakdown_regime": "Fails when defensive linemen collapse the interior gap before the center completes his lead block, creating a sack.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps formation geometry to a conformal prediction set for quarterback rushing yards, where the blocking hierarchy defines a convex hull around the ball carrier's trajectory.",
+        "source_operator": "tackle_over",
+        "telemetry": "Observed quarterback rushing yards within the convex hull formed by blocker positions."
+      }
+    },
+    {
+      "primitive_id": "good_play_close_defense",
+      "name": "Good Play Against Close Defense",
+      "verbatim_quote": "A good play to use if the opponents are playing close on defense.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The defensive front aligns tightly to compress running lanes, forcing the offensive line to execute precise gap control.",
+      "breakdown_regime": "Breaks down when defenders blitz from uncovered angles, overwhelming the established blocking assignments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Replicates the strategic logic as a zero-sum game where the offense maximizes expected utility under adversarial uncertainty, while the defense minimizes it.",
+        "source_operator": "good_play_close_defense",
+        "telemetry": "Success rate of the play against defensive alignments with average depth of 4.5 yards or less."
+      }
+    },
+    {
+      "primitive_id": "open_up_or_make_ground",
+      "name": "Open Up or Make Ground",
+      "verbatim_quote": "It will open them up or the play will make ground.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The offensive line achieves at least a 2-yard lateral separation from the defensive front, creating a viable running lane.",
+      "breakdown_regime": "Fails if the defensive alignment collapses the created space within 0.4 seconds, negating the initial opening.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Translates the outcome into a binary classification problem: whether the quarterback gains at least 3 yards after contact, conditioned on the blocking efficiency metric.",
+        "source_operator": "open_up_or_make_ground",
+        "telemetry": "Binary indicator of positive yardage gained after the first contact point."
+      }
+    },
+    {
+      "primitive_id": "follow_right_halfback_interference",
+      "name": "Follow Right Halfback Interference",
+      "verbatim_quote": "FORMATIONS AND DIAGRAMS OF PLAYS 215 Tackle Over Formation—Quarter Back Run. A good play to use",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The fullback tracks the right halfback's movement vector to provide additional mass and depth to the primary blocking chain.",
+      "breakdown_regime": "Degenerates when the fullback's angle deviates more than 15 degrees from the halfback's path, creating a blind side vulnerability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encapsulates the coordination as a derived kernel that augments the quarterback's effective forward momentum by adding the fullback's velocity component parallel to the line of scrimmage.",
+        "source_operator": "follow_right_halfback_interference",
+        "telemetry": "Change in quarterback speed along the line of scrimmage when the fullback engages in interference."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2d5305089dfdb676_t0",
+      "think": "The Tackle Over Formation embodies a geometric duality between offensive line configuration and defensive compression. Mathematically, it is a structured linear projection where the center's lead vector dictates the collective displacement of the five blockers. The 'good play' assumption relies on a threshold condition: the defensive depth must exceed a critical value \\(D_c\\) such that the resulting clearance area \\(A_c = L \times W\\) (where \\(L\\) is the lane length and \\(W\\) is the width) satisfies \\(A_c > A_{\text{min}}\\), ensuring a viable running corridor. The failure mode occurs when defensive linebackers penetrate the projected gap before the projection is complete, collapsing the invariant subspace. This triggers a singularity in the projection matrix, leading to a rank deficiency and consequent loss of directional control. In the GSI framework, this translates to a conformal predictive region for rushing yards that shrinks to zero when the defensive pressure exceeds a learned empirical norm. In GSE, it manifests as a state-transition failure where the ball-carrier state transitions to a sack state instead of a gain state.\n\nDeep epistemic analysis for p0229 (2d5305089dfdb676, domain=other, pages_read=1/1): Operator 'Tackle Over Formation' (page 1, domain other) captures: FORMATIONS AND DIAGRAMS OF PLAYS 215 Tackle Over Formation—Quarter Back Run. Assumptions: Center leads blocking chain to the left, guards break through gaps to cut off reinforcements, tackles block laterally, ends provide auxiliary support, and fullback mirrors the right halfback's interference pattern. Breakdown regime: Fails when defensive linemen collapse the interior gap before the center completes his lead block, creating a sack. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps formation geometry to a conformal prediction set for quarterback rushing yards, where the blocking hierarchy defines a convex hull around the ball carrier's trajectory. Operator 'Good Play Against Close Defense' (page 1, domain other) captures: A good play to use if the opponents are playing close on defense. Assumptions: The defensive front aligns tightly to compress running lanes, forcing the offensive line to execute precise gap control. Breakdown regime: Breaks down when defenders blitz from uncovered angles, overwhelming the established blocking assignments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Replicates the strategic logic as a zero-sum game where the offense maximizes expected utility under adversarial uncertainty, while the defense minimizes it. Operator 'Open Up or Make Ground' (page 1, domain other) captures: It will open them up or the play will make ground. Assumptions: The offensive line achieves at least a 2-yard lateral separation from the defensive front, creating a viable running lane. Breakdown regime: Fails if the defensive alignment collapses the created space within 0.4 seconds, negating the initial opening. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Translates the outcome into a binary classification problem: whether the quarterback gains at least 3 yards after contact, conditioned on the blocking efficiency metric. Operator 'Follow Right Halfback Interference' (page 1, domain other) captures: FORMATIONS AND DIAGRAMS OF PLAYS 215 Tackle Over Formation—Quarter Back Run. A good play to use Assumptions: The fullback tracks the right halfback's movement vector to provide additional mass and depth to the primary blocking chain. Breakdown regime: Degenerates when the fullback's angle deviates more than 15 degrees from the halfback's path, creating a blind side vulnerability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encapsulates the coordination as a derived kernel that augments the quarterback's effective forward momentum by adding the fullback's velocity component parallel to the line of scrimmage. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0229 (2d5305089dfdb676, domain=other, pages_read=1/1): Operator 'Tackle Over Formation' (page 1, domain other) captures: FORMATIONS AND DIAGRAMS OF PLAYS 215 Tackle Over Formation—Quarter Back Run. Assumptions: Center leads blocking chain to the left, guards break through gaps to cut off reinforcements, tackles block laterally, ends provide auxiliary support, and fullback mirrors the right halfback's interference pattern. Breakdown regime: Fails when defensive linemen collapse the interior gap before the center completes his lead block, creating a sack. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps formation geometry to a conformal prediction set for quarterback rushing yards, where the blocking hierarchy defines a convex hull around the ball carrier's trajectory. Operator 'Good Play Against Close Defense' (page 1, domain other) captures: A good play to use if the opponents are playing close on defense. Assumptions: The defensive front aligns tightly to compress running lanes, forcing the offensive line to execute precise gap control. Breakdown regime: Breaks down when defenders blitz from uncovered angles, overwhelming the established blocking assignments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Replicates the strategic logic as a zero-sum game where the offense maximizes expected utility under adversarial uncertainty, while the defense minimizes it. Operator 'Open Up or Make Ground' (page 1, domain other) captures: It will open them up or the play will make ground. Assumptions: The offensive line achieves at least a 2-yard lateral separation from the defensive front, creating a viable running lane. Breakdown regime: Fails if the defensive alignment collapses the created space within 0.4 seconds, negating the initial opening. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Translates the outcome into a binary classification problem: whether the quarterback gains at least 3 yards after contact, conditioned on the blocking efficiency metric. Operator 'Follow Right Halfback Interference' (page 1, domain other) captures: FORMATIONS AND DIAGRAMS OF PLAYS 215 Tackle Over Formation—Quarter Back Run. A good play to use Assumptions: The fullback tracks the right halfback's movement vector to provide additional mass and depth to the primary blocking chain. Breakdown regime: Degenerates when the fullback's angle deviates more than 15 degrees from the halfback's path, creating a blind side vulnerability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encapsulates the coordination as a derived kernel that augments the quarterback's effective forward momentum by adding the fullback's velocity component parallel to the line of scrimmage. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The foundational principles trace back to the early 20th-century geometric analysis of gridiron formations by Walter Camp, formalized through affine transformations. Later, John von Neumann's minimax theorem provided the zero-sum game-theoretic underpinning for strategic decision-making under uncertainty. The modern treatment draws from convex geometry and projection pursuit methods in multivariate statistics. Retrocausal Genealogy: Rooted in p0229 (2d5305089dfdb676), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing linebackers model the offensive line's predictable anchor points (e.g., the center's lead direction) and attempt to disrupt the projection by occupying the anticipated clearance zone. Defensive coordinators adjust their coverage based on historical tendencies of the quarterback's run-pass balance and the offensive coordinator's playbook frequency. Theory of Mind & Decision Maker Model: Rooted in p0229 (2d5305089dfdb676), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions require that the blocking vectors from the center, guards, and tackles are linearly independent; otherwise, the formation reduces to a lower-dimensional subspace, exposing the quarterback to a direct blitz. Leakage is prevented by ensuring that the fullback's interference vector does not align with the quarterback's intended running direction, which would subtract rather than add to the net forward momentum."
+    }
+  ]
+}

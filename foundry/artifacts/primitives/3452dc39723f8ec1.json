@@ -1,0 +1,78 @@
+{
+  "book_id": "3452dc39723f8ec1",
+  "source_status": "COMPLETE",
+  "title": "p0126",
+  "file_name": "p0126.txt",
+  "sha256": "3452dc39723f8ec1f232c4abeb707d77a5a47343817d1771fe5dac138189ec9c",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Kicked ball boundary interactions define play initiation and possession transitions via discrete event logic and spatial boundary conditions. Universal Lens: Rooted in p0126 (3452dc39723f8ec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on ball ownership and scrimmage initiation conditioned on boundary events and player contact. GSI Mapping: Rooted in p0126 (3452dc39723f8ec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state machine transitions governed by kick-off rules and out-of-bounds outcomes with deterministic possession shifts. GSE Mapping: Rooted in p0126 (3452dc39723f8ec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "kickoff_boundary_condition",
+      "name": "Kickoff Boundary Condition",
+      "verbatim_quote": "At kick-off, if the ball goes out of bounds before it is touched by any player, it shall be brought back and be kicked off again.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'time (s)', 'B': 'ball position vector (m)', 'O': 'out-of-bounds threshold (m)', 'P': 'player contact event (dimensionless)'}",
+      "assumptions": "Ball trajectory is deterministic; player contact is binary.",
+      "breakdown_regime": "T < T_contact implies B ∉ O",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Discrete event trigger for scrimmage reset maps to Bayesian prior update on possession.",
+        "source_operator": "kickoff_boundary_condition",
+        "telemetry": "Ball exit point relative to field boundaries"
+      }
+    },
+    {
+      "primitive_id": "repeated_out_of_bounds_kick",
+      "name": "Repeated Out-of-Bounds Kick",
+      "verbatim_quote": "If it is kicked out of bounds a second time, it shall go to the opponents, who shall put it in play by a scrimmage at their 40-yard line, equidistant from the side lines.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'number of kicks (dimensionless)', 'L': 'line of scrimmage (m)', 'F': 'field width (m)'}",
+      "assumptions": "Second kick failure triggers fixed positional reset.",
+      "breakdown_regime": "N ≥ 2 implies L = 40-yard line",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "State transition from repeated failure to opponent possession via fixed rule-based reset.",
+        "source_operator": "repeated_out_of_bounds_kick",
+        "telemetry": "Cumulative kick-out count and scrimmage location"
+      }
+    },
+    {
+      "primitive_id": "possession_by_contact",
+      "name": "Possession by Contact",
+      "verbatim_quote": "But if it strikes any player who is entitled to get it and then goes out of bounds, it shall belong to the player who first obtains possession of'it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'contact event (dimensionless)', 'P': 'player possession (dimensionless)', 'B': 'ball position vector (m)'}",
+      "assumptions": "Player entitlement is defined by game state.",
+      "breakdown_regime": "C ∧ B ∉ O ⇒ P = player",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Contact-based possession logic mirrors probabilistic outcome assignment in Bayesian inference.",
+        "source_operator": "possession_by_contact",
+        "telemetry": "Player contact sequence and final ball location"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3452dc39723f8ec1_t0",
+      "think": "The primitives model discrete boundary events that govern possession dynamics. The kickoff condition enforces a temporal and spatial reset when the ball fails to enter play. The repeated kick rule introduces a deterministic failure mode leading to a fixed positional shift. The contact-based possession rule encodes a conditional logic where player interaction determines outcome. These form a layered system: initial conditions (kick), event triggers (boundary), and outcome resolution (possession). Each primitive operates under a binary logic of success/failure, enabling a Markovian state transition framework for GSE reasoning. The failure modes are well-defined and non-overlapping, ensuring robustness in probabilistic inference within GSI.\n\nDeep epistemic analysis for p0126 (3452dc39723f8ec1, domain=other, pages_read=1/1): Operator 'Kickoff Boundary Condition' (page 1, domain other) captures: At kick-off, if the ball goes out of bounds before it is touched by any player, it shall be brought back and be kicked off again. Assumptions: Ball trajectory is deterministic; player contact is binary. Breakdown regime: T < T_contact implies B ∉ O Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Discrete event trigger for scrimmage reset maps to Bayesian prior update on possession. Operator 'Repeated Out-of-Bounds Kick' (page 1, domain other) captures: If it is kicked out of bounds a second time, it shall go to the opponents, who shall put it in play by a scrimmage at their 40-yard line, equidistant from the side lines. Assumptions: Second kick failure triggers fixed positional reset. Breakdown regime: N ≥ 2 implies L = 40-yard line Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition from repeated failure to opponent possession via fixed rule-based reset. Operator 'Possession by Contact' (page 1, domain other) captures: But if it strikes any player who is entitled to get it and then goes out of bounds, it shall belong to the player who first obtains possession of'it. Assumptions: Player entitlement is defined by game state. Breakdown regime: C ∧ B ∉ O ⇒ P = player Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Contact-based possession logic mirrors probabilistic outcome assignment in Bayesian inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0126 (3452dc39723f8ec1, domain=other, pages_read=1/1): Operator 'Kickoff Boundary Condition' (page 1, domain other) captures: At kick-off, if the ball goes out of bounds before it is touched by any player, it shall be brought back and be kicked off again. Assumptions: Ball trajectory is deterministic; player contact is binary. Breakdown regime: T < T_contact implies B ∉ O Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Discrete event trigger for scrimmage reset maps to Bayesian prior update on possession. Operator 'Repeated Out-of-Bounds Kick' (page 1, domain other) captures: If it is kicked out of bounds a second time, it shall go to the opponents, who shall put it in play by a scrimmage at their 40-yard line, equidistant from the side lines. Assumptions: Second kick failure triggers fixed positional reset. Breakdown regime: N ≥ 2 implies L = 40-yard line Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition from repeated failure to opponent possession via fixed rule-based reset. Operator 'Possession by Contact' (page 1, domain other) captures: But if it strikes any player who is entitled to get it and then goes out of bounds, it shall belong to the player who first obtains possession of'it. Assumptions: Player entitlement is defined by game state. Breakdown regime: C ∧ B ∉ O ⇒ P = player Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Contact-based possession logic mirrors probabilistic outcome assignment in Bayesian inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century football rule formalization, these primitives reflect foundational axiomatic systems of sport physics and game theory. Retrocausal Genealogy: Rooted in p0126 (3452dc39723f8ec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0126 (3452dc39723f8ec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams model strategic behavior around boundary risk and possession control, with each team's decision space constrained by rule-defined failure states. Theory of Mind & Decision Maker Model: Rooted in p0126 (3452dc39723f8ec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0126 (3452dc39723f8ec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that boundary events do not coalesce into ambiguous outcomes; leakage is prevented through strict conditional logic. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0126 (3452dc39723f8ec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0126 (3452dc39723f8ec1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

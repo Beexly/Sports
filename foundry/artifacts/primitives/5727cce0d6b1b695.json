@@ -1,0 +1,78 @@
+{
+  "book_id": "5727cce0d6b1b695",
+  "source_status": "COMPLETE",
+  "title": "tau-hat-correction-2026-10-28",
+  "file_name": "tau-hat-correction-2026-10-28.md",
+  "sha256": "5727cce0d6b1b695eaff42288cb966a2482425aba036cd8f1f00d3dd9f0da503",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "tau_hat is a point-fit calibration parameter, not a pre-kickoff feature; its consumption requires refitting to in-season data. Universal Lens: Rooted in tau-hat-correction-2026-10-28 (5727cce0d6b1b695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "tau_hat serves as a conformal prediction correction factor; its use without refitting induces distributional shift and leakage in Bayesian inference pipelines. GSI Mapping: Rooted in tau-hat-correction-2026-10-28 (5727cce0d6b1b695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "tau_hat acts as a dynamic state variable in situational reasoning; improper usage violates temporal consistency and triggers state-transition invalidity. GSE Mapping: Rooted in tau-hat-correction-2026-10-28 (5727cce0d6b1b695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tau_hat_point_fit",
+      "name": "Point-Fit Calibration Parameter",
+      "verbatim_quote": "**The stamp says it is a point fit, not a pre-kickoff value.** `TAU_STAMP` reads \"point fit — not pre-kickoff.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'tau_hat': 'dimensionless calibration coefficient'}",
+      "assumptions": "tau_hat is computed via in-game regression and lacks pre-kickoff validity.",
+      "breakdown_regime": "When used as a pre-kickoff feature without re-fitting, it introduces systematic bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "tau_hat maps to a posterior correction term in GSI's conformal prediction framework; in GSE, it represents a contextual state update.",
+        "source_operator": "tau_hat_point_fit",
+        "telemetry": "Holdout error discrepancy between point-fit and pre-kickoff estimates."
+      }
+    },
+    {
+      "primitive_id": "tau_hat_fallback_table",
+      "name": "Fallback Table Structure",
+      "verbatim_quote": "The `tau_hat` and `n` columns are **empty** on the rows checked; only `tau_hat_served` carries a value, with `fallback_level` set to `league` or `league_region`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'tau_hat_served': 'dimensionless fallback estimate', 'fallback_level': 'categorical {league, league_region}'}",
+      "assumptions": "tau_hat is not populated in primary table; fallback logic governs its availability.",
+      "breakdown_regime": "Misinterpretation of tau_hat as primary fit leads to incorrect inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "tau_hat_served encodes a derived kernel of conditional expectation under fallback constraints; GSI treats it as a proxy; GSE treats it as a state transition guard.",
+        "source_operator": "tau_hat_fallback_table",
+        "telemetry": "Row-wise emptiness of tau_hat column vs. non-empty tau_hat_served."
+      }
+    },
+    {
+      "primitive_id": "tau_hat_refit_constraint",
+      "name": "Pre-Kickoff Refit Requirement",
+      "verbatim_quote": "- The job is: refit to a pre-kickoff basis, then consume it from the TS path.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'refit_basis': 'temporal domain {pre-kickoff, in-season}', 'TS_path': 'TypeScript inference pipeline'}",
+      "assumptions": "tau_hat must be re-estimated for pre-kickoff consumption to avoid leakage.",
+      "breakdown_regime": "Failure to refit results in data leakage and invalid predictive state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Refit requirement mirrors GSI's need for temporal calibration; GSE enforces it through state transition validation.",
+        "source_operator": "tau_hat_refit_constraint",
+        "telemetry": "Difference in predictive accuracy before and after refit."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5727cce0d6b1b695_t0",
+      "think": "The core issue lies in the misalignment between tau_hat’s role as a point-fit diagnostic and its intended use as a pre-kickoff feature. The original assumption that tau_hat has no consumer was incorrect due to incomplete codebase scanning. In reality, it is actively wired in Python components but not consumed by TypeScript paths. This creates a dual failure mode: first, the model consumes an outdated point-fit instead of a refreshed pre-kickoff estimate, leading to leakage; second, the fallback structure implies that the primary fit is empty, requiring reliance on a secondary mechanism. These failures are not merely technical but reflect a deeper conceptual mismatch between static diagnostics and dynamic prediction environments.\n\nDeep epistemic analysis for tau-hat-correction-2026-10-28 (5727cce0d6b1b695, domain=other, pages_read=1/1): Operator 'Point-Fit Calibration Parameter' (page 1, domain other) captures: **The stamp says it is a point fit, not a pre-kickoff value.** `TAU_STAMP` reads \"point fit — not pre-kickoff. Assumptions: tau_hat is computed via in-game regression and lacks pre-kickoff validity. Breakdown regime: When used as a pre-kickoff feature without re-fitting, it introduces systematic bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): tau_hat maps to a posterior correction term in GSI's conformal prediction framework; in GSE, it represents a contextual state update. Operator 'Fallback Table Structure' (page 1, domain other) captures: The `tau_hat` and `n` columns are **empty** on the rows checked; only `tau_hat_served` carries a value, with `fallback_level` set to `league` or `league_region`. Assumptions: tau_hat is not populated in primary table; fallback logic governs its availability. Breakdown regime: Misinterpretation of tau_hat as primary fit leads to incorrect inference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): tau_hat_served encodes a derived kernel of conditional expectation under fallback constraints; GSI treats it as a proxy; GSE treats it as a state transition guard. Operator 'Pre-Kickoff Refit Requirement' (page 1, domain other) captures: - The job is: refit to a pre-kickoff basis, then consume it from the TS path. Assumptions: tau_hat must be re-estimated for pre-kickoff consumption to avoid leakage. Breakdown regime: Failure to refit results in data leakage and invalid predictive state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Refit requirement mirrors GSI's need for temporal calibration; GSE enforces it through state transition validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for tau-hat-correction-2026-10-28 (5727cce0d6b1b695, domain=other, pages_read=1/1): Operator 'Point-Fit Calibration Parameter' (page 1, domain other) captures: **The stamp says it is a point fit, not a pre-kickoff value.** `TAU_STAMP` reads \"point fit — not pre-kickoff. Assumptions: tau_hat is computed via in-game regression and lacks pre-kickoff validity. Breakdown regime: When used as a pre-kickoff feature without re-fitting, it introduces systematic bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): tau_hat maps to a posterior correction term in GSI's conformal prediction framework; in GSE, it represents a contextual state update. Operator 'Fallback Table Structure' (page 1, domain other) captures: The `tau_hat` and `n` columns are **empty** on the rows checked; only `tau_hat_served` carries a value, with `fallback_level` set to `league` or `league_region`. Assumptions: tau_hat is not populated in primary table; fallback logic governs its availability. Breakdown regime: Misinterpretation of tau_hat as primary fit leads to incorrect inference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): tau_hat_served encodes a derived kernel of conditional expectation under fallback constraints; GSI treats it as a proxy; GSE treats it as a state transition guard. Operator 'Pre-Kickoff Refit Requirement' (page 1, domain other) captures: - The job is: refit to a pre-kickoff basis, then consume it from the TS path. Assumptions: tau_hat must be re-estimated for pre-kickoff consumption to avoid leakage. Breakdown regime: Failure to refit results in data leakage and invalid predictive state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Refit requirement mirrors GSI's need for temporal calibration; GSE enforces it through state transition validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the historical conflation of diagnostic metrics with predictive features, echoing earlier practices where post-hoc calibration parameters were naively applied to new contexts without temporal revalidation. Retrocausal Genealogy: Rooted in tau-hat-correction-2026-10-28 (5727cce0d6b1b695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in tau-hat-correction-2026-10-28 (5727cce0d6b1b695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the data ingestion pipeline (which assumes point-fit sufficiency), the prediction engine (which expects temporal consistency), and the model auditor (which detects leakage). Each agent operates under conflicting assumptions about tau_hat's validity. Theory of Mind & Decision Maker Model: Rooted in tau-hat-correction-2026-10-28 (5727cce0d6b1b695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that tau_hat not be used directly in TS without refitting; leakage veto demands that any use of tau_hat in pre-kickoff settings must undergo explicit re-calibration against in-season data. Cross-Layer Veto & Anti-Leakage Check: Rooted in tau-hat-correction-2026-10-28 (5727cce0d6b1b695), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

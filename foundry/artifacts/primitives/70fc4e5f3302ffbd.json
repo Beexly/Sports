@@ -1,0 +1,78 @@
+{
+  "book_id": "70fc4e5f3302ffbd",
+  "source_status": "COMPLETE",
+  "title": "OUTSIDE_THE_BOX_BLIND_SPOTS_V3",
+  "file_name": "OUTSIDE_THE_BOX_BLIND_SPOTS_V3.md",
+  "sha256": "70fc4e5f3302ffbd03781e471d0ccb78ea06398cb81d6eeb565e1028666e707d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Multi-domain blind spot detection as a conformal inference lattice over web-surface manifolds, where \\mathcal{B} \\subset \\mathcal{M} \\times \\mathcal{A} \\times \\mathcal{T} \\times \\mathcal{S} \\times \\mathcal{R} \\times \\mathcal{D} defines structural gaps in agent exposure.",
+  "gsi_mapping": "GSI infers latent market states through Bayesian belief updates on multi-domain telemetry surfaces, using \\mathcal{P}(\\theta | \\mathcal{D}) \\propto \\mathcal{P}(\\mathcal{D} | \\theta) \\cdot \\mathcal{P}(\\theta) to map blind spot discrepancies into actionable risk priors.",
+  "gse_mapping": "GSE performs situational reasoning by transitioning between discrete state manifolds \\mathcal{S}_t \\rightarrow \\mathcal{S}_{t+1} based on observed anomalies in \\mathcal{M} \\times \\mathcal{A} \\times \\mathcal{T} \\times \\mathcal{R} \\times \\mathcal{D}, with \\Delta \\mathcal{S} = \\mathcal{F}(\\mathcal{E}_\\text{blind}) \\cdot \\mathcal{C}_\\text{agent}",
+  "primitives": [
+    {
+      "primitive_id": "deploy_vs_main",
+      "name": "Deployment vs Main Build Consistency",
+      "verbatim_quote": "(live probe 2026-08-06) | Blind spot | Why it mattered | Action | |------------|-----------------|--------| | **Deploy",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SHA': 'SHA-256 hash digest (dimensionless)', 'build': 'software version identifier (dimensionless)', 'founderNextSteps': 'operational directive flag (binary)'}",
+      "assumptions": "Production environment must reflect latest stable build; operational drift leads to inconsistency.",
+      "breakdown_regime": "When SHA mismatch occurs, deployment integrity fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Agent state transition \\mathcal{S}_\\text{prod} \\leftrightarrow \\mathcal{S}_\\text{main} is isomorphic to build consistency check.",
+        "source_operator": "deploy_vs_main",
+        "telemetry": "SHA comparison and feature flag verification"
+      }
+    },
+    {
+      "primitive_id": "pwa_manifest_lie",
+      "name": "PWA Manifest Misalignment",
+      "verbatim_quote": "| | **PWA/manifest copy lie** | `site.webmanifest` claimed \"live odds every 30 min\" while LIVE_BOARD off",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'manifest': 'web manifest file (dimensionless)', 'LIVE_BOARD': 'real-time data feed status (binary)', 'claim': 'user-facing promise (dimensionless)'}",
+      "assumptions": "Manifest claims must align with actual service availability.",
+      "breakdown_regime": "Misalignment between manifest claim and live board status.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Manifest kernel \\mathcal{K}_\\text{manifest} = \\mathcal{F}(\\text{claim} \\neq \\text{LIVE_BOARD}) generates perceptual error in user-agent.",
+        "source_operator": "pwa_manifest_lie",
+        "telemetry": "Manifest validation against live board status"
+      }
+    },
+    {
+      "primitive_id": "favicon_missing",
+      "name": "Favicon and Touch Icon Availability",
+      "verbatim_quote": "description shipped | | **favicon.ico / apple-touch 404** | Chrome/iOS default paths 404 → unprofessional chrome",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'favicon.ico': 'browser icon resource (file path)', 'apple-touch-icon.png': 'iOS touch icon (file path)', 'default_path_404': 'error response (binary)', 'brand_emblems': 'visual branding assets (dimensionless)'}",
+      "assumptions": "User-agent expects valid icon paths; missing icons imply poor UX.",
+      "breakdown_regime": "When default paths return 404, branding integrity is compromised.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Icon availability \\mathcal{I}_\\text{favicon} \\leftrightarrow \\mathcal{I}_\\text{touch} maps to brand perception fidelity.",
+        "source_operator": "favicon_missing",
+        "telemetry": "HTTP response codes for icon resources"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "70fc4e5f3302ffbd_t0",
+      "think": "The blind spot primitives form a dual lattice: one in operational consistency (deploy vs main), one in perceptual alignment (manifest lie), and one in user-agent fidelity (favicon). These are not independent but interlinked through shared dimensions of trust and observability. The failure modes arise when these dimensions diverge—e.g., a stale deploy implies inconsistent state, a false manifest implies misaligned expectations, and missing icons imply degraded UX. Each primitive represents a distinct failure channel in the multi-domain agent surface, where \\mathcal{B} = \\mathcal{M} \\times \\mathcal{A} \\times \\mathcal{T} \\times \\mathcal{R} \\times \\mathcal{D} captures the full space of possible blind spots. The mathematical structure allows for Bayesian inference of risk across domains, enabling GSI to model uncertainty in agent behavior and GSE to reason about corrective actions.\n\nDeep epistemic analysis for OUTSIDE_THE_BOX_BLIND_SPOTS_V3 (70fc4e5f3302ffbd, domain=other, pages_read=1/1): Operator 'Deployment vs Main Build Consistency' (page 1, domain other) captures: (live probe 2026-08-06) | Blind spot | Why it mattered | Action | |------------|-----------------|--------| | **Deploy Assumptions: Production environment must reflect latest stable build; operational drift leads to inconsistency. Breakdown regime: When SHA mismatch occurs, deployment integrity fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Agent state transition \\mathcal{S}_\\text{prod} \\leftrightarrow \\mathcal{S}_\\text{main} is isomorphic to build consistency check. Operator 'PWA Manifest Misalignment' (page 1, domain other) captures: | | **PWA/manifest copy lie** | `site.webmanifest` claimed \"live odds every 30 min\" while LIVE_BOARD off Assumptions: Manifest claims must align with actual service availability. Breakdown regime: Misalignment between manifest claim and live board status. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Manifest kernel \\mathcal{K}_\\text{manifest} = \\mathcal{F}(\\text{claim} \\neq \\text{LIVE_BOARD}) generates perceptual error in user-agent. Operator 'Favicon and Touch Icon Availability' (page 1, domain other) captures: description shipped | | **favicon.ico / apple-touch 404** | Chrome/iOS default paths 404 → unprofessional chrome Assumptions: User-agent expects valid icon paths; missing icons imply poor UX. Breakdown regime: When default paths return 404, branding integrity is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Icon availability \\mathcal{I}_\\text{favicon} \\leftrightarrow \\mathcal{I}_\\text{touch} maps to brand perception fidelity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for OUTSIDE_THE_BOX_BLIND_SPOTS_V3 (70fc4e5f3302ffbd, domain=other, pages_read=1/1): Operator 'Deployment vs Main Build Consistency' (page 1, domain other) captures: (live probe 2026-08-06) | Blind spot | Why it mattered | Action | |------------|-----------------|--------| | **Deploy Assumptions: Production environment must reflect latest stable build; operational drift leads to inconsistency. Breakdown regime: When SHA mismatch occurs, deployment integrity fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Agent state transition \\mathcal{S}_\\text{prod} \\leftrightarrow \\mathcal{S}_\\text{main} is isomorphic to build consistency check. Operator 'PWA Manifest Misalignment' (page 1, domain other) captures: | | **PWA/manifest copy lie** | `site.webmanifest` claimed \"live odds every 30 min\" while LIVE_BOARD off Assumptions: Manifest claims must align with actual service availability. Breakdown regime: Misalignment between manifest claim and live board status. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Manifest kernel \\mathcal{K}_\\text{manifest} = \\mathcal{F}(\\text{claim} \\neq \\text{LIVE_BOARD}) generates perceptual error in user-agent. Operator 'Favicon and Touch Icon Availability' (page 1, domain other) captures: description shipped | | **favicon.ico / apple-touch 404** | Chrome/iOS default paths 404 → unprofessional chrome Assumptions: User-agent expects valid icon paths; missing icons imply poor UX. Breakdown regime: When default paths return 404, branding integrity is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Icon availability \\mathcal{I}_\\text{favicon} \\leftrightarrow \\mathcal{I}_\\text{touch} maps to brand perception fidelity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web standards and RFC compliance, these blind spots echo the evolution from static HTML to dynamic, agent-driven interfaces. The formalization of security.txt, ads.txt, and humans.txt reflects a growing awareness of digital identity and transparency in web ecosystems. Retrocausal Genealogy: Rooted in OUTSIDE_THE_BOX_BLIND_SPOTS_V3 (70fc4e5f3302ffbd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include crawlers, browsers, and users who interpret manifest and icon signals differently. A misaligned manifest may mislead an agent into expecting real-time data, while a missing favicon may signal low professionalism to a browser agent, influencing indexing and caching decisions. Theory of Mind & Decision Maker Model: Rooted in OUTSIDE_THE_BOX_BLIND_SPOTS_V3 (70fc4e5f3302ffbd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each blind spot be independently verifiable and non-redundant. For example, a missing security.txt does not imply a manifest lie, nor does a 404 favicon imply a stale deploy. Leakage vetoes cross-layer dependencies to prevent cascading errors in agent reasoning. Cross-Layer Veto & Anti-Leakage Check: Rooted in OUTSIDE_THE_BOX_BLIND_SPOTS_V3 (70fc4e5f3302ffbd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

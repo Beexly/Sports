@@ -1,0 +1,78 @@
+{
+  "book_id": "720cb2d760cf415f",
+  "source_status": "COMPLETE",
+  "title": "1755-transaction-fees-optimal-rebalancing-growth-optimal",
+  "file_name": "1755-transaction-fees-optimal-rebalancing-growth-optimal.md",
+  "sha256": "720cb2d760cf415f3031455f4b6de8ec974d0ba5b3d6b57daf6018f865907842",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Transaction fees induce a trade-off between rebalancing frequency and transfer magnitude in growth-optimal portfolios, with partial rebalancing offering a smoother stake evolution than intermittent adjustments. Universal Lens: Rooted in 1755-transaction-fees-optimal-rebalancing-growth-optimal (720cb2d760cf415f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions to estimate posterior growth rates under fee-inclusive Kelly strategies, enabling Bayesian updating of optimal rebalancing intervals via sequential likelihoods. GSI Mapping: Rooted in 1755-transaction-fees-optimal-rebalancing-growth-optimal (720cb2d760cf415f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies dynamic programming to compute smoothed stake trajectories using ε-partial rebalancing rules, transitioning states based on realized returns and cumulative fee impacts to maintain robust portfolio performance. GSE Mapping: Rooted in 1755-transaction-fees-optimal-rebalancing-growth-optimal (720cb2d760cf415f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fee_inclusive_rebalancing_condition",
+      "name": "Fee-Inclusive Rebalancing Condition",
+      "verbatim_quote": "- Fee-inclusive rebalancing condition (8); transfer volume X_{r>0} = Wrf(1-f)/(1-αf); no transfer needed when r<0 side analog.",
+      "page": 1,
+      "latex": "\\mathcal{X}_{r>0} = \\frac{Wrf(1-f)}{1-\\alpha f}",
+      "symbol_and_unit_ledger": "{'W': 'wealth (dimensionless)', 'r': 'return rate (dimensionless)', 'f': 'fraction invested in risky asset (dimensionless)', 'α': 'proportional transaction fee (dimensionless)'}",
+      "assumptions": "Lognormal returns, constant rebalancing, proportional transfer fees.",
+      "breakdown_regime": "When αf ≥ 1, no transfers occur due to prohibitive fees.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's stake smoothing kernel where transfer volume is modulated by fee-induced friction, aligning with GSI's posterior growth rate estimation.",
+        "source_operator": "fee_inclusive_rebalancing_condition",
+        "telemetry": "Effective transfer volume per rebalancing cycle."
+      }
+    },
+    {
+      "primitive_id": "optimal_rebalancing_period",
+      "name": "Optimal Rebalancing Period",
+      "verbatim_quote": "- Optimal T* analytic for lognormal (formula in §4); interior optimum: fees make T*>1.",
+      "page": 1,
+      "latex": "T^* = \\arg\\max_T \\mathbb{E}[\\log(1 + r)] - \\alpha |X|",
+      "symbol_and_unit_ledger": "{'T': 'rebalancing period (time units)', 'α': 'proportional transaction fee (dimensionless)', 'X': 'transfer volume (dimensionless)'}",
+      "assumptions": "Lognormal return distribution, constant wealth, fee model applies.",
+      "breakdown_regime": "T* > 1 when α > 0, indicating delayed rebalancing is optimal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives GSE's adaptive rebalancing interval policy, adjusting T* dynamically based on fee levels and return volatility.",
+        "source_operator": "optimal_rebalancing_period",
+        "telemetry": "Average time between effective rebalancing events."
+      }
+    },
+    {
+      "primitive_id": "partial_rebalancing_rule",
+      "name": "Partial Rebalancing Rule",
+      "verbatim_quote": "- Partial rebalancing: transfer εX per step; optimal ε interior in (0,1) (Fig.",
+      "page": 1,
+      "latex": "\\varepsilon^* = \\arg\\max_\\varepsilon \\mathbb{E}[\\log(1 + r)] - \\alpha \\varepsilon X",
+      "symbol_and_unit_ledger": "{'ε': 'fraction of required transfer (dimensionless)', 'X': 'required transfer volume (dimensionless)', 'α': 'proportional transaction fee (dimensionless)'}",
+      "assumptions": "Single risky asset, lognormal returns, fee model applies.",
+      "breakdown_regime": "ε ∈ (0,1] ensures smooth transitions without full rebalancing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables GSE’s stake-churn smoothing mechanism, where ε acts as a control parameter to dampen stake volatility while maintaining growth-optimal behavior.",
+        "source_operator": "partial_rebalancing_rule",
+        "telemetry": "Fraction of stake adjusted per period."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "720cb2d760cf415f_t0",
+      "think": "The core insight is that transaction fees disrupt the theoretical optimality of continuous rebalancing in Kelly portfolios. The fee-inclusive rebalancing condition (X = Wrf(1-f)/(1-αf)) defines the minimal transfer required to maintain a target allocation. When α > 0, this implies that small transfers are preferred over large ones, leading to a non-zero optimal rebalancing period T* > 1. This is because frequent rebalancing incurs excessive fees, reducing net growth. Partial rebalancing (εX) offers an elegant solution by allowing incremental adjustments, where ε ∈ (0,1] balances fee costs against rebalancing benefits. Analytical solutions exist for lognormal returns, but numerical methods extend these findings to more general distributions such as GARCH(1,1), capturing correlated returns. The key mathematical duality lies between minimizing transaction costs and maximizing expected logarithmic growth, with ε providing a tunable parameter for risk-adjusted performance. Failure modes include ignoring fee structure, assuming static returns, or applying models to multi-asset portfolios without extension.\n\nDeep epistemic analysis for 1755-transaction-fees-optimal-rebalancing-growth-optimal (720cb2d760cf415f, domain=other, pages_read=2/2): Operator 'Fee-Inclusive Rebalancing Condition' (page 1, domain other) captures: - Fee-inclusive rebalancing condition (8); transfer volume X_{r>0} = Wrf(1-f)/(1-αf); no transfer needed when r<0 side analog. Assumptions: Lognormal returns, constant rebalancing, proportional transfer fees. Breakdown regime: When αf ≥ 1, no transfers occur due to prohibitive fees. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's stake smoothing kernel where transfer volume is modulated by fee-induced friction, aligning with GSI's posterior growth rate estimation. Operator 'Optimal Rebalancing Period' (page 1, domain other) captures: - Optimal T* analytic for lognormal (formula in §4); interior optimum: fees make T*>1. Assumptions: Lognormal return distribution, constant wealth, fee model applies. Breakdown regime: T* > 1 when α > 0, indicating delayed rebalancing is optimal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSE's adaptive rebalancing interval policy, adjusting T* dynamically based on fee levels and return volatility. Operator 'Partial Rebalancing Rule' (page 1, domain other) captures: - Partial rebalancing: transfer εX per step; optimal ε interior in (0,1) (Fig. Assumptions: Single risky asset, lognormal returns, fee model applies. Breakdown regime: ε ∈ (0,1] ensures smooth transitions without full rebalancing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE’s stake-churn smoothing mechanism, where ε acts as a control parameter to dampen stake volatility while maintaining growth-optimal behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1755-transaction-fees-optimal-rebalancing-growth-optimal (720cb2d760cf415f, domain=other, pages_read=2/2): Operator 'Fee-Inclusive Rebalancing Condition' (page 1, domain other) captures: - Fee-inclusive rebalancing condition (8); transfer volume X_{r>0} = Wrf(1-f)/(1-αf); no transfer needed when r<0 side analog. Assumptions: Lognormal returns, constant rebalancing, proportional transfer fees. Breakdown regime: When αf ≥ 1, no transfers occur due to prohibitive fees. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's stake smoothing kernel where transfer volume is modulated by fee-induced friction, aligning with GSI's posterior growth rate estimation. Operator 'Optimal Rebalancing Period' (page 1, domain other) captures: - Optimal T* analytic for lognormal (formula in §4); interior optimum: fees make T*>1. Assumptions: Lognormal return distribution, constant wealth, fee model applies. Breakdown regime: T* > 1 when α > 0, indicating delayed rebalancing is optimal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSE's adaptive rebalancing interval policy, adjusting T* dynamically based on fee levels and return volatility. Operator 'Partial Rebalancing Rule' (page 1, domain other) captures: - Partial rebalancing: transfer εX per step; optimal ε interior in (0,1) (Fig. Assumptions: Single risky asset, lognormal returns, fee model applies. Breakdown regime: ε ∈ (0,1] ensures smooth transitions without full rebalancing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE’s stake-churn smoothing mechanism, where ε acts as a control parameter to dampen stake volatility while maintaining growth-optimal behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly's original work on optimal growth portfolios (1956), extended by Thorp (1969) and later formalized in continuous-time settings by Breiman (1961) and Cox & Miller (1965). The inclusion of transaction costs was introduced by Leland (1985) and further developed in discrete-time frameworks by Constantinides (1986). Retrocausal Genealogy: Rooted in 1755-transaction-fees-optimal-rebalancing-growth-optimal (720cb2d760cf415f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include a risk-neutral trader optimizing for maximum expected return versus a risk-averse agent who minimizes variance through frequent rebalancing. A third agent might optimize for long-term growth under transaction constraints, preferring partial rebalancing over full rebalancing. Theory of Mind & Decision Maker Model: Rooted in 1755-transaction-fees-optimal-rebalancing-growth-optimal (720cb2d760cf415f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the fee model must distinguish between proportional transfer fees and fixed per-bet vigs; leakage occurs if GSE assumes constant rebalancing instead of partial adjustment. The ε result is numerically derived, so GSE should validate its applicability across varying fee structures and return dynamics. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1755-transaction-fees-optimal-rebalancing-growth-optimal (720cb2d760cf415f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

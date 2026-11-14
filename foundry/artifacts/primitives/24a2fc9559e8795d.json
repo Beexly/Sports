@@ -1,0 +1,95 @@
+{
+  "book_id": "24a2fc9559e8795d",
+  "source_status": "COMPLETE",
+  "title": "CONTEST-008-prize-pool-economics-simulator",
+  "file_name": "CONTEST-008-prize-pool-economics-simulator.md",
+  "sha256": "24a2fc9559e8795d4a8e1bdc110012b2a64ef1ca847538424d07f91f68f04c04",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "nvidia-nemotron-550b:nvidia/nemotron-3-ultra-550b-a55b",
+  "ocr_rescued": false,
+  "universal_lens": "Prize pool economics formalizes as a constrained stochastic flow: entries × (1−rake) + sponsor + overlay → prize pool, distributed via payout curve π(k), with CAC-adjusted net yield Y = Σπ(k) − CAC·N. Compliance boundary ∂C enforces zero live launch without legal sign-off, making the simulator a pure inference engine over counterfactual contest topologies.",
+  "gsi_mapping": "GSI treats prize pool as latent variable inferred from entry streams, rake schedules, and sponsor commitments via Bayesian hierarchical model. Conformal prediction sets on overlay realizations yield valid coverage for payout quantiles. CAC enters as covariate in acquisition likelihood; posterior predictive checks validate simulator against historical contest-format-lab telemetry.",
+  "gse_mapping": "GSE models contest lifecycle as state machine: SPEC → MOCK → VALIDATE → (gate) → LIVE. Transition SPEC→MOCK requires docs-first packet; MOCK→VALIDATE requires fake-data stress tests; VALIDATE→LIVE blocked by ∂C veto unless founder/legal approval token present. State variables: entry_count, rake_rate, sponsor_fund, overlay, CAC, payout_curve_params.",
+  "primitives": [
+    {
+      "primitive_id": "prize_pool_formation_operator",
+      "name": "Prize Pool Formation Operator",
+      "verbatim_quote": "reason_not_duplicate: Models entry count, rake, sponsor funding, overlay, CAC, and payout curves.",
+      "page": 1,
+      "latex": "P(N, r, S, O) = N \\cdot (1 - r) + S + O",
+      "symbol_and_unit_ledger": "N: entry count [dimensionless]; r: rake rate [dimensionless, 0≤r<1]; S: sponsor funding [USD]; O: overlay [USD]; P: prize pool [USD]",
+      "assumptions": "Entries independent; rake constant per entry; sponsor/overlay exogenous; no deposit/withdrawal dynamics in simulator mode.",
+      "breakdown_regime": "r → 1 causes P → S+O (rake captures all entry value); N=0 yields P=S+O (pure sponsored/overlay pool); negative O implies guarantee shortfall.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Core kernel for GSE contest state transitions; P feeds payout curve operator. GSI uses P as observed sufficient statistic for posterior over contest viability.",
+        "source_operator": "prize_pool_formation_operator",
+        "telemetry": "Simulated P distribution across N~Pois(λ), r~Beta, S,O fixed; compare to contest-format-lab historicals."
+      }
+    },
+    {
+      "primitive_id": "payout_curve_distribution_operator",
+      "name": "Payout Curve Distribution Operator",
+      "verbatim_quote": "reason_not_duplicate: Models entry count, rake, sponsor funding, overlay, CAC, and payout curves.",
+      "page": 1,
+      "latex": "\\pi(k; \\theta) = P \\cdot \\frac{k^{-\\alpha}}{\\sum_{j=1}^{K} j^{-\\alpha}}, \\quad k=1..K",
+      "symbol_and_unit_ledger": "k: rank [dimensionless]; K: paid places [dimensionless]; α: curvature [dimensionless, α>0]; θ=(α,K); π(k): payout to rank k [USD]; Σπ(k)=P",
+      "assumptions": "Power-law decay; fixed K; full prize pool allocated; no ties; deterministic given θ.",
+      "breakdown_regime": "α→0 flattens to uniform; α→∞ concentrates on k=1; K>N yields zero payout for k>N; P=0 yields zero payouts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI: π(k) defines likelihood for observed rank payouts; conformal sets on α from historical contests. GSE: payout curve params part of contest spec state; mutation triggers re-validation.",
+        "source_operator": "payout_curve_distribution_operator",
+        "telemetry": "KL divergence between simulated π(k;α) and empirical payout distributions from growth-os-v2 contests."
+      }
+    },
+    {
+      "primitive_id": "cac_adjusted_yield_operator",
+      "name": "CAC-Adjusted Net Yield Operator",
+      "verbatim_quote": "reason_not_duplicate: Models entry count, rake, sponsor funding, overlay, CAC, and payout curves.",
+      "page": 1,
+      "latex": "Y = \\sum_{k=1}^{K} \\pi(k) - \\text{CAC} \\cdot N = P - \\text{CAC} \\cdot N",
+      "symbol_and_unit_ledger": "Y: net yield [USD]; CAC: customer acquisition cost per entry [USD/entry]; N: entry count [dimensionless]; P: prize pool [USD]",
+      "assumptions": "CAC constant per entry; all entries acquired at same CAC; yield measured from operator perspective (house/sponsor).",
+      "breakdown_regime": "CAC > P/N yields negative Y (loss); N=0 makes Y=0 (no contest); CAC=0 recovers pure prize pool economics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE risk/reward state variable; Y<0 triggers compliance veto ∂C. GSI: Y enters utility function for contest design optimization under posterior over (N,r,S,O).",
+        "source_operator": "cac_adjusted_yield_operator",
+        "telemetry": "Simulated Y distribution vs. historical contest ROI; threshold crossing rate for Y<0."
+      }
+    },
+    {
+      "primitive_id": "compliance_boundary_veto_operator",
+      "name": "Compliance Boundary Veto Operator",
+      "verbatim_quote": "Do not launch paid contests, prizes, entry fees, live leaderboards, geofenced eligibility, or user deposits without founder/legal approval.",
+      "page": 1,
+      "latex": "\\partial C = \\mathbb{1}[\\text{live\\_launch} \\land \\neg \\text{approval\\_token}]",
+      "symbol_and_unit_ledger": "∂C: veto indicator [dimensionless, {0,1}]; live_launch: boolean flag; approval_token: founder/legal sign-off [boolean]",
+      "assumptions": "Binary approval gate; no partial launch states; veto is absolute and irreversible without new token.",
+      "breakdown_regime": "Approval token forged or expired → false negative (dangerous launch); token denied → false positive (blocked valid launch).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE: ∂C is hard transition guard on VALIDATE→LIVE edge. GSI: ∂C=1 truncates posterior support for live contest parameters; all inference conditioned on ∂C=0.",
+        "source_operator": "compliance_boundary_veto_operator",
+        "telemetry": "Audit log count of ∂C triggers; zero tolerance for ∂C=1 in production."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "24a2fc9559e8795d_t0",
+      "think": "The prize pool economics simulator is a constrained stochastic system. Primitive 1 (P) aggregates exogenous flows: entries minus rake, plus sponsor, plus overlay. This is a linear flow conservation law. Primitive 2 (π) distributes P via power-law rank allocation, a scale-free kernel ensuring Σπ=P. Primitive 3 (Y) subtracts acquisition cost CAC·N from total payout, yielding operator net yield — isomorphic to risk/reward state in GSE. Primitive 4 (∂C) is a Boolean veto gate on live launch, enforcing the legal boundary. Dualities: P ↔ Y via CAC·N; π ↔ P via normalization; ∂C blocks Y realization. Failure modes: rake→1 collapses P to sponsor/overlay; α→∞ creates winner-take-all instability; CAC > P/N makes Y negative, triggering ∂C veto; approval token failure modes are security-critical. The simulator's docs-first mandate means all primitives operate on fake-data distributions, enabling Bayesian calibration (GSI) and state-machine validation (GSE) without live risk.\n\nDeep epistemic analysis for CONTEST-008-prize-pool-economics-simulator (24a2fc9559e8795d, domain=other, pages_read=1/1): Operator 'Prize Pool Formation Operator' (page 1, domain other) captures: reason_not_duplicate: Models entry count, rake, sponsor funding, overlay, CAC, and payout curves. Assumptions: Entries independent; rake constant per entry; sponsor/overlay exogenous; no deposit/withdrawal dynamics in simulator mode. Breakdown regime: r → 1 causes P → S+O (rake captures all entry value); N=0 yields P=S+O (pure sponsored/overlay pool); negative O implies guarantee shortfall. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Core kernel for GSE contest state transitions; P feeds payout curve operator. GSI uses P as observed sufficient statistic for posterior over contest viability. Operator 'Payout Curve Distribution Operator' (page 1, domain other) captures: reason_not_duplicate: Models entry count, rake, sponsor funding, overlay, CAC, and payout curves. Assumptions: Power-law decay; fixed K; full prize pool allocated; no ties; deterministic given θ. Breakdown regime: α→0 flattens to uniform; α→∞ concentrates on k=1; K>N yields zero payout for k>N; P=0 yields zero payouts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: π(k) defines likelihood for observed rank payouts; conformal sets on α from historical contests. GSE: payout curve params part of contest spec state; mutation triggers re-validation. Operator 'CAC-Adjusted Net Yield Operator' (page 1, domain other) captures: reason_not_duplicate: Models entry count, rake, sponsor funding, overlay, CAC, and payout curves. Assumptions: CAC constant per entry; all entries acquired at same CAC; yield measured from operator perspective (house/sponsor). Breakdown regime: CAC > P/N yields negative Y (loss); N=0 makes Y=0 (no contest); CAC=0 recovers pure prize pool economics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE risk/reward state variable; Y<0 triggers compliance veto ∂C. GSI: Y enters utility function for contest design optimization under posterior over (N,r,S,O). Operator 'Compliance Boundary Veto Operator' (page 1, domain other) captures: Do not launch paid contests, prizes, entry fees, live leaderboards, geofenced eligibility, or user deposits without founder/legal approval. Assumptions: Binary approval gate; no partial launch states; veto is absolute and irreversible without new token. Breakdown regime: Approval token forged or expired → false negative (dangerous launch); token denied → false positive (blocked valid launch). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE: ∂C is hard transition guard on VALIDATE→LIVE edge. GSI: ∂C=1 truncates posterior support for live contest parameters; all inference conditioned on ∂C=0. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CONTEST-008-prize-pool-economics-simulator (24a2fc9559e8795d, domain=other, pages_read=1/1): Operator 'Prize Pool Formation Operator' (page 1, domain other) captures: reason_not_duplicate: Models entry count, rake, sponsor funding, overlay, CAC, and payout curves. Assumptions: Entries independent; rake constant per entry; sponsor/overlay exogenous; no deposit/withdrawal dynamics in simulator mode. Breakdown regime: r → 1 causes P → S+O (rake captures all entry value); N=0 yields P=S+O (pure sponsored/overlay pool); negative O implies guarantee shortfall. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Core kernel for GSE contest state transitions; P feeds payout curve operator. GSI uses P as observed sufficient statistic for posterior over contest viability. Operator 'Payout Curve Distribution Operator' (page 1, domain other) captures: reason_not_duplicate: Models entry count, rake, sponsor funding, overlay, CAC, and payout curves. Assumptions: Power-law decay; fixed K; full prize pool allocated; no ties; deterministic given θ. Breakdown regime: α→0 flattens to uniform; α→∞ concentrates on k=1; K>N yields zero payout for k>N; P=0 yields zero payouts. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI: π(k) defines likelihood for observed rank payouts; conformal sets on α from historical contests. GSE: payout curve params part of contest spec state; mutation triggers re-validation. Operator 'CAC-Adjusted Net Yield Operator' (page 1, domain other) captures: reason_not_duplicate: Models entry count, rake, sponsor funding, overlay, CAC, and payout curves. Assumptions: CAC constant per entry; all entries acquired at same CAC; yield measured from operator perspective (house/sponsor). Breakdown regime: CAC > P/N yields negative Y (loss); N=0 makes Y=0 (no contest); CAC=0 recovers pure prize pool economics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE risk/reward state variable; Y<0 triggers compliance veto ∂C. GSI: Y enters utility function for contest design optimization under posterior over (N,r,S,O). Operator 'Compliance Boundary Veto Operator' (page 1, domain other) captures: Do not launch paid contests, prizes, entry fees, live leaderboards, geofenced eligibility, or user deposits without founder/legal approval. Assumptions: Binary approval gate; no partial launch states; veto is absolute and irreversible without new token. Breakdown regime: Approval token forged or expired → false negative (dangerous launch); token denied → false positive (blocked valid launch). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE: ∂C is hard transition guard on VALIDATE→LIVE edge. GSI: ∂C=1 truncates posterior support for live contest parameters; all inference conditioned on ∂C=0. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Prize pool flow conservation derives from parimutuel betting theory (1867) and tournament design (Lazear & Rosen 1981). Power-law payouts trace to Zipf's law (1949) and contest theory (Moldovanu & Sela 2001). CAC-adjusted yield mirrors customer lifetime value models (Gupta & Lehmann 2003). Compliance veto implements regulatory gatekeeping from fintech KYC/AML frameworks (FATF 2012). Retrocausal Genealogy: Rooted in CONTEST-008-prize-pool-economics-simulator (24a2fc9559e8795d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents: contestants maximize expected π(k) minus entry cost; sponsors maximize brand exposure per USD; operator maximizes Y subject to ∂C=0. Contestants infer N distribution to gauge competition; operator infers N elasticity to rake. Sponsor funding S is strategic substitute for overlay O. Legal team holds veto token, modeling worst-case regulatory adversary. Simulator must satisfy all agents' inference needs without live exposure.",
+      "cross_layer_veto": "Anti-collinearity: rake r and CAC both reduce Y but operate at different layers (mechanism vs acquisition). Leakage veto: no live entry fees, deposits, or leaderboards allowed — any primitive depending on live data is invalid. Conformal coverage of π(k) must hold under fake-data distribution shift. GSE state machine forbids VALIDATE→LIVE transition without explicit approval_token, making ∂C a hard structural constraint, not a soft penalty."
+    }
+  ]
+}

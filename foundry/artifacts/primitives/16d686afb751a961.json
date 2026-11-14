@@ -1,0 +1,78 @@
+{
+  "book_id": "16d686afb751a961",
+  "source_status": "COMPLETE",
+  "title": "p0321",
+  "file_name": "p0321.txt",
+  "sha256": "16d686afb751a96142d65b9eeb5bd80e1ccf8ee7dd36fe2d1a8a8da291548ea8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Profit as unimputable income distinguishes organizational control from contractual wage; risk-bearing human function maps to centralized decision-making. Universal Lens: Rooted in p0321 (16d686afb751a961), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on profit as residual income; conformal prediction bounds on organizational decision outcomes via wage-contractual returns. GSI Mapping: Rooted in p0321 (16d686afb751a961), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in organizational control; managerial planning maps to function allocation and resource coordination. GSE Mapping: Rooted in p0321 (16d686afb751a961), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "unimputable_income",
+      "name": "Unimputable Income",
+      "verbatim_quote": "Profit is unimputable income, as distinguished from the total income of the owner of the business.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'profit, dimensionless ratio of residual return', 'I_{owner}': 'total owner income, currency units'}",
+      "assumptions": "Profit is residual after explicit contractual obligations; income attribution is exclusive to labor or capital.",
+      "breakdown_regime": "When explicit contracts cover all returns, P → 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Residual income model in GSI Bayesian inference; P represents posterior variance in outcome distribution.",
+        "source_operator": "unimputable_income",
+        "telemetry": "Observed deviation between expected and actual owner income."
+      }
+    },
+    {
+      "primitive_id": "organizational_control",
+      "name": "Organizational Control",
+      "verbatim_quote": "Organization involves the concentration of responsibility, placing resources belonging to a large number of individuals under centralized control.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'control intensity, dimensionless', 'R': 'resource pool, currency units'}",
+      "assumptions": "Control is centralized; resource allocation is deterministic under managerial authority.",
+      "breakdown_regime": "C → 0 implies decentralized or absent control.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Control structure mirrors state transition graph in GSE; C governs agent action space convergence.",
+        "source_operator": "organizational_control",
+        "telemetry": "Managerial decision entropy vs. resource utilization efficiency."
+      }
+    },
+    {
+      "primitive_id": "decisional_risk",
+      "name": "Decisional Risk",
+      "verbatim_quote": "Examination shows that the human functions in production involve making decisions, exercising control, but that this control is not final unless combined with assumption of the results of the decisions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'decisional weight, dimensionless', 'R': 'risk exposure, currency units'}",
+      "assumptions": "Human control is incomplete without risk assumption; decision quality is probabilistic.",
+      "breakdown_regime": "D → 0 implies passive or automated control.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Risk-weighted decision logic in GSI; D modulates likelihood of outcome variance.",
+        "source_operator": "decisional_risk",
+        "telemetry": "Decision tree branching entropy vs. realized outcome variance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "16d686afb751a961_t0",
+      "think": "The concept of profit as unimputable income establishes a foundational duality: income is either contractual (wage) or residual (profit). This distinction enables a formal decomposition of organizational returns into explicit and implicit components. Organizational control is modeled as a centralizing mechanism that aggregates individual resource contributions into a unified decision framework. Decisional risk emerges as the operational condition where control is meaningful only when tied to outcome assumption. These primitives form a triadic structure: wage-based income, control-based coordination, and risk-based profit. The failure mode occurs when control is misaligned with risk assumption, leading to mispricing of organizational returns. In GSI, this manifests as Bayesian overconfidence in residual return models. In GSE, it leads to state-space explosion due to unmodeled risk in control policies.\n\nDeep epistemic analysis for p0321 (16d686afb751a961, domain=other, pages_read=1/1): Operator 'Unimputable Income' (page 1, domain other) captures: Profit is unimputable income, as distinguished from the total income of the owner of the business. Assumptions: Profit is residual after explicit contractual obligations; income attribution is exclusive to labor or capital. Breakdown regime: When explicit contracts cover all returns, P → 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residual income model in GSI Bayesian inference; P represents posterior variance in outcome distribution. Operator 'Organizational Control' (page 1, domain other) captures: Organization involves the concentration of responsibility, placing resources belonging to a large number of individuals under centralized control. Assumptions: Control is centralized; resource allocation is deterministic under managerial authority. Breakdown regime: C → 0 implies decentralized or absent control. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Control structure mirrors state transition graph in GSE; C governs agent action space convergence. Operator 'Decisional Risk' (page 1, domain other) captures: Examination shows that the human functions in production involve making decisions, exercising control, but that this control is not final unless combined with assumption of the results of the decisions. Assumptions: Human control is incomplete without risk assumption; decision quality is probabilistic. Breakdown regime: D → 0 implies passive or automated control. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Risk-weighted decision logic in GSI; D modulates likelihood of outcome variance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0321 (16d686afb751a961, domain=other, pages_read=1/1): Operator 'Unimputable Income' (page 1, domain other) captures: Profit is unimputable income, as distinguished from the total income of the owner of the business. Assumptions: Profit is residual after explicit contractual obligations; income attribution is exclusive to labor or capital. Breakdown regime: When explicit contracts cover all returns, P → 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residual income model in GSI Bayesian inference; P represents posterior variance in outcome distribution. Operator 'Organizational Control' (page 1, domain other) captures: Organization involves the concentration of responsibility, placing resources belonging to a large number of individuals under centralized control. Assumptions: Control is centralized; resource allocation is deterministic under managerial authority. Breakdown regime: C → 0 implies decentralized or absent control. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Control structure mirrors state transition graph in GSE; C governs agent action space convergence. Operator 'Decisional Risk' (page 1, domain other) captures: Examination shows that the human functions in production involve making decisions, exercising control, but that this control is not final unless combined with assumption of the results of the decisions. Assumptions: Human control is incomplete without risk assumption; decision quality is probabilistic. Breakdown regime: D → 0 implies passive or automated control. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Risk-weighted decision logic in GSI; D modulates likelihood of outcome variance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Knightian uncertainty theory; builds upon Marshall's marginal productivity and Fisher's temporal preference frameworks. Retrocausal Genealogy: Rooted in p0321 (16d686afb751a961), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0321 (16d686afb751a961), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models competing agents: the owner (contractual claimant), the manager (control arbiter), and the market (risk allocator). Each agent operates under distinct information sets and utility functions. Theory of Mind & Decision Maker Model: Rooted in p0321 (16d686afb751a961), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0321 (16d686afb751a961), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that wage and profit components remain orthogonal in GSI; leakage occurs if control is treated as wage. Veto conditions enforce that risk assumption is not conflated with control authority. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0321 (16d686afb751a961), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

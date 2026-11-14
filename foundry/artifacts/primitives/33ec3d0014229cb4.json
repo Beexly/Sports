@@ -1,0 +1,95 @@
+{
+  "book_id": "33ec3d0014229cb4",
+  "source_status": "COMPLETE",
+  "title": "SKILL",
+  "file_name": "SKILL.md",
+  "sha256": "33ec3d0014229cb44f3d53616d4bad2fa002826572c412ce91240f7cca63a9e5",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in SKILL (33ec3d0014229cb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in SKILL (33ec3d0014229cb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in SKILL (33ec3d0014229cb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in SKILL (33ec3d0014229cb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in SKILL (33ec3d0014229cb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in SKILL (33ec3d0014229cb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "lane_firewall",
+      "name": "XXX Lane Firewall",
+      "verbatim_quote": "--name: xxx-lane-firewall description: Implement or audit XXX lane isolation and cross-lane references.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Explicit lane boundaries, typed resources, and fail-closed policy enforcement.",
+      "breakdown_regime": "Cross-lane identity, voice, character, asset, prompt, dataset, account, analytics, learning, and storage reference transfers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps lane isolation as a conformal inference constraint in GSI, ensuring disjoint predictive sets across media domains. In GSE, it implements a state-transition veto for unauthorized resource migrations.",
+        "source_operator": "lane_firewall",
+        "telemetry": "Machine-readable audit logs of denied cross-lane references"
+      }
+    },
+    {
+      "primitive_id": "canonical_policy_path",
+      "name": "Canonical Policy Path",
+      "verbatim_quote": "Allow other non-Mature cross-lane references only through the canonical policy path and only when tests prove the intended case.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Authorized exceptions require empirical validation and bidirectional denial testing.",
+      "breakdown_regime": "Controlled migration of non-Mature resources via verified pathways.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, this enforces a conformal prediction set hierarchy. In GSE, it governs state-transition feasibility checks.",
+        "source_operator": "canonical_policy_path",
+        "telemetry": "Test coverage metrics for cross-lane transfer paths"
+      }
+    },
+    {
+      "primitive_id": "assert_lane_firewall",
+      "name": "Assert Lane Firewall",
+      "verbatim_quote": "## Implement safely - Call `assertLaneFirewall` at the shared service or repository boundary closest to reference creation and again before a deferred job executes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Early enforcement at creation and deferred execution boundaries.",
+      "breakdown_regime": "Runtime verification of resource ownership and lane adherence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Embeds a conformal validity check in GSI's predictive pipeline. In GSE, it acts as a state-transition guard.",
+        "source_operator": "assert_lane_firewall",
+        "telemetry": "Latency and success rates of firewall assertions"
+      }
+    },
+    {
+      "primitive_id": "stable_resource_id",
+      "name": "Stable Resource ID",
+      "verbatim_quote": "- Preserve stable IDs and lane ownership; copying bytes does not change ownership.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Resource identity persists regardless of storage location.",
+      "breakdown_regime": "Immutable identification of assets, prompts, and datasets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, stable IDs anchor invariant feature representations. In GSE, they track persistent object states.",
+        "source_operator": "stable_resource_id",
+        "telemetry": "Consistency of resource identifiers across lane transfers"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "33ec3d0014229cb4_t0",
+      "think": "The XXX Lane Firewall implements a fail-closed access control lattice that prevents unauthorized data flows between isolated environments. It operates by verifying a quadruple: (source_lane, target_lane, resource_type, stable_id). This is mathematically equivalent to a conformal hypothesis test where the null hypothesis is that a transfer violates the firewall policy. The rule-set ensures that the family-wise error rate of cross-lane leaks is controlled at zero, analogous to a multiple comparison correction. The canonical policy path requirement enforces a rigorous experimental design, preventing ad-hoc exceptions that would inflate false discovery rates. The use of stable IDs breaks the spurious correlation between filename collisions and logical sharing, ensuring that even byte-for-byte identical data in different lanes are treated as distinct entities. This framework can be mapped to GSI's multi-model ensemble calibration, where each lane represents a distinct posterior distribution, and the firewall ensures their predictive disjointness. In GSE, it corresponds to a state-transition veto mechanism that maintains Markovian consistency across discrete event updates.\n\nDeep epistemic analysis for SKILL (33ec3d0014229cb4, domain=other, pages_read=1/1): Operator 'XXX Lane Firewall' (page 1, domain other) captures: --name: xxx-lane-firewall description: Implement or audit XXX lane isolation and cross-lane references. Assumptions: Explicit lane boundaries, typed resources, and fail-closed policy enforcement. Breakdown regime: Cross-lane identity, voice, character, asset, prompt, dataset, account, analytics, learning, and storage reference transfers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps lane isolation as a conformal inference constraint in GSI, ensuring disjoint predictive sets across media domains. In GSE, it implements a state-transition veto for unauthorized resource migrations. Operator 'Canonical Policy Path' (page 1, domain other) captures: Allow other non-Mature cross-lane references only through the canonical policy path and only when tests prove the intended case. Assumptions: Authorized exceptions require empirical validation and bidirectional denial testing. Breakdown regime: Controlled migration of non-Mature resources via verified pathways. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, this enforces a conformal prediction set hierarchy. In GSE, it governs state-transition feasibility checks. Operator 'Assert Lane Firewall' (page 1, domain other) captures: ## Implement safely - Call `assertLaneFirewall` at the shared service or repository boundary closest to reference creation and again before a deferred job executes. Assumptions: Early enforcement at creation and deferred execution boundaries. Breakdown regime: Runtime verification of resource ownership and lane adherence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Embeds a conformal validity check in GSI's predictive pipeline. In GSE, it acts as a state-transition guard. Operator 'Stable Resource ID' (page 1, domain other) captures: - Preserve stable IDs and lane ownership; copying bytes does not change ownership. Assumptions: Resource identity persists regardless of storage location. Breakdown regime: Immutable identification of assets, prompts, and datasets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, stable IDs anchor invariant feature representations. In GSE, they track persistent object states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SKILL (33ec3d0014229cb4, domain=other, pages_read=1/1): Operator 'XXX Lane Firewall' (page 1, domain other) captures: --name: xxx-lane-firewall description: Implement or audit XXX lane isolation and cross-lane references. Assumptions: Explicit lane boundaries, typed resources, and fail-closed policy enforcement. Breakdown regime: Cross-lane identity, voice, character, asset, prompt, dataset, account, analytics, learning, and storage reference transfers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps lane isolation as a conformal inference constraint in GSI, ensuring disjoint predictive sets across media domains. In GSE, it implements a state-transition veto for unauthorized resource migrations. Operator 'Canonical Policy Path' (page 1, domain other) captures: Allow other non-Mature cross-lane references only through the canonical policy path and only when tests prove the intended case. Assumptions: Authorized exceptions require empirical validation and bidirectional denial testing. Breakdown regime: Controlled migration of non-Mature resources via verified pathways. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, this enforces a conformal prediction set hierarchy. In GSE, it governs state-transition feasibility checks. Operator 'Assert Lane Firewall' (page 1, domain other) captures: ## Implement safely - Call `assertLaneFirewall` at the shared service or repository boundary closest to reference creation and again before a deferred job executes. Assumptions: Early enforcement at creation and deferred execution boundaries. Breakdown regime: Runtime verification of resource ownership and lane adherence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Embeds a conformal validity check in GSI's predictive pipeline. In GSE, it acts as a state-transition guard. Operator 'Stable Resource ID' (page 1, domain other) captures: - Preserve stable IDs and lane ownership; copying bytes does not change ownership. Assumptions: Resource identity persists regardless of storage location. Breakdown regime: Immutable identification of assets, prompts, and datasets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, stable IDs anchor invariant feature representations. In GSE, they track persistent object states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The conceptual ancestor is the Bell-LaPadula model from computer security, which formalized mandatory access control. It evolved into modern zero-trust network architectures and has deep ties to information flow control theory in programming languages. Retrocausal Genealogy: Rooted in SKILL (33ec3d0014229cb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include developers who seek to minimize friction for legitimate cross-lane data movement and security auditors who aim to maximize containment of potential breaches. Both must reason about the trade-off between operational efficiency and risk exposure. Theory of Mind & Decision Maker Model: Rooted in SKILL (33ec3d0014229cb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring explicit policy rationales for each exception, preventing the creation of linearly dependent transfer rules that could collectively leak information. Leakage vetoes are triggered by detecting any pathway that bypasses the fail-closed default, such as using inferred permissions from prior operations. Cross-Layer Veto & Anti-Leakage Check: Rooted in SKILL (33ec3d0014229cb4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

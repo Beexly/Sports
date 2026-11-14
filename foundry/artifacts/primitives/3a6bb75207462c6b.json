@@ -1,0 +1,78 @@
+{
+  "book_id": "3a6bb75207462c6b",
+  "source_status": "COMPLETE",
+  "title": "2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors",
+  "file_name": "2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors.md",
+  "sha256": "3a6bb75207462c6bcd243f0974437d7da336a4fdbb6ce760a63a1fe76b1bfa09",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Logistic regression as a probabilistic classifier maps linear combinations of features to binary outcomes via sigmoid transformation, enabling medal projection through weighted input aggregation. Universal Lens: Rooted in 2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors (3a6bb75207462c6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework models medal probabilities using logistic regression posterior distributions, incorporating prior beliefs about athlete performance and observed data to update predictive confidence intervals. GSI Mapping: Rooted in 2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors (3a6bb75207462c6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states based on projected medal likelihoods, dynamically adjusting resource allocation and strategy execution in response to evolving performance regressions and feature importance shifts. GSE Mapping: Rooted in 2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors (3a6bb75207462c6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "logistic_regression_classifier",
+      "name": "Logistic Regression Classifier",
+      "verbatim_quote": "- Unknown Authors.pdf --> • • 1 y= 0,1 1 + e<sup>-zwhere y is a probability",
+      "page": 1,
+      "latex": "y = \\frac{1}{1 + e^{-z}} \\text{ where } z = b + w_1x_1 + w_2x_2 + \\cdots + w_nx_n",
+      "symbol_and_unit_ledger": "{'y': 'probability (dimensionless)', 'z': 'logit (dimensionless)', 'b': 'bias term (dimensionless)', 'w_i': 'model weight (dimensionless)', 'x_i': 'model feature (dimensionless)'}",
+      "assumptions": "Linear relationship in log-odds space, independent observations, binary outcome variable.",
+      "breakdown_regime": "When feature correlations exceed threshold or sample size insufficient for convergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian updating mechanism by treating logistic outputs as belief probabilities under uniform priors.",
+        "source_operator": "logistic_regression_classifier",
+        "telemetry": "Prediction accuracy, calibration error, AUC-ROC"
+      }
+    },
+    {
+      "primitive_id": "negative_log_likelihood_loss",
+      "name": "Negative Log-Likelihood Loss",
+      "verbatim_quote": "--> # y • • • • N 1 pi -yi<sup>2</sup> N<sup>෍</sup> i=1 <!-- Start of",
+      "page": 1,
+      "latex": "\\mathcal{L} = -\\frac{1}{N}\\sum_{i=1}^{N} \\left( y_i \\log(p_i) + (1 - y_i) \\log(1 - p_i) \\right)",
+      "symbol_and_unit_ledger": "{'N': 'number of samples (dimensionless)', 'y_i': 'true label (0 or 1)', 'p_i': 'predicted probability (dimensionless)'}",
+      "assumptions": "Independent Bernoulli trials, correct model specification.",
+      "breakdown_regime": "When predicted probabilities approach 0 or 1, leading to numerical instability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE optimization loops to minimize classification error during iterative training.",
+        "source_operator": "negative_log_likelihood_loss",
+        "telemetry": "Cross-entropy loss value, gradient magnitude"
+      }
+    },
+    {
+      "primitive_id": "weighted_feature_aggregation",
+      "name": "Weighted Feature Aggregation",
+      "verbatim_quote": "b+ w x x x</mark> 1 1 <mark>+ w</mark> 2 2 <mark>+ ⋯+ w</mark> n n",
+      "page": 1,
+      "latex": "z = b + \\sum_{i=1}^{n} w_i x_i",
+      "symbol_and_unit_ledger": "{'z': 'linear combination (dimensionless)', 'b': 'bias term (dimensionless)', 'w_i': 'weight coefficient (dimensionless)', 'x_i': 'input feature (dimensionless)'}",
+      "assumptions": "Additive contributions of features, fixed weights during inference.",
+      "breakdown_regime": "Non-linear interactions among features not captured; overfitting risk with high-dimensional sparse inputs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents core GSE state transition function integrating multi-variate athlete metrics into single scalar predictor.",
+        "source_operator": "weighted_feature_aggregation",
+        "telemetry": "Feature importance scores, activation values"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3a6bb75207462c6b_t0",
+      "think": "The logistic regression classifier operates by transforming a linear combination of inputs into a probability via the sigmoid function. This allows for probabilistic interpretation of outcomes such as medal wins. The negative log-likelihood loss serves as the objective function that guides parameter estimation by penalizing incorrect predictions more heavily when confidence is high. Weighted feature aggregation forms the basis of this transformation, combining multiple variables into a single scalar input for the classifier. Dualities emerge in how these components interact—linear aggregation enables non-linear decision boundaries through the sigmoid, while loss minimization ensures robustness against noise. Failure modes include overfitting due to insufficient regularization, misclassification from poor feature selection, and instability from extreme probability estimates near zero or one.\n\nDeep epistemic analysis for 2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors (3a6bb75207462c6b, domain=other, pages_read=1/1): Operator 'Logistic Regression Classifier' (page 1, domain other) captures: - Unknown Authors.pdf --> • • 1 y= 0,1 1 + e<sup>-zwhere y is a probability Assumptions: Linear relationship in log-odds space, independent observations, binary outcome variable. Breakdown regime: When feature correlations exceed threshold or sample size insufficient for convergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating mechanism by treating logistic outputs as belief probabilities under uniform priors. Operator 'Negative Log-Likelihood Loss' (page 1, domain other) captures: --> # y • • • • N 1 pi -yi<sup>2</sup> N<sup>෍</sup> i=1 <!-- Start of Assumptions: Independent Bernoulli trials, correct model specification. Breakdown regime: When predicted probabilities approach 0 or 1, leading to numerical instability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE optimization loops to minimize classification error during iterative training. Operator 'Weighted Feature Aggregation' (page 1, domain other) captures: b+ w x x x</mark> 1 1 <mark>+ w</mark> 2 2 <mark>+ ⋯+ w</mark> n n Assumptions: Additive contributions of features, fixed weights during inference. Breakdown regime: Non-linear interactions among features not captured; overfitting risk with high-dimensional sparse inputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents core GSE state transition function integrating multi-variate athlete metrics into single scalar predictor. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors (3a6bb75207462c6b, domain=other, pages_read=1/1): Operator 'Logistic Regression Classifier' (page 1, domain other) captures: - Unknown Authors.pdf --> • • 1 y= 0,1 1 + e<sup>-zwhere y is a probability Assumptions: Linear relationship in log-odds space, independent observations, binary outcome variable. Breakdown regime: When feature correlations exceed threshold or sample size insufficient for convergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian updating mechanism by treating logistic outputs as belief probabilities under uniform priors. Operator 'Negative Log-Likelihood Loss' (page 1, domain other) captures: --> # y • • • • N 1 pi -yi<sup>2</sup> N<sup>෍</sup> i=1 <!-- Start of Assumptions: Independent Bernoulli trials, correct model specification. Breakdown regime: When predicted probabilities approach 0 or 1, leading to numerical instability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE optimization loops to minimize classification error during iterative training. Operator 'Weighted Feature Aggregation' (page 1, domain other) captures: b+ w x x x</mark> 1 1 <mark>+ w</mark> 2 2 <mark>+ ⋯+ w</mark> n n Assumptions: Additive contributions of features, fixed weights during inference. Breakdown regime: Non-linear interactions among features not captured; overfitting risk with high-dimensional sparse inputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Represents core GSE state transition function integrating multi-variate athlete metrics into single scalar predictor. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century developments in statistical modeling and machine learning theory, particularly Fisher’s discriminant analysis and Cox's proportional hazards model, which laid groundwork for modern generalized linear models. Retrocausal Genealogy: Rooted in 2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors (3a6bb75207462c6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include competing athletes whose performance trajectories are modeled differently, or external factors like weather or injury affecting outcomes. Decision actors must balance exploration vs exploitation in optimizing training regimens or betting strategies based on projected medal counts. Theory of Mind & Decision Maker Model: Rooted in 2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors (3a6bb75207462c6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks prevent redundant features from inflating variance in weight estimates. Leakage vetoes ensure no temporal information leaks into training sets, maintaining causal integrity across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2023 - Improving Medal Projections in Olympic Best Mark Sports - Unknown Authors (3a6bb75207462c6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

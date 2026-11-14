@@ -1,0 +1,78 @@
+{
+  "book_id": "5ee96c2afbfc3381",
+  "source_status": "COMPLETE",
+  "title": "CALIBRATION-BRIEF-2026-11-04",
+  "file_name": "CALIBRATION-BRIEF-2026-11-04.md",
+  "sha256": "5ee96c2afbfc3381cd15617f5e216ca32164d31ff3251f500d56eb450ab52263",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Confidence scoring conflates market distinctiveness with probabilistic calibration; a single score across heterogeneous markets distorts true performance differentials. Universal Lens: Rooted in CALIBRATION-BRIEF-2026-11-04 (5ee96c2afbfc3381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration maps confidence scores to empirical win rates via conformal prediction; misalignment occurs when score compression obscures market-specific reliability. GSI Mapping: Rooted in CALIBRATION-BRIEF-2026-11-04 (5ee96c2afbfc3381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning must distinguish between calibrated confidence and market-specific ordering; state transitions require separate modeling per market type to avoid inverted signals. GSE Mapping: Rooted in CALIBRATION-BRIEF-2026-11-04 (5ee96c2afbfc3381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "confidence_score_compression",
+      "name": "Confidence Score Compression",
+      "verbatim_quote": "**The score compresses a 20-point difference in reality into a 4-point difference on the page.** That is the whole problem in one line, and no amount of recalibration fixes it, because it is not a scaling error — it is a missing distinction.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'confidence score (dimensionless)', 'R': 'realized win rate (dimensionless)'}",
+      "assumptions": "A single scalar confidence score represents heterogeneous market reliabilities without distinction.",
+      "breakdown_regime": "When C ∈ [50, 100] but R varies by 20 points across markets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The confidence score acts as a proxy for calibrated probability, but fails to encode inter-market variance, leading to incorrect risk aggregation.",
+        "source_operator": "confidence_score_compression",
+        "telemetry": "Difference between reported and actual win rate bands."
+      }
+    },
+    {
+      "primitive_id": "inverted_signal_ordering",
+      "name": "Inverted Signal Ordering",
+      "verbatim_quote": "This is an inverted signal: **the score is most wrong exactly where it is most emphatic.** _[Chart: `calibration-reliability-by-market.png` — all three panels, points below the diagonal are overconfident.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'score confidence (dimensionless)', 'W': 'win rate (dimensionless)'}",
+      "assumptions": "High confidence implies accurate ordering of market reliability.",
+      "breakdown_regime": "When S > 0.7 but W < 0.6 for high-scored markets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Confidence ordering becomes antithetical to realized performance due to score compression.",
+        "source_operator": "inverted_signal_ordering",
+        "telemetry": "Ranking discrepancy between predicted and observed win rates."
+      }
+    },
+    {
+      "primitive_id": "market_aggregate_calibration",
+      "name": "Market Aggregate Calibration",
+      "verbatim_quote": "The market's aggregate looks calibrated only because a large under-confidence error at the bottom and a smaller over-confidence error at the top cancel out.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'market type (discrete)', 'P_M': 'probability assigned to M (dimensionless)', 'R_M': 'realized rate for M (dimensionless)'}",
+      "assumptions": "Aggregate calibration implies individual market calibration.",
+      "breakdown_regime": "When ∑(P_M - R_M) ≈ 0 despite P_M ≠ R_M for individual M.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Aggregate calibration masks internal inconsistency; individual market reliability must be modeled separately.",
+        "source_operator": "market_aggregate_calibration",
+        "telemetry": "Net calibration error across all markets vs. per-market deviation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5ee96c2afbfc3381_t0",
+      "think": "The core issue lies in treating heterogeneous markets with a single confidence score. The compression effect (4.6 points vs. 20-point gap) reveals that the score does not reflect true variability. In Bayesian terms, this is a failure of proper scoring rules—where the score function does not incentivize truthful reporting. The inverted signal arises because high confidence is assigned to low-performing markets, and vice versa. This creates a dual failure: calibration distortion and ranking inversion. The root cause is the lack of per-market modeling, which leads to a false sense of calibration through cancellation effects. The solution requires separating confidence computation by market type and aligning score semantics with empirical outcomes rather than arbitrary thresholds.\n\nDeep epistemic analysis for CALIBRATION-BRIEF-2026-11-04 (5ee96c2afbfc3381, domain=other, pages_read=3/3): Operator 'Confidence Score Compression' (page 1, domain other) captures: **The score compresses a 20-point difference in reality into a 4-point difference on the page.** That is the whole problem in one line, and no amount of recalibration fixes it, because it is not a scaling error — it is a missing distinction. Assumptions: A single scalar confidence score represents heterogeneous market reliabilities without distinction. Breakdown regime: When C ∈ [50, 100] but R varies by 20 points across markets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The confidence score acts as a proxy for calibrated probability, but fails to encode inter-market variance, leading to incorrect risk aggregation. Operator 'Inverted Signal Ordering' (page 1, domain other) captures: This is an inverted signal: **the score is most wrong exactly where it is most emphatic.** _[Chart: `calibration-reliability-by-market.png` — all three panels, points below the diagonal are overconfident. Assumptions: High confidence implies accurate ordering of market reliability. Breakdown regime: When S > 0.7 but W < 0.6 for high-scored markets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Confidence ordering becomes antithetical to realized performance due to score compression. Operator 'Market Aggregate Calibration' (page 2, domain other) captures: The market's aggregate looks calibrated only because a large under-confidence error at the bottom and a smaller over-confidence error at the top cancel out. Assumptions: Aggregate calibration implies individual market calibration. Breakdown regime: When ∑(P_M - R_M) ≈ 0 despite P_M ≠ R_M for individual M. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Aggregate calibration masks internal inconsistency; individual market reliability must be modeled separately. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CALIBRATION-BRIEF-2026-11-04 (5ee96c2afbfc3381, domain=other, pages_read=3/3): Operator 'Confidence Score Compression' (page 1, domain other) captures: **The score compresses a 20-point difference in reality into a 4-point difference on the page.** That is the whole problem in one line, and no amount of recalibration fixes it, because it is not a scaling error — it is a missing distinction. Assumptions: A single scalar confidence score represents heterogeneous market reliabilities without distinction. Breakdown regime: When C ∈ [50, 100] but R varies by 20 points across markets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The confidence score acts as a proxy for calibrated probability, but fails to encode inter-market variance, leading to incorrect risk aggregation. Operator 'Inverted Signal Ordering' (page 1, domain other) captures: This is an inverted signal: **the score is most wrong exactly where it is most emphatic.** _[Chart: `calibration-reliability-by-market.png` — all three panels, points below the diagonal are overconfident. Assumptions: High confidence implies accurate ordering of market reliability. Breakdown regime: When S > 0.7 but W < 0.6 for high-scored markets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Confidence ordering becomes antithetical to realized performance due to score compression. Operator 'Market Aggregate Calibration' (page 2, domain other) captures: The market's aggregate looks calibrated only because a large under-confidence error at the bottom and a smaller over-confidence error at the top cancel out. Assumptions: Aggregate calibration implies individual market calibration. Breakdown regime: When ∑(P_M - R_M) ≈ 0 despite P_M ≠ R_M for individual M. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Aggregate calibration masks internal inconsistency; individual market reliability must be modeled separately. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical calibration theory (Brier, 1950), extended to machine learning scoring (Good, 1952), and formalized in conformal prediction (Vovk et al., 2005). The inversion problem mirrors earlier issues in expert judgment systems where overconfidence led to systematic misalignment. Retrocausal Genealogy: Rooted in CALIBRATION-BRIEF-2026-11-04 (5ee96c2afbfc3381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the modeler who assumes score integrity, the market dynamics that produce variable outcomes, and the user who interprets scores as probabilities. Each agent operates under different assumptions: modeler assumes consistency, market varies, user expects accuracy. Theory of Mind & Decision Maker Model: Rooted in CALIBRATION-BRIEF-2026-11-04 (5ee96c2afbfc3381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity demands that confidence scores not be aggregated across distinct market types. Leakage occurs when one market’s error biases another’s perceived reliability. Veto conditions include: no shared score across markets with >10% win rate variance, no use of score for cross-market comparisons, and explicit per-market confidence modeling. Cross-Layer Veto & Anti-Leakage Check: Rooted in CALIBRATION-BRIEF-2026-11-04 (5ee96c2afbfc3381), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

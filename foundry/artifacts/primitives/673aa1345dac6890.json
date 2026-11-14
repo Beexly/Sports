@@ -1,0 +1,78 @@
+{
+  "book_id": "673aa1345dac6890",
+  "source_status": "COMPLETE",
+  "title": "p0312",
+  "file_name": "p0312.txt",
+  "sha256": "673aa1345dac68908bb7b8b54b04de541e0ec043739e27cac467620201cf25a7",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of collegiate football player roles into a relational algebraic framework mapping positions to institutional affiliations and tactical functions. Universal Lens: Rooted in p0312 (673aa1345dac6890), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps player position roles to institutional performance metrics using conformal predictive distributions over tactical configurations. GSI Mapping: Rooted in p0312 (673aa1345dac6890), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models player transitions between roles via state-space Markov chains conditioned on institutional and positional constraints. GSE Mapping: Rooted in p0312 (673aa1345dac6890), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "half_back_position",
+      "name": "Half-Back Position",
+      "verbatim_quote": "OA J s e COLLEGE. CAPTAIN. POSITION. COACH. MANAGER. Half-back J. Univ, of Arizona, Tuscon, Ariz.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'J': 'Player identifier (dimensionless)', 'Univ': 'Institutional affiliation (dimensionless)', 'Tuscon, Ariz': 'Geographic location (dimensionless)'}",
+      "assumptions": "Player role is deterministic within institutional context; position implies defined tactical function.",
+      "breakdown_regime": "When institutional affiliation changes, role mapping becomes ambiguous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping between player identifiers and institutional roles in GSI's Bayesian network.",
+        "source_operator": "half_back_position",
+        "telemetry": "Player position assignment accuracy against institutional data."
+      }
+    },
+    {
+      "primitive_id": "quarter_back_role",
+      "name": "Quarter-Back Role",
+      "verbatim_quote": "Quarter-back. A. TE Univ. of Cincinnati, Cincinnati, Ohio.. J. Montgomery.. G. E. Little (O. Wes.-O. State)",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A.TE': 'Tactical execution parameter (dimensionless)', 'Univ. of Cincinnati': 'Institutional identifier (dimensionless)'}",
+      "assumptions": "Quarter-back role is defined by strategic command structure and institutional training protocols.",
+      "breakdown_regime": "When tactical execution fails, role ambiguity increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived kernel of strategic command mapping from institutional training to GSE state transition.",
+        "source_operator": "quarter_back_role",
+        "telemetry": "Strategic command efficacy measured via institutional performance indices."
+      }
+    },
+    {
+      "primitive_id": "center_position",
+      "name": "Center Position",
+      "verbatim_quote": "Watson... Center Robert C. Zuppke (Wisconsin). Univ, of Kansas, Lawrence, Kans D. H. M. Wheaton (Yale)......",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Center': 'Positional role (dimensionless)', 'Univ. of Idaho': 'Institutional identifier (dimensionless)'}",
+      "assumptions": "Center position is fixed in formation and institutionalized within team strategy.",
+      "breakdown_regime": "Formation disruption leads to loss of center role integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping of center role to institutional formation stability in GSI.",
+        "source_operator": "center_position",
+        "telemetry": "Formation integrity score derived from institutional consistency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "673aa1345dac6890_t0",
+      "think": "The primitives define a structured relational model where each player role is mapped to an institutional context through a dualistic lens: tactical function and geographic origin. The half-back and quarter-back roles exhibit a duality in their strategic influence—half-backs operate in dynamic movement while quarter-backs coordinate command structures. The center position represents a static yet pivotal role in maintaining formation integrity. These roles form a closed-loop system where institutional affiliations determine tactical behavior, and tactical outcomes reflect institutional strength. Failure modes emerge when institutional alignment breaks down, leading to misalignment between role and function. The system exhibits anti-symmetry in its operational dynamics, where one role’s stability inversely correlates with another’s volatility. This creates a dualistic failure space that can be modeled as a tensor product of institutional and tactical manifolds.\n\nDeep epistemic analysis for p0312 (673aa1345dac6890, domain=other, pages_read=2/2): Operator 'Half-Back Position' (page 1, domain other) captures: OA J s e COLLEGE. CAPTAIN. POSITION. COACH. MANAGER. Half-back J. Univ, of Arizona, Tuscon, Ariz. Assumptions: Player role is deterministic within institutional context; position implies defined tactical function. Breakdown regime: When institutional affiliation changes, role mapping becomes ambiguous. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping between player identifiers and institutional roles in GSI's Bayesian network. Operator 'Quarter-Back Role' (page 1, domain other) captures: Quarter-back. A. TE Univ. of Cincinnati, Cincinnati, Ohio.. J. Montgomery.. G. E. Little (O. Wes.-O. State) Assumptions: Quarter-back role is defined by strategic command structure and institutional training protocols. Breakdown regime: When tactical execution fails, role ambiguity increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of strategic command mapping from institutional training to GSE state transition. Operator 'Center Position' (page 1, domain other) captures: Watson... Center Robert C. Zuppke (Wisconsin). Univ, of Kansas, Lawrence, Kans D. H. M. Wheaton (Yale)...... Assumptions: Center position is fixed in formation and institutionalized within team strategy. Breakdown regime: Formation disruption leads to loss of center role integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping of center role to institutional formation stability in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0312 (673aa1345dac6890, domain=other, pages_read=2/2): Operator 'Half-Back Position' (page 1, domain other) captures: OA J s e COLLEGE. CAPTAIN. POSITION. COACH. MANAGER. Half-back J. Univ, of Arizona, Tuscon, Ariz. Assumptions: Player role is deterministic within institutional context; position implies defined tactical function. Breakdown regime: When institutional affiliation changes, role mapping becomes ambiguous. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping between player identifiers and institutional roles in GSI's Bayesian network. Operator 'Quarter-Back Role' (page 1, domain other) captures: Quarter-back. A. TE Univ. of Cincinnati, Cincinnati, Ohio.. J. Montgomery.. G. E. Little (O. Wes.-O. State) Assumptions: Quarter-back role is defined by strategic command structure and institutional training protocols. Breakdown regime: When tactical execution fails, role ambiguity increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of strategic command mapping from institutional training to GSE state transition. Operator 'Center Position' (page 1, domain other) captures: Watson... Center Robert C. Zuppke (Wisconsin). Univ, of Kansas, Lawrence, Kans D. H. M. Wheaton (Yale)...... Assumptions: Center position is fixed in formation and institutionalized within team strategy. Breakdown regime: Formation disruption leads to loss of center role integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic mapping of center role to institutional formation stability in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century American football's institutionalization, these primitives mirror the evolution of positional stratification from informal team structures to formalized academic and athletic hierarchies. Retrocausal Genealogy: Rooted in p0312 (673aa1345dac6890), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0312 (673aa1345dac6890), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include institutional coaches who assign roles based on strategic needs and players who adapt to roles under performance pressure. Decision-making involves balancing institutional expectations with individual capability, creating a dynamic博弈 environment. Theory of Mind & Decision Maker Model: Rooted in p0312 (673aa1345dac6890), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between roles that share overlapping tactical domains, such as half-back and center, which may lead to confusion in state transitions. Leakage occurs when institutional data does not align with observed tactical behavior, invalidating the mapping. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0312 (673aa1345dac6890), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

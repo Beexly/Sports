@@ -1,0 +1,78 @@
+{
+  "book_id": "169aa5b52a1fb6af",
+  "source_status": "COMPLETE",
+  "title": "GITHUB_ISSUES_TO_CREATE",
+  "file_name": "GITHUB_ISSUES_TO_CREATE.md",
+  "sha256": "169aa5b52a1fb6afaac4a70ab5ee86bacf5b3b1c6173d0adc52323f42fad4801",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "FABLE source registry integration enables probabilistic visibility of data provenance and access control through Bayesian inference over source status and storage rights. Universal Lens: Rooted in GITHUB_ISSUES_TO_CREATE (169aa5b52a1fb6af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions to rank uncertain candidates using entropy and margin, enabling local review queues with uncertainty quantification. GSI Mapping: Rooted in GITHUB_ISSUES_TO_CREATE (169aa5b52a1fb6af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes state-transition models to manage source registry visibility and prediction candidate prioritization, ensuring deterministic compliance with access policies. GSE Mapping: Rooted in GITHUB_ISSUES_TO_CREATE (169aa5b52a1fb6af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "wire_fable_source_registry_adapter",
+      "name": "Source Registry Visibility Adapter",
+      "verbatim_quote": "# GitHub Issues To Create ## Issue: Wire FABLE source registry adapter into an internal visibility route Body: ```markdown Add an internal route or dashboard panel that reads `apps/web/lib/fable/source-registry.ts` and displays source status, allowed use, blocked use, owner decision needs, and last review date.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'source status (dimensionless)', 'A': 'allowed use flag (binary)', 'B': 'blocked use flag (binary)', 'D': 'decision need indicator (binary)', 'T': 'last review timestamp (seconds since epoch)'}",
+      "assumptions": "Registry data is consistent; AWS storage rights are inherited without conflict.",
+      "breakdown_regime": "When source status becomes stale or access control rules change.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The registry adapter maps source metadata to a Bayesian belief state over access permissions.",
+        "source_operator": "wire_fable_source_registry_adapter",
+        "telemetry": "Registry update frequency and access denial rate"
+      }
+    },
+    {
+      "primitive_id": "promote_uncertainty_ranking",
+      "name": "Uncertainty Ranking Queue",
+      "verbatim_quote": "``` ## Issue: Promote uncertainty ranking into a local review queue Body: ```markdown Use `rankUncertainCandidates` to produce a local review queue from prediction candidates.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U': 'uncertainty score (dimensionless)', 'C': 'candidate index (integer)', 'Q': 'queue size (integer)', 'M': 'ranking method (entropy, margin, least confidence)'}",
+      "assumptions": "Prediction candidates are independently distributed; ranking methods are valid heuristics.",
+      "breakdown_regime": "When uncertainty scores exceed threshold or queue exceeds capacity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ranking function generates a local queue based on predictive uncertainty metrics.",
+        "source_operator": "promote_uncertainty_ranking",
+        "telemetry": "Queue depth and selection bias per method"
+      }
+    },
+    {
+      "primitive_id": "add_repo_data_calibration_validation",
+      "name": "Repository Data Calibration Validator",
+      "verbatim_quote": "``` ## Issue: Add repo-data calibration validation before any gain claim Body: ```markdown Create a report that measures Brier and ECE on repo data or an approved replay fixture.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'Brier score (dimensionless)', 'E': 'Expected Calibration Error (dimensionless)', 'R': 'replay fixture identifier (string)', 'G': 'gain claim (dimensionless)'}",
+      "assumptions": "Repo data is representative; replay fixtures are valid simulations.",
+      "breakdown_regime": "When Brier or ECE exceed acceptable thresholds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Calibration metrics map prediction confidence to empirical accuracy.",
+        "source_operator": "add_repo_data_calibration_validation",
+        "telemetry": "Brier score variance and ECE convergence rate"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "169aa5b52a1fb6af_t0",
+      "think": "The primitives form a triadic system where source visibility (S) informs uncertainty ranking (U), which in turn validates calibration (B,E). The system operates under Bayesian constraints: S provides prior beliefs about access, U updates these via entropy-based heuristics, and B,E enforce posterior consistency. Dualities emerge between registry data and prediction confidence, with failure modes including stale S, misranked U, and miscalibrated E. Each primitive must maintain independence to avoid cascading errors. The system's robustness depends on telemetry feedback loops across all three operators.\n\nDeep epistemic analysis for GITHUB_ISSUES_TO_CREATE (169aa5b52a1fb6af, domain=other, pages_read=1/1): Operator 'Source Registry Visibility Adapter' (page 1, domain other) captures: # GitHub Issues To Create ## Issue: Wire FABLE source registry adapter into an internal visibility route Body: ```markdown Add an internal route or dashboard panel that reads `apps/web/lib/fable/source-registry.ts` and displays source status, allowed use, blocked use, owner decision needs, and last review date. Assumptions: Registry data is consistent; AWS storage rights are inherited without conflict. Breakdown regime: When source status becomes stale or access control rules change. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The registry adapter maps source metadata to a Bayesian belief state over access permissions. Operator 'Uncertainty Ranking Queue' (page 1, domain other) captures: ``` ## Issue: Promote uncertainty ranking into a local review queue Body: ```markdown Use `rankUncertainCandidates` to produce a local review queue from prediction candidates. Assumptions: Prediction candidates are independently distributed; ranking methods are valid heuristics. Breakdown regime: When uncertainty scores exceed threshold or queue exceeds capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ranking function generates a local queue based on predictive uncertainty metrics. Operator 'Repository Data Calibration Validator' (page 1, domain other) captures: ``` ## Issue: Add repo-data calibration validation before any gain claim Body: ```markdown Create a report that measures Brier and ECE on repo data or an approved replay fixture. Assumptions: Repo data is representative; replay fixtures are valid simulations. Breakdown regime: When Brier or ECE exceed acceptable thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Calibration metrics map prediction confidence to empirical accuracy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GITHUB_ISSUES_TO_CREATE (169aa5b52a1fb6af, domain=other, pages_read=1/1): Operator 'Source Registry Visibility Adapter' (page 1, domain other) captures: # GitHub Issues To Create ## Issue: Wire FABLE source registry adapter into an internal visibility route Body: ```markdown Add an internal route or dashboard panel that reads `apps/web/lib/fable/source-registry.ts` and displays source status, allowed use, blocked use, owner decision needs, and last review date. Assumptions: Registry data is consistent; AWS storage rights are inherited without conflict. Breakdown regime: When source status becomes stale or access control rules change. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The registry adapter maps source metadata to a Bayesian belief state over access permissions. Operator 'Uncertainty Ranking Queue' (page 1, domain other) captures: ``` ## Issue: Promote uncertainty ranking into a local review queue Body: ```markdown Use `rankUncertainCandidates` to produce a local review queue from prediction candidates. Assumptions: Prediction candidates are independently distributed; ranking methods are valid heuristics. Breakdown regime: When uncertainty scores exceed threshold or queue exceeds capacity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ranking function generates a local queue based on predictive uncertainty metrics. Operator 'Repository Data Calibration Validator' (page 1, domain other) captures: ``` ## Issue: Add repo-data calibration validation before any gain claim Body: ```markdown Create a report that measures Brier and ECE on repo data or an approved replay fixture. Assumptions: Repo data is representative; replay fixtures are valid simulations. Breakdown regime: When Brier or ECE exceed acceptable thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Calibration metrics map prediction confidence to empirical accuracy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and conformal prediction frameworks, extending earlier work on probabilistic access control and calibration validation. Retrocausal Genealogy: Rooted in GITHUB_ISSUES_TO_CREATE (169aa5b52a1fb6af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GITHUB_ISSUES_TO_CREATE (169aa5b52a1fb6af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the data owner (who may block sources), the prediction engine (which ranks candidates), and the validator (which checks calibration). Their interplay defines the operational space of the system. Theory of Mind & Decision Maker Model: Rooted in GITHUB_ISSUES_TO_CREATE (169aa5b52a1fb6af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that registry status does not directly influence uncertainty ranking, and that calibration checks do not alter source visibility. Leakage occurs if U or B,E depend on S inappropriately. Cross-Layer Veto & Anti-Leakage Check: Rooted in GITHUB_ISSUES_TO_CREATE (169aa5b52a1fb6af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

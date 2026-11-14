@@ -1,0 +1,95 @@
+{
+  "book_id": "294dcb3edd9718f7",
+  "source_status": "COMPLETE",
+  "title": "DISK_CLEANUP",
+  "file_name": "DISK_CLEANUP.md",
+  "sha256": "294dcb3edd9718f7cdf58dd66a4e1132f927dbb7860bd717b6b97c30ecd0770b",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "disk_usage_analysis",
+      "name": "Disk usage analysis",
+      "verbatim_quote": "# Disk cleanup — 2026-10-02 Baseline: `df` reported 4.2G free of 476G (100% used).",
+      "page": 1,
+      "latex": "U_{total} = 476 \\text{GB}, U_{free} = 4.2 \\text{GB}",
+      "symbol_and_unit_ledger": "{'U_total': 'Total disk capacity in gigabytes', 'U_free': 'Free space remaining in gigabytes'}",
+      "assumptions": "Assumes filesystem accounting aligns with physical storage.",
+      "breakdown_regime": "Full capacity operation when U_{free} \\ll U_total.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to portfolio liquidation constraints where U_{free} represents available capital and U_{total} represents total assets.",
+        "source_operator": "disk_usage_analysis",
+        "telemetry": "Real-time monitoring of free space thresholds to prevent system crashes."
+      }
+    },
+    {
+      "primitive_id": "ios_backup_storage",
+      "name": "iOS backup storage",
+      "verbatim_quote": "The largest roots were not caches: - `C:\\Users\\Garrett\\Apple\\MobileSync` 68.85 GB — iPhone backups.",
+      "page": 1,
+      "latex": "B_{ios} = 68.85 \\text{GB}",
+      "symbol_and_unit_ledger": "{'B_ios': 'Storage consumed by iOS device backups in gigabytes'}",
+      "assumptions": "Backups are incremental and may contain redundant data.",
+      "breakdown_regime": "Significant storage hog when multiple devices or old backups exist.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to database transaction logs or snapshot storage in financial systems.",
+        "source_operator": "ios_backup_storage",
+        "telemetry": "Backup size trends over time indicate data growth patterns."
+      }
+    },
+    {
+      "primitive_id": "docker_wsl_state",
+      "name": "Docker WSL state",
+      "verbatim_quote": "A Docker prune was not run; the daemon was not confirmed idle, and a vhdx compact needs a human.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "WSL disk images grow monotonically without compaction.",
+      "breakdown_regime": "Dynamic allocation overhead when container layers accumulate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Relates to memory fragmentation in high-frequency trading engines requiring manual garbage collection.",
+        "source_operator": "docker_wsl_state",
+        "telemetry": "WSL disk image file size as a proxy for active container state."
+      }
+    },
+    {
+      "primitive_id": "regenerable_cache_cleaning",
+      "name": "Regenerable cache cleaning",
+      "verbatim_quote": "A Docker prune was not run; the daemon was not confirmed idle, and a vhdx compact needs a human.",
+      "page": 1,
+      "latex": "C_{cleaned} = 20.97 \\text{GB}",
+      "symbol_and_unit_ledger": "{'C_cleaned': 'Cache storage explicitly marked for deletion in gigabytes'}",
+      "assumptions": "Cache contents can be rebuilt deterministically from source.",
+      "breakdown_regime": "Cache invalidation boundary where stale data is purged.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to clearing stale market data feeds in a trading system.",
+        "source_operator": "regenerable_cache_cleaning",
+        "telemetry": "Cache hit rates before and after cleaning to measure effectiveness."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "294dcb3edd9718f7_t0",
+      "think": "The primitives form a hierarchical decomposition of storage consumption. DiskUsageAnalysis provides the global budget constraint U_total = U_free + U_used. iOSBackupStorage quantifies a major non-evictable component B_ios, while DockerWSLState captures the latent growth of virtual machine images. RegenerableCacheCleaning targets the only part of the state that can be safely reduced without loss of information. The interplay between these components defines the effective free space available for new operations. In a broader sense, this mirrors resource allocation in stochastic environments where some assets are locked (e.g., collateral) and others can be liquidated (e.g., cached data). The key failure mode is assuming that freeing space via deletion guarantees immediate availability, which requires understanding the underlying filesystem semantics and the immutability of certain data.\n\nDeep epistemic analysis for DISK_CLEANUP (294dcb3edd9718f7, domain=other, pages_read=1/1): Operator 'Disk usage analysis' (page 1, domain other) captures: # Disk cleanup — 2026-10-02 Baseline: `df` reported 4.2G free of 476G (100% used). Assumptions: Assumes filesystem accounting aligns with physical storage. Breakdown regime: Full capacity operation when U_{free} \\ll U_total. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to portfolio liquidation constraints where U_{free} represents available capital and U_{total} represents total assets. Operator 'iOS backup storage' (page 1, domain other) captures: The largest roots were not caches: - `C:\\Users\\Garrett\\Apple\\MobileSync` 68.85 GB — iPhone backups. Assumptions: Backups are incremental and may contain redundant data. Breakdown regime: Significant storage hog when multiple devices or old backups exist. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to database transaction logs or snapshot storage in financial systems. Operator 'Docker WSL state' (page 1, domain other) captures: A Docker prune was not run; the daemon was not confirmed idle, and a vhdx compact needs a human. Assumptions: WSL disk images grow monotonically without compaction. Breakdown regime: Dynamic allocation overhead when container layers accumulate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to memory fragmentation in high-frequency trading engines requiring manual garbage collection. Operator 'Regenerable cache cleaning' (page 1, domain other) captures: A Docker prune was not run; the daemon was not confirmed idle, and a vhdx compact needs a human. Assumptions: Cache contents can be rebuilt deterministically from source. Breakdown regime: Cache invalidation boundary where stale data is purged. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to clearing stale market data feeds in a trading system. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for DISK_CLEANUP (294dcb3edd9718f7, domain=other, pages_read=1/1): Operator 'Disk usage analysis' (page 1, domain other) captures: # Disk cleanup — 2026-10-02 Baseline: `df` reported 4.2G free of 476G (100% used). Assumptions: Assumes filesystem accounting aligns with physical storage. Breakdown regime: Full capacity operation when U_{free} \\ll U_total. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to portfolio liquidation constraints where U_{free} represents available capital and U_{total} represents total assets. Operator 'iOS backup storage' (page 1, domain other) captures: The largest roots were not caches: - `C:\\Users\\Garrett\\Apple\\MobileSync` 68.85 GB — iPhone backups. Assumptions: Backups are incremental and may contain redundant data. Breakdown regime: Significant storage hog when multiple devices or old backups exist. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to database transaction logs or snapshot storage in financial systems. Operator 'Docker WSL state' (page 1, domain other) captures: A Docker prune was not run; the daemon was not confirmed idle, and a vhdx compact needs a human. Assumptions: WSL disk images grow monotonically without compaction. Breakdown regime: Dynamic allocation overhead when container layers accumulate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Relates to memory fragmentation in high-frequency trading engines requiring manual garbage collection. Operator 'Regenerable cache cleaning' (page 1, domain other) captures: A Docker prune was not run; the daemon was not confirmed idle, and a vhdx compact needs a human. Assumptions: Cache contents can be rebuilt deterministically from source. Breakdown regime: Cache invalidation boundary where stale data is purged. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to clearing stale market data feeds in a trading system. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in information theory's data compression and storage efficiency, evolving through Unix file system design principles and modern containerization practices. Retrocausal Genealogy: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The agent (system administrator) prioritizes preserving critical user data (backups, documents) over temporary build artifacts, reflecting a risk-averse decision-making process. Theory of Mind & Decision Maker Model: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by ensuring that the cleaned cache C_cleaned does not overlap with the backup B_ios or the WSL state, preventing double-counting and leakage between regimes. Cross-Layer Veto & Anti-Leakage Check: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in DISK_CLEANUP (294dcb3edd9718f7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

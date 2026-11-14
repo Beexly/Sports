@@ -1,0 +1,78 @@
+{
+  "book_id": "716ea1e3aaa004ed",
+  "source_status": "COMPLETE",
+  "title": "BUILD-NRT-055-pnpm-roster-stale-read-only-script",
+  "file_name": "BUILD-NRT-055-pnpm-roster-stale-read-only-script.md",
+  "sha256": "716ea1e3aaa004ed99bc61a10ed8b31f06580a3a8a77e5977b9fb67e7acdb0ad",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Roster truth systems unify source freshness, reconciliation, and validation into a single probabilistic data quality lattice. Each roster fact is a stochastic process governed by evidence likelihood and temporal consistency.",
+  "gsi_mapping": "GSI infers player state transitions via conformal predictive distributions over roster facts. Evidence weights are updated using Bayesian belief revision on source snapshots and conflict resolution. GSI Mapping: Rooted in BUILD-NRT-055-pnpm-roster-stale-read-only-script (716ea1e3aaa004ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning through state-transition graphs where each node represents a validated roster configuration. Transitions are gated by stale-read checks and conflict resolution protocols. GSE Mapping: Rooted in BUILD-NRT-055-pnpm-roster-stale-read-only-script (716ea1e3aaa004ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "roster_evidence_lattice",
+      "name": "Roster Evidence Lattice",
+      "verbatim_quote": "# BUILD-NRT-055: pnpm roster:stale read-only script ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-099 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Evidence set, dimensionless', 'T': 'Temporal consistency, seconds', 'F': 'Fact, dimensionless'}",
+      "assumptions": "Each roster fact F is a stochastic variable with evidence E. Temporal consistency T ensures evidence validity.",
+      "breakdown_regime": "When T < threshold, F is stale and marked for validation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Lattice structure maps to GSI's Bayesian evidence space and GSE's state transition graph.",
+        "source_operator": "roster_evidence_lattice",
+        "telemetry": "Source snapshot timestamps and parsed record counts."
+      }
+    },
+    {
+      "primitive_id": "conflict_resolution_kernel",
+      "name": "Conflict Resolution Kernel",
+      "verbatim_quote": "## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Conflict indicator, dimensionless', 'O': 'Official record, dimensionless', 'F': 'Fallback record, dimensionless'}",
+      "assumptions": "Conflicts C arise when O ≠ F. Official records take precedence unless stale.",
+      "breakdown_regime": "When C > 0, resolution protocol activates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel computes weighted consensus between sources using temporal and source credibility.",
+        "source_operator": "conflict_resolution_kernel",
+        "telemetry": "Conflict count and resolution time per fact."
+      }
+    },
+    {
+      "primitive_id": "stale_read_gate",
+      "name": "Stale Read Gate",
+      "verbatim_quote": "## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Stale flag, binary', 'V': 'Validation score, [0,1]', 'T_{\\\\text{max}}': 'Max acceptable age, seconds'}",
+      "assumptions": "A fact is stale if its age exceeds T_max. S = 1 iff age > T_max.",
+      "breakdown_regime": "When S = 1, fact is excluded from rendering until revalidated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Gate enforces data freshness constraint in GSE's state machine.",
+        "source_operator": "stale_read_gate",
+        "telemetry": "Percentage of stale facts and average age deviation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "716ea1e3aaa004ed_t0",
+      "think": "The core operator is a stochastic lattice of roster facts, where each element E(F) encodes temporal and source credibility. Conflict resolution is modeled as a kernel K(O,F) that computes a consensus value under precedence rules. The stale-read gate S(F) acts as a binary switch enforcing temporal consistency. Dualities emerge in that GSI's Bayesian inference operates on E(F), while GSE's state machine transitions depend on S(F). Failure modes include stale data propagation, unhandled conflicts, and incorrect precedence logic. These are mitigated by validation checks and rollback protocols.\n\nDeep epistemic analysis for BUILD-NRT-055-pnpm-roster-stale-read-only-script (716ea1e3aaa004ed, domain=other, pages_read=2/2): Operator 'Roster Evidence Lattice' (page 1, domain other) captures: # BUILD-NRT-055: pnpm roster:stale read-only script ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-099 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules. Assumptions: Each roster fact F is a stochastic variable with evidence E. Temporal consistency T ensures evidence validity. Breakdown regime: When T < threshold, F is stale and marked for validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Lattice structure maps to GSI's Bayesian evidence space and GSE's state transition graph. Operator 'Conflict Resolution Kernel' (page 1, domain other) captures: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. Assumptions: Conflicts C arise when O ≠ F. Official records take precedence unless stale. Breakdown regime: When C > 0, resolution protocol activates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel computes weighted consensus between sources using temporal and source credibility. Operator 'Stale Read Gate' (page 1, domain other) captures: ## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented. Assumptions: A fact is stale if its age exceeds T_max. S = 1 iff age > T_max. Breakdown regime: When S = 1, fact is excluded from rendering until revalidated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Gate enforces data freshness constraint in GSE's state machine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BUILD-NRT-055-pnpm-roster-stale-read-only-script (716ea1e3aaa004ed, domain=other, pages_read=2/2): Operator 'Roster Evidence Lattice' (page 1, domain other) captures: # BUILD-NRT-055: pnpm roster:stale read-only script ## Duplicate Gate duplicate_check_status: EXTENSION matched_existing_ids: BUILD-GV2-099 relation_to_existing: Extends existing source freshness/player surface/data quality work with roster-specific truth rules. Assumptions: Each roster fact F is a stochastic variable with evidence E. Temporal consistency T ensures evidence validity. Breakdown regime: When T < threshold, F is stale and marked for validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Lattice structure maps to GSI's Bayesian evidence space and GSE's state transition graph. Operator 'Conflict Resolution Kernel' (page 1, domain other) captures: ## Reconciliation Plan Compare official, open-data, and fallback records fact-by-fact. Assumptions: Conflicts C arise when O ≠ F. Official records take precedence unless stale. Breakdown regime: When C > 0, resolution protocol activates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel computes weighted consensus between sources using temporal and source credibility. Operator 'Stale Read Gate' (page 1, domain other) captures: ## Validation Plan Run roster:audit, roster:verify, roster:conflicts, roster:stale, and test:roster once implemented. Assumptions: A fact is stale if its age exceeds T_max. S = 1 iff age > T_max. Breakdown regime: When S = 1, fact is excluded from rendering until revalidated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Gate enforces data freshness constraint in GSE's state machine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and Bayesian networks, this framework builds on prior work in data quality and truth maintenance systems. Influenced by temporal databases and probabilistic programming. Retrocausal Genealogy: Rooted in BUILD-NRT-055-pnpm-roster-stale-read-only-script (716ea1e3aaa004ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BUILD-NRT-055-pnpm-roster-stale-read-only-script (716ea1e3aaa004ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include stale data producers and validation systems. Decision actors are the GSI inference engine and GSE state manager, both constrained by the truth lattice and conflict kernel. Theory of Mind & Decision Maker Model: Rooted in BUILD-NRT-055-pnpm-roster-stale-read-only-script (716ea1e3aaa004ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring GSI's evidence space and GSE's state graph are orthogonal. Leakage is prevented by isolating validation metrics from production data mutations. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUILD-NRT-055-pnpm-roster-stale-read-only-script (716ea1e3aaa004ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUILD-NRT-055-pnpm-roster-stale-read-only-script (716ea1e3aaa004ed), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

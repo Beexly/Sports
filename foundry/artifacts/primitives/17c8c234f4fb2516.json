@@ -1,0 +1,95 @@
+{
+  "book_id": "17c8c234f4fb2516",
+  "source_status": "COMPLETE",
+  "title": "INDEX",
+  "file_name": "INDEX.md",
+  "sha256": "17c8c234f4fb25164e0ab0183734c358646c0d31c46865d34a8449bbe02f5264",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'name': 'Hierarchical Bucket Decomposition', 'operators': [{'operator': '$\\\\mathcal{B}$', 'indices': 'Buckets $b \\\\in B$', 'definition': 'A set of exclusive, exhaustive containers for structured research artifacts'}, {'operator': '$R_b$', 'indices': 'Research within bucket', 'definition': 'The corpus of analytical work associated with a specific domain'}, {'operator': '$\\\\phi_b$', 'indices': 'Mapping function', 'definition': 'Transforms raw data into actionable insights for bucket $b$'}], 'structure': 'A layered lattice where each node is a specialized knowledge container, connected by transformation homomorphisms that preserve hierarchical integrity'}",
+  "gsi_mapping": "{'bayesian_conformal': \"Inference proceeds via conformal predictive sets $C(x_{n+1})$ derived from $R_b$, calibrated against historical forecast errors $\\\\epsilon = y - \\\\hat{y}$. Posterior updates use Bayes' rule on likelihood ratios $p(y|R_b)$, yielding $p(\\\\theta|R_b, y) \\\\propto p(y|\\\\theta, R_b) \\\\cdot p(\\\\theta|R_b)$. Calibration metrics track coverage frequency across $B$.\"}",
+  "gse_mapping": "{'situational_reasoning': 'State transitions model game dynamics as $S(t+1) = f(S(t), A(t), \\\\xi(t))$, where $A(t)$ is action taken using insights from $\\\\phi_b(R_b)$. Context vectors $c \\\\in C$ index optimal policies $\\\\pi^*(c)$, learned from temporally-extended returns $G_t = \\\\sum_{k=0}^{\\\\infty} \\\\gamma^k r_{t+k+1}$.'}",
+  "primitives": [
+    {
+      "primitive_id": "bucket_lattice_structure",
+      "name": "INDEX Operator 1",
+      "verbatim_quote": "# docs/INDEX.md — the bucket map **2026-09-27 reorg.** Research used to live in `docs/research/<date>/` with no categorization.",
+      "page": 1,
+      "latex": "$\\mathcal{B} = \\{B_1, B_2, ..., B_n\\}$",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Exclusive union: $B_i \\cap B_j = \\emptyset, \\bigcup B_i = U$",
+      "breakdown_regime": "Noisy, high-dimensional research environments",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps bucket partitions to predictive ensemble cells in GSI",
+        "source_operator": "bucket_lattice_structure",
+        "telemetry": "Average intra-cell variance vs. inter-cell drift"
+      }
+    },
+    {
+      "primitive_id": "research_transformation_homomorphism",
+      "name": "INDEX Operator 2",
+      "verbatim_quote": "This file is the map; `docs/MOVED.md` records where every old path went.",
+      "page": 1,
+      "latex": "$\\phi: R_{old} \\rightarrow R_{new}$",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Structure-preserving bijection between old and new research spaces",
+      "breakdown_regime": "Pathological migration patterns",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps refactoring to feature engineering in GSE",
+        "source_operator": "research_transformation_homomorphism",
+        "telemetry": "Migration success rate, information loss metrics"
+      }
+    },
+    {
+      "primitive_id": "bucket_integrity_constraint",
+      "name": "INDEX Operator 3",
+      "verbatim_quote": "Never at a bucket root, never in `docs/research/`, never in a new top-level folder.",
+      "page": 1,
+      "latex": "B \\notin TLF",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Hierarchical nesting ensures modular isolation",
+      "breakdown_regime": "Top-level namespace collisions",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforces package/module boundaries in codebase integration",
+        "source_operator": "bucket_integrity_constraint",
+        "telemetry": "Namespace collision frequency, build-time errors"
+      }
+    },
+    {
+      "primitive_id": "bucket_membership_predicate",
+      "name": "INDEX Operator 4",
+      "verbatim_quote": "## What's NOT in buckets (left as-is) - `docs/research/` still holds a few non-bucket files (brand report, agent-skill dossiers, rescue ops notes, misc prompts) — listed in `docs/MOVED.md`.",
+      "page": 1,
+      "latex": "$R_{non-bucket} \\subseteq R_{research} \\setminus \\bigcup B$",
+      "symbol_and_unit_ledger": "None",
+      "assumptions": "Residual artifacts maintain separate archival protocols",
+      "breakdown_regime": "Orphaned document accumulation",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps residual files to exception handling in GSI pipelines",
+        "source_operator": "bucket_membership_predicate",
+        "telemetry": "Archival entropy, retrieval precision degradation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "17c8c234f4fb2516_t0",
+      "think": "The bucket lattice formalizes a combinatorial optimization problem: given a fixed set of research artifacts, find a partitioning that minimizes intra-category variance while maximizing out-of-sample generalizability. The transformation homomorphism ensures that information-theoretic content is preserved under reorganization, preventing \"data leakage\" through structural redesign. The integrity constraint enforces a Cayley tree topology, which guarantees unique shortest paths between any two nodes—a critical property for efficient version control and auditability. Finally, the membership predicate acknowledges that some data resist clean classification; these are treated as noise processes in downstream predictive models, modeled via stochastic discount factors to adjust expected utility calculations.\n\nDeep epistemic analysis for INDEX (17c8c234f4fb2516, domain=other, pages_read=1/1): Operator 'INDEX Operator 1' (page 1, domain other) captures: # docs/INDEX.md — the bucket map **2026-09-27 reorg.** Research used to live in `docs/research/<date>/` with no categorization. Assumptions: Exclusive union: $B_i \\cap B_j = \\emptyset, \\bigcup B_i = U$ Breakdown regime: Noisy, high-dimensional research environments Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps bucket partitions to predictive ensemble cells in GSI Operator 'INDEX Operator 2' (page 1, domain other) captures: This file is the map; `docs/MOVED.md` records where every old path went. Assumptions: Structure-preserving bijection between old and new research spaces Breakdown regime: Pathological migration patterns Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps refactoring to feature engineering in GSE Operator 'INDEX Operator 3' (page 1, domain other) captures: Never at a bucket root, never in `docs/research/`, never in a new top-level folder. Assumptions: Hierarchical nesting ensures modular isolation Breakdown regime: Top-level namespace collisions Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces package/module boundaries in codebase integration Operator 'INDEX Operator 4' (page 1, domain other) captures: ## What's NOT in buckets (left as-is) - `docs/research/` still holds a few non-bucket files (brand report, agent-skill dossiers, rescue ops notes, misc prompts) — listed in `docs/MOVED.md`. Assumptions: Residual artifacts maintain separate archival protocols Breakdown regime: Orphaned document accumulation Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps residual files to exception handling in GSI pipelines Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for INDEX (17c8c234f4fb2516, domain=other, pages_read=1/1): Operator 'INDEX Operator 1' (page 1, domain other) captures: # docs/INDEX.md — the bucket map **2026-09-27 reorg.** Research used to live in `docs/research/<date>/` with no categorization. Assumptions: Exclusive union: $B_i \\cap B_j = \\emptyset, \\bigcup B_i = U$ Breakdown regime: Noisy, high-dimensional research environments Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps bucket partitions to predictive ensemble cells in GSI Operator 'INDEX Operator 2' (page 1, domain other) captures: This file is the map; `docs/MOVED.md` records where every old path went. Assumptions: Structure-preserving bijection between old and new research spaces Breakdown regime: Pathological migration patterns Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps refactoring to feature engineering in GSE Operator 'INDEX Operator 3' (page 1, domain other) captures: Never at a bucket root, never in `docs/research/`, never in a new top-level folder. Assumptions: Hierarchical nesting ensures modular isolation Breakdown regime: Top-level namespace collisions Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces package/module boundaries in codebase integration Operator 'INDEX Operator 4' (page 1, domain other) captures: ## What's NOT in buckets (left as-is) - `docs/research/` still holds a few non-bucket files (brand report, agent-skill dossiers, rescue ops notes, misc prompts) — listed in `docs/MOVED.md`. Assumptions: Residual artifacts maintain separate archival protocols Breakdown regime: Orphaned document accumulation Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps residual files to exception handling in GSI pipelines Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in INDEX (17c8c234f4fb2516), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in INDEX (17c8c234f4fb2516), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may view the bucket system as either a governance tool (to enforce standards) or a bureaucratic overhead (to impede ad-hoc analysis). The design must balance both perspectives by providing both rigid enforcement and flexible escape hatches. Theory of Mind & Decision Maker Model: Rooted in INDEX (17c8c234f4fb2516), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each bucket's features be linearly independent; otherwise, principal component analysis would reduce dimensionality, undermining the decomposition's utility. Leakage vetoes demand that temporal ordering is strictly enforced: future data cannot inform current bucket assignments, precluding look-ahead bias in backtesting. Cross-Layer Veto & Anti-Leakage Check: Rooted in INDEX (17c8c234f4fb2516), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

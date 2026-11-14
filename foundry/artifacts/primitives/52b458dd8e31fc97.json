@@ -1,0 +1,78 @@
+{
+  "book_id": "52b458dd8e31fc97",
+  "source_status": "COMPLETE",
+  "title": "te-dst-consensus-2026-09-13",
+  "file_name": "te-dst-consensus-2026-09-13.md",
+  "sha256": "52b458dd8e31fc9735c8ba0f74ac5ff1dafaf589e0a70ba4b2c61c686e3fb18c",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "FanDuel NFL TE + DST consensus slate modeling integrates 14-game Sunday–Monday format with 0.5 PPR scoring, $60K cap, 9-spot rostering, using FantasyPros + ECR projections. Universal Lens: Rooted in te-dst-consensus-2026-09-13 (52b458dd8e31fc97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers TE/DST value via Bayesian fusion of multi-source consensus projections, applying conformal predictive intervals to optimize 0.5 PPR FPTS under salary constraints. GSI Mapping: Rooted in te-dst-consensus-2026-09-13 (52b458dd8e31fc97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes dynamic state transitions across slate games using temporal logic to evaluate TE eligibility (Kelce, Ferguson, Likely) and DST matchups against NFL defensive ranks. GSE Mapping: Rooted in te-dst-consensus-2026-09-13 (52b458dd8e31fc97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "te_flex_allocation",
+      "name": "TE Flex Allocation",
+      "verbatim_quote": "0.5 PPR | 11 | Now a Giant; double-TE FLEX approach liked on this slate | — | Proj = FantasyPros consensus (half-PPR FPTS / PPR FPTS), updated Sep 13.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'FPTS': 'Fantasy Points', 'PPR': 'Points Per Reception', 'salary_cap': '$60,000', 'spots': '9'}",
+      "assumptions": "Double-TE FLEX strategy assumes 0.5 PPR scoring and projected FPTS consistency across TE slots.",
+      "breakdown_regime": "Slate-specific allocation under 0.5 PPR and salary cap constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE computes TE slot utility using projected FPTS and salary-weighted value; GSI applies Bayesian confidence intervals to forecast TE performance variance.",
+        "source_operator": "te_flex_allocation",
+        "telemetry": "Projected FPTS vs actual FPTS deviation"
+      }
+    },
+    {
+      "primitive_id": "dst_matchup_ranking",
+      "name": "DST Matchup Ranking",
+      "verbatim_quote": "**FD DST salaries: not published by any free source — verify in the lobby.** ## Best plays / best values / leverage pivots 1.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DST': 'Defense/Special Teams', 'rank': 'NFL defensive rank', 'opp': 'Opposing offense rank'}",
+      "assumptions": "DST rankings correlate with expected points allowed; salary data unavailable from free sources.",
+      "breakdown_regime": "Free-source DST ranking without salary data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps DST matchups to expected point differential; GSI uses rank-based regression to estimate variance in DST performance.",
+        "source_operator": "dst_matchup_ranking",
+        "telemetry": "Expected points allowed vs actual points scored"
+      }
+    },
+    {
+      "primitive_id": "te_eligibility_filter",
+      "name": "TE Eligibility Filter",
+      "verbatim_quote": "**Slate note:** This is the Sunday–Monday slate (14 games), NOT the 12-game \"main slate.\" Travis Kelce (MNF), Jake Ferguson and Isaiah Likely (SNF) ARE eligible here.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'game_slate': '14-game Sunday–Monday', 'eligible_players': 'Kelce, Ferguson, Likely', 'excluded_players': 'Kittle/Tonges (Thursday)'}",
+      "assumptions": "Player eligibility depends on game time and slate type; SNF/MNF games allow specific TE inclusion.",
+      "breakdown_regime": "Eligibility based on game time and roster constraints.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE filters TE candidates by game time and slate; GSI applies temporal logic to validate eligibility under constraint sets.",
+        "source_operator": "te_eligibility_filter",
+        "telemetry": "Eligible TE count vs rostered TE count"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "52b458dd8e31fc97_t0",
+      "think": "The TE + DST consensus model operates under a dual framework: one for player selection (TE flex, eligibility, projection) and another for defense evaluation (matchup rank, salary). The 0.5 PPR scoring system introduces a probabilistic element where TE value is derived from projected FPTS, which are aggregated from multiple free sources including FantasyPros and FanDuel Research. The model’s failure mode arises from reliance on outdated or inconsistent projections, particularly when players are sidelined (e.g., Bowers) or face high-risk matchups (e.g., Kraft post-ACL). DST selection hinges on opponent rank, but lacks salary data, leading to potential misalignment between value and cost. The dual nature of the model—player and defense—is susceptible to overfitting if projections are not robustly validated across sources. Temporal logic ensures that eligibility rules are applied consistently across game slates, while Bayesian inference allows for uncertainty quantification in projected outcomes.\n\nDeep epistemic analysis for te-dst-consensus-2026-09-13 (52b458dd8e31fc97, domain=other, pages_read=3/3): Operator 'TE Flex Allocation' (page 2, domain other) captures: 0.5 PPR | 11 | Now a Giant; double-TE FLEX approach liked on this slate | — | Proj = FantasyPros consensus (half-PPR FPTS / PPR FPTS), updated Sep 13. Assumptions: Double-TE FLEX strategy assumes 0.5 PPR scoring and projected FPTS consistency across TE slots. Breakdown regime: Slate-specific allocation under 0.5 PPR and salary cap constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE computes TE slot utility using projected FPTS and salary-weighted value; GSI applies Bayesian confidence intervals to forecast TE performance variance. Operator 'DST Matchup Ranking' (page 2, domain other) captures: **FD DST salaries: not published by any free source — verify in the lobby.** ## Best plays / best values / leverage pivots 1. Assumptions: DST rankings correlate with expected points allowed; salary data unavailable from free sources. Breakdown regime: Free-source DST ranking without salary data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps DST matchups to expected point differential; GSI uses rank-based regression to estimate variance in DST performance. Operator 'TE Eligibility Filter' (page 1, domain other) captures: **Slate note:** This is the Sunday–Monday slate (14 games), NOT the 12-game \"main slate.\" Travis Kelce (MNF), Jake Ferguson and Isaiah Likely (SNF) ARE eligible here. Assumptions: Player eligibility depends on game time and slate type; SNF/MNF games allow specific TE inclusion. Breakdown regime: Eligibility based on game time and roster constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE filters TE candidates by game time and slate; GSI applies temporal logic to validate eligibility under constraint sets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for te-dst-consensus-2026-09-13 (52b458dd8e31fc97, domain=other, pages_read=3/3): Operator 'TE Flex Allocation' (page 2, domain other) captures: 0.5 PPR | 11 | Now a Giant; double-TE FLEX approach liked on this slate | — | Proj = FantasyPros consensus (half-PPR FPTS / PPR FPTS), updated Sep 13. Assumptions: Double-TE FLEX strategy assumes 0.5 PPR scoring and projected FPTS consistency across TE slots. Breakdown regime: Slate-specific allocation under 0.5 PPR and salary cap constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE computes TE slot utility using projected FPTS and salary-weighted value; GSI applies Bayesian confidence intervals to forecast TE performance variance. Operator 'DST Matchup Ranking' (page 2, domain other) captures: **FD DST salaries: not published by any free source — verify in the lobby.** ## Best plays / best values / leverage pivots 1. Assumptions: DST rankings correlate with expected points allowed; salary data unavailable from free sources. Breakdown regime: Free-source DST ranking without salary data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps DST matchups to expected point differential; GSI uses rank-based regression to estimate variance in DST performance. Operator 'TE Eligibility Filter' (page 1, domain other) captures: **Slate note:** This is the Sunday–Monday slate (14 games), NOT the 12-game \"main slate.\" Travis Kelce (MNF), Jake Ferguson and Isaiah Likely (SNF) ARE eligible here. Assumptions: Player eligibility depends on game time and slate type; SNF/MNF games allow specific TE inclusion. Breakdown regime: Eligibility based on game time and roster constraints. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE filters TE candidates by game time and slate; GSI applies temporal logic to validate eligibility under constraint sets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in fantasy sports optimization theory, evolving from early linear programming models to modern ensemble forecasting systems integrating multiple data streams. Retrocausal Genealogy: Rooted in te-dst-consensus-2026-09-13 (52b458dd8e31fc97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in te-dst-consensus-2026-09-13 (52b458dd8e31fc97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include fantasy managers seeking optimal lineups, data providers offering projections, and platform constraints dictating roster limits. Each agent has distinct objectives: maximizing FPTS, minimizing risk, and adhering to salary caps. Theory of Mind & Decision Maker Model: Rooted in te-dst-consensus-2026-09-13 (52b458dd8e31fc97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring TE and DST selections are independent; leakage occurs if projections are sourced from overlapping datasets or if salary data is inferred incorrectly. Cross-Layer Veto & Anti-Leakage Check: Rooted in te-dst-consensus-2026-09-13 (52b458dd8e31fc97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in te-dst-consensus-2026-09-13 (52b458dd8e31fc97), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

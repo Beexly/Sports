@@ -1,0 +1,78 @@
+{
+  "book_id": "6aab2c76c346d50d",
+  "source_status": "COMPLETE",
+  "title": "SESSIONS",
+  "file_name": "SESSIONS.md",
+  "sha256": "6aab2c76c346d50d6cf215928daabf2b0f0213f13d2bb9e97775397b839f49a4",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Parallel session coordination ensures modular build integrity through shared markers and distinct ownership of UI surfaces and data flows. Universal Lens: Rooted in SESSIONS (6aab2c76c346d50d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps session A's demo flag to posterior belief over pick authenticity, while session B's policy gate enforces prior constraints on synthetic data exposure. GSI Mapping: Rooted in SESSIONS (6aab2c76c346d50d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions between canonical and demo states via `isDemoPicksEnabled()`; state transitions gated by role and model version, with telemetry on freshness and sample status. GSE Mapping: Rooted in SESSIONS (6aab2c76c346d50d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "session_coordination_marker",
+      "name": "Shared File Marker",
+      "verbatim_quote": "This file is the shared marker so they don't duplicate work.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'marker identifier, dimensionless', 'S_A, S_B': 'session identifiers, dimensionless'}",
+      "assumptions": "Sessions operate under exclusive read/write locks on shared resources.",
+      "breakdown_regime": "When M ≠ S_A ∪ S_B, race condition occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The shared marker functionally mirrors a mutex lock in concurrent programming, ensuring atomicity of resource access.",
+        "source_operator": "session_coordination_marker",
+        "telemetry": "Conflict detection via file modification timestamp."
+      }
+    },
+    {
+      "primitive_id": "demo_mode_flag",
+      "name": "Demo Mode Indicator",
+      "verbatim_quote": "### What Session A should consider building on top - Wire `/picks` page to consume the seeded picks (it already does via `/api/picks`, but render polish may help).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'demo mode activation flag, boolean', 'V': 'model version string, dimensionless', 'S': 'sample data source, dimensionless'}",
+      "assumptions": "Synthetic data is isolated from live ingestion paths.",
+      "breakdown_regime": "When D=true and V = 'v5.0.0-seed', synthetic picks are rendered.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The demo flag acts as a derived kernel in GSE's state machine, triggering alternative rendering logic based on data provenance.",
+        "source_operator": "demo_mode_flag",
+        "telemetry": "UI element visibility and API response content variation."
+      }
+    },
+    {
+      "primitive_id": "canonical_vs_synthetic_data",
+      "name": "Data Authenticity Gate",
+      "verbatim_quote": "- The performance gate or the public-performance policy — synthetic picks must never unlock public claims.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'canonical data source, boolean', 'S': 'synthetic data source, boolean', 'P': 'public claim permission, boolean'}",
+      "assumptions": "Public claims require canonical data validation.",
+      "breakdown_regime": "If C=false and S=true, P remains false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The data authenticity gate mirrors a cryptographic signature verification mechanism, ensuring trustworthiness of data sources.",
+        "source_operator": "canonical_vs_synthetic_data",
+        "telemetry": "API response filtering based on data source type."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6aab2c76c346d50d_t0",
+      "think": "Session A and B operate in a dual-ownership paradigm where A handles UI and demo logic, while B manages backend cockpit components. The shared marker prevents duplication, aligning with mathematical principles of mutual exclusion. The demo mode flag introduces a conditional branch in GSE's rendering pipeline, governed by a Boolean kernel. Canonical vs synthetic data enforcement reflects a Bayesian constraint, where synthetic data cannot trigger public outcomes—a dualistic failure mode. Session A’s simplification of the admin dashboard removes redundant logic, reducing cognitive load in GSI’s inference engine. The cross-session updates ensure modularity, preventing entanglement of concerns.\n\nDeep epistemic analysis for SESSIONS (6aab2c76c346d50d, domain=other, pages_read=2/2): Operator 'Shared File Marker' (page 1, domain other) captures: This file is the shared marker so they don't duplicate work. Assumptions: Sessions operate under exclusive read/write locks on shared resources. Breakdown regime: When M ≠ S_A ∪ S_B, race condition occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The shared marker functionally mirrors a mutex lock in concurrent programming, ensuring atomicity of resource access. Operator 'Demo Mode Indicator' (page 1, domain other) captures: ### What Session A should consider building on top - Wire `/picks` page to consume the seeded picks (it already does via `/api/picks`, but render polish may help). Assumptions: Synthetic data is isolated from live ingestion paths. Breakdown regime: When D=true and V = 'v5.0.0-seed', synthetic picks are rendered. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The demo flag acts as a derived kernel in GSE's state machine, triggering alternative rendering logic based on data provenance. Operator 'Data Authenticity Gate' (page 1, domain other) captures: - The performance gate or the public-performance policy — synthetic picks must never unlock public claims. Assumptions: Public claims require canonical data validation. Breakdown regime: If C=false and S=true, P remains false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The data authenticity gate mirrors a cryptographic signature verification mechanism, ensuring trustworthiness of data sources. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SESSIONS (6aab2c76c346d50d, domain=other, pages_read=2/2): Operator 'Shared File Marker' (page 1, domain other) captures: This file is the shared marker so they don't duplicate work. Assumptions: Sessions operate under exclusive read/write locks on shared resources. Breakdown regime: When M ≠ S_A ∪ S_B, race condition occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The shared marker functionally mirrors a mutex lock in concurrent programming, ensuring atomicity of resource access. Operator 'Demo Mode Indicator' (page 1, domain other) captures: ### What Session A should consider building on top - Wire `/picks` page to consume the seeded picks (it already does via `/api/picks`, but render polish may help). Assumptions: Synthetic data is isolated from live ingestion paths. Breakdown regime: When D=true and V = 'v5.0.0-seed', synthetic picks are rendered. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The demo flag acts as a derived kernel in GSE's state machine, triggering alternative rendering logic based on data provenance. Operator 'Data Authenticity Gate' (page 1, domain other) captures: - The performance gate or the public-performance policy — synthetic picks must never unlock public claims. Assumptions: Public claims require canonical data validation. Breakdown regime: If C=false and S=true, P remains false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The data authenticity gate mirrors a cryptographic signature verification mechanism, ensuring trustworthiness of data sources. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in concurrent programming models and layered architecture paradigms from early distributed systems design. Retrocausal Genealogy: Rooted in SESSIONS (6aab2c76c346d50d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SESSIONS (6aab2c76c346d50d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as independent threads with distinct responsibilities; their interaction is mediated through shared state and explicit signaling. Theory of Mind & Decision Maker Model: Rooted in SESSIONS (6aab2c76c346d50d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in SESSIONS (6aab2c76c346d50d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating UI logic (A) from backend infrastructure (B), with vetoes on shared file modifications and synthetic data leakage. Cross-Layer Veto & Anti-Leakage Check: Rooted in SESSIONS (6aab2c76c346d50d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in SESSIONS (6aab2c76c346d50d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

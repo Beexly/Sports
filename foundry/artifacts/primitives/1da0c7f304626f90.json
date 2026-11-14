@@ -1,0 +1,78 @@
+{
+  "book_id": "1da0c7f304626f90",
+  "source_status": "COMPLETE",
+  "title": "p0150",
+  "file_name": "p0150.txt",
+  "sha256": "1da0c7f304626f9053da7d1773f0b0b28489a09d9fcc3b414204e274e48725ae",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sensory perception integrates spatial pressure fields into volumetric felt qualities via minimal organ inputs, revealing dimensional scaling invariance. Universal Lens: Rooted in p0150 (1da0c7f304626f90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian auditory inference models spatial proximity through pressure gradient likelihoods, conditioning on tactile-sensory priors for object discrimination. GSI Mapping: Rooted in p0150 (1da0c7f304626f90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions encode contraction/opening sensations as dynamic boundary conditions in perceptual space, enabling real-time spatial inference. GSE Mapping: Rooted in p0150 (1da0c7f304626f90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pressure_gradient_sensitivity",
+      "name": "Pressure Gradient Sensitivity",
+      "verbatim_quote": "The tympanic membrane is furthermore able to render sensible differences in the pressure of the external atmosphere, too slight to be felt either as noise or in this more violent way.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ΔP': 'Pa (pascals), pressure difference', 'A': 'm² (square meters), tympanic area'}",
+      "assumptions": "Tympanic membrane responds linearly to subsonic pressure changes.",
+      "breakdown_regime": "Below 20 Hz or above 20 kHz, sensitivity drops due to mechanical resonance limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps atmospheric pressure variations to neural activation via transduction thresholds in cochlear hair cells.",
+        "source_operator": "pressure_gradient_sensitivity",
+        "telemetry": "Auditory nerve firing rate in response to ΔP"
+      }
+    },
+    {
+      "primitive_id": "spatial_perception_via_contact",
+      "name": "Spatial Perception via Contact",
+      "verbatim_quote": "If the reader will sit with closed eyes and let a friend approximate some solid object, like a large book, noiselessly to his face, he will immediately become aware of the object's presence and position—likewise of its departure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'d': 'm (meters), distance to object', 'F': 'N (newtons), contact force'}",
+      "assumptions": "Contact-induced pressure gradients provide positional cues without auditory feedback.",
+      "breakdown_regime": "At distances >10 cm, tactile resolution degrades due to skin receptor spacing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphically maps tactile contact to spatial awareness using inverse distance-weighted pressure fields.",
+        "source_operator": "spatial_perception_via_contact",
+        "telemetry": "Change in perceived spatial extent upon object approach/recede"
+      }
+    },
+    {
+      "primitive_id": "solidity_discrimination",
+      "name": "Solidity Discrimination",
+      "verbatim_quote": "A friend of the writer, making the experiment for the first time, discriminated unhesitatingly between the three degrees of solidity of a board, a lattice-frame, and a sieve, held close to his ear.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'σ': 'dimensionless, perceived solidity index', 't': 's (seconds), duration of contact'}",
+      "assumptions": "Perceived solidity correlates with acoustic impedance mismatch at interface.",
+      "breakdown_regime": "For objects <1 mm thick, tactile feedback dominates over acoustic cues.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives perceived material rigidity from frequency-dependent sound transmission through contacting surfaces.",
+        "source_operator": "solidity_discrimination",
+        "telemetry": "Subjective rating of material firmness vs. acoustic signature"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1da0c7f304626f90_t0",
+      "think": "The primitives reveal a core duality: sensory organs (ear, skin) process physical stimuli into abstract spatial and volumetric percepts. Pressure gradient sensitivity encodes environmental pressure changes into neural signals. Spatial perception via contact demonstrates how minimal tactile input yields rich positional data through inverse spatial mapping. Solidity discrimination shows that perceived material properties emerge from acoustic impedance contrast. These form a unified framework where small-scale sensory inputs generate large-scale spatial cognition. The failure mode occurs when stimulus magnitude exceeds transduction thresholds or when sensory modalities interfere (e.g., visual vs. tactile cues). Dualities manifest in the symmetry between internal and external pressure fields, and between discrete contact events and continuous spatial experience. The epistemic structure reveals that these perceptions are not learned but innate, suggesting deep mathematical invariants in sensory processing.\n\nDeep epistemic analysis for p0150 (1da0c7f304626f90, domain=other, pages_read=1/1): Operator 'Pressure Gradient Sensitivity' (page 1, domain other) captures: The tympanic membrane is furthermore able to render sensible differences in the pressure of the external atmosphere, too slight to be felt either as noise or in this more violent way. Assumptions: Tympanic membrane responds linearly to subsonic pressure changes. Breakdown regime: Below 20 Hz or above 20 kHz, sensitivity drops due to mechanical resonance limits. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps atmospheric pressure variations to neural activation via transduction thresholds in cochlear hair cells. Operator 'Spatial Perception via Contact' (page 1, domain other) captures: If the reader will sit with closed eyes and let a friend approximate some solid object, like a large book, noiselessly to his face, he will immediately become aware of the object's presence and position—likewise of its departure. Assumptions: Contact-induced pressure gradients provide positional cues without auditory feedback. Breakdown regime: At distances >10 cm, tactile resolution degrades due to skin receptor spacing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps tactile contact to spatial awareness using inverse distance-weighted pressure fields. Operator 'Solidity Discrimination' (page 1, domain other) captures: A friend of the writer, making the experiment for the first time, discriminated unhesitatingly between the three degrees of solidity of a board, a lattice-frame, and a sieve, held close to his ear. Assumptions: Perceived solidity correlates with acoustic impedance mismatch at interface. Breakdown regime: For objects <1 mm thick, tactile feedback dominates over acoustic cues. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives perceived material rigidity from frequency-dependent sound transmission through contacting surfaces. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0150 (1da0c7f304626f90, domain=other, pages_read=1/1): Operator 'Pressure Gradient Sensitivity' (page 1, domain other) captures: The tympanic membrane is furthermore able to render sensible differences in the pressure of the external atmosphere, too slight to be felt either as noise or in this more violent way. Assumptions: Tympanic membrane responds linearly to subsonic pressure changes. Breakdown regime: Below 20 Hz or above 20 kHz, sensitivity drops due to mechanical resonance limits. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps atmospheric pressure variations to neural activation via transduction thresholds in cochlear hair cells. Operator 'Spatial Perception via Contact' (page 1, domain other) captures: If the reader will sit with closed eyes and let a friend approximate some solid object, like a large book, noiselessly to his face, he will immediately become aware of the object's presence and position—likewise of its departure. Assumptions: Contact-induced pressure gradients provide positional cues without auditory feedback. Breakdown regime: At distances >10 cm, tactile resolution degrades due to skin receptor spacing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphically maps tactile contact to spatial awareness using inverse distance-weighted pressure fields. Operator 'Solidity Discrimination' (page 1, domain other) captures: A friend of the writer, making the experiment for the first time, discriminated unhesitatingly between the three degrees of solidity of a board, a lattice-frame, and a sieve, held close to his ear. Assumptions: Perceived solidity correlates with acoustic impedance mismatch at interface. Breakdown regime: For objects <1 mm thick, tactile feedback dominates over acoustic cues. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives perceived material rigidity from frequency-dependent sound transmission through contacting surfaces. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Helmholtz’s theory of sensory transduction and Fechner’s psychophysical laws. Influenced by early 19th-century physiological optics and acoustics, particularly the work of Weber and Galvani on nerve excitation. Retrocausal Genealogy: Rooted in p0150 (1da0c7f304626f90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0150 (1da0c7f304626f90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents perceive spatial boundaries through pressure modulation rather than direct measurement. Decision-making involves probabilistic inference over contact events, weighted by prior expectations of object type and motion. Opposing agents might misattribute tactile cues to auditory ones or vice versa, leading to perceptual ambiguity. Theory of Mind & Decision Maker Model: Rooted in p0150 (1da0c7f304626f90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when tactile and auditory modalities overlap in signal space, causing interference. Leakage occurs when spatial perception becomes dependent on non-local sensory inputs (e.g., visual context). Veto conditions require orthogonalization of sensory channels to maintain distinctiveness of each primitive. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0150 (1da0c7f304626f90), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

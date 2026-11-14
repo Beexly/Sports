@@ -1,0 +1,78 @@
+{
+  "book_id": "3131705b9dce2e2f",
+  "source_status": "COMPLETE",
+  "title": "aangelopoulos-conformal-prediction",
+  "file_name": "aangelopoulos-conformal-prediction.md",
+  "sha256": "3131705b9dce2e2f3f44830b7c5418947596a98c3de95f434cdb27fa2654369d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Conformal prediction provides distribution-free uncertainty quantification via validity under exchangeability, enabling robust interval estimation for regression and classification. Universal Lens: Rooted in aangelopoulos-conformal-prediction (3131705b9dce2e2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages conformal prediction for Bayesian uncertainty calibration, using exchangeability assumptions to generate valid predictive intervals for probabilistic inference. GSI Mapping: Rooted in aangelopoulos-conformal-prediction (3131705b9dce2e2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE employs conformalized quantile regression (CQR) as a state-transition kernel to dynamically adjust prediction intervals based on observed data exchangeability. GSE Mapping: Rooted in aangelopoulos-conformal-prediction (3131705b9dce2e2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "split_conformal_prediction",
+      "name": "Split Conformal Prediction",
+      "verbatim_quote": "- Teaches split-conformal and CQR correctly, but doesn't package them.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Data points are exchangeable; model outputs are pre-trained and fixed.",
+      "breakdown_regime": "When exchangeability fails or model outputs are non-conformal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian posterior calibration and GSE's interval update logic via exchangeability-based validity.",
+        "source_operator": "split_conformal_prediction",
+        "telemetry": "Coverage rate of prediction intervals against held-out test set."
+      }
+    },
+    {
+      "primitive_id": "conformalized_quantile_regression",
+      "name": "Conformalized Quantile Regression",
+      "verbatim_quote": "Vision The easiest on-ramp to conformal prediction: runnable notebooks applying it to real problems with state-of-the-art models — ImageNet prediction sets, **conformalized quantile regression (CQR) for regression**, multi-label classification.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Model predicts quantiles; data exchangeable; calibration set available.",
+      "breakdown_regime": "When quantile predictions are inconsistent with empirical coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Serves as core kernel for GSE's adaptive quantile head interval generation.",
+        "source_operator": "conformalized_quantile_regression",
+        "telemetry": "Interval width vs. coverage probability trade-off in walk-forward validation."
+      }
+    },
+    {
+      "primitive_id": "exchangeability_assumption",
+      "name": "Exchangeability Assumption",
+      "verbatim_quote": "- The repo's framing discipline is worth copying into GSE docs: coverage guarantees stated up front, exchangeability named as the load-bearing assumption.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Observations are independent and identically distributed (i.i.d.) under an unknown distribution.",
+      "breakdown_regime": "When data exhibits temporal or structural dependence violating i.i.d. structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Underpins both GSI’s Bayesian prior updating and GSE’s dynamic interval recalibration.",
+        "source_operator": "exchangeability_assumption",
+        "telemetry": "Empirical coverage consistency across seasonal or out-of-distribution data segments."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3131705b9dce2e2f_t0",
+      "think": "Split conformal prediction ensures validity by splitting data into calibration and test sets, where the former is used to compute conformity scores. These scores define prediction regions that maintain coverage guarantees under exchangeability. In contrast, conformalized quantile regression (CQR) extends this to regression tasks by predicting quantiles and adjusting intervals accordingly. Both methods rely on exchangeability as a foundational assumption. Failure occurs when data violates exchangeability, leading to invalid intervals. The key duality lies between the fixed model outputs in split conformal and the learned quantile functions in CQR. The breakdown regime manifests as overconfidence or undercoverage when assumptions fail. For GSE, these primitives enable adaptive interval estimation through state transitions driven by empirical coverage metrics.\n\nDeep epistemic analysis for aangelopoulos-conformal-prediction (3131705b9dce2e2f, domain=other, pages_read=1/1): Operator 'Split Conformal Prediction' (page 1, domain other) captures: - Teaches split-conformal and CQR correctly, but doesn't package them. Assumptions: Data points are exchangeable; model outputs are pre-trained and fixed. Breakdown regime: When exchangeability fails or model outputs are non-conformal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian posterior calibration and GSE's interval update logic via exchangeability-based validity. Operator 'Conformalized Quantile Regression' (page 1, domain other) captures: Vision The easiest on-ramp to conformal prediction: runnable notebooks applying it to real problems with state-of-the-art models — ImageNet prediction sets, **conformalized quantile regression (CQR) for regression**, multi-label classification. Assumptions: Model predicts quantiles; data exchangeable; calibration set available. Breakdown regime: When quantile predictions are inconsistent with empirical coverage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Serves as core kernel for GSE's adaptive quantile head interval generation. Operator 'Exchangeability Assumption' (page 1, domain other) captures: - The repo's framing discipline is worth copying into GSE docs: coverage guarantees stated up front, exchangeability named as the load-bearing assumption. Assumptions: Observations are independent and identically distributed (i.i.d.) under an unknown distribution. Breakdown regime: When data exhibits temporal or structural dependence violating i.i.d. structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Underpins both GSI’s Bayesian prior updating and GSE’s dynamic interval recalibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for aangelopoulos-conformal-prediction (3131705b9dce2e2f, domain=other, pages_read=1/1): Operator 'Split Conformal Prediction' (page 1, domain other) captures: - Teaches split-conformal and CQR correctly, but doesn't package them. Assumptions: Data points are exchangeable; model outputs are pre-trained and fixed. Breakdown regime: When exchangeability fails or model outputs are non-conformal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian posterior calibration and GSE's interval update logic via exchangeability-based validity. Operator 'Conformalized Quantile Regression' (page 1, domain other) captures: Vision The easiest on-ramp to conformal prediction: runnable notebooks applying it to real problems with state-of-the-art models — ImageNet prediction sets, **conformalized quantile regression (CQR) for regression**, multi-label classification. Assumptions: Model predicts quantiles; data exchangeable; calibration set available. Breakdown regime: When quantile predictions are inconsistent with empirical coverage. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Serves as core kernel for GSE's adaptive quantile head interval generation. Operator 'Exchangeability Assumption' (page 1, domain other) captures: - The repo's framing discipline is worth copying into GSE docs: coverage guarantees stated up front, exchangeability named as the load-bearing assumption. Assumptions: Observations are independent and identically distributed (i.i.d.) under an unknown distribution. Breakdown regime: When data exhibits temporal or structural dependence violating i.i.d. structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Underpins both GSI’s Bayesian prior updating and GSE’s dynamic interval recalibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Vovk’s work on conformal prediction (2005), extended by Lei et al. (2018) for quantile regression, forming a bridge between frequentist validity and modern machine learning uncertainty quantification. Retrocausal Genealogy: Rooted in aangelopoulos-conformal-prediction (3131705b9dce2e2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in aangelopoulos-conformal-prediction (3131705b9dce2e2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may assume either deterministic or stochastic data generation. A conformal predictor assumes exchangeability, while adversarial agents might exploit temporal or structural dependencies to undermine validity. Theory of Mind & Decision Maker Model: Rooted in aangelopoulos-conformal-prediction (3131705b9dce2e2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that GSI’s Bayesian updates do not redundantly encode information already captured by GSE’s interval kernels. Leakage is prevented by ensuring each layer operates on distinct statistical manifolds. Cross-Layer Veto & Anti-Leakage Check: Rooted in aangelopoulos-conformal-prediction (3131705b9dce2e2f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

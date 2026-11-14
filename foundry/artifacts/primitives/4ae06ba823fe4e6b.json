@@ -1,0 +1,78 @@
+{
+  "book_id": "4ae06ba823fe4e6b",
+  "source_status": "COMPLETE",
+  "title": "p0443",
+  "file_name": "p0443.txt",
+  "sha256": "4ae06ba823fe4e6b60d77598256721d8889f35ba1bf68b76c6dde409dd07d14d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Purposive Behaviorism models behavior as a function of ultimate causes (S, H, T, P) and intermediate determinants, forming a causal lattice with probabilistic state transitions. Universal Lens: Rooted in p0443 (4ae06ba823fe4e6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers behavioral posterior distributions over S, H, T, P using Bayesian belief propagation on deterministic capacity and cognitive determinants. GSI Mapping: Rooted in p0443 (4ae06ba823fe4e6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions via purposive action kernels mapping stimulus to response through capacity and expectation layers. GSE Mapping: Rooted in p0443 (4ae06ba823fe4e6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ultimate_causal_factors",
+      "name": "Ultimate Causal Factors",
+      "verbatim_quote": "statements (1) The ultimately independent causes of behavior are four, viz., stimuli, heredity, past training, and",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Stimulus (dimensionless scalar)', 'H': 'Heredity (genetic trait vector)', 'T': 'Past Training (acquired skill tensor)', 'P': 'Physiological State (neurochemical vector)'}",
+      "assumptions": "Behavior is determined by four independent, additive influences; each factor is static or slowly varying.",
+      "breakdown_regime": "When S, H, T, P are insufficiently characterized, model becomes non-predictive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI Bayesian inference engine uses S, H, T, P as prior inputs to compute behavioral likelihood.",
+        "source_operator": "ultimate_causal_factors",
+        "telemetry": "Behavioral outcome variance explained by S, H, T, P"
+      }
+    },
+    {
+      "primitive_id": "behavior_determinants",
+      "name": "Behavior Determinants",
+      "verbatim_quote": "there are a set of intermediate variables which, for convenience, may be called the behavior determinants",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Behavior Determinants (vector of intermediate variables)'}",
+      "assumptions": "Determinants mediate between ultimate causes and behavior; they are structured into subgroups.",
+      "breakdown_regime": "When D is not properly modeled, causal inference fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps D onto a hierarchical decision tree of capacity and expectation.",
+        "source_operator": "behavior_determinants",
+        "telemetry": "Capacity and expectation alignment in S→R mapping"
+      }
+    },
+    {
+      "primitive_id": "capacity_groups",
+      "name": "Capacity Groups",
+      "verbatim_quote": "behavior determinants are to be subdivıded into four sub groups (a) Capacities considered as ultimate genetic",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_g': 'Genetic Capacities (trait vector)', 'C_t': 'Training Capacities (skill tensor)', 'C_r': 'Requirement Capacities (need vector)', 'C_c': 'Cognitive Capacities (expectation tensor)'}",
+      "assumptions": "Capacities form discrete, hierarchical categories that define behavioral potential.",
+      "breakdown_regime": "When capacity groups are conflated, predictive accuracy degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI encodes C_g, C_t, C_r, C_c as latent variables in a probabilistic generative model.",
+        "source_operator": "capacity_groups",
+        "telemetry": "Latent capacity vector alignment with observed behavior"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4ae06ba823fe4e6b_t0",
+      "think": "The framework establishes a causal chain: ultimate causes (S, H, T, P) generate intermediate behavior determinants (D), which are further partitioned into four capacity groups—genetic, training, requirement, and cognitive. Each group contributes distinct dimensions to the behavioral output. In GSI, this translates to a Bayesian network where S, H, T, P serve as evidence nodes influencing latent capacity variables. The cognitive determinants (C_c) are particularly critical for modeling intentionality and expectation. In GSE, these determinants map to state transition functions that guide action selection. The failure mode occurs when capacity groups are misclassified or omitted, leading to incorrect predictions. The system's robustness depends on maintaining clear separation between these layers while allowing for interaction.\n\nDeep epistemic analysis for p0443 (4ae06ba823fe4e6b, domain=other, pages_read=1/1): Operator 'Ultimate Causal Factors' (page 1, domain other) captures: statements (1) The ultimately independent causes of behavior are four, viz., stimuli, heredity, past training, and Assumptions: Behavior is determined by four independent, additive influences; each factor is static or slowly varying. Breakdown regime: When S, H, T, P are insufficiently characterized, model becomes non-predictive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian inference engine uses S, H, T, P as prior inputs to compute behavioral likelihood. Operator 'Behavior Determinants' (page 1, domain other) captures: there are a set of intermediate variables which, for convenience, may be called the behavior determinants Assumptions: Determinants mediate between ultimate causes and behavior; they are structured into subgroups. Breakdown regime: When D is not properly modeled, causal inference fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps D onto a hierarchical decision tree of capacity and expectation. Operator 'Capacity Groups' (page 1, domain other) captures: behavior determinants are to be subdivıded into four sub groups (a) Capacities considered as ultimate genetic Assumptions: Capacities form discrete, hierarchical categories that define behavioral potential. Breakdown regime: When capacity groups are conflated, predictive accuracy degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI encodes C_g, C_t, C_r, C_c as latent variables in a probabilistic generative model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0443 (4ae06ba823fe4e6b, domain=other, pages_read=1/1): Operator 'Ultimate Causal Factors' (page 1, domain other) captures: statements (1) The ultimately independent causes of behavior are four, viz., stimuli, heredity, past training, and Assumptions: Behavior is determined by four independent, additive influences; each factor is static or slowly varying. Breakdown regime: When S, H, T, P are insufficiently characterized, model becomes non-predictive. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian inference engine uses S, H, T, P as prior inputs to compute behavioral likelihood. Operator 'Behavior Determinants' (page 1, domain other) captures: there are a set of intermediate variables which, for convenience, may be called the behavior determinants Assumptions: Determinants mediate between ultimate causes and behavior; they are structured into subgroups. Breakdown regime: When D is not properly modeled, causal inference fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps D onto a hierarchical decision tree of capacity and expectation. Operator 'Capacity Groups' (page 1, domain other) captures: behavior determinants are to be subdivıded into four sub groups (a) Capacities considered as ultimate genetic Assumptions: Capacities form discrete, hierarchical categories that define behavioral potential. Breakdown regime: When capacity groups are conflated, predictive accuracy degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI encodes C_g, C_t, C_r, C_c as latent variables in a probabilistic generative model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century behaviorist frameworks, especially Hull’s drive theory and Skinner’s operant conditioning, extended by Purposive Behaviorism to include internal cognitive mediation. Retrocausal Genealogy: Rooted in p0443 (4ae06ba823fe4e6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0443 (4ae06ba823fe4e6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as optimizing over capacity vectors to maximize expected utility, with internal states representing learned expectations and needs. Theory of Mind & Decision Maker Model: Rooted in p0443 (4ae06ba823fe4e6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0443 (4ae06ba823fe4e6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that genetic, training, requirement, and cognitive capacities remain distinct in modeling; leakage occurs if one layer is treated as a proxy for another. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0443 (4ae06ba823fe4e6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0443 (4ae06ba823fe4e6b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

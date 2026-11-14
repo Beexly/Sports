@@ -1,0 +1,95 @@
+{
+  "book_id": "4b89c39b43c871c9",
+  "source_status": "COMPLETE",
+  "title": "uncertainty-toolbox-uncertainty-toolbox",
+  "file_name": "uncertainty-toolbox-uncertainty-toolbox.md",
+  "sha256": "4b89c39b43c871c9851f6ee33771a6ca2fc12cc57ef3a792f66b3d7c023b16b7",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'name': 'Uncertainty Toolbox', 'description': 'A comprehensive Python package for evaluating probabilistic regression models via joint calibration-sharpness metrics, including NLL, CRPS, and isotonic recalibration.', 'structural_mathematics': 'Unified framework for assessing probabilistic calibration (alignment between predicted CDFs and empirical outcomes) and sharpness (width of prediction intervals), with focus on isotonic regression-based distribution correction.'}",
+  "gsi_mapping": "{'name': 'Bayesian/Conformal Evaluation Suite', 'description': 'Core component for validating posterior predictive distributions and conformal prediction intervals in Galaxy Sports Intelligence.', 'operational_mapping': 'Employs held-out test data to compute joint calibration-sharpness diagnostics for player projections, game totals, and spreads, enabling rigorous model selection and uncertainty quantification.'}",
+  "gse_mapping": "{'name': 'Probabilistic Signal Verification Protocol', 'description': 'Standardized process for verifying the reliability and informativeness of regression-based uncertainty estimates across GSE.', 'situational_reasoning': 'For each regression signal (e.g., player performance, game outcome), computes calibration error, sharpness, and NLL on the latest holdout sample, applying isotonic recalibration when necessary while monitoring for distributional artifacts.'}",
+  "primitives": [
+    {
+      "primitive_id": "get_all_metrics",
+      "name": "Comprehensive Metric Suite",
+      "verbatim_quote": "Vision The standard metrics-and-visualization toolbox for **regression** uncertainty: given predictions + predicted stds + ground truth, `get_all_metrics()` returns the full battery — NLL, CRPS, calibration error, sharpness, interval coverage — plus plots, plus **isotonic-regression recalibration** (Kuleshov et al.) that remaps predicted CDFs to be average-calibrated.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Predictions are independent and identically distributed; ground truth is noise-free; recalibration assumes sufficient holdout data.",
+      "breakdown_regime": "Small sample sizes lead to unstable recalibration maps; non-smooth underlying distributions cause overfitting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's calibration row structure, where each signal has a standardized evaluation.",
+        "source_operator": "get_all_metrics",
+        "telemetry": "Post-recalibration PIT uniformity checks"
+      }
+    },
+    {
+      "primitive_id": "isotonic_reciprocal_distribution",
+      "name": "Isotonic Reciprocal Distribution",
+      "verbatim_quote": "GSE lens This is the **regression half of the calibration-on-wire metric standard**, pairing with verified_calibration's classification half: - Every regression signal's calibration row (player yards, totals, spreads-as-numbers) gets `get_all_metrics()` on the 2025 held-out slice: calibration error + sharpness + NLL + CRPS.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Monotonic relationship between predicted CDF and true CDF; continuous score variable; large enough calibration set.",
+      "breakdown_regime": "Discrete output distributions produce step-function artifacts in the reciprocal CDF.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Serves as the primary recalibrator for distribution-valued forecasts in GSE.",
+        "source_operator": "isotonic_reciprocal_distribution",
+        "telemetry": "PIT histogram shape diagnostic"
+      }
+    },
+    {
+      "primitive_id": "sharpness_metric",
+      "name": "Sharpness Metric",
+      "verbatim_quote": "Sharpness matters — a calibrated-but-vacuous interval (\"total will be between 0 and 100\") is useless, and this toolbox is one of the few that measures both.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Prediction intervals are well-specified; smaller interval width indicates higher sharpness.",
+      "breakdown_regime": "Overconfident models produce narrow intervals that frequently fail to contain the truth.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Complements calibration error in GSI's joint metric framework.",
+        "source_operator": "sharpness_metric",
+        "telemetry": "Average interval width on holdout data"
+      }
+    },
+    {
+      "primitive_id": "pit_uniformity_check",
+      "name": "PIT Uniformity Check",
+      "verbatim_quote": "- Its isotonic recalibration is the candidate method for NGBoost output distributions — but gated by the idr-calibration warning: check PIT uniformity *after* recalibration on the 2026 W1-4 live-check; if the PIT shows the Thomae-function artifact pattern, fall back to conformal intervals instead of trusting the remapped CDF.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Recalibrated CDF is correct; uniformity implies perfect calibration after transformation.",
+      "breakdown_regime": "Non-uniform PIT values indicate miscalibration; artifacts appear as discrete spikes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Primary diagnostic for IDR artifact detection in GSE.",
+        "source_operator": "pit_uniformity_check",
+        "telemetry": "Histogram skewness and kurtosis statistics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4b89c39b43c871c9_t0",
+      "think": "The core challenge in probabilistic regression is simultaneously optimizing calibration (E[Y|σ]=Y) and sharpness (Var[Y|σ]). Uncertainty Toolbox addresses this duality via the Continuous Ranked Probability Score (CRPS), which combines both: CRPS = ∫(F(x)-H(y-x))²dx, where F is the predictive CDF and H the Heaviside step function. Isotonic recalibration transforms the raw CDF F into a post-calibrated G, preserving relative ordering while enforcing E[G(Y)|σ]=σ. However, this method can introduce the 'Thomae-function' artifact—discrete jumps leading to overconfident tails. To mitigate this, we implement a walk-forward strategy: re-estimate the monotone map on fresh holdout data each season, reducing the risk of distributional shift. Empirically, we monitor the Probability Integral Transform (PIT) uniformity; deviations indicate either poor calibration or IDR-induced discreteness. In GSE, this translates to verifying that player projection intervals are both reliable (calibrated) and informative (sharp), with fallback to conformal methods when artifacts emerge.\n\nDeep epistemic analysis for uncertainty-toolbox-uncertainty-toolbox (4b89c39b43c871c9, domain=other, pages_read=1/1): Operator 'Comprehensive Metric Suite' (page 1, domain other) captures: Vision The standard metrics-and-visualization toolbox for **regression** uncertainty: given predictions + predicted stds + ground truth, `get_all_metrics()` returns the full battery — NLL, CRPS, calibration error, sharpness, interval coverage — plus plots, plus **isotonic-regression recalibration** (Kuleshov et al.) that remaps predicted CDFs to be average-calibrated. Assumptions: Predictions are independent and identically distributed; ground truth is noise-free; recalibration assumes sufficient holdout data. Breakdown regime: Small sample sizes lead to unstable recalibration maps; non-smooth underlying distributions cause overfitting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's calibration row structure, where each signal has a standardized evaluation. Operator 'Isotonic Reciprocal Distribution' (page 1, domain other) captures: GSE lens This is the **regression half of the calibration-on-wire metric standard**, pairing with verified_calibration's classification half: - Every regression signal's calibration row (player yards, totals, spreads-as-numbers) gets `get_all_metrics()` on the 2025 held-out slice: calibration error + sharpness + NLL + CRPS. Assumptions: Monotonic relationship between predicted CDF and true CDF; continuous score variable; large enough calibration set. Breakdown regime: Discrete output distributions produce step-function artifacts in the reciprocal CDF. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as the primary recalibrator for distribution-valued forecasts in GSE. Operator 'Sharpness Metric' (page 1, domain other) captures: Sharpness matters — a calibrated-but-vacuous interval (\"total will be between 0 and 100\") is useless, and this toolbox is one of the few that measures both. Assumptions: Prediction intervals are well-specified; smaller interval width indicates higher sharpness. Breakdown regime: Overconfident models produce narrow intervals that frequently fail to contain the truth. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Complements calibration error in GSI's joint metric framework. Operator 'PIT Uniformity Check' (page 1, domain other) captures: - Its isotonic recalibration is the candidate method for NGBoost output distributions — but gated by the idr-calibration warning: check PIT uniformity *after* recalibration on the 2026 W1-4 live-check; if the PIT shows the Thomae-function artifact pattern, fall back to conformal intervals instead of trusting the remapped CDF. Assumptions: Recalibrated CDF is correct; uniformity implies perfect calibration after transformation. Breakdown regime: Non-uniform PIT values indicate miscalibration; artifacts appear as discrete spikes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Primary diagnostic for IDR artifact detection in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for uncertainty-toolbox-uncertainty-toolbox (4b89c39b43c871c9, domain=other, pages_read=1/1): Operator 'Comprehensive Metric Suite' (page 1, domain other) captures: Vision The standard metrics-and-visualization toolbox for **regression** uncertainty: given predictions + predicted stds + ground truth, `get_all_metrics()` returns the full battery — NLL, CRPS, calibration error, sharpness, interval coverage — plus plots, plus **isotonic-regression recalibration** (Kuleshov et al.) that remaps predicted CDFs to be average-calibrated. Assumptions: Predictions are independent and identically distributed; ground truth is noise-free; recalibration assumes sufficient holdout data. Breakdown regime: Small sample sizes lead to unstable recalibration maps; non-smooth underlying distributions cause overfitting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's calibration row structure, where each signal has a standardized evaluation. Operator 'Isotonic Reciprocal Distribution' (page 1, domain other) captures: GSE lens This is the **regression half of the calibration-on-wire metric standard**, pairing with verified_calibration's classification half: - Every regression signal's calibration row (player yards, totals, spreads-as-numbers) gets `get_all_metrics()` on the 2025 held-out slice: calibration error + sharpness + NLL + CRPS. Assumptions: Monotonic relationship between predicted CDF and true CDF; continuous score variable; large enough calibration set. Breakdown regime: Discrete output distributions produce step-function artifacts in the reciprocal CDF. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Serves as the primary recalibrator for distribution-valued forecasts in GSE. Operator 'Sharpness Metric' (page 1, domain other) captures: Sharpness matters — a calibrated-but-vacuous interval (\"total will be between 0 and 100\") is useless, and this toolbox is one of the few that measures both. Assumptions: Prediction intervals are well-specified; smaller interval width indicates higher sharpness. Breakdown regime: Overconfident models produce narrow intervals that frequently fail to contain the truth. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Complements calibration error in GSI's joint metric framework. Operator 'PIT Uniformity Check' (page 1, domain other) captures: - Its isotonic recalibration is the candidate method for NGBoost output distributions — but gated by the idr-calibration warning: check PIT uniformity *after* recalibration on the 2026 W1-4 live-check; if the PIT shows the Thomae-function artifact pattern, fall back to conformal intervals instead of trusting the remapped CDF. Assumptions: Recalibrated CDF is correct; uniformity implies perfect calibration after transformation. Breakdown regime: Non-uniform PIT values indicate miscalibration; artifacts appear as discrete spikes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Primary diagnostic for IDR artifact detection in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in seminal work on proper scoring rules (Gneiting & Raftery, 2007) and isotonic regression (Barlow et al., 1972), it evolved through contributions on probabilistic forecasting (Lambert et al., 2008) and more recently, on distribution calibration diagnostics (Jiang et al., 2021). Retrocausal Genealogy: Rooted in uncertainty-toolbox-uncertainty-toolbox (4b89c39b43c871c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers aim to balance profit margins against public betting volume. They may intentionally under-calibrate to ensure positive expected profit, creating a strategic tension where perfectly calibrated signals could be exploited. Our toolkit helps identify such manipulation by isolating genuine uncertainty from systematic bias. Theory of Mind & Decision Maker Model: Rooted in uncertainty-toolbox-uncertainty-toolbox (4b89c39b43c871c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Must avoid leakage from future holdout sets into training; also, the isotonic map should not correlate with the underlying signal magnitude, as this would induce spurious sharpness gains unrelated to model skill. Cross-Layer Veto & Anti-Leakage Check: Rooted in uncertainty-toolbox-uncertainty-toolbox (4b89c39b43c871c9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

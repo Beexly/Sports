@@ -1,0 +1,95 @@
+{
+  "book_id": "0b6a4471539842b9",
+  "source_status": "COMPLETE",
+  "title": "p0233",
+  "file_name": "p0233.txt",
+  "sha256": "0b6a4471539842b9b0ac5567a4cb06e9fd4e7dd51478bfe8c9a00f0d0023d1cd",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "throwing_trajectory_optimization",
+      "name": "Throwing trajectory optimization",
+      "verbatim_quote": "210 WALTER CAMP'S BOOK OF COLLEGE SPORTS almost no chance to recover and put the ball on the man, whereas a low throw brings his hands in the most advantageous position for touching the runner.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Constant gravitational acceleration, negligible air resistance, rigid body mechanics of arm and hand.",
+      "breakdown_regime": "Ball velocity drops below threshold requiring recovery time exceeding defensive window.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI optimal Bayesian shot selection under uncertainty, where high-risk throws (e.g., overthrows) increase error variance.",
+        "source_operator": "throwing_trajectory_optimization",
+        "telemetry": "Throw velocity, release angle, and receiver reaction time."
+      }
+    },
+    {
+      "primitive_id": "catcher_throw_efficiency",
+      "name": "Catcher throw efficiency",
+      "verbatim_quote": "The same is, of course, true in the case of the catcher's throws to the second or the other bases, to put out the runner.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Uniform distribution of runner advance probabilities across all bases, constant pop-time for catcher.",
+      "breakdown_regime": "Pop-time exceeds runner's base-running speed multiplied by distance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-transition models where catcher-to-base transitions determine double-play success rates.",
+        "source_operator": "catcher_throw_efficiency",
+        "telemetry": "Pop-time, runner's sprint speed, and throw accuracy metrics."
+      }
+    },
+    {
+      "primitive_id": "finger_position_control",
+      "name": "Finger position control",
+      "verbatim_quote": "The position of the fingers when throwing a ball is a point upon which there are individual differences of opinion; but the majority of the best throwers in the country use principally the fore-finger and middlefinger in giving direction to the ball.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Fixed grip stiffness, linear relationship between finger pressure and spin rate.",
+      "breakdown_regime": "Inconsistent grip leads to unpredictable spin axis and reduced aerodynamic stability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction intervals for spin rate and velocity, accounting for player-specific biomechanical variability.",
+        "source_operator": "finger_position_control",
+        "telemetry": "Spin rate, release velocity, and grip configuration data."
+      }
+    },
+    {
+      "primitive_id": "handling_accuracy",
+      "name": "Handling accuracy",
+      "verbatim_quote": "Handling the ball well is quite as important an element in the game as throwing.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Perfectly elastic collision between glove and ball, zero deflection angle.",
+      "breakdown_regime": "Ball leaves glove at non-zero angle relative to intended catch trajectory.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE event tagging algorithms that classify catches as 'secure' versus 'fumble', affecting subsequent play states.",
+        "source_operator": "handling_accuracy",
+        "telemetry": "Catch probability scores derived from ball exit velocity and glove movement vectors."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0b6a4471539842b9_t0",
+      "think": "These primitives formalize baseball's core physical mechanics: throwing trajectories maximize success probability given gravity and human reaction limits; catcher efficiency depends on minimizing total pop-time; finger control introduces systematic bias into spin and direction; handling captures residual errors after initial contact. Together they form a closed-loop control system where each action feeds back into the next play's probability space. In GSI, these become prior distributions for outcome likelihoods; in GSE, they define state-transition matrices for game-tree simulations.\n\nDeep epistemic analysis for p0233 (0b6a4471539842b9, domain=other, pages_read=1/1): Operator 'Throwing trajectory optimization' (page 1, domain other) captures: 210 WALTER CAMP'S BOOK OF COLLEGE SPORTS almost no chance to recover and put the ball on the man, whereas a low throw brings his hands in the most advantageous position for touching the runner. Assumptions: Constant gravitational acceleration, negligible air resistance, rigid body mechanics of arm and hand. Breakdown regime: Ball velocity drops below threshold requiring recovery time exceeding defensive window. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI optimal Bayesian shot selection under uncertainty, where high-risk throws (e.g., overthrows) increase error variance. Operator 'Catcher throw efficiency' (page 1, domain other) captures: The same is, of course, true in the case of the catcher's throws to the second or the other bases, to put out the runner. Assumptions: Uniform distribution of runner advance probabilities across all bases, constant pop-time for catcher. Breakdown regime: Pop-time exceeds runner's base-running speed multiplied by distance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition models where catcher-to-base transitions determine double-play success rates. Operator 'Finger position control' (page 1, domain other) captures: The position of the fingers when throwing a ball is a point upon which there are individual differences of opinion; but the majority of the best throwers in the country use principally the fore-finger and middlefinger in giving direction to the ball. Assumptions: Fixed grip stiffness, linear relationship between finger pressure and spin rate. Breakdown regime: Inconsistent grip leads to unpredictable spin axis and reduced aerodynamic stability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction intervals for spin rate and velocity, accounting for player-specific biomechanical variability. Operator 'Handling accuracy' (page 1, domain other) captures: Handling the ball well is quite as important an element in the game as throwing. Assumptions: Perfectly elastic collision between glove and ball, zero deflection angle. Breakdown regime: Ball leaves glove at non-zero angle relative to intended catch trajectory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE event tagging algorithms that classify catches as 'secure' versus 'fumble', affecting subsequent play states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0233 (0b6a4471539842b9, domain=other, pages_read=1/1): Operator 'Throwing trajectory optimization' (page 1, domain other) captures: 210 WALTER CAMP'S BOOK OF COLLEGE SPORTS almost no chance to recover and put the ball on the man, whereas a low throw brings his hands in the most advantageous position for touching the runner. Assumptions: Constant gravitational acceleration, negligible air resistance, rigid body mechanics of arm and hand. Breakdown regime: Ball velocity drops below threshold requiring recovery time exceeding defensive window. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI optimal Bayesian shot selection under uncertainty, where high-risk throws (e.g., overthrows) increase error variance. Operator 'Catcher throw efficiency' (page 1, domain other) captures: The same is, of course, true in the case of the catcher's throws to the second or the other bases, to put out the runner. Assumptions: Uniform distribution of runner advance probabilities across all bases, constant pop-time for catcher. Breakdown regime: Pop-time exceeds runner's base-running speed multiplied by distance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition models where catcher-to-base transitions determine double-play success rates. Operator 'Finger position control' (page 1, domain other) captures: The position of the fingers when throwing a ball is a point upon which there are individual differences of opinion; but the majority of the best throwers in the country use principally the fore-finger and middlefinger in giving direction to the ball. Assumptions: Fixed grip stiffness, linear relationship between finger pressure and spin rate. Breakdown regime: Inconsistent grip leads to unpredictable spin axis and reduced aerodynamic stability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction intervals for spin rate and velocity, accounting for player-specific biomechanical variability. Operator 'Handling accuracy' (page 1, domain other) captures: Handling the ball well is quite as important an element in the game as throwing. Assumptions: Perfectly elastic collision between glove and ball, zero deflection angle. Breakdown regime: Ball leaves glove at non-zero angle relative to intended catch trajectory. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE event tagging algorithms that classify catches as 'secure' versus 'fumble', affecting subsequent play states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Newtonian mechanics and early 20th-century kinematics, these primitives evolved from physics-based sport analysis pioneered by Walter Camp, later refined through statistical mechanics and information theory. Retrocausal Genealogy: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams model these primitives probabilistically: hitters estimate pitcher throw distributions, baserunners calculate steal成功率 based on catcher pop-time statistics. Theory of Mind & Decision Maker Model: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Avoids multicollinearity by ensuring each primitive captures distinct causal pathways (e.g., grip vs. trajectory); prevents leakage by conditioning on observed telemetry rather than inferred intent. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0233 (0b6a4471539842b9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

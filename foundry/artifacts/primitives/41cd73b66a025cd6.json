@@ -1,0 +1,78 @@
+{
+  "book_id": "41cd73b66a025cd6",
+  "source_status": "COMPLETE",
+  "title": "SIGNAL-TAXONOMY",
+  "file_name": "SIGNAL-TAXONOMY.md",
+  "sha256": "41cd73b66a025cd6c0e4c83806294efafcd23cf71012fad9cdbe2bccbd57ff30",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Signal taxonomy maps arXiv papers to 11 inventive intelligence signals, enabling GSE to synthesize novel predictive models from baseline market-efficiency frameworks. Universal Lens: Rooted in SIGNAL-TAXONOMY (41cd73b66a025cd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian conformal inference over signal-tagged papers to calibrate uncertainty bounds on predictive variables, leveraging historical_results and game_state for probabilistic forecasting. GSI Mapping: Rooted in SIGNAL-TAXONOMY (41cd73b66a025cd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning via state-transition graphs across signal lanes, dynamically evolving from baseline doctrines into proprietary edge through continual online learning and causal discovery. GSE Mapping: Rooted in SIGNAL-TAXONOMY (41cd73b66a025cd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "signal_taxonomy",
+      "name": "Signal Taxonomy Mapping",
+      "verbatim_quote": "Signal taxonomy (11 signals) Every paper carries ≥0 signal tags (pure-theory papers legitimately carry none — never invented).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'signal_tags': 'dimensionless categorical labels'}",
+      "assumptions": "Each paper is tagged with zero or more of 11 discrete signal types; pure theory papers are excluded from invention.",
+      "breakdown_regime": "When a paper lacks any invented signal, it is classified as theoretical and not part of the actionable corpus.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each signal tag corresponds to a distinct kernel in GSE's state-space model, enabling modular composition of predictive architectures.",
+        "source_operator": "signal_taxonomy",
+        "telemetry": "Cross-validation accuracy of signal-tagged subsets against known outcomes."
+      }
+    },
+    {
+      "primitive_id": "lane_normalization_map",
+      "name": "Lane Normalization Map",
+      "verbatim_quote": "Lane normalization map The tracker accumulated 50+ raw lane spellings.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'raw_lanes': 'string identifiers', 'normalized_lanes': 'canonical string labels'}",
+      "assumptions": "Multiple spelling variants exist for lane names; normalization ensures consistent indexing.",
+      "breakdown_regime": "Mislabeling occurs when raw lane terms do not align with canonical definitions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Normalizes raw lane strings into standardized categories for downstream signal tagging and bucket assignment.",
+        "source_operator": "lane_normalization_map",
+        "telemetry": "Frequency of suggested_lane corrections made by indexer."
+      }
+    },
+    {
+      "primitive_id": "suggested_lane_judgment",
+      "name": "Suggested Lane Judgment",
+      "verbatim_quote": "Each record also carries `suggested_lane` — the indexer's judgment call, used to catch tracker mislabels (e.g., Kelly papers filed under `win_spread_total`, stock-sentiment papers filed under `markets`).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'suggested_lane': 'string label'}",
+      "assumptions": "Indexer judgment improves classification accuracy by correcting tracker errors.",
+      "breakdown_regime": "Misclassification rate exceeds acceptable threshold when suggested_lane differs from tracker_lane.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides corrective feedback loop for lane assignment, enhancing signal taxonomy integrity.",
+        "source_operator": "suggested_lane_judgment",
+        "telemetry": "Percentage of records where suggested_lane differs from tracker_lane."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "41cd73b66a025cd6_t0",
+      "think": "The signal taxonomy operates as a categorical lattice over arXiv papers, assigning each to one or more of 11 inventive intelligence domains. This enables GSE to construct modular, context-aware models by composing kernels from these signals. The lane normalization map resolves ambiguity in terminology, ensuring that papers are consistently categorized despite variant nomenclature. The suggested_lane mechanism introduces a human-in-the-loop correction layer, mitigating systematic misclassifications. Together, these primitives form a robust foundation for GSE’s proprietary signal processing pipeline, which transcends traditional market-efficiency baselines to generate novel situational intelligence.\n\nDeep epistemic analysis for SIGNAL-TAXONOMY (41cd73b66a025cd6, domain=other, pages_read=3/3): Operator 'Signal Taxonomy Mapping' (page 1, domain other) captures: Signal taxonomy (11 signals) Every paper carries ≥0 signal tags (pure-theory papers legitimately carry none — never invented). Assumptions: Each paper is tagged with zero or more of 11 discrete signal types; pure theory papers are excluded from invention. Breakdown regime: When a paper lacks any invented signal, it is classified as theoretical and not part of the actionable corpus. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each signal tag corresponds to a distinct kernel in GSE's state-space model, enabling modular composition of predictive architectures. Operator 'Lane Normalization Map' (page 1, domain other) captures: Lane normalization map The tracker accumulated 50+ raw lane spellings. Assumptions: Multiple spelling variants exist for lane names; normalization ensures consistent indexing. Breakdown regime: Mislabeling occurs when raw lane terms do not align with canonical definitions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Normalizes raw lane strings into standardized categories for downstream signal tagging and bucket assignment. Operator 'Suggested Lane Judgment' (page 2, domain other) captures: Each record also carries `suggested_lane` — the indexer's judgment call, used to catch tracker mislabels (e.g., Kelly papers filed under `win_spread_total`, stock-sentiment papers filed under `markets`). Assumptions: Indexer judgment improves classification accuracy by correcting tracker errors. Breakdown regime: Misclassification rate exceeds acceptable threshold when suggested_lane differs from tracker_lane. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides corrective feedback loop for lane assignment, enhancing signal taxonomy integrity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SIGNAL-TAXONOMY (41cd73b66a025cd6, domain=other, pages_read=3/3): Operator 'Signal Taxonomy Mapping' (page 1, domain other) captures: Signal taxonomy (11 signals) Every paper carries ≥0 signal tags (pure-theory papers legitimately carry none — never invented). Assumptions: Each paper is tagged with zero or more of 11 discrete signal types; pure theory papers are excluded from invention. Breakdown regime: When a paper lacks any invented signal, it is classified as theoretical and not part of the actionable corpus. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each signal tag corresponds to a distinct kernel in GSE's state-space model, enabling modular composition of predictive architectures. Operator 'Lane Normalization Map' (page 1, domain other) captures: Lane normalization map The tracker accumulated 50+ raw lane spellings. Assumptions: Multiple spelling variants exist for lane names; normalization ensures consistent indexing. Breakdown regime: Mislabeling occurs when raw lane terms do not align with canonical definitions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Normalizes raw lane strings into standardized categories for downstream signal tagging and bucket assignment. Operator 'Suggested Lane Judgment' (page 2, domain other) captures: Each record also carries `suggested_lane` — the indexer's judgment call, used to catch tracker mislabels (e.g., Kelly papers filed under `win_spread_total`, stock-sentiment papers filed under `markets`). Assumptions: Indexer judgment improves classification accuracy by correcting tracker errors. Breakdown regime: Misclassification rate exceeds acceptable threshold when suggested_lane differs from tracker_lane. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides corrective feedback loop for lane assignment, enhancing signal taxonomy integrity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and machine learning taxonomy systems, particularly those developed for scientific literature indexing and automated categorization in computational neuroscience and AI research. Retrocausal Genealogy: Rooted in SIGNAL-TAXONOMY (41cd73b66a025cd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SIGNAL-TAXONOMY (41cd73b66a025cd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit signal misclassification or introduce noise into lane normalization. GSE counters this by enforcing strict ledger consistency checks and maintaining a dual-layer validation system involving both automated keyword extraction and expert judgment. Theory of Mind & Decision Maker Model: Rooted in SIGNAL-TAXONOMY (41cd73b66a025cd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If suggested_lane diverges significantly from tracker_lane without justification, the record is flagged for manual review. Additionally, if a paper lacks any invented signal, it is excluded from the INVENT bucket, preventing spurious model construction from theoretical works. Cross-Layer Veto & Anti-Leakage Check: Rooted in SIGNAL-TAXONOMY (41cd73b66a025cd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

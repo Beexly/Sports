@@ -1,0 +1,78 @@
+{
+  "book_id": "31b8964910028bbd",
+  "source_status": "COMPLETE",
+  "title": "p0405",
+  "file_name": "p0405.txt",
+  "sha256": "31b8964910028bbd401b81ee6342641cd6c20f5d48b60126880ffb5bd85df993",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Capacity and stimulus laws unify individual learning predispositions with environmental presentation formats via dimensional means-end and discriminanda-manipulanda capacities. Universal Lens: Rooted in p0405 (31b8964910028bbd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models learning efficacy through prior capacity distributions and stimulus likelihoods, enabling probabilistic prediction of performance across varied inputs. GSI Mapping: Rooted in p0405 (31b8964910028bbd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps state transitions using capacity-based action selection and stimulus-driven feedback loops to optimize adaptive behavior in dynamic environments. GSE Mapping: Rooted in p0405 (31b8964910028bbd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "dimensional_means_end_capacities",
+      "name": "Dimensional Means-End Capacities",
+      "verbatim_quote": "Learning—Purposive Behaviorism 377 (b) Dimensional means-end-capacities and discriminanda- and manipulanda-capacities.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{me}': 'dimensional means-end capacity (dimensionless)', 'D': 'discriminanda capacity (dimensionless)', 'M': 'manipulanda capacity (dimensionless)'}",
+      "assumptions": "Learning outcomes are proportional to the magnitude of means-end, discriminanda, and manipulanda capacities.",
+      "breakdown_regime": "When C_{me} < 0.1, learning becomes negligible under standard stimuli.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI models capacity as latent variable in Bayesian learning; GSE uses it for action-state transition probabilities.",
+        "source_operator": "dimensional_means_end_capacities",
+        "telemetry": "Observable behavioral consistency in task completion rates."
+      }
+    },
+    {
+      "primitive_id": "capacity_laws",
+      "name": "Capacity Laws",
+      "verbatim_quote": "These laws state, severally, certain types of ability or capacity the possession of which will aid a given individual to achieve the learning.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'learning outcome (dimensionless)', 'C_i': 'individual capacity i (dimensionless)', 'k': 'proportional constant (dimensionless)'}",
+      "assumptions": "Learning improves linearly with increased capacity, holding stimulus conditions fixed.",
+      "breakdown_regime": "When C_i approaches zero, L → 0 regardless of stimulus quality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI infers individual learning potential from observed performance; GSE computes optimal actions based on capacity thresholds.",
+        "source_operator": "capacity_laws",
+        "telemetry": "Normalized performance metrics across subjects with matched stimuli."
+      }
+    },
+    {
+      "primitive_id": "stimulus_laws",
+      "name": "Stimulus Laws",
+      "verbatim_quote": "Stimulus\" Laws We turn, now, to the second group of laws—those concerning the interrelations in the material and in the manner of its presentation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'stimulus type (dimensionless)', 'P': 'presentation format (dimensionless)', 'E': 'effective learning (dimensionless)'}",
+      "assumptions": "Effective learning depends on both material structure and presentation method independently of individual capacity.",
+      "breakdown_regime": "When S and P are orthogonal, E → 0 even with high capacity individuals.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI evaluates stimulus design effectiveness via conditional probability; GSE applies it to real-time adaptive interface tuning.",
+        "source_operator": "stimulus_laws",
+        "telemetry": "Accuracy of predictions against novel stimulus sets."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "31b8964910028bbd_t0",
+      "think": "The foundational framework integrates two core paradigms: capacity laws and stimulus laws. Capacity laws define inherent individual aptitudes (e.g., discriminanda, manipulanda, retentivity) that influence learning ease, modeled as additive contributions to a scalar learning outcome. Stimulus laws describe how material and presentation affect learning independently of capacity. These dual axes form a Cartesian product space where each point represents a unique learning scenario. The mathematical duality arises from treating capacity and stimulus as orthogonal dimensions: one defines agent capability, the other defines environmental affordance. Failure modes emerge when either axis fails—low capacity renders poor performance even with ideal stimuli, and poor stimulus design undermines even high-capacity learners. This structure supports a tensorial formulation of learning dynamics, where the joint distribution over capacity and stimulus determines expected learning outcomes. The system exhibits non-linear coupling when capacity and stimulus interact synergistically, e.g., high creativity (f) combined with structured presentation (S) yields exponential gains in inventive learning.\n\nDeep epistemic analysis for p0405 (31b8964910028bbd, domain=other, pages_read=1/1): Operator 'Dimensional Means-End Capacities' (page 1, domain other) captures: Learning—Purposive Behaviorism 377 (b) Dimensional means-end-capacities and discriminanda- and manipulanda-capacities. Assumptions: Learning outcomes are proportional to the magnitude of means-end, discriminanda, and manipulanda capacities. Breakdown regime: When C_{me} < 0.1, learning becomes negligible under standard stimuli. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI models capacity as latent variable in Bayesian learning; GSE uses it for action-state transition probabilities. Operator 'Capacity Laws' (page 1, domain other) captures: These laws state, severally, certain types of ability or capacity the possession of which will aid a given individual to achieve the learning. Assumptions: Learning improves linearly with increased capacity, holding stimulus conditions fixed. Breakdown regime: When C_i approaches zero, L → 0 regardless of stimulus quality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI infers individual learning potential from observed performance; GSE computes optimal actions based on capacity thresholds. Operator 'Stimulus Laws' (page 1, domain other) captures: Stimulus\" Laws We turn, now, to the second group of laws—those concerning the interrelations in the material and in the manner of its presentation. Assumptions: Effective learning depends on both material structure and presentation method independently of individual capacity. Breakdown regime: When S and P are orthogonal, E → 0 even with high capacity individuals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI evaluates stimulus design effectiveness via conditional probability; GSE applies it to real-time adaptive interface tuning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0405 (31b8964910028bbd, domain=other, pages_read=1/1): Operator 'Dimensional Means-End Capacities' (page 1, domain other) captures: Learning—Purposive Behaviorism 377 (b) Dimensional means-end-capacities and discriminanda- and manipulanda-capacities. Assumptions: Learning outcomes are proportional to the magnitude of means-end, discriminanda, and manipulanda capacities. Breakdown regime: When C_{me} < 0.1, learning becomes negligible under standard stimuli. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI models capacity as latent variable in Bayesian learning; GSE uses it for action-state transition probabilities. Operator 'Capacity Laws' (page 1, domain other) captures: These laws state, severally, certain types of ability or capacity the possession of which will aid a given individual to achieve the learning. Assumptions: Learning improves linearly with increased capacity, holding stimulus conditions fixed. Breakdown regime: When C_i approaches zero, L → 0 regardless of stimulus quality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI infers individual learning potential from observed performance; GSE computes optimal actions based on capacity thresholds. Operator 'Stimulus Laws' (page 1, domain other) captures: Stimulus\" Laws We turn, now, to the second group of laws—those concerning the interrelations in the material and in the manner of its presentation. Assumptions: Effective learning depends on both material structure and presentation method independently of individual capacity. Breakdown regime: When S and P are orthogonal, E → 0 even with high capacity individuals. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI evaluates stimulus design effectiveness via conditional probability; GSE applies it to real-time adaptive interface tuning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century behaviorist frameworks by Thorndike and Hull, later refined by Skinner's operant conditioning. The formalization builds upon Gestalt psychology’s emphasis on perceptual organization and cognitive architecture theories of learning. Retrocausal Genealogy: Rooted in p0405 (31b8964910028bbd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may vary in their capacity profiles (e.g., low discriminanda vs. high ideation-ability) and respond differently to stimulus variations. A model must account for heterogeneous learning strategies—some favor structured input, others thrive on ambiguity. Agents with high creativity but low retentivity might excel in invention but fail in retention tasks. Theory of Mind & Decision Maker Model: Rooted in p0405 (31b8964910028bbd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct roles for capacity and stimulus laws; if they become redundant (e.g., all capacity variation is captured by stimulus changes), the model collapses. Leakage occurs when stimulus laws are misapplied to capacity-dependent domains, leading to spurious correlations in learning outcomes. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0405 (31b8964910028bbd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

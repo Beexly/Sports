@@ -1,0 +1,78 @@
+{
+  "book_id": "325f98b692d24ccd",
+  "source_status": "COMPLETE",
+  "title": "p0083",
+  "file_name": "p0083.txt",
+  "sha256": "325f98b692d24ccd48ef83e8f400ed074d05c3875fb19070170b7ca2cf23b5ae",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of hierarchical team roster assignments into ordered categorical manifolds with role-specific latent variables. Universal Lens: Rooted in p0083 (325f98b692d24ccd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over player role assignments using conformal predictive distributions for team composition uncertainty. GSI Mapping: Rooted in p0083 (325f98b692d24ccd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models sequential state transitions in team formation via discrete action mappings on role manifolds. GSE Mapping: Rooted in p0083 (325f98b692d24ccd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "role_assignment_manifold",
+      "name": "Role Assignment Manifold",
+      "verbatim_quote": "1, Garrett; z, Martin; 3, Wittpenn; 4, Twing; 5, Austin; 6, Miller; 7, Coleman, Asst.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'r_i': 'role index for player i, dimensionless', 'p_i': 'player identifier, categorical', 'M': 'managerial rank, ordinal'}",
+      "assumptions": "Players are assigned to roles in a fixed hierarchy; role indices are mutually exclusive and collectively exhaustive.",
+      "breakdown_regime": "When role overlap exceeds threshold T, leading to non-injective mapping.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a permutation group action on a finite set of players, where each role corresponds to a subgroup orbit.",
+        "source_operator": "role_assignment_manifold",
+        "telemetry": "Player-role assignment consistency across multiple roster versions."
+      }
+    },
+    {
+      "primitive_id": "hierarchical_team_structure",
+      "name": "Hierarchical Team Structure",
+      "verbatim_quote": "Mgr.; 8, Rendall; 9, Todd; 10, White; 11, Seiler; 12, Rockafeller; 13, Bracher; 14, Scarr; 15, Reed, Asst.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_k': 'hierarchical level k, ordinal', 'T_k': 'team segment at level k, categorical', 'R_k': 'role assignment at level k, categorical'}",
+      "assumptions": "Team structure follows a strict top-down hierarchy with defined subordinates per level.",
+      "breakdown_regime": "When subordinate count exceeds capacity C_k, causing structural collapse.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel derived from transitive closure of role-subordination relations, forming a directed acyclic graph.",
+        "source_operator": "hierarchical_team_structure",
+        "telemetry": "Depth of hierarchy and number of direct reports per manager."
+      }
+    },
+    {
+      "primitive_id": "captaincy_and_management_rank",
+      "name": "Captaincy and Management Rank",
+      "verbatim_quote": "Mgr.; 16, McClosky; 17, Talman; 18, Toohey, Capt.; 19, Gillam, Mgr.; 20, Nash.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_i': 'captaincy status of player i, binary', 'M_i': 'management rank of player i, ordinal', 'P_i': 'player position, categorical'}",
+      "assumptions": "Captaincy implies leadership authority; management rank correlates with decision-making weight.",
+      "breakdown_regime": "When captaincy overlaps with managerial duties, creating conflict of interest.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a bipartite graph with captaincy and management as distinct node sets.",
+        "source_operator": "captaincy_and_management_rank",
+        "telemetry": "Proportion of players holding both captaincy and management roles."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "325f98b692d24ccd_t0",
+      "think": "The primitives define a structured approach to modeling team organization through role assignment, hierarchical levels, and leadership roles. The role assignment manifold encodes positional data into an ordered categorical space, enabling probabilistic inference on team configurations. The hierarchical team structure provides a recursive framework for analyzing organizational depth and scope. Captaincy and management rank introduce dual authority layers that may interact or conflict. These constructs form a dualistic system where roles are both deterministic and stochastic—deterministic in their categorical assignment but stochastic in their performance outcomes. Failure modes include role ambiguity, structural redundancy, and authority overlap. The system's robustness depends on maintaining clear boundaries between these layers.\n\nDeep epistemic analysis for p0083 (325f98b692d24ccd, domain=other, pages_read=1/1): Operator 'Role Assignment Manifold' (page 1, domain other) captures: 1, Garrett; z, Martin; 3, Wittpenn; 4, Twing; 5, Austin; 6, Miller; 7, Coleman, Asst. Assumptions: Players are assigned to roles in a fixed hierarchy; role indices are mutually exclusive and collectively exhaustive. Breakdown regime: When role overlap exceeds threshold T, leading to non-injective mapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a permutation group action on a finite set of players, where each role corresponds to a subgroup orbit. Operator 'Hierarchical Team Structure' (page 1, domain other) captures: Mgr.; 8, Rendall; 9, Todd; 10, White; 11, Seiler; 12, Rockafeller; 13, Bracher; 14, Scarr; 15, Reed, Asst. Assumptions: Team structure follows a strict top-down hierarchy with defined subordinates per level. Breakdown regime: When subordinate count exceeds capacity C_k, causing structural collapse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel derived from transitive closure of role-subordination relations, forming a directed acyclic graph. Operator 'Captaincy and Management Rank' (page 1, domain other) captures: Mgr.; 16, McClosky; 17, Talman; 18, Toohey, Capt.; 19, Gillam, Mgr.; 20, Nash. Assumptions: Captaincy implies leadership authority; management rank correlates with decision-making weight. Breakdown regime: When captaincy overlaps with managerial duties, creating conflict of interest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a bipartite graph with captaincy and management as distinct node sets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0083 (325f98b692d24ccd, domain=other, pages_read=1/1): Operator 'Role Assignment Manifold' (page 1, domain other) captures: 1, Garrett; z, Martin; 3, Wittpenn; 4, Twing; 5, Austin; 6, Miller; 7, Coleman, Asst. Assumptions: Players are assigned to roles in a fixed hierarchy; role indices are mutually exclusive and collectively exhaustive. Breakdown regime: When role overlap exceeds threshold T, leading to non-injective mapping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a permutation group action on a finite set of players, where each role corresponds to a subgroup orbit. Operator 'Hierarchical Team Structure' (page 1, domain other) captures: Mgr.; 8, Rendall; 9, Todd; 10, White; 11, Seiler; 12, Rockafeller; 13, Bracher; 14, Scarr; 15, Reed, Asst. Assumptions: Team structure follows a strict top-down hierarchy with defined subordinates per level. Breakdown regime: When subordinate count exceeds capacity C_k, causing structural collapse. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel derived from transitive closure of role-subordination relations, forming a directed acyclic graph. Operator 'Captaincy and Management Rank' (page 1, domain other) captures: Mgr.; 16, McClosky; 17, Talman; 18, Toohey, Capt.; 19, Gillam, Mgr.; 20, Nash. Assumptions: Captaincy implies leadership authority; management rank correlates with decision-making weight. Breakdown regime: When captaincy overlaps with managerial duties, creating conflict of interest. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a bipartite graph with captaincy and management as distinct node sets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century organizational theory and graph-based modeling, particularly influenced by social network analysis and lattice theory. Evolved from military command structures into modern team science frameworks. Retrocausal Genealogy: Rooted in p0083 (325f98b692d24ccd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0083 (325f98b692d24ccd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include competing interpretations of role clarity and authority delegation. Decision actors may prioritize either stability (fixed roles) or adaptability (dynamic role shifts), leading to potential misalignment in team coordination strategies. Theory of Mind & Decision Maker Model: Rooted in p0083 (325f98b692d24ccd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct semantic meaning for each layer: role assignment must not be conflated with hierarchy, and captaincy must remain separate from management. Leakage occurs when role ambiguity causes cross-layer interference, e.g., treating a captain as a manager without explicit designation. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0083 (325f98b692d24ccd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

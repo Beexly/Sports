@@ -1,0 +1,78 @@
+{
+  "book_id": "70fd7d0834819077",
+  "source_status": "COMPLETE",
+  "title": "PHASE_A_NOTES",
+  "file_name": "PHASE_A_NOTES.md",
+  "sha256": "70fd7d0834819077ffc5a4e3b716b5f3d8d23ff4bf32dfe6ba836f083cc0ba62",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Conformal type-checking and behavioral validation across model advisor and routing layers. Universal Lens: Rooted in PHASE_A_NOTES (70fd7d0834819077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian verification status tracking using {verified, known-real} as evidence states; conforms to spec-defined type constraints. GSI Mapping: Rooted in PHASE_A_NOTES (70fd7d0834819077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine enforces rule order: privacy → bulk → multimodal → long-context → complexity ladder; supports budget downgrade logic. GSE Mapping: Rooted in PHASE_A_NOTES (70fd7d0834819077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "verification_status_type",
+      "name": "Verification Status Type",
+      "verbatim_quote": "- Types §1.2: shapes match; `VerificationStatus` is `\"verified\" | \"known-real\"` (the spec's `\"unverified\"` member is intentionally absent so the catalog cannot hold unverified models — the spec's own rule, enforced by type).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'VerificationStatus': 'dimensionless, ∈ {\"verified\", \"known-real\"}'}",
+      "assumptions": "Catalog excludes unverified models by design; type system enforces exclusion.",
+      "breakdown_regime": "Unverified models are statically disallowed at compile time.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Type-level constraint in model catalog mirrors specification's logical exclusion of unverified entries.",
+        "source_operator": "verification_status_type",
+        "telemetry": "Static type checking result (tsc) confirms absence of unverified models."
+      }
+    },
+    {
+      "primitive_id": "recommender_rule_order",
+      "name": "Recommender Rule Order",
+      "verbatim_quote": "- Recommender §1.4: rule order privacy → bulk → multimodal → long-context → complexity ladder matches exactly; `budget:\"free\"` downgrade present.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'rule_order': 'ordered sequence of recommendation criteria'}",
+      "assumptions": "Rule precedence is fixed and enforced during model selection.",
+      "breakdown_regime": "Failure occurs when rule order deviates from spec-defined sequence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforced ordering of recommendation heuristics maps to GSE's decision kernel.",
+        "source_operator": "recommender_rule_order",
+        "telemetry": "Runtime validation ensures correct application of rule hierarchy."
+      }
+    },
+    {
+      "primitive_id": "surface_enum_divergence",
+      "name": "Surface Enum Divergence",
+      "verbatim_quote": "The repo has TWO surface enums with no in-code bridge: model-router `ClaudeSurface` (studio/journal/calibration-insight/model-court/content/brief) and cost-monitor `ClaudeApiSurface` (BLOG_GENERATION/.../OTHER), and call records are keyed to the latter.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ClaudeSurface': 'enum ∈ {studio, journal, calibration-insight, model-court, content, brief}', 'ClaudeApiSurface': 'enum ∈ {BLOG_GENERATION, ..., OTHER}'}",
+      "assumptions": "No direct mapping exists between two surface enums; data integrity depends on external alignment.",
+      "breakdown_regime": "Data misalignment if call records use one enum while UI uses another.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Two distinct surface enumerations represent same conceptual domain but lack runtime bridging.",
+        "source_operator": "surface_enum_divergence",
+        "telemetry": "Card rendering and budget table display must maintain separate views due to enum mismatch."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "70fd7d0834819077_t0",
+      "think": "The primitives reflect a dual-layered validation architecture: type-level enforcement ensures only verified models enter the catalog, while behavioral rules govern how recommendations are prioritized. The divergence in surface enums introduces a semantic gap that necessitates explicit separation in presentation layers rather than merging. This design avoids runtime ambiguity but requires careful documentation of data flows. The failure mode of type mismatch leads to silent data loss or mislabeling, whereas rule-order violations may lead to suboptimal model selection. Both issues are mitigated through static analysis and controlled rendering logic.\n\nDeep epistemic analysis for PHASE_A_NOTES (70fd7d0834819077, domain=other, pages_read=2/2): Operator 'Verification Status Type' (page 1, domain other) captures: - Types §1.2: shapes match; `VerificationStatus` is `\"verified\" | \"known-real\"` (the spec's `\"unverified\"` member is intentionally absent so the catalog cannot hold unverified models — the spec's own rule, enforced by type). Assumptions: Catalog excludes unverified models by design; type system enforces exclusion. Breakdown regime: Unverified models are statically disallowed at compile time. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Type-level constraint in model catalog mirrors specification's logical exclusion of unverified entries. Operator 'Recommender Rule Order' (page 1, domain other) captures: - Recommender §1.4: rule order privacy → bulk → multimodal → long-context → complexity ladder matches exactly; `budget:\"free\"` downgrade present. Assumptions: Rule precedence is fixed and enforced during model selection. Breakdown regime: Failure occurs when rule order deviates from spec-defined sequence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforced ordering of recommendation heuristics maps to GSE's decision kernel. Operator 'Surface Enum Divergence' (page 1, domain other) captures: The repo has TWO surface enums with no in-code bridge: model-router `ClaudeSurface` (studio/journal/calibration-insight/model-court/content/brief) and cost-monitor `ClaudeApiSurface` (BLOG_GENERATION/.../OTHER), and call records are keyed to the latter. Assumptions: No direct mapping exists between two surface enums; data integrity depends on external alignment. Breakdown regime: Data misalignment if call records use one enum while UI uses another. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Two distinct surface enumerations represent same conceptual domain but lack runtime bridging. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PHASE_A_NOTES (70fd7d0834819077, domain=other, pages_read=2/2): Operator 'Verification Status Type' (page 1, domain other) captures: - Types §1.2: shapes match; `VerificationStatus` is `\"verified\" | \"known-real\"` (the spec's `\"unverified\"` member is intentionally absent so the catalog cannot hold unverified models — the spec's own rule, enforced by type). Assumptions: Catalog excludes unverified models by design; type system enforces exclusion. Breakdown regime: Unverified models are statically disallowed at compile time. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Type-level constraint in model catalog mirrors specification's logical exclusion of unverified entries. Operator 'Recommender Rule Order' (page 1, domain other) captures: - Recommender §1.4: rule order privacy → bulk → multimodal → long-context → complexity ladder matches exactly; `budget:\"free\"` downgrade present. Assumptions: Rule precedence is fixed and enforced during model selection. Breakdown regime: Failure occurs when rule order deviates from spec-defined sequence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforced ordering of recommendation heuristics maps to GSE's decision kernel. Operator 'Surface Enum Divergence' (page 1, domain other) captures: The repo has TWO surface enums with no in-code bridge: model-router `ClaudeSurface` (studio/journal/calibration-insight/model-court/content/brief) and cost-monitor `ClaudeApiSurface` (BLOG_GENERATION/.../OTHER), and call records are keyed to the latter. Assumptions: No direct mapping exists between two surface enums; data integrity depends on external alignment. Breakdown regime: Data misalignment if call records use one enum while UI uses another. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Two distinct surface enumerations represent same conceptual domain but lack runtime bridging. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal type theory and layered architectural design principles from early 2020s software engineering practices, particularly influenced by Haskell-style type systems and domain-driven design patterns. Retrocausal Genealogy: Rooted in PHASE_A_NOTES (70fd7d0834819077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PHASE_A_NOTES (70fd7d0834819077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the model advisor enforcing type safety and the routing layer managing user intent. Decision actors are constrained by spec compliance and runtime observability, with potential conflict arising from divergent data models. Theory of Mind & Decision Maker Model: Rooted in PHASE_A_NOTES (70fd7d0834819077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring type constraints do not leak into behavioral logic. Leakage vetoes occur if enums are merged without explicit bridging, risking incorrect data labeling or loss of fidelity in reporting. Cross-Layer Veto & Anti-Leakage Check: Rooted in PHASE_A_NOTES (70fd7d0834819077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

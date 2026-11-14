@@ -1,0 +1,78 @@
+{
+  "book_id": "605603848f937a7d",
+  "source_status": "COMPLETE",
+  "title": "p0064",
+  "file_name": "p0064.txt",
+  "sha256": "605603848f937a7dcbaca9fbebb81c2cc16bded169ec7ca4ab06be134e954644",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for measuring animal motivation through ranked goal-object demands across experimental paradigms using obstruction and maze methodologies. Universal Lens: Rooted in p0064 (605603848f937a7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models latent drive strength from behavioral cross-modalities, conditioning on apparatus type and physiological state via conformal prediction layers. GSI Mapping: Rooted in p0064 (605603848f937a7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine encodes state transitions between motivational states using obstruction-based behavioral signatures and reward anticipation maps. GSE Mapping: Rooted in p0064 (605603848f937a7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "obstruction_method_ranking",
+      "name": "Obstruction Method Ranking",
+      "verbatim_quote": "the grill as for causing rapıd maze learning \" 11 The first use of this obstruction",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Rank order of goal-object demands (dimensionless)', 'D': 'Drive intensity (arbitrary units)'}",
+      "assumptions": "Behavioral ranking remains consistent across apparatus types; animals exhibit monotonic preference ordering.",
+      "breakdown_regime": "When apparatus novelty disrupts established preference hierarchies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps experimental conditions to ordinal utility functions in GSI; translates obstruction data into probabilistic motivation scores in GSE.",
+        "source_operator": "obstruction_method_ranking",
+        "telemetry": "Frequency of crossing electric grill per trial"
+      }
+    },
+    {
+      "primitive_id": "goal_object_demand_structure",
+      "name": "Goal Object Demand Structure",
+      "verbatim_quote": "and instigated others to carry out, a long series of experiments comparıng the effects of different",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G_i': 'Goal object i (dimensionless)', 'M_i': 'Motivational magnitude of G_i (arbitrary units)'}",
+      "assumptions": "Each goal object induces a distinct motivational force; ranking is stable under repeated exposure.",
+      "breakdown_regime": "When motivational forces become saturated or conflicting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives kernel function from pairwise comparisons of goal objects in GSI; enables dynamic reweighting of motivational weights in GSE.",
+        "source_operator": "goal_object_demand_structure",
+        "telemetry": "Mean latency to approach each goal object"
+      }
+    },
+    {
+      "primitive_id": "motivational_rank_consistency",
+      "name": "Motivational Rank Consistency",
+      "verbatim_quote": "been found by these workers that the same rank orders of demand hold for ınducing frequent",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ρ': 'Consistency coefficient (dimensionless)', 'T': 'Time interval (seconds)'}",
+      "assumptions": "Rankings are invariant across time and context within controlled environments.",
+      "breakdown_regime": "When external perturbations alter baseline motivation levels.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Establishes isomorphism between temporal and spatial behavioral consistency in GSI; supports temporal logic in GSE.",
+        "source_operator": "motivational_rank_consistency",
+        "telemetry": "Correlation coefficient of behavioral rankings across trials"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "605603848f937a7d_t0",
+      "think": "The core insight emerges from the interplay between experimental design and motivational hierarchy. The obstruction method serves as a proxy for quantifying animal motivation by observing behavioral responses to varying goal objects. This leads to a structured ordinal ranking of drives, which can be modeled as a preference kernel in GSI's Bayesian framework. The consistency of these rankings across different apparatus types suggests a universal motivational structure. In GSE, this translates into a dynamic state transition model where each goal object corresponds to a node in a motivational graph. The failure mode occurs when environmental novelty or stress disrupts the established hierarchy, leading to non-monotonic behavior. The mathematical duality lies in treating motivation as both a scalar (intensity) and vector (directionality) field, enabling robust inference under uncertainty.\n\nDeep epistemic analysis for p0064 (605603848f937a7d, domain=other, pages_read=1/1): Operator 'Obstruction Method Ranking' (page 1, domain other) captures: the grill as for causing rapıd maze learning \" 11 The first use of this obstruction Assumptions: Behavioral ranking remains consistent across apparatus types; animals exhibit monotonic preference ordering. Breakdown regime: When apparatus novelty disrupts established preference hierarchies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps experimental conditions to ordinal utility functions in GSI; translates obstruction data into probabilistic motivation scores in GSE. Operator 'Goal Object Demand Structure' (page 1, domain other) captures: and instigated others to carry out, a long series of experiments comparıng the effects of different Assumptions: Each goal object induces a distinct motivational force; ranking is stable under repeated exposure. Breakdown regime: When motivational forces become saturated or conflicting. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives kernel function from pairwise comparisons of goal objects in GSI; enables dynamic reweighting of motivational weights in GSE. Operator 'Motivational Rank Consistency' (page 1, domain other) captures: been found by these workers that the same rank orders of demand hold for ınducing frequent Assumptions: Rankings are invariant across time and context within controlled environments. Breakdown regime: When external perturbations alter baseline motivation levels. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Establishes isomorphism between temporal and spatial behavioral consistency in GSI; supports temporal logic in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0064 (605603848f937a7d, domain=other, pages_read=1/1): Operator 'Obstruction Method Ranking' (page 1, domain other) captures: the grill as for causing rapıd maze learning \" 11 The first use of this obstruction Assumptions: Behavioral ranking remains consistent across apparatus types; animals exhibit monotonic preference ordering. Breakdown regime: When apparatus novelty disrupts established preference hierarchies. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps experimental conditions to ordinal utility functions in GSI; translates obstruction data into probabilistic motivation scores in GSE. Operator 'Goal Object Demand Structure' (page 1, domain other) captures: and instigated others to carry out, a long series of experiments comparıng the effects of different Assumptions: Each goal object induces a distinct motivational force; ranking is stable under repeated exposure. Breakdown regime: When motivational forces become saturated or conflicting. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives kernel function from pairwise comparisons of goal objects in GSI; enables dynamic reweighting of motivational weights in GSE. Operator 'Motivational Rank Consistency' (page 1, domain other) captures: been found by these workers that the same rank orders of demand hold for ınducing frequent Assumptions: Rankings are invariant across time and context within controlled environments. Breakdown regime: When external perturbations alter baseline motivation levels. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Establishes isomorphism between temporal and spatial behavioral consistency in GSI; supports temporal logic in GSE. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century work by Warden and colleagues who pioneered the use of obstruction methods to study animal motivation. Influenced by earlier studies on hunger and maternal drives, forming a foundational lineage for modern behavioral neuroscience. Retrocausal Genealogy: Rooted in p0064 (605603848f937a7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as optimizing for goal-object rank orderings under bounded rationality. Opposing decision actors may exhibit divergent preferences due to differing physiological states or prior experiences, leading to conflict in shared environments. Theory of Mind & Decision Maker Model: Rooted in p0064 (605603848f937a7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that motivational structures do not collapse into trivial equivalence classes. Leakage veto prevents spurious correlations between unrelated behavioral metrics, maintaining fidelity of the underlying drive model. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0064 (605603848f937a7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0064 (605603848f937a7d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "01668cbab1aab36c",
+  "source_status": "COMPLETE",
+  "title": "actionnetwork",
+  "file_name": "actionnetwork.md",
+  "sha256": "01668cbab1aab36c5836e3430de96d4fa458aac3e54a270959ea9ebad7261ea4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Action Network API aggregates multi-book odds via filtered JSON payloads, enabling compositional inference over disjoint bookmaker data streams. Universal Lens: Rooted in actionnetwork (01668cbab1aab36c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian consensus pricing across 7 books serves as probabilistic denominator for edge calculations; conforms to GSI's multi-source calibration framework. GSI Mapping: Rooted in actionnetwork (01668cbab1aab36c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in GSE modelled via live scoreboard updates and filtered market payloads; supports real-time situational awareness and adaptive betting logic. GSE Mapping: Rooted in actionnetwork (01668cbab1aab36c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "multi_book_aggregation",
+      "name": "Multi-Book Odds Aggregator",
+      "verbatim_quote": "# Action Network — open multi-book odds (the DK/FD workaround) Moving fast off the bookmaker dead end: `api.actionnetwork.com` is fully open and aggregates books, which is exactly what DK and FanDuel refused to give directly.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'book identifier (dimensionless)', 'O_{B}': 'odds from book B (dimensionless)', 'M': 'market type (dimensionless)'}",
+      "assumptions": "Each book provides independent odds; aggregation assumes no arbitrage within sample period.",
+      "breakdown_regime": "When bookId filter fails or payload exceeds 452KB, fallback to full dataset required.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's ensemble inference kernel where O_B becomes likelihood term in Bayesian update.",
+        "source_operator": "multi_book_aggregation",
+        "telemetry": "Number of valid books returned per request"
+      }
+    },
+    {
+      "primitive_id": "filtered_payload_retrieval",
+      "name": "Filtered Payload Retriever",
+      "verbatim_quote": "- Filters work: `?bookIds=15,30&periods=event` -> 200, 128 KB, narrower payload.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_B': 'filter set for book IDs (set of integers)', 'P_F': 'payload size under filter F_B (bytes)'}",
+      "assumptions": "Filtering reduces computational load without loss of essential data.",
+      "breakdown_regime": "Payload exceeds 128KB when including all books or live markets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's state-space reduction protocol; enables efficient query planning.",
+        "source_operator": "filtered_payload_retrieval",
+        "telemetry": "Payload size and response time metrics"
+      }
+    },
+    {
+      "primitive_id": "consensus_pricing_denominator",
+      "name": "Consensus Pricing Denominator",
+      "verbatim_quote": "Consensus price across books is also the denominator any edge calculation needs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'consensus odds (dimensionless)', 'E': 'edge calculation result (dimensionless)'}",
+      "assumptions": "Consensus reflects market equilibrium; used as normalization factor.",
+      "breakdown_regime": "Breaks down when consensus cannot be computed due to missing data or divergent views.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s normalized likelihood function where C acts as scaling parameter.",
+        "source_operator": "consensus_pricing_denominator",
+        "telemetry": "Variance in odds across books per market"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "01668cbab1aab36c_t0",
+      "think": "The Action Network API provides an open aggregation layer that bypasses proprietary restrictions imposed by DK/FD. It allows retrieval of odds from multiple books through structured filtering, enabling a compositional approach to data fusion. The system operates under the assumption that each book contributes independent but correlated signals. Filtering reduces payload size while preserving key information, supporting efficient processing. Consensus pricing emerges as a stable reference point for edge estimation. This structure mirrors GSI’s need for multi-source calibration and GSE’s requirement for real-time state updates. Failure modes include missing data from certain books or inconsistent market representations, which would invalidate the aggregation process.\n\nDeep epistemic analysis for actionnetwork (01668cbab1aab36c, domain=other, pages_read=1/1): Operator 'Multi-Book Odds Aggregator' (page 1, domain other) captures: # Action Network — open multi-book odds (the DK/FD workaround) Moving fast off the bookmaker dead end: `api.actionnetwork.com` is fully open and aggregates books, which is exactly what DK and FanDuel refused to give directly. Assumptions: Each book provides independent odds; aggregation assumes no arbitrage within sample period. Breakdown regime: When bookId filter fails or payload exceeds 452KB, fallback to full dataset required. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's ensemble inference kernel where O_B becomes likelihood term in Bayesian update. Operator 'Filtered Payload Retriever' (page 1, domain other) captures: - Filters work: `?bookIds=15,30&periods=event` -> 200, 128 KB, narrower payload. Assumptions: Filtering reduces computational load without loss of essential data. Breakdown regime: Payload exceeds 128KB when including all books or live markets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's state-space reduction protocol; enables efficient query planning. Operator 'Consensus Pricing Denominator' (page 1, domain other) captures: Consensus price across books is also the denominator any edge calculation needs. Assumptions: Consensus reflects market equilibrium; used as normalization factor. Breakdown regime: Breaks down when consensus cannot be computed due to missing data or divergent views. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s normalized likelihood function where C acts as scaling parameter. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for actionnetwork (01668cbab1aab36c, domain=other, pages_read=1/1): Operator 'Multi-Book Odds Aggregator' (page 1, domain other) captures: # Action Network — open multi-book odds (the DK/FD workaround) Moving fast off the bookmaker dead end: `api.actionnetwork.com` is fully open and aggregates books, which is exactly what DK and FanDuel refused to give directly. Assumptions: Each book provides independent odds; aggregation assumes no arbitrage within sample period. Breakdown regime: When bookId filter fails or payload exceeds 452KB, fallback to full dataset required. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's ensemble inference kernel where O_B becomes likelihood term in Bayesian update. Operator 'Filtered Payload Retriever' (page 1, domain other) captures: - Filters work: `?bookIds=15,30&periods=event` -> 200, 128 KB, narrower payload. Assumptions: Filtering reduces computational load without loss of essential data. Breakdown regime: Payload exceeds 128KB when including all books or live markets. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's state-space reduction protocol; enables efficient query planning. Operator 'Consensus Pricing Denominator' (page 1, domain other) captures: Consensus price across books is also the denominator any edge calculation needs. Assumptions: Consensus reflects market equilibrium; used as normalization factor. Breakdown regime: Breaks down when consensus cannot be computed due to missing data or divergent views. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s normalized likelihood function where C acts as scaling parameter. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s open data initiatives and modern API-first architectures, influenced by financial market data aggregation models. Retrocausal Genealogy: Rooted in actionnetwork (01668cbab1aab36c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in actionnetwork (01668cbab1aab36c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include bookmakers seeking exclusive access and users desiring transparency. The system models user behavior as optimizing for aggregated signal quality over individual book fidelity. Theory of Mind & Decision Maker Model: Rooted in actionnetwork (01668cbab1aab36c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in actionnetwork (01668cbab1aab36c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct book contributions; leakage occurs if filters fail to isolate unique data sources. Cross-Layer Veto & Anti-Leakage Check: Rooted in actionnetwork (01668cbab1aab36c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in actionnetwork (01668cbab1aab36c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

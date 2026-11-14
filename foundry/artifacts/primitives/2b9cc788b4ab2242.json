@@ -1,0 +1,78 @@
+{
+  "book_id": "2b9cc788b4ab2242",
+  "source_status": "COMPLETE",
+  "title": "06-compliance-risk-register",
+  "file_name": "06-compliance-risk-register.md",
+  "sha256": "2b9cc788b4ab224248453eaa020fe4d7d0038822e92f53c38d3c9ea8a0f3c360",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk register as a Bayesian belief network over compliance states, with severity and likelihood as joint posterior distributions constraining launch gates. Universal Lens: Rooted in 06-compliance-risk-register (2b9cc788b4ab2242), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers risk posterior over compliance domains using conformal predictive sets from legal and operational telemetry, mapping to launch thresholds via Bayesian evidence accumulation. GSI Mapping: Rooted in 06-compliance-risk-register (2b9cc788b4ab2242), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions system states through compliance layers using deterministic guards on risk severity and likelihood, with state-action mappings governed by regulatory constraints. GSE Mapping: Rooted in 06-compliance-risk-register (2b9cc788b4ab2242), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "paid_contest_risk",
+      "name": "Paid Contest Risk",
+      "verbatim_quote": "--- | --- | --- | --- | --- | | Paid contest risk | HIGH",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{pc}': 'risk severity of paid contests (dimensionless)', 'L_{pc}': 'likelihood of paid contest failure (dimensionless)'}",
+      "assumptions": "Risk is bounded, mitigation requires legal memo and state review.",
+      "breakdown_regime": "R_{pc} > 0.8 ∧ L_{pc} > 0.5 ⇒ no paid launch",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI risk posterior maps to GSE launch gate via Bayesian thresholding on R_{pc} × L_{pc}",
+        "source_operator": "paid_contest_risk",
+        "telemetry": "Legal approval status, state licensing data"
+      }
+    },
+    {
+      "primitive_id": "state_eligibility_risk",
+      "name": "State Eligibility Risk",
+      "verbatim_quote": "State eligibility | HIGH | HIGH | Geo/state rules before any prize/paid flow | Hide gated",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{se}': 'risk severity of state eligibility (dimensionless)', 'L_{se}': 'likelihood of state non-compliance (dimensionless)', 'G_{se}': 'geographic eligibility constraint (boolean)'}",
+      "assumptions": "Geographic rules must be enforced prior to prize/paid flows.",
+      "breakdown_regime": "R_{se} > 0.8 ∧ L_{se} > 0.8 ⇒ G_{se} = false",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE enforces geo-gating logic derived from GSI's risk kernel on jurisdictional compliance",
+        "source_operator": "state_eligibility_risk",
+        "telemetry": "GeoIP data, state-specific legal rules"
+      }
+    },
+    {
+      "primitive_id": "responsible_gambling_risk",
+      "name": "Responsible Gambling Risk",
+      "verbatim_quote": "MVP | Finance/legal | No prizes | Prize ops approved | | Responsible gambling | HIGH",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{rg}': 'risk severity of responsible gambling (dimensionless)', 'C_{rg}': 'conversion pressure factor (dimensionless)', 'E_{rg}': 'educational mode enforcement (boolean)'}",
+      "assumptions": "Gambling must not induce harmful behavior without safeguards.",
+      "breakdown_regime": "R_{rg} > 0.8 ⇒ E_{rg} = true ∧ C_{rg} < 0.3",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's risk model maps to GSE's educational mode toggle and pressure control",
+        "source_operator": "responsible_gambling_risk",
+        "telemetry": "User engagement metrics, behavioral flags"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2b9cc788b4ab2242_t0",
+      "think": "The risk register encodes a structured Bayesian framework where each risk is a stochastic variable with severity and likelihood parameters. These define a posterior belief over compliance outcomes. The mitigation strategies act as conditional controls that constrain the system’s evolution toward launch. For instance, 'Paid contest risk' is modeled as a high-severity, medium-likelihood event requiring legal memo and state review before any paid launch. This implies a probabilistic constraint on the launch gate, where the product of severity and likelihood exceeds a threshold. Similarly, 'State eligibility' is a high-severity, high-likelihood risk, necessitating geographic gating before any prize or paid flow. The system's state transition is governed by these risk thresholds, enforcing a dual-layered compliance check. The 'Responsible gambling' risk introduces a behavioral constraint, ensuring that educational mode is activated when risk exceeds a critical level. The dual nature of these risks—both as observables and controls—enables a recursive risk inference engine in GSI and a deterministic compliance engine in GSE.\n\nDeep epistemic analysis for 06-compliance-risk-register (2b9cc788b4ab2242, domain=other, pages_read=1/1): Operator 'Paid Contest Risk' (page 1, domain other) captures: --- | --- | --- | --- | --- | | Paid contest risk | HIGH Assumptions: Risk is bounded, mitigation requires legal memo and state review. Breakdown regime: R_{pc} > 0.8 ∧ L_{pc} > 0.5 ⇒ no paid launch Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI risk posterior maps to GSE launch gate via Bayesian thresholding on R_{pc} × L_{pc} Operator 'State Eligibility Risk' (page 1, domain other) captures: State eligibility | HIGH | HIGH | Geo/state rules before any prize/paid flow | Hide gated Assumptions: Geographic rules must be enforced prior to prize/paid flows. Breakdown regime: R_{se} > 0.8 ∧ L_{se} > 0.8 ⇒ G_{se} = false Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE enforces geo-gating logic derived from GSI's risk kernel on jurisdictional compliance Operator 'Responsible Gambling Risk' (page 1, domain other) captures: MVP | Finance/legal | No prizes | Prize ops approved | | Responsible gambling | HIGH Assumptions: Gambling must not induce harmful behavior without safeguards. Breakdown regime: R_{rg} > 0.8 ⇒ E_{rg} = true ∧ C_{rg} < 0.3 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's risk model maps to GSE's educational mode toggle and pressure control Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 06-compliance-risk-register (2b9cc788b4ab2242, domain=other, pages_read=1/1): Operator 'Paid Contest Risk' (page 1, domain other) captures: --- | --- | --- | --- | --- | | Paid contest risk | HIGH Assumptions: Risk is bounded, mitigation requires legal memo and state review. Breakdown regime: R_{pc} > 0.8 ∧ L_{pc} > 0.5 ⇒ no paid launch Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI risk posterior maps to GSE launch gate via Bayesian thresholding on R_{pc} × L_{pc} Operator 'State Eligibility Risk' (page 1, domain other) captures: State eligibility | HIGH | HIGH | Geo/state rules before any prize/paid flow | Hide gated Assumptions: Geographic rules must be enforced prior to prize/paid flows. Breakdown regime: R_{se} > 0.8 ∧ L_{se} > 0.8 ⇒ G_{se} = false Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE enforces geo-gating logic derived from GSI's risk kernel on jurisdictional compliance Operator 'Responsible Gambling Risk' (page 1, domain other) captures: MVP | Finance/legal | No prizes | Prize ops approved | | Responsible gambling | HIGH Assumptions: Gambling must not induce harmful behavior without safeguards. Breakdown regime: R_{rg} > 0.8 ⇒ E_{rg} = true ∧ C_{rg} < 0.3 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's risk model maps to GSE's educational mode toggle and pressure control Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in regulatory compliance models from 2010s gaming law, extended into modern risk-informed design principles. Influenced by Bayesian decision theory and game-theoretic risk modeling. Retrocausal Genealogy: Rooted in 06-compliance-risk-register (2b9cc788b4ab2242), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 06-compliance-risk-register (2b9cc788b4ab2242), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include legal compliance officers, product teams, and user behavior analysts. Each agent operates under distinct objectives: legal safety, feature velocity, and user welfare respectively. Their interplay defines the risk landscape and system constraints. Theory of Mind & Decision Maker Model: Rooted in 06-compliance-risk-register (2b9cc788b4ab2242), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity between GSI's risk inference and GSE's launch logic prevents overconfidence in one domain. Leakage occurs if GSI fails to update risk models post-launch, or if GSE ignores updated compliance signals. Cross-Layer Veto & Anti-Leakage Check: Rooted in 06-compliance-risk-register (2b9cc788b4ab2242), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

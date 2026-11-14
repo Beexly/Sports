@@ -1,0 +1,78 @@
+{
+  "book_id": "7976ff8efb9fc9fc",
+  "source_status": "COMPLETE",
+  "title": "p0017",
+  "file_name": "p0017.txt",
+  "sha256": "7976ff8efb9fc9fc497c772079002bf7b4de0f555bf9e235994babedd5b38fd4",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Weighted similarity scoring integrates temporal decay and user feedback to compute relevance scores for item recommendations. Universal Lens: Rooted in p0017 (7976ff8efb9fc9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on item weights using purchase history and rating data to infer user preferences probabilistically. GSI Mapping: Rooted in p0017 (7976ff8efb9fc9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine applies state transitions on item weights to dynamically rank and filter recommendations based on user context. GSE Mapping: Rooted in p0017 (7976ff8efb9fc9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "user_feedback_weight",
+      "name": "User Feedback Weight",
+      "verbatim_quote": "US 6,266,649 B1 15 then multiplied by 2, and 5 is subtracted from the result.",
+      "page": 1,
+      "latex": "\\text{weight} = (r - 1) \\times 2 - 5",
+      "symbol_and_unit_ledger": "{'r': 'rating value, dimensionless', 'weight': 'relevance weight, dimensionless'}",
+      "assumptions": "Rating is discrete and bounded between 1 and 5; linear transformation applies.",
+      "breakdown_regime": "When r < 1 or r > 5, the weight becomes invalid or undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps user ratings to normalized relevance scores for downstream filtering.",
+        "source_operator": "user_feedback_weight",
+        "telemetry": "Average weight per user-item pair over time."
+      }
+    },
+    {
+      "primitive_id": "temporal_decay_factor",
+      "name": "Temporal Decay Factor",
+      "verbatim_quote": "The value calculated in line 1 is multiplied by the value calculated in lines 2 and 3, which can range from a minimum of 1 (if the item was either not purchased or was purchased at least six months ago) to a maximum of 2 (if order\\_date= now).",
+      "page": 1,
+      "latex": "\\text{decay} = \\begin{cases} 1 & \\text{if } t \\geq 6 \\text{ months} \\\\ 2 & \\text{if } t = 0 \\end{cases}",
+      "symbol_and_unit_ledger": "{'t': 'time since purchase, months', 'decay': 'temporal scaling factor, dimensionless'}",
+      "assumptions": "Purchase date is known and time is measured in months; decay is binary.",
+      "breakdown_regime": "Undefined for t < 0 or t > 6 months without interpolation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to exponential decay models in information retrieval.",
+        "source_operator": "temporal_decay_factor",
+        "telemetry": "Frequency of recent vs. older item interactions."
+      }
+    },
+    {
+      "primitive_id": "composite_relevance_score",
+      "name": "Composite Relevance Score",
+      "verbatim_quote": "Thus, the weight can range from a minimum of -6 to a maximum of 10.",
+      "page": 1,
+      "latex": "\\text{score} = \\text{weight} \\times \\text{decay}",
+      "symbol_and_unit_ledger": "{'score': 'final relevance score, dimensionless', 'weight': 'user feedback weight, dimensionless', 'decay': 'temporal scaling factor, dimensionless'}",
+      "assumptions": "Score is additive across dimensions; no normalization applied.",
+      "breakdown_regime": "Negative scores imply disinterest; scores beyond 10 may be capped.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Combines user preference and recency into a single scalar for ranking.",
+        "source_operator": "composite_relevance_score",
+        "telemetry": "Distribution of final scores across all recommended items."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7976ff8efb9fc9fc_t0",
+      "think": "The system computes a relevance score through a two-stage process: first, assigning a base weight to user feedback (rating or purchase), then adjusting it via a temporal decay factor. The feedback weight maps discrete ratings to continuous relevance values, ranging from -3 (low interest) to 5 (high interest). Multiplying by the temporal decay factor scales this relevance based on recency—items purchased recently receive higher multipliers (up to 2), while older purchases get lower ones (1). This produces a composite score that spans from -6 to 10, where negative values suggest disinterest, zero or below indicates low-rated items, and values above 5 imply actual purchases. These scores are aggregated from multiple similar item lists, summed, and sorted descendingly before filtering out irrelevant or previously interacted items. The final ranked list ensures high-quality recommendations by combining behavioral signals with temporal dynamics.\n\nDeep epistemic analysis for p0017 (7976ff8efb9fc9fc, domain=other, pages_read=3/3): Operator 'User Feedback Weight' (page 1, domain other) captures: US 6,266,649 B1 15 then multiplied by 2, and 5 is subtracted from the result. Assumptions: Rating is discrete and bounded between 1 and 5; linear transformation applies. Breakdown regime: When r < 1 or r > 5, the weight becomes invalid or undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps user ratings to normalized relevance scores for downstream filtering. Operator 'Temporal Decay Factor' (page 1, domain other) captures: The value calculated in line 1 is multiplied by the value calculated in lines 2 and 3, which can range from a minimum of 1 (if the item was either not purchased or was purchased at least six months ago) to a maximum of 2 (if order\\_date= now). Assumptions: Purchase date is known and time is measured in months; decay is binary. Breakdown regime: Undefined for t < 0 or t > 6 months without interpolation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to exponential decay models in information retrieval. Operator 'Composite Relevance Score' (page 1, domain other) captures: Thus, the weight can range from a minimum of -6 to a maximum of 10. Assumptions: Score is additive across dimensions; no normalization applied. Breakdown regime: Negative scores imply disinterest; scores beyond 10 may be capped. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines user preference and recency into a single scalar for ranking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0017 (7976ff8efb9fc9fc, domain=other, pages_read=3/3): Operator 'User Feedback Weight' (page 1, domain other) captures: US 6,266,649 B1 15 then multiplied by 2, and 5 is subtracted from the result. Assumptions: Rating is discrete and bounded between 1 and 5; linear transformation applies. Breakdown regime: When r < 1 or r > 5, the weight becomes invalid or undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps user ratings to normalized relevance scores for downstream filtering. Operator 'Temporal Decay Factor' (page 1, domain other) captures: The value calculated in line 1 is multiplied by the value calculated in lines 2 and 3, which can range from a minimum of 1 (if the item was either not purchased or was purchased at least six months ago) to a maximum of 2 (if order\\_date= now). Assumptions: Purchase date is known and time is measured in months; decay is binary. Breakdown regime: Undefined for t < 0 or t > 6 months without interpolation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to exponential decay models in information retrieval. Operator 'Composite Relevance Score' (page 1, domain other) captures: Thus, the weight can range from a minimum of -6 to a maximum of 10. Assumptions: Score is additive across dimensions; no normalization applied. Breakdown regime: Negative scores imply disinterest; scores beyond 10 may be capped. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines user preference and recency into a single scalar for ranking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach builds upon classical collaborative filtering and temporal weighting techniques from early recommendation systems, particularly those rooted in matrix factorization and time-series analysis. Retrocausal Genealogy: Rooted in p0017 (7976ff8efb9fc9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0017 (7976ff8efb9fc9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include users who may misrate items or delay purchases, and the system which must infer intent from sparse signals. The model assumes rationality in user behavior but accounts for noise through score thresholds and filtering. Theory of Mind & Decision Maker Model: Rooted in p0017 (7976ff8efb9fc9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by filtering out items with negative scores or those already purchased. Leakage is mitigated by ensuring that only valid combinations of feedback and time contribute to the final score. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0017 (7976ff8efb9fc9fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

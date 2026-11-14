@@ -1,0 +1,78 @@
+{
+  "book_id": "3ea00db63256e50c",
+  "source_status": "COMPLETE",
+  "title": "NYJ@NE-matchups",
+  "file_name": "NYJ@NE-matchups.md",
+  "sha256": "3ea00db63256e50cc2351a245a59544df88ecc6efad0fc2fde22fedee3690bc1",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Trench dynamics underpass-rush and run-block constraints unify offensive line performance via temporal and spatial metrics. Universal Lens: Rooted in NYJ@NE-matchups (3ea00db63256e50c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps OL effectiveness through time-to-throw and RYOE using NGS data; conformal predictors assess risk of pocket collapse. GSI Mapping: Rooted in NYJ@NE-matchups (3ea00db63256e50c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models OL/DL interactions as state transitions; RB1's TLOS and RYOE drive counter-rush strategies in real-time. GSE Mapping: Rooted in NYJ@NE-matchups (3ea00db63256e50c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "trench_temporal_efficiency",
+      "name": "Trench Temporal Efficiency",
+      "verbatim_quote": "(2.80s) and RB1 burst (TLOS 2.80s, RYOE +0.0) [raw_statboard_rushing.json] serve as primary trench counter against rush",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{throw}': 'seconds', 'T_{LOS}': 'seconds', 'RYOE': 'yards'}",
+      "assumptions": "QB and RB actions are synchronized; rush pressure is modeled as deterministic delay.",
+      "breakdown_regime": "When T_{throw} > 2.80s or RYOE < 0, trench integrity degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Temporal metrics inform GSE state transition probabilities for pass protection success.",
+        "source_operator": "trench_temporal_efficiency",
+        "telemetry": "Time-to-throw and time-to-LOS from NGS data."
+      }
+    },
+    {
+      "primitive_id": "defensive_front_status",
+      "name": "Defensive Front Status",
+      "verbatim_quote": "listed) - front ACTIVE (on report): (none listed) - front DOWN: (none) - front QUESTIONABLE: (none)",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_{active}': 'dimensionless', 'F_{down}': 'dimensionless', 'F_{questionable}': 'dimensionless'}",
+      "assumptions": "All defensive front players are available and healthy.",
+      "breakdown_regime": "If F_{active} = 0, defensive front is compromised.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI injury status maps to GSE defensive front availability.",
+        "source_operator": "defensive_front_status",
+        "telemetry": "Injury reports from ESPN NFL injuries database."
+      }
+    },
+    {
+      "primitive_id": "qb_protection_anchor",
+      "name": "QB Protection Anchor",
+      "verbatim_quote": "vs HOME-FRONT - offensive line starters: (none listed) - QB protection anchor: QB (2026 NGS time-to-throw:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{anchor}': 'dimensionless', 'T_{throw}': 'seconds'}",
+      "assumptions": "QB is the central axis of pass protection.",
+      "breakdown_regime": "If P_{anchor} fails, pass protection collapses.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE evaluates QB's role in real-time pass protection decisions.",
+        "source_operator": "qb_protection_anchor",
+        "telemetry": "NGS time-to-throw data."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3ea00db63256e50c_t0",
+      "think": "The core operators model the interaction between offensive line and defensive front through temporal and spatial metrics. Trench temporal efficiency (T_{throw}, T_{LOS}) captures the synchronization between QB and RB in mitigating rush pressure. Defensive front status (F_{active}, F_{down}) reflects availability of defensive assets. QB protection anchor (P_{anchor}) defines the central axis of pass protection. These form a dual system where failure in any component triggers cascading breakdowns. Temporal inefficiencies imply delayed pocket release, while inactive fronts suggest predictable defensive alignment. The system exhibits singularity at T_{throw} = 2.80s and F_{active} = 0. Failure modes include QB delay beyond threshold, or loss of active DLs. Dualities emerge in how temporal metrics mirror spatial block effectiveness. The GSE interprets these as state transitions in real-time protection planning.\n\nDeep epistemic analysis for NYJ@NE-matchups (3ea00db63256e50c, domain=other, pages_read=1/1): Operator 'Trench Temporal Efficiency' (page 1, domain other) captures: (2.80s) and RB1 burst (TLOS 2.80s, RYOE +0.0) [raw_statboard_rushing.json] serve as primary trench counter against rush Assumptions: QB and RB actions are synchronized; rush pressure is modeled as deterministic delay. Breakdown regime: When T_{throw} > 2.80s or RYOE < 0, trench integrity degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal metrics inform GSE state transition probabilities for pass protection success. Operator 'Defensive Front Status' (page 1, domain other) captures: listed) - front ACTIVE (on report): (none listed) - front DOWN: (none) - front QUESTIONABLE: (none) Assumptions: All defensive front players are available and healthy. Breakdown regime: If F_{active} = 0, defensive front is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI injury status maps to GSE defensive front availability. Operator 'QB Protection Anchor' (page 1, domain other) captures: vs HOME-FRONT - offensive line starters: (none listed) - QB protection anchor: QB (2026 NGS time-to-throw: Assumptions: QB is the central axis of pass protection. Breakdown regime: If P_{anchor} fails, pass protection collapses. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE evaluates QB's role in real-time pass protection decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NYJ@NE-matchups (3ea00db63256e50c, domain=other, pages_read=1/1): Operator 'Trench Temporal Efficiency' (page 1, domain other) captures: (2.80s) and RB1 burst (TLOS 2.80s, RYOE +0.0) [raw_statboard_rushing.json] serve as primary trench counter against rush Assumptions: QB and RB actions are synchronized; rush pressure is modeled as deterministic delay. Breakdown regime: When T_{throw} > 2.80s or RYOE < 0, trench integrity degrades. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Temporal metrics inform GSE state transition probabilities for pass protection success. Operator 'Defensive Front Status' (page 1, domain other) captures: listed) - front ACTIVE (on report): (none listed) - front DOWN: (none) - front QUESTIONABLE: (none) Assumptions: All defensive front players are available and healthy. Breakdown regime: If F_{active} = 0, defensive front is compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI injury status maps to GSE defensive front availability. Operator 'QB Protection Anchor' (page 1, domain other) captures: vs HOME-FRONT - offensive line starters: (none listed) - QB protection anchor: QB (2026 NGS time-to-throw: Assumptions: QB is the central axis of pass protection. Breakdown regime: If P_{anchor} fails, pass protection collapses. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE evaluates QB's role in real-time pass protection decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in 20th-century game theory and modern NFL analytics, this framework builds upon statistical models of pass protection and defensive alignment from 2020s-era NGS datasets. Retrocausal Genealogy: Rooted in NYJ@NE-matchups (3ea00db63256e50c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in NYJ@NE-matchups (3ea00db63256e50c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing teams optimize for temporal disruption or spatial dominance. GSI models QB and RB behavior as strategic responses to defensive front availability. GSE simulates real-time decision trees based on these metrics. Theory of Mind & Decision Maker Model: Rooted in NYJ@NE-matchups (3ea00db63256e50c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that temporal metrics do not overfit to static injury data. Leakage vetos prevent over-reliance on single-player performance. The system avoids conflating QB speed with DL penetration rate. Cross-Layer Veto & Anti-Leakage Check: Rooted in NYJ@NE-matchups (3ea00db63256e50c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

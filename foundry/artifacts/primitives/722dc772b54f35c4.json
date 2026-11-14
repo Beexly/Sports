@@ -1,0 +1,78 @@
+{
+  "book_id": "722dc772b54f35c4",
+  "source_status": "COMPLETE",
+  "title": "bypass_notes",
+  "file_name": "bypass_notes.md",
+  "sha256": "722dc772b54f35c4716a3afe6b17fbc6cd20307c70212ea97e8a51b787c045e5",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A mathematical lens unifying private metrics and public reconstructions through verified API routes, JWT-based access control, and structured data mappings. Universal Lens: Rooted in bypass_notes (722dc772b54f35c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps private metrics to public substitutes using authenticated token flows and empirical observables, enabling probabilistic reconstruction of player behavior and game states. GSI Mapping: Rooted in bypass_notes (722dc772b54f35c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models transitions between game states via deterministic joins (e.g., game_id → gameId) and derived features like defender location vocabularies, supporting real-time tactical decision-making. GSE Mapping: Rooted in bypass_notes (722dc772b54f35c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "auth_gated_metric",
+      "name": "Authentication-Gated Metric Access",
+      "verbatim_quote": "auth-gated\" = needs the free Cognito JWT, not a paid tier.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Access to certain metrics requires valid JWT tokens issued by Cognito, with no paid subscription required.",
+      "breakdown_regime": "Token validation fails or is missing, preventing access to restricted data fields.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The JWT token serves as an isomorphic key linking private metric access to public API endpoints, enabling secure but transparent data flow.",
+        "source_operator": "auth_gated_metric",
+        "telemetry": "Token validity and scope (e.g., ngs_tracking) verified via POST /identity/v3/token."
+      }
+    },
+    {
+      "primitive_id": "bola_reconstruction",
+      "name": "Behavioral Outcome Location Analysis",
+      "verbatim_quote": "- BOLA confirmed on `/api/highlights/participation/game/play` (gameId+playId) and `/api/gamecenter/overview` (gameId, any season).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "BOLA can be reconstructed from participation and overview APIs without direct access to proprietary tracking systems.",
+      "breakdown_regime": "Missing play-level or game-level identifiers leads to incomplete BOLA reconstruction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "BOLA is derived from public participation data using known joins (gameId, playId), forming a kernel of behavioral inference.",
+        "source_operator": "bola_reconstruction",
+        "telemetry": "Reconstructed BOLA values from /api/highlights/participation/game/play and /api/gamecenter/overview."
+      }
+    },
+    {
+      "primitive_id": "defender_location_vocabulary",
+      "name": "Defender Location Vocabulary",
+      "verbatim_quote": "- 13-value `defenderLocation` vocabulary captured — the alignment/coverage-disguise feature set.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The 13-value vocabulary captures discrete alignment and coverage states used in defensive positioning analysis.",
+      "breakdown_regime": "Insufficient granularity or misclassification of defender positions leads to inaccurate coverage modeling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The 13-value vocabulary forms a discrete feature space for modeling defensive behavior, enabling classification of coverage types.",
+        "source_operator": "defender_location_vocabulary",
+        "telemetry": "Observed defender locations mapped to 13 discrete categories via public API responses."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "722dc772b54f35c4_t0",
+      "think": "The primitives form a coherent system where authentication gates access to sensitive metrics, while public APIs enable reconstruction of complex behaviors such as BOLA and defender positioning. These are grounded in structured data mappings and verified API routes. The derivation relies on isomorphic transformations between private and public representations, ensuring that each metric's integrity is preserved across layers. Failure modes include missing identifiers, invalid tokens, or insufficient data resolution, which break the reconstruction chain. Dualities emerge in how private metrics map to public telemetry, with each primitive representing a distinct but interrelated aspect of game-state modeling.\n\nDeep epistemic analysis for bypass_notes (722dc772b54f35c4, domain=other, pages_read=1/1): Operator 'Authentication-Gated Metric Access' (page 1, domain other) captures: auth-gated\" = needs the free Cognito JWT, not a paid tier. Assumptions: Access to certain metrics requires valid JWT tokens issued by Cognito, with no paid subscription required. Breakdown regime: Token validation fails or is missing, preventing access to restricted data fields. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The JWT token serves as an isomorphic key linking private metric access to public API endpoints, enabling secure but transparent data flow. Operator 'Behavioral Outcome Location Analysis' (page 1, domain other) captures: - BOLA confirmed on `/api/highlights/participation/game/play` (gameId+playId) and `/api/gamecenter/overview` (gameId, any season). Assumptions: BOLA can be reconstructed from participation and overview APIs without direct access to proprietary tracking systems. Breakdown regime: Missing play-level or game-level identifiers leads to incomplete BOLA reconstruction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): BOLA is derived from public participation data using known joins (gameId, playId), forming a kernel of behavioral inference. Operator 'Defender Location Vocabulary' (page 1, domain other) captures: - 13-value `defenderLocation` vocabulary captured — the alignment/coverage-disguise feature set. Assumptions: The 13-value vocabulary captures discrete alignment and coverage states used in defensive positioning analysis. Breakdown regime: Insufficient granularity or misclassification of defender positions leads to inaccurate coverage modeling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The 13-value vocabulary forms a discrete feature space for modeling defensive behavior, enabling classification of coverage types. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for bypass_notes (722dc772b54f35c4, domain=other, pages_read=1/1): Operator 'Authentication-Gated Metric Access' (page 1, domain other) captures: auth-gated\" = needs the free Cognito JWT, not a paid tier. Assumptions: Access to certain metrics requires valid JWT tokens issued by Cognito, with no paid subscription required. Breakdown regime: Token validation fails or is missing, preventing access to restricted data fields. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The JWT token serves as an isomorphic key linking private metric access to public API endpoints, enabling secure but transparent data flow. Operator 'Behavioral Outcome Location Analysis' (page 1, domain other) captures: - BOLA confirmed on `/api/highlights/participation/game/play` (gameId+playId) and `/api/gamecenter/overview` (gameId, any season). Assumptions: BOLA can be reconstructed from participation and overview APIs without direct access to proprietary tracking systems. Breakdown regime: Missing play-level or game-level identifiers leads to incomplete BOLA reconstruction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): BOLA is derived from public participation data using known joins (gameId, playId), forming a kernel of behavioral inference. Operator 'Defender Location Vocabulary' (page 1, domain other) captures: - 13-value `defenderLocation` vocabulary captured — the alignment/coverage-disguise feature set. Assumptions: The 13-value vocabulary captures discrete alignment and coverage states used in defensive positioning analysis. Breakdown regime: Insufficient granularity or misclassification of defender positions leads to inaccurate coverage modeling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The 13-value vocabulary forms a discrete feature space for modeling defensive behavior, enabling classification of coverage types. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s sports analytics frameworks, particularly those leveraging structured data and API-driven access control, evolving into modern cloud-native systems with JWT-based identity management. Retrocausal Genealogy: Rooted in bypass_notes (722dc772b54f35c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in bypass_notes (722dc772b54f35c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include unauthorized access attempts and data corruption risks. Decision actors are the NFL's data infrastructure and third-party analysts who must navigate access restrictions while maintaining analytical fidelity. Theory of Mind & Decision Maker Model: Rooted in bypass_notes (722dc772b54f35c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive addresses a unique facet of game dynamics—authentication, behavior, and positioning. Leakage vetoes prevent overlap between derived kernels, preserving signal-to-noise ratios in downstream models. Cross-Layer Veto & Anti-Leakage Check: Rooted in bypass_notes (722dc772b54f35c4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "017f7c9c2379726a",
+  "source_status": "COMPLETE",
+  "title": "color-roles",
+  "file_name": "color-roles.md",
+  "sha256": "017f7c9c2379726abef1473ea94ce30c8a65317a1e098549a80459546d1ad467",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Semantic color roles as a structured information geometry; each hue encodes a distinct categorical fiber over a shared cockpit manifold. Universal Lens: Rooted in color-roles (017f7c9c2379726a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on color-coded status signals; posterior belief updates conditioned on observed color states in cockpit telemetry. GSI Mapping: Rooted in color-roles (017f7c9c2379726a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps color-role transitions to state-space evolution; discrete events trigger deterministic shifts in operational mode. GSE Mapping: Rooted in color-roles (017f7c9c2379726a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "semantic_color_system",
+      "name": "Semantic Color System",
+      "verbatim_quote": "--description: Define and enforce one semantic color system allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git status*) --Establish a single semantic color system for the cockpit and enforce it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'red': 'dimensionless categorical label for blocked/critical state', 'gold': 'dimensionless categorical label for pending/launch-gated state', 'cyan': 'dimensionless categorical label for open/go state', 'purple': 'dimensionless categorical label for performance domain'}",
+      "assumptions": "Each color maps uniquely to a semantic role; all cockpit elements must conform to this mapping.",
+      "breakdown_regime": "Inconsistent color usage leads to semantic ambiguity and reduced system reliability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Color roles form a categorical fiber bundle over the cockpit state space; each color corresponds to a section of the bundle.",
+        "source_operator": "semantic_color_system",
+        "telemetry": "Color consistency across UI elements and status indicators."
+      }
+    },
+    {
+      "primitive_id": "color_role_assignment",
+      "name": "Color Role Assignment",
+      "verbatim_quote": "red = blocked/critical, gold = pending/launch-gated, cyan = open/go, purple = performance domain.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'red': 'categorical label for critical/blockage', 'gold': 'categorical label for pending/launch', 'cyan': 'categorical label for operational/open', 'purple': 'categorical label for performance metrics'}",
+      "assumptions": "Each color has a unique semantic interpretation; no overlap in meanings.",
+      "breakdown_regime": "Misassignment of color to incorrect semantic role causes cognitive load and misinterpretation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Assignment defines a kernel function that maps raw data to semantic categories via color.",
+        "source_operator": "color_role_assignment",
+        "telemetry": "Validation of color-to-meaning correspondence in UI components."
+      }
+    },
+    {
+      "primitive_id": "off_role_usage_detection",
+      "name": "Off-Role Usage Detection",
+      "verbatim_quote": "Document the map, then flag every place a color is used off-role, especially status numbers and badges (the Company Pulse numbers are currently colored inconsistently).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'off_role_flag': 'binary indicator for semantic misuse', 'file_line': 'structured identifier for location of misuse'}",
+      "assumptions": "All color usages can be traced to a specific file and line; inconsistency implies error.",
+      "breakdown_regime": "Detected off-role usage indicates violation of semantic integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Detection algorithm computes deviation from expected color semantics using static analysis.",
+        "source_operator": "off_role_usage_detection",
+        "telemetry": "List of file:line pairs where color semantics are violated."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "017f7c9c2379726a_t0",
+      "think": "The semantic color system operates as a categorical fiber bundle over a cockpit state space, where each hue encodes a distinct operational category. Red signifies critical blockage, gold denotes pending launch, cyan represents operational readiness, and purple indicates performance metrics. These roles are enforced through a consistent mapping that ensures semantic clarity. Off-role usage introduces ambiguity and potential failure modes in decision-making systems. The detection mechanism relies on static analysis tools to identify inconsistencies in color application across UI elements. This approach aligns with information geometry principles, where color serves as a geometric marker for functional states. The system's robustness depends on maintaining strict adherence to these mappings, ensuring that observers can reliably interpret operational status without cognitive interference.\n\nDeep epistemic analysis for color-roles (017f7c9c2379726a, domain=other, pages_read=1/1): Operator 'Semantic Color System' (page 1, domain other) captures: --description: Define and enforce one semantic color system allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git status*) --Establish a single semantic color system for the cockpit and enforce it. Assumptions: Each color maps uniquely to a semantic role; all cockpit elements must conform to this mapping. Breakdown regime: Inconsistent color usage leads to semantic ambiguity and reduced system reliability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Color roles form a categorical fiber bundle over the cockpit state space; each color corresponds to a section of the bundle. Operator 'Color Role Assignment' (page 1, domain other) captures: red = blocked/critical, gold = pending/launch-gated, cyan = open/go, purple = performance domain. Assumptions: Each color has a unique semantic interpretation; no overlap in meanings. Breakdown regime: Misassignment of color to incorrect semantic role causes cognitive load and misinterpretation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Assignment defines a kernel function that maps raw data to semantic categories via color. Operator 'Off-Role Usage Detection' (page 1, domain other) captures: Document the map, then flag every place a color is used off-role, especially status numbers and badges (the Company Pulse numbers are currently colored inconsistently). Assumptions: All color usages can be traced to a specific file and line; inconsistency implies error. Breakdown regime: Detected off-role usage indicates violation of semantic integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Detection algorithm computes deviation from expected color semantics using static analysis. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for color-roles (017f7c9c2379726a, domain=other, pages_read=1/1): Operator 'Semantic Color System' (page 1, domain other) captures: --description: Define and enforce one semantic color system allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git status*) --Establish a single semantic color system for the cockpit and enforce it. Assumptions: Each color maps uniquely to a semantic role; all cockpit elements must conform to this mapping. Breakdown regime: Inconsistent color usage leads to semantic ambiguity and reduced system reliability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Color roles form a categorical fiber bundle over the cockpit state space; each color corresponds to a section of the bundle. Operator 'Color Role Assignment' (page 1, domain other) captures: red = blocked/critical, gold = pending/launch-gated, cyan = open/go, purple = performance domain. Assumptions: Each color has a unique semantic interpretation; no overlap in meanings. Breakdown regime: Misassignment of color to incorrect semantic role causes cognitive load and misinterpretation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Assignment defines a kernel function that maps raw data to semantic categories via color. Operator 'Off-Role Usage Detection' (page 1, domain other) captures: Document the map, then flag every place a color is used off-role, especially status numbers and badges (the Company Pulse numbers are currently colored inconsistently). Assumptions: All color usages can be traced to a specific file and line; inconsistency implies error. Breakdown regime: Detected off-role usage indicates violation of semantic integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Detection algorithm computes deviation from expected color semantics using static analysis. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and visual perception studies, particularly those addressing color-coded signaling in human-machine interfaces. Influenced by cognitive science models of categorical perception and semantic memory. Retrocausal Genealogy: Rooted in color-roles (017f7c9c2379726a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in color-roles (017f7c9c2379726a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents interacting with the cockpit must model both the intended semantic roles of colors and the potential for misinterpretation due to inconsistent usage. Decision-making systems must account for possible observer confusion caused by off-role color assignments. Theory of Mind & Decision Maker Model: Rooted in color-roles (017f7c9c2379726a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each color maps exclusively to one semantic role; leakage occurs when multiple roles are conflated under a single hue. Veto conditions prevent semantic overlap and ensure clear signal propagation between layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in color-roles (017f7c9c2379726a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

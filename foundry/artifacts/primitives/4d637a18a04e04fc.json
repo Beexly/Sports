@@ -1,0 +1,78 @@
+{
+  "book_id": "4d637a18a04e04fc",
+  "source_status": "COMPLETE",
+  "title": "p0335",
+  "file_name": "p0335.txt",
+  "sha256": "4d637a18a04e04fcb64db0885686ca75fdfdedd4fe70397f89d71e16e1145f15",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Behavioral learning dynamics governed by reaction potential thresholds and probabilistic oscillation principles. Universal Lens: Rooted in p0335 (4d637a18a04e04fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models reaction evocation probability via Gaussian-distributed potential fluctuations around threshold. GSI Mapping: Rooted in p0335 (4d637a18a04e04fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps reinforcement sequences to state transitions using all-or-none reaction kernels and learning curve slopes. GSE Mapping: Rooted in p0335 (4d637a18a04e04fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "reaction_potential_threshold",
+      "name": "Reaction Potential Threshold",
+      "verbatim_quote": "328 PRINCIPLES OF BEHAVIOR Now, since reaction can be evoked only when the effective reaction potential",
+      "page": 1,
+      "latex": "\\mathcal{P}(t) > \\theta \\Rightarrow R(t)",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{P}(t)': 'effective reaction potential, dimensionless', '\\\\theta': 'reaction threshold, dimensionless', 'R(t)': 'reaction evoked, binary'}",
+      "assumptions": "Reaction occurs only when potential exceeds threshold; initial stimuli insufficient without reinforcement.",
+      "breakdown_regime": "When \\mathcal{P}(t) < \\theta, no reaction evoked despite stimulus presence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps conditional probability of reaction given potential exceeding threshold to GSI's Bayesian update framework.",
+        "source_operator": "reaction_potential_threshold",
+        "telemetry": "Observable reaction frequency vs. potential magnitude."
+      }
+    },
+    {
+      "primitive_id": "learning_curve_steepness",
+      "name": "Learning Curve Steepness",
+      "verbatim_quote": "the all-or-none type, at least one and often a number of reinforcements are required before the",
+      "page": 1,
+      "latex": "N_{\\text{reinforce}} = f(\\alpha), \\quad \\alpha = \\frac{dL}{dt}",
+      "symbol_and_unit_ledger": "{'N_{\\\\text{reinforce}}': 'number of reinforcements required, dimensionless', '\\\\alpha': 'slope of learning curve, dimensionless per time', 'L': 'learning accumulation, dimensionless'}",
+      "assumptions": "Reinforcement count inversely correlates with learning rate; all-or-none responses assumed.",
+      "breakdown_regime": "As \\alpha \\to 0, N_{\\text{reinforce}} \\to \\infty.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphs to GSE's temporal state transition kernel where \\alpha governs convergence speed.",
+        "source_operator": "learning_curve_steepness",
+        "telemetry": "Time-to-reaction under varying reinforcement schedules."
+      }
+    },
+    {
+      "primitive_id": "gaussian_potential_fluctuation",
+      "name": "Gaussian Potential Fluctuation",
+      "verbatim_quote": "308 ff.), the magnitude of these depressing effects presumably varies from moment to moment in a symmetrical manner about a central tendency according to the Gaussian \"law\" of probability.",
+      "page": 1,
+      "latex": "\\mathcal{P}(t) \\sim \\mathcal{N}(\\mu, \\sigma^2), \\quad \\mu = \\bar{\\mathcal{P}}, \\sigma^2 = \\text{Var}(\\mathcal{P})",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{P}(t)': 'instantaneous reaction potential, dimensionless', '\\\\mu': 'mean potential, dimensionless', '\\\\sigma^2': 'variance of potential, dimensionless squared'}",
+      "assumptions": "Potential variations follow normal distribution; symmetric around mean.",
+      "breakdown_regime": "Large variance leads to high uncertainty in reaction timing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides stochastic noise model for GSI's probabilistic reaction prediction engine.",
+        "source_operator": "gaussian_potential_fluctuation",
+        "telemetry": "Variance in reaction timing across repeated trials."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4d637a18a04e04fc_t0",
+      "think": "The core behavioral dynamics emerge from the interplay between reaction potential and threshold. A reaction is evoked only when potential exceeds threshold, modeled as a deterministic condition. However, due to inherent variability in potential—modeled as Gaussian fluctuations—the timing of reaction remains uncertain even with sufficient conditioning. Learning curves reflect how quickly this threshold is crossed, with steeper slopes indicating faster acquisition. Reinforcement requirements decrease with increasing learning steepness, implying that more rapid learning reduces the number of trials needed for consistent response. These primitives form a dual structure: one deterministic (potential vs. threshold) and one probabilistic (Gaussian fluctuation), enabling both precise prediction and uncertainty quantification in behavior.\n\nDeep epistemic analysis for p0335 (4d637a18a04e04fc, domain=other, pages_read=1/1): Operator 'Reaction Potential Threshold' (page 1, domain other) captures: 328 PRINCIPLES OF BEHAVIOR Now, since reaction can be evoked only when the effective reaction potential Assumptions: Reaction occurs only when potential exceeds threshold; initial stimuli insufficient without reinforcement. Breakdown regime: When \\mathcal{P}(t) < \\theta, no reaction evoked despite stimulus presence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps conditional probability of reaction given potential exceeding threshold to GSI's Bayesian update framework. Operator 'Learning Curve Steepness' (page 1, domain other) captures: the all-or-none type, at least one and often a number of reinforcements are required before the Assumptions: Reinforcement count inversely correlates with learning rate; all-or-none responses assumed. Breakdown regime: As \\alpha \\to 0, N_{\\text{reinforce}} \\to \\infty. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs to GSE's temporal state transition kernel where \\alpha governs convergence speed. Operator 'Gaussian Potential Fluctuation' (page 1, domain other) captures: 308 ff.), the magnitude of these depressing effects presumably varies from moment to moment in a symmetrical manner about a central tendency according to the Gaussian \"law\" of probability. Assumptions: Potential variations follow normal distribution; symmetric around mean. Breakdown regime: Large variance leads to high uncertainty in reaction timing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides stochastic noise model for GSI's probabilistic reaction prediction engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0335 (4d637a18a04e04fc, domain=other, pages_read=1/1): Operator 'Reaction Potential Threshold' (page 1, domain other) captures: 328 PRINCIPLES OF BEHAVIOR Now, since reaction can be evoked only when the effective reaction potential Assumptions: Reaction occurs only when potential exceeds threshold; initial stimuli insufficient without reinforcement. Breakdown regime: When \\mathcal{P}(t) < \\theta, no reaction evoked despite stimulus presence. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps conditional probability of reaction given potential exceeding threshold to GSI's Bayesian update framework. Operator 'Learning Curve Steepness' (page 1, domain other) captures: the all-or-none type, at least one and often a number of reinforcements are required before the Assumptions: Reinforcement count inversely correlates with learning rate; all-or-none responses assumed. Breakdown regime: As \\alpha \\to 0, N_{\\text{reinforce}} \\to \\infty. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs to GSE's temporal state transition kernel where \\alpha governs convergence speed. Operator 'Gaussian Potential Fluctuation' (page 1, domain other) captures: 308 ff.), the magnitude of these depressing effects presumably varies from moment to moment in a symmetrical manner about a central tendency according to the Gaussian \"law\" of probability. Assumptions: Potential variations follow normal distribution; symmetric around mean. Breakdown regime: Large variance leads to high uncertainty in reaction timing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides stochastic noise model for GSI's probabilistic reaction prediction engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical conditioning theory (Pavlov, Skinner) and extended through probabilistic models (Fisher, Wiener). Later formalized in stochastic processes and Bayesian frameworks. Retrocausal Genealogy: Rooted in p0335 (4d637a18a04e04fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0335 (4d637a18a04e04fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must model both deterministic thresholds and probabilistic noise. Opposing actors might manipulate either potential magnitude or variance to influence outcomes, e.g., by altering reinforcement schedules or introducing variability. Theory of Mind & Decision Maker Model: Rooted in p0335 (4d637a18a04e04fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if potential and variance are perfectly correlated, eliminating probabilistic insight. Leakage occurs if deterministic thresholds dominate, negating stochastic modeling utility. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0335 (4d637a18a04e04fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0335 (4d637a18a04e04fc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

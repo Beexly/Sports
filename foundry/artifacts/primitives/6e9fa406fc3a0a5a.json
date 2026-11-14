@@ -1,0 +1,78 @@
+{
+  "book_id": "6e9fa406fc3a0a5a",
+  "source_status": "COMPLETE",
+  "title": "0343-a-realtime-visionbased-system-for-badminton",
+  "file_name": "0343-a-realtime-visionbased-system-for-badminton.md",
+  "sha256": "6e9fa406fc3a0a5aea6c83e9b461d0cd0ffc5312444eab93f19ba03e361c9a2c",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Vision-based speed estimation via YOLOv5 detection, Kalman tracking, and user-scale conversion maps shuttlecock kinematics to real-world velocity. Universal Lens: Rooted in 0343-a-realtime-visionbased-system-for-badminton (6e9fa406fc3a0a5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers badminton smash speed from video using conformal prediction on YOLOv5 outputs, with Kalman-filtered trajectories and scale-normalized pixel displacements. GSI Mapping: Rooted in 0343-a-realtime-visionbased-system-for-badminton (6e9fa406fc3a0a5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models shuttlecock motion as a state-transition system with Kalman smoothing, where detection uncertainty and scale calibration define operational limits. GSE Mapping: Rooted in 0343-a-realtime-visionbased-system-for-badminton (6e9fa406fc3a0a5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "shuttlecock_detection",
+      "name": "Shuttlecock Detection Operator",
+      "verbatim_quote": "Method / model YOLOv5 shuttlecock detector (confidence threshold 0.1, IoU 0.45) on perpendicular-view video.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{YOLO}}': 'confidence score (dimensionless)', 'IoU': 'intersection-over-union (dimensionless)'}",
+      "assumptions": "Perpendicular camera view, static background, known object class (shuttlecock).",
+      "breakdown_regime": "Obstruction, occlusion, or non-perpendicular angle.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Detection output is isomorphic to GSI's object classification layer with confidence-weighted spatial localization.",
+        "source_operator": "shuttlecock_detection",
+        "telemetry": "Precision, recall, mAP@0.5"
+      }
+    },
+    {
+      "primitive_id": "trajectory_smoothing",
+      "name": "Trajectory Smoothing Kernel",
+      "verbatim_quote": "Constant-velocity Kalman filter for trajectory smoothing; manual trajectory correction is allowed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'Kalman gain matrix (dimensionless)', 'x_k': 'state vector at time k (position, velocity)', 'P_k': 'error covariance matrix (m²)'}",
+      "assumptions": "Constant velocity motion model, Gaussian noise process.",
+      "breakdown_regime": "High acceleration or abrupt direction change.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kalman filter acts as a derived kernel in GSE's motion state estimation, enabling robust temporal interpolation.",
+        "source_operator": "trajectory_smoothing",
+        "telemetry": "RMSE of smoothed vs. raw trajectory"
+      }
+    },
+    {
+      "primitive_id": "scale_conversion",
+      "name": "Pixel-to-Metric Scale Conversion",
+      "verbatim_quote": "Scale: the user supplies the real-world scale \\(S_f = d_{\\text{real}}/d_{\\text{pixel}}\\) (e.g., by measuring a known court dimension on screen).",
+      "page": 1,
+      "latex": "S_f = \\frac{d_{\\text{real}}}{d_{\\text{pixel}}}",
+      "symbol_and_unit_ledger": "{'S_f': 'scale factor (m/pixel)', 'd_{\\\\text{real}}': 'real-world distance (m)', 'd_{\\\\text{pixel}}': 'pixel distance (pixels)'}",
+      "assumptions": "User-provided calibration, fixed camera intrinsic parameters.",
+      "breakdown_regime": "Incorrect user input or dynamic camera perspective.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scale conversion mirrors GSI’s geometric calibration module, linking pixel space to physical space.",
+        "source_operator": "scale_conversion",
+        "telemetry": "Mean absolute error in converted speed estimates"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6e9fa406fc3a0a5a_t0",
+      "think": "The system operates under a deterministic pipeline: YOLOv5 detects shuttlecock position in each frame, Kalman filter smooths its trajectory, and a user-defined scale converts pixel displacement into real-world speed. The core mathematical structure is a composition of detection (classification + regression), filtering (state-space model), and geometric transformation (unit scaling). The failure modes arise from poor calibration (scale), insufficient training data (n=20), and lack of generalizability (single player). The system lacks statistical rigor for inference, as validation uses only one subject and no confidence bounds. The model assumes constant velocity and perfect detection, which breaks down during high-acceleration smashes. The use of manual trajectory correction undermines automation claims. The system is not suitable for GSE due to low sample size, lack of cross-validation, and absence of NGS-ground-truth alignment. It represents a textbook application rather than a novel methodological advance.\n\nDeep epistemic analysis for 0343-a-realtime-visionbased-system-for-badminton (6e9fa406fc3a0a5a, domain=other, pages_read=3/3): Operator 'Shuttlecock Detection Operator' (page 1, domain other) captures: Method / model YOLOv5 shuttlecock detector (confidence threshold 0.1, IoU 0.45) on perpendicular-view video. Assumptions: Perpendicular camera view, static background, known object class (shuttlecock). Breakdown regime: Obstruction, occlusion, or non-perpendicular angle. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Detection output is isomorphic to GSI's object classification layer with confidence-weighted spatial localization. Operator 'Trajectory Smoothing Kernel' (page 1, domain other) captures: Constant-velocity Kalman filter for trajectory smoothing; manual trajectory correction is allowed. Assumptions: Constant velocity motion model, Gaussian noise process. Breakdown regime: High acceleration or abrupt direction change. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kalman filter acts as a derived kernel in GSE's motion state estimation, enabling robust temporal interpolation. Operator 'Pixel-to-Metric Scale Conversion' (page 1, domain other) captures: Scale: the user supplies the real-world scale \\(S_f = d_{\\text{real}}/d_{\\text{pixel}}\\) (e.g., by measuring a known court dimension on screen). Assumptions: User-provided calibration, fixed camera intrinsic parameters. Breakdown regime: Incorrect user input or dynamic camera perspective. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scale conversion mirrors GSI’s geometric calibration module, linking pixel space to physical space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0343-a-realtime-visionbased-system-for-badminton (6e9fa406fc3a0a5a, domain=other, pages_read=3/3): Operator 'Shuttlecock Detection Operator' (page 1, domain other) captures: Method / model YOLOv5 shuttlecock detector (confidence threshold 0.1, IoU 0.45) on perpendicular-view video. Assumptions: Perpendicular camera view, static background, known object class (shuttlecock). Breakdown regime: Obstruction, occlusion, or non-perpendicular angle. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Detection output is isomorphic to GSI's object classification layer with confidence-weighted spatial localization. Operator 'Trajectory Smoothing Kernel' (page 1, domain other) captures: Constant-velocity Kalman filter for trajectory smoothing; manual trajectory correction is allowed. Assumptions: Constant velocity motion model, Gaussian noise process. Breakdown regime: High acceleration or abrupt direction change. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kalman filter acts as a derived kernel in GSE's motion state estimation, enabling robust temporal interpolation. Operator 'Pixel-to-Metric Scale Conversion' (page 1, domain other) captures: Scale: the user supplies the real-world scale \\(S_f = d_{\\text{real}}/d_{\\text{pixel}}\\) (e.g., by measuring a known court dimension on screen). Assumptions: User-provided calibration, fixed camera intrinsic parameters. Breakdown regime: Incorrect user input or dynamic camera perspective. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Scale conversion mirrors GSI’s geometric calibration module, linking pixel space to physical space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach builds on classical computer vision pipelines (object detection, tracking) and sensor fusion techniques, tracing back to early work in Kalman filtering and photogrammetry. It reflects a modern adaptation of traditional radar-based speed estimation to mobile platforms. Retrocausal Genealogy: Rooted in 0343-a-realtime-visionbased-system-for-badminton (6e9fa406fc3a0a5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the system designer who assumes accurate user calibration and consistent motion patterns, and the real-world player whose actions may deviate from the assumed model. The system also faces adversarial conditions such as lighting variation, occlusion, and motion blur that degrade performance beyond the validation scope. Theory of Mind & Decision Maker Model: Rooted in 0343-a-realtime-visionbased-system-for-badminton (6e9fa406fc3a0a5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "The system fails anti-collinearity checks because it reuses standard components (YOLO, Kalman) without innovation. Leakage occurs through reliance on user-calibration, which introduces bias and inconsistency. The validation protocol is too narrow to support GSE’s need for robust, multi-source, multi-scenario inference. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0343-a-realtime-visionbased-system-for-badminton (6e9fa406fc3a0a5a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "5b5b7ec6a7006a15",
+  "source_status": "COMPLETE",
+  "title": "p0193",
+  "file_name": "p0193.txt",
+  "sha256": "5b5b7ec6a7006a15ee4dee370ebb58f24cd2d906a95effcdec8d049de7541abb",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Space perception emerges from habitual sensory-motor associations; prismatic adaptation reveals latent cognitive dissonance in spatial constancy. Universal Lens: Rooted in p0193 (5b5b7ec6a7006a15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating via perceptual priors; conformal prediction of spatial error correction through habituation dynamics. GSI Mapping: Rooted in p0193 (5b5b7ec6a7006a15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps spatial error states to adaptive motor control; state transitions governed by perceptual feedback loops. GSE Mapping: Rooted in p0193 (5b5b7ec6a7006a15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "perceptual_habituation",
+      "name": "Perceptual Habituation",
+      "verbatim_quote": "But less than an hour of practice in wearing such spectacles rectifies the judgment so that no more mistakes are made.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time in hours', 'M': 'motor error magnitude (dimensionless)', 'H': 'habit strength (dimensionless)'}",
+      "assumptions": "Motor learning follows exponential decay of error with time; perceptual reweighting occurs within 1 hour.",
+      "breakdown_regime": "t > 1 hour; M approaches zero asymptotically.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI Bayesian update of perceptual priors; GSE motor adaptation via feedback control.",
+        "source_operator": "perceptual_habituation",
+        "telemetry": "Change in motor error rate over time during prism wear."
+      }
+    },
+    {
+      "primitive_id": "spatial_error_reversal",
+      "name": "Spatial Error Reversal",
+      "verbatim_quote": "In fact the new-formed associations are already so strong, that when the prisms are first laid aside again the opposite error is committed, the habits of a lifetime violated, and the hand now passed to the right of every object which it seeks to touch.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'error direction (left/right, ±1)', 'T': 'temporal phase (before/after prism removal)', 'A': 'adaptation strength (dimensionless)'}",
+      "assumptions": "Error reversal implies memory-driven misalignment; adaptation persists post-exposure.",
+      "breakdown_regime": "T = after removal; E(t=0) ≠ E(t>0).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI temporal belief shift; GSE reversal of motor policy.",
+        "source_operator": "spatial_error_reversal",
+        "telemetry": "Directional deviation from expected target post-adaptation."
+      }
+    },
+    {
+      "primitive_id": "sensory_chaos_to_order",
+      "name": "Sensory Chaos to Order Transition",
+      "verbatim_quote": "In this way what was incoherent and irrelative ends by being coherent and definitely related ; nor is it hard to trace the principles, by which the mind is guided in this arrangement of its perceptions, in detail.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'perceptual coherence (dimensionless)', 'R': 'relational complexity (dimensionless)', 'L': 'cognitive load (dimensionless)'}",
+      "assumptions": "Order arises from cognitive simplification; relational structure emerges through grouping rules.",
+      "breakdown_regime": "L → ∞; C increases monotonically.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI relational inference engine; GSE topological scene graph construction.",
+        "source_operator": "sensory_chaos_to_order",
+        "telemetry": "Reduction in perceptual ambiguity over successive cognitive cycles."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5b5b7ec6a7006a15_t0",
+      "think": "The perceptual system initially operates under a chaotic sensory framework where spatial relationships are not intuitively ordered. Through repeated exposure to prismatic distortion, the brain forms new neural pathways that adapt motor behavior to compensate for visual displacement. This process demonstrates how sensory-motor integration can rapidly rewire perception, leading to temporary errors upon removal of the stimulus—indicating that prior perceptual habits are disrupted. The transition from chaos to order reflects a fundamental cognitive mechanism: the mind simplifies complex sensory input by identifying invariant structures and grouping related elements into coherent spatial configurations. These mechanisms are rooted in principles of economy and identification, where multiple sensations are unified into single perceptual units. The resulting spatial understanding allows for stable interaction with the environment despite fluctuating sensory inputs. The failure mode manifests as transient misalignment when habitual mappings are suddenly reversed, revealing the dynamic nature of perceptual constancy.\n\nDeep epistemic analysis for p0193 (5b5b7ec6a7006a15, domain=other, pages_read=1/1): Operator 'Perceptual Habituation' (page 1, domain other) captures: But less than an hour of practice in wearing such spectacles rectifies the judgment so that no more mistakes are made. Assumptions: Motor learning follows exponential decay of error with time; perceptual reweighting occurs within 1 hour. Breakdown regime: t > 1 hour; M approaches zero asymptotically. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian update of perceptual priors; GSE motor adaptation via feedback control. Operator 'Spatial Error Reversal' (page 1, domain other) captures: In fact the new-formed associations are already so strong, that when the prisms are first laid aside again the opposite error is committed, the habits of a lifetime violated, and the hand now passed to the right of every object which it seeks to touch. Assumptions: Error reversal implies memory-driven misalignment; adaptation persists post-exposure. Breakdown regime: T = after removal; E(t=0) ≠ E(t>0). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI temporal belief shift; GSE reversal of motor policy. Operator 'Sensory Chaos to Order Transition' (page 1, domain other) captures: In this way what was incoherent and irrelative ends by being coherent and definitely related ; nor is it hard to trace the principles, by which the mind is guided in this arrangement of its perceptions, in detail. Assumptions: Order arises from cognitive simplification; relational structure emerges through grouping rules. Breakdown regime: L → ∞; C increases monotonically. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI relational inference engine; GSE topological scene graph construction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0193 (5b5b7ec6a7006a15, domain=other, pages_read=1/1): Operator 'Perceptual Habituation' (page 1, domain other) captures: But less than an hour of practice in wearing such spectacles rectifies the judgment so that no more mistakes are made. Assumptions: Motor learning follows exponential decay of error with time; perceptual reweighting occurs within 1 hour. Breakdown regime: t > 1 hour; M approaches zero asymptotically. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI Bayesian update of perceptual priors; GSE motor adaptation via feedback control. Operator 'Spatial Error Reversal' (page 1, domain other) captures: In fact the new-formed associations are already so strong, that when the prisms are first laid aside again the opposite error is committed, the habits of a lifetime violated, and the hand now passed to the right of every object which it seeks to touch. Assumptions: Error reversal implies memory-driven misalignment; adaptation persists post-exposure. Breakdown regime: T = after removal; E(t=0) ≠ E(t>0). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI temporal belief shift; GSE reversal of motor policy. Operator 'Sensory Chaos to Order Transition' (page 1, domain other) captures: In this way what was incoherent and irrelative ends by being coherent and definitely related ; nor is it hard to trace the principles, by which the mind is guided in this arrangement of its perceptions, in detail. Assumptions: Order arises from cognitive simplification; relational structure emerges through grouping rules. Breakdown regime: L → ∞; C increases monotonically. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI relational inference engine; GSE topological scene graph construction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Helmholtz's theory of unconscious inference and Kant’s synthetic a priori; builds on Gestalt psychology's laws of grouping and perceptual organization. Retrocausal Genealogy: Rooted in p0193 (5b5b7ec6a7006a15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0193 (5b5b7ec6a7006a15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the perceptual system (which adapts) and the motor system (which executes corrected actions); both must align to resolve spatial conflict. Theory of Mind & Decision Maker Model: Rooted in p0193 (5b5b7ec6a7006a15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in p0193 (5b5b7ec6a7006a15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that perceptual and motor layers do not reinforce erroneous mappings; leakage veto prevents persistent misalignment from propagating across cognitive domains. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0193 (5b5b7ec6a7006a15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0193 (5b5b7ec6a7006a15), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

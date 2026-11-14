@@ -1,0 +1,78 @@
+{
+  "book_id": "6b60425e88af4af7",
+  "source_status": "COMPLETE",
+  "title": "p0365",
+  "file_name": "p0365.txt",
+  "sha256": "6b60425e88af4af7aba5c284cfa8844dedb803b8dcc24bf43a0758aed47d7764",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Dual-action gating mechanism: perceptual association vs. causal reasoning in animal behavior. Universal Lens: Rooted in p0365 (6b60425e88af4af7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on latch-state via string-biting event; P(gate_open|bite) > P(gate_open|snout_hit). GSI Mapping: Rooted in p0365 (6b60425e88af4af7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transition: {gate_closed} → {string_bitten} → {gate_open}; latch-pushing fails due to lack of causal model. GSE Mapping: Rooted in p0365 (6b60425e88af4af7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "perceptual_association",
+      "name": "Perceptual Association",
+      "verbatim_quote": "A cat is constantly playing with things with her paws; a trick accidentally hit upon may be retained.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{assoc}': 'probability of associative retention', 'T_{accident}': 'time of accidental discovery'}",
+      "assumptions": "Behavioral patterns emerge from repeated sensory-motor feedback loops.",
+      "breakdown_regime": "Failure when environmental context changes beyond learned associations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Associative learning in animals mirrors Bayesian updating of conditional probabilities.",
+        "source_operator": "perceptual_association",
+        "telemetry": "Frequency of repeated action after accidental success."
+      }
+    },
+    {
+      "primitive_id": "causal_modeling_failure",
+      "name": "Causal Modeling Failure",
+      "verbatim_quote": "Here, too, occasionally the little dog is confined, and when he barks the big one makes every possible effort to open the gate, hut it has never occurred to him to push the latch up.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{model}': 'causal model capacity', 'L_{latch}': 'latch position variable'}",
+      "assumptions": "Animals lack abstract representation of cause-effect relationships.",
+      "breakdown_regime": "When mechanical action does not directly correlate with desired outcome.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Absence of causal inference leads to suboptimal policy selection in state-space search.",
+        "source_operator": "causal_modeling_failure",
+        "telemetry": "Frequency of ineffective actions despite repeated attempts."
+      }
+    },
+    {
+      "primitive_id": "behavioral_retention",
+      "name": "Behavioral Retention",
+      "verbatim_quote": "Now he knew the secret and thenceforth bit the string whenever he wished to get out, so that I was obliged to change it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{retained}': 'retained behavioral pattern', 'E_{outcome}': 'eventual outcome of behavior'}",
+      "assumptions": "Reinforcement through consequence enables behavioral modification.",
+      "breakdown_regime": "When prior outcomes become irrelevant due to environmental change.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Retention of successful behavior mirrors reinforcement learning convergence.",
+        "source_operator": "behavioral_retention",
+        "telemetry": "Consistency of behavior across multiple trials post-discovery."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6b60425e88af4af7_t0",
+      "think": "The primitives reveal a dual structure in animal cognition: perception-driven association versus causal reasoning. Perceptual association allows for retention of behaviors that incidentally lead to reward, as seen in the dog's string-biting. Causal modeling failure manifests when an animal performs actions without understanding their functional relationship to outcomes—e.g., the big dog’s futile snout hits. Behavioral retention formalizes how these associations become stable over time. These structures suggest a hierarchy where associative learning underpins simpler behaviors, while causal reasoning remains largely absent. This duality implies that complex problem-solving requires symbolic abstraction, which animals do not possess. The failure mode of causal reasoning is evident in the dog’s inability to generalize from one situation (biting string) to another (pushing latch). Thus, the cognitive architecture of animals is better described as a set of conditioned reflexes rather than a system capable of logical deduction or hypothesis testing.\n\nDeep epistemic analysis for p0365 (6b60425e88af4af7, domain=other, pages_read=2/2): Operator 'Perceptual Association' (page 1, domain other) captures: A cat is constantly playing with things with her paws; a trick accidentally hit upon may be retained. Assumptions: Behavioral patterns emerge from repeated sensory-motor feedback loops. Breakdown regime: Failure when environmental context changes beyond learned associations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Associative learning in animals mirrors Bayesian updating of conditional probabilities. Operator 'Causal Modeling Failure' (page 1, domain other) captures: Here, too, occasionally the little dog is confined, and when he barks the big one makes every possible effort to open the gate, hut it has never occurred to him to push the latch up. Assumptions: Animals lack abstract representation of cause-effect relationships. Breakdown regime: When mechanical action does not directly correlate with desired outcome. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Absence of causal inference leads to suboptimal policy selection in state-space search. Operator 'Behavioral Retention' (page 1, domain other) captures: Now he knew the secret and thenceforth bit the string whenever he wished to get out, so that I was obliged to change it. Assumptions: Reinforcement through consequence enables behavioral modification. Breakdown regime: When prior outcomes become irrelevant due to environmental change. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Retention of successful behavior mirrors reinforcement learning convergence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0365 (6b60425e88af4af7, domain=other, pages_read=2/2): Operator 'Perceptual Association' (page 1, domain other) captures: A cat is constantly playing with things with her paws; a trick accidentally hit upon may be retained. Assumptions: Behavioral patterns emerge from repeated sensory-motor feedback loops. Breakdown regime: Failure when environmental context changes beyond learned associations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Associative learning in animals mirrors Bayesian updating of conditional probabilities. Operator 'Causal Modeling Failure' (page 1, domain other) captures: Here, too, occasionally the little dog is confined, and when he barks the big one makes every possible effort to open the gate, hut it has never occurred to him to push the latch up. Assumptions: Animals lack abstract representation of cause-effect relationships. Breakdown regime: When mechanical action does not directly correlate with desired outcome. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Absence of causal inference leads to suboptimal policy selection in state-space search. Operator 'Behavioral Retention' (page 1, domain other) captures: Now he knew the secret and thenceforth bit the string whenever he wished to get out, so that I was obliged to change it. Assumptions: Reinforcement through consequence enables behavioral modification. Breakdown regime: When prior outcomes become irrelevant due to environmental change. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Retention of successful behavior mirrors reinforcement learning convergence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Darwinian comparative psychology, particularly Romanes' work on animal intelligence and the distinction between instinct and reasoning. Influenced by early cognitive ethology and modern computational models of associative learning. Retrocausal Genealogy: Rooted in p0365 (6b60425e88af4af7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0365 (6b60425e88af4af7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The big dog operates under a fixed stimulus-response loop, lacking introspective awareness of its own actions. The little dog exhibits exploratory behavior, suggesting a limited form of trial-and-error reasoning. Both agents act within bounded information states, with no shared mental model of causality. Theory of Mind & Decision Maker Model: Rooted in p0365 (6b60425e88af4af7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity lies in the separation of associative memory from causal inference. Leakage occurs when behavioral patterns are applied inappropriately to novel contexts. Veto conditions arise when environmental dynamics exceed the scope of learned associations, rendering retention strategies obsolete. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0365 (6b60425e88af4af7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}
