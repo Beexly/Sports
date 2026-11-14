@@ -1,0 +1,385 @@
+{
+  "book_id": "31578d5b20fc1a1f",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_POSTER_RF_RECONSTRUCTED_LATEX",
+  "source_note": "Elisabeth Millington (Rice, Kinesiology) & Scott Powers (Rice, Sport Management), 'A comps-based approach for interpreting tree-based predictions with an application to the NFL draft', NESSIS 2025 one-page poster. Substantive poster with the random-forest-as-weighted-kNN formulation (Lin & Jeon 2006), a printed RMSE/variance result, 2025 draft projections, and comp tables; extracted faithfully (not a derivative summary). Mathematical subscripts are shifted-font and the regression-to-zero shrinkage formula is not printed, so the weighted-kNN equations and shrinkage are reconstructed as labeled LaTeX from unambiguous prose and flagged in assumptions. Outputs are statistical QBR projections and player comps from public Sports Reference data; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "rf_black_box",
+      "name": "Random forests are powerful but black-box",
+      "verbatim_quote": "Random Forests are a powerful machine learning prediction model, but like other “black box” algorithms, their results are difficult to interpret",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Random forests predict well but, like other black-box algorithms, their results are hard to interpret; this motivates a comps-based interpretation layer."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A black-box predictor needing an interpretation layer is the same trust problem GSE solves by surfacing why a prediction was made.",
+        "source_operator": "rf_black_box",
+        "telemetry": "RF: powerful, hard to interpret"
+      }
+    },
+    {
+      "primitive_id": "interpretability_builds_trust",
+      "name": "Interpretability builds user trust in sports predictions",
+      "verbatim_quote": "In sports, interpretability is crucial because it builds trust for the user in the predictions",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "In sports, interpretability is crucial because it builds trust in the predictions; a number alone is not actionable for a front office."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Interpretability as a trust requirement is the same explainability standard GSE holds for its decision-support outputs.",
+        "source_operator": "interpretability_builds_trust",
+        "telemetry": "interpretability -> trust"
+      }
+    },
+    {
+      "primitive_id": "front_office_nonquantifiable",
+      "name": "Front offices must weigh non-quantifiable information",
+      "verbatim_quote": "front offices need to consider non-quantifiable information in their decision-making",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Front offices need to consider non-quantifiable information in decision-making, so predictions must be interpretable enough to combine with scouting judgment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Blending model output with non-quantifiable scouting is the same human-in-the-loop adjudication GSE supports.",
+        "source_operator": "front_office_nonquantifiable",
+        "telemetry": "model + non-quantifiable scouting"
+      }
+    },
+    {
+      "primitive_id": "comps_via_knn",
+      "name": "Player comps from the k-NN property of random forests",
+      "verbatim_quote": "We aim to use the k-NN properties of random forests to add interpretability to the QBR predictions produced for quarterback prospects in the form of “player comps”",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The k-NN structure of random forests is exploited to express each QB prospect's QBR prediction as a set of similar historical players (comps)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Expressing a prediction as nearest historical analogues is the same comp-based explanation GSE uses to make a prospect rating legible.",
+        "source_operator": "comps_via_knn",
+        "telemetry": "RF k-NN -> player comps"
+      }
+    },
+    {
+      "primitive_id": "data_2099_qbs",
+      "name": "2,099 QBs of college stats from Sports Reference",
+      "verbatim_quote": "Our dataset includes 2,099 quarterbacks. The data for each player-season includes team, conference, strength of schedule, games played",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Public Sports Reference data covers 2,099 quarterbacks; player-season features include team, conference, strength of schedule, games played, passing stats (attempts, completions, TDs, INTs), rushing stats (attempts, yards, TDs), and awards (All-America, Heisman voting)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A public college-stat corpus is the same draft-model input GSE uses for prospect projection.",
+        "source_operator": "data_2099_qbs",
+        "telemetry": "2,099 QBs; college passing/rushing/awards"
+      }
+    },
+    {
+      "primitive_id": "qbr_epa_adjusted",
+      "name": "QBR is EPA-based, adjusted for context",
+      "verbatim_quote": "QBR is based on expected points added (EPA), and considers each quarterback’s share of their team’s EPA and accounts for home-field advantage, defensive strength, and garbage time",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "NFL Total QBR (Burke 2016) is based on EPA, takes each QB's share of team EPA, and accounts for home-field advantage, defensive strength, and garbage time."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An EPA-based, context-adjusted QB rating is the same outcome value GSE uses as a projection target.",
+        "source_operator": "qbr_epa_adjusted",
+        "telemetry": "QBR = EPA share, adj home/def/garbage"
+      }
+    },
+    {
+      "primitive_id": "regress_qbr_to_zero",
+      "name": "Regress QBR/season to zero for small samples",
+      "verbatim_quote": "We regressed each player’s QBR/season to zero to mitigate the effects of players who put up very high QBR numbers in very small samples",
+      "page": 1,
+      "latex": "\\text{QBR}_{\\text{regressed}}=\\frac{n}{n+k}\\,\\text{QBR}_{\\text{observed}}",
+      "symbol_and_unit_ledger": {
+        "n": "sample size (passing attempts)",
+        "k": "shrinkage constant"
+      },
+      "assumptions": [
+        "Each player's QBR per season is regressed toward zero to mitigate very high QBR in very small samples; the shrinkage form is reconstructed (the abstract states the regression-to-zero, not the exact formula)."
+      ],
+      "breakdown_regime": "shrinkage formula reconstructed; abstract states regress-to-zero",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Small-sample shrinkage toward a baseline is the same regression-to-the-mean GSE applies to noisy prospect ratings.",
+        "source_operator": "regress_qbr_to_zero",
+        "telemetry": "regress QBR/season -> 0 (small n)"
+      }
+    },
+    {
+      "primitive_id": "response_avg_nfl_qbr",
+      "name": "Response: average NFL QBR (0 if never played)",
+      "verbatim_quote": "Response Variable: Average NFL QBR across seasons (0 for players who never played in the NFL)",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The response is average NFL QBR across seasons, set to 0 for players who never played in the NFL, so the model predicts professional success from college stats."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A zero-for-never-played response is the same career-outcome encoding GSE uses to penalize prospects who do not translate.",
+        "source_operator": "response_avg_nfl_qbr",
+        "telemetry": "y = avg NFL QBR (0 if never played)"
+      }
+    },
+    {
+      "primitive_id": "rf_adaptive_weighted_knn",
+      "name": "Random forest as data-adaptive weighted k-NN (Lin-Jeon)",
+      "verbatim_quote": "Building on the work of Lin & Jeon (2006) we interpret the random forest model as a data-adaptive weighted",
+      "page": 1,
+      "latex": "\\hat y_b(x')=\\sum_i w_{i,b}(x')\\,y_i,\\quad w_{i,b}(x')=\\frac{n_{i,b}\\,\\mathbf{1}[T_{i,b}=T_{x',b}]}{|T_{x',b}|};\\quad \\hat y(x')=\\frac1B\\sum_b \\hat y_b(x')=\\sum_i \\bar w_i(x')\\,y_i",
+      "symbol_and_unit_ledger": {
+        "n_{i,b}": "count of obs i in bootstrap b",
+        "T_{i,b}": "terminal node of i in tree b",
+        "B": "number of trees",
+        "w_bar": "averaged leaf co-occurrence weight"
+      },
+      "assumptions": [
+        "Following Lin & Jeon 2006, B bootstrap samples each train a tree; n_{i,b} counts obs i in bootstrap b, T_{i,b} is its terminal node, |T_{i,b}| the node size with repetition; a tree's prediction is a weighted sum of training outcomes with weights n_{i,b}*I(same leaf)/|leaf|, and the forest averages across trees. Subscripts are shifted-font on the poster and reconstructed here from the prose."
+      ],
+      "breakdown_regime": "shifted-font math reconstructed from prose (Lin & Jeon 2006, JASA 101(474):578-590)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The forest-as-weighted-kNN identity is the same kernel GSE uses to turn a tree ensemble into a similarity-weighted predictor.",
+        "source_operator": "rf_adaptive_weighted_knn",
+        "telemetry": "RF = sum_i w_bar_i(x') y_i"
+      }
+    },
+    {
+      "primitive_id": "custom_neighborhood_leaf_cooccurrence",
+      "name": "RF defines a custom neighborhood by leaf co-occurrence",
+      "verbatim_quote": "where observations that frequently land in the same leaf across trees are assigned higher weights",
+      "page": 1,
+      "latex": "\\bar w_i(x')=\\frac1B\\sum_{b=1}^{B} w_{i,b}(x')",
+      "symbol_and_unit_ledger": {
+        "w_bar_i": "similarity weight of training point i to query x'"
+      },
+      "assumptions": [
+        "The forest defines a custom neighborhood for the query: observations that frequently land in the same leaf across trees receive higher weights."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Leaf co-occurrence as a learned neighborhood is the same adaptive similarity GSE uses to find a prospect's true analogues.",
+        "source_operator": "custom_neighborhood_leaf_cooccurrence",
+        "telemetry": "frequent same-leaf -> higher weight"
+      }
+    },
+    {
+      "primitive_id": "similarity_score",
+      "name": "Averaged weight is a similarity score",
+      "verbatim_quote": "Higher similarity implies more frequent co-occurrence in terminal nodes",
+      "page": 1,
+      "latex": "\\text{sim}(x',x_i)=\\bar w_i(x')",
+      "symbol_and_unit_ledger": {
+        "sim": "similarity score in [0,1]"
+      },
+      "assumptions": [
+        "The averaged weight w_bar is interpreted as a similarity score between the query and a training point; higher similarity means more frequent co-occurrence in terminal nodes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A leaf-co-occurrence similarity score is the same comp-ranking metric GSE uses to order historical analogues.",
+        "source_operator": "similarity_score",
+        "telemetry": "sim = w_bar; higher = more co-occurrence"
+      }
+    },
+    {
+      "primitive_id": "rf_rmse_861_r2_437",
+      "name": "RF test RMSE 8.61, 43.7% of regressed QBR variance",
+      "verbatim_quote": "The random forest model achieved a test RMSE of 8.61, explaining 43.7% of the variance in regressed NFL QBR",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "RMSE": "8.61 QBR points",
+        "R2": "43.7%"
+      },
+      "assumptions": [
+        "The random forest achieves test RMSE 8.61 and explains 43.7% of the variance in regressed NFL QBR."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A reported out-of-sample RMSE and variance-explained is the same honest predictive benchmark GSE requires of its draft model.",
+        "source_operator": "rf_rmse_861_r2_437",
+        "telemetry": "test RMSE 8.61, R2 43.7%"
+      }
+    },
+    {
+      "primitive_id": "key_predictors",
+      "name": "Key predictors: Heisman, passing stats, SOS",
+      "verbatim_quote": "Final-season Heisman voting Passing stats per season (yards, TDs, completions) Final-season strength of schedule",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Key predictors of NFL success are final-season Heisman voting, passing stats per season (yards, TDs, completions), and final-season strength of schedule; the bullet list is concatenated here."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Award voting plus volume passing stats plus schedule strength is the same feature set GSE weighs for QB prospects.",
+        "source_operator": "key_predictors",
+        "telemetry": "Heisman + passing vol + SOS"
+      }
+    },
+    {
+      "primitive_id": "multicollinearity_094",
+      "name": "Passing volume stats are highly multicollinear (>=0.94)",
+      "verbatim_quote": "High multicollinearity exists between some variables (e.g., yards, touchdowns, and completions per season are all pairwise correlated at ≥ 0.94)",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Yards, touchdowns, and completions per season are pairwise correlated at >= 0.94, so the passing-volume features are highly multicollinear."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Near-collinear volume features are the same redundancy GSE handles when interpreting tree importances.",
+        "source_operator": "multicollinearity_094",
+        "telemetry": "yards/TD/comp pairwise r >= 0.94"
+      }
+    },
+    {
+      "primitive_id": "treecomp_package",
+      "name": "treecomp: open-source R package extracting RF similarities",
+      "verbatim_quote": "R package treecomp. Extracts similarity scores from random forests.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The R package treecomp extracts similarity scores from random forests and is open-source at github.com/elisabethmill/treecomp; tuning uses tuneRanger (Probst 2024) and ranger (Wright 2024)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An open-source comp-extraction tool is the same reproducible interpretability layer GSE values.",
+        "source_operator": "treecomp_package",
+        "telemetry": "treecomp (R), open-source"
+      }
+    },
+    {
+      "primitive_id": "draft_2025_predictions",
+      "name": "2025 draft predictions: Ward 37.0, Gabriel 34.6, Sanders 33.2, Dart 24.0",
+      "verbatim_quote": "The predictions for the top four NFL prospects pre-draft were",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "Cam Ward": "37.0",
+        "Dillon Gabriel": "34.6",
+        "Shedeur Sanders": "33.2",
+        "Jaxson Dart": "24.0"
+      },
+      "assumptions": [
+        "Pre-draft predicted QBR for the top four 2025 prospects: Cam Ward 37.0, Dillon Gabriel 34.6, Shedeur Sanders 33.2, Jaxson Dart 24.0; comps include e.g. Cam Ward -> Johnny Manziel 2.3%, Marcus Mariota 2.3%, Baker Mayfield 2.2%."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A pre-draft prospect ranking with comps is the same draft-board output GSE produces, here as a statistical projection.",
+        "source_operator": "draft_2025_predictions",
+        "telemetry": "Ward 37.0 / Gabriel 34.6 / Sanders 33.2 / Dart 24.0"
+      }
+    },
+    {
+      "primitive_id": "prediction_is_weighted_mean",
+      "name": "Predicted QBR equals the similarity-weighted mean",
+      "verbatim_quote": "The vertical green line annotates each prospect’s predicted QBR, which matches the mean of the weighted distribution",
+      "page": 1,
+      "latex": "\\hat y(x')=\\sum_i \\bar w_i(x')\\,y_i=\\mathbb{E}_{\\bar w}[y]",
+      "symbol_and_unit_ledger": {
+        "y_i": "training player regressed QBR"
+      },
+      "assumptions": [
+        "Figure 1's green line marks each prospect's predicted QBR, which equals the mean of the similarity-weighted distribution of training players' regressed QBR."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A prediction as the weighted mean of analogue outcomes is the same comp-based expectation GSE uses to explain a projection.",
+        "source_operator": "prediction_is_weighted_mean",
+        "telemetry": "pred QBR = mean of weighted comp dist"
+      }
+    },
+    {
+      "primitive_id": "comp_histogram_scatter",
+      "name": "Comps visualized as weighted QBR histogram + similarity scatter",
+      "verbatim_quote": "Histogram of training players’ regressed QBR values weighted by similarity to the prospect being predicted",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Figure 1 top: histogram of training players' regressed QBR weighted by similarity to the prospect; bottom: scatter of individual similarity scores vs regressed QBR for historical prospects."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A weighted outcome histogram plus similarity scatter is the same visual explanation GSE uses to show a prospect's comp distribution.",
+        "source_operator": "comp_histogram_scatter",
+        "telemetry": "weighted QBR hist + sim scatter"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "treecomps2025_trace",
+      "think": "The retrocausal genealogy of this poster is the black-box problem of random forests and the specific need for interpretability in sports front offices. Elisabeth Millington and Scott Powers of Rice University observe that random forests are powerful predictors but, like other black-box algorithms, their results are difficult to interpret, and that in sports interpretability is crucial because it builds trust and because front offices must weigh non-quantifiable information alongside the model. Their move is to exploit the k-nearest-neighbor structure of random forests to express each quarterback prospect's predicted NFL QBR as a set of player comps. The theoretical lineage is Lin and Jeon's 2006 Journal of the American Statistical Association paper showing that random forests are adaptive nearest neighbors, and the outcome target is ESPN's Total QBR as explained by Burke in 2016, which is itself built on expected points added. The implementation lineage runs through the ranger and tuneRanger R packages, with an acknowledgement to Kevin Meers for suggestions improving the model. The data are publicly available Sports Reference records for 2,099 quarterbacks, with player-season features for team, conference, strength of schedule, games played, passing statistics, rushing statistics, and awards including All-America designation and Heisman voting, joined to each player's NFL passing attempts and Total QBR. QBR is based on EPA, takes each quarterback's share of his team's EPA, and accounts for home-field advantage, defensive strength, and garbage time. Each player's QBR per season is regressed toward zero to mitigate very high QBR in very small samples, and the response variable is average NFL QBR across seasons, set to zero for players who never played in the NFL. A random forest predicts this response from the college statistics. The recursive theory of mind is the reinterpretation of the forest as a data-adaptive weighted k-nearest-neighbor algorithm, which makes the model's reasoning about a prospect explicit. Following Lin and Jeon, B bootstrap samples each train a decision tree; for observation i in bootstrap b, n_{i,b} counts its appearances, T_{i,b} is its terminal node, and the node size counts observations with repetition. A tree's prediction for a query is a weighted sum of training outcomes, where the weight on a training point is its bootstrap count times the indicator that it shares the query's leaf, divided by the leaf size; the forest averages these weights across trees. This shows the forest defines a custom neighborhood for the query, assigning higher weights to observations that frequently land in the same leaf across trees, and the averaged weight is interpreted as a similarity score. The model thus reasons about a prospect by assembling a weighted community of historical analogues rather than emitting an opaque number. Cross-layer veto adjudication is the demand that the prediction be both accurate and legible. The random forest achieves a test RMSE of 8.61 and explains 43.7 percent of the variance in regressed NFL QBR, with key predictors being final-season Heisman voting, passing stats per season, and final-season strength of schedule, while noting that yards, touchdowns, and completions are pairwise correlated at least 0.94. The comps layer passes the interpretability test: the predicted QBR equals the mean of the similarity-weighted distribution of training players' regressed QBR, visualized as a weighted histogram with a green line at the prediction and a scatter of similarity versus QBR. Applied to the 2025 draft, the top four pre-draft predictions are Cam Ward 37.0, Dillon Gabriel 34.6, Shedeur Sanders 33.2, and Jaxson Dart 24.0, each with a ranked list of historical comps such as Cam Ward to Johnny Manziel and Marcus Mariota at 2.3 percent. The open-source treecomp R package extracts these similarity scores. The implementation invariants map directly onto GSE. The forest-as-weighted-kNN identity is GSE's kernel for turning a tree ensemble into a similarity-weighted predictor; leaf co-occurrence is GSE's adaptive similarity for finding a prospect's true analogues; the prediction-as-weighted-mean is GSE's comp-based expectation; and the regression-to-zero shrinkage is GSE's small-sample correction. The interpretability requirement, that a front office must combine the model with non-quantifiable scouting, is the same human-in-the-loop adjudication GSE supports. The outputs are statistical QBR projections and ranked player comps from public data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The corpus is 2,099 quarterbacks of public college and NFL data; the model is a random forest tuned with tuneRanger and ranger, with B bootstrap trees; the test RMSE is 8.61 and variance explained 43.7 percent; the passing-volume features are multicollinear at pairwise correlation at least 0.94; and the 2025 pre-draft projections are Ward 37.0, Gabriel 34.6, Sanders 33.2, Dart 24.0. The mathematical subscripts are shifted-font on the poster and the shrinkage formula is not printed, so both are reconstructed as labeled LaTeX from the unambiguous prose and flagged in the assumptions, with the weighted-kNN identity attributed to Lin and Jeon 2006. The invariant for GSE is to carry the comps-based interpretation of a tree ensemble, the leaf-co-occurrence similarity, and the prediction-as-weighted-mean explanation, while recording that the exact shrinkage constant and full proofs live in the cited literature and the authors' broader work before any quantitative reuse in GSE.",
+      "retrocausal_genealogy": "The poster originates in the random-forest black-box problem and sports front offices' need for interpretability (trust + non-quantifiable scouting). Millington & Powers (Rice) exploit the k-NN structure of RFs to express QB-prospect QBR predictions as player comps. Lineage: Lin & Jeon 2006 (RF as adaptive nearest neighbors, JASA 101(474):578-590), Burke 2016 (Total QBR from EPA), ranger/tuneRanger R packages; acknowledgement to Kevin Meers. Target is regressed NFL QBR from college stats.",
+      "theory_of_mind": "The forest is reinterpreted as data-adaptive weighted k-NN: B bootstrap trees, weight on training point i = bootstrap count n_{i,b} * I(same leaf as query) / leaf size, averaged across trees to a similarity score w_bar. The forest defines a custom neighborhood where frequent leaf co-occurrence means higher weight, so the model reasons about a prospect as a weighted community of historical analogues. Predicted QBR = mean of the similarity-weighted training-QBR distribution. QBR/season regressed to zero for small samples; response = avg NFL QBR (0 if never played).",
+      "cross_layer_veto": "Accuracy + legibility required. RF test RMSE 8.61, 43.7% variance explained; key predictors Heisman voting, passing volume, SOS; yards/TD/comp pairwise r>=0.94 (multicollinear). Comps pass interpretability: prediction = weighted mean, shown as weighted histogram + similarity scatter. 2025 pre-draft: Cam Ward 37.0, Dillon Gabriel 34.6, Shedeur Sanders 33.2, Jaxson Dart 24.0, with ranked comps (Ward -> Manziel/Mariota 2.3%). Open-source treecomp R package. Shifted-font math and unprinted shrinkage formula reconstructed as labeled LaTeX, flagged."
+    }
+  ],
+  "universal_lens": "A random forest predicting NFL QBR from college QB stats is made interpretable by reinterpreting it as a data-adaptive weighted k-nearest-neighbor model, where leaf co-occurrence defines a similarity score and each prospect's prediction is the similarity-weighted mean of historical analogues' QBR, surfaced as ranked player comps.",
+  "gsi_mapping": "GSI treats the RF as weighted k-NN (Lin-Jeon 2006): tree weight n_{i,b}*I(same leaf)/|leaf|, forest weight w_bar=(1/B)sum_b, similarity=w_bar, prediction=sum_i w_bar_i y_i; 2,099 QBs, response avg NFL QBR (0 if never played), QBR/season regressed to zero; test RMSE 8.61 / R2 43.7%; treecomp R package; 2025 projections Ward 37.0/Gabriel 34.6/Sanders 33.2/Dart 24.0.",
+  "gse_mapping": "GSE lifts the comps-based interpretation of a tree ensemble, the leaf-co-occurrence similarity, the prediction-as-weighted-mean explanation, and the small-sample regression-to-zero shrinkage; the interpretability-for-trust requirement matches GSE's human-in-the-loop adjudication; all outputs are statistical QBR projections and ranked comps, never sportsbook lines."
+}
