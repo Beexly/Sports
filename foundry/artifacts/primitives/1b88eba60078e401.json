@@ -1,0 +1,652 @@
+{
+  "book_id": "1b88eba60078e401",
+  "shard": "1",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_COLLEGE_FOOTBALL_NETWORK_RANKING_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Park & Newman (University of Michigan), 'A network-based ranking system for US college football', arXiv:physics/0505169v4 [physics.soc-ph], 31 Oct 2005 (Phys. Rev. E 72, 026136), 18 pages. One-parameter network centrality ranking for Division I-A college football (n=117 teams, 2004): schedule as directed graph (arrow winner->loser), asymmetric adjacency A_ij = times j beat i; direct wins = out-degree (Eq1), indirect wins = directed paths discounted by alpha per indirection level (Eq2); win score w_i = k_out_i + alpha sum A^T_ij w_j (Eq3), loss score l_i = k_in_i + alpha sum A_ij l_j (Eq4), total s_i = w_i - l_i ranks teams; vector resolvent w=(I-alpha A^T)^-1 k_out, l=(I-alpha A)^-1 k_in (Eq5/6) = generalization of Katz centrality. Strength of schedule automatic (beating strong team yields many indirect wins). Convergence alpha < lambda_max^-1 (largest eigenvalue); acyclic => no bound but real seasons always have loops; historical bound 0.2-0.3 (Table I). Retrodictive accuracy (fraction games won by higher-ranked team) ~80%, best at alpha ~ 0.8 lambda_max^-1. Outcome-free alpha: real networks fewer loops than random (strength variation), random-graph lambda_max = (<k^2>-<k>)/(2<k>) (Eq9, from Eq7 <k_in k_out>/<k_in> and Eq8 binomial degree split) ~20% larger than actual => alpha = 2<k>/(<k^2>-<k>) (Eq10) guarantees convergence, no outcome knowledge, near-optimal (2004 alpha=0.207). BCS comparison: 2004 top-25 correlation 0.90, top-5 agree >=3/5 each year 1998-2003, retrodictive parity; Auburn undefeated 3rd (concurs), Texas/California sides with computers; agreement not necessarily success. Non-football: bison dominance hierarchy (Lott 1979, 26 males), alpha=0.124, rank-breeding correlation 0.611, Lorenz/Gini. Single-parameter simplicity advantage; margin/home-field/season-progress as future edge-weight modifiers. Extracted faithfully (not a derivative summary). Equations 1-10 printed in math font that extracts garbled (null-glyph corruption + stacked fractions); reconstructed in labeled LaTeX from the unambiguous prose and flagged here and in assumptions. Domain football matches catalog (American college football network ranking). Directly isomorphic to GSE's pairwise-outcome schedule graph, opponent-quality-adjusted indirect-win credit, Katz-centrality ranking statistic, spectral convergence bound, and outcome-free pre-season discount calibration. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "underdetermined_ranking_problem",
+      "name": "Incomplete pairwise comparisons make ranking underdetermined/contradictory (no playoff)",
+      "verbatim_quote": "each team plays only a small fraction of eligible opponents, making the system underdetermined or contradictory or both",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Juyong Park, M. E. J. Newman; University of Michigan Physics + Center for the Study of Complex Systems; arXiv:physics/0505169v4 [physics.soc-ph], 31 Oct 2005; Phys. Rev. E 72, 026136) opens from the conflict that American college football wants a national championship game but has no conventional playoff; ranking rests on win-loss records yet each team plays only a small fraction of eligible opponents, making the system underdetermined or contradictory or both."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The underdetermined-pairwise-comparison problem is literally GSE's sparse-schedule strength-estimation challenge.",
+        "source_operator": "underdetermined_ranking_problem",
+        "telemetry": "no playoff; ranking from win-loss but each team plays small fraction of eligible opponents -> underdetermined/contradictory; incomplete pairwise comparisons"
+      }
+    },
+    {
+      "primitive_id": "one_parameter_network_method",
+      "name": "One-parameter network ranking method (mathematically founded + intuitive + accord with wisdom)",
+      "verbatim_quote": "introduce a one-parameter ranking method that satisfies all of these requirements",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The authors introduce a one-parameter ranking method that satisfies all of these requirements (mathematically well-founded, results in general accord with received wisdom, based on intuitive principles acceptable to fans and experts) and is based on a network representation of college football schedules."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The single-parameter network ranking is literally GSE's parsimonious strength-of-schedule kernel.",
+        "source_operator": "one_parameter_network_method",
+        "telemetry": "one-parameter ranking method; mathematically founded + accord with received wisdom + intuitive principles; network representation of schedules"
+      }
+    },
+    {
+      "primitive_id": "conference_75pct",
+      "name": "~75% of games intra-conference; conference champions clear but overall champion ambiguous",
+      "verbatim_quote": "In a typical season about 75% of games are played between teams belonging to the same conference",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In a typical season about 75% of games are played between teams belonging to the same conference (groups of a dozen or so colleges on roughly geographic grounds); there is normally an undisputed champion for each conference but not enough inter-conference games to choose an overall champion unambiguously, and college football has no post-season knockout tournament."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The intra-conference clustering is the same community-structure sparsity GSE flags for cross-group strength comparison.",
+        "source_operator": "conference_75pct",
+        "telemetry": "~75% games intra-conference (dozen colleges, geographic); conference champions clear, overall champion ambiguous (too few inter-conference games); no playoff"
+      }
+    },
+    {
+      "primitive_id": "fan_indirect_win_argument",
+      "name": "Fan transitive argument: A beat B beat C => A better than C (indirect win)",
+      "verbatim_quote": "it did beat B who in turn beat C. Therefore A is better than C and would have won had they played a game",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The method is based on the common fan argument: although team A did not play team C, it beat B who in turn beat C, therefore A is better than C and would have won had they played; an indirect win (loss) of this type is considered indicative of a team's strength (weakness) alongside real physical wins and losses."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The transitive indirect-win reasoning is literally GSE's strength-of-schedule propagation intuition.",
+        "source_operator": "fan_indirect_win_argument",
+        "telemetry": "fan argument A beat B beat C => A better than C (indirect win); indirect win/loss indicative of strength/weakness alongside direct; transitive comparison"
+      }
+    },
+    {
+      "primitive_id": "network_directed_winner_loser",
+      "name": "Schedule as directed network: vertices=colleges, edge winner->loser",
+      "verbatim_quote": "We place an arrow on each edge pointing from the winner of the corresponding game to the loser",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The schedule is represented as a network/graph with vertices as colleges and an edge between two colleges if they played a regular-season game; the network is made directed by placing an arrow on each edge pointing from the winner of the corresponding game to the loser (direction is a convention; the opposite choice carries the same information)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The winner-to-loser directed schedule graph is literally GSE's pairwise-outcome network representation.",
+        "source_operator": "network_directed_winner_loser",
+        "telemetry": "vertices=colleges, edge if played regular-season game; directed arrow winner->loser (convention, opposite carries same info); 2004 Division I-A n=117"
+      }
+    },
+    {
+      "primitive_id": "indirect_wins_strength_of_schedule",
+      "name": "Indirect wins auto-encode strength of schedule (beating strong team yields many indirect wins)",
+      "verbatim_quote": "the ranking of a team automatically allows for the strength of schedule",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A particularly nice property of indirect wins is that a direct win against a strong opponent (a team that has itself won many games) is highly rewarding, giving automatically a large number of indirect wins; thus when measured in terms of indirect wins the ranking of a team automatically allows for the strength of schedule."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The indirect-win strength-of-schedule encoding is literally GSE's opponent-quality-adjusted credit kernel.",
+        "source_operator": "indirect_wins_strength_of_schedule",
+        "telemetry": "direct win vs strong opponent (many wins) -> many indirect wins automatically; ranking via indirect wins auto-accounts strength of schedule"
+      }
+    },
+    {
+      "primitive_id": "higher_order_discount",
+      "name": "Higher-order indirect wins (paths length 3+) counted but discounted by alpha per level",
+      "verbatim_quote": "those at greater distances count for less, because we feel it natural that a direct win against a team should count for more than the mere supposed victory of an indirect win",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "One can consider higher-order indirect wins (A beats B beats C beats D) corresponding to directed paths of length three or more; the scheme counts indirect wins and losses at all distances but those at greater distances count for less, because a direct win should count for more than the mere supposed victory of an indirect win; indirect wins are discounted by a constant factor alpha for every level of indirection (alpha the single free parameter)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The distance-discounted path counting is literally GSE's衰减ed transitive-credit kernel.",
+        "source_operator": "higher_order_discount",
+        "telemetry": "higher-order indirect wins = directed paths length 3+; count all distances but discount alpha per indirection level (2-step alpha, 3-step alpha^2); alpha single free parameter; direct > indirect"
+      }
+    },
+    {
+      "primitive_id": "adjacency_matrix_def",
+      "name": "Adjacency A_ij = times team j beat team i; direct wins = out-degree (Eq1), distance-2 indirect (Eq2)",
+      "verbatim_quote": "with element Aij equal to the number of times team j has beaten team i (usually 0 or 1, but occasionally 2)",
+      "page": 4,
+      "latex": "\\text{direct wins}_i=\\sum_j A_{ji},\\qquad \\text{indirect wins}^{(2)}_i=\\sum_{jk}A_{kj}A_{ji}",
+      "symbol_and_unit_ledger": {
+        "A_ij": "number of times team j beat team i (0/1/2)",
+        "n": "number of teams (117 Div I-A 2004)",
+        "direct wins_i": "out-degree of vertex i",
+        "indirect wins^(2)": "directed paths length 2 into i"
+      },
+      "assumptions": [
+        "The adjacency matrix A is an n x n real asymmetric matrix (n=117 for Division I-A 2004) with element A_ij equal to the number of times team j has beaten team i (usually 0 or 1, occasionally 2); direct wins for team i = sum_j A_ji (Eq1, the out-degree), and indirect wins at distance 2 (A beats B beats C) = sum_jk A_kj A_ji (Eq2). Equations 1-2 are printed math-font (with null-glyph corruption) and reconstructed here.",
+        "Equations 1-2 (direct wins out-degree + distance-2 indirect wins) printed math-font with null-glyph corruption; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Asymmetric adjacency; A_ij convention j beats i",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The win-adjacency matrix and path-count wins are literally GSE's directed-outcome graph operator.",
+        "source_operator": "adjacency_matrix_def",
+        "telemetry": "A n x n real asymmetric (n=117 Div I-A 2004); A_ij = times j beat i (0/1/2); direct wins_i=sum_j A_ji (Eq1 out-degree); distance-2 indirect_i=sum_jk A_kj A_ji (Eq2)"
+      }
+    },
+    {
+      "primitive_id": "eq3_win_score",
+      "name": "Eq3 win score w_i = k_out_i + alpha sum_j A^T_ij w_j (out-degree + discounted beaten teams' scores)",
+      "verbatim_quote": "the win score can also be viewed another way, as a linear combination of the number of games a team has won",
+      "page": 6,
+      "latex": "w_i=\\sum_j(1+\\alpha w_j)A_{ji}=k^{out}_i+\\alpha\\sum_j A^{T}_{ij}w_j",
+      "symbol_and_unit_ledger": {
+        "w_i": "total win score of team i",
+        "alpha": "indirection discount parameter",
+        "k_out_i": "out-degree (games won)",
+        "A^T_ij": "transpose adjacency"
+      },
+      "assumptions": [
+        "The total win score w_i sums direct and indirect wins at all distances: w_i = sum_j (1+alpha w_j) A_ji = k_out_i + alpha sum_j A^T_ij w_j (Eq3), where k_out_i is the out-degree; the win score is a linear combination of the number of games won (out-degree) and the win scores of the other teams it beat. Equation 3 is printed math-font and reconstructed here.",
+        "Equation 3 (recursive win score) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Self-consistent fixed point; converges for alpha<lambda_max^-1",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The recursive win-score fixed point is literally GSE's opponent-weighted victory credit.",
+        "source_operator": "eq3_win_score",
+        "telemetry": "w_i=sum_j(1+alpha w_j)A_ji = k_out_i + alpha sum_j A^T_ij w_j (Eq3); k_out out-degree; linear combo of games won + win scores of beaten teams"
+      }
+    },
+    {
+      "primitive_id": "eq4_loss_score_total",
+      "name": "Eq4 loss score l_i = k_in_i + alpha sum_j A_ij l_j; total s_i = w_i - l_i ranks teams",
+      "verbatim_quote": "our ranking scheme automatically incorporates the strength of schedule into the scoring",
+      "page": 6,
+      "latex": "l_i=k^{in}_i+\\alpha\\sum_j A_{ij}l_j,\\qquad s_i=w_i-l_i",
+      "symbol_and_unit_ledger": {
+        "l_i": "total loss score of team i",
+        "k_in_i": "in-degree (games lost)",
+        "s_i": "total ranking score (win minus loss)",
+        "alpha": "indirection discount"
+      },
+      "assumptions": [
+        "The loss score l_i = sum_j A_ij(1+alpha l_j) = k_in_i + alpha sum_j A_ij l_j (Eq4); the total score is s_i = w_i - l_i and teams are ranked on it; a win against a strong opponent (high win score) rewards heavily while a loss against a weak opponent (high loss score) has the opposite effect, so the scheme automatically incorporates strength of schedule. Equation 4 is printed math-font and reconstructed here.",
+        "Equation 4 (recursive loss score) + total-score definition printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Rank by s_i; loss score symmetric to win score on A",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The win-minus-loss total score is literally GSE's strength-of-schedule-adjusted ranking statistic.",
+        "source_operator": "eq4_loss_score_total",
+        "telemetry": "l_i=sum_j A_ij(1+alpha l_j)=k_in_i+alpha sum_j A_ij l_j (Eq4); total s_i=w_i-l_i ranks teams; win vs strong rewards, loss vs weak penalizes; auto strength-of-schedule"
+      }
+    },
+    {
+      "primitive_id": "eq6_katz_centrality",
+      "name": "Eq5/6 w=(I-alpha A^T)^-1 k_out, l=(I-alpha A)^-1 k_in; generalization of Katz centrality",
+      "verbatim_quote": "our method can be regarded as a generalization of the Katz centrality applied to the network representation of the schedule of games",
+      "page": 6,
+      "latex": "w=(I-\\alpha A^{T})^{-1}k^{out},\\qquad l=(I-\\alpha A)^{-1}k^{in}",
+      "symbol_and_unit_ledger": {
+        "w,l": "win/loss score vectors",
+        "k_out,k_in": "out/in-degree vectors",
+        "I": "identity matrix",
+        "alpha": "discount (<lambda_max^-1)",
+        "(I-alpha A)^-1": "resolvent / Katz centrality operator"
+      },
+      "assumptions": [
+        "In vector notation w = k_out + alpha A^T . w and l = k_in + alpha A . l (Eq5), rearranging to w = (I - alpha A^T)^-1 . k_out and l = (I - alpha A)^-1 . k_in (Eq6); these are closely related to the matrix-based network centrality measure due to Katz and others, and the method can be regarded as a generalization of Katz centrality applied to the schedule network. Equations 5-6 are printed math-font and reconstructed here.",
+        "Equations 5-6 (vector fixed point + resolvent inverse) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Inverse exists only for alpha<lambda_max^-1 (spectral radius bound)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Katz-centrality resolvent is literally GSE's network-centrality strength kernel.",
+        "source_operator": "eq6_katz_centrality",
+        "telemetry": "w=k_out+alpha A^T.w, l=k_in+alpha A.l (Eq5); w=(I-alpha A^T)^-1.k_out, l=(I-alpha A)^-1.k_in (Eq6); generalization of Katz centrality (Katz 1953, Taylor 1969) on schedule network"
+      }
+    },
+    {
+      "primitive_id": "alpha_convergence_loops",
+      "name": "Convergence requires alpha < lambda_max^-1; acyclic => lambda_max=0 (no bound); real seasons always have loops",
+      "verbatim_quote": "there has never yet been a season for which there were no loops in the network",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The series in Eqs 3-4 converge only if alpha < lambda_max^-1 where lambda_max is the largest eigenvalue of A; if the network is acyclic (no loops A beats B beats C beats A) the largest eigenvalue is zero and there is no limit on alpha, but there has never yet been a season for which there were no loops in the network, so normally there is a finite upper bound on alpha."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The spectral-radius convergence bound is literally GSE's stability constraint on transitive-credit discount.",
+        "source_operator": "alpha_convergence_loops",
+        "telemetry": "converge only alpha<lambda_max^-1 (largest eigenvalue of A); acyclic -> lambda_max=0 -> no bound; real seasons always have loops -> finite upper bound"
+      }
+    },
+    {
+      "primitive_id": "alpha_upper_bound_range",
+      "name": "Historical alpha upper bound 0.2-0.3 (indirect win <= 1/5 to 1/3 of direct); Table I eigenvalues",
+      "verbatim_quote": "Historically the values of this upper bound have been in the range 0.2 to 0.3",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Historically the values of this upper bound have been in the range 0.2 to 0.3 (Table I, 1998-2004 lambda_max from 3.39401 to 4.15120), so an indirect win cannot count for more than a fifth to a third of a direct win; but the number of indirect wins grows with indirection level, so they can still contribute substantially by sheer number, and alpha close to the upper bound gives roughly equal contributions from indirect wins at all distances."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The empirical spectral bound range is the same calibration window GSE uses for the discount parameter.",
+        "source_operator": "alpha_upper_bound_range",
+        "telemetry": "alpha upper bound 0.2-0.3 (Table I 1998-2004 lambda_max 3.394-4.151); indirect win <= 1/5-1/3 direct; indirect count grows with distance -> substantial by number; alpha near bound ~ equal contributions all distances"
+      }
+    },
+    {
+      "primitive_id": "alpha_zero_winloss",
+      "name": "alpha=0 special case: only direct wins count, total score = win-loss differential",
+      "verbatim_quote": "only direct wins count at all and the total score for a team is simply the win-loss differential",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A larger alpha places more weight on indirect wins relative to direct ones while a smaller one places more weight on direct wins; for the special case alpha=0 only direct wins count at all and the total score for a team is simply the win-loss differential, which correlates poorly with expert opinion due to strength-of-schedule variation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The alpha=0 win-loss limit is literally GSE's naive-baseline anchor for the discount family.",
+        "source_operator": "alpha_zero_winloss",
+        "telemetry": "alpha=0 -> only direct wins, total score = win-loss differential (poor correlation with expert opinion, strength-of-schedule variation); larger alpha = more indirect weight"
+      }
+    },
+    {
+      "primitive_id": "retrodictive_accuracy_def",
+      "name": "Retrodictive accuracy = fraction of games won by higher-ranked team (final network)",
+      "verbatim_quote": "the fraction of all games in a season that are won by the team with higher rank",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "As a simple criterion for judging alpha values, the rankings of all teams are calculated and the retrodictive accuracy examined: the fraction of all games in a season that are won by the team with higher rank (as calculated from the final network after the season is complete); this is the Martinich 2002 retrodictive-accuracy metric."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The retrodictive-accuracy metric is literally GSE's higher-rank-wins validation measure.",
+        "source_operator": "retrodictive_accuracy_def",
+        "telemetry": "retrodictive accuracy = fraction of games won by higher-ranked team (from final post-season network); Martinich 2002 metric; judges alpha"
+      }
+    },
+    {
+      "primitive_id": "best_alpha_retrodictive",
+      "name": "~80% retrodictive accuracy over broad alpha; best at alpha ~ 0.8 lambda_max^-1",
+      "verbatim_quote": "we calculate the rankings of all teams and then examine the retrodictive accuracy",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For a broad range of alpha the method ranks winners above losers about 80% of the time (a pretty good average), and the best results appear for values of alpha around 0.8 of the maximum allowed value, so a simple strategy is to choose alpha = 0.8 lambda_max^-1 (Fig 3, seasons 1998-2004)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The 0.8-of-max optimum is the same empirical discount-tuning GSE applies.",
+        "source_operator": "best_alpha_retrodictive",
+        "telemetry": "~80% retrodictive accuracy broad alpha range; best alpha ~ 0.8 lambda_max^-1 (Fig3 1998-2004); simple strategy alpha=0.8 lambda_max^-1"
+      }
+    },
+    {
+      "primitive_id": "preseason_alpha_problem",
+      "name": "lambda_max needs full-season network (post-season); want pre-season alpha for weekly standings",
+      "verbatim_quote": "one often wants to rank teams before the end of the season, for instance to calculate weekly standings from partial results as the season progresses",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The strategy alpha=0.8 lambda_max^-1 has one problem: calculating lambda_max (and hence alpha) requires knowledge of the entire directed network, so it can only be done after the season ends once every game outcome is decided; in practice one often wants to rank teams before the end of the season, for instance to calculate weekly standings from partial results as the season progresses, so alpha must be decidable before the season starts."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The pre-season-parameter requirement is literally GSE's no-lookahead calibration constraint.",
+        "source_operator": "preseason_alpha_problem",
+        "telemetry": "lambda_max needs entire directed network -> only post-season; want pre-season alpha for weekly standings from partial results; no-lookahead requirement"
+      }
+    },
+    {
+      "primitive_id": "real_networks_fewer_loops",
+      "name": "Real schedules fewer loops than chance (strength variation => near-acyclic); random edges raise lambda_max",
+      "verbatim_quote": "Real schedule networks have fewer loops than one would expect on the basis of chance, precisely because teams do vary in strength",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Real schedule networks have fewer loops than one would expect on the basis of chance, precisely because teams do vary in strength which gives rise to networks close to being acyclic; thus lambda_max is lower and the limit lambda_max^-1 higher in a real network than in a randomly-edged network (Monte Carlo randomization of edge directions consistently increases lambda_max), providing a safe practical upper bound on alpha without knowledge of game outcomes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The strength-induced near-acyclicity is literally GSE's signal-that-lowers-loop-count insight.",
+        "source_operator": "real_networks_fewer_loops",
+        "telemetry": "real networks fewer loops than chance (teams vary in strength -> near-acyclic); lambda_max lower / bound higher than random; MC edge-direction randomization raises lambda_max; safe bound without outcomes"
+      }
+    },
+    {
+      "primitive_id": "random_graph_safe_bound",
+      "name": "Safe pre-season alpha bound: calculate limit for randomly-assigned-outcome network",
+      "verbatim_quote": "we simply calculate the limit for a network with randomly assigned outcomes",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "This provides a way to calculate a safe and practical upper bound on alpha without knowledge of game outcomes: simply calculate the limit for a network with randomly assigned outcomes; the largest eigenvalue for a random directed network with known in/out-degree distribution is computable analytically."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The random-outcome null bound is literally GSE's outcome-free conservative calibration.",
+        "source_operator": "random_graph_safe_bound",
+        "telemetry": "safe practical alpha upper bound without game outcomes = calculate limit for randomly-assigned-outcome network; analytic lambda_max for known degree distribution"
+      }
+    },
+    {
+      "primitive_id": "eq7_eigenvalue_degree",
+      "name": "Eq7 lambda_max = <k_in k_out>/<k_in> (mean out-degree of vertex reached by random edge)",
+      "verbatim_quote": "this is simply equal to the mean out-degree of the vertex reached by following a randomly chosen edge in the graph",
+      "page": 9,
+      "latex": "\\lambda_{max}=\\frac{\\sum_{ij}ij\\,P(k^{in}=i,k^{out}=j)}{\\sum_{ij}i\\,P(k^{in}=i,k^{out}=j)}=\\frac{\\langle k^{in}k^{out}\\rangle}{\\langle k^{in}\\rangle}",
+      "symbol_and_unit_ledger": {
+        "lambda_max": "largest eigenvalue of adjacency",
+        "P(k_in=i,k_out=j)": "joint in/out-degree distribution",
+        "<k_in k_out>": "mean product of in/out degrees",
+        "<k_in>": "mean in-degree"
+      },
+      "assumptions": [
+        "The largest eigenvalue equals the factor by which the number of paths of a given length starting at a vertex increases when length increases by one (long-path limit), which is simply the mean out-degree of the vertex reached by following a randomly chosen edge: lambda_max = sum_ij ij P(k_in=i,k_out=j) / sum_ij i P(k_in=i,k_out=j) = <k_in k_out>/<k_in> (Eq7, Newman-Strogatz-Watts 2001). Equation 7 is printed math-font and reconstructed here.",
+        "Equation 7 (largest eigenvalue as degree-moment ratio) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Random directed network with known degree distribution; long-path limit",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The eigenvalue-as-excess-degree formula is literally GSE's random-graph spectral-radius kernel.",
+        "source_operator": "eq7_eigenvalue_degree",
+        "telemetry": "lambda_max = path-count growth factor (long-path limit) = mean out-degree of vertex reached by random edge = <k_in k_out>/<k_in> (Eq7); P joint in/out-degree; Newman-Strogatz-Watts 2001"
+      }
+    },
+    {
+      "primitive_id": "eq9_lambda_moment",
+      "name": "Eq9 lambda_max = (<k^2>-<k>)/(2<k>) for random edge directions; MC agreement excellent",
+      "verbatim_quote": "agreement between the analytic calculation and the simulations is excellent",
+      "page": 10,
+      "latex": "\\lambda_{max}=\\frac{\\langle k^2\\rangle-\\langle k\\rangle}{2\\langle k\\rangle}",
+      "symbol_and_unit_ledger": {
+        "lambda_max": "random-network largest eigenvalue",
+        "<k>": "mean games played per team",
+        "<k^2>": "mean-square games played",
+        "p_k": "games-played degree distribution"
+      },
+      "assumptions": [
+        "For random direction assignment on an undirected network with games-played distribution p_k, the joint degree distribution is P(k_in=i,k_out=j)=2^-(i+j) C(i+j,i) p_{i+j} (Eq8), giving lambda_max = (<k^2>-<k>)/(2<k>) (Eq9) where <k> and <k^2> are the mean and mean-square number of games played; Table II shows excellent agreement between the analytic calculation and Monte Carlo simulations (1998-2004). Equations 8-9 are printed math-font and reconstructed here.",
+        "Equations 8-9 (binomial degree split + eigenvalue moment formula) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Random edge directions on undirected schedule graph; binomial in/out split",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The degree-moment eigenvalue formula is literally GSE's outcome-free spectral bound from games-played distribution.",
+        "source_operator": "eq9_lambda_moment",
+        "telemetry": "P(k_in=i,k_out=j)=2^-(i+j)C(i+j,i)p_{i+j} (Eq8 random directions); lambda_max=(<k^2>-<k>)/(2<k>) (Eq9); <k>,<k^2> mean/mean-square games played; Table II MC agreement excellent"
+      }
+    },
+    {
+      "primitive_id": "random_lambda_20pct_larger",
+      "name": "Random lambda_max ~20% larger than actual (real wins reflect strength); random bound ~0.8 of true limit",
+      "verbatim_quote": "actual wins and losses are not random, but reflect the real strengths and weaknesses of the teams",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "All the values of lambda_max in Table II are larger by about 20% than the actual lambda_max for the corresponding season (Table I), precisely because actual wins and losses are not random but reflect the real strengths and weaknesses of the teams; this means the random-graph value of lambda_max imposes a limit on alpha that is in general about 0.8 of the limit derived from the true final schedule network, right in the middle of the best-ranking region."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 20%-larger random bound landing at 0.8-of-true is literally GSE's elegant outcome-free near-optimal calibration.",
+        "source_operator": "random_lambda_20pct_larger",
+        "telemetry": "random lambda_max ~20% larger than actual (real wins reflect strength not random); random bound ~0.8 of true limit = middle of best-ranking region; elegant coincidence"
+      }
+    },
+    {
+      "primitive_id": "eq10_alpha_choice",
+      "name": "Eq10 alpha = 2<k>/(<k^2>-<k>): guarantees convergence, no outcome knowledge, near-optimal",
+      "verbatim_quote": "This guarantees convergence, requires no knowledge of the eventual outcome of games, and appears to give optimal or near-optimal rankings under these constraints",
+      "page": 11,
+      "latex": "\\alpha=\\frac{2\\langle k\\rangle}{\\langle k^2\\rangle-\\langle k\\rangle}",
+      "symbol_and_unit_ledger": {
+        "alpha": "chosen indirection discount",
+        "<k>": "mean games played",
+        "<k^2>": "mean-square games played"
+      },
+      "assumptions": [
+        "An elegant solution emerges: choose alpha equal to the limiting value set by Eq9, alpha = 2<k>/(<k^2>-<k>) (Eq10); this guarantees convergence, requires no knowledge of the eventual outcome of games, and appears to give optimal or near-optimal rankings under these constraints, and is the value used in the paper (2004 alpha=0.207, about 0.763 of the maximum). Equation 10 is printed math-font and reconstructed here.",
+        "Equation 10 (outcome-free alpha choice) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Equals random-graph convergence limit; near-optimal empirically (0.7-0.85 of true max)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The closed-form outcome-free alpha is literally GSE's pre-season discount calibration rule.",
+        "source_operator": "eq10_alpha_choice",
+        "telemetry": "alpha=2<k>/(<k^2>-<k>) (Eq10, inverse of Eq9); guarantees convergence + no outcome knowledge + near-optimal; 2004 alpha=0.207 (~0.763 max); used throughout paper"
+      }
+    },
+    {
+      "primitive_id": "bcs_correlation_090",
+      "name": "BCS top-25 2004 rank correlation 0.90; Pittsburgh/Florida outside top 25 match computers",
+      "verbatim_quote": "the correlation coefficient between the two sets of rankings is 0.90",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For the top 25 BCS teams of 2004 the correlation coefficient between the method's rankings and the BCS computer rankings is 0.90; the method classified Pittsburgh and Florida outside the top 25, the same teams ranked outside the top 25 by all BCS computer algorithms except Billingsley, and no other computer poll does better at predicting the final top 25 (each gets at least two wrong)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The 0.90 BCS correlation is the same external-ranking-agreement benchmark GSE records.",
+        "source_operator": "bcs_correlation_090",
+        "telemetry": "2004 top-25 BCS correlation 0.90; Pittsburgh+Florida outside top 25 (match all BCS computers except Billingsley); no computer poll predicts final top 25 better (each >=2 wrong)"
+      }
+    },
+    {
+      "primitive_id": "agreement_not_success",
+      "name": "Agreement with official rankings NOT necessarily success (better method must disagree somewhere)",
+      "verbatim_quote": "agreement with the official rankings is not necessarily a sign of success for our method",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Agreement with the official rankings is not necessarily a sign of success: if the method were better in some sense than the official method (for example versus human expert judges) then necessarily the two methods would have to disagree on some results; nonetheless since the BCS ranking is by common consent the official collective wisdom it is of interest to compare."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The agreement-not-success caveat is literally GSE's better-model-must-diverge epistemic discipline.",
+        "source_operator": "agreement_not_success",
+        "telemetry": "agreement with official NOT necessarily success; better method must disagree somewhere (vs expert judges); BCS = official collective wisdom, compare for interest"
+      }
+    },
+    {
+      "primitive_id": "auburn_undefeated_third",
+      "name": "Auburn undefeated but ranked 3rd in all polls (no championship); method concurs; Texas/California side with computers",
+      "verbatim_quote": "Auburn, although undefeated in the regular season, did not participate in a championship game because it was consistently ranked third in all polls, and our method concurs",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Auburn, although undefeated in the regular season, did not participate in a championship game because it was consistently ranked third in all polls, and the method concurs; Texas and California played very similar seasons but both human polls ranked California higher while all computer polls said the reverse, and the method lines up with the computer polls."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Auburn/California controversial cases are the same ranking-disagreement diagnostics GSE audits.",
+        "source_operator": "auburn_undefeated_third",
+        "telemetry": "Auburn undefeated but 3rd in all polls (no championship), method concurs; Texas/California similar seasons, human polls California higher, computer polls reverse, method sides with computers"
+      }
+    },
+    {
+      "primitive_id": "top5_agree_3of5",
+      "name": "Top-5 rankings agree on >=3 of 5 each year 1998-2003; retrodictive accuracy comparable to BCS",
+      "verbatim_quote": "The rankings consistently agree on at least three of the top five teams in each year",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Comparing the top five BCS teams for each year 1998-2003 (alpha typically 0.7-0.85 of the maximum), the rankings consistently agree on at least three of the top five teams in each year (Table IV); the retrodictive accuracy among the top 25/15 teams (Table V) is comparable to the BCS (e.g. 2004 method 0.81 vs BCS 0.84, 2002 method 0.89 vs BCS 0.79)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The top-5 overlap and retrodictive parity are the same multi-year agreement evidence GSE logs.",
+        "source_operator": "top5_agree_3of5",
+        "telemetry": "top-5 agree >=3 of 5 each year 1998-2003 (Table IV, alpha 0.7-0.85 max); retrodictive accuracy among top 25/15 comparable to BCS (Table V: 2004 0.81 vs 0.84, 2002 0.89 vs 0.79)"
+      }
+    },
+    {
+      "primitive_id": "bison_dominance_example",
+      "name": "Non-football: bison dominance hierarchy (Lott 1979, 26 males); rank-breeding correlation 0.611",
+      "verbatim_quote": "the resulting rankings are highly correlated with breeding success of the bison",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The method applies to any pairwise-comparison ranking problem; a biology example uses Lott's 1979 study of dominant/submissive behaviors between 26 male American bison in Montana over about a month, creating a directed win/loss network; with alpha=0.124 from Eq10 the resulting rankings are highly correlated with breeding success (number of mating events), correlation coefficient 0.611, a quantitative confirmation of the status-breeding link."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The cross-domain dominance-hierarchy transfer is literally GSE's pairwise-ranking generality proof.",
+        "source_operator": "bison_dominance_example",
+        "telemetry": "bison dominance (Lott 1979, 26 male American bison Montana, ~month); directed win/loss network; alpha=0.124 (Eq10); rank vs breeding success correlation 0.611; status-breeding link confirmed"
+      }
+    },
+    {
+      "primitive_id": "lorenz_gini_inequality",
+      "name": "Lorenz curve / Gini coefficient visualize rank-breeding inequality (curve above 45deg equality line)",
+      "verbatim_quote": "a device often used to represent inequality in the distribution of wealth between the richest and poorest individuals",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The rank-breeding correlation can be represented by a Lorenz curve, a device often used to represent inequality in the distribution of wealth between the richest and poorest individuals: the fraction of mating events involving bison of a given rank or higher versus rank; if mating success were independent of rank the curve would follow the 45-degree line, but it deviates markedly, and the area between the line and curve is the Gini coefficient (though the correlation coefficient is a more easily understood measure)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Lorenz/Gini inequality visualization is the same rank-outcome concentration diagnostic GSE uses.",
+        "source_operator": "lorenz_gini_inequality",
+        "telemetry": "Lorenz curve (wealth-inequality device): fraction mating events >= rank vs rank; independent -> 45deg line, deviates markedly; area between = Gini coefficient; correlation coefficient more understandable"
+      }
+    },
+    {
+      "primitive_id": "simplicity_advantage",
+      "name": "Single-parameter simplicity is a substantial advantage (less tuning, intuitive + mathematically clear)",
+      "verbatim_quote": "we believe that the very simplicity of the current method, with its single parameter, is a substantial advantage",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The authors believe the very simplicity of the current method, with its single parameter, is a substantial advantage and that simplicity should be encouraged in these types of mathematical methods; a method such as theirs reduces the extent to which calculations must be tuned to give good results while retaining an intuitive foundation and mathematical clarity that makes the results persuasive."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The parsimony-over-tuning principle is literally GSE's single-parameter model-selection value.",
+        "source_operator": "simplicity_advantage",
+        "telemetry": "single-parameter simplicity substantial advantage; less tuning for good results; intuitive foundation + mathematical clarity -> persuasive; simplicity encouraged"
+      }
+    },
+    {
+      "primitive_id": "edge_weight_modifiers",
+      "name": "Extensible: margin of victory / home-field / season progress as edge-weight modifiers (kept simple here)",
+      "verbatim_quote": "these could be introduced as modifiers on the weights of the edges in the network",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The method lends itself readily to the addition of other elements such as margin of victory, home-field advantage, progress of the season, and so forth: these could be introduced as modifiers on the weights of the edges in the network, and it would be interesting to see how these affect the outcome; the authors nonetheless keep the single-parameter simplicity as the substantial advantage."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The edge-weight-modifier extensibility is literally GSE's margin/home/time weighting hook on the schedule graph.",
+        "source_operator": "edge_weight_modifiers",
+        "telemetry": "extensible: margin of victory/home-field advantage/season progress as edge-weight modifiers on network; kept simple (single parameter) here; interesting future effect"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "networkrank2005_trace",
+      "think": "The retrocausal genealogy of this paper is the network-centrality turn in sports ranking. Juyong Park and M. E. J. Newman of the University of Michigan, posting to arXiv in 2005 as physics/0505169 and publishing in Physical Review E, start from the structural conflict that American college football wants a national championship but has no playoff, so ranking rests on win-loss records even though each team plays only a small fraction of eligible opponents, leaving the system underdetermined or contradictory. The work sits in the lineage of paired-comparison theory, the Perron-Frobenius ranking of Keener, the Katz status index and Taylor's influence structures, and the random-graph degree-distribution machinery of Newman, Strogatz and Watts, and it translates the folk transitive argument that a team which beat a team which beat another team is better than that other team into a precise centrality measure on the directed win-loss graph. The recursive theory of mind is the discounted path-count win and loss score. The schedule is a directed network with an arrow from winner to loser and an asymmetric adjacency matrix whose entry counts how many times one team beat another; direct wins are the out-degree, indirect wins at distance two are two-step paths, and higher-order indirect wins are longer paths discounted by a single parameter alpha per level of indirection. The win score is the out-degree plus alpha times the win scores of the teams beaten, the loss score is the symmetric quantity on the transpose, and the ranking statistic is their difference; in vector form these are resolvent inverses that generalize Katz centrality, so beating a strong team automatically confers many indirect wins and strength of schedule is built in rather than appended. Cross-layer veto adjudication is the convergence bound and the outcome-free choice of alpha. The path series converges only when alpha is below the inverse of the largest eigenvalue of the adjacency matrix, and because real seasons always contain loops there is a finite bound, historically between zero point two and zero point three. The best retrodictive accuracy — the fraction of games won by the higher-ranked team — sits near alpha equal to zero point eight of that bound, but computing the bound requires the whole season's outcomes, which is unavailable for weekly in-season standings. The authors' resolution is that real networks have fewer loops than random ones precisely because teams differ in strength, so the random-graph eigenvalue, computable from the games-played degree distribution alone as the mean-square minus mean degree over twice the mean degree, is about twenty percent larger than the true value and therefore lands alpha right in the optimal region without any knowledge of results. The implementation invariants map directly onto GSE. The directed winner-to-loser schedule graph is GSE's pairwise-outcome network representation; the discounted indirect-win credit is GSE's opponent-quality-adjusted strength kernel; the win-minus-loss Katz resolvent is GSE's network-centrality ranking statistic; the spectral convergence bound is GSE's stability constraint on transitive credit; and the closed-form outcome-free alpha is GSE's no-lookahead pre-season calibration rule that guarantees convergence while remaining near-optimal. The empirical validation and the cross-domain transfer give the method its credibility. Against the official Bowl Championship Series computer rankings the method achieves a rank correlation of zero point nine zero on the 2004 top twenty-five, agrees on at least three of the top five teams every year from 1998 to 2003, and matches the BCS retrodictive accuracy among the top teams, while siding with the computer polls against the human polls on the controversial California-versus-Texas case and concurring that undefeated Auburn was third. The same machinery applied to Lott's 1979 dominance hierarchy of twenty-six male American bison yields a rank-versus-breeding-success correlation of zero point six one one, visualized with a Lorenz curve and Gini coefficient, demonstrating that the ranking kernel is not football-specific but a general tool for pairwise comparison. The retrodictive-accuracy table makes the parity concrete: among the published top teams the method scores zero point eight one against the BCS zero point eight four in 2004 and zero point eight nine against zero point seven nine in 2002, and the alpha-zero limit reduces to the raw win-loss differential that everyone agrees on but that correlates poorly with expert opinion because it ignores strength of schedule, which is precisely the defect the indirect-win machinery repairs. The caveats and the design philosophy close the account. The authors are explicit that agreement with the official rankings is not necessarily a sign of success, since a genuinely better method must disagree somewhere, and they note that the retrodictive metric is computed on the final network and constrained to games among the top teams the BCS publishes. The method deliberately keeps a single parameter, treating margin of victory, home-field advantage and season progress as possible future edge-weight modifiers rather than complicating the present formulation, on the principle that simplicity reduces tuning while retaining an intuitive foundation and mathematical clarity. The invariant for GSE is to adopt the directed schedule graph, the discounted indirect-win Katz centrality, the win-minus-loss ranking statistic, the spectral convergence bound, and the outcome-free degree-moment alpha, while carrying the agreement-not-success caution, the final-network retrodictive scope, and the single-parameter parsimony as honest bounds on what the ranking can claim.",
+      "retrocausal_genealogy": "Network-centrality turn in sports ranking. Juyong Park, M. E. J. Newman (University of Michigan Physics + Center for Study of Complex Systems); arXiv:physics/0505169v4 [physics.soc-ph] 31 Oct 2005; Phys Rev E 72, 026136. College football no playoff -> ranking from win-loss but each team plays small fraction of opponents -> underdetermined/contradictory; ~75% games intra-conference. Lineage: paired comparisons (David 1988), Keener 1993 Perron-Frobenius ranking, Katz 1953 status index, Taylor 1969 influence structures, Newman-Strogatz-Watts 2001 random graphs, Martinich 2002 retrodictive accuracy, BCS (Callagan-Mucha-Porter 2004). Folk transitive argument A beat B beat C => A better than C -> centrality on directed win-loss graph. NSF DMS-0405348 + McDonnell Foundation.",
+      "theory_of_mind": "Directed network vertices=colleges, arrow winner->loser; A n x n real asymmetric (n=117 Div I-A 2004), A_ij=times j beat i (0/1/2). Eq1 direct wins_i=sum_j A_ji (out-degree); Eq2 distance-2 indirect=sum_jk A_kj A_ji; discount alpha per indirection level. Eq3 w_i=sum_j(1+alpha w_j)A_ji=k_out_i+alpha sum_j A^T_ij w_j; Eq4 l_i=k_in_i+alpha sum_j A_ij l_j; total s_i=w_i-l_i ranks. Eq5 w=k_out+alpha A^T.w, l=k_in+alpha A.l; Eq6 w=(I-alpha A^T)^-1 k_out, l=(I-alpha A)^-1 k_in (generalized Katz centrality). Convergence alpha<lambda_max^-1; acyclic lambda_max=0 (no bound) but real seasons always loops; bound 0.2-0.3 (Table I lambda_max 3.394-4.151). alpha=0 -> win-loss differential. Eq7 lambda_max=<k_in k_out>/<k_in>; Eq8 P(k_in=i,k_out=j)=2^-(i+j)C(i+j,i)p_{i+j}; Eq9 lambda_max=(<k^2>-<k>)/(2<k>); Eq10 alpha=2<k>/(<k^2>-<k>). Eqs 1-10 math-font (null-glyph) reconstructed.",
+      "cross_layer_veto": "Retrodictive accuracy = fraction games won by higher-ranked team (final network, Martinich 2002); ~80% broad alpha, best alpha~0.8 lambda_max^-1 (Fig3 1998-2004). Problem: lambda_max needs full season (post-season); want pre-season weekly standings. Real networks fewer loops than chance (strength variation -> near-acyclic); MC edge randomization raises lambda_max; random-graph lambda_max ~20% larger than actual -> bound ~0.8 of true = optimal region. Eq10 alpha outcome-free, guarantees convergence, near-optimal (2004 alpha=0.207 ~0.763 max; typically 0.7-0.85 max). BCS comparison: 2004 top-25 correlation 0.90; Pittsburgh+Florida outside top 25 (match all computers except Billingsley); Auburn undefeated 3rd (concurs); Texas/California method sides with computers; top-5 agree >=3/5 each year 1998-2003 (Table IV); retrodictive among top 25/15 comparable (Table V 2004 0.81 vs 0.84, 2002 0.89 vs 0.79). Agreement NOT necessarily success (better method must disagree). Non-football: bison dominance Lott 1979 26 males Montana, alpha=0.124, rank-breeding correlation 0.611, Lorenz curve/Gini. Simplicity single-parameter advantage; margin/home-field/season-progress as future edge-weight modifiers. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A network-physics study ranks Division I-A college football teams by representing the season schedule as a directed winner-to-loser graph and counting direct plus distance-discounted indirect wins and losses, yielding a win-minus-loss score that is a generalized Katz centrality and automatically encodes strength of schedule; the single discount parameter alpha is bounded by the inverse largest eigenvalue of the adjacency matrix for convergence, and the authors derive an outcome-free closed-form alpha from the games-played degree distribution that lands in the empirically optimal region, achieving 0.90 correlation with the BCS computer rankings and transferring to bison dominance hierarchies, while honestly noting that agreement with official rankings is not itself proof of superiority.",
+  "gsi_mapping": "GSI treats directed schedule graph (arrow winner->loser, A_ij=times j beat i, n=117 Div I-A 2004); Eq1 direct wins out-degree sum_j A_ji, Eq2 distance-2 indirect sum_jk A_kj A_ji, alpha discount per indirection; Eq3 w_i=k_out_i+alpha sum A^T_ij w_j, Eq4 l_i=k_in_i+alpha sum A_ij l_j, s_i=w_i-l_i ranks; Eq5/6 resolvent w=(I-alpha A^T)^-1 k_out, l=(I-alpha A)^-1 k_in (generalized Katz); strength-of-schedule automatic; convergence alpha<lambda_max^-1 (acyclic lambda_max=0 no bound, real seasons always loops, bound 0.2-0.3 Table I); alpha=0 win-loss differential; retrodictive accuracy fraction games won by higher rank ~80% best alpha~0.8 lambda_max^-1; real networks fewer loops than chance (strength variation), random lambda_max ~20% larger; Eq7 lambda_max=<k_in k_out>/<k_in>, Eq8 binomial degree split, Eq9 lambda_max=(<k^2>-<k>)/(2<k>), Eq10 alpha=2<k>/(<k^2>-<k>) outcome-free near-optimal (2004 0.207); BCS 2004 top-25 correlation 0.90, top-5 >=3/5 agree 1998-2003, retrodictive parity, Auburn 3rd concurs, Texas/California sides computers, agreement not success; bison Lott 1979 26 males alpha 0.124 rank-breeding 0.611 Lorenz/Gini; single-parameter simplicity, margin/home/season edge-weight modifiers future; Eqs 1-10 math-font reconstructed.",
+  "gse_mapping": "GSE lifts the directed winner-to-loser schedule graph as its pairwise-outcome network representation, the distance-discounted indirect-win count as its opponent-quality-adjusted strength-of-schedule credit kernel, the win-minus-loss Katz-centrality resolvent as its network ranking statistic, the spectral convergence bound alpha<lambda_max^-1 as its stability constraint on transitive credit, the retrodictive higher-rank-wins fraction as its validation metric, and the closed-form outcome-free degree-moment alpha as its no-lookahead pre-season discount calibration that guarantees convergence while staying near-optimal; treats the random-graph-versus-real loop-count difference as the insight that makes outcome-free calibration land in the optimal region, carries the agreement-with-official-not-success caution and the final-network retrodictive scope as honest bounds, and notes the single-parameter parsimony with margin-of-victory/home-field/season-progress available as future edge-weight modifiers; all outputs are network-centrality team rankings from win-loss records, never sportsbook lines."
+}
