@@ -1,0 +1,725 @@
+{
+  "book_id": "1505929a6cf204b1",
+  "source_status": "COMPLETE",
+  "source_note": "Catalog title '2601.00998v1' and primary_domain 'other' are placeholders. True source: Yue Zhou, Jue Chen, Zilun Zhang, Penghui Huang, Ran Ding, Zhentao Zou, PengFei Gao, Yuchen Wei, Ke Li, Xue Yang, Xue Jiang, Hongxin Yang, Jonathan Li, 'DVGBench: Implicit-to-Explicit Visual Grounding Benchmark in UAV Imagery with Large Vision-Language Models', arXiv:2601.00998v1 [cs.CV], 2 Jan 2026, 20 pages, clean born-digital text (Elsevier preprint). Tier-B queue row but a full equation-rich research paper; extracted under true domain cs (visual grounding / RLVR), with a sport scenario directly relevant to GSE football offside/pick-and-roll grounding. Equations 1-5 and the IoU/L1/Jaccard rewards transcribed as labeled LaTeX; the PDF renders some math symbols as garbled Unicode glyphs, reconstructed in standard notation from the unambiguous prose. No sportsbook content. Verbatim quotes verified as exact normalized substrings.",
+  "primitives": [
+    {
+      "primitive_id": "implicit_vs_explicit_vg",
+      "name": "Implicit VG requires domain knowledge; explicit VG uses direct visual cues",
+      "verbatim_quote": "This type of VG task involving common sense or professional knowledge, referred to as Implicit VG, is precisely the focus of this article.",
+      "page": "p1 Sec1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Explicit references use direct visual cues (relative position, size, color).",
+        "Implicit references require commonsense or scenario-specific domain knowledge to resolve."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The implicit/explicit split IS the GSE domain-knowledge grounding kernel: resolving a reference that requires football rules (offside, pick-and-roll) rather than pixel attributes is the isomorphism of grounding a sovereign decision in domain physics rather than surface statistics.",
+        "source_operator": "implicit_vs_explicit_vg",
+        "telemetry": "implicit = commonsense/domain knowledge; explicit = position/size/color; UAV imagery."
+      }
+    },
+    {
+      "primitive_id": "infant_implicit_dividing_line",
+      "name": "Implicit reference handling as the dividing line between primary and advanced intelligence",
+      "verbatim_quote": "the academic community regards the ability to handle implicit reference as a dividing line between primary and advanced intelligence",
+      "page": "p1 Sec1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Infants understand 'bottom left' but cannot judge a boat's direction from oar/water-ripple relationships.",
+        "Implicit reference handling is framed as a cognitive developmental milestone."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The developmental dividing line IS a DERIVED KERNEL for GSE reasoning-tier classification: a system that resolves only explicit cues is at a primary tier, while one that resolves domain-knowledge references is at an advanced tier, the Foundry's ladder from perception to sovereign reasoning.",
+        "source_operator": "infant_implicit_dividing_line",
+        "telemetry": "infant analogy; bottom-left vs leading-ship; primary vs advanced intelligence."
+      }
+    },
+    {
+      "primitive_id": "cycle_of_bias",
+      "name": "Cycle of bias: explicit-biased datasets train explicit-biased LVLMs",
+      "verbatim_quote": "although they enable automated generation of referring data at scale, their outputs remain biased toward explicit references, as they are trained predominantly on earlier human-annotated datasets that contain mostly explicit descriptions",
+      "page": "p2 Sec1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Existing VG datasets derive from detection/classification benchmarks emphasizing explicit attributes.",
+        "LVLMs trained on them generate explicit-biased referring data, reinforcing the bias in a cycle."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The cycle of bias IS a DERIVED KERNEL for GSE training-data-feedback veto: a model trained on a biased corpus regenerates that bias at scale, so the Foundry audits synthetic-data provenance for self-reinforcing distortion rather than trusting volume.",
+        "source_operator": "cycle_of_bias",
+        "telemetry": "explicit-biased datasets -> explicit-biased LVLM generation -> cycle of bias."
+      }
+    },
+    {
+      "primitive_id": "uav_explicit_presupposes_answer",
+      "name": "In UAV applications explicit references presuppose the answer; implicit ones are operational",
+      "verbatim_quote": "In UAV applications, explicit references hold limited practical utility",
+      "page": "p2 Sec1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "'The red vehicle in the top-left' has limited practical utility because it presupposes the answer.",
+        "Implicit references like 'the vehicle making an illegal left turn' or 'people trapped by floodwater' are operationally meaningful."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The presupposition critique IS the GSE query-information veto: a reference that already encodes the answer carries no decision information, so the Foundry values queries that require genuine inference over queries that merely restate the target's location.",
+        "source_operator": "uav_explicit_presupposes_answer",
+        "telemetry": "explicit presupposes answer; implicit operational (illegal left turn, floodwater trapped)."
+      }
+    },
+    {
+      "primitive_id": "dual_query_iep_protocol",
+      "name": "Implicit-Explicit Pair protocol quantifies the reasoning gap and paired consistency",
+      "verbatim_quote": "quantification of the reasoning gap as the explicit-implicit localization performance differential",
+      "page": "p5 Sec3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each referent has both an explicit and an implicit referring expression.",
+        "Reasoning gap = explicit minus implicit localization performance; paired-consistency measures agreement across paraphrase."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The IEP protocol IS the GSE reasoning-gap measurement kernel: holding the target fixed while varying only the reference's knowledge demand isolates the reasoning contribution from perception, the Foundry's controlled-ablation pattern for separating layers.",
+        "source_operator": "dual_query_iep_protocol",
+        "telemetry": "IEP dual-query; reasoning gap = explicit-implicit differential; paired-consistency metric."
+      }
+    },
+    {
+      "primitive_id": "sport_offside_electronic_referee",
+      "name": "Sport scenario: soccer offside, race ranking, pick-and-roll for electronic refereeing",
+      "verbatim_quote": "soccer offside determination, race ranking identification, and detection of pick-and-roll participants in basketball, enabling intelligent commentary or refereeing and complementing ground-based camera viewpoints",
+      "page": "p5 Sec3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sport is 18.0% of DVGBench; sub-scenes include soccer, basketball, boating, cycling, running, baseball, swimming, car racing.",
+        "Implicit sport queries encode the rules of the sport (offside, pick-and-roll, leading rider)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The sport scenario IS the GSE football-domain grounding kernel: resolving 'people who may be in an offside position' from an overhead view is exactly the Foundry's task of grounding a rule-based decision in spatial telemetry, the electronic-referee isomorphism of GSE's situational reasoning.",
+        "source_operator": "sport_offside_electronic_referee",
+        "telemetry": "sport 18.0%; soccer offside; pick-and-roll; race ranking; electronic referee; overhead view."
+      }
+    },
+    {
+      "primitive_id": "category_averaging_fairness",
+      "name": "Category-averaging corrects uneven scenario distribution for fair evaluation",
+      "verbatim_quote": "The uneven distribution of question types across scenarios in DVGBench reflects a realistic data collection bias. To ensure a fair evaluation, we employ a category-averaging method when calculating the overall accuracy scores.",
+      "page": "p5 Sec3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Scenario proportions are uneven: traffic 33.0%, productive 27.7%, sport 18.0%, social 10.4%, disaster 6.1%, security 4.8%.",
+        "Overall accuracy is category-averaged, not sample-weighted, to avoid majority-category domination."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Category-averaging IS the GSE imbalance-robust scoring kernel: averaging per-category performance rather than pooling samples prevents a majority class from masking minority-class failure, the Foundry's stratified-certification pattern.",
+        "source_operator": "category_averaging_fairness",
+        "telemetry": "traffic 33.0/productive 27.7/sport 18.0/social 10.4/disaster 6.1/security 4.8%; category-averaged accuracy."
+      }
+    },
+    {
+      "primitive_id": "manual_annotation_kappa",
+      "name": "Fully manual annotation with Cohen's Kappa above 0.95 reliability",
+      "verbatim_quote": "Inter-annotator agreement was quantified using Cohen's Kappa, and an average consistency score of above 0.95 was maintained.",
+      "page": "p6 Sec3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Three-stage pipeline: implicit reference, explicit reference, mask annotation; no template or LVLM generation.",
+        "Initial annotator + senior validator + third-expert resolution; unresolved cases excluded; 10% independently re-annotated."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Kappa-audited manual pipeline IS a DERIVED KERNEL for GSE label-provenance gate: human-crafted domain-knowledge labels with measured inter-annotator agreement and an exclusion rule for unresolved cases are the Foundry's standard for trustworthy supervision.",
+        "source_operator": "manual_annotation_kappa",
+        "telemetry": "Cohen's Kappa >0.95; 10% re-annotated; 3-stage manual; unresolved excluded."
+      }
+    },
+    {
+      "primitive_id": "lvlm_box_center_output",
+      "name": "DroneVG-R1 reasoning model outputs boxes and center points (Eq1)",
+      "verbatim_quote": "The model output is represented in a structured format, from which we extract the bounding boxes",
+      "page": "p6 Eq1",
+      "latex": "(\\{B_i, P_i\\})_{i=1}^{N} = \\mathrm{LVLM}(I, T)",
+      "symbol_and_unit_ledger": {
+        "I": "input image [pixels]",
+        "T": "high-level text instruction [tokens]",
+        "B_i": "predicted bounding box for object i [pixel coordinates x1,y1,x2,y2]",
+        "P_i": "predicted center point for object i [pixel coordinates]",
+        "N": "number of referred objects [count]"
+      },
+      "assumptions": [
+        "LVLM = vision encoder (windowed-attention ViT) + two-layer MLP adaptor + Qwen2.5 LLM backbone.",
+        "Output is structured; boxes and center points are extracted as segmentation prompts."
+      ],
+      "breakdown_regime": "Box/center extraction depends on the LVLM emitting valid structured output; malformed reasoning chains break the downstream segmentation prompt.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The reasoning-to-spatial-prompt output IS the GSE decision-to-telemetry kernel: a language reasoner emits a structured spatial primitive (box + center) that a downstream operator consumes, the Foundry's pattern of a sovereign reasoning layer producing dimensioned, machine-readable outputs.",
+        "source_operator": "lvlm_box_center_output",
+        "telemetry": "Eq1; LVLM(I,T) -> {B_i,P_i}; windowed ViT + MLP adaptor + Qwen2.5."
+      }
+    },
+    {
+      "primitive_id": "sam_mask_from_box",
+      "name": "Segmentation model produces masks from box and center prompts (Eq2)",
+      "verbatim_quote": "the segmentation model is not our primary focus, as it can be conveniently replaced without requiring training",
+      "page": "p6 Eq2",
+      "latex": "A_i = \\mathrm{SAM}(B_i, P_i)",
+      "symbol_and_unit_ledger": {
+        "A_i": "predicted segmentation mask for object i [pixel binary mask]",
+        "B_i": "bounding-box prompt [pixel coordinates]",
+        "P_i": "center-point prompt [pixel coordinates]"
+      },
+      "assumptions": [
+        "SAM2 selected as default; segmentation model is replaceable without retraining.",
+        "Pixel-level performance is a proxy for the quality of the reasoning model's spatial priors."
+      ],
+      "breakdown_regime": "Mask quality is bounded by box quality: a poor bounding box cannot be rescued by a powerful segmenter, so mIoU primarily reflects the reasoning model's spatial accuracy.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The decoupled reason-then-segment design IS the GSE modular-operator kernel: reasoning and dense prediction are independently optimizable, so the Foundry can upgrade the segmentation backbone without retraining the sovereign reasoner, exactly the paper's replaceable-SAM design.",
+        "source_operator": "sam_mask_from_box",
+        "telemetry": "Eq2; A_i=SAM(B_i,P_i); SAM2 default; replaceable without training; mIoU as box-quality proxy."
+      }
+    },
+    {
+      "primitive_id": "grpo_policy_objective",
+      "name": "GRPO reinforcement fine-tuning policy objective (Eq3)",
+      "verbatim_quote": "denote the dataset annotated with explicit and implicit references",
+      "page": "p7 Eq3",
+      "latex": "\\mathcal{R}_{FT}(\\theta) = \\mathbb{E}_{x\\sim\\mathcal{D}_{FT},\\, y\\sim\\pi_\\theta(\\cdot|x)}\\left[R(x, q_i, q_e, a)\\right]",
+      "symbol_and_unit_ledger": {
+        "theta": "policy parameters [model weights]",
+        "x=[I;q_i]": "concatenated image and implicit reference [input]",
+        "y=[q_e;a]": "concatenated explicit reference and answer sequence [output]",
+        "q_i": "implicit reference [text]",
+        "q_e": "explicit reference [text]",
+        "a": "answer bbox [coordinates]",
+        "R": "reward function [scalar]"
+      },
+      "assumptions": [
+        "Dataset RFT = {(I, q_i, q_e, a)} with q_i and q_e pointing to the same object.",
+        "Policy pi_theta samples a response y given input x; reward R guides optimization."
+      ],
+      "breakdown_regime": "Objective is an expectation over sampled responses; high variance in group rewards can destabilize the advantage estimate.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The RL fine-tuning objective IS the GSE reward-driven policy kernel: a sovereign reasoner is optimized against an explicit reward over its implicit-to-explicit conversions, the Foundry's RLVR pattern where the reward encodes the correctness criterion rather than a learned critic.",
+        "source_operator": "grpo_policy_objective",
+        "telemetry": "Eq3; RFT(theta)=E[R(x,q_i,q_e,a)]; x=[I;q_i], y=[q_e;a]."
+      }
+    },
+    {
+      "primitive_id": "grpo_group_advantage",
+      "name": "GRPO group-relative advantage normalizes rewards without a critic (Eq4)",
+      "verbatim_quote": "GRPO directly compares groups of candidate responses, thereby eliminating the need for a separate critic network",
+      "page": "p7 Eq4",
+      "latex": "A_i = \\frac{r_i - \\mathrm{mean}\\{r_1,\\dots,r_N\\}}{\\mathrm{std}\\{r_1,\\dots,r_N\\}}",
+      "symbol_and_unit_ledger": {
+        "A_i": "advantage of candidate response i [dimensionless, normalized]",
+        "r_i": "reward of response i [scalar]",
+        "N": "group size [count, 8 generations]",
+        "mean,std": "group reward mean and standard deviation [scalar]"
+      },
+      "assumptions": [
+        "GRPO samples N candidate responses per query and normalizes rewards by group mean/std.",
+        "No separate critic network is required, unlike PPO."
+      ],
+      "breakdown_regime": "Undefined when group reward std = 0 (all responses equally rewarded); the advantage signal vanishes and no learning occurs for that group.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Group-relative advantage IS the GSE critic-free RL kernel: relative quality within a sampled group replaces a learned value critic, the Foundry's preference for a transparent, computable advantage over an opaque estimated baseline.",
+        "source_operator": "grpo_group_advantage",
+        "telemetry": "Eq4; A_i=(r_i-mean)/std; N=8; critic-free vs PPO."
+      }
+    },
+    {
+      "primitive_id": "grpo_clipped_objective",
+      "name": "GRPO clipped policy objective with KL regularization (Eq5)",
+      "verbatim_quote": "ensures training stability by penalizing large deviations from the reference policy, thereby preserving response quality and diversity",
+      "page": "p7 Eq5",
+      "latex": "\\mathcal{J}_{GRPO}(\\theta)=\\mathbb{E}\\left[\\frac{1}{N}\\sum_{i=1}^{N}\\left\\{\\min[s_1 A_i, s_2 A_i]-\\beta\\,\\mathbb{D}_{KL}[\\pi_\\theta\\|\\pi_{ref}]\\right\\}\\right],\\quad s_1=\\frac{\\pi_\\theta(y_i|q)}{\\pi_{\\theta_{old}}(y_i|q)},\\ s_2=\\mathrm{clip}(s_1,1+\\epsilon,1-\\epsilon)",
+      "symbol_and_unit_ledger": {
+        "s_1": "policy importance ratio [dimensionless]",
+        "s_2": "clipped ratio [dimensionless, 1 +/- epsilon]",
+        "epsilon": "clipping threshold [dimensionless]",
+        "beta": "KL penalty coefficient [dimensionless]",
+        "pi_ref": "reference policy [distribution]",
+        "A_i": "group advantage [dimensionless]"
+      },
+      "assumptions": [
+        "Clipping stabilizes policy updates by bounding the importance ratio.",
+        "KL penalty against a reference policy preserves response quality and diversity."
+      ],
+      "breakdown_regime": "Large deviations from the reference policy are penalized; excessive clipping can stall learning while too little destabilizes it.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The clipped KL-regularized objective IS the GSE stability-preserving policy-update kernel: bounded importance ratios plus a reference-policy anchor prevent catastrophic drift, the Foundry's discipline of constraining each update so a sovereign operator never diverges from its validated baseline.",
+        "source_operator": "grpo_clipped_objective",
+        "telemetry": "Eq5; min[s1 A_i, s2 A_i] - beta D_KL; s2=clip(s1,1+eps,1-eps)."
+      }
+    },
+    {
+      "primitive_id": "iou_perception_reward",
+      "name": "IoU perception reward: 1 if IoU greater than 0.5 else 0",
+      "verbatim_quote": "We calculate the Intersection over Union (IoU) between output bounding boxes and ground truth bounding boxes. If IoU > 0.5, the reward is 1; otherwise, the reward is 0.",
+      "page": "p7 Sec4.3",
+      "latex": "R_{IoU} = \\mathbb{1}[\\mathrm{IoU}(B_{pred}, B_{gt}) > 0.5]",
+      "symbol_and_unit_ledger": {
+        "IoU": "intersection over union of predicted and ground-truth boxes [dimensionless, 0-1]",
+        "0.5": "IoU acceptance threshold [dimensionless]",
+        "R_IoU": "binary perception reward [0 or 1]"
+      },
+      "assumptions": [
+        "IoU reward is a hard threshold at 0.5, providing geometry-aware supervision.",
+        "Robust to variations in text formatting."
+      ],
+      "breakdown_regime": "Hard threshold discards gradient information near the boundary; a box at IoU 0.49 gets zero reward while 0.51 gets one.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The IoU threshold reward IS the GSE geometric-correctness gate: a spatial prediction is certified only above an overlap threshold, the Foundry's binary localization veto grounded in a dimensioned geometric measure.",
+        "source_operator": "iou_perception_reward",
+        "telemetry": "R=1 if IoU>0.5 else 0; geometry-aware; format-robust."
+      }
+    },
+    {
+      "primitive_id": "l1_perception_reward",
+      "name": "L1 perception reward: 1 if box L1 distance under 10 pixels else 0",
+      "verbatim_quote": "A reward of 1 is assigned if their L1 distance less than 10 pixels; otherwise, the reward is 0.",
+      "page": "p7 Sec4.3",
+      "latex": "R_{L1} = \\mathbb{1}[\\|B_{pred}-B_{gt}\\|_1 < 10\\ \\mathrm{px}]",
+      "symbol_and_unit_ledger": {
+        "||.||_1": "L1 distance between predicted and ground-truth box coordinates [pixels]",
+        "10 px": "L1 acceptance threshold [pixels]",
+        "R_L1": "binary perception reward [0 or 1]"
+      },
+      "assumptions": [
+        "L1 reward complements IoU with an absolute pixel-distance criterion.",
+        "Together IoU and L1 offer continuous, geometry-aware supervision."
+      ],
+      "breakdown_regime": "Pixel-distance threshold is resolution-dependent; a 10-pixel tolerance means different angular accuracy at different image scales.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The L1 pixel reward IS the GSE absolute-localization gate: an absolute coordinate-distance criterion complements the scale-invariant IoU, the Foundry's pattern of pairing relative and absolute spatial checks.",
+        "source_operator": "l1_perception_reward",
+        "telemetry": "R=1 if L1<10px else 0; complements IoU; resolution-dependent."
+      }
+    },
+    {
+      "primitive_id": "jaccard_reasoning_reward",
+      "name": "Jaccard reasoning reward: 1 if explicit-reference similarity above 0.9 else 0",
+      "verbatim_quote": "we compute the Jaccard text similarity (Jaccard, 1901) between the model-generated explicit reference and the ground-truth explicit expression. A reward of 1 is assigned if similarity > 0.9; otherwise, the reward is 0.",
+      "page": "p7 Sec4.3",
+      "latex": "R_{reason} = \\mathbb{1}[\\mathrm{Jaccard}(q_e^{gen}, q_e^{gt}) > 0.9]",
+      "symbol_and_unit_ledger": {
+        "Jaccard": "Jaccard text similarity between generated and ground-truth explicit references [dimensionless, 0-1]",
+        "0.9": "similarity acceptance threshold [dimensionless]",
+        "R_reason": "binary reasoning reward [0 or 1]"
+      },
+      "assumptions": [
+        "Reasoning reward leverages human-annotated explicit references to teach correct implicit-to-explicit conversion.",
+        "The paper finds the reasoning reward even more critical than the perception reward."
+      ],
+      "breakdown_regime": "Jaccard is lexical, not semantic: a paraphrase with the same meaning but different words can score below threshold, motivating the 0.9 (not 1.0) tolerance.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Jaccard reasoning reward IS the GSE conversion-fidelity kernel: rewarding a correct implicit-to-explicit translation directly, rather than only the final box, is the Foundry's RLVR insight that supervising the reasoning step can beat supervising the answer.",
+        "source_operator": "jaccard_reasoning_reward",
+        "telemetry": "R=1 if Jaccard>0.9 else 0; reasoning reward > perception reward; lexical similarity."
+      }
+    },
+    {
+      "primitive_id": "acc_at_05_metric",
+      "name": "Acc@0.5 region-level metric: proportion of boxes with IoU above 0.5",
+      "verbatim_quote": "assess the region-level VG task using the Acc@0.5 metric, which measures the proportion of predicted HBBs with an IoU greater than 0.5 relative to the ground truth boxes",
+      "page": "p8 Sec5.1",
+      "latex": "\\mathrm{Acc@0.5} = \\frac{1}{M}\\sum_{j=1}^{M}\\mathbb{1}[\\mathrm{IoU}(B_j, B_j^{gt}) > 0.5]",
+      "symbol_and_unit_ledger": {
+        "M": "number of evaluation samples [count]",
+        "IoU": "intersection over union [dimensionless, 0-1]",
+        "Acc@0.5": "fraction of correct localizations [dimensionless, 0-1]"
+      },
+      "assumptions": [
+        "Region-level VG scored by horizontal bounding box IoU threshold 0.5.",
+        "GeoChat oriented boxes converted to horizontal boxes for comparability."
+      ],
+      "breakdown_regime": "Acc@0.5 is a hard-threshold accuracy; it does not distinguish near-misses from complete failures.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Acc@0.5 IS the GSE localization-certification metric: a thresholded overlap accuracy is the Foundry's standard for certifying a spatial decision, paired with consistency to guard against spurious correctness.",
+        "source_operator": "acc_at_05_metric",
+        "telemetry": "Acc@0.5; HBB IoU>0.5; OBB->HBB conversion for GeoChat."
+      }
+    },
+    {
+      "primitive_id": "i2e_cot_explicit_token",
+      "name": "I2E-CoT forces an explicit grounded description before the final box",
+      "verbatim_quote": "This design strategically forces the model to translate an implicit query into an explicit, grounded description before committing to a final bounding box, thereby enhancing the reliability of the reasoning process.",
+      "page": "p6 Sec4.2",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "I2E-CoT adds <explicit></explicit> tags requiring perceptual attributes (color, size, relative position).",
+        "The model must produce think, then explicit description, then answer bbox."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The forced explicit intermediate IS the GSE reasoning-before-decision kernel: requiring a grounded intermediate representation before committing to an answer is the Foundry's discipline of making the reasoning step explicit and auditable rather than letting a model jump to a conclusion.",
+        "source_operator": "i2e_cot_explicit_token",
+        "telemetry": "<explicit> tags; color/size/position; think->explicit->answer; reliability."
+      }
+    },
+    {
+      "primitive_id": "reasoning_reward_gt_perception",
+      "name": "Reasoning reward contributes more than perception reward (ablation)",
+      "verbatim_quote": "The configuration combining Format and Reasoning rewards achieves an accuracy of 54.07%, which is not only higher than the baseline but also surpasses the configuration that includes Perception",
+      "page": "p12 Table5",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Reward ablation Acc@0.5: Format only 51.32%, Format+Perception 53.04%, Format+Reasoning 54.07%, all three 54.75%.",
+        "Implicit-to-explicit strategy outperforms direct supervision of bounding boxes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The reasoning-reward dominance IS the GSE process-over-outcome supervision kernel: rewarding the correct reasoning translation beats rewarding the raw answer, the Foundry's RLVR principle that a well-supervised reasoning pathway is more valuable than direct outcome supervision.",
+        "source_operator": "reasoning_reward_gt_perception",
+        "telemetry": "Format 51.32; +Perception 53.04; +Reasoning 54.07; all 54.75%; reasoning > perception."
+      }
+    },
+    {
+      "primitive_id": "threshold_09_optimal",
+      "name": "Optimal Jaccard threshold is 0.9, not a perfect 1.0 match",
+      "verbatim_quote": "insisting on a perfect textual match between the generated rationale and a reference answer is suboptimal",
+      "page": "p12 Sec5.3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Explicit-query accuracy peaks 63.57% at threshold 0.9 (62.77% at 0.8); implicit peaks 54.75% at 0.9.",
+        "0.9 tolerates semantically correct but lexically diverse reasoning; same optimum for both query types."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The sub-perfect threshold IS a DERIVED KERNEL for GSE semantic-tolerance gate: demanding exact lexical match penalizes valid paraphrase, so the Foundry sets a tolerance that rewards semantic correctness over surface form, simplifying tuning with a universal setting.",
+        "source_operator": "threshold_09_optimal",
+        "telemetry": "threshold 0.9 optimal; explicit 63.57%, implicit 54.75%; lexical-diversity tolerance."
+      }
+    },
+    {
+      "primitive_id": "reasoning_reward_weight_05",
+      "name": "Reasoning reward weight 0.5 chosen; similarity peaks there",
+      "verbatim_quote": "Based on the above analysis, a default weight of 0.5 was selected for the reasoning reward.",
+      "page": "p13 Sec5.3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Any positive reasoning-reward weight significantly raises Jaccard similarity vs omitting it.",
+        "Final accuracy is largely insensitive to the weight once included; similarity max at weight 0.5; positive similarity-accuracy correlation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The weight-insensitivity finding IS a DERIVED KERNEL for GSE reward-robustness gate: once the reasoning signal is present, exact weighting matters little, so the Foundry prioritizes including the correct reward term over fine-tuning its coefficient.",
+        "source_operator": "reasoning_reward_weight_05",
+        "telemetry": "default weight 0.5; similarity max at 0.5; accuracy weight-insensitive; positive similarity-accuracy correlation."
+      }
+    },
+    {
+      "primitive_id": "sft_loses_reasoning_grpo_preserves",
+      "name": "SFT destroys reasoning ability; GRPO preserves it",
+      "verbatim_quote": "standard SFT on our dataset causes Qwen2.5-VL to lose its reasoning ability, a limitation circumvented by I2E-CoT",
+      "page": "p8 Sec5.1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Dataset lacks CoT annotations, so SFT removes Qwen2.5-VL's reasoning output.",
+        "GRPO retains reasoning while improving accuracy; DroneVG-R1 7B 52.05% vs SFT 50.28%."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The SFT-versus-GRPO reasoning preservation IS the GSE capability-preservation veto: fine-tuning on answer-only data can erase a model's reasoning faculty, so the Foundry prefers reward-based optimization that retains interpretable reasoning rather than collapsing it into a direct mapper.",
+        "source_operator": "sft_loses_reasoning_grpo_preserves",
+        "telemetry": "SFT loses reasoning (no CoT labels); GRPO preserves; 52.05% vs SFT 50.28%."
+      }
+    },
+    {
+      "primitive_id": "rationale_quality_gt_presence",
+      "name": "Mere presence of a rationale is insufficient; quality and relevance are paramount",
+      "verbatim_quote": "the mere presence of a rationale is insufficient; its quality and relevance, which are directly optimized by",
+      "page": "p8 Sec5.1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "InternVL3.5 8B (28.76%) and DeepSeek-VL2-Tiny (19.56%) produce reasoning chains yet lag badly.",
+        "Rationale quality and task-alignment, optimized by I2E-CoT, drive accurate grounding."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The quality-over-presence finding IS the GSE reasoning-quality veto: a reasoning trace that exists but is irrelevant does not certify a decision, so the Foundry scores rationale quality and task-alignment rather than merely checking that a trace was emitted.",
+        "source_operator": "rationale_quality_gt_presence",
+        "telemetry": "InternVL3.5 8B 28.76%, DeepSeek-VL2-Tiny 19.56% despite rationales; quality/relevance paramount."
+      }
+    },
+    {
+      "primitive_id": "consistency_genuine_reasoning",
+      "name": "High paired-consistency indicates genuine reasoning, not spurious correlation",
+      "verbatim_quote": "The high consistency score strongly suggests that the model performs genuine visual reasoning rather than relying on spurious correlations, marking a significant step towards building trustworthy VG systems.",
+      "page": "p9 Sec5.1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "DVGBench-hard requires both explicit and implicit IoU > 0.5; Consistency measures bbox agreement across the two references.",
+        "DroneVG-R1 7B consistency 47.60% (highest); InternVL3.5 8B accuracy 10.34% but consistency 4.10% (unreliable)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The consistency metric IS the GSE paraphrase-robustness certification kernel: a decision that holds across semantically equivalent references is grounded in stable understanding, while one that flips is spurious, the Foundry's robustness veto against lucky guesses.",
+        "source_operator": "consistency_genuine_reasoning",
+        "telemetry": "DVGBench-hard; Consistency 47.60% (DroneVG-R1 7B); InternVL3.5 8B 10.34% acc / 4.10% consistency."
+      }
+    },
+    {
+      "primitive_id": "causal_direction_rear_end_failure",
+      "name": "Causal-direction error: rear-ending versus being rear-ended",
+      "verbatim_quote": "both it and InternVL3.5-8B misunderstand the logical relationship between rear-ending and being rear-ended",
+      "page": "p15 Sec5.4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In a racing scene, the silver car lost control first and rear-ended the yellow car, making the yellow car the victim.",
+        "InternVL3.5-8B and Qwen2.5-VL-7B infer the silver car was rear-ended from rear sparks, reversing cause and effect; DroneVG-R1 converts to explicit 'orange hood' and avoids the causal trap."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The rear-end causal reversal IS the GSE causal-direction veto: confusing the agent and patient of an action (who hit whom) is a canonical causal-reasoning failure, and the Foundry treats explicit grounding that sidesteps a fragile causal chain as a legitimate robustness strategy.",
+        "source_operator": "causal_direction_rear_end_failure",
+        "telemetry": "silver car lost control then rear-ended yellow; models reverse victim; DroneVG-R1 'orange hood' shortcut."
+      }
+    },
+    {
+      "primitive_id": "reasoning_serves_model_not_human",
+      "name": "A reasoning process suited to the model need not be human-preferred",
+      "verbatim_quote": "the reasoning process serves the model, and a reasoning process suitable for the model is not necessarily one that is human-preferred",
+      "page": "p15 Sec5.4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "DroneVG-R1's concise 'orange hood' conversion outperforms verbose human-like causal analysis.",
+        "The effective reasoning pathway is the one that serves the model's grounding, not the one humans find elaborate."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The model-serving-reasoning insight IS a DERIVED KERNEL for GSE explanation-fitness gate: the Foundry evaluates a reasoning trace by whether it improves the decision, not by whether it reads like a human essay, separating explanatory fitness from rhetorical elaboration.",
+        "source_operator": "reasoning_serves_model_not_human",
+        "telemetry": "concise 'orange hood' beats verbose causal analysis; reasoning serves model not human preference."
+      }
+    },
+    {
+      "primitive_id": "attention_shift_mechanism",
+      "name": "Explicit words genuinely shift image attention to the target",
+      "verbatim_quote": "generating explicit outputs genuinely alters the model's image attention rather than being merely a formality",
+      "page": "p15 Sec5.4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Attention weights averaged across layers/heads, image-token portion reshaped to a 2D grid and upscaled to a heatmap.",
+        "The phrase 'white shirt' shifts attention from the left person to the right rider, locking onto the target."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The attention-shift mechanism IS the GSE grounded-attention kernel: an explicit intermediate demonstrably redirects spatial attention to the relevant region, the Foundry's evidence that a reasoning step is causally effective rather than decorative.",
+        "source_operator": "attention_shift_mechanism",
+        "telemetry": "layer/head-averaged attention; image-token 2D heatmap; 'white shirt' shifts attention to target."
+      }
+    },
+    {
+      "primitive_id": "i2e_cot_training_free_boost",
+      "name": "I2E-CoT is a training-free zero-shot enhancement",
+      "verbatim_quote": "I2E-CoT serves as a powerful and training-free enhancement, effectively eliciting a model's inherent but underutilized reasoning capabilities",
+      "page": "p14 Sec5.4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Zero-shot: Qwen2.5-VL 3B 34.92%->38.06%, 7B 43.78%->47.93% with I2E-CoT.",
+        "GRPO: 3B 41.30%->43.71%, 7B 51.24%->52.05%; I2E-CoT complements rather than is replaced by fine-tuning."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The training-free boost IS the GSE prompt-elicited-capability kernel: restructuring the inference prompt can unlock latent reasoning without any weight update, the Foundry's recognition that some capability gains come from interface design rather than retraining.",
+        "source_operator": "i2e_cot_training_free_boost",
+        "telemetry": "zero-shot 3B 34.92->38.06, 7B 43.78->47.93; GRPO 7B 51.24->52.05; training-free."
+      }
+    },
+    {
+      "primitive_id": "few_shot_degrades_implicit",
+      "name": "Few-shot prompting consistently degrades implicit reasoning",
+      "verbatim_quote": "prompting consistently degrades performance on our challenging implicit reasoning benchmark",
+      "page": "p17 Sec5.4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Qwen2.5-VL 3B: zero-shot 34.92%, 2-shot 32.06%, 5-shot 26.97% (declining).",
+        "DroneVG-R1 3B reaches 43.71%; few-shot examples mislead on domain-knowledge implicit queries."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The few-shot degradation IS a DERIVED KERNEL for GSE in-context-learning veto: adding examples can hurt when the task requires domain reasoning rather than pattern imitation, so the Foundry tests few-shot empirically rather than assuming more examples help.",
+        "source_operator": "few_shot_degrades_implicit",
+        "telemetry": "3B zero-shot 34.92 -> 2-shot 32.06 -> 5-shot 26.97; DroneVG-R1 3B 43.71."
+      }
+    },
+    {
+      "primitive_id": "box_center_point_gt_box",
+      "name": "Box-plus-center-point prompts beat box-only for segmentation",
+      "verbatim_quote": "providing an additional center point offers more precise spatial guidance to the segmentation model, effectively reducing localization ambiguity within the proposed region and leading to a more accurate segmentation mask",
+      "page": "p13 Sec5.3",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "SAM b/l/h and SAM2 l evaluated with box-only vs box+center prompts.",
+        "Box+Center consistently superior; SAM2 l + Box+Center gives the best mIoU 46.70%."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The center-point disambiguation IS a DERIVED KERNEL for GSE spatial-prompt-precision gate: an extra point reduces region ambiguity for a downstream operator, the Foundry's principle that richer dimensioned prompts yield more precise downstream execution.",
+        "source_operator": "box_center_point_gt_box",
+        "telemetry": "Box+Center > Box; SAM2 l best; mIoU 46.70%; reduces localization ambiguity."
+      }
+    },
+    {
+      "primitive_id": "small_target_limitation",
+      "name": "Ultra-small targets break localization; zoom-in agents proposed",
+      "verbatim_quote": "Our models still struggle to accurately identify referred objects that occupy a very small area ratio.",
+      "page": "p18 Sec6",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Mask coverage ratio < 0.1 in 82.02% of instances, < 0.01 in 56.93%, < 0.001 in 18.33%.",
+        "Limited pixel area restricts discriminative features; future zoom-in tool agents proposed; dataset size 2,863 limits gains."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The small-target breakdown IS a DERIVED KERNEL for GSE resolution-limit veto: below a pixel-area threshold localization fails regardless of reasoning quality, so the Foundry declares a resolution breakdown regime and proposes an active zoom-in remedy rather than pretending uniform competence.",
+        "source_operator": "small_target_limitation",
+        "telemetry": "coverage <0.1: 82.02%, <0.01: 56.93%, <0.001: 18.33%; zoom-in agents; 2,863-sample limit."
+      }
+    },
+    {
+      "primitive_id": "generalization_grpo_i2e",
+      "name": "GRPO with I2E-CoT generalizes best in-domain and out-of-domain",
+      "verbatim_quote": "GRPO w/ I2E-CoT yields the highest accuracies in both settings, pushing the 7B model's out-of-domain performance to 59.03%.",
+      "page": "p16 Sec5.4",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Out-of-domain = EarthReason satellite imagery vs drone-only training; in-domain score lower than OOD due to annotation difficulty.",
+        "GRPO+I2E-CoT mitigates overfitting; GeoPix's high SIOR-T score attributed to possible overfitting (only SIOR-T weights released)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The domain-shift robustness IS the GSE generalization-certification kernel: a method that holds under domain shift and resists overfitting is certified as robust, while a high in-domain-only score is flagged as possible overfit, the Foundry's out-of-distribution validation discipline.",
+        "source_operator": "generalization_grpo_i2e",
+        "telemetry": "OOD EarthReason 7B 59.03%; GRPO+I2E best both settings; GeoPix SIOR-T overfit suspicion."
+      }
+    },
+    {
+      "primitive_id": "dronevg_r1_sota",
+      "name": "DroneVG-R1 7B state-of-the-art on region and pixel implicit VG",
+      "verbatim_quote": "model achieves a state-of-the-art average accuracy of 52.05%, significantly outperforming all other benchmarks",
+      "page": "p8 Sec5.1",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Region-level implicit AVG 52.05% vs base Qwen2.5-VL 7B 43.78%; DVGBench-hard 45.66% vs 34.38%.",
+        "Pixel-level 46.70% mIoU / 44.15% oIoU / 51.78% Acc@0.5, beating GeoPixel 29.63% mIoU by 17 points; scaling 7B > 3B (43.71%)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The SOTA result IS the GSE certified-operator benchmark: a sovereign reasoner that leads on both region and pixel implicit grounding, with a measured scaling effect, is the Foundry's evidence-backed performance claim rather than an assertion.",
+        "source_operator": "dronevg_r1_sota",
+        "telemetry": "region 52.05% (base 43.78%); hard 45.66%; pixel 46.70% mIoU; 7B>3B 43.71%."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1505929a6cf204b1-t1",
+      "think": "DVGBench, from Zhou and colleagues at East China Normal University and collaborators (arXiv 2601.00998v1, January 2026), is a benchmark and method for implicit visual grounding in drone imagery, and it is unusually relevant to the Foundry because its sport scenario is literally football reasoning from an overhead view. The paper's founding distinction is between explicit references, which use direct visual cues like relative position, size, and color, and implicit references, which require commonsense or scenario-specific domain knowledge. The authors motivate this with a developmental analogy: infants easily understand 'the ship in the bottom left' but cannot judge which boat is leading by reading the relationship between oar and water ripples, and they cite the academic view that handling implicit reference is a dividing line between primary and advanced intelligence. The same gap appears in large vision-language models, whose remote-sensing grounding superiority is largely confined to explicit references. The sport scenario, eighteen percent of the benchmark, asks queries like 'people who may be in an offside position,' 'a person in a pick-and-roll,' and 'the temporarily leading rider,' with the stated application of electronic refereeing and intelligent commentary that complements ground-based cameras. This is exactly the Foundry's task of grounding a rule-based decision in spatial telemetry.\n\nThe benchmark itself is a disciplined provenance artifact. DVGBench contains 2,863 fully human-annotated samples across six scenarios, traffic at 33.0 percent, productive activity 27.7, sport 18.0, social activity 10.4, disaster 6.1, and security 4.8, split into 1,990 training and 873 test samples. Every referent carries an Implicit-Explicit Pair, one explicit and one implicit query pointing to the same object, which enables three things: a controllable difficulty gradient from perception to scene reasoning, quantification of the reasoning gap as the explicit-minus-implicit localization differential, and a paired-consistency metric that checks whether the model localizes the same object regardless of how it is referred to. Because the scenario distribution is uneven, the authors use category-averaging rather than sample-weighting for overall accuracy, a deliberate imbalance-robustness choice. Annotation is fully manual, with no template or LVLM generation, a three-stage pipeline of implicit reference, explicit reference, and mask, senior-annotator validation and third-expert resolution, exclusion of unresolved cases, and ten percent independent re-annotation yielding Cohen's Kappa above 0.95. The authors also diagnose a cycle of bias: existing datasets emphasize explicit attributes, LVLMs trained on them generate explicit-biased referring data at scale, and the bias reinforces itself.\n\nThe method, DroneVG-R1, decouples reasoning from segmentation. A vision-language model with a windowed-attention ViT encoder, a two-layer MLP adaptor, and a Qwen2.5 backbone emits structured boxes and center points, Equation 1, and a replaceable SAM2 segmenter turns those prompts into masks, Equation 2, so pixel-level mIoU becomes a proxy for the quality of the reasoner's spatial priors. The training innovation is Implicit-to-Explicit Chain-of-Thought: the prompt forces the model to emit a brief explicit description in dedicated tags, using color, size, and relative position, before committing to a bounding box. This is optimized with GRPO, whose group-relative advantage, Equation 4, normalizes rewards by the group mean and standard deviation and thereby eliminates the critic network PPO requires, under a clipped importance-ratio objective with a KL penalty against a reference policy, Equation 5. Three rewards drive learning: a format reward, a perception reward combining IoU greater than 0.5 and L1 distance under ten pixels, and a reasoning reward giving one when the Jaccard similarity between the generated and human-annotated explicit reference exceeds 0.9. The headline finding is that the reasoning reward matters more than the perception reward: Format-plus-Reasoning reaches 54.07 percent, beating Format-plus-Perception at 53.04, and the full combination reaches 54.75, confirming that guiding the model through a reasoning step to the box beats directly supervising the box coordinates.\n\nThe results and ablations are where the sovereign lessons concentrate. DroneVG-R1 7B reaches a state-of-the-art 52.05 percent average region-level implicit accuracy against the base Qwen2.5-VL 7B's 43.78, and 46.70 percent mIoU on pixel-level grounding, beating GeoPixel by over seventeen points. Standard supervised fine-tuning destroys Qwen2.5-VL's reasoning ability because the dataset lacks chain-of-thought labels, while GRPO preserves it, and the mere presence of a rationale is shown to be insufficient since InternVL3.5 8B and DeepSeek-VL2-Tiny emit reasoning chains yet score only 28.76 and 19.56 percent. On the strict DVGBench-hard split, DroneVG-R1 7B's paired-consistency of 47.60 percent, closely tracking its accuracy, is read as evidence of genuine visual reasoning rather than spurious correlation, while InternVL3.5 8B's 10.34 percent accuracy with 4.10 percent consistency exposes unreliable lucky guesses. The Jaccard threshold ablation finds 0.9 optimal rather than a perfect 1.0, because insisting on exact lexical match penalizes semantically correct paraphrase, and the reasoning-reward weight is set to 0.5 with accuracy largely insensitive to the exact value once the term is present. I2E-CoT also works training-free, lifting zero-shot 7B accuracy from 43.78 to 47.93, while few-shot prompting consistently degrades implicit reasoning, dropping 3B accuracy from 34.92 at zero-shot to 26.97 at five-shot.\n\nThe failure analyses supply the breakdown regimes the Foundry requires. The most instructive is a causal-direction error: in a racing scene the silver car lost control first and rear-ended the yellow car, making the yellow car the victim, yet InternVL3.5 and Qwen2.5-VL read the sparks at the silver car's rear and conclude it was the one rear-ended, reversing agent and patient; DroneVG-R1 sidesteps the fragile causal chain by converting the implicit query to the explicit 'orange hood,' and the authors draw the principled conclusion that a reasoning process suited to the model need not be one humans prefer. Attention heatmaps confirm the mechanism is real, not decorative: the explicit phrase 'white shirt' visibly shifts image attention from the left person to the right rider. The declared limitations are honest, ultra-small targets break localization, with mask coverage below 0.001 in 18.33 percent of instances, the 2,863-sample dataset caps gains, and zoom-in tool agents and self-play reinforcement learning are proposed as remedies. For GSE this paper is a direct isomorphism of the sovereign stack: domain-knowledge grounding, a reasoning-before-decision intermediate, critic-free RLVR with a process reward that beats outcome supervision, paraphrase-consistency certification, causal-direction vetoes, and declared resolution breakdown regimes, all with zero sportsbook content and equations transcribed exactly from the printed text.",
+      "retrocausal_genealogy": "The lineage runs from referring-expression comprehension in cognitive development through remote-sensing visual grounding to reinforcement-learned reasoning. The developmental anchor is the infant literature, Hollich, Golinkoff and Hirsh-Pasek (2007) on word-object association, used to frame implicit reference as a cognitive milestone. The remote-sensing branch runs from RSVG (Sun et al. 2022) and DIOR-RSVG (Zhan et al. 2023) through rotated-box GeoChat and VRSBench to drone datasets AAVG and AirSpatial-G, all of which use explicit references composed of color, size, position, and type. The reasoning-segmentation branch runs through LISA (Lai et al. 2024) and SegEarth-R1 (Li et al. 2025). The reinforcement branch inherits GRPO from DeepSeek-R1 (Guo et al. 2025, Nature), which removes the PPO critic by group-relative advantage, and SAM/SAM2 (Kirillov et al. 2023) for promptable segmentation. Zhou et al.'s novel retrocausal step is to insert a forced implicit-to-explicit intermediate, rewarded by Jaccard similarity to human explicit references, so that the reasoning step itself, not just the final box, is supervised; the dual-query benchmark is designed specifically to measure the reasoning gap this conversion closes.",
+      "theory_of_mind": "The authors model several minds at once. They model the operational user's mind, arguing that a UAV operator asking for 'the vehicle making an illegal left turn' or 'people trapped by floodwater' needs domain-knowledge grounding, not 'the red vehicle in the top-left,' which presupposes the answer and carries no decision information. They model the model's own mind, discovering that a concise explicit conversion like 'orange hood' serves grounding better than an elaborate human-like causal narrative, and stating explicitly that a reasoning process suitable for the model is not necessarily one humans prefer. They model the annotator's mind, building guidelines, senior validation, and third-expert resolution to minimize annotator-induced bias, and measuring agreement with Cohen's Kappa. And they model the evaluator's mind, designing the Implicit-Explicit Pair so that a reader can separate perception from reasoning and detect spurious correctness through paired-consistency, anticipating the objection that a high accuracy might be lucky guessing rather than stable understanding. The cycle-of-bias diagnosis shows they even model the training-data ecosystem's mind, recognizing that LVLMs regenerate the explicit bias of their source corpora.",
+      "cross_layer_veto": "The Foundry adjudicates this paper across its layers with multiple vetoes and certifications. The observation layer passes because every spatial primitive is dimensioned: boxes and center points in pixels, IoU and L1 rewards with named thresholds, and a declared small-target resolution breakdown where mask coverage below 0.001 breaks localization. The reasoning layer issues a process-over-outcome certification: the ablation proves the Jaccard reasoning reward beats the perception reward, so supervising the implicit-to-explicit conversion is validated as more valuable than supervising the box. The capability layer issues a preservation veto against answer-only SFT, which erases reasoning, in favor of GRPO which retains it, and a quality-over-presence veto against models that emit irrelevant rationales. The robustness layer certifies via paired-consistency that DroneVG-R1's predictions reflect genuine reasoning rather than spurious correlation, and flags few-shot degradation and the 0.9-not-1.0 lexical tolerance. The causal layer issues a direction veto illustrated by the rear-ending versus being-rear-ended reversal, and accepts explicit grounding that sidesteps a fragile causal chain. The provenance layer honors the fully manual, Kappa-audited annotation and the category-averaging fairness choice. The sport scenario, soccer offside and pick-and-roll from overhead, is a direct GSE football-grounding isomorphism. Zero sportsbook lines, spreads, totals, or implied odds appear anywhere; this is pure visual-reasoning and RLVR territory."
+    }
+  ],
+  "universal_lens": "DVGBench is a universal perception-to-reasoning template: any system that must resolve a reference requiring domain knowledge, rather than surface attributes, faces the implicit-explicit gap. The forced explicit intermediate, the process reward that beats outcome supervision, the critic-free group-relative advantage, and the paired-consistency certification together form a general recipe for turning a latent reasoning capability into an auditable, robust, grounded decision, applicable wherever a sovereign operator must justify a spatial or categorical commitment.",
+  "gsi_mapping": "For the Galaxy Sports Institute the sport scenario is a direct overhead-view athlete-grounding kernel: resolving offside position, pick-and-roll participation, and race ranking from drone imagery is the spatial-telemetry counterpart of GSI's situational athlete monitoring. The implicit-explicit distinction separates perceptual tracking from rule-based reasoning, the reasoning gap quantifies how much domain knowledge a model actually applies, and the small-target breakdown regime declares where overhead resolution fails. The causal-direction failure, rear-ending versus being rear-ended, is a caution for any GSI operator that infers agent-patient relationships from visual evidence.",
+  "gse_mapping": "For Galaxy Sports Edge this paper supplies a complete RLVR grounding stack: the forced implicit-to-explicit intermediate is the reasoning-before-decision kernel, the Jaccard reasoning reward that beats perception is the process-over-outcome supervision principle, the critic-free GRPO group advantage is the transparent reinforcement kernel, and paired-consistency is the paraphrase-robustness certification that separates genuine reasoning from spurious correlation. The cycle-of-bias diagnosis is a training-data-feedback veto, the SFT-loses-reasoning finding is a capability-preservation veto, the few-shot degradation is an in-context-learning veto, and the rear-end causal reversal is a causal-direction veto. The sport offside and pick-and-roll queries are literal football-domain grounding, and the declared small-target resolution limit is the breakdown-regime discipline GSE enforces. Zero sportsbook content; pure reasoning-pipeline territory."
+}
