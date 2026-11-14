@@ -1,0 +1,723 @@
+{
+  "book_id": "18166c7364bb19c7",
+  "shard": "1",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_SOCCER_MPE_ACTION_VALUATION_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Ide, Someya, Kawaguchi & Fujii, 'Strategic Multi-Agent Learning for Interpretable Action Valuation of All Players in Football', arXiv:2610.05961v1 [cs.LG], 5 Oct 2026 (Kenjiro Ide, Taiga Someya, Kohei Kawaguchi, Keisuke Fujii; Nagoya University / University of Tokyo / HKUST / RIKEN), 33 pages. MPE-inspired (Markov Perfect Equilibrium) action valuation for on-ball, off-ball, and defensive players in association football (soccer): each possession a finite-horizon dynamic game, each player an autonomous Markov agent (N=22 focal slots, not persistent identities). HONEST SCOPE: MPE is a motivating solution concept only — does NOT compute or verify an equilibrium strategy profile; continuation values bootstrapped from observed next actions (not best-response/greedy). EDMS (Expandable Decision-Making States, 74-dim: pressure/space/passing options/shooting/offside-line/possession context) vs PVS (92-dim positions+velocities). Q-value decomposed into successor-feature basis h (expected discounted sum of d=3 tactical features: shot value, possession-termination adjustment, attacking-third ball occupancy) + linear reward-weight theta=[1.0,-0.5,0.2] (heuristic, NOT estimated; future IRL). Two-stage estimation: linear semi-gradient TD initialization (Adusumilli-Eckardt dynamic discrete choice) -> MLP pretrain to reproduce (coefficients not transferred) -> AVI nonlinear refinement (observed-next-action Bellman targets, greedy only at inference). 15 role-masked actions (5 on-ball/1 defensive/9 off-ball). gamma=1 finite horizon (build-up unattenuated). Data: 95 J1 League matches 2023+2024 (Data Stadium), 25fps->10fps, 50 train/5 val/40 test, 10308 possessions/1561255 steps/42.81h. Results: independent RL collapses to forward movement in 99.21% off-ball states vs MPE most-frequent 17.63%; team Q vs season xG Spearman independent -0.37 vs MPE +0.29 (n=20, descriptive); EDMS lower TD MSE than PVS in both formulations (TD MSE NOT cross-comparable: scalar Q vs d=3 feature space). Post-hoc reweighting on fixed basis (attacking-third 0.2->1.0 flips backward-right->forward-right, no retrain). Qualitative: context-dependent off-ball (open-space/support/scoring) + preventive defensive space closure. Limitations: does NOT isolate MPE component (differs architecture/reward/objective/training; controlled ablation needed), does NOT verify MPE, manual weights, position-only state (no orientation/technical attributes), weak xG correlation, J1-only. Extracted faithfully (not a derivative summary). Equations 1-18 printed in math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain football matches catalog (association football / soccer multi-agent reinforcement learning; J1 League). Directly isomorphic to GSE's strategic-interdependence multi-agent kernel, interpretable successor-feature value decomposition, tactical state representation, post-hoc preference reweighting, role-relative focal-slot conditioning, and preventive off-ball defensive credit. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "strategic_interdependence_gap",
+      "name": "Existing RL valuation aggregates team-level or independent players, missing strategic interdependence",
+      "verbatim_quote": "aggregate decisions at the team level or estimate player values independently, leaving strategic interdependence among players insufficiently represented",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Kenjiro Ide, Taiga Someya, Kohei Kawaguchi, Keisuke Fujii; Nagoya / Tokyo / HKUST / RIKEN; arXiv:2610.05961v1 [cs.LG], 5 Oct 2026) opens from the gap that existing reinforcement-learning-based valuation methods commonly aggregate decisions at the team level or estimate player values independently, leaving strategic interdependence among players insufficiently represented; valuing actions requires accounting for continuous strategic interactions among 22 players including off-ball movements and defensive positioning."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The strategic-interdependence gap is literally the void GSE's multi-agent interaction kernel fills.",
+        "source_operator": "strategic_interdependence_gap",
+        "telemetry": "existing RL aggregates team-level or independent players; strategic interdependence insufficiently represented; 22-player continuous interaction incl off-ball + defense; Ide/Someya/Kawaguchi/Fujii arXiv 2610.05961"
+      }
+    },
+    {
+      "primitive_id": "mpe_motivating_not_computed",
+      "name": "MPE is a motivating solution concept, NOT computed or verified (honest scope)",
+      "verbatim_quote": "It uses MPE as a motivating solution concept but does not compute or verify an exact equilibrium strategy profile",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The framework uses Markov perfect equilibrium (MPE) as a motivating solution concept but does not compute or verify an exact equilibrium strategy profile; the empirical implementation does not explicitly estimate the Markov policies or verify an equilibrium, instead bootstrapping continuation values from observed transitions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The MPE-inspired-not-computed honesty is literally GSE's equilibrium-as-motivation-versus-verified scope discipline.",
+        "source_operator": "mpe_motivating_not_computed",
+        "telemetry": "MPE motivating solution concept; does NOT compute/verify exact equilibrium strategy profile; continuation bootstrapped from observed transitions"
+      }
+    },
+    {
+      "primitive_id": "possession_finite_horizon_game",
+      "name": "Each possession = finite-horizon dynamic game; each player autonomous state-dependent agent",
+      "verbatim_quote": "The framework formulates each possession as a finite-horizon dynamic game and represents each player as an autonomous agent whose policy depends on the current game state",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The framework formulates each possession as a finite-horizon dynamic game and represents each player as an autonomous agent whose policy depends on the current game state; N=22 (11 attacking, 11 defending slots), the focal-player index i denotes a slot within a possession rather than a persistent identity across matches."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The possession-as-dynamic-game formulation is literally GSE's finite-horizon multi-agent possession model.",
+        "source_operator": "possession_finite_horizon_game",
+        "telemetry": "possession = finite-horizon dynamic game; each player autonomous agent, policy depends on game state; N=22 (11 attack/11 defend slots); focal index = slot not persistent identity"
+      }
+    },
+    {
+      "primitive_id": "edms_interpretable_state",
+      "name": "EDMS: tactically interpretable state (pressure/space/passing/shooting/offside/possession), 74-dim",
+      "verbatim_quote": "we use Expandable Decision-Making States (EDMS) as a tactically interpretable state representation",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "To improve interpretability, Expandable Decision-Making States (EDMS) are used as a tactically interpretable state representation encoding pressure, space, passing options, shooting opportunities, offside-line information, and possession context (74 dimensions), versus Position and Velocity State (PVS, 92 dimensions) describing physical configuration; EDMS incorporates human-interpretable tactical concepts alongside raw positional data."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "EDMS is literally GSE's tactically interpretable state representation layer.",
+        "source_operator": "edms_interpretable_state",
+        "telemetry": "EDMS 74-dim (pressure/space/passing options/shooting/offside-line/possession context) vs PVS 92-dim (positions+velocities); human-interpretable tactical concepts"
+      }
+    },
+    {
+      "primitive_id": "q_successor_feature_decomposition",
+      "name": "Q-value decomposed into successor-feature basis + linear reward-weight vector",
+      "verbatim_quote": "decompose the Q-value into a successor-feature basis and a linear",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Q-value is decomposed into a successor-feature basis and a linear reward-weight vector, separating the estimated future accumulation of tactical reward features from the specification of tactical preferences; this improves interpretability by revealing which tactical components contribute to the estimated Q-value."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The successor-feature decomposition is literally GSE's interpretable value-basis separation (features vs preferences).",
+        "source_operator": "q_successor_feature_decomposition",
+        "telemetry": "Q = successor-feature basis h + linear reward-weight theta; separates future tactical-feature accumulation from tactical preferences; reveals contributing components"
+      }
+    },
+    {
+      "primitive_id": "two_stage_td_avi",
+      "name": "Two-stage: linear TD initialization + nonlinear iterative (AVI) refinement",
+      "verbatim_quote": "The value basis is estimated using a two-stage learning procedure that combines linear TD initialization with nonlinear iterative refinement",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The value basis is estimated using a two-stage learning procedure that combines linear TD initialization with nonlinear iterative refinement: a linear semi-gradient TD estimator produces initial successor-feature estimates, a randomly initialized MLP is pretrained to reproduce them, then refined by approximate value iteration (AVI) to capture nonlinear state-dependent patterns."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The linear-then-nonlinear two-stage estimation is literally GSE's stable value-basis training curriculum.",
+        "source_operator": "two_stage_td_avi",
+        "telemetry": "two-stage: linear semi-gradient TD init -> MLP pretrain to reproduce -> AVI nonlinear refinement; captures nonlinear state-dependent patterns"
+      }
+    },
+    {
+      "primitive_id": "forward_collapse_9921",
+      "name": "Independent RL baseline collapses: forward movement highest in 99.21% of off-ball states",
+      "verbatim_quote": "the independent baseline assigns the highest value to forward movement in 99.21% of the",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "With EDMS held fixed, the independent RL baseline assigns the highest value to forward movement in 99.21% of the evaluated off-ball states, a highly concentrated action ranking that converges to a trivial dominant movement."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The forward-movement collapse is literally GSE's action-ranking-collapse diagnostic for independent valuation.",
+        "source_operator": "forward_collapse_9921",
+        "telemetry": "independent RL + EDMS: forward movement highest in 99.21% off-ball states; highly concentrated ranking -> trivial dominant movement"
+      }
+    },
+    {
+      "primitive_id": "mpe_diverse_1763",
+      "name": "MPE-inspired formulation diverse: most frequent off-ball direction only 17.63%",
+      "verbatim_quote": "the most frequent direction under the proposed formulation accounts for 17.63%",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The most frequent direction under the proposed MPE-inspired formulation accounts for only 17.63% of the evaluated off-ball states, a substantially more diverse distribution; because both models use the same EDMS representation the difference cannot be attributed to state representation alone, but the approaches also differ in architecture, reward, objective, and training, so it reflects the formulations as a whole."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The diverse off-ball ranking is literally GSE's context-sensitive action-valuation evidence over trivial collapse.",
+        "source_operator": "mpe_diverse_1763",
+        "telemetry": "MPE-inspired most frequent off-ball direction 17.63% (vs independent 99.21% forward); same EDMS so not state-rep alone; differs architecture/reward/objective/training -> whole formulation"
+      }
+    },
+    {
+      "primitive_id": "xg_correlation_flip",
+      "name": "Team Q vs season xG: independent rho=-0.37 (negative), MPE rho=+0.29 (weakly positive)",
+      "verbatim_quote": "and season-level expected goals is negative for the independent baseline",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The association between team-level average Q-values and season-level expected goals is negative for the independent baseline (Spearman rho=-0.37) and weakly positive for the proposed formulation (rho=0.29) across n=20 matched teams; this is a descriptive association with season-long attacking quality, not confirmatory external validity, given the small team sample and differing temporal coverage (held-out tracking sample vs full-season xG)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The xG-correlation sign flip is literally GSE's external-association diagnostic (direction, not validity proof).",
+        "source_operator": "xg_correlation_flip",
+        "telemetry": "team avg Q vs season xG: independent rho=-0.37, MPE rho=+0.29 (n=20 teams); descriptive not confirmatory; small sample + differing temporal coverage; xG=shot quality vs Q=broader decision-making"
+      }
+    },
+    {
+      "primitive_id": "not_isolate_mpe_component",
+      "name": "Comparison does NOT isolate MPE component (differs in architecture/reward/objective/training)",
+      "verbatim_quote": "the current comparison does not isolate the contribution of the MPE-inspired component",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The current comparison does not isolate the contribution of the MPE-inspired component, because the proposed method and the independent baseline differ in model architecture, reward representation, learning objective, and training procedure; controlled ablation studies using a common backbone and training setup are required to quantify each component separately."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The non-isolation caveat is literally GSE's confounded-comparison honesty (no single-component attribution).",
+        "source_operator": "not_isolate_mpe_component",
+        "telemetry": "comparison does NOT isolate MPE component; differs architecture/reward/objective/training; controlled ablation common backbone needed"
+      }
+    },
+    {
+      "primitive_id": "markov_strategies_only",
+      "name": "Restrict to Markov strategies (depend only on current state), not history-dependent SPE",
+      "verbatim_quote": "We therefore adopt an MPE perspective and restrict attention to Markov strategies, in which each player's strategy depends only on the current game state",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A Nash equilibrium may rely on non-credible continuation strategies off the equilibrium path; subgame-perfect equilibrium rules these out but may allow history-dependent strategies, which are computationally impractical in football's large continuous state space; the framework therefore adopts an MPE perspective and restricts attention to Markov strategies in which each player's strategy depends only on the current game state."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Markov-strategy restriction is literally GSE's state-only policy tractability choice.",
+        "source_operator": "markov_strategies_only",
+        "telemetry": "Nash non-credible threats -> SPE rules out but history-dependent impractical (large continuous state); MPE restricts to Markov strategies (depend only on current state)"
+      }
+    },
+    {
+      "primitive_id": "spe_history_impractical",
+      "name": "History-dependent SPE strategies computationally impractical in large continuous football state",
+      "verbatim_quote": "a general SPE may allow strategies to depend on the full history of play",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A general subgame-perfect equilibrium may allow strategies to depend on the full history of play; in environments such as football where the state space is large and continuous, representing history-dependent strategies is computationally impractical, motivating the Markov restriction."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The history-dependence intractability is the same computational-complexity bound GSE cites for state-only policies.",
+        "source_operator": "spe_history_impractical",
+        "telemetry": "general SPE allows full-history strategies; football large continuous state -> history-dependent computationally impractical"
+      }
+    },
+    {
+      "primitive_id": "eq2_mpe_best_response",
+      "name": "Eq2 MPE condition: V_i^pi*(s) >= V_i^(pi_tilde,pi*_-i)(s) for all unilateral deviations",
+      "verbatim_quote": "no player can improve its expected return by unilaterally changing its strategy while the strategies of the other players remain fixed",
+      "page": 8,
+      "latex": "V^{\\pi^*}_i(s_t)\\ge V^{(\\tilde\\pi_i,\\pi^*_{-i})}_i(s_t),\\quad \\forall\\tilde\\pi_i,\\ \\forall s_t\\in S,\\qquad \\pi_i(\\cdot\\mid s_t)\\in\\Delta(A_i(s_t))",
+      "symbol_and_unit_ledger": {
+        "pi*": "MPE Markov strategy profile",
+        "V_i^pi": "player i value under profile pi",
+        "pi_tilde_i": "alternative unilateral Markov strategy",
+        "pi*_-i": "other players' equilibrium strategies",
+        "A_i(s_t)": "state-dependent feasible action set",
+        "Delta": "probability simplex"
+      },
+      "assumptions": [
+        "An MPE is a strategy profile pi* such that no player can improve its expected return by unilaterally changing its strategy while the others remain fixed: for every player i, state s_t, and alternative Markov strategy pi_tilde_i, V_i^pi*(s_t) >= V_i^(pi_tilde_i, pi*_-i)(s_t); a Markov strategy pi_i(.|s_t) is a distribution over the state-dependent feasible action set. Equations 1-2 are printed math-font and reconstructed here.",
+        "Equations 1-2 (Markov strategy + MPE best-response condition) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Motivating concept; NOT computed/verified empirically",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The MPE mutual-best-response condition is literally GSE's strategic-consistency solution concept (motivating).",
+        "source_operator": "eq2_mpe_best_response",
+        "telemetry": "MPE: V_i^pi*(s)>=V_i^(pi_tilde_i,pi*_-i)(s) for all pi_tilde_i,s (no unilateral improvement); pi_i(.|s) in Delta(A_i(s)); Markov strategy profile mutually consistent best responses"
+      }
+    },
+    {
+      "primitive_id": "gamma1_finite_horizon",
+      "name": "Discount gamma=1: finite terminal time keeps return well-defined, build-up rewards propagate unattenuated",
+      "verbatim_quote": "Because each possession has a finite terminal time T, the resulting return remains well defined without temporal discounting",
+      "page": 8,
+      "latex": "V^{\\pi}_i(s_t)=\\mathbb E_{\\pi}\\!\\Big[\\sum_{k=t}^{T}\\gamma^{k-t}r_i(s_k,a_k)\\,\\Big|\\,s_t\\Big],\\qquad \\gamma=1",
+      "symbol_and_unit_ledger": {
+        "gamma": "discount factor (set 1)",
+        "T": "finite possession terminal time",
+        "r_i": "player i reward",
+        "V_i^pi": "finite-horizon value"
+      },
+      "assumptions": [
+        "The discount factor is set to gamma=1; because each possession has a finite terminal time T, the resulting return remains well defined without temporal discounting, allowing rewards near the end of a possession to propagate to earlier actions without temporal attenuation, including actions involved in build-up play; the value is V_i^pi(s_t)=E[sum_{k=t}^T gamma^{k-t} r_i(s_k,a_k)|s_t]. Equation 3 is printed math-font and reconstructed here.",
+        "Equation 3 (finite-horizon value) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Finite horizon makes gamma=1 well-defined; no temporal attenuation of build-up",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The gamma=1 finite-horizon return is literally GSE's unattenuated build-up credit propagation.",
+        "source_operator": "gamma1_finite_horizon",
+        "telemetry": "gamma=1; finite terminal T -> return well-defined without discounting; end-of-possession rewards propagate to earlier build-up actions unattenuated; V_i^pi(s)=E[sum gamma^{k-t} r_i|s]"
+      }
+    },
+    {
+      "primitive_id": "bootstrap_observed_not_bestresponse",
+      "name": "Continuation bootstrapped from observed next actions, NOT best-response/greedy (MPE-inspired not MPE算法)",
+      "verbatim_quote": "continuation values are bootstrapped using the next actions observed in each possession rather than actions obtained from an explicit best-response or greedy-policy update",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The empirical implementation does not explicitly estimate the Markov policies or verify an equilibrium strategy profile; instead, observed player actions construct Bellman-style continuation targets, and continuation values are bootstrapped using the next actions observed in each possession rather than actions obtained from an explicit best-response or greedy-policy update; the effects of other players are represented through the observed multi-player state and realized transitions, avoiding explicit enumeration of all joint action profiles, so the procedure is MPE-inspired but does not constitute an algorithm for computing an MPE."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The observed-action bootstrapping is literally GSE's data-driven continuation (no equilibrium computation) discipline.",
+        "source_operator": "bootstrap_observed_not_bestresponse",
+        "telemetry": "continuation bootstrapped from observed next actions (not best-response/greedy); other players via observed multi-player state + realized transitions; no joint-action enumeration; MPE-inspired not MPE-computing"
+      }
+    },
+    {
+      "primitive_id": "eq4_linear_reward_features",
+      "name": "Eq4 reward r_i=z_i^T theta; attacker features player-specific, defender shared (suppress opponent)",
+      "verbatim_quote": "the immediate reward of player i is defined as a linear combination of reward features",
+      "page": 9,
+      "latex": "r_i(s_t,a_t)=z_i(s_t,a_t)^{\\top}\\theta",
+      "symbol_and_unit_ledger": {
+        "z_i": "reward-feature vector (player-specific attackers, shared defenders)",
+        "theta": "reward-weight vector",
+        "r_i": "player i immediate reward"
+      },
+      "assumptions": [
+        "The immediate reward of player i is defined as a linear combination of reward features, r_i(s_t,a_t)=z_i(s_t,a_t)^T theta, where z_i is the reward-feature vector and theta the reward-weight vector; z_i is player-specific for attacking players but shared among defending players to reflect their common objective of suppressing the opponent's attacking value. Equation 4 is printed math-font and reconstructed here.",
+        "Equation 4 (linear feature reward) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Defenders share features (common suppress-opponent objective)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The linear feature reward with shared defender objective is literally GSE's tactical-reward decomposition.",
+        "source_operator": "eq4_linear_reward_features",
+        "telemetry": "r_i(s,a)=z_i(s,a)^T theta; z player-specific attackers, shared defenders (common objective suppress opponent attacking value); theta reward-weight vector"
+      }
+    },
+    {
+      "primitive_id": "three_reward_features",
+      "name": "d=3 features: shot value, possession termination, attacking-third ball occupancy",
+      "verbatim_quote": "we introduce d = 3 features corresponding to shot value, possession termination, and attacking-third ball occupancy",
+      "page": 9,
+      "latex": "z^{att}_i=\\begin{bmatrix}v_t S_{i,t}\\\\ -V(-x_t,y_t)C_t\\\\ \\mathbf 1\\{x_t\\ge L/6\\}\\end{bmatrix},\\quad C_t=E_t\\,\\mathbf 1\\{\\textstyle\\sum_j S_{j,t}=0\\}\\,\\mathbf 1\\{x_t<L/6\\}",
+      "symbol_and_unit_ledger": {
+        "v_t": "configured shot value (EPV V(x_t,y_t))",
+        "S_i,t": "1{action=shot}",
+        "V(-x_t,y_t)": "opponent-perspective EPV",
+        "C_t": "possession-ends-without-shot-outside-attacking-third indicator",
+        "L/6": "attacking-third boundary 17.5m (L=105m)",
+        "E_t": "final time step of possession"
+      },
+      "assumptions": [
+        "Three reward features are introduced (d=3): shot value (nonzero only at a shot, shooter receives v_t e.g. EPV V(x_t,y_t), all defenders receive -1), possession-termination adjustment (nonzero only at the final step of a possession ending without a shot outside the attacking third, magnitude opponent-perspective EPV V(-x_t,y_t) with opposite signs for attackers/defenders), and attacking-third ball occupancy (one for every attacker whenever the ball is in the attacking third x_t>=L/6=17.5m, L=105m); the termination indicator C_t=E_t·1{no shot}·1{x_t<L/6}. Equations 5-7 are printed math-font and reconstructed here.",
+        "Equations 5-7 (termination indicator + attacker/defender feature vectors) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Occupancy = ball in attacking third (not just first entry); EPV from LaurieOnTracking grid",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The three-feature tactical reward is literally GSE's shot/termination/occupancy value decomposition.",
+        "source_operator": "three_reward_features",
+        "telemetry": "d=3: shot value (shooter v_t=EPV, defenders -1); possession termination (no shot outside attacking third, opponent EPV V(-x,y), opposite signs); attacking-third occupancy (1{x>=L/6=17.5m}, L=105m); C_t=E_t·1{no shot}·1{x<L/6}"
+      }
+    },
+    {
+      "primitive_id": "theta_heuristic_not_estimated",
+      "name": "Reward weights theta=[1.0,-0.5,0.2] set heuristically, NOT estimated from data",
+      "verbatim_quote": "These weights were set heuristically to reflect the relative importance of the three reward components",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The weight parameters are predefined as theta=[1.0,-0.5,0.2]^T, set heuristically to reflect the relative importance of the three reward components (shot value, possession-termination adjustment, attacking-third ball occupancy); they were not estimated from data in this study, and future work should investigate inverse reinforcement learning to infer reward weights from expert demonstrations or team-level tactical objectives."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The heuristic-not-estimated weights caveat is literally GSE's declared-preference-versus-learned-reward honesty.",
+        "source_operator": "theta_heuristic_not_estimated",
+        "telemetry": "theta=[1.0,-0.5,0.2]^T predefined heuristically (shot/termination/occupancy importance); NOT estimated from data; future IRL from expert demonstrations/tactical objectives"
+      }
+    },
+    {
+      "primitive_id": "eq8_successor_features_q",
+      "name": "Eq8/9 Q_i=h_i^T theta; h_i=E[sum gamma^{k-t} z_i] successor features (expectation over others' actions)",
+      "verbatim_quote": "can also be decomposed into the inner product of the expected discounted sum of features and the weight vector",
+      "page": 10,
+      "latex": "Q^{\\pi}_i(s_t,a_{i,t})=h^{\\pi}_i(s_t,a_{i,t})^{\\top}\\theta,\\qquad h^{\\pi}_i=\\mathbb E_{\\pi}\\!\\Big[\\sum_{k=t}^{T}\\gamma^{k-t}z_i(s_k,a_k)\\,\\Big|\\,s_t,a_{i,t}\\Big]",
+      "symbol_and_unit_ledger": {
+        "h_i^pi": "successor features / value basis (expected discounted feature sum)",
+        "Q_i^pi": "action-value function",
+        "theta": "reward-weight vector",
+        "z_i": "reward-feature vector",
+        "pi_-i": "other agents' policies (part of environment)"
+      },
+      "assumptions": [
+        "By linearity of the reward, the action-value function decomposes into the inner product of the expected discounted sum of features and the weight vector: Q_i^pi(s_t,a_i,t)=h_i^pi(s_t,a_i,t)^T theta, where the value basis or successor features h_i^pi=E[sum_{k=t}^T gamma^{k-t} z_i(s_k,a_k)|s_t,a_i,t] is the expected discounted feature sum from taking a_i,t then following pi (other agents' policies treated as environment); the expectation over other players' current actions is approximated by realized joint actions in observed transitions rather than enumerating all joint profiles. Equations 8-9 are printed math-font and reconstructed here.",
+        "Equations 8-9 (successor-feature Q decomposition) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Linear decomposition separates learned basis h from reward structure theta",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The successor-feature Q decomposition is literally GSE's interpretable expected-feature-accumulation value kernel.",
+        "source_operator": "eq8_successor_features_q",
+        "telemetry": "Q_i^pi(s,a)=h_i^pi(s,a)^T theta; h_i^pi=E[sum_{k=t}^T gamma^{k-t} z_i(s_k,a_k)|s,a] successor features; others' policies = environment; expectation over others' actions approximated by realized joint actions (no enumeration)"
+      }
+    },
+    {
+      "primitive_id": "posthoc_reweight_preferences",
+      "name": "Post-hoc reweighting: alternative theta on fixed basis inspects tactical preferences without retraining",
+      "verbatim_quote": "alternative reward weights can be applied post hoc to inspect how tactical preferences",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Once the value basis has been estimated, alternative reward weights can be applied post hoc to inspect how tactical preferences change local action rankings; because the bootstrap targets use observed next actions rather than greedy actions selected by the reward weights, this reweighting changes the valuation of the fixed learned value basis without re-estimating the underlying continuation values."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The post-hoc preference reweighting is literally GSE's tactical-priority sensitivity analysis on a fixed value basis.",
+        "source_operator": "posthoc_reweight_preferences",
+        "telemetry": "alternative theta applied post hoc to fixed learned basis; inspects how tactical preferences change local action rankings; no retraining"
+      }
+    },
+    {
+      "primitive_id": "reweight_no_reestimate",
+      "name": "Reweighting changes valuation of fixed basis WITHOUT re-estimating continuation (post-hoc sensitivity)",
+      "verbatim_quote": "this reweighting changes the valuation of the fixed learned value basis without re-estimating the underlying continuation values",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "This reweighting changes the valuation of the fixed learned value basis without re-estimating the underlying continuation values; it is a post-hoc sensitivity analysis of local action rankings rather than a fully re-estimated value model under the new reward weights, since the learned value basis is kept fixed and only theta changes when computing Q_i=h_i^T theta."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The fixed-basis reweighting scope is literally GSE's sensitivity-not-reestimation distinction.",
+        "source_operator": "reweight_no_reestimate",
+        "telemetry": "reweighting changes valuation of fixed basis without re-estimating continuation; post-hoc sensitivity not fully re-estimated model; basis fixed, only theta changes in Q=h^T theta"
+      }
+    },
+    {
+      "primitive_id": "adusumilli_eckardt_td",
+      "name": "Adapts Adusumilli-Eckardt TD for dynamic discrete choice; fixes theta, estimates basis (not structural params)",
+      "verbatim_quote": "Our estimation procedure adapts the temporal-difference framework of Adusumilli and Eckardt",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The estimation procedure adapts the temporal-difference framework of Adusumilli and Eckardt, who propose linear semi-gradient and approximate value-iteration estimators for recursive value terms in dynamic discrete choice models and dynamic games; their objective is structural parameter estimation feeding a conditional-choice-probability pseudo-likelihood, whereas this paper's objective is football action valuation: it fixes the tactical reward weights theta and directly estimates the successor-feature basis, combining the two approaches sequentially rather than as alternatives."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The econometric-TD adaptation is literally GSE's dynamic-discrete-choice value-estimation lineage.",
+        "source_operator": "adusumilli_eckardt_td",
+        "telemetry": "adapts Adusumilli-Eckardt TD (linear semi-gradient + AVI for dynamic discrete choice/games); their goal structural params -> pseudo-likelihood; here fix theta, estimate successor basis; sequential not alternatives"
+      }
+    },
+    {
+      "primitive_id": "linear_pretrain_not_transfer",
+      "name": "MLP pretrained to reproduce linear TD estimates (coefficients NOT transferred to network weights)",
+      "verbatim_quote": "A randomly initialized MLP is then pretrained to reproduce these linear TD estimates by minimizing their squared prediction error",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A randomly initialized MLP is pretrained to reproduce the linear TD estimates by minimizing their squared prediction error; thus the linear coefficients are not directly transferred to the network weights, and the pretrained parameters initialize the subsequent AVI refinement."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The reproduce-not-transfer pretraining is the same stable initialization GSE uses before nonlinear refinement.",
+        "source_operator": "linear_pretrain_not_transfer",
+        "telemetry": "random MLP pretrained to reproduce linear TD estimates (min squared prediction error); linear coefficients NOT transferred to network weights; pretrained params initialize AVI"
+      }
+    },
+    {
+      "primitive_id": "eq12_block_role_action_basis",
+      "name": "Eq12 basis phi=e(role,action) one-hot tensor [1; standardized state]; block-structured, no higher-order terms",
+      "verbatim_quote": "This block-structured representation allows the coefficients of the state variables to vary across role-action combinations",
+      "page": 12,
+      "latex": "h_i(s_t,a_{i,t};W_i)=W_i^{\\top}\\phi_i(s_t,a_{i,t}),\\qquad \\phi_i=e(c_{i,t},a_{i,t})\\otimes\\begin{bmatrix}1\\\\ \\tilde o_{i,t}\\end{bmatrix}",
+      "symbol_and_unit_ledger": {
+        "W_i": "parameter matrix (p_i x d)",
+        "phi_i": "basis-function vector",
+        "e(c,a)": "role-action one-hot",
+        "o_tilde": "standardized player-centric state",
+        "c_i,t": "role category",
+        "tensor": "Kronecker product (block structure)"
+      },
+      "assumptions": [
+        "The linear value basis is h_i(s_t,a_i,t;W_i)=W_i^T phi_i(s_t,a_i,t), with phi_i=e(c_i,t,a_i,t) tensor [1; o_tilde_i,t] where e is a one-hot vector identifying the role-action combination and o_tilde is the standardized player-centric state; this block-structured representation allows the coefficients of the state variables to vary across role-action combinations and does not include higher-order state-state polynomial terms; each column of W_i estimates the expected discounted accumulation of one reward feature. Equations 10-12 are printed math-font and reconstructed here.",
+        "Equations 10-12 (linear basis + standardization + role-action block) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "No higher-order state-state polynomial terms; per-role-action coefficient blocks",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The role-action block basis is literally GSE's role-conditioned interpretable value approximation.",
+        "source_operator": "eq12_block_role_action_basis",
+        "telemetry": "h_i=W_i^T phi_i; phi_i=e(c_i,t,a_i,t) tensor [1;o_tilde_i,t] (role-action one-hot tensor standardized state); block-structured coefficients vary by role-action; no higher-order state-state polynomial; W_i columns = per-feature accumulation"
+      }
+    },
+    {
+      "primitive_id": "focal_slots_not_identity",
+      "name": "22 focal-player slots (11 attack/11 defend) per frame, NOT persistent player identities; shared MLP",
+      "verbatim_quote": "A separate basis pipeline is constructed for each of the 22 focal-player slots",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A separate basis pipeline is constructed for each of the 22 focal-player slots, corresponding to the 11 attacking and 11 defending positions in each frame rather than to persistent player identities; player-specific means conditioning the value estimate on a focal-player representation (action and relative tactical context, whether ball holder/off-ball attacker/defender), not a separate network per identity; observations from all slots are pooled during nonlinear AVI with a shared MLP value approximator."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The focal-slot conditioning is literally GSE's role-relative value estimation (shared backbone, not per-identity networks).",
+        "source_operator": "focal_slots_not_identity",
+        "telemetry": "22 focal-player slots (11 attack/11 defend) per frame, not persistent identities; player-specific = focal-player conditioning (action + relative tactical context + role); all slots pooled in AVI, shared MLP"
+      }
+    },
+    {
+      "primitive_id": "eq13_semi_gradient_td",
+      "name": "Eq13-16 semi-gradient TD: target Y=z+gamma h(next observed); terminal Y=z; W<-W+alpha phi(Y-h)^T",
+      "verbatim_quote": "we use a stochastic semi-gradient TD update based on observed transition data",
+      "page": 12,
+      "latex": "Y_{i,t}=z_i(s_t,a_t)+\\gamma h_i(s_{t+1},a_{i,t+1};W_i),\\quad Y_{i,T}=z_i(s_T,a_T),\\quad W_i\\leftarrow W_i+\\alpha\\,\\phi(s_t,a_{i,t})(Y_{i,t}-h_i)^{\\top}",
+      "symbol_and_unit_ledger": {
+        "Y_i,t": "TD target",
+        "z_i": "immediate reward features",
+        "h_i": "successor-feature basis",
+        "alpha": "learning rate",
+        "phi": "basis vector",
+        "terminal": "continuation value zero at possession end"
+      },
+      "assumptions": [
+        "A stochastic semi-gradient TD update uses observed transitions (s_t,a_t,z_i,s_{t+1},a_i,t+1) where a_i,t+1 is the next observed action; the objective is L(W_i)=E[||z_i(s_t,a_t)+gamma h_i(s_{t+1},a_i,t+1;W_i)-h_i(s_t,a_i,t;W_i)||^2], the TD target Y_i,t=z_i+gamma h_i(s_{t+1},a_i,t+1;W_i), at the final step the continuation is zero so Y_i,T=z_i(s_T,a_T), and the update is W_i<-W_i+alpha phi(s_t,a_i,t)(Y_i,t-h_i)^T; shot-value and termination components are assigned on the terminal row and occupancy at every attacking-third step, propagated backward through continuation values. Equations 13-16 are printed math-font and reconstructed here.",
+        "Equations 13-16 (TD loss/target/terminal/semi-gradient update) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Semi-gradient (target treated as fixed); observed next action not greedy",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The semi-gradient successor-feature TD is literally GSE's observed-transition value-basis estimator.",
+        "source_operator": "eq13_semi_gradient_td",
+        "telemetry": "L=||z_i+gamma h_i(next)-h_i(current)||^2; Y=z+gamma h(next observed); terminal Y=z (continuation 0); W<-W+alpha phi(Y-h)^T; shot/termination on terminal row, occupancy every attacking-third step; backward propagation"
+      }
+    },
+    {
+      "primitive_id": "avi_observed_next_action",
+      "name": "AVI refinement uses observed next action (not greedy/best-response); fits Bellman targets iteratively",
+      "verbatim_quote": "the nonlinear refinement uses the next action actually observed in the transition data when constructing the continuation target",
+      "page": 13,
+      "latex": "y^{(k)}_{i,t}=z_i(s_t,a_t)+\\gamma h_i(s_{t+1},a^{obs}_{i,t+1};\\psi_k),\\qquad \\psi_{k+1}=\\arg\\min_\\psi \\mathbb E\\|y^{(k)}_{i,t}-h_i(s_t,a_{i,t};\\psi)\\|^2",
+      "symbol_and_unit_ledger": {
+        "y_i,t^(k)": "AVI Bellman target at iteration k",
+        "a_obs": "observed next action (not greedy)",
+        "psi": "MLP value-basis parameters",
+        "h_i": "nonlinear successor-feature basis"
+      },
+      "assumptions": [
+        "Unlike a greedy control update, the nonlinear AVI refinement uses the next action actually observed in the transition data when constructing the continuation target, so it does not perform best-response updates or compute an equilibrium; it iteratively fits the successor-feature basis to Bellman-style targets y_i,t^(k)=z_i+gamma h_i(s_{t+1},a_obs_i,t+1;psi_k) from observed multi-player transitions, updating psi by minimizing squared error until convergence. Equations 17-18 are printed math-font and reconstructed here.",
+        "Equations 17-18 (AVI target + parameter update) printed math-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Iterative fit to observed-transition Bellman targets; not best-response",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The observed-action AVI is literally GSE's iterative Bellman-fit refinement without equilibrium computation.",
+        "source_operator": "avi_observed_next_action",
+        "telemetry": "AVI uses observed next action (not greedy/best-response); y_i,t^(k)=z_i+gamma h_i(s_{t+1},a_obs_{i,t+1};psi_k); psi_{k+1}=argmin E||y-h_i(psi)||^2; iterate to convergence; no equilibrium"
+      }
+    },
+    {
+      "primitive_id": "greedy_only_inference",
+      "name": "Greedy actions derived ONLY at post-training inference for ranking, NOT fed back into TD targets",
+      "verbatim_quote": "Greedy actions are derived only at this post-training inference stage for action-ranking analysis and are not fed back into the TD targets",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The resulting nonlinear value basis computes action values for all feasible actions through Q_i(s,a)=h_i(s,a)^T theta; greedy actions are derived only at this post-training inference stage for action-ranking analysis and are not fed back into the TD targets, keeping the estimation observational rather than control-oriented."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The greedy-only-at-inference discipline is literally GSE's valuation-not-control separation (no policy feedback).",
+        "source_operator": "greedy_only_inference",
+        "telemetry": "Q_i=h_i^T theta for all feasible actions; greedy actions only at post-training inference for ranking; NOT fed back into TD targets; observational not control"
+      }
+    },
+    {
+      "primitive_id": "td_mse_not_cross_comparable",
+      "name": "TD MSE only within-formulation (scalar Q vs d=3 successor-feature target spaces differ)",
+      "verbatim_quote": "the absolute TD MSE values are not directly comparable across the two formulations",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because the independent RL baseline computes TD error in a scalar Q-value space whereas the MPE-inspired formulation computes TD error in a d=3 successor-feature vector space, the absolute TD MSE values are not directly comparable across the two formulations; TD MSE is used only to assess internal consistency within each formulation and does not directly assess the tactical plausibility of alternative-action rankings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The cross-target-space incomparability is literally GSE's metric-space-matching discipline before model comparison.",
+        "source_operator": "td_mse_not_cross_comparable",
+        "telemetry": "independent TD error scalar Q-space vs MPE d=3 successor-feature space; absolute TD MSE NOT cross-comparable; within-formulation consistency only; not tactical plausibility"
+      }
+    },
+    {
+      "primitive_id": "edms_lower_td_both",
+      "name": "EDMS yields lower TD MSE than PVS within BOTH formulations (better target consistency)",
+      "verbatim_quote": "the EDMS state representation provides better consistency with the corresponding TD targets under both learning procedures",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Within the independent RL formulation EDMS yielded a lower TD MSE than PVS (4.5057e-4 vs 6.6947e-4), and the same pattern held within the MPE-inspired formulation (1.0876e-2 vs 1.1229e-2); these within-formulation comparisons indicate that the EDMS state representation provides better consistency with the corresponding TD targets under both learning procedures."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The EDMS-over-PVS consistency is the same interpretable-state-representation benefit GSE validates.",
+        "source_operator": "edms_lower_td_both",
+        "telemetry": "EDMS lower TD MSE than PVS in both: independent 4.5057e-4 vs 6.6947e-4; MPE 1.0876e-2 vs 1.1229e-2; EDMS better target consistency"
+      }
+    },
+    {
+      "primitive_id": "defensive_preventive_value",
+      "name": "Defensive value: preventive actions (occupy space before pass, shift to reduce options) without ball interaction",
+      "verbatim_quote": "the proposed model can evaluate preventive defensive actions, such as occupying space before a pass is played or shifting position to reduce the opponent's future attacking options",
+      "page": 21,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The framework treats both attacking and defending players as decision-making agents, enabling evaluation of defensive movements that reduce the opponent's future attacking value; it can evaluate preventive defensive actions such as occupying space before a pass is played or shifting position to reduce the opponent's future attacking options, and movements that close dangerous space or restrict passing options receive high Q-values even without direct ball interaction — contributions difficult to capture with conventional on-ball event statistics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The preventive defensive valuation is literally GSE's off-ball space-denial credit kernel.",
+        "source_operator": "defensive_preventive_value",
+        "telemetry": "defenders as agents; preventive actions (occupy space before pass, shift to reduce options) high Q without ball interaction; close dangerous space/block passing lane; hard to capture with on-ball stats"
+      }
+    },
+    {
+      "primitive_id": "reweight_backward_to_forward",
+      "name": "Reweight attacking-third 0.2->1.0 flips highest action backward-right -> forward-right (no retrain)",
+      "verbatim_quote": "the highest-valued action changes from backward-right to forward-right",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Under the default theta=(1.0,-0.5,0.2)^T the highest-valued action is backward-right; after increasing the attacking-third ball-occupancy weight from 0.2 to 1.0 (theta=(1.0,-0.5,1.0)^T), the highest-valued action changes from backward-right to forward-right, a more aggressive forward movement; since the change applies only to the reward-weight vector with the learned basis fixed, it is performed without retraining the entire model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The weight-flip action change is literally GSE's interpretable tactical-priority steering demonstration.",
+        "source_operator": "reweight_backward_to_forward",
+        "telemetry": "default theta=(1.0,-0.5,0.2) -> backward-right highest; attacking-third weight 0.2->1.0 (theta=(1.0,-0.5,1.0)) -> forward-right; basis fixed, no retrain; coach preference directly reflected"
+      }
+    },
+    {
+      "primitive_id": "limitation_no_mpe_verify",
+      "name": "Limitation: does NOT solve/verify mutually consistent MPE profile; continuation from observed data",
+      "verbatim_quote": "the current implementation does not explicitly solve for or verify a mutually consistent MPE strategy profile",
+      "page": 24,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A stated limitation is that the current implementation does not explicitly solve for or verify a mutually consistent MPE strategy profile; MPE is used as a motivating dynamic-game framework while continuation values are estimated from observed state-action transition data."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The no-equilibrium-verification limitation is literally GSE's honest MPE-as-motivation scope bound.",
+        "source_operator": "limitation_no_mpe_verify",
+        "telemetry": "does NOT solve/verify mutually consistent MPE profile; MPE motivating framework; continuation from observed state-action transitions"
+      }
+    },
+    {
+      "primitive_id": "limitation_ablation_needed",
+      "name": "Limitation: controlled ablation (common backbone) needed to isolate each component's contribution",
+      "verbatim_quote": "Controlled ablation studies using a common backbone and training setup are required to quantify the contribution of each component separately",
+      "page": 24,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The proposed method and the independent baseline differ in model architecture, reward representation, learning objective, and training procedure, so the current experiments do not isolate the contribution of the MPE-inspired component from these other design choices; controlled ablation studies using a common backbone and training setup are required to quantify the contribution of each component separately; other limitations include weak xG correlation, position-only state (no body orientation/field of view/technical attributes), manual reward weights (future IRL), and J1-League-only evaluation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The ablation-needed limitation is literally GSE's component-attribution experimental-design requirement.",
+        "source_operator": "limitation_ablation_needed",
+        "telemetry": "differs architecture/reward/objective/training -> MPE contribution not isolated; controlled ablation common backbone needed; other limits: weak xG corr, position-only state, manual weights (future IRL), J1-only"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "mpeactionvalue2026_trace",
+      "think": "The retrocausal genealogy of this paper is the strategic-interdependence turn in football action valuation. Kenjiro Ide, Taiga Someya, Kohei Kawaguchi, and Keisuke Fujii, posting to arXiv in October 2026 as 2610.05961, argue that valuing player actions requires accounting for continuous strategic interactions among twenty-two players including off-ball movements and defensive positioning, and that existing reinforcement-learning valuation methods either aggregate decisions at the team level or estimate player values independently, leaving strategic interdependence insufficiently represented. The work sits in the lineage of expected goals, VAEP's action valuation by scoring-and-conceding probability changes, expected possession value and expected threat, Voronoi and velocity-aware space control, and the GVDEP defensive framework, while building directly on Nakahara's multi-agent reinforcement learning valuation, the authors' own Expandable Decision-Making States, and Adusumilli and Eckardt's temporal-difference estimation of dynamic discrete choice models. The recursive theory of mind is the Markov-perfect-equilibrium-inspired dynamic game and its interpretable value decomposition. Each possession is formulated as a finite-horizon stochastic game with twenty-two autonomous agents whose Markov policies depend only on the current state, because history-dependent subgame-perfect strategies are computationally impractical in football's large continuous state space; the MPE condition requires each player's strategy to be a mutual best response, but the authors are explicit that they use MPE only as a motivating solution concept and never compute or verify an equilibrium profile. The Q-value is decomposed into a successor-feature basis, the expected discounted accumulation of three tactical reward features — shot value, possession-termination adjustment, and attacking-third ball occupancy — and a linear reward-weight vector fixed heuristically at one, minus one-half, and one-fifth, separating the learned future-feature accumulation from the specification of tactical preferences. Cross-layer veto adjudication is the two-stage estimation and its honest evaluation discipline. A linear semi-gradient temporal-difference estimator initializes the successor-feature basis on observed transitions, a randomly initialized multilayer perceptron is pretrained to reproduce those linear estimates without transferring the coefficients, and approximate value iteration then refines the basis against Bellman targets built from observed next actions rather than greedy best-responses, with greedy actions derived only at post-training inference and never fed back into the targets. The evaluation respects three separate diagnostics: temporal-difference mean squared error measures within-formulation consistency only, because the independent baseline errs in scalar Q-space while the proposed method errs in three-dimensional successor-feature space; the off-ball action distribution diagnoses ranking collapse; and the team-level association with season expected goals is an exploratory descriptive check, not confirmatory external validity. The implementation invariants map directly onto GSE. The MPE-inspired multi-agent formulation is GSE's strategic-interdependence kernel that accounts for surrounding players through the observed game state; the successor-feature decomposition is GSE's interpretable value-basis separation of feature accumulation from tactical preferences; EDMS is GSE's tactically interpretable state representation encoding pressure, space, passing options, and possession context; the post-hoc reward reweighting on a fixed basis is GSE's tactical-priority sensitivity analysis; the focal-slot conditioning with a shared backbone is GSE's role-relative value estimation; and the preventive defensive valuation is GSE's off-ball space-denial credit for movements that close dangerous space without touching the ball. The empirical results make the context-sensitivity claim concrete and honest. With EDMS held fixed, the independent baseline assigns the highest value to forward movement in 99.21 percent of evaluated off-ball states, a trivial collapse, whereas the proposed formulation's most frequent direction accounts for only 17.63 percent, and the team-level Q-value association with season expected goals flips from a negative Spearman rho of minus zero point three seven for the baseline to a weakly positive zero point two nine for the proposed model across twenty matched teams. Qualitative cases show context-dependent valuation: forward runs into open space, support movements when a teammate already occupies the forward lane, scoring-opportunity positioning, and defensive space closure; and raising the attacking-third weight from one-fifth to one flips the highest-valued action from backward-right to forward-right without retraining. The caveats close the account with the scope limits that bound the claim. The authors are explicit that the comparison does not isolate the MPE-inspired component because the two approaches differ in architecture, reward representation, learning objective, and training procedure, so controlled ablations with a common backbone are required; the implementation does not solve or verify a mutually consistent equilibrium; the reward weights are manual rather than learned, with inverse reinforcement learning flagged as future work; the state relies on positions and velocities without body orientation or technical attributes; the expected-goals correlation remains weak; and evaluation is confined to ninety-five J1 League matches. The invariant for GSE is to adopt the MPE-inspired multi-agent value formulation, the successor-feature decomposition with post-hoc preference reweighting, the EDMS interpretable state, the two-stage linear-then-nonlinear estimation with observed-action bootstrapping, and the preventive defensive credit, while carrying the no-equilibrium-verification, the non-isolated-component, the manual-weight, and the single-league limitations as honest bounds on what the learned action values can claim. The implementation scale and architecture give the result its empirical weight. The corpus is ninety-five J1 League matches from the 2023 and 2024 seasons provided by Data Stadium Inc., resampled from twenty-five to ten frames per second, split chronologically into fifty training matches from 2023, five validation matches and forty test matches from 2024, yielding ten thousand three hundred eight possession sequences, one million five hundred sixty-one thousand two hundred fifty-five time steps, and forty-two point eight one hours of play, with sequences between thirty and three hundred steps and the attacking direction normalized left to right; the independent baseline uses a sixty-four-unit GRU while the proposed model uses a shared sixty-four and thirty-two-unit multilayer perceptron pooled across the twenty-two focal slots, with linear pretraining for one epoch and up to twenty approximate-value-iteration iterations reusing the previous parameters and decaying the learning rate by zero point three at iterations five, ten, and fifteen.",
+      "retrocausal_genealogy": "Strategic-interdependence turn in football (soccer) action valuation. Kenjiro Ide, Taiga Someya, Kohei Kawaguchi, Keisuke Fujii (Nagoya/Tokyo/HKUST/RIKEN); arXiv:2610.05961v1 [cs.LG] 5 Oct 2026. Existing RL aggregates team-level or independent players, missing 22-player strategic interdependence (off-ball + defense). Lineage: xG, VAEP (Decroos 2019), EPV (Fernandez-Bornn), xT, Voronoi/velocity space control, GVDEP defense, TacticAI, GRF; builds on Nakahara 2023 MARL valuation, Ide EDMS (icSPORTS 2024 / J Big Data 2026), Adusumilli-Eckardt 2026 TD dynamic discrete choice (Rev Econ Studies). MPE motivating not computed. Data 95 J1 League matches 2023+2024 (Data Stadium), 25fps->10fps, 50 train/5 val/40 test, 10308 possessions/1561255 steps/42.81h, sequences 30-300 steps.",
+      "theory_of_mind": "Possession = finite-horizon stochastic game N=22 (11 attack/11 defend focal slots, not persistent identities); Markov policies pi_i(.|s) in Delta(A_i(s)) (history-dependent SPE impractical). Eq2 MPE V_i^pi*(s)>=V_i^(pi_tilde,pi*_-i)(s) (mutual best response, motivating NOT verified). Eq3 V_i=E[sum gamma^{k-t} r_i|s], gamma=1 (finite T, build-up unattenuated). Eq4 r_i=z_i^T theta (z player-specific attackers/shared defenders). d=3 features: shot value (shooter v_t=EPV, defenders -1), possession termination (C_t=E_t·1{no shot}·1{x<L/6}, opponent EPV V(-x,y)), attacking-third occupancy (1{x>=L/6=17.5m}, L=105m); theta=[1.0,-0.5,0.2] heuristic NOT estimated. Eq8/9 Q_i=h_i^T theta, h_i=E[sum gamma^{k-t} z_i|s,a] successor features (others' actions via realized joint, no enumeration). EDMS 74-dim (pressure/space/passing/shooting/offside/possession) vs PVS 92-dim. 15 actions (5 on-ball/1 defensive/9 off-ball), role-masked. Eqs 1-18 math-font reconstructed.",
+      "cross_layer_veto": "Two-stage: linear semi-gradient TD (Eq10-16 h=W^T phi, phi=e(role,action)tensor[1;standardized state], block no higher-order; Y=z+gamma h(next observed), terminal Y=z, W<-W+alpha phi(Y-h)^T) -> MLP pretrain reproduce (coeffs NOT transferred) -> AVI (Eq17-18 y=z+gamma h(next observed), psi argmin squared error, <=20 iter, reuse params, lr decay 0.3 @5/10/15); greedy only post-training inference NOT fed back. Continuation bootstrapped observed next actions not best-response (MPE-inspired not MPE算法). Metrics: TD MSE within-formulation only (independent scalar Q vs MPE d=3 feature space NOT cross-comparable; independent PVS 6.69e-4/EDMS 4.51e-4, MPE PVS 1.12e-2/EDMS 1.09e-2; EDMS lower both); off-ball collapse independent forward 99.21% vs MPE most-frequent 17.63%; team Q vs season xG independent rho=-0.37 vs MPE +0.29 (n=20, descriptive not confirmatory). Post-hoc reweight theta fixed basis (attacking-third 0.2->1.0 flips backward-right->forward-right, no retrain). Qualitative: open-space runs/support/scoring/defensive space closure; preventive defense (occupy space before pass) high Q without ball. Limitations: NOT isolate MPE component (differs architecture/reward/objective/training, ablation needed), NOT solve/verify MPE, manual weights (future IRL), position-only state, weak xG, J1-only. Architecture independent GRU 64/64, MPE MLP 64/32 shared across 22 pooled slots. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A Markov-perfect-equilibrium-inspired multi-agent framework values on-ball, off-ball, and defensive actions in association football by formulating each possession as a finite-horizon dynamic game of autonomous Markov agents, decomposing the Q-value into an interpretable successor-feature basis and a fixed linear reward-weight vector over three tactical features, and estimating the basis through linear temporal-difference initialization followed by nonlinear approximate value iteration on observed transitions; against an independent RL baseline that collapses to forward movement in 99.21% of off-ball states, the proposed formulation spreads its highest-valued directions (most frequent 17.63%) and flips the team-level expected-goals association from negative to weakly positive, while honestly using MPE only as motivation without computing an equilibrium and without isolating its contribution from other design choices.",
+  "gsi_mapping": "GSI treats possession finite-horizon dynamic game N=22 focal slots (Markov policies, MPE motivating NOT computed/verified; Eq2 V_i^pi*>=V_i^(pi_tilde,pi*_-i); Eq3 gamma=1 finite T build-up unattenuated); continuation bootstrapped observed next actions not best-response; EDMS 74-dim (pressure/space/passing/shooting/offside/possession) vs PVS 92-dim; Eq4 r_i=z_i^T theta (attackers player-specific/defenders shared); d=3 features shot value (shooter EPV/defenders -1)/possession termination (C_t=E_t·1{no shot}·1{x<L/6}, opponent EPV)/attacking-third occupancy (1{x>=17.5m}, L=105m); theta=[1.0,-0.5,0.2] heuristic NOT estimated; Eq8/9 Q_i=h_i^T theta successor features h_i=E[sum gamma z] (others via realized joint actions); 15 role-masked actions (5 on-ball/1 def/9 off-ball); two-stage linear semi-gradient TD (Eq10-16 h=W^T phi, phi=e(role,action)tensor[1;state], Y=z+gamma h(next), terminal Y=z) -> MLP pretrain reproduce (not transfer) -> AVI (Eq17-18 observed-next Bellman, <=20 iter, greedy only inference); metrics TD MSE within-formulation only (scalar Q vs d=3 NOT cross-comparable; EDMS lower both: indep 4.51e-4 vs 6.69e-4, MPE 1.09e-2 vs 1.12e-2), off-ball collapse indep forward 99.21% vs MPE 17.63%, team Q vs xG indep -0.37 vs MPE +0.29 (n=20 descriptive); post-hoc reweight fixed basis (attacking-third 0.2->1.0 backward-right->forward-right no retrain); preventive defensive space closure; data 95 J1 2023+2024 25->10fps 50/5/40 10308 possessions; limitations NOT isolate MPE/NOT verify/manual weights/position-only/weak xG/J1-only; Eqs 1-18 math-font reconstructed.",
+  "gse_mapping": "GSE lifts the MPE-inspired multi-agent value formulation as its strategic-interdependence kernel accounting for surrounding players through the observed game state, the successor-feature Q decomposition as its interpretable separation of tactical-feature accumulation from preferences, EDMS as its tactically interpretable state representation, the post-hoc reward reweighting on a fixed basis as its tactical-priority sensitivity analysis, the focal-slot shared-backbone conditioning as its role-relative value estimation, the two-stage linear-then-nonlinear observed-action estimation as its stable value-basis training, and the preventive defensive space-closure credit as its off-ball space-denial kernel; treats the gamma=1 finite-horizon build-up propagation as its unattenuated credit assignment, the within-formulation-only TD MSE and descriptive xG association as its metric-space-matching and external-association discipline, and carries the no-equilibrium-verification, the non-isolated-MPE-component (ablation-needed), the manual-reward-weight, the position-only-state, and the single-league limitations as honest bounds; all outputs are context-dependent action values from tracking and event data, never sportsbook lines."
+}
