@@ -578,3 +578,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 03:06:01 | COMPLETE | 2c9d78295a2595e6 | primitives=27 think_words=875
 - 2026-11-14 03:08:40 | CLAIMED | 2c8c36af2305e179 | worker=hermes-inline shard03 file=2025 - Transformer-Based Baseball Modeling for Pitch Outcome Prediction and Strategy Optimization - Declan.pdf
 - 2026-11-14 03:12:35 | COMPLETE | 2c8c36af2305e179 | primitives=21 think_words=857
+- 2026-11-14 03:13:34 | CLAIMED | 3c8b550bc3be4562 | worker=hermes-inline shard03 file=2014 - What Does it Take to Call a Strike Three Biases in Umpire Decision Making - Unknown Authors.pdf
+- 2026-11-14 03:16:53 | COMPLETE | 3c8b550bc3be4562 | primitives=22 think_words=850

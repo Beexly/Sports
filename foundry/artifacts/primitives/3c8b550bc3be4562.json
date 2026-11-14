@@ -1,0 +1,457 @@
+{
+  "book_id": "3c8b550bc3be4562",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_RECONSTRUCTED_LATEX",
+  "source_note": "Etan Green, David P. Daniels (Stanford University), 'What Does it Take to Call a Strike? Three Biases in Umpire Decision Making', MIT Sloan Sports Analytics Conference 2014 Research Paper Competition (7 pages). Full paper: kernel-regression strike-probability surfaces, three robust state biases (2-strike contraction, 3-ball expansion, last-called-strike aversion; last-ball spurious), a time-pressure natural experiment favoring intuitive bias, semi-parametric borderline-weighted state model, and structural random-utility strike thresholds (avg 64%, min 55% -> every umpire biased); extracted faithfully (not a derivative summary). The semi-parametric model and utility equations are image-based in the source and reconstructed as labeled LaTeX from the prose; the omega weight and logistic/threshold logic print in prose. This is the behavioral predecessor to the 2024 'Noisy Judgments' probability-surface paper. Outputs are bias estimates and strike thresholds from public pitch-location data; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "three_biases",
+      "name": "Three biases: 2-strike contract, 3-ball expand, no back-to-back strikes",
+      "verbatim_quote": "We find that the strike zone contracts in 2-strike counts and expands in 3-ball counts, and that umpires are reluctant to call two strikes in a row",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Analyzing all 2009-2011 regular-season calls (over one million pitches) with non-parametric and structural estimation, the strike zone contracts in 2-strike counts, expands in 3-ball counts, and umpires are reluctant to call two strikes in a row; the last-ball effect is spurious."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State-dependent decision boundaries are the same situational officiating bias GSE models.",
+        "source_operator": "three_biases",
+        "telemetry": "2-strike contract / 3-ball expand / no consecutive strikes"
+      }
+    },
+    {
+      "primitive_id": "average_umpire_64pct",
+      "name": "Average umpire needs 64% certainty to call strike three",
+      "verbatim_quote": "the average umpire needs to be 64% sure of a strike in order to call strike three half the time",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "An unbiased umpire would need only 50% certainty to call a strike half the time, but the average umpire needs 64% certainty to call strike three half the time, a structural measure of ball-biased aversion in pivotal counts."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The elevated certainty threshold is the same decision-bias quantification GSE applies to officiating.",
+        "source_operator": "average_umpire_64pct",
+        "telemetry": "avg strike-three threshold 64% (vs unbiased 50%)"
+      }
+    },
+    {
+      "primitive_id": "every_umpire_biased_55",
+      "name": "Even the least biased umpire needs 55%: every umpire is biased",
+      "verbatim_quote": "the least biased umpire still needs to be 55% sure of a strike in order to call strike three half the time",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The least biased umpire still needs 55% certainty to call strike three half the time, so every umpire is biased; contrary to their formal role as unbiased arbiters, umpires are biased by the state of the at-bat when deciding whether a pitch intersects the zone."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Universal bias is the same population-wide observer-noise finding GSE must normalize.",
+        "source_operator": "every_umpire_biased_55",
+        "telemetry": "min threshold 55% -> every umpire biased"
+      }
+    },
+    {
+      "primitive_id": "bias_flips_1pct_games",
+      "name": "Bias flips ~1% of calls, ~once per game changes an at-bat",
+      "verbatim_quote": "Bias flips about 1% of calls. Almost once a game, an at-bat ends in something other than a strikeout after a third strike should have been called.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The documented effects are strong enough to change game outcomes: bias flips about 1% of calls, and almost once a game an at-bat ends in something other than a strikeout after a third strike should have been called."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The game-level impact of bias is the same outcome-materiality measure GSE uses to prioritize corrections.",
+        "source_operator": "bias_flips_1pct_games",
+        "telemetry": "bias flips ~1% calls; ~1/game wrong at-bat outcome"
+      }
+    },
+    {
+      "primitive_id": "kernel_regression_estimator",
+      "name": "Bivariate Gaussian kernel regression, Silverman bandwidth",
+      "verbatim_quote": "Our estimator is a kernel regression with a bivariate Gaussian kernel and Silverman’s bandwidth for each axis",
+      "page": 1,
+      "latex": "\\hat p(z)=\\frac{\\sum_i K_h(z-z_i)\\,y_i}{\\sum_i K_h(z-z_i)},\\ K=\\text{bivariate Gaussian},\\ h=\\text{Silverman}",
+      "symbol_and_unit_ledger": {
+        "K_h": "Gaussian kernel",
+        "h": "Silverman bandwidth per axis"
+      },
+      "assumptions": [
+        "Strike-call probability is estimated non-parametrically from pitch location at the front-of-plate plane via kernel regression with a bivariate Gaussian kernel and Silverman's bandwidth per axis, weighting each observation inversely by distance; the vertical axis is normalized by the batter's zone height measured by the camera operator each at-bat."
+      ],
+      "breakdown_regime": "kernel formula reconstructed from prose description",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A distance-weighted kernel call-probability surface is the same non-parametric zone estimator GSE uses.",
+        "source_operator": "kernel_regression_estimator",
+        "telemetry": "bivariate Gaussian kernel; Silverman bandwidth; inverse-distance"
+      }
+    },
+    {
+      "primitive_id": "ring_of_uncertainty",
+      "name": "10%-to-90% ring is a foot wide; calls concentrate at edges",
+      "verbatim_quote": "the ring in which the probability of a strike rises from 10% to 90% is a foot wide",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Center-zone pitches are called strikes >99% and far pitches <1%, with probability changing steeply at the edge: the ring where strike probability rises from 10% to 90% is a foot wide; because calls concentrate along the zone edges, this ring of uncertainty plays an outsized role in pitch, at-bat, and game outcomes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The borderline uncertainty ring is the same high-leverage decision region GSE focuses on.",
+        "source_operator": "ring_of_uncertainty",
+        "telemetry": "10%->90% ring ~1 foot wide; edges dominate outcomes"
+      }
+    },
+    {
+      "primitive_id": "inconsistent_vs_biased",
+      "name": "Inconsistent = same-location different calls; biased = correlates with state",
+      "verbatim_quote": "We call an umpire inconsistent when he makes different calls on pitches that cross the plane at the same location",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "An umpire is inconsistent when he makes different calls on pitches crossing the plane at the same location, and biased when those differences correlate with extraneous non-location factors; the paper examines four at-bat states (3 balls, 2 strikes, last pitch a ball, last pitch a called strike) representing pivotal or correlated calls."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Separating noise (inconsistency) from systematic state-correlation (bias) is the same decomposition GSE applies.",
+        "source_operator": "inconsistent_vs_biased",
+        "telemetry": "inconsistent=same-loc diff calls; biased=state-correlated"
+      }
+    },
+    {
+      "primitive_id": "mountains_and_moat",
+      "name": "State effects visualized as ring of mountains or moat",
+      "verbatim_quote": "When the state raises the probability of a strike, we observe a ring of mountains",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Estimating strike probability with the state true versus false and plotting the difference shows no change at the center or periphery (obvious strikes/balls) but systematic distortion on borderline pitches: a state that raises strike probability forms a ring of mountains, one that lowers it forms a moat."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The difference-surface visualization is the same borderline-bias diagnostic GSE uses.",
+        "source_operator": "mountains_and_moat",
+        "telemetry": "state raises prob -> mountains; lowers -> moat (border only)"
+      }
+    },
+    {
+      "primitive_id": "2strike_20pp_drop",
+      "name": "2-strike / last-called-strike drop up to 20 percentage points",
+      "verbatim_quote": "The effects of 2 strikes or a called strike on the last pitch can induce as much as a 20 percentage point drop",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "There is a small zone expansion in 3-ball counts and a large contraction in 2-strike counts, plus a small expansion after a last-pitch ball and a large contraction after a last-pitch called strike; 2 strikes or a last called strike can induce up to a 20 percentage point drop in strike probability for the average umpire, and for some shift a coin flip to almost zero."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The large borderline probability shift is the same effect-size magnitude GSE flags as material.",
+        "source_operator": "2strike_20pp_drop",
+        "telemetry": "2-strike/last-strike: up to -20pp; coin flip -> ~0"
+      }
+    },
+    {
+      "primitive_id": "last_ball_spurious",
+      "name": "Last-ball bias is spurious; other three states robust",
+      "verbatim_quote": "the apparent effect of a ball on the previous pitch is spurious but that sizable biases manifest in the other three states",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Robustness checks in Appendix A show the apparent effect of a ball on the previous pitch is spurious, while sizable biases manifest in the other three states (3 balls, 2 strikes, last called strike); the semi-parametric last-ball coefficient is near zero with 95% CI (-0.001, 0.011)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Discarding a spurious effect via robustness checks is the same false-positive veto GSE applies.",
+        "source_operator": "last_ball_spurious",
+        "telemetry": "last-ball spurious (CI -.001,.011); 3 states robust"
+      }
+    },
+    {
+      "primitive_id": "time_pressure_natural_experiment",
+      "name": "Time pressure (~2% of calls) arbitrates deliberative vs intuitive",
+      "verbatim_quote": "For about 2% of calls, the umpire must make his call immediately",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "For about 2% of calls the umpire must call immediately because the call tells the catcher whether to play on a potential baserunner (3-ball counts with a runner on first, except 2 strikes and 2 outs); this natural time-pressure experiment tests whether bias is deliberative or intuitive."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A time-pressure natural experiment is the same mechanism-identification design GSE uses.",
+        "source_operator": "time_pressure_natural_experiment",
+        "telemetry": "~2% immediate calls; 3-ball + R1 (not 2K2out)"
+      }
+    },
+    {
+      "primitive_id": "deliberative_vs_intuitive_test",
+      "name": "Bias weakens under pressure = deliberative; strengthens = intuitive",
+      "verbatim_quote": "If under time pressure the bias weakens, then the bias is likely deliberative",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "If bias weakens under time pressure it is likely deliberative (created when the umpire thinks through the decision); if it strengthens it is likely intuitive (a consequence of snap judgment); this logic arbitrates the cognitive source of the bias."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The pressure-modulation test is the same dual-process attribution GSE applies to decision errors.",
+        "source_operator": "deliberative_vs_intuitive_test",
+        "telemetry": "weaken->deliberative; strengthen->intuitive"
+      }
+    },
+    {
+      "primitive_id": "time_pressure_intuitive_result",
+      "name": "Time pressure deepens the 2-strike moat: bias is intuitive",
+      "verbatim_quote": "Figure 3 shows that time pressure accentuates the 2-strike bias",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Comparing time-pressure calls with 3-ball-count calls not under pressure, time pressure accentuates the 2-strike bias (a deeper moat), while the 3-ball-plus-last-called-strike case shows no apparent bias with or without pressure; this supports the intuitive (snap-judgment) interpretation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The intuitive-bias finding is the same automatic-processing error GSE expects under time constraints.",
+        "source_operator": "time_pressure_intuitive_result",
+        "telemetry": "time pressure -> deeper 2-strike moat -> intuitive"
+      }
+    },
+    {
+      "primitive_id": "unbiased_50_threshold",
+      "name": "Unbiased benchmark: call strike when location-probability > 50%",
+      "verbatim_quote": "An unbiased umpire calls a strike when the probability of a strike based solely on the location of the pitch is greater than 50%",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "An unbiased umpire calls a strike when the location-only strike probability exceeds 50%; a ball-biased umpire requires a higher threshold and a strike-biased one a lower threshold, and bias flips close calls (a pitch called a strike 50.1% of the time unbiased is likely called a ball in a ball-biased state)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The 50% unbiased decision rule is the same rational benchmark GSE measures bias against.",
+        "source_operator": "unbiased_50_threshold",
+        "telemetry": "unbiased: strike if p(location)>0.5"
+      }
+    },
+    {
+      "primitive_id": "strike_threshold_structural",
+      "name": "Strike threshold: simulated unbiased probability matching biased calls",
+      "verbatim_quote": "We define this probability as the strike threshold",
+      "page": 4,
+      "latex": "p_j:\\ \\mathbb{E}[U(\\text{call}=s)]=U(\\text{call}=b);\\ \\gamma_s=\\gamma_b\\Rightarrow p_j=0.5",
+      "symbol_and_unit_ledger": {
+        "p_j": "strike threshold in state j",
+        "gamma": "miscall disutilities"
+      },
+      "assumptions": [
+        "The strike threshold is the strike probability that would produce an umpire's observed biased-state calls were he actually unbiased, recovered by structurally estimating state-specific aversions to miscalling balls and strikes; if a state induces no bias the threshold is 50%."
+      ],
+      "breakdown_regime": "threshold condition reconstructed from prose",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The structural strike threshold is the same bias-calibrated decision boundary GSE estimates.",
+        "source_operator": "strike_threshold_structural",
+        "telemetry": "threshold p_j where E[U_s]=U_b; unbiased=0.5"
+      }
+    },
+    {
+      "primitive_id": "modal_thresholds_35_60",
+      "name": "Modal thresholds: 3-ball 35%, last-strike 60%, 2-strike >60%",
+      "verbatim_quote": "In 3-ball counts, the modal umpire’s strike threshold falls to 35%",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The modal umpire's strike threshold is 50% after a last-pitch ball (unbiased), rises to 60% after a last-pitch strike, falls to 35% in 3-ball counts, and rises above 60% in 2-strike counts; for two of the three biased states every umpire is biased, so mistakes are systematic, sizable, and pervasive."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The state-specific threshold distribution is the same per-state bias profile GSE normalizes.",
+        "source_operator": "modal_thresholds_35_60",
+        "telemetry": "modal: last-ball 50% / last-strike 60% / 3-ball 35% / 2-strike >60%"
+      }
+    },
+    {
+      "primitive_id": "semiparametric_additive_model",
+      "name": "Semi-parametric model: baseline kernel + weighted state indicators",
+      "verbatim_quote": "The call is modeled as an additive function of a non-parametric component",
+      "page": 6,
+      "latex": "y_{iuh}=p_{uh}(z_{1i},z_{2i})+\\omega_i\\,x_i^\\top\\beta+\\varepsilon_i",
+      "symbol_and_unit_ledger": {
+        "p_uh": "umpire-handedness baseline kernel",
+        "x_i": "state indicators",
+        "beta": "state bias coefficients"
+      },
+      "assumptions": [
+        "The semi-parametric model writes the strike indicator as an additive function of a non-parametric baseline p_uh(z1,z2) (a bivariate kernel per umpire-handedness tuple estimated on non-pivotal, non-preceded-by-call counts), weighted state indicators omega_i*x_i^T*beta, and an IID mean-zero error; the equation is image-based and reconstructed from the prose."
+      ],
+      "breakdown_regime": "model equation image-based, reconstructed from prose",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A baseline-plus-state-bias additive model is the same confound-adjusted officiating model GSE fits.",
+        "source_operator": "semiparametric_additive_model",
+        "telemetry": "y = p_uh(z) + omega*x^T*beta + eps"
+      }
+    },
+    {
+      "primitive_id": "omega_borderline_weight",
+      "name": "Omega weight concentrates bias at the borderline (p=0.5)",
+      "verbatim_quote": "we define ω in terms of the baseline probability of a strike",
+      "page": 6,
+      "latex": "\\omega_i=1-2\\,|p_{uh}(z_{1i},z_{2i})-0.5|",
+      "symbol_and_unit_ledger": {
+        "omega": "0 for certain balls/strikes, 1 at p=0.5"
+      },
+      "assumptions": [
+        "Because deviations are most pronounced at the zone border, the state weight is omega_i = 1 - 2*|p_uh - 0.5|, equal to 0 for certain balls or strikes (p in {0,1}) and 1 where balls and strikes are equally probable (p=0.5); thus beta_j is the percentage-point change in strike probability for state j at a borderline pitch."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The borderline-concentrated weight is the same edge-focused bias parameterization GSE uses.",
+        "source_operator": "omega_borderline_weight",
+        "telemetry": "omega=1-2|p-0.5|; beta=pp change at p=0.5"
+      }
+    },
+    {
+      "primitive_id": "borderline_58_31_estimates",
+      "name": "Borderline strike rate: 3-ball 58%, 2-strike 31%, full count -13pp",
+      "verbatim_quote": "In 3-ball counts, borderline calls are called strikes 58% of the time",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Semi-parametric estimates echo the non-parametric figures: borderline calls are strikes 58% of the time in 3-ball counts and only 31% in 2-strike counts; in full counts the probability drops about 13 percentage points (0.081-0.19-0.025), a moderation of the 2-strike bias; standard errors are clustered by umpire-batter-handedness and causal identification assumes exogeneity with respect to omitted states."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The jointly-estimated state coefficients are the same multi-state bias decomposition GSE reports.",
+        "source_operator": "borderline_58_31_estimates",
+        "telemetry": "borderline: 3-ball 58% / 2-strike 31% / full -13pp"
+      }
+    },
+    {
+      "primitive_id": "last_strike_17pp",
+      "name": "Last called strike lowers borderline strike probability 17pp",
+      "verbatim_quote": "calling a strike on the last pitch in the at-bat decreases the probability of a strike call on a borderline pitch by 17 percentage points",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Calling a strike on the last pitch decreases the probability of a strike call on a borderline pitch by 17 percentage points (the reluctance to call two strikes in a row), while the last-ball effect is near zero; the 3-ball strike bias appears only on the first 3-ball count, not after the hitter takes a strike or swings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The sequential-call aversion is the same history-dependent bias GSE models.",
+        "source_operator": "last_strike_17pp",
+        "telemetry": "last called strike: -17pp borderline; 3-ball bias only first time"
+      }
+    },
+    {
+      "primitive_id": "utility_asymmetric_miscall",
+      "name": "Structural utility: +1 correct, asymmetric miscall disutilities",
+      "verbatim_quote": "umpire u receives a utility of 1 for making a correct call",
+      "page": 6,
+      "latex": "U(s)=p-(1-p)\\gamma_{s,u}+\\nu_s;\\ U(b)=(1-p)-p\\,\\gamma_{b,u}+\\nu_b",
+      "symbol_and_unit_ledger": {
+        "gamma_s,u": "disutility miscalling strike",
+        "gamma_b,u": "disutility miscalling ball"
+      },
+      "assumptions": [
+        "The structural framework gives utility 1 for a correct call, disutility gamma_s,u for incorrectly calling a strike and gamma_b,u for incorrectly calling a ball, allowing asymmetric valuations following Kahneman and Tversky; umpires are modeled as risk-neutral and knowing the baseline location-only strike probability p (the utility equations are image-based and reconstructed from the prose)."
+      ],
+      "breakdown_regime": "utility equations image-based, reconstructed from prose (Kahneman-Tversky asymmetry)",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Asymmetric miscall disutilities are the same loss-aversion utility GSE uses to explain threshold shifts.",
+        "source_operator": "utility_asymmetric_miscall",
+        "telemetry": "U=+1 correct; -gamma_s miscall strike / -gamma_b miscall ball"
+      }
+    },
+    {
+      "primitive_id": "logistic_mle_threshold",
+      "name": "Type-I extreme value errors -> logistic choice, MLE; threshold logic",
+      "verbatim_quote": "the probability of a strike call, P[U (call = s) > U (call = b)] is the logistic transformation of U (call = s) − U (call = b)",
+      "page": 7,
+      "latex": "P(\\text{strike})=\\mathrm{logistic}(U_s-U_b);\\ \\gamma_s<\\gamma_b\\Rightarrow p_j<0.5\\ (\\text{strike bias});\\ \\gamma_s>\\gamma_b\\Rightarrow p_j>0.5\\ (\\text{ball bias})",
+      "symbol_and_unit_ledger": {
+        "nu": "IID type-I extreme value",
+        "MLE": "maximum likelihood"
+      },
+      "assumptions": [
+        "With IID type-I extreme-value errors, the strike-call probability is the logistic transformation of U_s - U_b, fit by maximum likelihood to recover gamma_s,u and gamma_b,u; thresholds p_j are simulated where E[U_s]=U_b, so equal disutilities give p_j=0.5 (unbiased), gamma_s<gamma_b gives p_j<0.5 (strike bias), and gamma_s>gamma_b gives p_j>0.5 (ball bias)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The random-utility logistic choice model is the same structural bias-estimation GSE applies.",
+        "source_operator": "logistic_mle_threshold",
+        "telemetry": "logistic(U_s-U_b) MLE; gamma_s vs gamma_b -> bias direction"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "strikethree2014_trace",
+      "think": "The retrocausal genealogy of this paper is the behavioral-economics finding that professionals deviate from rationality in response to extraneous factors, and the choice of a setting where such deviation is unambiguously suboptimal. Etan Green and David P. Daniels of Stanford cite basketball teams slightly behind at halftime winning more, golf pros focusing harder on par putts than birdie putts, and baseball players exerting effort to finish just above a round-number batting average, then note that home plate umpires are required to call balls and strikes solely on pitch location, so any state-induced deviation is clearly a mistake. They analyze all 2009 to 2011 regular-season calls, over one million pitches restricted to 75 umpires with at least 7,500 calls, using non-parametric and structural estimation. The measurement is a kernel regression of the strike-call probability on pitch location at the front-of-plate plane, with a bivariate Gaussian kernel and Silverman's bandwidth per axis, weighting observations inversely by distance and normalizing the vertical axis by each batter's zone height. Center pitches are called strikes more than 99 percent of the time and far pitches less than 1 percent, with a steep edge: the ring where probability rises from 10 to 90 percent is a foot wide, and because calls concentrate at the edges this ring of uncertainty dominates outcomes. An umpire is inconsistent when he makes different calls at the same location and biased when those differences correlate with non-location factors; the four states examined are 3 balls, 2 strikes, a last-pitch ball, and a last-pitch called strike. The recursive theory of mind is an umpire whose current call is shaped by his previous call and by the call's consequence for the at-bat. The difference surfaces show no change at the center or periphery but a ring of mountains where a state raises strike probability and a moat where it lowers it. The strike zone contracts sharply in 2-strike counts and after a last called strike, by up to 20 percentage points for the average umpire and from a coin flip to almost zero for some, while 3-ball counts expand it modestly; the last-ball effect is shown spurious by robustness checks. A natural time-pressure experiment, the roughly 2 percent of calls that must be immediate to tell the catcher whether to play on a runner, arbitrates mechanism: if bias weakens under pressure it is deliberative, if it strengthens it is intuitive, and the deeper 2-strike moat under pressure supports the intuitive snap-judgment interpretation. Cross-layer veto adjudication is the structural quantification of bias and its universality. An unbiased umpire calls a strike when location-only probability exceeds 50 percent, but the strike threshold, the simulated unbiased probability that would reproduce observed biased calls, reveals the average umpire needs 64 percent certainty to call strike three half the time and even the least biased needs 55 percent, so every umpire is biased. The semi-parametric model adds a baseline kernel per umpire-handedness to weighted state indicators, with weight omega equal to one minus twice the absolute deviation of baseline probability from one-half, concentrating the bias estimate at the borderline; beta is the percentage-point change at a coin-flip pitch. Borderline calls are strikes 58 percent in 3-ball counts and 31 percent in 2-strike counts, the full count moderates by about 13 points, and a last called strike lowers borderline probability by 17 points. The implementation invariants map directly onto GSE. The kernel call-probability surface is GSE's non-parametric zone estimator; the inconsistency-versus-bias decomposition is GSE's noise-versus-systematic-error split; the time-pressure mechanism test is GSE's dual-process attribution; and the structural strike threshold is GSE's bias-calibrated decision boundary. The structural utility gives plus one for a correct call and asymmetric disutilities for miscalling strikes versus balls, following Kahneman and Tversky, with type-I extreme-value errors yielding a logistic choice probability fit by maximum likelihood; equal disutilities give a 50 percent threshold, larger strike-miscall disutility gives a ball bias, and larger ball-miscall disutility gives a strike bias. The outputs are bias estimates and strike thresholds from public pitch-location data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger, the game impact, and the limitations close the account. The corpus is 1.03 million calls from 75 umpires over 2009 to 2011; bias flips about 1 percent of calls and almost once a game an at-bat ends in something other than a strikeout after a third strike should have been called; modal thresholds are 50 percent after a last ball, 60 percent after a last strike, 35 percent in 3-ball counts, and above 60 percent in 2-strike counts. The semi-parametric and utility equations are image-based in the source, so they are reconstructed as labeled LaTeX from the prose and flagged, and causal identification rests on exogeneity with respect to omitted states, with standard errors clustered by umpire and batter handedness. The invariant for GSE is to carry the state-dependent bias model and the structural strike-threshold estimator, while recording that the last-ball effect is spurious, that the 3-ball strike bias appears only on the first 3-ball count, and that the baseline kernel assumes invariant zones across handedness before any quantitative reuse.",
+      "retrocausal_genealogy": "Behavioral-economics: professionals deviate from rationality (halftime-behind basketball wins, golf par-putt focus, .300 batting-average effort); umpires required to call solely on location -> any state deviation clearly suboptimal. Green & Daniels (Stanford), MIT Sloan 2014. Data: all 2009-2011 regular-season calls, >1M pitches, 75 umpires >=7500 calls (1.03M). Method: bivariate Gaussian kernel regression (Silverman bandwidth, inverse-distance), vertical normalized by batter zone height; center >99%/far <1%, 10->90% ring ~1 foot wide; inconsistent=same-loc diff calls, biased=state-correlated; 4 states (3-ball/2-strike/last-ball/last-strike).",
+      "theory_of_mind": "Umpire's call shaped by previous call + at-bat consequence; the four states are either pivotal calls that end the at-bat or calls correlated across pitches. Difference surfaces: mountains (raise prob)/moat (lower) at border only. 2-strike + last-called-strike contract up to -20pp (coin flip->~0); 3-ball expands modestly; last-ball spurious (CI -.001,.011). Time-pressure natural experiment (~2% immediate calls, 3-ball+R1 not 2K2out): weaken->deliberative, strengthen->intuitive; deeper 2-strike moat under pressure -> intuitive snap judgment.",
+      "cross_layer_veto": "Unbiased: strike if p(location)>0.5. Strike threshold (simulated unbiased prob reproducing biased calls): avg umpire 64% for strike three, least biased 55% -> every umpire biased; modal last-ball 50%/last-strike 60%/3-ball 35%/2-strike >60%. Semi-parametric y=p_uh(z)+omega*x^T*beta+eps, omega=1-2|p-0.5| (borderline-concentrated), beta=pp change at p=0.5; borderline 3-ball 58%/2-strike 31%/full -13pp/last-strike -17pp; SE clustered umpire-handedness, exogeneity assumption. Structural utility +1 correct, -gamma_s/-gamma_b miscall (Kahneman-Tversky), type-I extreme value -> logistic(U_s-U_b) MLE; gamma_s=gamma_b->0.5, gamma_s>gamma_b->ball bias. Bias flips ~1% calls, ~1/game wrong outcome. Equations image-based reconstructed; zero sportsbook lines."
+    }
+  ],
+  "universal_lens": "MLB home-plate umpires are modeled as biased decision-makers whose strike-call probability depends on pitch location (a bivariate Gaussian kernel surface) plus at-bat state, with three robust biases (2-strike contraction, 3-ball expansion, reluctance to call consecutive strikes), an intuitive mechanism revealed by time pressure, and structural random-utility strike thresholds showing every umpire requires more than 50% certainty to call strike three.",
+  "gsi_mapping": "GSI treats the model as kernel p(z) (bivariate Gaussian, Silverman bandwidth, inverse-distance, height-normalized); inconsistent vs biased decomposition; 4 states; difference surfaces (mountains/moat); 2-strike/last-strike up to -20pp, last-ball spurious; time pressure (~2% calls) -> intuitive (deeper moat); semi-parametric y=p_uh(z)+omega*x^T*beta+eps with omega=1-2|p-0.5|, beta=borderline pp change (3-ball 58%/2-strike 31%/full -13pp/last-strike -17pp); structural utility +1 correct/-gamma_s/-gamma_b (Kahneman-Tversky), type-I extreme value -> logistic(U_s-U_b) MLE, threshold p_j where E[U_s]=U_b (avg 64%/min 55%, modal 3-ball 35%/2-strike >60%); data 1.03M calls/75 umpires 2009-2011; bias flips ~1% calls/~1 per game.",
+  "gse_mapping": "GSE lifts the state-dependent officiating-bias model, kernel call-probability surface, inconsistency-vs-bias decomposition, time-pressure dual-process attribution, borderline-weighted semi-parametric state coefficients, and structural random-utility strike-threshold estimator; records the spurious last-ball effect, first-3-ball-only strike bias, exogeneity assumption, and image-based equation reconstruction; all outputs are bias estimates and thresholds, never sportsbook lines."
+}
