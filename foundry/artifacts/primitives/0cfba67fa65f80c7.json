@@ -1,0 +1,570 @@
+{
+  "book_id": "0cfba67fa65f80c7",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_CLEAN_FORMULAS",
+  "source_note": "Connor Heaton, Prasenjit Mitra (Penn State / L3S Research Center Hannover), 'Learning Contextual Event Embeddings to Predict Player Performance in the MLB', MIT Sloan Sports Analytics Conference 2023 Research Paper Competition (14 pages). Full paper: bag-of-events -> contextual-embedding thesis, transformer over pitch tokens, Masked Gamestate Modeling (BERT MLM adapted, 15% mask), participation-masked player embeddings, linear fine-tuning head, pitcher/batter asymmetry, sportsbook accuracy benchmark, and unsupervised leverage discovery in embedding visualizations; extracted faithfully (not a derivative summary). Counting-stat formulas (BABIP/FPCT/ERA/SLG/OBP/OPS/WAR linear-weights, Eqs 1-9) print cleanly and are captured as LaTeX. Catalog domain cs is correct (representation-learning/ML paper applied to MLB baseball). Sportsbooks appear only as an accuracy benchmark; outputs are contextual embeddings and player-performance predictions from public PBP/Statcast; zero sportsbook lines, spreads, totals, or implied odds lifted.",
+  "primitives": [
+    {
+      "primitive_id": "bag_of_events_era",
+      "name": "Sports analytics is in the bag-of-events era",
+      "verbatim_quote": "We view the sports analytics community as currently in the bag-of-events era",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The sports analytics community is in a 'bag-of-events' era analogous to NLP's bag-of-words era: events are counted without regard to order or context; the paper offers a steppingstone toward contextual embeddings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The bag-of-events to contextual-embedding transition is the same representation-learning upgrade GSE applies to play sequences.",
+        "source_operator": "bag_of_events_era",
+        "telemetry": "bag-of-events era -> contextual embeddings"
+      }
+    },
+    {
+      "primitive_id": "contextualize_onfield_events",
+      "name": "Better models by contextualizing on-field events",
+      "verbatim_quote": "we can build better models by contextualizing the events that occur on the field",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Better models come from contextualizing on-field events (what pitch count was the single recorded on, was anybody on base, what launch angle and exit velocity), drawing parallels to computational linguistics' shift from counts to contextual representations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Contextualizing events rather than counting them is the same situational-enrichment principle GSE uses for play valuation.",
+        "source_operator": "contextualize_onfield_events",
+        "telemetry": "context: pitch count, base state, launch angle/exit velo"
+      }
+    },
+    {
+      "primitive_id": "nlp_bag_of_words_parallel",
+      "name": "NLP bag-of-words parallel and its limits",
+      "verbatim_quote": "In the early days of computational linguistics, language was described by counting the number of times different words appeared",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Early computational linguistics counted word occurrences (bag-of-words, Harris 1954); accurate but it lost order and sense, and modern contextual representations analyze surrounding context, improving existing tasks and enabling new ones like generation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The NLP count-to-context transformation is the same template GSE follows for sports event sequences.",
+        "source_operator": "nlp_bag_of_words_parallel",
+        "telemetry": "bag-of-words (Harris 1954) -> contextual reps"
+      }
+    },
+    {
+      "primitive_id": "single_polysemy",
+      "name": "The word 'single' is polysemous: quantity vs baseball event",
+      "verbatim_quote": "if the word “single” has a count of one, was it used to describe a quantity (a single sheet of paper) or an event in baseball (the batter hit a single)?",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A count of one for 'single' cannot distinguish a quantity (a single sheet of paper) from a baseball event (the batter hit a single); contextual models disambiguate by surrounding context rather than a static understanding."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Polysemy resolution by context is the same event-disambiguation GSE needs (a 'single' means different things by base/out state).",
+        "source_operator": "single_polysemy",
+        "telemetry": "'single' = quantity OR baseball event; context disambiguates"
+      }
+    },
+    {
+      "primitive_id": "babip_formula",
+      "name": "BABIP counting-stat formula",
+      "verbatim_quote": "Equation to compute BABIP where H is the number of hits, HR the number of home runs, AB the number at-bats",
+      "page": 3,
+      "latex": "\\mathrm{BABIP}=\\frac{H-HR}{AB-HR-K+SF}",
+      "symbol_and_unit_ledger": {
+        "H": "hits",
+        "HR": "home runs",
+        "AB": "at-bats",
+        "K": "strikeouts",
+        "SF": "sacrifice hits"
+      },
+      "assumptions": [
+        "BABIP (Batting Average on Balls In Play) = (H-HR)/(AB-HR-K+SF), a counting statistic among the most important features in Soto Valero's ~59% game-winner SVM; like all such metrics it ignores how events happened."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "BABIP is the same count-derived rate GSE treats as a context-free baseline to be enriched.",
+        "source_operator": "babip_formula",
+        "telemetry": "BABIP=(H-HR)/(AB-HR-K+SF)"
+      }
+    },
+    {
+      "primitive_id": "era_formula",
+      "name": "ERA counting-stat formula",
+      "verbatim_quote": "Equation to compute ERA where ER is the number of earned runs and IP the number of innings pitches",
+      "page": 3,
+      "latex": "\\mathrm{ERA}=9\\times\\frac{ER}{IP}",
+      "symbol_and_unit_ledger": {
+        "ER": "earned runs",
+        "IP": "innings pitched"
+      },
+      "assumptions": [
+        "ERA = 9*ER/IP, earned runs per nine innings, a counting statistic; the paper groups it with BABIP, FPCT, SLG, OBP, OPS as count-derived features that reveal only so much because all depend on a crude event-count description."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "ERA is the same per-nine-innings rate GSE contextualizes with game-state rather than treating as a static count.",
+        "source_operator": "era_formula",
+        "telemetry": "ERA=9*ER/IP"
+      }
+    },
+    {
+      "primitive_id": "slg_formula",
+      "name": "SLG total-bases formula",
+      "verbatim_quote": "Equation to compute SLG where 1B is the number of singles, 2B the number of doubles, 3B the number of triples",
+      "page": 3,
+      "latex": "\\mathrm{SLG}=\\frac{1B+2\\cdot 2B+3\\cdot 3B+4\\cdot HR}{AB}",
+      "symbol_and_unit_ledger": {
+        "1B/2B/3B": "singles/doubles/triples",
+        "HR": "home runs",
+        "AB": "at-bats"
+      },
+      "assumptions": [
+        "SLG = (1B + 2*2B + 3*3B + 4*HR)/AB, total bases per at-bat, a weighted counting statistic; OPS = OBP + SLG combines on-base and slugging, all fundamentally event counts without regard to how they happened."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SLG's linear total-base weights are the same count-weighted value GSE replaces with context-aware event embeddings.",
+        "source_operator": "slg_formula",
+        "telemetry": "SLG=(1B+2*2B+3*3B+4*HR)/AB; OPS=OBP+SLG"
+      }
+    },
+    {
+      "primitive_id": "war_linear_weights",
+      "name": "WAR is linear-weights on counting statistics",
+      "verbatim_quote": "Each variable of the numerator is computed using what is known as the linear-weights method, a two-step process",
+      "page": 4,
+      "latex": "\\mathrm{WAR}=\\frac{RC+\\mathrm{PosAdj}+\\mathrm{LgAdj}+\\mathrm{ReplAdj}}{R/W};\\ RS=\\sum_e\\alpha_e C_e;\\ RC_i=\\sum_e\\alpha_e C_{e,i}",
+      "symbol_and_unit_ledger": {
+        "RC": "RunsCreated=Batting+Fielding+Baserunning",
+        "alpha_e": "run value per event",
+        "C_e": "event count"
+      },
+      "assumptions": [
+        "WAR = (RunsCreated + PositionAdjustment + LeagueAdjustment + ReplacementAdjustment)/RunsPerWin, with RunsCreated = BattingRuns+FieldingRuns+BaserunningRuns; each numerator term uses linear weights: first solve RS = sum alpha_e*C_e for event run values, then compute RunsCreated_i = sum alpha_e*C_{e,i}; ultimately all inputs are counting statistics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "WAR's linear-weights-on-counts construction is the same count-based valuation GSE upgrades with contextual embeddings.",
+        "source_operator": "war_linear_weights",
+        "telemetry": "WAR=(RC+adj)/R-per-W; RS=sum alpha_e C_e"
+      }
+    },
+    {
+      "primitive_id": "war_context_blind",
+      "name": "WAR is context-blind: two different singles count the same",
+      "verbatim_quote": "For the purposes of computing WAR, both situations are effectively the same – a single was recorded in both cases",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "WAR treats a dribbler beaten out by speed (situation A) and a deep-left ball where the batter fails to reach second (situation B) identically, since both record a single; the paper hypothesizes that including such context yields more useful insights."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The context-blindness of count metrics is the same limitation GSE's contextual embeddings remove.",
+        "source_operator": "war_context_blind",
+        "telemetry": "dribbler single == deep-left single in WAR (context lost)"
+      }
+    },
+    {
+      "primitive_id": "counts_lose_sequence",
+      "name": "Counts cannot recover the event sequence",
+      "verbatim_quote": "Given a set of counts, it is impossible to recover the specific sequence of events the counts describe",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "None of the prior performance models leverage the temporal nature of the game, perhaps because data is traditionally available as counts; given counts it is impossible to recover the specific event sequence they describe, motivating sequence modeling."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The irreversibility of counts-to-sequence is the same information-loss argument GSE uses to justify sequence models.",
+        "source_operator": "counts_lose_sequence",
+        "telemetry": "counts -> sequence is irreversible"
+      }
+    },
+    {
+      "primitive_id": "action_valuation_1d",
+      "name": "Hockey/soccer action valuation is 1D scoring-likelihood, not forecasting",
+      "verbatim_quote": "in those applications, actions are only valued with respect to their likelihood of scoring a goal",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Hockey/soccer action-valuation methods (Liu & Schulte) leverage temporality but quantify quality of previous play rather than predicting future performance, and value actions only by scoring likelihood, a one-dimensional analysis; the paper instead predicts future performance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The distinction between valuing past play and forecasting future performance is the same task separation GSE maintains.",
+        "source_operator": "action_valuation_1d",
+        "telemetry": "action valuation = past quality, 1D scoring; not forecasting"
+      }
+    },
+    {
+      "primitive_id": "pretrain_then_finetune",
+      "name": "Two-phase: pre-train game understanding, fine-tune prediction",
+      "verbatim_quote": "First, we “pre-train” a model to understand the game of baseball as a sequence of events",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The approach is two-phase: pre-train a model to understand baseball as a sequence of events, then fine-tune it to predict a player's future performance from the sequence of events they recently participated in, leveraging pre-training knowledge."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pre-train-then-fine-tune is the same transfer-learning recipe GSE uses for sport representation learning.",
+        "source_operator": "pretrain_then_finetune",
+        "telemetry": "pre-train (game understanding) -> fine-tune (performance)"
+      }
+    },
+    {
+      "primitive_id": "dataset_1995_2021",
+      "name": "Dataset: 1995-2021 seasons, 2015-2021 PBP, 4.6M pitches",
+      "verbatim_quote": "the dataset contains season-by-season data from 1995-2021, and play-by-play data from 2015-2021",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The dataset spans season-by-season data 1995-2021 and play-by-play 2015-2021 (15,743 games, 1.2M plate appearances, 4.6M pitches, 2,229 batters, 1,884 pitchers); historical data supplements the PBP by describing the pitcher and batter in each PA."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A multi-season PBP corpus with historical supplements is the same data substrate GSE uses for sequence pre-training.",
+        "source_operator": "dataset_1995_2021",
+        "telemetry": "1995-2021 seasons; 2015-21 PBP; 15,743 games/4.6M pitches"
+      }
+    },
+    {
+      "primitive_id": "transformer_pitch_tokens",
+      "name": "Transformer with pitch tokens instead of word tokens",
+      "verbatim_quote": "each vector in the sequence will correspond to a thrown pitch instead of a word token",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The transformer architecture (Vaswani 2017) uses multi-head attention to update each vector from surrounding context; here each sequence vector corresponds to a thrown pitch rather than a word token, and different heads/layers learn different functions (e.g., pronoun resolution in language)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A transformer over pitch tokens is the same attention-based sequence encoder GSE applies to play-by-play.",
+        "source_operator": "transformer_pitch_tokens",
+        "telemetry": "transformer MHA; vector = thrown pitch"
+      }
+    },
+    {
+      "primitive_id": "gamestate_delta_embedding",
+      "name": "Gamestate delta as the primary event descriptor",
+      "verbatim_quote": "The primary way in which each event is described is via a gamestate delta",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Each event is described primarily by a gamestate delta (change in base occupancy, ball-strike count, outs, score), plus pitch type and resulting event type as learnable embeddings; a discrete token cannot fully describe an event, so multiple sources are combined."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A gamestate-delta event encoding is the same state-transition representation GSE uses for play sequences.",
+        "source_operator": "gamestate_delta_embedding",
+        "telemetry": "gamestate delta: bases/count/outs/score + pitch/event type"
+      }
+    },
+    {
+      "primitive_id": "statcast_and_sabermetrics",
+      "name": "Statcast physics + sabermetrics (<5% of vector)",
+      "verbatim_quote": "we include data collected by Statcast which contains descriptions of pitch speed, rotation, and location as well as batted ball exit velocity, launch angle, and distance",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Statcast data (pitch speed/rotation/location, batted-ball exit velocity/launch angle/distance) is included, plus a small sabermetric description of pitcher, batter, and their matchup segmented to last 15 days, this season, and career (mostly PyBaseball metrics, letting the model learn which matter); sabermetrics are less than 5% of the numerals in each vector."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Fusing sensor physics with a small sabermetric prior is the same multimodal event encoding GSE uses.",
+        "source_operator": "statcast_and_sabermetrics",
+        "telemetry": "Statcast physics + sabermetrics (15d/season/career, <5%)"
+      }
+    },
+    {
+      "primitive_id": "mgm_masked_15pct",
+      "name": "Masked Gamestate Modeling: mask 15%, predict gamestate+event",
+      "verbatim_quote": "we randomly mask 15% of the vectors in the sequence, asking the model to predict the missing gamestate and event",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Pre-training adapts BERT's Masked Language Modeling into Masked Gamestate Modeling (MGM): randomly mask 15% of the event vectors in the N-previous-games sequence and predict the missing gamestate and event, forcing the model to learn the game's structure and progression."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Masked gamestate modeling is the same self-supervised pre-training objective GSE uses to learn sport structure.",
+        "source_operator": "mgm_masked_15pct",
+        "telemetry": "MGM = BERT MLM adapted; mask 15% -> predict gamestate+event"
+      }
+    },
+    {
+      "primitive_id": "mgm_learns_game_structure",
+      "name": "MGM forces learning of game rules/structure",
+      "verbatim_quote": "the model must inherently learn the general structure and progression of a game in the MLB",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "To predict masked entities the model must learn MLB structure: a strikeout only occurs with two strikes, an inning ends at three outs, an intentional walk is sometimes warranted; from surrounding events it discerns the instantaneous gamestate at each timestep."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Learning rule-consistent game structure from masked prediction is the same structural prior GSE acquires via self-supervision.",
+        "source_operator": "mgm_learns_game_structure",
+        "telemetry": "MGM learns: 2 strikes->K, 3 outs->inning end"
+      }
+    },
+    {
+      "primitive_id": "player_embeddings_attention_mask",
+      "name": "Player embeddings with participation-restricted attention",
+      "verbatim_quote": "we manipulate the attention mask such that the player embeddings can only tend to events in the sequence in which the corresponding player was involved",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Special player embeddings for the starting lineup are prepended to the event sequence; the attention mask is manipulated so each player embedding can only attend to events that player participated in, and during pre-training the model fills them with player signal useful for predicting masked events."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Participation-masked player embeddings are the same entity-conditioned attention GSE uses to derive per-player representations.",
+        "source_operator": "player_embeddings_attention_mask",
+        "telemetry": "player embeddings; attention restricted to own events"
+      }
+    },
+    {
+      "primitive_id": "finetune_linear_head",
+      "name": "Fine-tune: player embeddings -> linear projection -> targets",
+      "verbatim_quote": "using these embeddings, predict targets L using a new linear projection layer",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Fine-tuning is a 4-step process: identify the starting pitcher and nine batters for game G, obtain labels L from their game-G performance, get embeddings from their past N games, and predict L with a new linear projection layer; targets are strikeouts, hits, and walks per batter and the starting pitcher."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A linear head on pre-trained player embeddings is the same fine-tuning probe GSE uses for performance targets.",
+        "source_operator": "finetune_linear_head",
+        "telemetry": "embeddings(past N games) -> linear -> K/H/BB labels"
+      }
+    },
+    {
+      "primitive_id": "pitcher_beats_batter_9x",
+      "name": "Pitcher predictions far better: ~9x more events",
+      "verbatim_quote": "the pitcher is likely to participate in roughly 9x as many ABs as a batter",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The model is significantly better at predicting pitcher than batter performance (pitcher K R² 0.21 vs batter K R² 0.06) because a pitcher participates in every event while a batter only every ninth plate appearance, roughly 9x as many ABs per game, giving more examples of impact; prior work used 365-day batter averages vs only 10 games here."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The event-exposure asymmetry between pitcher and batter is the same sample-size effect GSE accounts for in per-player confidence.",
+        "source_operator": "pitcher_beats_batter_9x",
+        "telemetry": "pitcher K R² 0.21 vs batter 0.06; ~9x events"
+      }
+    },
+    {
+      "primitive_id": "competitive_50pct_more",
+      "name": "Competitive with sportsbooks, 50% more predictions",
+      "verbatim_quote": "Our model’s projections are competitive with major sportsbooks while reflecting a larger number of predictions",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Against three US sportsbooks on 2021 pitcher single-game strikeouts, the model is not best on any metric but competitive (MAE only 0.05 higher, R² only 0.02 lower than the best book; batter has-hit streak 16 vs best 17), while making 4,856 predictions, 50% more than the closest book, because books only offer a line when confident."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Competitive accuracy at much broader coverage is the same breadth-vs-confidence tradeoff GSE evaluates against books.",
+        "source_operator": "competitive_50pct_more",
+        "telemetry": "4,856 preds (+50%); MAE +0.05/R² -0.02 vs best book"
+      }
+    },
+    {
+      "primitive_id": "has_hit_vs_pitcher_harder",
+      "name": "Has-hit vs a given starter is harder than has-hit in game",
+      "verbatim_quote": "we make a prediction as to whether a batter will record a hit against a given starting pitcher",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The model predicts whether a batter records a hit against a given starting pitcher, whereas books predict a hit in the whole game (an easier task with more ABs and more chances to reach base, increasing the likelihood of picking a hit even at random), so the comparison understates the model's difficulty."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The harder matchup-conditioned target is the same opponent-specific prediction GSE makes rather than game-aggregate.",
+        "source_operator": "has_hit_vs_pitcher_harder",
+        "telemetry": "model: hit vs given starter; books: hit in game (easier)"
+      }
+    },
+    {
+      "primitive_id": "rookie_cold_start",
+      "name": "Rookie cold-start: no MLB events to embed",
+      "verbatim_quote": "When a player makes their first start in the MLB, there are no records of in-game events in the MLB in which said player participated",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A rookie making their first MLB start has no in-game event records, so no amount of MLB context yields an embedding; likewise a pitcher who has never started has nothing to base predictions on, and batters who didn't start in any of the team's last 10 games get no embedding."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The rookie cold-start is the same out-of-sample entity problem GSE must handle with priors or minor-league data.",
+        "source_operator": "rookie_cold_start",
+        "telemetry": "rookie/first-start: no MLB events -> no embedding"
+      }
+    },
+    {
+      "primitive_id": "minors_leverage_future",
+      "name": "Minor-league data is the cold-start remedy",
+      "verbatim_quote": "leveraging descriptions of how players performed in the minors is a likely path towards improving the performance of our model",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Before reaching MLB, players progress through the minors where performance records exist; leveraging minor-league descriptions is a likely path to improve the model and is likely something major sportsbooks already do."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Minor-league transfer for cold-start is the same cross-level prior GSE uses for rookies (cf. amateur-signal priors).",
+        "source_operator": "minors_leverage_future",
+        "telemetry": "minors records -> rookie embedding remedy"
+      }
+    },
+    {
+      "primitive_id": "singles_contextualized",
+      "name": "Embeddings distinguish singles by outs and runner movement",
+      "verbatim_quote": "our model clearly finds more than one way to describe a single in the game of baseball",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Visualizing ~300,000 event embeddings (~12,000 singles), the model finds multiple ways to describe a single: striations by outs-when-up (0/1/2), a central mass for bases-empty singles vs peripheral groupings for singles that moved runners or scored runs, confirming genuine contextualization rather than a statistical artifact."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Context-separated event embeddings are the same situational disambiguation GSE verifies in its play representations.",
+        "source_operator": "singles_contextualized",
+        "telemetry": "singles split by outs (0/1/2) + runner movement"
+      }
+    },
+    {
+      "primitive_id": "leverage_discovered_unsupervised",
+      "name": "Leverage emerges unsupervised in strikeout embeddings",
+      "verbatim_quote": "our model naturally identifies strikeouts recorded in high leverage situations without any guidance to do so",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Visualizing ~20,000 strikeouts, the model accounts for outs-when-up and base occupancy, inherently incorporating leverage: high-leverage PAs are those where the pitching team's win probability can change drastically (often multiple runners on), and the model identifies high-leverage strikeouts without any guidance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Unsupervised leverage discovery is the same emergent win-probability sensitivity GSE expects from contextual play embeddings.",
+        "source_operator": "leverage_discovered_unsupervised",
+        "telemetry": "strikeouts split by outs/bases; leverage emerges unsupervised"
+      }
+    },
+    {
+      "primitive_id": "restrictive_setting_6yr_10games",
+      "name": "Restrictive setting: 6 years data, 10 games context",
+      "verbatim_quote": "our model is trained using only six years of data to make predictions based only on 10 games-worth of play-by-play data in the MLB",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The model is trained on only six years of data and predicts from only 10 games of MLB play-by-play (pitchers: 10 most recent starts; batters: team batting vs the 10 most recent opposing starters), a small career window versus sportsbooks' decades of career plus minor-league data, yet matches their performance for 50% more pitchers."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Strong performance from a short context window is the same data-efficiency result GSE targets with contextual pre-training.",
+        "source_operator": "restrictive_setting_6yr_10games",
+        "telemetry": "6 yrs train / 10 games context vs books' decades+minors"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "mlbcontextembed2023_trace",
+      "think": "The retrocausal genealogy of this paper is the recognition that sports analytics counts events the way early computational linguistics counted words. Connor Heaton and Prasenjit Mitra of Pennsylvania State University and the L3S Research Center argue that the sports analytics community is in a bag-of-events era, analogous to the bag-of-words era Harris described in 1954, and offer a steppingstone toward contextual embeddings. They show that the most important features in prior MLB prediction work, BABIP, fielding percentage, ERA, slugging, on-base percentage, OPS, and even Wins Above Replacement, are all fundamentally counting statistics: WAR's numerator is built by the linear-weights method, solving for event run values and summing counts, so a dribbler beaten out by speed and a deep-left ball where the runner fails to reach second are identical because both record a single. Given a set of counts it is impossible to recover the event sequence, and prior models do not leverage temporality. The scientific lineage runs from the transformer and BERT through masked language modeling to this paper's Masked Gamestate Modeling. The dataset spans season-by-season data from 1995 to 2021 and play-by-play from 2015 to 2021, totaling 15,743 games, 1.2 million plate appearances, 4.6 million pitches, 2,229 batters, and 1,884 pitchers. The model is a transformer whose sequence vectors correspond to thrown pitches rather than word tokens, with multi-head attention updating each pitch from its surrounding context. Each event is described primarily by a gamestate delta, the change in base occupancy, ball-strike count, outs, and score, plus pitch type and event type as learnable embeddings, augmented by Statcast pitch speed, rotation, location, exit velocity, launch angle, and distance, and a small sabermetric description of pitcher, batter, and matchup segmented to the last fifteen days, season, and career that is less than five percent of each vector. The model is presented with two related sequences, one for team batting and one for individual pitching, and all code and data are released publicly. The recursive theory of mind is a model that learns the game by predicting missing parts of it, then learns players by attending only to what they did. Pre-training masks fifteen percent of the event vectors and asks the model to predict the missing gamestate and event, forcing it to learn that a strikeout requires two strikes, an inning ends at three outs, and an intentional walk is sometimes warranted. Special player embeddings for the starting lineup are prepended, and the attention mask is manipulated so each player embedding attends only to events that player participated in, filling with player signal during pre-training. Fine-tuning then identifies the starting pitcher and nine batters for a game, obtains labels from their performance, derives embeddings from their past ten games, and predicts strikeouts, hits, and walks through a new linear projection layer. Cross-layer veto adjudication is the asymmetry between pitcher and batter and the honest comparison to sportsbooks. The model is far better at predicting pitchers than batters, with pitcher strikeout R-squared of 0.21 versus batter 0.06, because a pitcher participates in every event while a batter only every ninth plate appearance, roughly nine times as many events per game. Against three major US sportsbooks on 2021 pitcher single-game strikeouts, the model is not best on any metric but competitive, with mean absolute error only 0.05 higher and R-squared only 0.02 lower than the best book, and a batter has-hit streak of sixteen versus the best seventeen, while making 4,856 predictions, fifty percent more than the closest book, because books only offer a line when confident. The model's has-hit target is harder than the books', predicting a hit against a given starting pitcher rather than in the whole game. The implementation invariants map directly onto GSE. The transformer over pitch tokens is GSE's play-sequence encoder; the gamestate-delta plus Statcast plus small-sabermetric event encoding is GSE's multimodal play representation; Masked Gamestate Modeling is GSE's self-supervised pre-training objective; participation-masked player embeddings are GSE's entity-conditioned attention; and the linear fine-tuning head is GSE's performance probe. The outputs are contextual event embeddings and player-performance predictions from public play-by-play and Statcast data; the paper references sportsbooks only as an accuracy benchmark, and GSE lifts no sportsbook lines, spreads, totals, or implied odds. The parameter ledger, the embedding evidence, and the limitations close the account. The corpus is six years of training data with ten games of context, pitchers described by their ten most recent starts and batters by team batting against the ten most recent opposing starters. Visualizing roughly 300,000 event embeddings confirms genuine contextualization: about 12,000 singles separate by outs-when-up and runner movement, and about 20,000 strikeouts separate by outs and base occupancy, naturally identifying high-leverage situations, where the pitching team's win probability can change drastically, without any guidance. The limitations are the rookie cold-start, where a first MLB start has no event records to embed, and the absence of minor-league data, which the authors flag as the likely remedy and something books already use. The invariant for GSE is to carry the contextual pre-training recipe and the participation-masked player embeddings, while recording that batter predictions need more context than ten games and that rookies require a cross-level prior before any quantitative reuse.",
+      "retrocausal_genealogy": "Sports analytics counts events like early NLP counted words (bag-of-events era, Harris 1954 bag-of-words parallel). Heaton & Mitra (Penn State / L3S Hannover). BABIP/FPCT/ERA/SLG/OBP/OPS/WAR all counting stats; WAR linear-weights (RS=sum alpha_e C_e) is context-blind (dribbler single == deep-left single). Counts cannot recover sequence; prior models ignore temporality; hockey/soccer action valuation is 1D past-quality not forecasting. Lineage: transformer (Vaswani 2017) + BERT MLM -> Masked Gamestate Modeling. Data: 1995-2021 seasons, 2015-21 PBP, 15,743 games/1.2M PA/4.6M pitches/2,229 batters/1,884 pitchers.",
+      "theory_of_mind": "Model learns game by predicting missing parts, then players by attending only to own events. Transformer with pitch tokens (not words); event = gamestate delta (bases/count/outs/score) + pitch/event type embeddings + Statcast (speed/rotation/location/exit velo/launch angle/distance) + sabermetrics (15d/season/career, <5% of vector). MGM masks 15% -> predict gamestate+event (learns 2-strikes->K, 3-outs->inning). Player embeddings prepended, attention masked to own events. Fine-tune: identify starter+9 batters, labels from game G, embeddings from past N=10 games, linear projection -> K/H/BB.",
+      "cross_layer_veto": "Pitcher >> batter (K R² 0.21 vs 0.06): pitcher in every event, batter every 9th PA (~9x). vs 3 US books 2021 pitcher K: not best but competitive (MAE +0.05, R² -0.02 vs best; has-hit streak 16 vs 17), 4,856 preds = +50% (books only line when confident); model has-hit vs given starter is harder than books' hit-in-game. Embedding viz (~300k): singles split by outs/runner movement, strikeouts by outs/bases -> leverage (WP can change drastically) emerges unsupervised. Limits: rookie cold-start (no MLB events), minors data remedy. 6 yrs train/10 games context; zero sportsbook lines lifted (books = accuracy benchmark only)."
+    }
+  ],
+  "universal_lens": "MLB play-by-play is encoded as a transformer sequence of pitch-token events (gamestate delta + pitch/event type + Statcast physics + small sabermetric prior), pre-trained by Masked Gamestate Modeling with participation-masked player embeddings, then fine-tuned via a linear head to predict per-player strikeouts/hits/walks, yielding contextual event representations that distinguish same-type events by situation and discover leverage unsupervised.",
+  "gsi_mapping": "GSI treats the model as a transformer (MHA, pitch tokens) on events = gamestate delta(bases/count/outs/score)+pitch/event embeddings+Statcast(speed/rotation/location/exit velo/launch angle/distance)+sabermetrics(15d/season/career,<5%); MGM masks 15% to predict gamestate+event; player embeddings attention-masked to own events; fine-tune linear head -> K/H/BB from past N=10 games; data 1995-2021/2015-21 PBP (15,743 games/4.6M pitches); counting-stat formulas BABIP=(H-HR)/(AB-HR-K+SF), ERA=9ER/IP, SLG=(1B+2*2B+3*3B+4HR)/AB, OPS=OBP+SLG, WAR=(RC+adj)/(R/W), RS=sum alpha_e C_e; pitcher K R² 0.21 vs batter 0.06 (~9x events); vs books MAE +0.05/R² -0.02, +50% preds (4,856); leverage emerges unsupervised; rookie cold-start/minors remedy.",
+  "gse_mapping": "GSE lifts the contextual pre-training recipe (transformer pitch tokens, gamestate-delta+Statcast event encoding, Masked Gamestate Modeling, participation-masked player embeddings, linear fine-tune probe) and the unsupervised leverage discovery as its play-representation and player-performance layer; records batter needs >10 games context and rookies need a cross-level (minor-league/amateur) prior; all outputs are contextual embeddings and performance predictions, never sportsbook lines."
+}

@@ -572,3 +572,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 02:42:50 | COMPLETE | 3012b2996271809f | primitives=36 think_words=932
 - 2026-11-14 02:43:36 | CLAIMED | 2ec2fac5565ea22e | worker=hermes-inline shard03 file=2021 - Prediction of Defensive Player Trajectories in NFL Games with Defender CNN-LSTM model - Unknown Authors.pdf
 - 2026-11-14 02:55:00 | COMPLETE | 2ec2fac5565ea22e | primitives=29 think_words=852
+- 2026-11-14 02:56:18 | CLAIMED | 0cfba67fa65f80c7 | worker=hermes-inline shard03 file=2023 - Learning Contextual Event Embeddings to Predict Player Performance in the MLB - Heaton et al.pdf
+- 2026-11-14 03:00:00 | COMPLETE | 0cfba67fa65f80c7 | primitives=28 think_words=858
