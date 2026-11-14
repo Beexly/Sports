@@ -474,3 +474,7 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 20:00:59 | COMPLETE | 3b7b1ffc7100f779 | primitives=19 think_words=874
 - 2026-11-13 20:03:09 | CLAIMED | 60ed04ccc855408c | worker=hermes-inline file=KochenderferWheeler-2026-AlgorithmsForOptimization2.pdf
 - 2026-11-13 20:18:50 | COMPLETE | 60ed04ccc855408c | primitives=18 think_words=864
+- 2026-11-13 20:47:37 | CLAIMED | 3a88f7ddf53d358c | worker=hermes-inline file=Tolman-1932-PurposiveBehaviorInAnimalsAndMen.pdf
+- 2026-11-13 20:49:34 | REFUSAL_ACCEPTED | 3a88f7ddf53d358c | INSUFFICIENT_OCR: Image-only scanned PDF: 495 pages, pymupdf get_text() returns 0 characters on every sampled page (0, 9, 50), each page carrying exactly one raster image and no text layer. No OCR text is available inl
+- 2026-11-13 20:49:35 | CLAIMED | 6bbdbe4a5b49d89d | worker=hermes-inline file=OpenStax-2013-AnatomyAndPhysiology.pdf
+- 2026-11-13 21:08:45 | COMPLETE | 6bbdbe4a5b49d89d | primitives=20 think_words=1061
