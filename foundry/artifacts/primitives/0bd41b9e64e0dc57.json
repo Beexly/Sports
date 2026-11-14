@@ -1,0 +1,542 @@
+{
+  "book_id": "0bd41b9e64e0dc57",
+  "shard": "0",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_PROSE_GLYPH_FOLD",
+  "source_note": "Miller (Harvard) & Bornn (SFU), 2017 MIT Sloan Research Papers Competition, 'Possession Sketches: Mapping NBA Strategies'. NBA basketball; catalog primary_domain='other' is a tagging gap, extracted under basketball. The 'fi' ligature renders as Greek-beta U+03D0 and is folded to 'f' for quote verification. Appendix equations (2)-(8) reconstructed as labeled LaTeX. Pure representation/strategy-learning method; zero sportsbook odds, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "possession_sketches",
+      "name": "Possession Sketches: organizing possessions by offensive structure",
+      "verbatim_quote": "We present Possession Sketches, a new machine learning method for organizing and exploring a database of basketball player-tracks.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A possession is summarized by a sparse distribution over learned offensive strategies, making the whole tracking database searchable."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A possession sketch is a low-dimensional strategy fingerprint; GSE can index every play by its strategic mixture for retrieval and scouting.",
+        "source_operator": "possession_sketches",
+        "telemetry": "possession -> sparse strategy vector"
+      }
+    },
+    {
+      "primitive_id": "scouting_query_intractable",
+      "name": "Compounding scouting queries break ad hoc search",
+      "verbatim_quote": "However, adding search criteria quickly renders this ad hoc solution intractable",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A single filter (corner three from a Harden drive) is easy; compounding filters (screen, then drive, then pass, then teammate drive) explodes the query space."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Hand-built filters do not scale over a vast scenario space; a learned representation is required, the same reason GSE needs an ontology rather than ad hoc situational queries.",
+        "source_operator": "scouting_query_intractable",
+        "telemetry": "query criteria compound -> intractable"
+      }
+    },
+    {
+      "primitive_id": "three_org_tools",
+      "name": "Three organizational tools: team map, shot map, basis",
+      "verbatim_quote": "team possession maps: low-dimensional visualization of all of the offensive possessions of a team",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Team possession maps reveal set calls; shot possession maps reveal paths to a shot type; the possession basis is the vocabulary of repeated interactions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The same embedding supports team-level, shot-level, and vocabulary-level views; GSE strategy intelligence needs all three resolutions.",
+        "source_operator": "three_org_tools",
+        "telemetry": "team map / shot map / possession basis"
+      }
+    },
+    {
+      "primitive_id": "pipeline_three_steps",
+      "name": "Segment -> action templates -> possession model",
+      "verbatim_quote": "Segmentation: We cut possession-length (e.g. 5-24 second) player trajectories into shorter, more manageable segments (e.g. .6-8 second) based on moments of sustained low-velocity.",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Three stages: cut trajectories at low-velocity moments, cluster segments into action templates, model possessions as bags of pair-actions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is a hierarchical decomposition from raw signal to discrete tokens to document-level mixture, the same tokenization-then-topic pipeline GSE uses to turn snaps into strategy.",
+        "source_operator": "pipeline_three_steps",
+        "telemetry": "segment -> action -> possession"
+      }
+    },
+    {
+      "primitive_id": "data_scale",
+      "name": "2014-2015 NBA tracking scale",
+      "verbatim_quote": "We analyze a database of player-tracks from the 2014-2015 season of the NBA. The data are organized into over N = 190,000 possessions",
+      "page": 2,
+      "latex": "N\\approx 190{,}000\\ \\text{possessions}",
+      "symbol_and_unit_ledger": {
+        "N": "number of possessions (count)",
+        "x_j^(n)": "trajectory of offensive player j in possession n"
+      },
+      "assumptions": [
+        "Only offensive player trajectories are modeled; possessions nest into quarters and games."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The unit of analysis is the possession, not the game; GSE situational models likewise index at the possession/snap grain.",
+        "source_operator": "data_scale",
+        "telemetry": "N ~ 190,000 possessions, 2014-15"
+      }
+    },
+    {
+      "primitive_id": "lowvelocity_segmentation",
+      "name": "Segmentation at sustained low velocity",
+      "verbatim_quote": "At sustained moments of low velocity (> .25 seconds below a threshold of .1 feet per second), we cut the possession, resulting in a collection of shorter segments.",
+      "page": 3,
+      "latex": "\\text{cut when } \\|v(t)\\|<0.1\\ \\text{ft/s for }>0.25\\ \\text{s}",
+      "symbol_and_unit_ledger": {
+        "v(t)": "smoothed speed (ft/s)",
+        "0.1": "speed threshold (ft/s)",
+        "0.25": "minimum dwell time (s)"
+      },
+      "assumptions": [
+        "Low velocity is detected on the smoothed first difference of the trajectory; a cut marks a transition between actions."
+      ],
+      "breakdown_regime": "threshold/dwell mis-set over- or under-segments; fast continuous motion yields no cuts",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Action boundaries are detected as pauses in motion, the same event-segmentation logic GSE uses to split continuous tracking into discrete plays.",
+        "source_operator": "lowvelocity_segmentation",
+        "telemetry": "cut: speed<0.1 ft/s for >0.25 s"
+      }
+    },
+    {
+      "primitive_id": "segment_statistics",
+      "name": "Segment duration statistics",
+      "verbatim_quote": "The resulting short segments are on average 2.25 seconds (the interior 95 percentiles range from 0.6 to 7.96 seconds).",
+      "page": 3,
+      "latex": "\\bar{\\ell}=2.25\\ \\text{s},\\quad \\ell_{95\\%}\\in[0.6,7.96]\\ \\text{s}",
+      "symbol_and_unit_ledger": {
+        "ell": "segment duration (s)",
+        "4.5M": "total segment observations (count)"
+      },
+      "assumptions": [
+        "Applying segmentation to the full regular season yields roughly 4.5 million segment observations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The action token has a characteristic timescale (~2 s); GSE movement ontologies must respect the natural duration distribution of actions.",
+        "source_operator": "segment_statistics",
+        "telemetry": "mean 2.25 s, 95% [0.6,7.96] s, ~4.5M segments"
+      }
+    },
+    {
+      "primitive_id": "action_template_bezier",
+      "name": "Action templates as Bezier cluster centers",
+      "verbatim_quote": "Our model posits that each trajectory segment represents one of V discrete actions, where each action is characterized by a template.",
+      "page": 3,
+      "latex": "B:[0,1]\\to\\mathbb{R}^2,\\quad V=250",
+      "symbol_and_unit_ledger": {
+        "B(t)": "Bezier template mapping time to a 2-D point (ft)",
+        "V": "number of action templates (count), V=250"
+      },
+      "assumptions": [
+        "Each template is a cluster center; observed segments deviate around it. Each segment is assigned an integer label v in 1..250."
+      ],
+      "breakdown_regime": "V fixed by hand (not inferred); a movement not well fit by any Bezier template is mislabeled",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A discrete action vocabulary learned as smooth spatial curves is the same movement-token ontology GSE needs to name what a player did.",
+        "source_operator": "action_template_bezier",
+        "telemetry": "V=250 Bezier templates, B:[0,1]->R^2"
+      }
+    },
+    {
+      "primitive_id": "bezier_linear_basis",
+      "name": "Bezier curve linear in parameters (Bernstein basis)",
+      "verbatim_quote": "Importantly, each curve can be specified as a linear function with respect to parameters",
+      "page": 12,
+      "latex": "B_v(t;\\theta_v)=\\theta_v^{\\top}D_P(t),\\quad D_P(t)=\\binom{P}{p}t^{p}(1-t)^{P-p}",
+      "symbol_and_unit_ledger": {
+        "theta_v": "control-point parameters in R^{P x 2} (ft)",
+        "D_P(t)": "Bernstein basis (dimensionless)",
+        "P": "number of control points, P=10"
+      },
+      "assumptions": [
+        "The curve is linear in theta_v with a fixed nonlinear basis in time; 10 control points are used."
+      ],
+      "breakdown_regime": "high P overfits shape; the basis is fixed so only theta_v is learned",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Linear-in-parameters templates make the M-step a weighted least squares, the same trick that lets GSE fit movement models at scale.",
+        "source_operator": "bezier_linear_basis",
+        "telemetry": "B=theta^T D_P(t), P=10 control points"
+      }
+    },
+    {
+      "primitive_id": "functional_clustering_em",
+      "name": "Functional clustering via EM / weighted least squares",
+      "verbatim_quote": "each maximization step can be computed using weighted least squares.",
+      "page": 12,
+      "latex": "z_{js}^{(n)}\\sim\\Pr(\\text{action}\\mid\\pi),\\quad x_{js,t}^{(n)}\\sim\\mathcal{N}\\big(B_v(t,\\theta_v),\\Sigma_v\\big)",
+      "symbol_and_unit_ledger": {
+        "z": "latent action label (categorical)",
+        "x": "observed location at moment t (ft)",
+        "Sigma_v": "per-action covariance (ft^2)",
+        "pi": "action mixture proportions"
+      },
+      "assumptions": [
+        "Each segment's location is Gaussian around its action's Bezier template; parameters learned by maximum likelihood via EM on 4.5M segments."
+      ],
+      "breakdown_regime": "Gaussian noise assumption; E-step parallelizes per segment, M-step is weighted least squares",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A mixture of smooth curves fit by EM is the canonical functional-clustering kernel; GSE action discovery inherits the same generative structure.",
+        "source_operator": "functional_clustering_em",
+        "telemetry": "x ~ N(B_v, Sigma_v), EM on 4.5M segments"
+      }
+    },
+    {
+      "primitive_id": "actions_as_vocabulary",
+      "name": "Actions as a vocabulary of words",
+      "verbatim_quote": "We view these actions as a kind of vocabulary",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Each possession combines action 'words' to describe structured interactions, motivating the document-modeling analogy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Treating movements as words lets NLP topic models transfer to sport; GSE builds its play language on the same words-to-documents mapping.",
+        "source_operator": "actions_as_vocabulary",
+        "telemetry": "action = word, possession = document"
+      }
+    },
+    {
+      "primitive_id": "strategy_mixture",
+      "name": "Possession as a mixture of strategies (LDA)",
+      "verbatim_quote": "In our application, rather than topics, we represent each possession as a mixture of strategies",
+      "page": 4,
+      "latex": "\\text{possession }n=\\sum_k \\pi_k^{(n)}\\,\\phi_k",
+      "symbol_and_unit_ledger": {
+        "pi_k^(n)": "weight of strategy k in possession n (dimensionless, sums to 1)",
+        "phi_k": "strategy k, a distribution over pair-actions"
+      },
+      "assumptions": [
+        "LDA is a latent factor model like PCA/factor analysis; topics become offensive strategies."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A possession is a soft mixture of reusable strategies, not a single hard play label; GSE situational reasoning uses the same mixture-of-tactics representation.",
+        "source_operator": "strategy_mixture",
+        "telemetry": "possession = mixture of strategies"
+      }
+    },
+    {
+      "primitive_id": "pair_action_vocabulary",
+      "name": "Pair-action vocabulary captures interactions",
+      "verbatim_quote": "In this work we use a vocabulary of pair-actions, where each \"word\" in the vocabulary is a unique pair of the V actions",
+      "page": 5,
+      "latex": "\\text{word}=(v_i,v_j),\\quad v_i\\ne v_j,\\quad v_i,v_j\\in\\{1,\\dots,V\\}",
+      "symbol_and_unit_ledger": {
+        "(v_i,v_j)": "ordered pair of simultaneous action labels (categorical)"
+      },
+      "assumptions": [
+        "Counting single actions ignores interactions and temporal structure; pairs of simultaneous actions encode player interaction."
+      ],
+      "breakdown_regime": "pair vocabulary grows as V^2; rare pairs must be pruned",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The unit of meaning is a pair of co-occurring actions (a screen, a drive-and-pass), the same relational token GSE uses to name a football interaction.",
+        "source_operator": "pair_action_vocabulary",
+        "telemetry": "word = simultaneous action pair"
+      }
+    },
+    {
+      "primitive_id": "ball_possession_split",
+      "name": "With/without ball doubles the action space",
+      "verbatim_quote": "To incorporate ball possession information, we define each action as \"with\" or \"without\" the ball",
+      "page": 5,
+      "latex": "V_{\\text{eff}}=2V=500",
+      "symbol_and_unit_ledger": {
+        "V_eff": "effective action count after ball split (count)",
+        "with-ball": "player possesses ball for majority of segment"
+      },
+      "assumptions": [
+        "An action is 'with ball' if the player holds the ball for the majority of the segment."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ball possession is a first-class context bit on every action; GSE likewise tags every movement with ball-state to disambiguate intent.",
+        "source_operator": "ball_possession_split",
+        "telemetry": "2V = 500 ball-conditioned actions"
+      }
+    },
+    {
+      "primitive_id": "pair_frequency_threshold",
+      "name": "Prune pairs appearing in <100 possessions",
+      "verbatim_quote": "We include pair-actions that appear in at least 100 possessions, resulting in about 25,000 unique pair-actions in our vocabulary.",
+      "page": 5,
+      "latex": "|\\mathcal{V}_{\\text{pair}}|\\approx 25{,}000,\\quad \\text{min count}=100",
+      "symbol_and_unit_ledger": {
+        "25000": "vocabulary size after pruning (count)",
+        "100": "minimum possession frequency (count)"
+      },
+      "assumptions": [
+        "A frequency floor removes rare pairs, keeping the vocabulary tractable and statistically supported."
+      ],
+      "breakdown_regime": "threshold too high drops informative rare tactics; too low admits noise",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A minimum-support floor on relational tokens is the same vocabulary-pruning discipline GSE applies to its situation ontology.",
+        "source_operator": "pair_frequency_threshold",
+        "telemetry": "~25,000 pairs, min 100 possessions"
+      }
+    },
+    {
+      "primitive_id": "bag_of_pairs_eq1",
+      "name": "Bag-of-pair-actions count vector",
+      "verbatim_quote": "We then represent each possession as a \"bag of simultaneous pair-actions\", mapping the \"bag of words\" concept from topic models to basketball interactions.",
+      "page": 5,
+      "latex": "Y_{n,d}=\\#\\{\\text{times pair }d=(v_1,v_2)\\text{ occurs in possession }n\\}",
+      "symbol_and_unit_ledger": {
+        "Y_{n,d}": "count of pair-action d in possession n (count)",
+        "M_n": "total actions in possession n (count)"
+      },
+      "assumptions": [
+        "Order is discarded: the possession is a count vector over simultaneous pairs, a deliberate trade-off for efficiency."
+      ],
+      "breakdown_regime": "temporal order lost; a weave that breaks down looks like its intact form",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The bag-of-pairs is the document-term matrix of basketball; GSE can build the same count representation over snap-level interaction tokens.",
+        "source_operator": "bag_of_pairs_eq1",
+        "telemetry": "Y_{n,d} = pair count"
+      }
+    },
+    {
+      "primitive_id": "lda_generative",
+      "name": "LDA generative process for possessions",
+      "verbatim_quote": "Each observed possession is characterized by some latent distribution over topics",
+      "page": 12,
+      "latex": "\\phi_k\\sim\\mathrm{Dir}_V(\\alpha_0),\\quad \\pi^{(n)}\\sim\\mathrm{Dir}_K(\\alpha),\\quad Y_{n,:}\\sim\\mathrm{Mult}\\Big(M_n,\\ \\sum_k \\pi_k^{(n)}\\phi_k\\Big)",
+      "symbol_and_unit_ledger": {
+        "phi_k": "global strategy k (distribution over pairs)",
+        "pi^(n)": "possession-specific strategy proportions",
+        "alpha_0,alpha": "Dirichlet concentration (dimensionless)",
+        "K": "number of strategies, K=100"
+      },
+      "assumptions": [
+        "Global topics and per-possession proportions jointly generate the observed pair counts; K=100."
+      ],
+      "breakdown_regime": "Dirichlet prior controls sparsity; K fixed by hand",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Dirichlet-multinomial hierarchy is the same generative kernel GSE uses to model a team's tendency over a vocabulary of tactics.",
+        "source_operator": "lda_generative",
+        "telemetry": "phi~Dir(alpha0), pi~Dir(alpha), Y~Mult"
+      }
+    },
+    {
+      "primitive_id": "scalable_svi",
+      "name": "Stochastic variational inference at scale",
+      "verbatim_quote": "To fit this model to the over 190,000 possessions in the season, we use a recently developed scalable Bayesian inference technique",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Stochastic variational inference (Hoffman et al. 2013) fits the hierarchical model to 190,000 possessions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Scalable Bayesian inference is what makes a season-wide topic model feasible; GSE corpus-scale strategy models need the same SVI-class machinery.",
+        "source_operator": "scalable_svi",
+        "telemetry": "SVI on 190,000 possessions"
+      }
+    },
+    {
+      "primitive_id": "topic_sparsity",
+      "name": "Sparse possession sketches (8 of 100)",
+      "verbatim_quote": "We also notice that each possession topic vector is quite sparse",
+      "page": 7,
+      "latex": "\\|\\pi^{(n)}\\|_0\\approx 8\\ \\text{of }K=100",
+      "symbol_and_unit_ledger": {
+        "||pi||_0": "number of non-zero strategy weights (count)"
+      },
+      "assumptions": [
+        "On average only 8 of 100 strategy entries are non-zero: a possession uses few tactics from a wide arsenal."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sparsity means a play is a small combination of reusable tactics, the same parsimony GSE expects in a situational signature.",
+        "source_operator": "topic_sparsity",
+        "telemetry": "avg 8/100 non-zero strategies"
+      }
+    },
+    {
+      "primitive_id": "tsne_local_map",
+      "name": "t-SNE map preserves local similarity",
+      "verbatim_quote": "With each possession succinctly described by a (sparse) 100-dimensional topic vector, we use the dimensionality reduction technique t-SNE",
+      "page": 7,
+      "latex": "\\text{100-d sketch}\\ \\xrightarrow{\\text{t-SNE}}\\ \\text{2-d, local distances preserved}",
+      "symbol_and_unit_ledger": {
+        "100-d": "strategy vector dimension",
+        "2-d": "visualization dimension"
+      },
+      "assumptions": [
+        "t-SNE emphasizes local distance preservation; far points may be close or far, so only local clusters are trustworthy."
+      ],
+      "breakdown_regime": "global distances not preserved; cluster interpretation is local-only",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A local-distance-preserving embedding lets analysts explore strategy space; GSE play retrieval uses the same neighborhood semantics.",
+        "source_operator": "tsne_local_map",
+        "telemetry": "t-SNE 100-d -> 2-d, local"
+      }
+    },
+    {
+      "primitive_id": "weave_validation",
+      "name": "Hand-labeled weave plays validate similarity",
+      "verbatim_quote": "We hand-label 40 weave plays in the 2014-2015 season",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "40 hand-labeled weave plays cluster together; weave-to-weave distance is much smaller than weave-to-other, and each weave's nearest neighbor is usually a weave."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Semantic similarity is empirically vetoed against hand labels, not assumed; GSE must validate its play-similarity metric the same way.",
+        "source_operator": "weave_validation",
+        "telemetry": "40 weave labels, NN mostly weave"
+      }
+    },
+    {
+      "primitive_id": "cross_team_nn",
+      "name": "Cross-team nearest-neighbor strategy match",
+      "verbatim_quote": "Our method also identifies similar possession structure between different teams.",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A random Chicago possession's nearest neighbor is a Brooklyn possession sharing a left-side high screen, curl, weak-side corner camp, and paint attack."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Strategy similarity transcends team identity; GSE can transfer scouting insights across teams that run the same structure.",
+        "source_operator": "cross_team_nn",
+        "telemetry": "Chicago ~ Brooklyn via shared structure"
+      }
+    },
+    {
+      "primitive_id": "corner_three_paths",
+      "name": "Two distinct structural paths to a corner three",
+      "verbatim_quote": "Indeed, these are two very different ways of ending up with a corner three point attempt",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "One cluster reaches a corner three via drive-and-pass to a camping teammate; another via a baseline cut to the shooting corner. Rockets and Spurs inhabit different regions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The same outcome (corner three) has distinct generative paths; GSE must distinguish how a shot was created, not just that it occurred.",
+        "source_operator": "corner_three_paths",
+        "telemetry": "drive+pass vs baseline cut -> corner 3"
+      }
+    },
+    {
+      "primitive_id": "temporal_tradeoff",
+      "name": "Temporal information sacrificed for efficiency",
+      "verbatim_quote": "our possession sketch ignores much of the temporal information in each possession (a trade-off for statistical and computational efficiency).",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The bag-of-pairs discards order; future work adds auto-correlation, dynamic variance, and time-varying strategies (e.g. a weave that breaks down)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every representation trades expressiveness for tractability; GSE must record what temporal structure a feature discards and when that veto matters.",
+        "source_operator": "temporal_tradeoff",
+        "telemetry": "order discarded; future: time-varying"
+      }
+    },
+    {
+      "primitive_id": "epv_relation",
+      "name": "Data-driven states vs handcrafted EPV",
+      "verbatim_quote": "Our approach is more of a data-driven decomposition of basketball states that we use for exploration (but could be used within an EPV model).",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Cervone et al. handcraft states for expected possession value (EPV); possession sketches learn states from data and could feed an EPV model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "basketball",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Learned strategy states can replace handcrafted EPV states; GSE can feed possession sketches into its expected-value pipeline as a data-driven state space.",
+        "source_operator": "epv_relation",
+        "telemetry": "sketch states -> EPV input"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "possession_sketches2017_trace",
+      "think": "The retrocausal genealogy of Possession Sketches begins with a promise that player-tracking data had not kept. A windfall of insight was supposed to hide in spatiotemporal patterns, yet the tools to organize and interpret whole possessions did not exist. The authors anchor the gap in a concrete scouting task: find every possession where James Harden drives and kicks to a right-corner three. One filter is trivial, but compound the criteria, add a high screen, then a teammate drive, then any Rocket, and the ad hoc query space explodes. Prior work quantified player ability, possession value, and classified small labeled play sets, but none could support open-ended exploration. The lineage runs from Cervone's handcrafted expected-possession-value states and Sha's pointwise trajectory similarity toward a global, probabilistic, interpretable decomposition of an entire season. The representation is a three-stage pipeline. First, segmentation cuts each offensive trajectory at sustained low-velocity moments, below 0.1 feet per second for more than a quarter second, detected on the smoothed first difference; this yields about 4.5 million segments averaging 2.25 seconds. Second, action templates cluster those segments into V=250 Bezier curves, each a cluster center B(t)=theta^T D_P(t) with a fixed Bernstein basis and ten control points, fit by expectation maximization whose M-step is weighted least squares and whose E-step parallelizes per segment. Third, the possession model builds a vocabulary of simultaneous action pairs, split by with/without ball into 2V=500 actions, pruned to pairs appearing in at least 100 possessions, about 25,000 words, and represents each possession as a bag of those pair counts. The recursive theory of mind is the LDA hierarchy. A possession is a mixture of strategies, a strategy is a distribution over co-occurring pair-actions, and a pair-action is two players moving at once. So the model reasons about collective intent from individual tracks: a team's offense is a distribution over tactics, each tactic a distribution over interactions, each interaction a pair of movements. The generative process draws global strategies phi_k from a Dirichlet, per-possession proportions pi from a Dirichlet, and the observed counts from a multinomial with probability sum_k pi_k phi_k. The sketches are sparse, about 8 of 100 strategies non-zero, meaning a play is a small combination drawn from a wide arsenal. This is the same words-to-documents recursion that lets topic models read a corpus, now reading a season of basketball. Cross-layer veto adjudication is empirical, not assumed. The similarity metric is vetoed against 40 hand-labeled weave plays: weave-to-weave distances must be smaller than weave-to-other, and each weave's nearest neighbor is usually another weave, which holds. A cross-team test finds a Chicago possession whose nearest neighbor is a Brooklyn possession sharing a left-side high screen, a curl, a weak-side corner camp, and a paint attack, proving structure transcends team identity. The corner-three analysis separates two generative paths, drive-and-pass versus baseline cut, that produce the same shot. And a deliberate representation veto discards temporal order for statistical and computational efficiency, which the authors flag as a limitation: a weave that breaks down looks like an intact one. Interpretability is chosen over deep learning precisely so each template and pair can be read as a cut or a screen. The implementation invariants are what make this portable to GSE. The Bezier templates are linear in their parameters, which is why the M-step reduces to weighted least squares and the whole thing scales to 4.5 million segments; stochastic variational inference then fits the topic model to 190,000 possessions. t-SNE embeds the 100-dimensional sketches into 2-d preserving local distances, so only local clusters are trustworthy. For GSE the possession sketch is a strategy fingerprint and a reusable movement ontology: the action vocabulary names what a player did, the pair vocabulary names how two players interacted, and the sparse strategy mixture indexes the play for retrieval and scouting. These learned states could feed an expected-possession-value model in place of handcrafted states. Everything here is a statistical representation of movement and strategy; there are zero sportsbook lines, spreads, or implied odds anywhere in the method. The parameter ledger and the honest limitations close the account. V=250 actions, K=100 strategies, ten Bezier control points, 4.5 million segments, about 25,000 pair words, and 8-of-100 sparsity are the fixed choices. The authors concede that V is set by hand rather than inferred, that Bayesian nonparametrics could learn the action count, that templates lack auto-correlation and dynamic variance, and that the bag-of-pairs throws away the time-varying nature of strategy. The invariant for GSE is to carry the linear-in-parameters movement templates, the frequency-pruned relational vocabulary, and the sparse Dirichlet mixture, while recording exactly which temporal structure was sacrificed and validating similarity against hand labels before trusting it for scouting. The related-work positioning sharpens the contribution: unlike pointwise trajectory similarity, this is a global model of an entire season that directly models player interactions, and unlike the handcrafted states of the multiresolution EPV model, the states here are learned from data. The authors name the downstream uses plainly, summarizing situational statistics such as how often a weave succeeded, searching for similar plays in post-game analysis, and discovering previously unknown habits of interaction for team-specific scouting, which is exactly the reconnaissance loop GSE wants to automate.",
+      "retrocausal_genealogy": "The method originates in the unkept promise of player-tracking data and a scouting query that breaks ad hoc search: finding a Harden drive-and-kick corner three is easy, but compounding screen, drive, pass, and teammate-drive criteria explodes the query space. Prior work measured ability and possession value and classified small labeled sets, but could not support open exploration. The lineage runs from Cervone's handcrafted EPV states and Sha's pointwise similarity to a global probabilistic decomposition, borrowing the topic-modeling analogy that actions are words and possessions are documents. Every later choice, the low-velocity segmentation, the Bezier templates, and the pair-action vocabulary, inherits from the need to make a whole season searchable and interpretable rather than queried by hand.",
+      "theory_of_mind": "The model reasons recursively about collective intent from individual tracks. A possession is a mixture of strategies, a strategy is a distribution over co-occurring pair-actions, and a pair-action is two players moving simultaneously, so a team's offense is a distribution over tactics, each tactic a distribution over interactions. The LDA generative process draws global strategies and per-possession proportions from Dirichlets and the counts from a multinomial, and the resulting sketches are sparse, about 8 of 100 strategies active. This is the words-to-documents recursion of topic models applied to basketball: the model infers what a team was trying to do by how its players' movements co-occur, not from any single player's path.",
+      "cross_layer_veto": "Similarity is vetoed empirically against 40 hand-labeled weave plays: weave-to-weave distance must beat weave-to-other, and nearest neighbors are mostly weaves, which holds. A cross-team nearest-neighbor test matches a Chicago possession to a Brooklyn one sharing a high screen, curl, weak-side corner, and paint attack, proving structure transcends team. The corner-three analysis separates drive-and-pass from baseline-cut paths to the same shot. A representation veto deliberately discards temporal order for efficiency, flagged as a limitation because a broken weave resembles an intact one. Interpretability is chosen over deep learning so each template and pair reads as a cut or screen, and t-SNE clusters are trusted only locally."
+    }
+  ],
+  "universal_lens": "Continuous player movement is decomposed into a discrete vocabulary of Bezier action templates, paired into simultaneous interaction tokens, and modeled as a sparse Dirichlet mixture of strategies, turning a season of tracking data into a searchable, interpretable space of offensive structure validated against hand labels.",
+  "gsi_mapping": "GSI treats a possession as a sparse mixture over learned strategies: low-velocity segmentation yields ~2.25 s action tokens, V=250 Bezier templates name movements, with/without-ball pair-actions (~25,000 words) name interactions, and LDA with K=100 strategies indexes every play for retrieval and cross-team scouting.",
+  "gse_mapping": "GSE lifts the possession sketch as a strategy fingerprint and movement ontology: the action vocabulary names what a player did, the pair vocabulary names interactions, and the sparse strategy mixture feeds play retrieval and could supply data-driven states to an expected-possession-value model; all quantities are statistical representations, never sportsbook lines."
+}
