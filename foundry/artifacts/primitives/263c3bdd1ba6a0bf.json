@@ -1,0 +1,363 @@
+{
+  "book_id": "263c3bdd1ba6a0bf",
+  "shard": "2",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_ABSTRACT_QUALITATIVE_CLEAN_OCR",
+  "source_note": "Neil Johnson (Pittsburgh), 'Projecting college basketball freshman performance using grassroots basketball statistics', NESSIS 2017 one-page abstract. Substantive abstract with a defined grassroots data corpus (Nike EYBL, Adidas, Under Armour, NBPA, Pangos circuits), a BPM/PER vs ESPN-scout-ratings predictor comparison, sample sizes (556 vs 115), and directional results; extracted faithfully (not a derivative summary). The abstract reports directional comparisons rather than printed equations or correlation coefficients, so primitives are recorded as qualitative empirical findings (BPM/PER are referenced metrics, no formulas printed). Outputs are statistical projection comparisons from public box-score data; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "scout_opinion_recruiting",
+      "name": "Recruiting relies on traveling scouts' opinions",
+      "verbatim_quote": "Basketball recruiting relies largely, if not solely, on the opinions of scouts who travel the country to see and evaluate as many players as they can",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Basketball recruiting relies largely, if not solely, on the opinions of scouts who travel to evaluate as many players as they can."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scout-opinion recruiting is the same subjective-evaluation baseline GSE replaces with measurable performance data.",
+        "source_operator": "scout_opinion_recruiting",
+        "telemetry": "recruiting = scout opinions"
+      }
+    },
+    {
+      "primitive_id": "impossible_see_every_player",
+      "name": "Scouts cannot see every future D1 player",
+      "verbatim_quote": "it is impossible for scouts to see every player that will play National Collegiate Athletic Association (NCAA) Division 1 basketball",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Logistically it is impossible for scouts to see every player who will play NCAA Division 1 basketball, creating a coverage gap."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The impossibility of full scout coverage is the same sampling gap GSE fills with standardized league statistics.",
+        "source_operator": "impossible_see_every_player",
+        "telemetry": "scouts cannot see all D1 players"
+      }
+    },
+    {
+      "primitive_id": "exposure_bias",
+      "name": "Bias toward the most-exposed players and teams",
+      "verbatim_quote": "there is a bias towards evaluating the best players and teams with the most exposure",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "There is a bias toward evaluating the best players and teams with the most exposure, so scout ratings oversample high-visibility prospects."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Exposure bias in scouting is the same selection bias GSE corrects by using uniform grassroots competition data.",
+        "source_operator": "exposure_bias",
+        "telemetry": "bias toward most-exposed players"
+      }
+    },
+    {
+      "primitive_id": "grassroots_level_playing_field",
+      "name": "Grassroots leagues level the field, give consistent stats",
+      "verbatim_quote": "prospective basketball recruits now play in organized leagues that level the playing field and provide consistent statistics",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Apparel-sponsored grassroots leagues let recruits play in organized competition that levels the playing field and provides consistent statistics."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Standardized competition producing consistent stats is the same controlled-measurement substrate GSE needs for fair prospect comparison.",
+        "source_operator": "grassroots_level_playing_field",
+        "telemetry": "grassroots: level field, consistent stats"
+      }
+    },
+    {
+      "primitive_id": "bpm_from_grassroots_boxscores",
+      "name": "Build Box Plus/Minus from grassroots box scores",
+      "verbatim_quote": "This paper will create Box Plus/Minus ratings (BPM) using available box score statistics for the players in those grassroots leagues",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Box Plus/Minus (BPM) ratings are created from available grassroots box-score statistics for players in those leagues."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Computing BPM from grassroots box scores is the same advanced-metric projection GSE uses to translate amateur performance.",
+        "source_operator": "bpm_from_grassroots_boxscores",
+        "telemetry": "BPM from grassroots box scores"
+      }
+    },
+    {
+      "primitive_id": "predictive_power_both_levels",
+      "name": "Assess grassroots stats' predictive power for NCAA",
+      "verbatim_quote": "assess the predictive power of grassroots statistics for NCAA performance for all players who participated at both levels",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The predictive power of grassroots statistics for NCAA performance is assessed for all players who participated at both levels."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Testing amateur-to-college predictive power on two-level players is the same projection-validation design GSE uses.",
+        "source_operator": "predictive_power_both_levels",
+        "telemetry": "grassroots -> NCAA predictive power"
+      }
+    },
+    {
+      "primitive_id": "grassroots_league_format",
+      "name": "Grassroots format: 10-20 teams, 3-4 weekends, one city",
+      "verbatim_quote": "Grassroots basketball leagues are for high school players and consist of 10-20 teams that play on 3-4 weekends with every team playing in the same city",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Grassroots leagues are for high school players, consist of 10-20 teams playing on 3-4 weekends with every team in the same city, typically during NCAA live recruiting periods."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A concentrated common-location tournament is the same controlled environment GSE values for comparable prospect measurement.",
+        "source_operator": "grassroots_league_format",
+        "telemetry": "10-20 teams, 3-4 weekends, one city"
+      }
+    },
+    {
+      "primitive_id": "common_opponents_team_strength",
+      "name": "Common opponents enable reliable team-strength evaluation",
+      "verbatim_quote": "the league format ensures teams play against each other and against common opponents, which helps in regards to evaluating team strength reliably",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The league format ensures teams play each other and common opponents, which helps evaluate team strength reliably."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Common-opponent scheduling for reliable strength estimation is the same connected-comparison graph GSE uses to rate teams.",
+        "source_operator": "common_opponents_team_strength",
+        "telemetry": "common opponents -> reliable strength"
+      }
+    },
+    {
+      "primitive_id": "recruiting_classes_2012_2016",
+      "name": "Sample: 2012-2016 recruiting classes",
+      "verbatim_quote": "Players that qualified were apart of the 2012-2016 recruiting classes",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Qualified players were part of the 2012-2016 recruiting classes (source writes 'apart of'); grassroots box scores come from Nike EYBL, Adidas Uprising/Nations/Summer Championships, Under Armour Association, NBPA Top 100, Nike Global Challenge, Pangos and Under Armour All-America camps; NCAA stats from Basketball-Reference."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A defined recruiting-class cohort with named data sources is the same reproducible sample GSE requires.",
+        "source_operator": "recruiting_classes_2012_2016",
+        "telemetry": "2012-2016 classes; EYBL/Adidas/UA camps"
+      }
+    },
+    {
+      "primitive_id": "boxscore_beats_scouts",
+      "name": "Box scores project freshmen more accurately than scouts alone",
+      "verbatim_quote": "With the use of box score statistics, projecting incoming freshman talent at the NCAA level can be done more accurately and consistently than solely relying on scout ratings",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "With box-score statistics, projecting incoming NCAA freshman talent can be done more accurately and consistently than relying solely on scout ratings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Objective box scores outperforming subjective scouts is the same data-over-opinion projection principle GSE applies.",
+        "source_operator": "boxscore_beats_scouts",
+        "telemetry": "box scores > scout ratings alone"
+      }
+    },
+    {
+      "primitive_id": "metrics_compared",
+      "name": "Compare ESPN ratings, raw/adjusted BPM, PER",
+      "verbatim_quote": "we will use ESPN’s scout ratings, raw BPM, adjusted BPM, and player efficiency ratings (PER) to measure which metric is the best a predictor of BPM for a given player’s freshman season",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "ESPN scout ratings, raw BPM, adjusted BPM, and player efficiency ratings (PER) are compared as predictors of a player's freshman-season BPM (and separately PER); source writes 'best a predictor'."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A multi-metric predictor bake-off is the same model-comparison design GSE runs for prospect projection.",
+        "source_operator": "metrics_compared",
+        "telemetry": "ESPN vs raw/adj BPM vs PER"
+      }
+    },
+    {
+      "primitive_id": "scout_predictability_drops_pool",
+      "name": "Scout predictability drops as the player pool grows",
+      "verbatim_quote": "we see the predictability factor of the scout ratings drop significantly when we increase the size of the player pool",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Surprisingly, the predictability of scout ratings drops significantly when the player pool size increases, exposing their coverage bias."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scout ratings degrading on a broader pool is the same exposure-bias failure GSE avoids with uniform data.",
+        "source_operator": "scout_predictability_drops_pool",
+        "telemetry": "scout predictability drops with pool size"
+      }
+    },
+    {
+      "primitive_id": "adjusted_bpm_best_for_bpm",
+      "name": "Adjusted grassroots BPM best predicts freshman BPM",
+      "verbatim_quote": "Adjusted grassroots BPM looks to be the most predictive of freshman year BPM",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For players ranked by ESPN with at least 200 grassroots minutes, adjusted grassroots BPM looks most predictive of freshman-year BPM."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Adjusted amateur BPM as the top freshman-BPM predictor is the same projection signal GSE lifts for prospect rating.",
+        "source_operator": "adjusted_bpm_best_for_bpm",
+        "telemetry": "adj grassroots BPM -> freshman BPM (best)"
+      }
+    },
+    {
+      "primitive_id": "scouts_better_for_per",
+      "name": "Scout ratings better predict freshman PER",
+      "verbatim_quote": "the scout ratings are the better predictor of freshman year PER than adjusted BPM is for the same sample",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For the same sample, scout ratings are the better predictor of freshman-year PER than adjusted BPM, so the best predictor depends on the target metric."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Target-dependent predictor superiority is the same metric-specific model selection GSE performs.",
+        "source_operator": "scouts_better_for_per",
+        "telemetry": "scouts > adj BPM for freshman PER"
+      }
+    },
+    {
+      "primitive_id": "bpm_beats_per_for_per",
+      "name": "Grassroots BPM beats grassroots PER for predicting PER",
+      "verbatim_quote": "grassroots BPM is a better predictor of freshman year PER than grassroots PER is",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Interestingly, grassroots BPM is a better predictor of freshman-year PER than grassroots PER itself, so a composite metric can out-predict its own raw counterpart."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A composite metric out-predicting a raw one across targets is the same value of context-adjusted ratings GSE exploits.",
+        "source_operator": "bpm_beats_per_for_per",
+        "telemetry": "grassroots BPM > grassroots PER for PER"
+      }
+    },
+    {
+      "primitive_id": "sample_556_vs_115",
+      "name": "556-player pool vs 115 scout-rated high-minute players",
+      "verbatim_quote": "The sample size here is 556 players, while the sample size for players with an scout rating and more than 500 AAU minutes logged is only 115",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The all-player sample is 556 (>=200 grassroots minutes), versus only 115 players with a scout rating and more than 500 AAU minutes, showing how scout coverage shrinks the usable pool."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A large uniform-data pool versus a small scout-covered pool is the same coverage advantage GSE quantifies.",
+        "source_operator": "sample_556_vs_115",
+        "telemetry": "556 all players vs 115 scout-rated"
+      }
+    },
+    {
+      "primitive_id": "adjusted_bpm_200min_robust",
+      "name": "Adjusted BPM translates strongly even at 200 minutes",
+      "verbatim_quote": "It translates strongly to freshman year BPM even when considering players with as little as 200 minutes played",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Adjusted grassroots BPM translates strongly to freshman-year BPM even for players with as little as 200 minutes played, showing small-sample robustness."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A projection that holds at low minutes is the same small-sample stability GSE requires of amateur metrics.",
+        "source_operator": "adjusted_bpm_200min_robust",
+        "telemetry": "adj BPM strong at >=200 min"
+      }
+    },
+    {
+      "primitive_id": "conclusion_comparable_to_scouts",
+      "name": "Adjusted grassroots BPM comparable to scout ratings",
+      "verbatim_quote": "The predictability of adjusted grassroots BPM is significantly notable and is comparable to scout ratings when projecting incoming NCAA freshman year performance",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The predictability of adjusted grassroots BPM is significantly notable and comparable to scout ratings for projecting NCAA freshman performance; with more rigorous stat-keeping it could predict even more powerfully."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An objective amateur metric matching scout ratings is the same validated data-driven projection GSE builds.",
+        "source_operator": "conclusion_comparable_to_scouts",
+        "telemetry": "adj grassroots BPM ~ scout ratings"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "grassrootsbpm2017_trace",
+      "think": "The retrocausal genealogy of this abstract is the subjectivity and coverage bias of basketball recruiting. Neil Johnson of Pittsburgh observes that recruiting relies largely, if not solely, on the opinions of scouts who travel the country to evaluate as many players as they can, that it is logistically impossible to see every future NCAA Division 1 player, and that there is a bias toward evaluating the best players and teams with the most exposure. The corrective is the rise of apparel-sponsored grassroots leagues, where recruits play organized competition that levels the playing field and provides consistent statistics. The methodological lineage is the Box Plus/Minus and Player Efficiency Rating family of advanced box-score metrics, applied here to amateur competition and validated against college outcomes. The data are grassroots box scores from Nike 17U EYBL, Adidas Uprising Gauntlet 17U Gold, Under Armour Association 17U, Adidas Nations, Adidas Summer Championships 17U, NBPA Top 100 Camp, Nike Global Challenge, Pangos All-American Camp, and Under Armour All-America Camp, joined to NCAA season stats from Basketball-Reference for players in the 2012 to 2016 recruiting classes. The grassroots format, ten to twenty teams playing three to four weekends in the same city during NCAA live recruiting periods, ensures teams face each other and common opponents, which helps evaluate team strength reliably. Box Plus/Minus ratings are computed from the grassroots box scores, and the study assesses their predictive power for NCAA performance among players who participated at both levels. The recursive theory of mind is treating each recruit as a measurable performer whose amateur output should forecast college output, rather than as a scout's impression. The procedure compares ESPN scout ratings, raw BPM, adjusted BPM, and PER as predictors of a player's freshman-season BPM, and separately of freshman-season PER. The model reasons about a prospect by asking which observable signal, subjective rating or objective box-score composite, best anticipates the college target, and it finds the answer depends on both the target metric and the size of the player pool. Cross-layer veto adjudication is the empirical comparison and its surprises. The predictability of scout ratings drops significantly when the player pool grows, exposing their exposure bias. For players ranked by ESPN with at least 200 grassroots minutes, adjusted grassroots BPM looks most predictive of freshman-year BPM, yet scout ratings are the better predictor of freshman-year PER for that same sample, and grassroots BPM is a better predictor of freshman PER than grassroots PER itself. For all players, adjusted grassroots BPM translates strongly to freshman BPM even at as little as 200 minutes, with a sample of 556 players versus only 115 who have a scout rating and more than 500 AAU minutes. The conclusion is that adjusted grassroots BPM is significantly notable and comparable to scout ratings, and that more rigorous stat-keeping could make it an even more powerful predictor. The implementation invariants map directly onto GSE. Computing BPM from standardized grassroots box scores is GSE's amateur-to-college projection; common-opponent scheduling for reliable strength estimation is GSE's connected-comparison graph; the exposure-bias correction is GSE's reason to prefer uniform competition data over scout impressions; and the target-dependent predictor superiority is GSE's metric-specific model selection. The finding that a composite metric can out-predict its own raw counterpart is the same value GSE places on context-adjusted ratings. The outputs are statistical projection comparisons from public box-score data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The cohort is the 2012 to 2016 recruiting classes with grassroots and NCAA box scores; the compared metrics are ESPN scout ratings, raw BPM, adjusted BPM, and PER; the targets are freshman-season BPM and PER; the minute thresholds are 200 for the broad pool and 500 AAU minutes for the scout-rated subset; and the sample sizes are 556 versus 115. The abstract reports directional comparisons rather than printed correlation coefficients or equations, so the primitives are recorded as qualitative empirical findings with no fabricated formulas, and the named grassroots circuits and Basketball-Reference source are preserved. The invariant for GSE is to carry the adjusted-grassroots-BPM projection, the exposure-bias correction, and the target-dependent model selection, while recording that the exact coefficients and the adjusted-BPM construction live in the full paper and the cited metric literature. The broader significance for GSE is that amateur competition data can substitute for, and on some targets surpass, the subjective scout consensus that dominates recruiting, which is precisely the kind of measurable edge the engine seeks before any market is consulted. Because the grassroots circuits standardize opponents, location, and stat-keeping, the resulting BPM is a cleaner signal than a scout's exposure-weighted impression, and the 556-versus-115 sample contrast quantifies how much usable information the scout-only view discards. GSE therefore treats adjusted grassroots BPM as a prior on incoming talent, updates it with college output, and keeps the projection strictly separate from any betting line: the method forecasts performance, never prices a wager, and the zero-odds constraint is preserved end to end, which is the same epistemic separation the Foundry enforces on every primitive, and it is recorded as such in the ledger.",
+      "retrocausal_genealogy": "The abstract originates in basketball recruiting's reliance on traveling scouts' opinions, the impossibility of seeing every future D1 player, and bias toward the most-exposed players/teams. Johnson (Pittsburgh) uses apparel-sponsored grassroots leagues (level field, consistent stats) to build Box Plus/Minus from amateur box scores and validate against NCAA outcomes. Lineage: BPM/PER advanced box-score metrics; data from Nike EYBL, Adidas Uprising/Nations/Summer, UA Association, NBPA Top 100, Nike Global Challenge, Pangos/UA All-America camps + Basketball-Reference; 2012-2016 recruiting classes.",
+      "theory_of_mind": "Each recruit is a measurable performer whose amateur output should forecast college output, not a scout impression. ESPN scout ratings, raw BPM, adjusted BPM, and PER are compared as predictors of freshman-season BPM and PER. The best signal depends on target metric and pool size; grassroots format (10-20 teams, 3-4 weekends, one city, common opponents) enables reliable team-strength evaluation. BPM computed from grassroots box scores for two-level players.",
+      "cross_layer_veto": "Scout predictability drops significantly as the pool grows (exposure bias). For ESPN-ranked players with >=200 grassroots min: adjusted grassroots BPM best predicts freshman BPM, but scouts better predict freshman PER, and grassroots BPM beats grassroots PER for PER. All-player pool: adjusted BPM strong even at 200 min, n=556 vs 115 scout-rated (>500 AAU min). Conclusion: adjusted grassroots BPM comparable to scout ratings; better stat-keeping could improve it. Directional findings, no printed coefficients/equations; recorded as qualitative empirical primitives."
+    }
+  ],
+  "universal_lens": "College basketball freshman performance is projected from grassroots (AAU) box-score Box Plus/Minus ratings, which level the playing field and correct scout exposure bias; adjusted grassroots BPM proves comparable to ESPN scout ratings for predicting freshman BPM, with the best predictor depending on the target metric and player-pool size.",
+  "gsi_mapping": "GSI treats adjusted grassroots BPM as a freshman-performance projection validated on two-level players (2012-2016 classes; Nike EYBL/Adidas/UA/NBPA/Pangos circuits + Basketball-Reference); compares ESPN ratings, raw/adjusted BPM, PER as predictors of freshman BPM and PER; scout predictability drops with pool size; adjusted BPM best for BPM (n=556 at >=200 min vs 115 scout-rated >500 AAU min), scouts better for PER; common-opponent format aids strength estimation.",
+  "gse_mapping": "GSE lifts the amateur-to-college BPM projection, the exposure-bias correction favoring uniform competition data over scout impressions, the connected common-opponent strength graph, and target-dependent model selection; the composite-beats-raw finding matches GSE's context-adjusted ratings; all outputs are statistical projection comparisons, never sportsbook lines."
+}

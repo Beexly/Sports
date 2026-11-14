@@ -562,3 +562,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 02:12:22 | COMPLETE | 31578d5b20fc1a1f | primitives=18 think_words=852
 - 2026-11-14 02:13:22 | CLAIMED | 0be32c68562efac5 | worker=hermes-inline shard03 file=2025 - College Football Volatility A Bayesian state-space model of the transfer portal and NIL impact - Unknown Authors.pdf
 - 2026-11-14 02:22:07 | COMPLETE | 0be32c68562efac5 | primitives=27 think_words=850
+- 2026-11-14 02:22:48 | CLAIMED | 263c3bdd1ba6a0bf | worker=hermes-inline shard03 file=2017 - Projecting college basketball freshman performance using grassroots basketball statistics - Unknown Authors.pdf
+- 2026-11-14 02:25:54 | COMPLETE | 263c3bdd1ba6a0bf | primitives=18 think_words=850
