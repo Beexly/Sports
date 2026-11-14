@@ -44,6 +44,46 @@ DEFAULT_BOOK_PAGE_CAPS: Dict[str, int] = {
     "17150554536af787": 16,  # James 1890 Principles of Psychology Vol 2
 }
 
+EXTENDED_BOOK_PAGE_CAPS: Dict[str, int] = {
+    **DEFAULT_BOOK_PAGE_CAPS,
+    "65dd26cd834db798": 20,  # IBM US7483986 Self-Organizing Multi-Agent Topology (14 pages -> full patent)
+    "6ff1729124cef6c7": 40,  # Halmos 1950 Measure Theory (40 foundational pages)
+}
+
+
+def load_books_by_ids_readonly(
+    book_ids: Sequence[str],
+    db_path: Path = DEFAULT_FOUNDRY_DB,
+) -> List[Dict[str, Any]]:
+    """Query `corpus_queue` via `file:...?mode=ro` for explicit `book_id`s without touching locks."""
+    clean_ids = [str(b).strip() for b in book_ids if str(b).strip()]
+    if not clean_ids:
+        return []
+    resolved = Path(db_path).resolve()
+    if not resolved.is_file():
+        raise FileNotFoundError(f"Foundry DB not found: {resolved}")
+    marks = ",".join("?" * len(clean_ids))
+    conn = sqlite3.connect(f"file:{resolved.as_posix()}?mode=ro", uri=True, timeout=5.0)
+    try:
+        rows = conn.execute(
+            f"SELECT book_id, file_path, file_name, primary_domain, tier, worker_id "
+            f"FROM corpus_queue WHERE book_id IN ({marks}) ORDER BY book_id",
+            clean_ids,
+        ).fetchall()
+    finally:
+        conn.close()
+    return [
+        {
+            "book_id": r[0],
+            "file_path": r[1],
+            "file_name": r[2],
+            "primary_domain": r[3],
+            "tier": r[4],
+            "worker_id": r[5],
+        }
+        for r in rows
+    ]
+
 
 def load_insufficient_ocr_books_readonly(db_path: Path = DEFAULT_FOUNDRY_DB) -> List[Dict[str, Any]]:
     """Query `corpus_queue` via `file:...?mode=ro` for `INSUFFICIENT_OCR` books without touching locks."""
@@ -214,12 +254,17 @@ def run_ocr_rescue(
     db_path: Path = DEFAULT_FOUNDRY_DB,
     out_dir: Path = DEFAULT_OUT_DIR,
     max_pages_total: int = MAX_VISION_PAGES_PER_RUN,
+    book_ids: Optional[Sequence[str]] = None,
     dry_run: bool = False,
 ) -> Dict[str, Any]:
     """Execute end-to-end Cloud Vision DOCUMENT_TEXT_DETECTION rescue within Always-Free limits."""
     import pymupdf
 
-    books = load_insufficient_ocr_books_readonly(db_path)
+    books = (
+        load_books_by_ids_readonly(book_ids, db_path)
+        if book_ids
+        else load_insufficient_ocr_books_readonly(db_path)
+    )
     total_pages_by_book: Dict[str, int] = {}
     for b in books:
         pdf_path = Path(b["file_path"])
@@ -227,8 +272,9 @@ def run_ocr_rescue(
         total_pages_by_book[str(b["book_id"])] = len(doc)
         doc.close()
 
+    caps = EXTENDED_BOOK_PAGE_CAPS if book_ids else DEFAULT_BOOK_PAGE_CAPS
     plans, planned_total = plan_page_allocation(
-        books, total_pages_by_book, max_pages_total=max_pages_total
+        books, total_pages_by_book, max_pages_total=max_pages_total, per_book_caps=caps
     )
 
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -291,17 +337,23 @@ def run_ocr_rescue(
         "vision_api_http_batches": total_api_requests,
         "books_rescued": results,
     }
-    manifest_path = out_dir / "ocr_rescue_manifest.json"
+    manifest_name = "ocr_rescue_tierb_manifest.json" if book_ids else "ocr_rescue_manifest.json"
+    manifest_path = out_dir / manifest_name
     manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
     return manifest
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Always-Free GCP Cloud Vision OCR rescue for INSUFFICIENT_OCR Tier-A books.")
+    ap = argparse.ArgumentParser(description="Always-Free GCP Cloud Vision OCR rescue for INSUFFICIENT_OCR / scanned Foundry books.")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--max-pages", type=int, default=MAX_VISION_PAGES_PER_RUN)
+    ap.add_argument("--book-ids", nargs="*", default=None, help="Optional explicit book_id list to rescue.")
     args = ap.parse_args()
-    manifest = run_ocr_rescue(max_pages_total=args.max_pages, dry_run=args.dry_run)
+    manifest = run_ocr_rescue(
+        max_pages_total=args.max_pages,
+        book_ids=args.book_ids,
+        dry_run=args.dry_run,
+    )
     print(
         f"OCR_RESCUE_OK | books={len(manifest['books_rescued'])} "
         f"| pages_ocr={manifest['actual_pages_ocr']}/{manifest['always_free_monthly_units']} "

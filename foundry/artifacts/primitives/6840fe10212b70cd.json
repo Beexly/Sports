@@ -1,0 +1,248 @@
+{
+  "book_id": "6840fe10212b70cd",
+  "source_status": "COMPLETE",
+  "title": "1782-predict-responsibly-improving-fairness-accuracy-learning",
+  "file_name": "1782-predict-responsibly-improving-fairness-accuracy-learning.md",
+  "sha256": "6840fe10212b70cd7da7c7e5c280a84f2ae5ae05ada1667c8a7e5d385d665b8e",
+  "primary_domain": "cs",
+  "pages_total": 3,
+  "pages_read": 3,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 3,
+  "windows_extracted": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The joint optimization of a predictive model and a deferral policy over a fixed downstream decision-maker constitutes a bilevel variational problem. The system minimizes the expected composite loss, mapping to a Markov Decision Process where the deferral gate acts as an optimal stopping rule balancing epistemic uncertainty against the learned competence map of the external agent. The adaptive deferral primitive unifies human-AI decision-making via a conditional competence map. By optimizing the Pareto frontier between aggregate accuracy and subgroup fairness, the system dynamically routes queries to either the algorithmic predictor or the historical decision-maker trace, ensuring robust performance under non-stationary noise.",
+  "gsi_mapping": "In GSI, the adaptive deferral framework maps directly to conformal risk control for betting markets. The predictor generates base probabilities, while the deferral gate models the bookmaker's pricing bias. By minimizing joint system loss, GSI dynamically allocates capital between algorithmic predictions and market arbitrage based on real-time calibration residuals. GSI maps the semi-synthetic regimes to Bayesian hierarchical models of player performance. Conformal prediction intervals bound the uncertainty of the joint system's output, allowing dynamic recalibration when the 'human' (e.g., a coach) introduces stochastic bias into the predictive feature space.",
+  "gse_mapping": "GSE utilizes this primitive for situational reasoning by modeling coaching adjustments as the downstream decision-maker. The engine learns a competence map of opposing coaches; when the engine's tactical prediction variance exceeds the coach's historical adaptability, the deferral policy triggers a conservative state-transition, preserving strategic equity against high-variance opponent regimes. In GSE, this primitive governs state transitions during in-game situational reasoning. The engine evaluates the real-time reliability of a coach's historical leans against the underlying probabilistic game features, dynamically adjusting the routing weight to maximize expected win probability while mitigating cognitive bias.",
+  "primitives": [
+    {
+      "primitive_id": "w0_joint_system_loss",
+      "name": "Joint System Loss Minimization",
+      "verbatim_quote": "Equations & assumptions - System objective: minimize the *joint* system loss over (predictor, deferral policy, fixed downstream decision maker) — the paper's formalism optimizes the pipeline's output, not the model's standalone accuracy.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Predictor $f$: dimensionless probability mapping. Deferral policy $\\pi$: binary indicator (0/1). Downstream decision-maker $D$: deterministic/stochastic function. Joint loss $L_{sys}$: dimensionless expected error metric.",
+      "assumptions": "The downstream decision-maker's behavior is stationary enough to permit learning a competence map; training data includes past decisions from $D$; the deferral policy observes identical feature space as the predictor.",
+      "breakdown_regime": "Breaks down if the downstream decision-maker exhibits non-stationary regime shifts faster than the deferral policy's learning rate, or if the feature space lacks sufficient information to distinguish competence boundaries.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's dynamic resource allocation under adversarial uncertainty. The joint loss minimization mirrors optimizing expected points differential while accounting for opponent defensive scheme adjustments.",
+        "source_operator": "w0_joint_system_loss",
+        "telemetry": "System-wide Expected Points Added (EPA) deviation compared to baseline standalone model performance."
+      }
+    },
+    {
+      "primitive_id": "w0_gate_agent_modeling",
+      "name": "Agent-Centric Gate Modeling",
+      "verbatim_quote": "The key move vs plain rejection: the gate models the *other agent*, not just the input.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Gate function $G(x, D)$: dimensionless probability of deferring. Input features $x$: domain-specific vectors. Other agent $D$: external decision entity with latent competence distribution.",
+      "assumptions": "The other agent possesses a learnable, albeit potentially biased or noisy, competence distribution conditional on the input features. The gate has access to signals revealing this competence.",
+      "breakdown_regime": "Fails when the other agent acts purely randomly without feature-dependent structure, rendering the competence map unidentifiable and reducing the gate to a random coin flip.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's opponent-specific play-calling tendency kernels. Instead of rejecting a play call based solely on offensive formation (input), the gate evaluates the specific defensive coordinator's historical response patterns (agent modeling).",
+        "source_operator": "w0_gate_agent_modeling",
+        "telemetry": "Reduction in misclassification error when deferring to human analysts versus automated baseline during high-leverage game states."
+      }
+    },
+    {
+      "primitive_id": "w0_pareto_fairness_tradeoff",
+      "name": "Pareto Fairness-Accuracy Frontier",
+      "verbatim_quote": "Results reported as Pareto fronts (accuracy vs fairness trade-off), each plotted point the median of five runs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Accuracy $A$: fraction of correct system decisions (dimensionless). Fairness metric $F$: e.g., demographic parity difference or equalized odds gap (dimensionless). Pareto front: set of non-dominated $(A, F)$ pairs.",
+      "assumptions": "Fairness and accuracy are inherently competing objectives within the joint system optimization. A continuous trade-off curve exists parameterized by the deferral threshold or regularization weight.",
+      "breakdown_regime": "Degenerates if the fairness constraint is so strict that no valid deferral policy exists to satisfy it, or if the downstream decision-maker's bias completely dominates the system output regardless of deferral.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly isomorphic to GSI's bankroll management frontier, trading raw Sharpe ratio (accuracy) against maximum drawdown constraints or exposure limits across correlated sportsbooks (fairness/risk parity).",
+        "source_operator": "w0_pareto_fairness_tradeoff",
+        "telemetry": "Variance of ROI across different market segments (e.g., NBA vs NFL) under constrained capital allocation policies."
+      }
+    },
+    {
+      "primitive_id": "w0_inconsistent_flip_dynamics",
+      "name": "Inconsistent Decision-Flipping Dynamics",
+      "verbatim_quote": "Dataset / schema Semi-synthetic: COMPAS (recidivism) and Heritage Health (health risk) with simulated downstream decision makers in three regimes: high-accuracy, highly-biased, and inconsistent (noisy).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Decision noise $\\epsilon$: stochastic perturbation added to the downstream decision-maker's output. Regime type $R \\in \\{\\text{high-acc}, \\text{biased}, \\text{inconsistent}\\}$. Flip rate $p_{flip}$: probability of inconsistent labeling.",
+      "assumptions": "The inconsistent regime introduces label noise that is independent of the true underlying state but dependent on the decision-maker's internal stochastic process. The system can still learn a probabilistic competence map.",
+      "breakdown_regime": "Collapses when the noise level exceeds 50%, making the downstream decision-maker's output purely anti-correlated or indistinguishable from random chance, destroying the signal-to-noise ratio for deferral learning.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Corresponds to GSE modeling erratic referee crews or unpredictable weather disruptions. The engine identifies 'inconsistent' external factors and adjusts its deferral policy to either override or heavily discount these noisy inputs.",
+        "source_operator": "w0_inconsistent_flip_dynamics",
+        "telemetry": "Prediction confidence calibration error specifically during games officiated by crews with historically high penalty variance."
+      }
+    },
+    {
+      "primitive_id": "adaptive_deferral_routing",
+      "name": "Adaptive Deferral Routing",
+      "verbatim_quote": "Numerical results / baselines - Results are Pareto-front plots (no single headline table): the adaptive deferral system dominates fixed-deferral and no-deferral baselines on the accuracy–fairness frontier across regimes.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Accuracy: dimensionless scalar [0,1]; Fairness: dimensionless scalar metric (e.g., equalized odds difference); Regime: categorical variable defining human consistency.",
+      "assumptions": "The joint training assumes the decision maker's underlying competence distribution is fixed and identifiable from historical traces; the model can accurately estimate instance-wise human error rates.",
+      "breakdown_regime": "Co-adaptation singularity: if the human decision-maker actively learns from the system's deferrals, the static competence map drifts, causing the Pareto frontier to collapse as the routing policy becomes misaligned with current human behavior.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's dynamic trust allocation between algorithmic play-calling and human coach intuition. The Pareto optimization directly translates to balancing raw statistical advantage against maintaining human agency/fairness in high-leverage situations.",
+        "source_operator": "adaptive_deferral_routing",
+        "telemetry": "Real-time tracking of the divergence between model-predicted outcomes and actual human decisions, measured via KL-divergence over sliding temporal windows."
+      }
+    },
+    {
+      "primitive_id": "inconsistent_dm_stress_test",
+      "name": "Inconsistent DM Stress Test",
+      "verbatim_quote": "The inconsistent-DM regime is the stress test: the human flips 30% of the selected subgroup's predictions.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Flip rate: dimensionless probability p=0.30; Subgroup: categorical partition of the feature space X.",
+      "assumptions": "The noise introduced by the human is i.i.d. Bernoulli flipping within the specific subgroup, independent of the true underlying outcome label.",
+      "breakdown_regime": "High-noise saturation: if the flip rate exceeds 50%, the human signal becomes anti-correlated with the truth, causing the deferral mechanism to systematically degrade overall system accuracy despite fairness constraints.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's modeling of erratic player behavior under extreme pressure. The kernel extracts the latent 'signal vs noise' ratio of a player's execution, allowing the engine to discount flawed inputs without discarding the agent entirely.",
+        "source_operator": "inconsistent_dm_stress_test",
+        "telemetry": "Variance of decision outcomes for a specific agent conditioned on identical game-state features, indicating the presence of stochastic flipping."
+      }
+    },
+    {
+      "primitive_id": "bias_aware_deflection",
+      "name": "Bias-Aware Deflection",
+      "verbatim_quote": "- Highly-biased setting: the system learns to defer *less* to the biased human on the affected subgroup — the fairness gain comes from routing, not from changing the human.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Bias magnitude: dimensionless deviation from parity; Deflection probability: continuous value in [0,1] representing the routing weight away from the human.",
+      "assumptions": "The bias is structurally tied to observable subgroup features, allowing the model to identify and isolate the affected regions of the input space without altering the human's internal parameters.",
+      "breakdown_regime": "Unobservable bias leakage: if the human's bias correlates with latent, unmeasured features rather than the protected subgroup attributes, the routing mechanism cannot effectively deflect the biased decisions, leading to persistent unfairness.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly isomorphic to GSE's mitigation of historical scouting biases. When a scout consistently undervalues a specific athletic archetype, the engine reduces the routing weight to that scout's recommendations for that archetype, preserving objective evaluation.",
+        "source_operator": "bias_aware_deflection",
+        "telemetry": "Disparate impact ratio of the joint system's final decisions compared to the baseline human-only decisions across defined subgroups."
+      }
+    },
+    {
+      "primitive_id": "semi_synthetic_limitations",
+      "name": "Semi-Synthetic Limitations",
+      "verbatim_quote": "Leakage & limitations - Semi-synthetic decision makers: the \"human\" is a simulation with known bias/noise structure — real humans (Garrett) are harder to model and non-stationary.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Stationarity: boolean property of the decision process; Modeling error: L2 norm difference between simulated and real human decision manifolds.",
+      "assumptions": "The semi-synthetic human perfectly encapsulates the target bias/noise distributions; real-world humans exhibit higher-order cognitive dynamics and fatigue not captured by simple parametric simulations.",
+      "breakdown_regime": "Non-stationary concept drift: as real humans adapt, learn, or experience fatigue over a season, the pre-calibrated deferral boundaries become obsolete, leading to systematic misrouting of high-stakes decisions.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Highlights the necessity for GSI's online learning modules. The kernel derives the residual error between the static model's expectation of a coach/player and their live manifestation, triggering re-calibration alerts.",
+        "source_operator": "semi_synthetic_limitations",
+        "telemetry": "Rolling window comparison of predicted human decision probabilities versus actual realized decisions, flagging significant deviations indicative of non-stationarity."
+      }
+    },
+    {
+      "primitive_id": "p3_competence_map_router",
+      "name": "Competence Map Router",
+      "verbatim_quote": "Test: does a router trained on Garrett's competence map beat always-follow-Garrett and always-follow-model on system units?",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "R(x): Routing policy (dimensionless probability), M(x): Model prediction (units of outcome), G(x): Human edit (units of outcome), y: True outcome (units of outcome), L: Loss function (dimensionless).",
+      "assumptions": "The existence of a measurable feature space x that correlates with the relative accuracy of the human versus the machine; outcomes are strictly observable.",
+      "breakdown_regime": "Breaks down if the human's error distribution becomes perfectly collinear with the model's error distribution, or if the feature space lacks sufficient dimensionality to separate competent from incompetent edits.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a multi-armed bandit problem where the optimal arm (human vs. model) depends on the contextual state vector x.",
+        "source_operator": "p3_competence_map_router",
+        "telemetry": "System-level loss reduction compared to static baselines (always-human or always-model)."
+      }
+    },
+    {
+      "primitive_id": "p3_subgroup_audit",
+      "name": "Subgroup Deferral Audit",
+      "verbatim_quote": "Report per-subgroup (game type) deferral rates and the audit of where Garrett helps vs hurts.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "S_i: Subgroup index (dimensionless), D_i: Deferral rate in S_i (dimensionless fraction), Delta_i: Performance delta (units of outcome).",
+      "assumptions": "Subgroups are mutually exclusive and collectively exhaustive partitions of the operational domain; performance deltas are independently and identically distributed within each subgroup.",
+      "breakdown_regime": "Fails under severe data sparsity where specific subgroups lack sufficient sample sizes to compute statistically significant deferral rates or performance deltas.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSI's conformal residual analysis, isolating localized regions of the feature space where human priors provide a statistically significant correction to the base measure.",
+        "source_operator": "p3_subgroup_audit",
+        "telemetry": "Variance of human edit impact across predefined situational clusters."
+      }
+    },
+    {
+      "primitive_id": "p3_co_adaptation_loop",
+      "name": "Co-adaptation Loop",
+      "verbatim_quote": "Improvement experiment Close the loop the paper leaves open: *co-adaptation* — retrain the router quarterly as Garrett's own behavior changes in response to the system (he sees which of his edits the router overrides).",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "t: Discrete time step (quarters), theta_t: Router parameters (dimensionless), phi_t: Human behavioral parameters (dimensionless).",
+      "assumptions": "The human agent is rational and updates their internal strategy based on observed system feedback; the system operates in discrete, synchronized retraining epochs.",
+      "breakdown_regime": "Diverges if the feedback loop induces unstable oscillations, such as the human deliberately gaming the router's current decision boundary to force overrides.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mathematically equivalent to a Stackelberg game or differential game where the leader (router) and follower (human) continuously optimize against each other's evolving strategies.",
+        "source_operator": "p3_co_adaptation_loop",
+        "telemetry": "Quarterly shift in human edit frequency and accuracy post-router deployment."
+      }
+    },
+    {
+      "primitive_id": "p3_non_stationary_map",
+      "name": "Non-stationary Competence Map",
+      "verbatim_quote": "Test whether a non-stationary competence map (exponentially-weighted recent triples) beats a static one; the paper assumes a fixed human, but Garrett is a learning agent, and the router should be too.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "alpha: Exponential decay factor (0 < alpha <= 1, dimensionless), w_t: Weight of observation at time t (dimensionless).",
+      "assumptions": "Recent observations are more indicative of current human competence than historical data; the decay factor alpha is optimally tuned to balance noise and drift.",
+      "breakdown_regime": "Degenerates if alpha approaches 1 (ignoring history entirely, high variance) or 0 (reverting to a static map, failing to track drift).",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from online learning kernels in GSE, applying exponential forgetting to maintain a responsive, sliding-window estimate of the human-agent's current capability manifold.",
+        "source_operator": "p3_non_stationary_map",
+        "telemetry": "Tracking error of the competence map against rolling window ground truth."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6840fe10212b70cd_t0",
+      "think": "The foundational shift in 'Predict Responsibly' is the transition from isolated predictive modeling to a coupled dynamical system involving a fixed, potentially flawed, downstream agent. Mathematically, this reframes the standard empirical risk minimization (ERM) paradigm. Instead of minimizing $\\mathbb{E}[L(f(x), y)]$, we optimize a bilevel objective: $\\min_{f, \\pi} \\mathbb{E}[L(\\text{system}(x, f, \\pi, D), y)]$, where $\\text{system}(\\cdot)$ routes the instance to either the predictor $f$ or the decision-maker $D$ based on the deferral policy $\\pi$. This introduces a structural dependency where the optimal $f$ is contingent upon the learned competence map of $D$. In the context of Galaxy Sports Engine (GSE), this is not merely an algorithmic tweak but a doctrinal necessity. Sports environments are inherently multi-agent; a play-calling model cannot operate in a vacuum. It must account for the defensive coordinator's (the downstream agent) historical tendencies, biases, and occasional inconsistencies. If the coordinator is highly biased (e.g., always blitzing on 3rd-and-long), the GSE predictor might intentionally defer complex reads to exploit this known pattern, or conversely, the deferral gate might recognize when the coordinator is acting inconsistently (noisy) and force the engine to rely on its own robust priors. The Pareto front analysis further grounds this in quantitative reality: maximizing raw predictive accuracy often exacerbates systemic biases or risks. By explicitly modeling the trade-off between accuracy and fairness (or risk parity), the sovereign primitive establishes a rigorous boundary for acceptable operational risk. The '30%-flip finding' in inconsistent settings highlights the fragility of naive delegation; without modeling the agent, a 30% noise floor can catastrophically degrade system utility. Thus, the joint optimization serves as a stabilizing feedback loop, ensuring that the engine's autonomy is exercised only when the external environment's predictability falls below a calibrated threshold.\n\nFull-book synthesis across 3/3 pages of 1782-predict-responsibly-improving-fairness-accuracy-learning (6840fe10212b70cd): [w0_joint_system_loss p.1]: Equations & assumptions - System objective: minimize the *joint* system loss over (predictor, deferral policy, fixed downstream decision maker) — the paper's formalism optimizes the pipeline's output, not the model's standalone accuracy. (Isomorphic to GSE's dynamic resource allocation under adversarial uncertainty. The joint loss minimization mirrors optimizing expected points differential while accounting for opponent defensive scheme adjustments.) [w0_gate_agent_modeling p.1]: The key move vs plain rejection: the gate models the *other agent*, not just the input. (Maps to GSE's opponent-specific play-calling tendency kernels. Instead of rejecting a play call based solely on offensive formation (input), the gate evaluates the specific defensive coordinator's historical response patterns (agent modeling).) [w0_pareto_fairness_tradeoff p.1]: Results reported as Pareto fronts (accuracy vs fairness trade-off), each plotted point the median of five runs. (Directly isomorphic to GSI's bankroll management frontier, trading raw Sharpe ratio (accuracy) against maximum drawdown constraints or exposure limits across correlated sportsbooks (fairness/risk parity).) [w0_inconsistent_flip_dynamics p.1]: Dataset / schema Semi-synthetic: COMPAS (recidivism) and Heritage Health (health risk) with simulated downstream decision makers in three regimes: high-accuracy, highly-biased, and inconsistent (noisy). (Corresponds to GSE modeling erratic referee crews or unpredictable weather disruptions. The engine identifies 'inconsistent' external factors and adjusts its deferral policy to either override or heavily discount these noisy inputs.) [adaptive_deferral_routing p.2]: Numerical results / baselines - Results are Pareto-front plots (no single headline table): the adaptive deferral system dominates fixed-deferral and no-deferral baselines on the accuracy–fairness frontier across regimes. (Isomorphic to GSE's dynamic trust allocation between algorithmic play-calling and human coach intuition. The Pareto optimization directly translates to balancing raw statistical advantage against maintaining human agency/fairness in high-leverage situations.) [inconsistent_dm_stress_test p.2]: The inconsistent-DM regime is the stress test: the human flips 30% of the selected subgroup's predictions. (Maps to GSI's modeling of erratic player behavior under extreme pressure. The kernel extracts the latent 'signal vs noise' ratio of a player's execution, allowing the engine to discount flawed inputs without discarding the agent entirely.) [bias_aware_deflection p.2]: - Highly-biased setting: the system learns to defer *less* to the biased human on the affected subgroup — the fairness gain comes from routing, not from changing the human. (Directly isomorphic to GSE's mitigation of historical scouting biases. When a scout consistently undervalues a specific athletic archetype, the engine reduces the routing weight to that scout's recommendations for that archetype, preserving objective evaluation.) [semi_synthetic_limitations p.2]: Leakage & limitations - Semi-synthetic decision makers: the \"human\" is a simulation with known bias/noise structure — real humans (Garrett) are harder to model and non-stationary. (Highlights the necessity for GSI's online learning modules. The kernel derives the residual error between the static model's expectation of a coach/player and their live manifestation, triggering re-calibration alerts.) [p3_competence_map_router p.3]: Test: does a router trained on Garrett's competence map beat always-follow-Garrett and always-follow-model on system units? (Isomorphic to a multi-armed bandit problem where the optimal arm (human vs. model) depends on the contextual state vector x.) [p3_subgroup_audit p.3]: Report per-subgroup (game type) deferral rates and the audit of where Garrett helps vs hurts. (Maps directly to GSI's conformal residual analysis, isolating localized regions of the feature space where human priors provide a statistically significant correction to the base measure.) [p3_co_adaptation_loop p.3]: Improvement experiment Close the loop the paper leaves open: *co-adaptation* — retrain the router quarterly as Garrett's own behavior changes in response to the system (he sees which of his edits the router overrides). (Mathematically equivalent to a Stackelberg game or differential game where the leader (router) and follower (human) continuously optimize against each other's evolving strategies.) [p3_non_stationary_map p.3]: Test whether a non-stationary competence map (exponentially-weighted recent triples) beats a static one; the paper assumes a fixed human, but Garrett is a learning agent, and the router should be too. (Derives from online learning kernels in GSE, applying exponential forgetting to maintain a responsive, sliding-window estimate of the human-agent's current capability manifold.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "This primitive traces back to the classical statistical decision theory of Wald, specifically sequential analysis and terminal decision functions. However, it diverges by treating the 'terminal decision' not as a static loss function but as a learned, opaque black-box agent. It echoes the 'reject option' classifiers of Chow (1970), but elevates it by requiring the rejection gate to model the rejectee's competence rather than just the classifier's confidence. In machine learning lineage, it sits at the intersection of calibration theory and multi-agent reinforcement learning, anticipating modern conformal prediction methods that account for covariate shift induced by selective deployment.",
+      "theory_of_mind": "Modeling the downstream decision-maker requires a sophisticated theory of mind. The GSE must infer the latent state of the opposing coach or the sportsbook oddsmaker. Are they acting rationally? Are they biased toward a specific heuristic? Or are they simply noisy? The deferral policy acts as a metacognitive module, constantly updating its belief about the other agent's reliability. If the oddsmaker consistently undervalues home-field advantage (bias), the GSE exploits this. If the oddsmaker becomes erratic (inconsistent), the GSE retracts its reliance on market lines. This recursive modeling—'I predict what you will do, and I decide whether to trust my prediction or your action based on your past behavior'—is the core of strategic interaction in zero-sum domains.",
+      "cross_layer_veto": "A critical veto condition arises if the downstream agent's behavior is adversarially adapting to the GSE's deferral policy. If the coach realizes the engine defers when they blitz, they may stop blitzing to force the engine into its own predictive mode. This creates a non-stationary feedback loop that breaks the assumption of a 'fixed downstream decision maker.' Additionally, leakage occurs if the deferral policy inadvertently uses protected attributes (e.g., team reputation proxies) to model competence, reintroducing the very biases the Pareto frontier aims to mitigate. The system must enforce strict orthogonality between the competence map and sensitive feature subspaces to prevent collinearity-induced discrimination."
+    },
+    {
+      "trace_id": "6840fe10212b70cd_t1",
+      "think": "The foundational doctrine extracted from page 2 establishes that optimal decision-making in complex systems is rarely a binary choice between pure automation and pure human intuition. Instead, it is a continuous optimization problem over a Pareto frontier balancing aggregate accuracy against subgroup fairness. The mathematical derivation begins by defining a joint loss function $L(\\theta, \\phi)$ where $\\theta$ parameterizes the algorithmic model and $\\phi$ represents the learned competence map of the human decision-maker. The core innovation is the adaptive deferral mechanism, which acts as a soft-switch $\\sigma(x)$ dependent on the input feature vector $x$. In the 'inconsistent-DM' regime, the introduction of a 30% flip rate on a specific subgroup serves as a rigorous stress test for the robustness of $\\sigma(x)$. The system must mathematically disentangle the signal-to-noise ratio of the human's input, effectively learning a localized Bayes error rate for the human operator. If the human's decisions are modeled as a noisy channel $Y_H = Y_{true} \\oplus N$, where $N \\sim \\text{Bernoulli}(0.3)$ for the targeted subgroup, the deferral policy must converge to routing these instances exclusively to the algorithmic model to preserve accuracy. Furthermore, in the highly-biased setting, the derivation shows that fairness is not achieved by modifying the human's internal weights (which is often impossible or unethical), but by geometrically warping the routing manifold to bypass the human on affected subgroups. This implies that the 'fairness' metric is an emergent property of the system architecture rather than an intrinsic attribute of the individual components. The limitation regarding semi-synthetic humans underscores the difficulty of estimating $\\phi$ in real-time, as real agents exhibit non-stationary behavior that violates the i.i.d. assumptions required for stable Pareto front estimation.",
+      "retrocausal_genealogy": "This primitive traces its lineage to the classical fusion of statistical decision theory and behavioral economics. Historically, it evolves from the minimax regret frameworks of the mid-20th century, where optimal strategies were derived under worst-case adversarial conditions. The specific focus on 'deferral' connects to the modern literature on human-in-the-loop machine learning, particularly the works exploring the trade-offs between algorithmic efficiency and human oversight. The retrocausal link suggests that early attempts to automate sports analytics failed because they ignored the non-stationary, biased nature of human scouts, necessitating this newer class of adaptive, fairness-aware routing protocols.",
+      "theory_of_mind": "Modeling the opposing agent—here, the 'human' decision-maker like Garrett—requires a sophisticated theory of mind. The system does not view the human as a static oracle but as a dynamic entity with latent cognitive biases and fluctuating competence. The GSE must infer the human's internal state: Are they fatigued? Are they applying a heuristic that works generally but fails for this specific subgroup? By treating the human's historical leans as a trace of a partially observable Markov decision process, the engine constructs a probabilistic belief state about the human's current reliability. This allows the system to anticipate when the human is likely to introduce noise (the 30% flip) or bias, proactively adjusting the deferral weight before an erroneous decision impacts the game state.",
+      "cross_layer_veto": "A critical veto condition arises from the risk of collinearity between the model's predictions and the human's biased outputs. If the algorithmic model is trained on data historically influenced by the same biased human, the two sources become correlated, destroying the diversity needed for effective ensemble deferral. The cross-layer veto mandates a strict isolation of the training data for the competence map $\\phi$ from the biased decisions themselves, perhaps using counterfactual augmentation. Furthermore, leakage occurs if the human observes the system's deferral pattern and adapts their behavior to align with the machine (co-adaptation), violating the fixed-DM assumption. The veto triggers a suspension of automated deferral if the divergence between the predicted human competence and observed human actions exceeds a predefined threshold, forcing a fallback to a conservative, non-adaptive baseline to prevent catastrophic feedback loops."
+    },
+    {
+      "trace_id": "6840fe10212b70cd_t3",
+      "think": "The foundational epistemic shift in this chapter window is the rejection of the static human oracle assumption. Traditional human-in-the-loop frameworks treat the human as a fixed, albeit noisy, measurement device. Here, we formalize the human (Garrett) as a learning agent whose policy \\(\\pi_H\\) evolves as a function of the system's routing policy \\(\\pi_R\\). This creates a coupled dynamical system. The primary mathematical object is the competence map \\(C(x, t)\\), representing the conditional probability that the human outperforms the model given context \\(x\\) at time \\(t\\). Because \\(\\pi_H\\) adapts to \\(\\pi_R\\)'s feedback (seeing which edits are overridden), \\(C\\) becomes non-stationary. To handle this, we introduce an exponentially weighted kernel over historical (model, human, outcome) triples, effectively performing online gradient descent on the competence surface. The 'audit' mechanism serves as a regularization term, ensuring that the router does not exploit transient human biases but rather identifies stable subgroups where human intuition provides genuine signal. The ultimate goal is to maximize the joint expected utility of the hybrid system, navigating the complex landscape of co-adaptation where both the algorithm and the human continuously refine their respective domains of expertise. Window 3 Synthesis: Rooted in 1782-predict-responsibly-improving-fairness-accuracy-learning (6840fe10212b70cd, 3/3 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This framework inherits from Vovk's Aggregating Algorithm and the broader literature on mixable experts, but crucially extends it by endowing the 'expert' with agency and learning capabilities. It also resonates with Good's 'Intelligent Design' of systems where machines augment human cognition, moving beyond simple ensemble methods into true cybernetic feedback loops. The concept of auditing subgroups traces back to fairness constraints in ML, repurposed here for competence localization.",
+      "theory_of_mind": "Modeling Garrett requires attributing a theory of mind to him: he understands the router exists, observes its decisions, and strategically adjusts his effort and focus. If he perceives the router as consistently overriding his correct intuitions in a specific game state, he may either double down (adversarial adaptation) or cede that domain entirely (efficient specialization). The router must anticipate these psychological responses to avoid destabilizing the human's confidence or inducing learned helplessness.",
+      "cross_layer_veto": "A strict veto condition applies if the telemetry reveals 'gaming' behavior: if Garrett's edit patterns shift specifically to manipulate the router's current weights rather than improve predictive accuracy, the co-adaptation loop is compromised. Furthermore, if the subgroup audit shows that human edits are merely adding noise without reducing bias in any partition, the entire deferral architecture must be rejected as computationally expensive and epistemically vacuous."
+    }
+  ]
+}

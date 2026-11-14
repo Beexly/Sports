@@ -1,0 +1,1437 @@
+========== PAGE 1 ==========
+UNIV
+CITY OF
+TAB
+RATAN TATA
+LIBRARY
+
+========== PAGE 2 ==========
+Cl. No. B37
+RATAN TATA LIBRARY
+Jo
+Ac. No. 36039
+Date of release for loan
+This book should be returned on or before the date last stamped
+below. An overdue charge of 0.5 nP. will be charged for each
+day the book is kept overtime. 1
+14
++1965
+11965
+JUN 1965
+1968
+2 NOV 1968
+26 NOV 1968
+11801972
+25 SEPT872
+10071573
+10-01-1373
+-
+ربنا -
+1979
+15
+198
+17 DEC 1968
+14 SE
+1
+NOV
+8 AUG 1972
+
+========== PAGE 3 ==========
+
+
+========== PAGE 4 ==========
+Measure Theory
+
+========== PAGE 5 ==========
+THE UNIVERSITY SERIES IN HIGHER MATHEMATICS
+Editorial Board
+M. H. Stone, Chairman
+L. Nirenberg
+S. S. Chern
+Oscar Zariski
+WALL, H. S.-Analytic Theory of Continued Fractions
+HALMOS, PAUL R.-Measure Theory
+JACOBSON, NATHAN-Lectures in Abstract Algebra
+Vol. I-Basic Concepts
+Vol. II Linear Algebra
+KLEENE, S. C.-Introduction to Metamathematics
+LOOMIS, LYNN H.-An Introduction to Abstract
+Harmonic Analysis
+LOEVE, MICHEL Probability Theory, 2nd Edition
+KELLEY, JOHN L.-General Topology
+ZARISKI, OSCAR and SAMUEL, PIERRE-Commutative
+Algebra, Vols. I and II
+GILLMAN, LEONARD, and JERISON, MEYER-Rings of
+Continuous Functions
+RICKART, CHARLES E.-General Theory of Banach Algebras
+A series of advanced text and reference books in pure and
+applied mathematics. Additional titles will be listed and
+announced as published.
+
+========== PAGE 6 ==========
+Measure Theory
+by
+PAUL R. HALMOS
+Professor of Mathematics
+The University of Michigan
+EIGHTH PRINTING
+(An East-West Edition)
+D. VAN NOSTRAND COMPANY, INC.
+TORONTO
+PRINCETON, NEW JERSEY
+NEW YORK
+LONDON
+Affiliated East-West Press Private Ltd.
+New Delhi
+
+========== PAGE 7 ==========
+D. VAN NOSTRAND COMPANY, INC.
+120 Alexander St., Princeton, New Jersey (Principal office)
+24 West 40 Street, New York 18, New York
+D. VAN NOSTRAND COMPANY, LTD.
+358, Kensington High Street, London, W.14, England
+D. VAN NOSTRAND COMPANY (Canada), LTD.
+25 Hollinger Road, Toronto 16, Canada
+Cast-West Student Edition
+Affiliated
+1964
+Affiliated East-West Press P. Ltd.
+COPYRIGHT 195 BY
+D. VAN NOSTRA
+COMPANY, INC.
+No reproduction in any form of this book, in whole or in
+part (except for brief quotation in critical articles or reviews),
+may be made without written authorization from the publishers.
+First Published January 1950
+Reprinted September 1951, May 1954,
+August 1956, April 1958, July 1959,
+September 1961, November 1962
+Reprinted in India with the special permission
+of the original publishers, The D. Van Nostrand
+Company Inc., Princeton, New Jersey, U.S.A. and
+the copyright holders.
+This book has been published with the assistance
+of the Joint Indian-American Standard Works
+Programme.
+Published by W. D. Ten Broeck for AFFILIATED
+EAST-WEST PRESS PRIVATE LTD., C 57 Defense
+Colony, New Delhi 3, India, and printed by
+S. M. Balsaver at USHA PRINTERS, National
+House Tulloch Road, Bombay 1, India.
+
+========== PAGE 8 ==========
+PREFACE
+My main purpose in this book is to present a unified treatment
+of that part of measure theory which in recent years has shown
+itself to be most useful for its applications in modern analysis.
+If I have accomplished my purpose, then the book should be
+found usable both as a text for students and as a source of refer-
+ence for the more advanced mathematician.
+I have tried to keep to a minimum the amount of new and
+unusual terminology and notation. In the few places where my
+nomenclature differs from that in the existing literature of meas-
+ure theory, I was motivated by an attempt to harmonize with
+the usage of other parts of mathematics. There are, for instance,
+sound algebraic reasons for using the terms “lattice" and "ring"
+for certain classes of sets-reasons which are more cogent than
+the similarities that caused Hausdorff to use "ring" and "field."
+The only necessary prerequisite for an intelligent reading of
+the first seven chapters of this book is what is known in the
+United States as undergraduate algebra and analysis. For the
+convenience of the reader, §0 is devoted to a detailed listing of
+exactly what knowledge is assumed in the various chapters. The
+beginner should be warned that some of the words and symbols
+in the latter part of § 0 are defined only later, in the first seven
+chapters of the text, and that, accordingly, he should not be dis-
+couraged if, on first reading of § 0, he finds that he does not have
+the prerequisites for reading the prerequisites.
+At the end of almost every section there is a set of exercises
+which appear sometimes as questions but more usually as asser-
+tions that the reader is invited to prove. These exercises should
+be viewed as corollaries to and sidelights on the results more
+V
+
+========== PAGE 9 ==========
+vi
+PREFACE
+formally expounded. They constitute an integral part of the
+book; among them appear not only most of the examples and
+counter examples necessary for understanding the theory, but
+also definitions of new concepts and, occasionally, entire theories
+that not long ago were still subjects of research.
+It might appear inconsistent that, in the text, many elementary
+notions are treated in great detail, while, in the exercises, some quite
+refined and profound matters (topological spaces, transfinite num-
+bers, Banach spaces, etc.) are assumed to be known. The mate-
+rial is arranged, however, so that when a beginning student comes
+to an exercise which uses terms not defined in this book he may
+simply omit it without loss of continuity. The more advanced
+reader, on the other hand, might be pleased at the interplay
+between measure theory and other parts of mathematics which
+it is the purpose of such exercises to exhibit.
+The symbol is used throughout the entire book in place of
+such phrases as "Q.E.D." or "This completes the proof of the
+theorem" to signal the end of a proof.
+At the end of the book there is a short list of references and a
+bibliography. 'I make no claims of completeness for these lists.
+Their purpose is sometimes to mention background reading,
+rarely (in cases where the history of the subject is not too well
+known) to give credit for original discoveries, and most often to
+indicate directions for further study.
+A symbol such as u.v, where u is an integer and o is an integer
+or a letter of the alphabet, refers to the (unique) theorem, formula,
+or exercise in section u which bears the label v.
+
+========== PAGE 10 ==========
+ACKNOWLEDGMENTS
+Most of the work on this book was done in the academic year
+1947-1948 while I was a fellow of the John Simon Guggenheim
+Memorial Foundation, in residence at the Institute for Advanced
+Study, on leave from the University of Chicago.
+I am very much indebted to D. Blackwell, J. L. Doob, W. H.
+Gottschalk, L. Nachbin, B. J. Pettis, and, especially, to J. C.
+Oxtoby for their critical reading of the manuscript and their many
+valuable suggestions for improvements.
+The result of 3.13 was communicated to me by F. Bishop.
+The condition in 31.10 was suggested by J. C. Oxtoby. The
+example 52.10 was discovered by J. Dieudonné.
+P. R. H.
+vii
+
+========== PAGE 11 ==========
+
+
+========== PAGE 12 ==========
+Preface.
+Acknowledgments
+SECTION
+0. Prerequisites.
+CONTENTS
+CHAPTER 1: SETS AND CLASSES
+1. Set inclusion.
+2. Unions and intersections
+3. Limits, complements, and differences
+4. Rings and algebras.
+5. Generated rings and o-rings
+6. Monotone classes.
+CHAPTER II: MEASURES AND OUTER MEASURES
+7. Measure on rings.
+8. Measure on intervals
+9. Properties of measures
+10. Outer measures
+11. Measurable sets
+PAGE
+V
+vii
+1
+11
+16
+19
+9-6222
+30
+32
+37
+41
+44
+CHAPTER III: EXTENSION OF MEASURES
+12. Properties of induced measures.
+13. Extension, completion, and approximation.
+14. Inner measures
+15. Lebesgue measure
+16. Non measurable sets
+23544
+49
+58
+62
+67
+CHAPTER IV: MEASURABLE FUNCTIONS
+17. Measure spaces
+18. Measurable functions
+37
+73
+76
+ix
+
+========== PAGE 13 ==========
+X
+SECTION
+CONTENTS
+19. Combinations of measurable functions
+20. Sequences of measurable functions
+21. Pointwise convergence
+22. Convergence in measure.
+PAGE
+80
+84
+86
+90
+CHAPTER V: INTEGRATION
+23. Integrable simple functions
+24. Sequences of integrable simple functions
+25. Integrable functions
+26. Sequences of integrable functions.
+27. Properties of integrals
+CHAPTER VI: GENERAL SET FUNCTIONS
+102
+107
+112
+22862
+95
+98
+28. Signed measures
+29. Hahn and Jordan decompositions
+30. Absolute continuity
+31. The Radon-Nikodym theorem
+32. Derivatives of signed measures
+117
+120
+124
+128
+132
+CHAPTER VII: PRODUCT SPACES
+33. Cartesian products
+34. Sections
+.
+35. Product measures
+137
+141
+143
+36. Fubini's theorem
+145
+37. Finite dimensional product spaces
+150
+38. Infinite dimensional product spaces
+154
+CHAPTER VIII: TRANSFORMATIONS AND FUNCTIONS
+39. Measurable transformations
+161
+40. Measure rings.
+165
+41. The isomorphism theorem
+171
+42. Function spaces
+174
+43. Set functions and point functions.
+178
+CHAPTER IX: PROBABILITY
+44. Heuristic introduction
+184
+45. Independence.
+191
+46. Series of independent functions
+196
+
+========== PAGE 14 ==========
+CONTENTS
+SECTION
+47. The law of large numbers
+48. Conditional probabilities and expectations
+49. Measures on product spaces
+CHAPTER X: LOCALLY COMPACT SPACES
+ΧΙ
+13.
+PAGE
+201
+206
+211
+50. Topological lemmas
+51. Borel sets and Baire sets
+52. Regular measures
+53. Generation of Borel measures
+54. Regular contents
+55. Classes of continuous functions
+56. Linear functionals
+216
+219
+223
+231
+237
+240
+243
+CHAPTER XI: HAAR MEASURE
+57. Full subgroups
+250
+58. Existence
+251
+59. Measurable groups.
+257
+60. Uniqueness
+262
+CHAPTER XII: MEASURE AND TOPOLOGY IN GROUPS
+61. Topology in terms of measure
+266
+62. Weil topology
+270
+63. Quotient groups
+277
+64. The regularity of Haar measure
+282
+References
+291
+Bibliography
+293
+List of frequently used symbols
+297
+Index
+299
+
+========== PAGE 15 ==========
+
+
+========== PAGE 16 ==========
+§ O. PREREQUISITES
+The only prerequisite for reading and understanding the first
+seven chapters of this book is a knowledge of elementary algebra
+and analysis. Specifically it is assumed that the reader is familiar
+with the concepts and results listed in (1)-(7) below.
+(1) Mathematical induction, commutativity and associativity
+of algebraic operations, linear combinations, equivalence relations
+and decompositions into equivalence classes.
+(2) Countable sets; the union of countably many countable
+sets is countable.
+(3) Real numbers, elementary metric and topological properties
+of the real line (e.g. the rational numbers are dense, every open
+set is a countable union of disjoint open intervals), the Heine-
+Borel theorem.
+(4) The general concept of a function and, in particular, of a
+sequence (i.e. a function whose domain of definition is the set of
+positive integers); sums, products, constant multiples, and abso-
+lute values of functions.
+(5) Least upper and greatest lower bounds (called suprema and
+infima) of sets of real numbers and real valued functions; limits,
+superior limits, and inferior limits of sequences of real numbers
+and real valued functions.
+(6) The symbols + and -∞, , and the following algebraic rela-
+tions among them and real numbers x:
+(±∞) + (±∞) = x + (±∞)
+=
+(±∞) + x = ±8%;B
+(±% if x > 0,
+*(±*) = (±*)**
+== 0
+F∞ if x < 0;
+if x = 0,
+(±8)(±∞) = +∞,
+(±∞)(7∞) =-8;
+*/(±∞) = 0;
+18AXA +∞.
+1
+
+========== PAGE 17 ==========
+2
+PREREQUISITES
+[SEC. 0]
+The phrase extended real number refers to a real number or one
+of the symbols ±0.
+(7) If x and y are real numbers,
+* Uy = max {x,y} = \(x + y + | x − y |),
+x ny
+=
+min {x,y} = (x + y − | x − y |).
+-
+Similarly, if ƒ and g are real valued functions, then ƒ Ug and
+fng are the functions defined by
+(ƒ U g)(x) = f(x) U g(x) and (fƒ N g)(x) = f(x) N g(x),
+respectively. The supremum and infimum of a sequence (x^}
+of real numbers are denoted by
+U-1 and -1,
+respectively. In this notation
+lim supn xn =
+-- xm
+and
+lim inf, xn =
+---
+In Chapter VIII the concept of metric space is used, together
+with such related concepts as completeness and separability for
+metric spaces, and uniform continuity of functions on metric
+spaces. In Chapter VIII use is made also of such slightly more
+sophisticated concepts of real analysis as one-sided continuity.
+In the last section of Chapter IX, Tychonoff's theorem on the
+compactness of product spaces is needed (for countably many
+factors each of which is an interval).
+In general, each chapter makes free use of all preceding chap-
+ters; the only major exception to this is that Chapter IX is not
+needed for the last three chapters.
+In Chapters X, XI, and XII systematic use is made of many
+of the concepts, and results of point set topology and the elements
+of topological group theory. We append below a list of all the
+relevant definitions and theorems. The purpose of this list is not
+to serve as a text on topology, but (a) to tell the expert exactly
+
+========== PAGE 18 ==========
+[SEC. 0]
+PREREQUISITES
+which forms of the relevant concepts and results we need, (b) to
+tell the beginner with exactly which concepts and results he should
+familiarize himself before studying the last three chapters, (c) to
+put on record certain, not universally used, terminological con-
+ventions, and (d) to serve as an easily available reference for
+things which the reader may wish to recall.
+Topological Spaces
+A topological space is a set X and a class of subsets of X, called
+the open sets of X, such that the class contains 0 and X and is
+closed under the formation of finite intersections and arbitrary
+(i.e. not necessarily finite or countable) unions. A subset E
+of X is called a G; if there exists a sequence {U^} of open sets
+such that EU. The class of all Gg's is closed under the
+formation of finite unions and countable intersections. The topo-
+logical space X is discrete if every subset of X is open, or, equiva-
+lently, if every one-point subset of X is open. A set E is closed
+if XE is open. The class of closed sets contains 0 and X and
+is closed under the formation of finite unions and arbitrary inter-
+sections. The interior, Eº, of a subset E of X is the greatest open
+set contained in E; the closure, E, of E is the least closed set con-
+taining E. Interiors are open sets and closures are closed sets;
+if E is open, then E° = E, and, if E is closed, then E = E. The
+closure of a set E is the set of all points x such that, for every open
+set U containing x, En U0. A set E is dense in X if E = X.
+A subset Y of a topological space becomes a topological space
+(a subspace of X) in the relative topology if exactly those subsets
+of Y are called open which may be obtained by intersecting an
+open subset of X with Y. A neighborhood of a point x in X
+[or of a subset E of X) is an open set containing x [or an open set
+containing E]. A base is a class B of open sets such that, for
+every x in X and every neighborhood U of x, there exists a set
+B in B such that x e BC U. The topology of the real line is
+determined by the requirement that the class of all open intervals
+be a base. A subbase is a class of sets, the class of all finite inter-
+sections of which is a base. A space X is separable if it has a
+countable base. A subspace of a separable space is separable.
+
+========== PAGE 19 ==========
+4
+PREREQUISITES
+=
+...,
+[SEC. 0]
+An open covering of a subset E of a topological space X is a
+class K of open sets such that ECUK. If X is separable and
+K is an open covering of a subset E of X, then there exists a
+countable subclass (K1, K2, } of K which is an open covering
+of E. A set E in X is compact if, for every open covering K of E,
+there exists a finite subclass {K₁, Kn} of K which is an open
+covering of E. A class K of sets has the finite intersection prop-
+erty if every finite subclass of K has a non empty intersection.
+A space X is compact if and only if every class of closed sets with
+the finite intersection property has a non empty intersection. A
+set E in a space X is σ-compact if there exists a sequence {Cn}
+of compact sets such that E
+Un Cn. A space X is locally
+compact if every point of X has a neighborhood whose closure is
+compact. A subset E of a locally compact space is bounded if
+there exists a compact set C such that ECC. The class of all
+bounded open sets in a locally compact space is a base. A closed
+subset of a bounded set is compact. A subset E of a locally com-
+pact space is σ-bounded if there exists a sequence {C} of compact
+sets such that EU-1 C. To any locally compact but not
+compact topological space ✗ there corresponds a compact space
+X* containing X and exactly one additional point **; X* is called
+the one-point compactification of X by x*. The open sets of X*
+are the open subsets of X and the complements (in X*) of the
+closed compact subsets of X.
+=
+==
+If Xie I is a class of topological spaces, their Cartesian
+product is the set X X {X: i ε I} of all functions x defined
+on and such that, for each i in I, x(i) e Xi. For a fixed io in
+I, let E., be an open subset of X, and, for iio, write E; Xi;
+the class of open sets in X is determined by the requirement that
+the class of all sets of the form ✗{E;: i & I} be a subbase. If
+the function on X is defined by .(x) = x(i), then ε; is continu-
+ous. The Cartesian product of any class of compact spaces is
+compact.
+A topological space is a Hausdorff space if every pair of distinct
+points have disjoint neighborhoods. Two disjoint compact sets
+in a Hausdorff space have disjoint neighborhoods. A compact
+subset of a Hausdorff space is closed. If a locally compact space
+
+========== PAGE 20 ==========
+[SEC. 0]
+PREREQUISITES
+is a Hausdorff space or a separable space, then so is its one-point
+compactification. A real valued continuous function on a compact
+set is bounded.
+===
+==
+=====
+=
+1.
+For any topological space X we denote by F (or F(X)) the class
+of all real valued continuous functions of such that 0 ≤ f(x) ≤ 1
+for all x in X. A Hausdorff space is completely regular if, for
+every point y in X and every closed set F not containing y, there
+is a function f in F such that f(y) 0 and, for x in F, f(x) :
+A locally compact Hausdorff space is completely regular.
+A metric space is a set X and a real valued function d (called
+distance) on X X X, such that d(x,y) ≥ 0, d(x,y)
+O if and only
+if x ======= y, d(x,y) = d(y,x), and d(x,y) ≤ d(x,z) + d(z,y). If E and
+Fare non empty subsets of a metric space X, the distance between
+them is defined to be the number d(E,F) inf {d(x,y): xe E,
+ye F}. If F = {0} is a one-point set, we write d(E,x) in place
+of d(E,{x}). A sphere (with center xo and radius ro) is a subset
+E of a metric space X such that, for some point xo and some posi-
+tive number ro, E {x: d(xo,x) <ro}. The topology of a metric
+space is determined by the requirement that the class of all
+spheres be a base. A metric space is completely regular. A closed
+set in a metric space is a Gs. A metric space is separable if and only
+if it contains a countable dense set. If E is a subset of a metric
+space and f(x) = d(E,x), then f is a continuous function and
+E = {x:f(x) = 0}. If X is the real line, or the Cartesian product
+of a finite number of real lines, then X is a locally compact separa-
+ble Hausdorff space; it is even a metric space if for x = (x1,xn)
+and y
+(y1, , yn) the distance d(x,y) is defined to be
+(Σ-1 (x − y)²) ½. A closed interval in the real line is a com-
+pact set.
+=
+-
+=
+A transformation T from a topological space X into a topological
+space Y is continuous if the inverse image of every open set is
+open, or, equivalently, if the inverse image of every closed set is
+closed. The transformation T is open if the image of every open
+set is open. If B is a subbase in Y, then a necessary and sufficient
+condition that T be continuous is that T-¹(B) be open for every
+B in B. If a continuous transformation T maps X onto Y, and
+if X is compact, then Y is compact. A homeomorphism is a one
+
+========== PAGE 21 ==========
+6
+PREREQUISITES
+[SEC. 0]
+to one, continuous transformation of X onto Y whose inverse is
+also continuous.
+The sum of a uniformly convergent series of real valued, con-
+tinuous functions is continuous. If ƒ and g are real valued con-
+tinuous functions, then ƒ Ug and ƒ ng are continuous.
+E
+Topological Groups
+A group is a non empty set X of elements for which an associa
+tive multiplication is defined so that, for any two elements a and
+b of X, the equations ax = b and ya bare solvable. In every
+group X there is a unique identity element e, characterized by
+the fact that ex = xe = x for every x in X. Each element x
+of X has a unique inverse, x-1, characterized by the fact that
+xx-1
+= x-¹x : = e. A non empty subset Y of X is a subgroup
+if xy Y whenever x and y are in Y. If E is any subset of a
+group X, E-¹ is the set of all elements of the form x-1, where
+xe E; if E and F are any two subsets of X, EF is the set of all
+elements of the form xy, where x ε E and y ε F. A non empty
+subset Y of X is a subgroup if and only if Y-¹Y CY. If x ε X,
+it is customary to write xE and Ex in place of {x}E and E{x}
+respectively; the set xE [or Ex] is called a left translation [or right
+translation] of E. If Y is a subgroup of X, the sets xY and Yx
+are called (left and right) cosets of Y. A subgroup Y of X is
+invariant if xY === Yx for every x in X. If the product of two
+cosets Y₁ and Y₂ of an invariant subgroup Y is defined to be
+Y₁Y2, then, with respect to this notion of multiplication, the class
+of all cosets is a group X, called the quotient group of X modulo
+Y and denoted by X/Y. The identity element ê of X is Y. If
+Y is an invariant subgroup of X, and if for every x in X, π(x)
+is the coset of Y which contains x, then the transformation w
+is called the projection from X onto X. A homomorphism is a
+transformation T from a group ✗ into a group Y such that
+T(xy) = T(x)T(y) for every two elements x and of X. The
+projection from a group X onto a quotient group X is a homo-
+morphism.
+A topological group is a group X which is a Hausdorff space
+such that the transformation (from X X X onto ✗) which sends
+
+========== PAGE 22 ==========
+(SEC. 0]
+PREREQUISITES
+(x,y) into x-¹y is continuous. A class N of open sets containing
+e in a topological group is a base at e if (a) for every x different
+from e there exists a set U in N such that x e' U, (b) for any two
+sets U and V in N there exists a set W in N such that WC Un V,
+(c) for any set U in N there exists a set V in N such that
+V−¹V © U, (d) for any set U in N and any element x in X, there
+exists a set V in N such that V CxUx-1, and (e) for any set U
+in N and any element x in U there exists a set V in N such that
+VxU. The class of all neighborhoods of e is a base at e; con-
+versely if, in any group X, N is a class of sets satisfying the condi-
+tions described above, and if the class of all translations of sets
+of N is taken for a base, then, with respect to the topology so
+defined, X becomes a topological group. A neighborhood V of e
+is symmetric if V = V-¹; the class of all symmetric neighbor-
+hoods of e is a base at e. If N is a base at e and if F is any closed
+set in X, then F {UF: U & N}.
+=
+ε
+The closure of a subgroup [or of an invariant subgroup] of a
+topological group X is a subgroup [or an invariant subgroup] of
+X. If Y is a closed invariant subgroup of X, and if a subset of
+X = X/Y is called open if and only if its inverse image (under
+the projection ) is open in X, then X is a topological group and
+the transformation π from X onto X is open and continuous.
+If C is a compact set and U is an open set in a topological group
+X, and if CCU, then there exists a neighborhood V of e such
+that VCV CU. If C and D are two disjoint compact sets, then
+there exists a neighborhood U of e such that UCU and UDU
+are disjoint. If C and D are any two compact sets, then C-1
+and CD are also compact.
+A subset E of a topological group X is bounded if, for every
+neighborhood U of e, there exists a finite set {x1, ..., *n} (which,
+in case E 0, may be assumed to be a subset of E) such
+that ECU *;U; if X is locally compact, then this definition
+of boundedness agrees with the one applicable in any locally com-
+pact space (i.e. the one which requires that the closure of E be
+compact). If a continuous, real valued function ƒ on X is such
+that the set N(f) = {x: f(x) = 0} is bounded, then ƒ is uniformly
+continuous in the sense that to every positive number = there
+
+========== PAGE 23 ==========
+8
+PREREQUISITES
+[SEC. 0]
+corresponds a neighborhood U of e such that |f(x1) − f(x2) |< €
+whenever x1x2™¹ ε U.
+A topological group is locally bounded if there exists in it a
+bounded neighborhood of e. To every locally bounded topo-
+logical group X, there corresponds a locally compact topological
+group X*, called the completion of X (uniquely determined to
+within an isomorphism), such that X is a dense subgroup of X*.
+Every closed subgroup and every quotient group of a locally
+compact group is a locally compact group.
+
+========== PAGE 24 ==========
+Chapter I
+SETS AND CLASSES
+§ 1. SET INCLUSION
+Throughout this book, whenever the word set is used, it will
+be interpreted to mean a subset of a given set, which, unless it is
+assigned a different symbol in a special context, will be denoted
+by X. The elements of X will be called points; the set X will
+be referred to as the space, or the whole or entire space, under
+consideration. The purpose of this introductory chapter is to de-
+fine the basic concepts of the theory of sets, and to state the
+principal results which will be used constantly in what follows.
+If x is a point of X and E is a subset of X, the notation
+*ε Ε
+means that x belongs to E (i.e. that one of the points of E is x);
+the negation of this assertion, i.e. the statement that x does not
+belong to E, will be denoted by
+* &'E.
+Thus, for example, for every point x of X, we have
+χεΧ,
+and for no point x of X do we have
+x e' X.
+If E and F are subsets of X, the notation
+ECF or FE
+9
+
+========== PAGE 25 ==========
+10
+SETS AND CLASSES
+[SEC. 1)
+means that E is a subset of F, i.e. that every point of E belongs
+to F. In particular therefore
+ECE
+for every set E. Two sets E and F are called equal if and only
+if they contain exactly the same points, or, equivalently, if and
+only if
+ECF and F C E.
+This seemingly innocuous definition has as a consequence the
+important principle that the only way to prove that two sets are
+equal to show, in two steps, that every point of either set be-
+longs also to the other.
+It makes for tremendous simplification in language and nota-
+tion to admit into the class of sets a set containing no points, which
+we shall call the empty set and denote by 0. For every set E
+we have
+for every point x we have
+0 CEC X;
+× ε' 0.
+In addition to sets of points we shall have frequent occasion to
+consider also sets of sets. If, for instance, X is the real line, then
+an interval is a set, i.e. a subset of X, but the set of all intervals
+is a set of sets. To help keep the notions clear, we shall always
+use the word class for a set of sets. The same notations and
+terminology will be used for classes as for sets. Thus, for instance,
+if E is a set and E is a class of sets, then
+E & E
+means that the set E belongs to (is a member of, is an element of)
+the class E; if E and F are classes, then
+ECF
+means that every set of E belongs also to F, i.e. that E is a sub-
+class of F.
+On very rare occasions we shall also have to consider sets of
+classes, for which we shall always use the word collection. If,
+
+========== PAGE 26 ==========
+[SEC. 2]
+SETS AND CLASSES
+11
+for instance, X is the Euclidean plane and E, is the class of all
+intervals on the horizontal line at distance y from the origin, then
+each E, is a class and the set of all these classes is a collection.
+(1) The relation between sets is always reflexive and transitive; it is sym-
+metric if and only if X is empty.
+(2) Let X be the class of all subsets of X, including of course the empty set 0
+and the whole space X; let x be a point of X, let E be a subset of X (i.e. a member
+of X), and let E be a class of subsets of X (i.e. a subclass of X). If u and o vary
+independently over the five symbols x, E, X, E, X, then some of the fifty rela-
+tions of the forms
+u Ev ог uCv
+5x5x2
+are necessarily true, some are possibly true, some are necessarily false, and some
+are meaningless. In particular u ev is meaningless unless the right term is a
+subset of a space of which the left term is a point, and u Cv is meaningless
+unless u and v are both subsets of the same space.
+§ 2. UNIONS AND INTERSECTIONS
+If E is any class of subsets of X, the set of all those points of
+X which belong to at least one set of the class E is called the
+union of the sets of E; it will be denoted by
+UE or U{E: E & E}.
+ε
+The last written symbol is an application of an important and
+frequently used principle of notation. If we are given any set of
+objects denoted by the generic symbol x, and if, for each x, π(x)
+is a proposition concerning x, then the symbol
+{x: π(x)}
+denotes the set of those points x for which the proposition (x)
+is true.
+If {(x)} is a sequence of propositions concerning x,
+the symbol
+....
+{x: π₁(x), π2(x), ...}
+denotes the set of those points x for which π,(x) is true for every
+n = 1, 2, . If, more generally, to every element y of a certain
+index set I there corresponds a proposition π,(x) concerning x,
+then we shall denote the set of all those points x for which the
+proposition π,(x) is true for every y in I by
+{x:π.(x), γεΓ}.
+
+========== PAGE 27 ==========
+12
+Thus, for instance,
+and
+SETS AND CLASSES
+[SEC. 2)
+{x: x = E}
+=
+E
+{E: E & E}
+= E.
+For more illuminating examples we consider the sets
+{:0≤≤ 1}
+(= the closed unit interval),
+{(x,y): x² + y² = 1}
+(= the circumference of the unit circle in the plane), and
+{n² : n = 1, 2, … ..}
+(= the set of those positive integers which are squares). In ac-
+cordance with this notation, the upper and lower bounds (supre-
+mum and infimum) of a set E of real numbers are denoted by
+respectively.
+sup {x: x ε E} and inf {x: x ε E}
+Є
+In general the brace {...} notation will be reserved for the
+formation of sets. Thus, for instance, if x and y are points, then
+{x,y} denotes the set whose only elements are x and y. It is
+important logically to distinguish between the point x and the
+set {x} whose only element is x, and similarly to distinguish
+between the set E and the class {E} whose only element is E.
+The empty set 0, for example, contains no points, but the class
+{0} contains exactly one set, namely the empty set.
+For the union of special classes of sets various special notations
+are used. If, for instance,
+E = {E1, E2}
+UE UE= 1,2}
+=
+then
+is denoted by
+if, more generally,
+E = {E1,
+...,
+E₁ U E2;
+En}
+
+========== PAGE 28 ==========
+[SEC. 2]
+SETS AND CLASSES
+is a finite class of sets, then
+is denoted by
+UE U{E = 1, · · ·, n}
+=
+E UUE or U-1 E.
+13
+If, similarly, {En} is an infinite sequence of sets, then the union
+of the terms of this sequence is denoted by
+E₁ U E₂ U.. or UE.
+More generally, if to every element y of a certain index set I
+there corresponds a set E., then the union of the class of sets
+is denoted by
+{E: yer}
+Uver E or U₁ E.
+If the index set F is empty, we shall make the convention that
+U₁₁ E₁ = 0.
+The relations of the empty set 0 and the whole space X to
+the formation of unions are given by the identities
+EUO E and EUX = X.
+===
+More generally it is true that
+if and only if
+ECF
+EU F = F.
+If E is any class of subsets of X, the set of all those points of
+✗ which belong to every set of the class E is called the intersection
+of the sets of E; it will be denoted by
+E or {E: E & E}.
+Symbols similar to those used for unions are used, but with the
+symbol U replaced by n, for the intersections of two sets, of a
+finite or countably infinite sequence of sets, or of the terms of
+any indexed class of sets. If the index set F is empty, we shall
+make the somewhat startling convention that
+E = X. ✓
+
+========== PAGE 29 ==========
+14
+SETS AND CLASSES
+[SEC. 2)
+There are several heuristic motivations for this convention. One
+of them is that if I₁ and г2 are two (non empty) index sets for
+which г₁₂, then clearly
+Over Ever₂ Ey,
+and that therefore to the smallest possible I, i.e. the empty one,
+we should make correspond the largest possible intersection.
+. Another motivation is the identity
+rerur, Eyer, Ey nyer₂ Ey,
+=
+е Г
+valid for all non empty index sets г₁ and г2. If we insist that this
+identity remain valid for arbitrary F₁ and г2, then we are com-
+mitted to believing that, for every г',
+Over Ey = veruo Ey = nyer Ey N Ny ɛo Ey;
+writing E = X for every y in г, we conclude that
+neo Ex = x.
+Union and intersection are sometimes called join and meet,
+respectively. As a mnemonic device for distinguishing between
+U and (which, by the way, are usually read as cup and cap,
+respectively), it may be remarked that the symbol U is similar
+to the initial letter of the word "union" and the symbol n is
+similar to the initial letter of the word “meet."
+The relations of 0 and X to the formation of intersections are
+given by the identities
+EN00 and EnX = E.
+More generally it is true that
+it and only if
+ECF
+ENFE.
+=
+Two sets E and F are called disjoint if they have no points in
+common, i.e. if
+En F = 0.
+1
+
+========== PAGE 30 ==========
+[SEC. 2]
+SETS AND CLASSES
+15
+A disjoint class is a class E of sets such that every two distinct
+sets of E are disjoint; in this case we shall refer to the union of the
+sets of E as a disjoint union.
+We conclude this section with the introduction of the useful
+concept of characteristic function. If E is any subset of X, the
+function XE, defined for all x in X by the relations
+XE(*)
+(1 if x ε E,
+=
+10 if x e' E,
+is called the characteristic function of the set E. The correspond-
+ence between sets and their characteristic functions is one to one,
+and all properties of sets and set operations may be expressed
+by means of characteristic functions. As one more relevant illus-
+tration of the brace notation, we mention
+E = {x:xx(x) = 1}.
+(1) The formation of unions is commutative and associative, i.e.
+EUF FUE and EU (FUG) = (E U F) U G;
+the same is true for the formation of intersections.
+(2) Each of the two operations, the formation of unions and the formation
+of intersections, is distributive with respect to the other, i.e.
+EN (FUG) = (EN F) U (ENG)
+and
+EU (FG)
+=
+(EU F) (EUG).
+More generally the following extended distributive laws are valid:
+and
+FNU {E: E & E} = U {E N F: E & E}
+===
+FUN {E: E & E}
+=
+NEUF EEE}.
+(3) Does the class of all subsets of X form a group with respect to either of
+the operations U and n?
+(4) Xo(*) 10, xx(x) = 1. The relation
+XB(*) ≤xz(*)
+is valid for all x in X if and only if EC F. If EF = A and EU F = B,
+then
+'
+XA = XEXF = XE ( xe and XB = XE + XP – XA = XE
+UXF.
+(5) Do the identities in (4), expressing XA and XB in terms of XE and XF,
+have generalizations to finite, countably infinite, and arbitrary unions and
+intersections?
+
+========== PAGE 31 ==========
+16
+SETS AND CLASSES
+[SEC. 3]
+§ 3. LIMITS, COMPLEMENTS, AND DIFFERENCES
+If {E} is a sequence of subsets of X, the set E* of all those
+points of X which belong to E, for infinitely many values of n
+is called the superior limit of the sequence and is denoted by
+E*
+=
+lim sup, En.
+N: ".
+י ! f
+The set Ex of all those points of X which belong to E, for all but
+a finite number of values of n is called the inferior limit of the
+sequence and is denoted by
+E✶ = lim inf„ En. Unev
+= Ee
+12:1
+เท
+If it so happens that
+E✶ = E*,
+we shall use the notation
+lim, En
+for this set. If the sequence is such that
+En En+, for n = 1, 2,
+it is called increasing; if
+En En+, for n = 1, 2,
+...,
+...,
+it is called decreasing. Both increasing and decreasing sequences
+will be referred to as monotone. It is easy to verify that if {E}
+is a monotone sequence, then lim, E, exists and is equal to
+Un En or . E.
+according as the sequence is increasing or decreasing.
+The complement of a subset E of X is the set of all those
+points of X which do not belong to E; it will be denoted by E'.
+The operation of forming complements satisfies the following
+algebraic identities:
+ENE' =
+0, E U E' = X,
+'0' = X, (E')' E, X' = 0, and
+if ECF, then E' - F'.
+
+========== PAGE 32 ==========
+[SEC. 3]
+SETS AND CLASSES
+17
+The formation of complements also bears an interesting and very
+important relation to unions and intersections, expressed by the
+identities
+(U {E: E & E})' =
+( {E: E & E})' =
+{E': E & E},
+U {E': E & E}.
+In words: the complement of the union of a class of sets is the
+intersection of their complements, and the complement of their
+intersection is the union of their complements. This fact, together
+with the elementary formulas relating to complements, proves the
+important principle of duality:
+any valid identity among sets, obtained by forming unions,
+intersections, and complements, remains valid if in it the
+symbols
+are interchanged with
+, c, and 0
+U, >, and X
+respectively (and equality and complementation are left
+unchanged).
+If E and F are subsets of X, the difference between E and F,
+in symbols
+E-F,
+is the set of all those points of E which do not belong to F. Since
+and, more generally,
+the difference E
+-
+X - F = F',
+E-FEF',
+F is frequently called the relative complement
+of F in E. The operation of forming differences, similarly to the
+operation of forming complements, interchanges U with n and
+C with , so that, for instance,
+-
+E (FUG) = (E - F) (E – G).
+The difference E - F is called proper if E - F.
+
+========== PAGE 33 ==========
+18
+SETS AND CLASSES
+[SEC. 3]
+As the final and frequently very important operation on sets
+we introduce the symmetric difference of two sets E and F,
+denoted by
+and defined by
+-
+EAF,
+E ▲ F = (E — F) U (F — E) = (E N F') U (E' N F).
+The formation of limits, complements, and differences of sets
+requires a bit of practice for ease in manipulation. The reader
+is accordingly advised to carry through the proofs of the most
+important properties of these processes, listed in the exercises
+that follow.
+(1) Another heuristic motivation of the convention
+is the desire to have the identity
+neo Ex = X
+=
+Over Ey (Uyer Ex')',
+which is valid for all non empty index sets I, remain valid for I = 0.
+(2) If Elim inf, E, and E* = lim sup, En, then
+E✶
+Un-Em CN-1 Um-n Em
+1
+===== E*.
+✓ (3) The superior limit, inferior limit, and limit (if it exists) of a sequence of
+sets are unaltered if a finite number of the terms of the sequence are changed.
+(4) If En A or B according as n is even or odd, then
+(5) If {E} is a disjoint sequence, then
+.
+lim inf, En
+==
+AB and lim sup, En = A U B.
+lim, En = 0.
+✓ (6) If E⭑
+= lim inf, En and E*
+(E)' = lim sup. E'
+lim sup, En, then
+and (E*)'
+== lim inf. En'.
+More generally,
+✓
+F- E✶
+=
+lim sup, (FE) and F - E* = lim inf, (F — En).
+(7) E - F = E - (En F) = (E U F) — F,*
+-
+-
+EN (F - G) = (EN F) — (ENG), (E U F) - G = (E — G) U (F — G).
+(8) (E — G) N (F — G) = (EN F) — G,
+-
+-
+-
+(E - F) - G = E – (FU G), E – (F — G) = (E — F) U (ENG),
+-
+-
+-
+-
+(EF) (GH) = (ENG) — (F Ụ H).
+
+========== PAGE 34 ==========
+[SEC. 4]
+SETS AND CLASSES
+(9) EAF FAE, E RAG) = (EAF) AG,
+ENFAG)=(ENF) A (ENG),
+EA0E, EAX = E',
+=
+EAE 0, E▲ E' = X,
+EAF (EUF) — (EF).
+==>
+19
+(10) Does the class of all subsets of X form a group with respect to the opera-
+tion A?
+(11) If E✶ == lim inf, E, and E* =
+XE,(x)
+lim sup, En, then
+= lim infn XE,(x) and Xz(x) = lim supn Xz,(x).
+(The expressions on the right sides of these equations refer, of course, to the
+usual numerical concepts of superior limit and inferior limit.)
+(12) x = 1 – XE, XE-F = XE(1 – XF),
+ΧΕ ΔΡ ==
+| XE − XP |
+= X + XP (mod 2).
+(13) If {E} is a sequence of sets, write
+and, in general,
+=
+D₁ = E1, D2 D₁A E2, D3. = D₂ A E8,
+Dn+1 ==== DA En+1 for n = 1, 2, ....
+The limit of the sequence {D} exists if and only if lim, En = 0. If the opera-
+tion A is thought of as addition (cf. (12)), then this result has the following
+verbal phrasing an infinite series of sets converges if and only if its terms ap-
+proach zero.
+§ 4. RINGS AND ALGEBRAS
+A ring (or Boolean ring) of sets is a non empty class R of sets
+such that if
+then
+E&R and FɛR,
+EUFER and E-Fε R.
+In other words a ring is a non empty class of sets which is closed
+under the formation of unions and differences.
+The empty set belongs to every ring R, for if
+E & R,
+then
+=
+0 E Ee R.
+
+========== PAGE 35 ==========
+20
+Since
+SETS AND CLASSES
+E-F
+=
+(EUF)
+(SEC. 4)
+it follows that a non empty. class of sets closed under the formation
+of unions and proper differences is a ring. Since
+-
+EAF (E- F) U (F — E)
+===
+and
+ENF
+=
+-
+(EU F) (EAF),
+it follows that a ring is closed under the formation of symmetric
+differences and intersections.
+An application of mathematical
+induction and the associative laws for unions and intersections
+shows that if R is a ring and
+then
+E₁ & R, i = 1, ..., n,
+UE&R and E. & R.
+=1
+Two extreme but useful examples of rings are the class {0}
+containing the empty set only, and the class of all subsets of X.
+Another example, for an arbitrary set ✗, is the class of all finite
+sets. A more illuminating example is the following. Let
+X = = {x:
+{∞+ > x >∞-
+be the real line, and let R be the class of all finite unions of
+bounded, left closed, and right open intervals, i.e. the class of
+all sets of the form
+U-1 {x: - ∞ < ai ≤ x < bi < +∞o}.
+Union and intersection are treated unsymmetrically in the
+definition of rings. While, for instance, it is true that a ring is
+closed under the formation of intersections, it is not true that a
+class of sets closed under the formation of intersections and dif-
+ferences is necessarily closed also under the formation of unions.
+If, however, a non empty class of sets is closed under the formation
+of intersections, proper differences, and disjoint unions, then it
+is a ring. (Proof:
+-
+EUFE (EN F)] U [F — (EN F)] U (EN F).)
+
+========== PAGE 36 ==========
+[SEC. 4]
+SETS AND CLASSES
+21
+It is easily possible to give a definition of rings which is more
+nearly symmetric in its treatment of union and intersection: a
+ring may be defined as a non empty class of sets closed under the
+formation of intersections and symmetric differences. The proof
+of this statement is in the identities:
+EUF = (EAF) A (E Ɑ F), E - F = EA (EN F).
+If in this form of the definition we replace intersection by union
+we obtain a true statement: a non empty class of sets closed under
+the formation of unions and symmetric differences is a ring.
+An algebra (or Boolean algebra) of sets is a non empty class
+R of sets such that
+(a) if E e R and F & R, then E U F & R, and
+(b) if E & R, then E' & R.
+Since
+E
+-
+F
+=
+En F'
+====
+(E' U F)',
+it follows that every algebra is a ring. The relation between the
+general concept of ring and the more special concept of algebra is
+simple: an algebra may be characterized as a ring containing X.
+Since
+E = X-E,
+it is clear that every such ring is an algebra; if, conversely, R
+is an algebra and
+EER
+✓ (we recall that R is non empty), then
+X EUE & R.
+==
+(1) The following classes of sets are examples of rings and algebras.
+(la) X is n-dimensional Euclidean space; E is the class of all finite unions of
+semiclosed "intervals" of the form
+{(x1,
+...,
+,xn): -∞ <a; ≤ x; < b; < ∞, i = 1,
+..., n}.
+✓ (1b) X is an uncountable set; E is the class of all countable subsets of X.
+.
+(1c) X is an uncountable set; E is the class of all sets which either are count-
+able or have countable complements.
+(2) Which topological spaces have the property that the class E of open sets
+is a ring?
+
+========== PAGE 37 ==========
+22
+SETS AND CLASSES
+[SEC. 5)
+(3) The intersection of any collection of rings or algebras is again a ring or an
+algebra, respectively.
+(4) If R is a ring of sets and if we define, for E and F in R,
+✓ E OF ENF and E O F = EAF,
+then, with respect to the operations of “addition" (+) and "multiplication"
+(O), the system R is a ring in the algebraic sense of the word. Algebraic rings,
+such as this one, in which every element is idempotent (i.e. EOE = E for
+every E in R) are also called Boolean rings. The existence of a very close rela-
+tion between Boolean rings of sets and Boolean rings in general is the main
+justification of the ring terminology in the set theoretic case.
+(5) If R is a ring of sets and if A is the class of all those sets E for which
+then A is an algebra.
+either E&R or else E' ε R,
+(6) A semiring is a non empty class P of sets such that
+(6a) if E&P and Fe P, then EN FEP, and
+(6b) if E&P and F&P and E C F, then there is a finite class {Co, C1, ..., Cn}
+of sets in P such that E = C₁C G₁ C... C C = F and D₁ = C; —
+C₁₁ & P for i = 1, · · ·, n.
+The empty set belongs to every semiring. If X is any set, then the class P
+consisting of the empty set and all one-point sets (i.e. sets of the form {x} with
+xe X) is a semiring. If X is the real line, the class of all bounded, left closed, and
+right open intervals is a semiring.
+§ 5.
+GENERATED RINGS AND O-RINGS
+Theorem A. If E is any class of sets, then there exists a
+unique ring Ro such that Ro > E and such that if R is any
+other ring containing E then Ro CR.
+The ring Ro, the smallest ring containing E, is called the ring
+generated by E; it will be denoted by R(E).
+also a
+Proof. Since the class of all subsets of X is a ring, it is clear
+that at least one ring containing E always exists. Since more-
+over (cf. 4.3) the intersection of any collection of rings
+ring, the intersection of all rings containing E is easily seen to be
+the desired ring Ro. 1
+Theorem B. If E is any class of sets, then every set in R(E)
+may be covered by a finite union of sets in E.
+
+========== PAGE 38 ==========
+(SEC. 5]
+SETS AND CLASSES
+23
+Proof. The class of all sets which may be covered by a finite и
+union of sets in E is a ring; since this ring contains E, it also con-
+tains R(E). I
+Theorem C. If E is a countable class of sets, then R(E) is
+countable.
+Proof. For any class C of sets, we write C* for the class of all
+finite unions of differences of sets of C. It is clear that if C is
+countable, then so is C*, and if
+then
+0 & C,
+Το
+C C C*.
+prove the theorem we assume, as we may without any loss
+of generality, that
+and we write
+Ο ε Ε,
+E₁ = E, E = E*1-1, n = 1, 2,
+It is clear that
+and that the class
+ECUE C R(E),
+Un-0 En
+is countable; we shall complete the proof by showing that Uno En
+is a ring. Since
+E =
+E, CE, CE2 ...,
+it follows that if A and B are any two sets in Un-0 En, then there
+exists a positive integer n such that both A and B belong to En.
+We have
+A - Bε En+1
+and, since
+0 & Eo En,
+it follows also that
+==
+AUB (A0) U (B ·
+0) ε En+1.
+
+========== PAGE 39 ==========
+24
+SETS AND CLASSES
+[SEC. 5)
+We have proved therefore that both A - B and AUB belong
+to Uno En, i.e. that Uno En is indeed closed under the forma-
+tion of unions and differences.
+A o-ring is a non empty class S of sets such that
+(a) if E&S and F & S, then E - F & S, and
+(b) if E, e S, i = 1, 2, ..., then UE e S.
+Equivalently a o-ring is a ring closed under the formation of
+countable unions. If S is a o-ring and if
+E; ε S, i === 1, 2,
+...,
+and E
+=
+Ui-1 Ei,
+then the identity
+shows that
+=
+-
+NEE-Uï²-1 (E — E;)
+- E; & S,
+i.e. that a o-ring is closed under the formation of countable inter-
+sections. It follows also (cf. 3.2) that if S is a o-ring and
+E, & S, i = 1, 2, …··,
+ε
+then both lim inf; E; and lim sup; E; belong to S.
+Since the truth and proof of Theorem A remain unaltered if
+we replace "ring" by "o-ring" throughout, we may define the
+o-ring S(E) generated by any class E of sets as the smallest
+o-ring containing E.
+=
+Theorem D. If E is any class of sets and E is any set in S
+S(E), then there exists a countable subclass D of E such that
+E e S(D).
+Proof. The union of all those σ-subrings of S which are
+generated by some countable subclass of E is a o-ring containing
+E and contained in S; it is therefore identical with S. 1
+For every class E of subsets of X and every fixed subset A
+of X, we shall denote by
+E በ A
+the class of all sets of the form En A with E in E.
+
+========== PAGE 40 ==========
+[SEC. 5]
+SETS AND CLASSES
+Theorem E. If E is any class of sets and if A is any subset
+of X, then
+S(E) A
+=
+S(ENA).
+25
+Proof. Denote by C the class of all sets of the form B U
+(C-A), where
+BeS(ENA) and C & S(E);
+it is easy to verify that C is a o-ring. If E & E, then the relation
+E = (ENA) U (E — A),
+-
+together with
+ENAEEN A ≤ S(EN A),
+shows that E & C, and therefore that
+Ес С.
+It follows that
+S(E) C C
+and therefore that
+S(E) ACC NA.
+Since, however, it is obvious that
+CNA =
+S(ENA),
+it follows that
+S(E) ACS(EN A).
+The reverse inequality,
+S(ENA) = S(E) N A,
+follows from the facts that S(E) NA is a o-ring and
+EN ACS(E) NA. ■
+(1) For each of the following examples, what is the ring generated by the
+class E of sets there described?
+(la) For a fixed subset E of X, E
+(lb) For a fixed subset E of X, E is
+i.e. E = {F: EC F}.
+====
+{E} is the class containing E only.
+the class of all sets of which E is a subset,
+(1c) E is the class of all sets which contain exactly two points.
+(2) A lattice (of sets) is a class L such that 0 &L and such that if E e L and
+FEL, then EU FEL and EN FEL. Let P = P(L) be the class of all sets

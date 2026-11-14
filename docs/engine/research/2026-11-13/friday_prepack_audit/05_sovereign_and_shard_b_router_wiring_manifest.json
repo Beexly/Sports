@@ -1,6 +1,6 @@
 {
   "schema": "gse.sovereign_to_cognitive_router_wiring.v1",
-  "generated_at_utc": "2026-11-14T07:12:26.559418+00:00",
+  "generated_at_utc": "2026-11-14T07:51:06.187762+00:00",
   "mission_doctrine": "MIND-FIRST + WIRE-FIRST SEQUENCING (feeding intelligence & reasoning and wiring all signals; zero book-beating shortcuts)",
   "router_constants": {
     "MASK_BITS": 288,
@@ -9,18 +9,18 @@
     "MAX_ABS_DELTA_LOG_ODDS": 0.35
   },
   "counts": {
-    "sovereign_books_loaded": 237,
-    "refusal_receipts_fail_closed": 19,
-    "sovereign_primitives_routed": 2171,
-    "sovereign_reasoning_traces_routed": 464,
-    "gcp_shard_b_docs_routed": 3906,
+    "sovereign_books_loaded": 276,
+    "refusal_receipts_fail_closed": 20,
+    "sovereign_primitives_routed": 2663,
+    "sovereign_reasoning_traces_routed": 558,
+    "gcp_shard_b_docs_routed": 4059,
     "rules_rlvr_lessons_routed": 186,
     "drive_master_clusters_routed": 69,
     "drive_master_total_records_indexed": 1042184,
     "week10_entity_truth_rows": 35,
-    "total_routed_intelligence_units": 6727,
+    "total_routed_intelligence_units": 7466,
     "distinct_domains_seen": 30,
-    "active_mask_bits_set": 274
+    "active_mask_bits_set": 276
   },
   "domain_counts": {
     "['cs', 'information-theory', 'channel-coding']": 2,
@@ -39,24 +39,24 @@
     "['psych', 'memory', 'learning', 'association']": 1,
     "['psych', 'psychophysics', 'discrimination', 'measurement']": 1,
     "basketball": 25,
-    "cs": 329,
+    "cs": 440,
     "cs/operations-research": 19,
-    "football": 557,
+    "football": 842,
     "football/history": 3,
     "general": 134,
     "history": 6,
     "history/football": 1,
-    "math": 329,
+    "math": 366,
     "medicine": 5,
     "other": 535,
     "physics": 22,
     "physiology": 58,
-    "psych": 126,
+    "psych": 185,
     "strategy": 6
   },
   "context_mask_uint32_words_9": [
     4294967295,
-    4294965243,
+    4294967295,
     4294967295,
     4294967295,
     4294967295,
@@ -67,51 +67,51 @@
   ],
   "six_situational_families": {
     "pressure": {
-      "sovereign_primitives_routed": 130,
-      "gcp_shard_b_docs_routed": 37,
-      "combined_evidence_count": 167,
-      "active_router_bits_count": 43,
-      "bounded_james_stein_log_odds_weight": 0.085588,
+      "sovereign_primitives_routed": 158,
+      "gcp_shard_b_docs_routed": 38,
+      "combined_evidence_count": 196,
+      "active_router_bits_count": 45,
+      "bounded_james_stein_log_odds_weight": 0.09241,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_routed": 313,
-      "gcp_shard_b_docs_routed": 1227,
-      "combined_evidence_count": 1540,
+      "sovereign_primitives_routed": 401,
+      "gcp_shard_b_docs_routed": 1264,
+      "combined_evidence_count": 1665,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.184715,
+      "bounded_james_stein_log_odds_weight": 0.188256,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_routed": 265,
-      "gcp_shard_b_docs_routed": 1275,
-      "combined_evidence_count": 1540,
+      "sovereign_primitives_routed": 319,
+      "gcp_shard_b_docs_routed": 1367,
+      "combined_evidence_count": 1686,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.184715,
+      "bounded_james_stein_log_odds_weight": 0.188824,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_routed": 232,
-      "gcp_shard_b_docs_routed": 703,
-      "combined_evidence_count": 935,
+      "sovereign_primitives_routed": 264,
+      "gcp_shard_b_docs_routed": 714,
+      "combined_evidence_count": 978,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.162082,
+      "bounded_james_stein_log_odds_weight": 0.164121,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_routed": 1122,
-      "gcp_shard_b_docs_routed": 517,
-      "combined_evidence_count": 1639,
+      "sovereign_primitives_routed": 1353,
+      "gcp_shard_b_docs_routed": 527,
+      "combined_evidence_count": 1880,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.187542,
+      "bounded_james_stein_log_odds_weight": 0.193764,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_routed": 109,
-      "gcp_shard_b_docs_routed": 147,
-      "combined_evidence_count": 256,
+      "sovereign_primitives_routed": 168,
+      "gcp_shard_b_docs_routed": 149,
+      "combined_evidence_count": 317,
       "active_router_bits_count": 46,
-      "bounded_james_stein_log_odds_weight": 0.104001,
+      "bounded_james_stein_log_odds_weight": 0.113423,
       "all_finite_non_nan": true
     }
   }

@@ -1,65 +1,65 @@
 {
   "schema": "gse.arxiv_and_sovereign_equation_synthesis.v1",
-  "generated_at_utc": "2026-11-14T07:08:18Z",
+  "generated_at_utc": "2026-11-14T07:47:34Z",
   "counts": {
-    "complete_sovereign_books": 223,
-    "refused_stub_books_fail_closed": 19,
+    "complete_sovereign_books": 257,
+    "refused_stub_books_fail_closed": 20,
     "gatekeeper_validation_failures": 0,
-    "total_sovereign_primitives": 1883,
-    "total_sovereign_reasoning_traces": 449,
-    "total_pages_inspected": 25646,
-    "trainer_feed_records_emitted": 2332,
-    "active_router_mask_bits": 269,
+    "total_sovereign_primitives": 2225,
+    "total_sovereign_reasoning_traces": 538,
+    "total_pages_inspected": 25787,
+    "trainer_feed_records_emitted": 2763,
+    "active_router_mask_bits": 274,
     "arxiv_program_unique_ids_indexed": 6183,
     "sovereign_books_with_explicit_arxiv_id": 1
   },
   "context_mask_uint32_words_9": [
-    4290707455,
     4294967295,
     4294967295,
     4294967295,
     4294967295,
     4294967295,
     4294967295,
-    4211072959,
+    4294967295,
+    4278190079,
     1048573
   ],
   "track_counts": {
     "arxiv_and_preprints": 1,
     "football_coaching_rules_and_scouting": 8,
-    "graduate_math_stats_physics_textbooks": 196,
+    "graduate_math_stats_physics_textbooks": 224,
     "nfl_war_and_fourth_down_decision": 4,
-    "sports_psychology_and_cognition": 14
+    "sports_psychology_and_cognition": 20
   },
   "six_situational_family_weights": {
     "pressure": {
-      "sovereign_primitives_count": 106,
-      "bounded_james_stein_weight": 0.161695,
+      "sovereign_primitives_count": 129,
+      "bounded_james_stein_weight": 0.164681,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_count": 255,
-      "bounded_james_stein_weight": 0.17191,
+      "sovereign_primitives_count": 310,
+      "bounded_james_stein_weight": 0.173292,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_count": 234,
-      "bounded_james_stein_weight": 0.17122,
+      "sovereign_primitives_count": 272,
+      "bounded_james_stein_weight": 0.172394,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_count": 212,
-      "bounded_james_stein_weight": 0.170357,
+      "sovereign_primitives_count": 236,
+      "bounded_james_stein_weight": 0.17129,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_count": 987,
-      "bounded_james_stein_weight": 0.177838,
+      "sovereign_primitives_count": 1140,
+      "bounded_james_stein_weight": 0.178125,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_count": 89,
-      "bounded_james_stein_weight": 0.158614,
+      "sovereign_primitives_count": 138,
+      "bounded_james_stein_weight": 0.1656,
       "all_finite_non_nan": true
     }
   },
@@ -125,9 +125,9 @@
     "partition_tier_summary": {
       "0..3|tier_A": {
         "total": 110,
-        "completed_or_extracted": 59,
-        "pending_unextracted": 48,
-        "pending_with_local_file": 48
+        "completed_or_extracted": 65,
+        "pending_unextracted": 42,
+        "pending_with_local_file": 42
       },
       "0..3|tier_B": {
         "total": 835,
@@ -145,9 +145,9 @@
       },
       "4..7|tier_B": {
         "total": 814,
-        "pending_unextracted": 760,
-        "pending_with_local_file": 760,
-        "completed_or_extracted": 54
+        "pending_unextracted": 725,
+        "pending_with_local_file": 725,
+        "completed_or_extracted": 89
       },
       "4..7|tier_C": {
         "total": 3347,
@@ -169,7 +169,7 @@
     },
     "shard_4to7_tier_a_remaining_with_file": 0,
     "shard_4to7_tier_a_remaining_preview": [],
-    "shard_4to7_tier_b_pending_candidates_count": 760,
+    "shard_4to7_tier_b_pending_candidates_count": 725,
     "shard_4to7_tier_b_pending_candidates": [
       {
         "book_id": "4030a352319afc8b",
@@ -532,6 +532,11 @@
     {
       "book_id": "5432be0e4c9c47fe",
       "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "569cfad5d74c180b",
+      "title": "QUARANTINED_NON_CORPUS_ITEM_569cfad5d74c180b",
       "source_status": "INSUFFICIENT_SOURCE_ACCESS"
     },
     {
@@ -1076,6 +1081,17 @@
         "arxiv_ids": []
       },
       {
+        "book_id": "4f85ec3be28b0f28",
+        "title": "0003-gsi-cross-domain-sports-medicine-and-decision-intelligence-expansion",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 7,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
         "book_id": "5f458169bc4c660a",
         "title": "06-multi-brain-council-and-758-skills",
         "primary_domain": "psych",
@@ -1084,6 +1100,28 @@
         "pages_total": 1,
         "primitives_count": 4,
         "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "604d25873b977f53",
+        "title": "0309-future-aspects-in-human-action-recognition",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 8,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "6b89792878a198b6",
+        "title": "0483-admissibility-of-a-posterior-predictive-decision",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 2,
+        "pages_total": 2,
+        "primitives_count": 8,
+        "traces_count": 2,
         "arxiv_ids": []
       },
       {
@@ -1139,6 +1177,39 @@
         "pages_total": 22,
         "primitives_count": 3,
         "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "795dc273e6915773",
+        "title": "1030-action-recognition-framework-video-highlights",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 3,
+        "pages_total": 3,
+        "primitives_count": 12,
+        "traces_count": 3,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "79e17070823c1f15",
+        "title": "1176-predictive-decision-synthesis-for-portfolios",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 3,
+        "pages_total": 3,
+        "primitives_count": 12,
+        "traces_count": 3,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "7cf20ffa99532775",
+        "title": "1933-pretrained-llm-adapted-with-lora-as-decision-transformer",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 3,
+        "pages_total": 3,
+        "primitives_count": 12,
+        "traces_count": 3,
         "arxiv_ids": []
       },
       {

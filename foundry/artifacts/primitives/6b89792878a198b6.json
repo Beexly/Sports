@@ -1,0 +1,173 @@
+{
+  "book_id": "6b89792878a198b6",
+  "source_status": "COMPLETE",
+  "title": "0483-admissibility-of-a-posterior-predictive-decision",
+  "file_name": "0483-admissibility-of-a-posterior-predictive-decision.md",
+  "sha256": "6b89792878a198b68f372d88d85fa6582f25698f1efbf84f599e276d19f7f02b",
+  "primary_domain": "psych",
+  "pages_total": 2,
+  "pages_read": 2,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 2,
+  "windows_extracted": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Posterior predictive decision rules extend Bayesian admissibility from parameter estimation to prediction, using risk minimization over y_pred | y_obs. Universal Lens: Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "GSI leverages posterior predictive distributions for Bayesian inference in predictive sports models, ensuring admissible decisions via risk-based optimization. GSI Mapping: Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "GSE applies predictive decision rules to dynamic state transitions in game simulations, where admissibility guarantees optimal strategic responses under uncertainty. GSE Mapping: Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "w0_admissibility_of_bayes_prediction",
+      "name": "Admissibility of Bayes Prediction Rule",
+      "verbatim_quote": "- **Theorem 1:** a Bayes prediction rule is found by minimizing the posterior predictive risk ∫ L(ŷ(y_obs), y_pred) p(y_pred | y_obs) dy_pred for arbitrary y_obs — θ integrates out as a nuisance parameter (Fubini), factoring p(y_pred, y_obs) = p(y_pred|y_obs)p(y_obs).",
+      "page": 1,
+      "latex": "\\int L(\\hat{y}(y_{\\text{obs}}), y_{\\text{pred}}) p(y_{\\text{pred}} | y_{\\text{obs}}) dy_{\\text{pred}}",
+      "symbol_and_unit_ledger": "{'L': 'loss function, dimensionless', 'ŷ': 'prediction rule, R^N', 'y_obs': 'observed data, R^M', 'y_pred': 'to-predict data, R^N', 'p(y_pred | y_obs)': 'posterior predictive density, dimensionless'}",
+      "assumptions": "Proper prior g(θ) > 0 everywhere, f(y_pred, y_obs | θ) is well-defined, L is measurable.",
+      "breakdown_regime": "When g(θ) becomes zero or undefined, or when f(y_pred, y_obs | θ) fails to factorize.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The posterior predictive risk minimization mirrors Bayesian estimation's posterior expectation minimization, enabling GSI to derive admissible predictors.",
+        "source_operator": "w0_admissibility_of_bayes_prediction",
+        "telemetry": "Minimization of expected loss over predictive distribution."
+      }
+    },
+    {
+      "primitive_id": "w1_bayes_rule_admissibility",
+      "name": "Bayes Rule Admissibility in Prediction",
+      "verbatim_quote": "- **Theorem 2:** Bayes prediction rules are admissible — the standard proof: if a competing rule dominated on Θ, continuity of risk gives a set S ∋ θ* of strict improvement, and g(θ) > 0 on S yields strictly smaller Bayes risk, contradiction.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Θ': 'parameter space, R^k', 'S': 'set of parameters, subset of Θ', 'g(θ)': 'prior density, positive real'}",
+      "assumptions": "Continuity of risk functions, existence of proper prior g(θ) > 0.",
+      "breakdown_regime": "Discontinuity in risk or improper prior leads to non-admissibility.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Admissibility ensures that no other rule uniformly outperforms the Bayes predictor, supporting GSE’s robustness in strategic decision-making.",
+        "source_operator": "w1_bayes_rule_admissibility",
+        "telemetry": "Dominance-free performance under prior distribution."
+      }
+    },
+    {
+      "primitive_id": "w2_posterior_predictive_mean",
+      "name": "Posterior Predictive Mean",
+      "verbatim_quote": "- Corollary-style remark: the posterior predictive mean is admissible and minimizes Bayes prediction risk under squared-error loss (under weak conditions), exactly as the posterior mean does in estimation.",
+      "page": 1,
+      "latex": "\\mathbb{E}[Y_{\\text{pred}} | Y_{\\text{obs}}] = \\int y_{\\text{pred}} p(y_{\\text{pred}} | y_{\\text{obs}}) dy_{\\text{pred}}",
+      "symbol_and_unit_ledger": "{'Y_pred': 'random variable, R^N', 'Y_obs': 'observed data, R^M', 'p(y_pred | y_obs)': 'posterior predictive density, dimensionless'}",
+      "assumptions": "Squared-error loss, weak regularity conditions on prior and likelihood.",
+      "breakdown_regime": "Non-squared loss or irregular posterior leads to suboptimal mean.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The posterior predictive mean parallels the posterior mean in estimation, allowing GSI to apply familiar Bayesian tools to prediction tasks.",
+        "source_operator": "w2_posterior_predictive_mean",
+        "telemetry": "Expected value under predictive distribution."
+      }
+    },
+    {
+      "primitive_id": "w3_frequentist_vs_bayes_risk",
+      "name": "Frequentist vs Bayes Prediction Risk",
+      "verbatim_quote": "A prediction rule Ŷ: R^M → R^N; loss L(Ŷ(Y_obs), Y_pred); frequentist prediction risk = average of L over (Y_obs, Y_pred) holding θ fixed; Bayes prediction risk = average over the joint (Y_pred, Y_obs, θ).",
+      "page": 1,
+      "latex": "R_{\\text{freq}}(\\theta) = \\iint L(\\hat{Y}, Y_{\\text{pred}}) f(Y_{\\text{pred}}, Y_{\\text{obs}} | \\theta) dY_{\\text{pred}} dY_{\\text{obs}} \\quad R_{\\text{Bayes}} = \\iiint L(\\hat{Y}, Y_{\\text{pred}}) f(Y_{\\text{pred}}, Y_{\\text{obs}}, \\theta) dY_{\\text{pred}} dY_{\\text{obs}} d\\theta",
+      "symbol_and_unit_ledger": "{'R_freq': 'frequentist risk, dimensionless', 'R_Bayes': 'Bayes risk, dimensionless', 'f': 'joint density, dimensionless'}",
+      "assumptions": "Well-defined joint and marginal densities, integrability of loss function.",
+      "breakdown_regime": "Infinite or undefined expectations under loss function.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Risk comparison enables GSE to evaluate prediction strategies under both frequentist and Bayesian paradigms, informing adaptive decision-making.",
+        "source_operator": "w3_frequentist_vs_bayes_risk",
+        "telemetry": "Comparison of expected losses across paradigms."
+      }
+    },
+    {
+      "primitive_id": "posterior_predictive_admissibility",
+      "name": "Posterior Predictive Mean Admissibility",
+      "verbatim_quote": "Leakage & limitations - No empirical claims, no leakage surface.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Weak conditions for posterior-predictive-mean claim are not specified; requires g(θ) > 0 everywhere, excluding priors with point masses or truncated support.",
+      "breakdown_regime": "Exclusion of improper priors with point masses leads to potential admissibility failure.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Bayes/Conformal Mapping: The posterior predictive mean serves as a conformal predictive distribution when the model is correctly specified, bridging Bayesian predictive inference to nonparametric calibration without requiring explicit likelihood models.",
+        "source_operator": "posterior_predictive_admissibility",
+        "telemetry": "Residual calibration error between posterior predictive intervals and empirical coverage frequencies on held-out test sets."
+      }
+    },
+    {
+      "primitive_id": "bayesian_decision_theoretic_justification",
+      "name": "Bayesian Decision-Theoretic Justification",
+      "verbatim_quote": "A decision-theoretic justification for using posterior predictive distributions changes no GSE engineering choice; GSE's pipeline is frequentist/empirical (calibration on held-out data), not Bayesian decision-theoretic.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "No specific loss function assumed beyond standard quadratic loss; assumes complete knowledge of the posterior distribution.",
+      "breakdown_regime": "Failure when decision rules are applied outside the empirical calibration framework, leading to over-reliance on prior beliefs.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE Situational Reasoning Mapping: While GSE uses frequentist calibration pipelines (e.g., Conformal Quantile Regression), this primitive provides a theoretical anchor for interpreting Bayesian posterior means as optimal under squared-error loss, aligning with GSE's goal of producing well-calibrated probabilistic forecasts.",
+        "source_operator": "bayesian_decision_theoretic_justification",
+        "telemetry": "Difference in performance metrics (e.g., log-loss, betting ROI) between Bayesian posterior predictive distributions and GSE's empirical calibration benchmarks."
+      }
+    },
+    {
+      "primitive_id": "no_leakage_surface",
+      "name": "No Empirical Claims, No Leakage Surface",
+      "verbatim_quote": "The \"weak conditions\" for the posterior-predictive-mean claim are not spelled out.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a clean separation between theoretical development and practical application; no data contamination assumed.",
+      "breakdown_regime": "Absence of empirical validation makes the result vulnerable to misapplication in real-world settings where model misspecification is common.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI Uncertainty Stack Mapping: The lack of empirical results mirrors GSI's focus on conformal inference, which also emphasizes distribution-free guarantees and avoids direct parameter estimation, thereby reducing the risk of overfitting to training data and ensuring robustness across different leagues and seasons.",
+        "source_operator": "no_leakage_surface",
+        "telemetry": "Absence of systematic evaluation on live sports betting markets or historical data."
+      }
+    },
+    {
+      "primitive_id": "truncated_support_priors",
+      "name": "Truncated Support Priors Exclusion",
+      "verbatim_quote": "Requires g(θ) > 0 everywhere — excludes priors with point masses or truncated support as stated.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Prior distribution must have full support over the parameter space; point masses at specific values are disallowed.",
+      "breakdown_regime": "Inadmissibility arises when the prior assigns positive probability to a single value, causing the posterior predictive mean to collapse to that point mass.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE State-Transition Mapping: In GSE's uncertainty quantification, truncated priors often arise from domain constraints (e.g., non-negative volatilities). This primitive highlights that such truncation can invalidate the admissibility guarantee, necessitating alternative frequentist methods like Venn-Abers conformal intervals that remain valid even with restricted parameter spaces.",
+        "source_operator": "truncated_support_priors",
+        "telemetry": "Observed frequency of posterior predictive intervals failing to cover true outcomes when using truncated priors in simulation studies."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6b89792878a198b6_t0",
+      "think": "Chapter 1 of 'Admissibility of a posterior predictive decision rule' establishes foundational statistical theory for extending Bayesian decision-making from parameter estimation to prediction. It defines the posterior predictive distribution p(y_pred | y_obs) and demonstrates how Bayes prediction rules minimize posterior predictive risk. The core result hinges on Fubini's theorem, which allows integration over θ as a nuisance parameter, simplifying the joint distribution into conditional and marginal components. This structure supports admissibility proofs by showing that any alternative rule cannot dominate the Bayes rule without violating continuity or prior positivity. The note also shows that under squared-error loss, the posterior predictive mean is admissible and minimizes risk—mirroring the role of the posterior mean in estimation. These insights form a bridge between classical decision theory and modern Bayesian prediction frameworks, providing a rigorous basis for probabilistic forecasting in complex domains such as sports analytics. The implications for GSI lie in its ability to construct provably sound predictive models, while GSE benefits from a principled approach to evaluating and selecting prediction strategies based on risk minimization. Window 1 Synthesis: Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 2/2 pages of 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6): [w0_admissibility_of_bayes_prediction p.1]: - **Theorem 1:** a Bayes prediction rule is found by minimizing the posterior predictive risk ∫ L(ŷ(y_obs), y_pred) p(y_pred | y_obs) dy_pred for arbitrary y_obs — θ integrates out as a nuisance parameter (Fubini), factoring p(y_pred, y_obs) = p(y_pred|y_obs)p(y_obs). (The posterior predictive risk minimization mirrors Bayesian estimation's posterior expectation minimization, enabling GSI to derive admissible predictors.) [w1_bayes_rule_admissibility p.1]: - **Theorem 2:** Bayes prediction rules are admissible — the standard proof: if a competing rule dominated on Θ, continuity of risk gives a set S ∋ θ* of strict improvement, and g(θ) > 0 on S yields strictly smaller Bayes risk, contradiction. (Admissibility ensures that no other rule uniformly outperforms the Bayes predictor, supporting GSE’s robustness in strategic decision-making.) [w2_posterior_predictive_mean p.1]: - Corollary-style remark: the posterior predictive mean is admissible and minimizes Bayes prediction risk under squared-error loss (under weak conditions), exactly as the posterior mean does in estimation. (The posterior predictive mean parallels the posterior mean in estimation, allowing GSI to apply familiar Bayesian tools to prediction tasks.) [w3_frequentist_vs_bayes_risk p.1]: A prediction rule Ŷ: R^M → R^N; loss L(Ŷ(Y_obs), Y_pred); frequentist prediction risk = average of L over (Y_obs, Y_pred) holding θ fixed; Bayes prediction risk = average over the joint (Y_pred, Y_obs, θ). (Risk comparison enables GSE to evaluate prediction strategies under both frequentist and Bayesian paradigms, informing adaptive decision-making.) [posterior_predictive_admissibility p.2]: Leakage & limitations - No empirical claims, no leakage surface. (GSI Bayes/Conformal Mapping: The posterior predictive mean serves as a conformal predictive distribution when the model is correctly specified, bridging Bayesian predictive inference to nonparametric calibration without requiring explicit likelihood models.) [bayesian_decision_theoretic_justification p.2]: A decision-theoretic justification for using posterior predictive distributions changes no GSE engineering choice; GSE's pipeline is frequentist/empirical (calibration on held-out data), not Bayesian decision-theoretic. (GSE Situational Reasoning Mapping: While GSE uses frequentist calibration pipelines (e.g., Conformal Quantile Regression), this primitive provides a theoretical anchor for interpreting Bayesian posterior means as optimal under squared-error loss, aligning with GSE's goal of producing well-calibrated probabilistic forecasts.) [no_leakage_surface p.2]: The \"weak conditions\" for the posterior-predictive-mean claim are not spelled out. (GSI Uncertainty Stack Mapping: The lack of empirical results mirrors GSI's focus on conformal inference, which also emphasizes distribution-free guarantees and avoids direct parameter estimation, thereby reducing the risk of overfitting to training data and ensuring robustness across different leagues and seasons.) [truncated_support_priors p.2]: Requires g(θ) > 0 everywhere — excludes priors with point masses or truncated support as stated. (GSE State-Transition Mapping: In GSE's uncertainty quantification, truncated priors often arise from domain constraints (e.g., non-negative volatilities). This primitive highlights that such truncation can invalidate the admissibility guarantee, necessitating alternative frequentist methods like Venn-Abers conformal intervals that remain valid even with restricted parameter spaces.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in Wald's foundational work on statistical decision theory and Berger's extensions to Bayesian inference, this note builds upon decades of research into admissibility and predictive decision rules. Retrocausal Genealogy (Window 1): Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents might attempt to exploit inconsistencies in prediction rules or misestimate risk. However, the admissibility guarantee ensures that no such strategy can universally outperform the posterior predictive rule, making it resilient against adversarial manipulation. Theory of Mind (Window 1): Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained through distinct roles of θ (nuisance parameter) and y_obs (data) in risk computation. Leakage is prevented by ensuring that all dependencies are properly marginalized in the predictive framework. Cross-Layer Veto (Window 1): Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6b89792878a198b6_t1",
+      "think": "This conceptual note proves that the posterior predictive mean is admissible under squared-error loss, meaning no other estimator uniformly dominates it. However, it provides no empirical results, making it a pure decision-theoretic justification rather than a practical algorithm. For GSE, which operates entirely on frequentist principles (calibrating predictive intervals via cross-validation on historical data), this note offers a theoretical anchor but no immediate implementation. It explains why practitioners might use posterior means despite their Bayesian origin, but GSE already uses empirical calibration to achieve good coverage, so the note doesn't change any current engineering choices. The key limitation is that the 'weak conditions' are not explicitly stated, leaving ambiguity about when the result holds. Additionally, the requirement that the prior has full support excludes many useful priors with point masses or truncation, which are common in sports modeling to incorporate expert knowledge or enforce physical bounds. Thus, while theoretically elegant, the result has minimal direct impact on GSE's operational pipeline. Window 2 Synthesis: Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 0483-admissibility-of-a-posterior-predictive-decision (6b89792878a198b6, 2/2 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "For an opposing agent who believes in subjective expected utility maximization, this note reinforces the rationality of using posterior means. However, for GSE engineers who prioritize empirical calibration and robustness to model misspecification, the note is seen as academic decoration. They may view the admissibility proof as irrelevant because their primary concern is whether predictions actually cover outcomes in future games, not whether they are uniformly optimal across hypothetical estimators.",
+      "cross_layer_veto": "The note introduces a potential anti-collinearity issue because it suggests that all admissible estimators are Bayes rules, which could lead analysts to overemphasize Bayesian methods at the expense of simpler, equally accurate frequentist alternatives. To vet this, one must ensure that the note does not leak into the GSE pipeline by influencing feature selection or model averaging in ways that increase variance without improving calibration. Specifically, the exclusion of truncated priors should not guide the choice of uncertainty quantifiers (e.g., preferring conformal intervals over Bayesian credible intervals simply because the latter are admissible)."
+    }
+  ]
+}

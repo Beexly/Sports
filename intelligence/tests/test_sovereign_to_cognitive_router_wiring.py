@@ -9,8 +9,10 @@ import pytest
 
 from intelligence.foundry_bridge.gcp_vision_ocr_rescue import (
     DEFAULT_BOOK_PAGE_CAPS,
+    EXTENDED_BOOK_PAGE_CAPS,
     MAX_VISION_PAGES_PER_RUN,
     format_foundry_core_transcript,
+    load_books_by_ids_readonly,
     plan_page_allocation,
 )
 from intelligence.foundry_bridge.sovereign_to_cognitive_router_wiring import (
@@ -52,6 +54,20 @@ def test_vision_ocr_circuit_breaker_and_allocation() -> None:
     transcript = format_foundry_core_transcript({2: "Second page equation.", 1: "First page theorem."})
     assert transcript.startswith("========== PAGE 1 ==========\nFirst page theorem.")
     assert "========== PAGE 2 ==========\nSecond page equation." in transcript
+
+    tierb_books = [
+        {"book_id": "65dd26cd834db798", "file_name": "IBM-US7483986.pdf", "file_path": "x", "primary_domain": "math"},
+        {"book_id": "6ff1729124cef6c7", "file_name": "Halmos-1950-MeasureTheory.pdf", "file_path": "x", "primary_domain": "math"},
+    ]
+    tierb_plans, tierb_total = plan_page_allocation(
+        tierb_books,
+        {"65dd26cd834db798": 14, "6ff1729124cef6c7": 320},
+        max_pages_total=60,
+        per_book_caps=EXTENDED_BOOK_PAGE_CAPS,
+    )
+    assert tierb_total == 54
+    assert tierb_plans[0]["coverage_mode"] == "FULL_DOCUMENT"
+    assert load_books_by_ids_readonly([]) == []
 
 
 def test_router_mask_and_james_stein_shrinkage_bounds() -> None:

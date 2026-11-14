@@ -360,7 +360,12 @@ def select_eligible_books_ro(
                 continue
             if not Path(str(d["file_path"])).exists():
                 continue
-            d["is_ocr_classic"] = False
+            ocr_txt = OCR_RESCUE_DIR / f"{bid}_vision_ocr_core.txt"
+            if ocr_txt.exists():
+                d["ocr_rescue_path"] = str(ocr_txt)
+                d["is_ocr_classic"] = True
+            else:
+                d["is_ocr_classic"] = False
             selected.append(d)
             seen_ids.add(bid)
 

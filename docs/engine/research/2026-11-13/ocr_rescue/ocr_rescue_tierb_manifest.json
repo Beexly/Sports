@@ -1,0 +1,40 @@
+{
+  "schema": "gse.gcp_vision_ocr_rescue.v1",
+  "generated_at_utc": "2026-11-14T07:30:51.022508+00:00",
+  "project_id": "galaxysportsedge",
+  "vision_feature": "DOCUMENT_TEXT_DETECTION",
+  "always_free_monthly_units": 1000,
+  "circuit_breaker_max_pages": 120,
+  "dry_run": false,
+  "planned_total_pages": 54,
+  "actual_pages_ocr": 54,
+  "always_free_pct_used": 5.4,
+  "estimated_cost_usd": 0.0,
+  "vision_api_http_batches": 11,
+  "books_rescued": [
+    {
+      "book_id": "65dd26cd834db798",
+      "file_name": "IBM-US7483986-SelfOrganizingMultiAgentTopology.pdf",
+      "primary_domain": "math",
+      "pdf_total_pages": 14,
+      "pages_rescued": 14,
+      "coverage_mode": "FULL_DOCUMENT",
+      "output_txt_rel": "65dd26cd834db798_vision_ocr_core.txt",
+      "word_count": 9910,
+      "char_count": 61154,
+      "sample_opening_words": "US007483986B2 (12) United States Patent Hanson et al. (54) DYNAMICALLY TUNING NETWORKS OF RELATIONSHIPS IN SELF-ORGANIZING MULTI-AGENT SYSTEMS"
+    },
+    {
+      "book_id": "6ff1729124cef6c7",
+      "file_name": "Halmos-1950-MeasureTheory.pdf",
+      "primary_domain": "math",
+      "pdf_total_pages": 320,
+      "pages_rescued": 40,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "6ff1729124cef6c7_vision_ocr_core.txt",
+      "word_count": 9669,
+      "char_count": 48908,
+      "sample_opening_words": "UNIV CITY OF TAB RATAN TATA LIBRARY"
+    }
+  ]
+}
