@@ -383,3 +383,19 @@ Still outstanding on the corpus: chunk-level retrieval needs its own table (a si
 **Opus executor claim, independently reproduced.** Ran `honest_equation_executor.parse_and_execute_honestly` over the canonical 60,051-row master (`jev-pipeline/equations-from-catalog.jsonl`): **44,435 UNPARSEABLE / 8,566 PARSED_SYMBOLIC_ONLY / 7,050 PARSED_EVALUATED, 0 exceptions**. Exact match to the reported figures, so the executor measurement stands. The supporting "25/25 executor tests" claim does **not** reproduce: `tests/test_honest_equation_executor_unicode_and_guards.py` yields 11 passed, and adding `tests/unit/test_unified_quantitative_nfl_architecture.py` brings it to 17.
 
 **Transcript verification published** as agent-bus PR #10 (`hermes/transcript-verification-2026-11-12`), opened for review rather than pushed to main.
+
+### 2026-11-14 (UTC) — Foundry inline extraction: the learning/decision stack
+
+Per Garrett's directive ("get rid of subagents and do it yourself"), the Foundry Tier-A queue is ground INLINE in the main session (worker `hermes-inline`), no delegate_task workers. Each cycle: claim -> read full source -> build artifact with a verbatim-substring gate (every quote asserted an exact substring of the extracted text after ligature/quote/whitespace normalization) -> `python foundry/gatekeeper.py commit` (GATEKEEPER_APPROVED) -> copy to `foundry/artifacts/primitives/<book_id>.json` -> stage ONLY that artifact + `foundry/logs/swarm_status.md` + this HANDOFF -> commit -> push -> `git ls-remote` read-back. The DB (`foundry/foundry.db`) is gitignored; the tracked artifact JSON is the durable record.
+
+Four layers closed this stretch, all on branch `feat/hermes-research-wiring-2026-11-11`, all remote-verified:
+- **Reddi 2026 ML Systems Vol2 At-Scale** (`55e082c734ce5566`, shard 5) — fleet/systems layer, 16 primitives, 1028-word trace, commit `d6cd25e4a`. Vol1 Foundations left to the DELEGATED_GCP lane.
+- **Shalev-Shwartz 2012 Online Learning & OCO** (`4d07e5902607436f`, shard 4) — online/regret layer, 19 primitives, 943-word trace, commit `c1c1fa3ef`. The GSE snap engine as an online learner against adversarial Nature; online-to-batch is the bridge to the pre-game number.
+- **Shalev-Shwartz & Ben-David 2014 Understanding ML** (`5b79f17544fe148c`, shard 5) — batch/PAC generalization layer, 18 primitives, 885-word trace, commit `7f5d365ac`. Ontology as inductive bias; No-Free-Lunch; VC sample budget; replace-one stability = generalization gap; SGD true-risk.
+- **Szepesvari 2010 Algorithms for RL** (`1498481931694bd8`, shard 1) — MDP/decision layer, 18 primitives, 902-word trace. Crucible simulator IS the transition kernel; Bellman backup = recursive play evaluation; Q-learning off-policy play-value from film; OFU/UCB exploration; RLVR gates on the Bellman residual.
+
+The stack now reads: neurons (Nielsen) -> representations (Prince) -> fleet (Reddi) -> in-game online learning (2012) -> pre-game PAC generalization (2014) -> play-call decision (Szepesvari). Zero sportsbook odds throughout; strict source-invariant vs derived-kernel separation; fail-closed gatekeeper.
+
+**Pitfalls logged for the next worker:** (1) read_file's rendered text can diverge from the actual file bytes — ALWAYS verify quotes against the normalized core programmatically, never trust a rendered sentence. (2) The verbatim gate must also enforce >=8 words per quote (gatekeeper rejects shorter). (3) Avoid quotes that span a page-break marker or a real-hyphen line break (e.g. "No-Free-\nLunch", "VC-\ndimension") — the de-hyphenation normalizer joins them incorrectly. (4) The definition-of-done handoff guard uses the UTC date (`new Date().toISOString()`), not local CST — past midnight CST it wants the next day's entry here.
+
+**Next role:** continue claiming Tier-A SHARD A books inline (`python foundry/gatekeeper.py claim --worker hermes-inline --tier A`); leave DELEGATED_GCP rows and Week-10 crucible dossiers to the cloud lane.

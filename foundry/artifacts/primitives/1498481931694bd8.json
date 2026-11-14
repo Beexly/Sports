@@ -1,0 +1,310 @@
+{
+  "book_id": "1498481931694bd8",
+  "source_status": "COMPLETE",
+  "title": "Szepesvari-2010-AlgorithmsForReinforcementLearning",
+  "source_note": "Csaba Szepesvari, 'Algorithms for Reinforcement Learning', Synthesis Lectures on Artificial Intelligence and Machine Learning, Morgan & Claypool Publishers (draft June 2009, published 2010). 98-page PDF read in full (MDP/Bellman ch2, TD/TD(lambda)/function-approx ch3, control/bandits/Q-learning ch4). Legitimate readable monograph, not retracted, title matches content. Local SHARD A (sha256 prefix 1). All verbatim quotes verified exact substrings of the extracted text after ligature/quote/whitespace normalization; cites by section + printed page. Zero sportsbook odds; this is the RL/MDP decision layer governing GSE's play-call engine, complementing the online (4d07e5902607436f) and batch/PAC (5b79f17544fe148c) layers.",
+  "pages_total": 98,
+  "pages_read": 98,
+  "primitives": [
+    {
+      "primitive_id": "mdp_sequential",
+      "name": "Markov Decision Process (sequential decision model)",
+      "verbatim_quote": "Markov Decision Processes are a tool for modeling sequential decision-making problems where a decision maker interacts with a system in a sequential fashion.",
+      "page": "sec 2.2, printed p.8",
+      "latex": "M=(\\mathcal{X},\\mathcal{A},P_0),\\quad (X_{t+1},R_{t+1})\\sim P_0(\\cdot|X_t,A_t),\\quad P(x,a,y)=P_0(\\{y\\}\\times\\mathbb{R}|x,a),\\quad r(x,a)=\\mathbb{E}[R(x,a)]",
+      "symbol_and_unit_ledger": "X: countable state space; A: countable action space; P0: transition probability kernel over X×R (next state AND reward); P: state-transition kernel; r(x,a): expected immediate reward [reward units]; rewards bounded |R|<=R a.s. The Markov property: next state+reward depend only on current (state,action), not history.",
+      "assumptions": "Countable (or continuous under technical conditions) MDP; bounded rewards; the decision maker observes the next state and reward, then chooses the next action; discounted total expected reward criterion.",
+      "breakdown_regime": "If the Markov property fails (next state depends on history beyond the current state), the state must be augmented to restore it, or the MDP model is invalid. Large multidimensional state/action spaces are the NORMAL case, not the exception (the book's inventory/gambling examples are atypical).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The GSE play-call engine is an MDP: state x = (down, distance, field position, formation, personnel, score, time), action a = the play/coverage call, transition kernel P0 = the stochastic outcome of that call. The 10,000-world crucible simulator IS an empirical estimate of P0. The Markov property is the modeling assumption that the current game state summarizes all relevant history.",
+        "source_operator": "mdp_sequential",
+        "telemetry": "GSE telemetry: state vector x_t; action a_t; simulator transition samples (X_{t+1},R_{t+1}); verify the Markov sufficiency of the state representation; reward boundedness."
+      }
+    },
+    {
+      "primitive_id": "return_maximization",
+      "name": "Discounted return and the optimal behavior objective",
+      "verbatim_quote": "The goal of the decision-maker is to choose a behavior that maximizes the expected return, irrespectively of how the process is started.",
+      "page": "sec 2.2, printed p.9",
+      "latex": "\\mathcal{R}=\\sum_{t=0}^{\\infty}\\gamma^t R_{t+1},\\quad 0\\le\\gamma\\le 1;\\qquad \\pi^\\star=\\arg\\max_{\\pi}\\mathbb{E}[\\mathcal{R}]",
+      "symbol_and_unit_ledger": "R: total discounted return [reward units]; gamma: discount factor [dimensionless, 0<=gamma<=1]; gamma<1 makes future rewards worth exponentially less; gamma=1 = undiscounted (episodic). A behavior is a history-dependent action-selection rule; optimal = maximizes expected return from every start state.",
+      "assumptions": "Discounted criterion (gamma<1) guarantees finite return for bounded rewards; episodic MDPs (terminal/absorbing states) often use gamma=1; the objective is start-state-independent.",
+      "breakdown_regime": "With gamma=1 and no terminal state the return can diverge. The discount factor encodes how much future game state matters versus immediate gain — a modeling choice, not a law. An episodic MDP with no absorbing state and gamma=1 is ill-posed.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's objective is the discounted expected return of a drive/game: immediate yards/EPA plus gamma-discounted future win-probability. The discount factor gamma is GSE's tempo dial — how much a play's future consequences (field position, down-distance) weigh against its immediate gain. The crucible maximizes expected return over the play-call policy, from every game state.",
+        "source_operator": "return_maximization",
+        "telemetry": "GSE telemetry: discount factor gamma; per-play reward R_t (EPA / win-prob added); cumulative discounted return per simulated drive; optimal-policy expected return."
+      }
+    },
+    {
+      "primitive_id": "optimal_value",
+      "name": "Optimal value function and optimality",
+      "verbatim_quote": "A behavior that achieves the optimal values in all states is optimal.",
+      "page": "sec 2.3, printed p.12-13",
+      "latex": "V^\\star(x)=\\sup_{\\pi\\in\\Pi_{\\mathrm{stat}}}V^\\pi(x),\\quad V^\\pi(x)=\\mathbb{E}\\Big[\\sum_{t=0}^{\\infty}\\gamma^t R_{t+1}\\,\\Big|\\,X_0=x\\Big]",
+      "symbol_and_unit_ledger": "V*(x): optimal value = highest achievable expected return from state x [reward units]; V^pi(x): value of policy pi; an optimal stationary policy always exists in this MDP class. Computing V* first, then acting greedily, is easier than enumerating all behaviors.",
+      "assumptions": "Stationary policies suffice for optimality; the value function is the expected discounted return under the policy; the initial-state distribution must give every state positive probability for the conditional expectation to be well-defined.",
+      "breakdown_regime": "Enumerating all behaviors is infeasible (too many); the value-function approach is the tractable route. If the state space is huge, V* must be approximated (function approximation), which introduces its own error.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's state-value V*(x) is the win-probability / expected points from a game state under optimal play-calling. The crucible computes V* by simulation, then the engine acts greedily w.r.t. it. This is the formal object the 10,000-world ensemble estimates: the value of every (down,distance,field-position) situation.",
+        "source_operator": "optimal_value",
+        "telemetry": "GSE telemetry: estimated V*(x) per game state; win-probability / expected-points value surface; greedy-policy value vs V*; convergence of the value estimate."
+      }
+    },
+    {
+      "primitive_id": "optimal_stationary_exists",
+      "name": "Existence of an optimal stationary policy",
+      "verbatim_quote": "In the class of MDPs considered here, an optimal stationary policy always exists",
+      "page": "sec 2.3, printed p.14",
+      "latex": "V^\\star(x)=\\sup_{\\pi\\in\\Pi_{\\mathrm{stat}}}V^\\pi(x);\\qquad \\sum_{a}\\pi(a|x)Q^\\star(x,a)=V^\\star(x)\\ \\forall x\\Rightarrow \\pi\\ \\text{optimal}",
+      "symbol_and_unit_ledger": "An optimal policy can be taken stationary (state->action, no history dependence) and deterministic (concentrated on argmax_a Q*(x,a)). A policy is optimal iff it puts all mass on Q*-maximizing actions in every state. Knowing Q* alone suffices to act optimally.",
+      "assumptions": "Countable MDP, discounted criterion, bounded rewards; stationary deterministic optimal policy exists; greedy w.r.t. Q* is optimal.",
+      "breakdown_regime": "This existence result is specific to the discounted (or episodic) MDP class; for average-reward or constrained MDPs the structure differs. History-dependent policies cannot beat the best stationary one here.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE need not search history-dependent play-call strategies: an optimal stationary policy (a mapping from game state to play call) exists and suffices. Derived kernel: GSE's policy search can be restricted to state->action maps (the playbook conditioned on situation), dramatically shrinking the search space, because no history-dependent scheme beats the best stationary one.",
+        "source_operator": "optimal_stationary_exists",
+        "telemetry": "GSE telemetry: verify the policy is stationary (state-conditioned); greedy w.r.t. Q* check; confirm no history-dependent policy outperforms the stationary optimum in simulation."
+      }
+    },
+    {
+      "primitive_id": "bellman_dp",
+      "name": "Bellman equations, contraction, and dynamic programming",
+      "verbatim_quote": "The above facts provide the basis for the value- and policy-iteration algorithms.",
+      "page": "sec 2.3-2.4, printed p.15-16 (Facts 1-3)",
+      "latex": "T^\\pi V=r_\\pi+\\gamma P_\\pi V,\\quad T^\\pi V^\\pi=V^\\pi;\\qquad T^\\star V(x)=\\sup_a\\{r(x,a)+\\gamma\\sum_y P(x,a,y)V(y)\\},\\quad T^\\star V^\\star=V^\\star",
+      "symbol_and_unit_ledger": "T^pi: Bellman policy operator (affine linear); T*: Bellman optimality operator (nonlinear due to sup); for 0<gamma<1 BOTH are maximum-norm contractions, so T V=V has a UNIQUE fixed point (Banach). V^pi solves the linear system r_pi+gamma P_pi V=V; V* solves the nonlinear optimality equation. Action-value analogues: T^pi Q(x,a)=r(x,a)+gamma sum_y P(x,a,y)Q(y,pi(y)); T* Q(x,a)=r(x,a)+gamma sum_y P(x,a,y)sup_a' Q(y,a').",
+      "assumptions": "0<gamma<1 (contraction); bounded rewards; the fixed point is the value function; contraction gives geometric convergence of iteration.",
+      "breakdown_regime": "At gamma=1 the operators are non-expansions, not contractions — uniqueness/geometric convergence can fail (need episodic/absorbing structure). The sup makes T* nonlinear, so V* cannot be solved by linear algebra alone (unlike V^pi).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Bellman equation IS the GSE crucible's recursive evaluation rule: the value of a game state equals the immediate reward plus the discounted value of the resulting state, maximized over play calls. The contraction property guarantees the crucible's backward induction converges to a unique value surface. The RLVR reward verifier checks the Bellman residual T*Q−Q as a consistency gate.",
+        "source_operator": "bellman_dp",
+        "telemetry": "GSE telemetry: Bellman residual ‖T*Q−Q‖_inf; contraction factor gamma; geometric convergence of value iteration; uniqueness of the fixed-point value surface."
+      }
+    },
+    {
+      "primitive_id": "value_policy_iteration",
+      "name": "Value iteration and policy iteration",
+      "verbatim_quote": "After k iterations, policy iteration gives a policy not worse than the policy that is greedy w.r.t. to the value function computed using k iterations of value iteration if the two procedures are started with the same initial value function.",
+      "page": "sec 2.4, printed p.16-17 (eq 16)",
+      "latex": "V_{k+1}=T^\\star V_k\\ \\to V^\\star\\ \\text{(geometric)};\\qquad V^\\pi(x)\\ge V^\\star(x)-\\frac{2}{1-\\gamma}\\|Q-Q^\\star\\|_\\infty",
+      "symbol_and_unit_ledger": "Value iteration: V_{k+1}=T* V_k converges to V* geometrically (Banach); a greedy policy w.r.t. an approximate Q is near-optimal with performance loss <= 2/(1−gamma)‖Q−Q*‖_inf (Singh-Yee bound, eq 16). Policy iteration alternates policy evaluation (compute Q^pi) and policy improvement (greedy w.r.t. Q^pi); each step is costlier but the policy is never worse than k-step value iteration's greedy policy.",
+      "assumptions": "0<gamma<1; value iteration is cheap per step but needs many steps; policy iteration's evaluation step is expensive (solves a linear system) but improves the policy monotonically.",
+      "breakdown_regime": "The 2/(1−gamma) factor blows up as gamma->1: near-undiscounted problems amplify value-approximation error into large policy loss. This is why GSE's value accuracy must tighten as the discount approaches 1.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's crucible runs value iteration (backward induction over the game tree) to estimate V*, then extracts a greedy play-call policy. The Singh-Yee bound quantifies how value-estimation error translates into play-call suboptimality: a Q-error of eps costs at most 2eps/(1−gamma) in value. Policy iteration is GSE's alternate refine-the-playbook loop (evaluate the current playbook, then improve it greedily).",
+        "source_operator": "value_policy_iteration",
+        "telemetry": "GSE telemetry: value-iteration convergence curve; greedy-policy performance loss vs 2‖Q−Q*‖/(1−gamma); policy-iteration improvement steps; gamma-sensitivity of the error amplification."
+      }
+    },
+    {
+      "primitive_id": "td_bootstrapping",
+      "name": "Temporal-difference learning and bootstrapping",
+      "verbatim_quote": "The unique feature of TD learning is that it uses bootstrapping: predictions are used as targets during the course of learning.",
+      "page": "sec 3.1, printed p.18 (Sutton 1984, 1988)",
+      "latex": "\\delta_{t+1}=R_{t+1}+\\gamma\\hat V_t(X_{t+1})-\\hat V_t(X_t),\\qquad \\hat V_{t+1}(x)=\\hat V_t(x)+\\alpha_t\\delta_{t+1}\\mathbb{1}\\{X_t=x\\}",
+      "symbol_and_unit_ledger": "delta_{t+1}: temporal-difference error = reward + discounted next-state estimate − current estimate [reward units]; the target R_{t+1}+gamma V̂_t(X_{t+1}) depends on the CURRENT estimate (bootstrapping); alpha_t: step size; only the visited state's value is updated. TD learns from incomplete episodes without waiting for the final return.",
+      "assumptions": "Finite/tabular MRP; bootstrapping uses predictions as targets; TD error is the difference between successive-time-step value estimates; step sizes small and nonnegative.",
+      "breakdown_regime": "Bootstrapping introduces bias (the target depends on the estimate) but reduces variance versus Monte-Carlo and works online without resetting the state. Monte-Carlo uses the full return (unbiased, high variance, needs episode end / reset). Neither dominates: TD can be faster or slower depending on the problem.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The TD error is GSE's calibration surprise signal: delta = realized EPA + gamma·(predicted value of the resulting state) − (predicted value of the current state). GSE updates its state-value estimates snap-by-snap using bootstrapping, without waiting for the drive to end — exactly how the engine learns online from partial drives. The crucible's per-snap value update is TD(0).",
+        "source_operator": "td_bootstrapping",
+        "telemetry": "GSE telemetry: per-snap TD error delta_t; bootstrapped target R+gamma V̂(next); value-update magnitude alpha·delta; TD-vs-Monte-Carlo variance comparison on simulated drives."
+      }
+    },
+    {
+      "primitive_id": "td_stochastic_approx",
+      "name": "TD as stochastic approximation (ODE convergence)",
+      "verbatim_quote": "Just like many other algorithms in reinforcement learning, tabular TD(0) is a stochastic approximation (SA) algorithm.",
+      "page": "sec 3.1.1, printed p.19-20 (eq 18)",
+      "latex": "\\dot v(t)=c\\,F(v(t)),\\quad F(\\hat V)=T\\hat V-\\hat V;\\qquad \\dot v=r+(\\gamma P-I)v",
+      "symbol_and_unit_ledger": "TD(0) is a stochastic-approximation algorithm tracking the ODE v̇=c(Tv−v)=r+(gamma P−I)v; if it converges, the expected TD error F(V̂)=0, whose unique solution is the true value V (by the Bellman fixed point). The eigenvalues of gamma P−I lie in the open left half-plane, so the ODE is globally asymptotically stable => V̂_t -> V almost surely.",
+      "assumptions": "Stationary ergodic Markov chain of states; Robbins-Monro step-size conditions; the ODE method (Borkar) links the stochastic iterate to a deterministic stable ODE.",
+      "breakdown_regime": "Convergence requires every state sampled infinitely often and the RM step-size conditions; a non-ergodic or transient state chain breaks the guarantee. The convergence is to the value of the SAMPLED MRP, which under off-policy sampling may differ from the target.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's value-learning convergence rests on the same SA/ODE argument: the per-snap updates track a stable linear ODE whose fixed point is the true state value. Derived kernel: GSE verifies its value-learner's stability by checking the ODE eigenvalue condition (gamma P−I in the left half-plane) and the infinite-visitation requirement, rather than assuming convergence.",
+        "source_operator": "td_stochastic_approx",
+        "telemetry": "GSE telemetry: SA step-size schedule; ODE stability (eigenvalues of gamma P−I); state-visitation counts (infinite-often check); almost-sure convergence diagnostic."
+      }
+    },
+    {
+      "primitive_id": "step_sizes",
+      "name": "Robbins-Monro step sizes and the constant-step-size practice",
+      "verbatim_quote": "In fact, in practice people often use constant step-sizes, which clearly violates the RM conditions.",
+      "page": "sec 3.1.1, printed p.20 (RM conditions)",
+      "latex": "\\sum_{t=0}^{\\infty}\\alpha_t=\\infty,\\quad \\sum_{t=0}^{\\infty}\\alpha_t^2<\\infty;\\qquad \\alpha_t=c\\,t^{-\\eta},\\ \\tfrac12<\\eta\\le 1",
+      "symbol_and_unit_ledger": "Robbins-Monro conditions: step sizes sum to infinity (reach the target) but square-sum finite (vanishing noise). alpha_t=c/t (eta=1) is asymptotically best; eta near 1/2 gives bigger transient moves. Constant step-sizes violate RM but are used for non-stationary environments (the policy changes) and small-sample regimes; then parameters converge in DISTRIBUTION with variance proportional to the step size. Iterate-averaging (Polyak-Juditsky) achieves the best asymptotic rate but is rarely used.",
+      "assumptions": "RM conditions for almost-sure convergence to a fixed target; constant step-size for tracking a moving target (convergence in distribution, not to a point).",
+      "breakdown_regime": "A constant step-size never settles (persistent variance) — appropriate only when the target moves. A decaying step-size in a non-stationary environment lags the moving target. The choice is a stationarity-vs-tracking tradeoff; automatic step-size tuning remains open ('the jury is still out').",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's value-learner step size is a stationarity dial: decaying alpha_t for a stable calibration target, constant alpha for a shifting defense (non-stationary). The book's warning that constant step-sizes give convergence in distribution (persistent variance) is GSE's calibration-jitter floor — the engine must size alpha to the defense's adaptivity, and never claim point convergence while tracking a moving target.",
+        "source_operator": "step_sizes",
+        "telemetry": "GSE telemetry: step-size schedule alpha_t; RM-condition check; constant-vs-decaying choice vs defense stationarity; limiting-distribution variance proportional to alpha."
+      }
+    },
+    {
+      "primitive_id": "td_lambda",
+      "name": "TD(lambda): unifying Monte-Carlo and TD(0)",
+      "verbatim_quote": "The previous examples show that both Monte-Carlo and TD(0) have their own merits.",
+      "page": "sec 3.1.3, printed p.23-25 (eligibility traces)",
+      "latex": "R_{t:k}=\\sum_{s=t}^{t+k}\\gamma^{s-t}R_{s+1}+\\gamma^{k+1}\\hat V_t(X_{t+k+1}),\\quad \\text{weights }(1-\\lambda)\\lambda^k;\\qquad z_{t+1}(x)=\\mathbb{1}\\{x=X_t\\}+\\gamma\\lambda z_t(x)",
+      "symbol_and_unit_ledger": "TD(lambda) mixes multi-step returns R_{t:k} with exponential weights (1−lambda)lambda^k; lambda=0 gives TD(0), lambda=1 gives Monte-Carlo. Eligibility traces z_t(x) make it incremental: accumulating traces z_{t+1}=1{x=X_t}+gamma lambda z_t; replacing traces z_{t+1}=max(1{x=X_t},gamma lambda z_t). The trace modulates how much the TD error updates each state's value (credit assignment over the recent trajectory).",
+      "assumptions": "lambda in [0,1] controls bootstrapping amount; replacing traces often perform better; lambda>0 helps under partial state knowledge or function approximation; best lambda found by trial and error (can change mid-run without breaking convergence).",
+      "breakdown_regime": "lambda=1 with accumulating traces = every-visit MC (episodic); with replacing traces = first-visit MC (undiscounted only). The wrong lambda slows convergence; there is no universal optimal lambda. Multi-step Q-learning is less clean because Q-learning TD errors do not telescope.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "TD(lambda) is GSE's drive-level credit assignment: a touchdown's reward must be credited back across the whole drive's plays, and lambda controls how far back the credit flows. Eligibility traces are GSE's mechanism for assigning a drive's outcome to the earlier play calls that enabled it. lambda=0 credits only the last snap; lambda=1 credits the whole drive (Monte-Carlo). GSE tunes lambda to the drive structure.",
+        "source_operator": "td_lambda",
+        "telemetry": "GSE telemetry: eligibility traces z_t per state; lambda trace-decay; multi-step return R_{t:k}; credit assignment across a drive; lambda tuning vs convergence speed."
+      }
+    },
+    {
+      "primitive_id": "function_approx",
+      "name": "Function approximation for large state spaces",
+      "verbatim_quote": "When the state space is large (or infinite), it is not feasible to keep a separate value for each state in the memory.",
+      "page": "sec 3.2, printed p.25-26 (averagers)",
+      "latex": "V_\\theta(x)=\\theta^\\top\\phi(x),\\quad \\phi:\\mathcal{X}\\to\\mathbb{R}^d;\\qquad \\text{averager: }s_i\\ge 0,\\ \\sum_i s_i(x)\\equiv 1\\Rightarrow \\theta\\mapsto V_\\theta\\ \\text{max-norm non-expansion}",
+      "symbol_and_unit_ledger": "V_theta(x)=theta^T phi(x): linear function approximation; phi(x): feature vector (basis functions); theta: parameters. Features via polynomial/Fourier/wavelet/RBF/tensor-product/state-aggregation. Averagers (nonnegative basis summing to 1) are max-norm NON-EXPANSIONS, making them well-behaved with approximate dynamic programming. Binary/sparse features give cheap evaluation (s additions for s-sparse phi).",
+      "assumptions": "Large/infinite state space precludes tabular values; the feature map phi encodes prior structure; averagers preserve the contraction-friendly max-norm geometry.",
+      "breakdown_regime": "Linear approximation can diverge when combined with bootstrapping and off-policy sampling (the deadly triad) unless the architecture is well-behaved (e.g. averagers). Poor features => large approximation error; the feature choice IS the inductive bias (links to the PAC layer).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's game-state space is enormous (down×distance×field×formation×personnel×score×time), so its value function MUST be approximated: V_theta(x)=theta^T phi(x), where phi is the football ontology's feature map. Averager-style features (soft coverage-shell memberships summing to 1) keep the value learner max-norm well-behaved. The ontology features are the inductive bias that makes the huge state space learnable.",
+        "source_operator": "function_approx",
+        "telemetry": "GSE telemetry: feature map phi(x) from the ontology; parameter vector theta; averager non-expansion check; approximation error vs tabular; deadly-triad (bootstrapping+off-policy+function-approx) stability monitor."
+      }
+    },
+    {
+      "primitive_id": "qlearning_sampling",
+      "name": "Q-learning: off-policy learning from arbitrary sampling",
+      "verbatim_quote": "A major attraction of Q-learning is its simplicity and that it allows one to use an arbitrary sampling strategy to generate the training data provided that in the limit, all state-action pairs are updated infinitely often.",
+      "page": "sec 4.3.1, printed p.56-57 (Watkins 1989, eq 34)",
+      "latex": "\\delta_{t+1}(Q)=R_{t+1}+\\gamma\\max_{a'}Q(Y_{t+1},a')-Q(X_t,A_t),\\quad Q_{t+1}(x,a)=Q_t(x,a)+\\alpha_t\\delta_{t+1}\\mathbb{1}\\{x=X_t,a=A_t\\}",
+      "symbol_and_unit_ledger": "Q-learning keeps Q_t(x,a) estimating Q*(x,a); the TD error uses max_a' Q(Y,a') (the greedy next-action value), so it learns the OPTIMAL policy regardless of the behavior policy that generated the data (off-policy). Converges to Q* if every state-action pair is visited infinitely often and appropriate local learning rates are used (Tsitsiklis 1994; Jaakkola et al. 1994). In equilibrium E[delta]=T*Q−Q=0.",
+      "assumptions": "Finite MDP; all state-action pairs visited infinitely often; appropriate (local, RM-like) learning rates; the sampling/behavior policy can be arbitrary (epsilon-greedy, Boltzmann) as long as it explores enough.",
+      "breakdown_regime": "If some state-action pair is never visited, its Q-value never converges — exploration is mandatory. The convergence is asymptotic; finite-sample rates (Even-Dar-Mansour 2003) require careful tuning. With function approximation the guarantee can break (deadly triad).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Q-learning is GSE's play-value learner: it learns the OPTIMAL play-call value Q* from the plays actually called (the behavior policy), not just from greedy plays. The max_a' backup means GSE learns what the best call WOULD have been even when a different call was made — the counterfactual the bandit layer said was unobservable is recovered here via the Bellman max. The infinite-visitation condition is GSE's exploration requirement.",
+        "source_operator": "qlearning_sampling",
+        "telemetry": "GSE telemetry: Q_t(x,a) play-value table; off-policy TD error with max backup; state-action visitation counts (infinite-often check); behavior-vs-target policy divergence; convergence to Q*."
+      }
+    },
+    {
+      "primitive_id": "qlearning_insight",
+      "name": "Q-learning's key insight: action-values are expectations",
+      "verbatim_quote": "The key observation that lead to the discovery of Q-learning is that unlike the optimal state values, the optimal action-values can be expressed as expectations",
+      "page": "sec 4.3.1, printed p.57",
+      "latex": "Q^\\star(x,a)=r(x,a)+\\gamma\\sum_y P(x,a,y)\\sup_{a'}Q^\\star(y,a')\\quad(\\text{expectation form});\\qquad V^\\star(x)=\\sup_a\\{r(x,a)+\\gamma\\sum_y P(x,a,y)V^\\star(y)\\}\\ (\\text{sup outside})",
+      "symbol_and_unit_ledger": "The optimal ACTION-value Q* has the sup INSIDE the expectation (over next states), so Q*(x,a) is itself an expectation and can be estimated incrementally by sampling. The optimal STATE-value V* has the sup OUTSIDE the expectation, so it is NOT a plain expectation and cannot be estimated the same way. This asymmetry is why Q-learning (action-values) admits a simple incremental TD update while V*-learning does not.",
+      "assumptions": "The expectation form of Q* enables model-free incremental estimation; V* requires the model (P) or a different approach; this is the structural reason Q-learning is the canonical model-free control algorithm.",
+      "breakdown_regime": "Trying to learn V* incrementally model-free fails because of the sup-outside-expectation structure; one must learn Q* (or use a model). This is a fundamental structural constraint, not an algorithmic limitation.",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE learns action-values Q*(state, play-call), not state-values, precisely because Q* is an expectation that can be estimated snap-by-snap from sampled outcomes. Derived kernel: GSE's model-free play-value learner targets Q* (the expectation form), and the crucible's value-iteration targets V* (the sup form) — the two are connected by V*(x)=max_a Q*(x,a), and GSE must not confuse which object admits incremental learning.",
+        "source_operator": "qlearning_insight",
+        "telemetry": "GSE telemetry: Q* (expectation form) vs V* (sup form) estimation; verify the incremental learner targets Q*; V*=max_a Q* consistency check."
+      }
+    },
+    {
+      "primitive_id": "qlearning_offpolicy",
+      "name": "Q-learning is inherently off-policy",
+      "verbatim_quote": "Q-learning is an inherently off-policy algorithm: the temporal differences underlying Q-learning do not telescope even when",
+      "page": "sec 4.3.1, printed p.57",
+      "latex": "\\text{Q-learning TD errors do not telescope even when }X_{t+1}=Y_{t+1};\\qquad \\text{target}=\\max_{a'}Q(Y,a')\\ne Q(Y,\\pi(Y))",
+      "symbol_and_unit_ledger": "Q-learning's TD error uses the greedy max_a' Q(Y,a') as the next-state target, which differs from the value of the action the behavior policy actually takes. Hence the TD errors do NOT telescope along a trajectory (unlike on-policy TD/MC), and multi-step Q-learning extensions are less clean. The target policy (greedy) differs from the behavior policy (sampling) — the definition of off-policy.",
+      "assumptions": "Off-policy: learn the greedy target while following an exploring behavior; the non-telescoping is intrinsic to the max backup; on-policy methods (SARSA) use Q(Y,A_next) instead and DO telescope.",
+      "breakdown_regime": "Off-policy learning enables reuse of arbitrary historical data but introduces the deadly-trad divergence risk with function approximation. The non-telescoping means eligibility-trace multi-step Q-learning needs care (e.g. Watkins's Q(lambda) cuts traces on non-greedy actions).",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE learns the optimal playbook OFF-POLICY from the historical record of plays actually called — it does not need to have called the optimal plays to learn their value. This is why GSE can mine decades of game film: the max backup recovers the best-call value from any called play. The off-policy nature is what makes the historical corpus usable, and the non-telescoping is why GSE's drive-credit assignment must cut traces on non-greedy calls.",
+        "source_operator": "qlearning_offpolicy",
+        "telemetry": "GSE telemetry: off-policy target max_a' Q vs behavior Q(Y,A_next); trace-cutting on non-greedy actions; historical-data reuse; deadly-triad divergence monitor."
+      }
+    },
+    {
+      "primitive_id": "post_decision_states",
+      "name": "Post-decision states (afterstates) avoid stochastic optimization",
+      "verbatim_quote": "Thus, the expectation is avoided, i.e., no stochastic optimization problem needs to be solved.",
+      "page": "sec 4.3.1, printed p.58 (Powell 2007; Sutton-Barto afterstates)",
+      "latex": "P(x,a,y)=P_A(f(x,a),y),\\quad Q^\\star(x,a)=r(x,a)+\\gamma V^\\star_A(f(x,a)),\\quad V^\\star_A(z)=\\sum_y P_A(z,y)V^\\star(y)",
+      "symbol_and_unit_ledger": "Post-decision state z=f(x,a): the deterministic effect of action a in state x, BEFORE the next stochastic event; P_A captures the stochastic effect. Learning V*_A(z) (the post-decision value) instead of Q*(x,a) can need less storage and fewer samples. Greedy action = argmax_a r(x,a)+gamma V_A(f(x,a)) — NO expectation, so no stochastic optimization problem (which is hard when next-states/actions are many).",
+      "assumptions": "The MDP must admit a post-decision-state decomposition P(x,a,y)=P_A(f(x,a),y); f known; common in operations-research problems (inventory f(x,a)=(x+a)∧M).",
+      "breakdown_regime": "If the transition does not decompose into deterministic-then-stochastic, post-decision states are unavailable. The advantage is computational (avoid the expectation in action selection) and statistical (smaller space Z than X×A).",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's post-decision state is the resulting down-distance-field-position AFTER a play's deterministic effect but BEFORE the next stochastic event (e.g. the new line of scrimmage before the next play's outcome). Derived kernel: GSE learns the afterstate value V_A to avoid re-simulating the expectation at every action-selection step — the crucible computes greedy play calls as argmax_a r+gamma V_A(f(x,a)) without a nested stochastic optimization, a major compute saving.",
+        "source_operator": "post_decision_states",
+        "telemetry": "GSE telemetry: post-decision state z=f(x,a); afterstate value V_A(z); greedy action without nested expectation; storage/sample savings vs full Q*(x,a)."
+      }
+    },
+    {
+      "primitive_id": "exploration_greedy_fails",
+      "name": "Pure greed fails: exploration is mandatory",
+      "verbatim_quote": "A basic observation then is that a bandit learner who always chooses the action with the best estimated payoff (i.e., who always makes the greedy choice) can fail to find the best action with positive probability, which in turn leads to a large loss.",
+      "page": "sec 4.2.1, printed p.47 (Robbins 1952)",
+      "latex": "\\text{greedy-only}\\Rightarrow \\Pr[\\text{miss best action}]>0\\Rightarrow \\text{large regret};\\qquad \\text{single-state MDP}=\\text{bandit}",
+      "symbol_and_unit_ledger": "A bandit is a single-state MDP. A learner that always picks the best-ESTIMATED action can lock onto a suboptimal action (its estimate of the true best never improves because it is never tried), failing with positive probability and incurring large loss. Therefore a good learner MUST explore — take actions that look suboptimal.",
+      "assumptions": "Bandit (single-state MDP); estimates are noisy; greedy-only never gathers information about untried actions; exploration-exploitation tradeoff is fundamental.",
+      "breakdown_regime": "Pure exploitation is provably suboptimal in the face of uncertainty; this is the RL counterpart of the online bandit's mandatory exploration (Shalev-Shwartz 2012). Without exploration the infinite-visitation condition of Q-learning also fails.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE must explore non-greedy play calls: a engine that only ever calls its best-estimated play never learns whether a different call is better, and can lock onto a suboptimal playbook. This is the formal reason GSE's crucible probes alternative calls (the 10,000 worlds explore the action space) rather than only simulating the greedy line. Pure greed is the tout's 'lock' — provably fragile.",
+        "source_operator": "exploration_greedy_fails",
+        "telemetry": "GSE telemetry: exploration rate; untried-action count; greedy-lock detection (an action never sampled); regret from pure-greedy vs exploring policy."
+      }
+    },
+    {
+      "primitive_id": "ofu_ucb",
+      "name": "Optimism in the face of uncertainty (UCB1)",
+      "verbatim_quote": "Notice that an action's UCB is larger if less information is available for it.",
+      "page": "sec 4.2.1, printed p.47-48 (Lai-Robbins 1985; Auer et al. 2002)",
+      "latex": "U_t(a)=\\bar r_t(a)+R\\sqrt{\\frac{2\\log t}{n_t(a)}},\\quad \\Pr[\\text{UCB fails}]=t^{-4};\\qquad \\text{select }a_t=\\arg\\max_a U_t(a)",
+      "symbol_and_unit_ledger": "OFU principle: choose the action with the best UPPER CONFIDENCE BOUND. UCB1: U_t(a)=sample mean r̄_t(a) + R√(2 log t / n_t(a)); n_t(a): pull count; R: reward range; failure probability t^{-4}. An action's UCB is larger when less information is available (small n_t), and rises even when untried — so uncertainty drives exploration automatically. UCRL2 extends OFU to MDPs.",
+      "assumptions": "Frequentist agnostic setting: rewards independent across actions/time, bounded [0,1] (or [-R,R]); no prior knowledge of distributions; UCB balances exploration (uncertainty bonus) and exploitation (sample mean).",
+      "breakdown_regime": "UCB1's range-based bonus is loose when reward variance is small (variance-aware UCB, Audibert et al. 2009, is essentially unimprovable). The Bayesian alternative (Gittins index) is optimal on average over a prior but gives no per-environment guarantee.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's play-call exploration uses OFU: it favors calls whose value is uncertain (few simulated reps), not just calls with the best mean estimate. The UCB bonus R√(2 log t/n_t) is GSE's uncertainty-driven exploration schedule — a play call tried in only a few crucible worlds gets an optimism bonus, ensuring the engine probes the whole playbook. This is the principled alternative to epsilon-greedy's blind randomness.",
+        "source_operator": "ofu_ucb",
+        "telemetry": "GSE telemetry: per-call UCB U_t(a); pull count n_t(a); uncertainty bonus vs sample mean; OFU-driven exploration vs epsilon-greedy; UCRL2-style MDP optimism."
+      }
+    },
+    {
+      "primitive_id": "explore_exploit_balance",
+      "name": "The exploration-exploitation tradeoff",
+      "verbatim_quote": "The question is then how to balance the frequency of exploring and exploiting (i.e., greedy) actions.",
+      "page": "sec 4.2.1, printed p.47 (epsilon-greedy, Boltzmann)",
+      "latex": "\\epsilon\\text{-greedy: }\\Pr[a]=\\epsilon/|\\mathcal{A}|\\ (\\text{random}),\\ 1-\\epsilon\\ (\\text{greedy});\\qquad \\text{Boltzmann: }\\pi(a)=\\frac{e^{\\beta Q_t(a)}}{\\sum_{a'}e^{\\beta Q_t(a')}}",
+      "symbol_and_unit_ledger": "epsilon-greedy: random action with probability epsilon, greedy otherwise; Boltzmann/softmax: action probability proportional to exp(beta Q_t(a)), beta controls greediness (beta->inf = greedy). Boltzmann accounts for RELATIVE action values; epsilon-greedy does not. Tuned epsilon(t) can be competitive but the best choice is problem-dependent with no automated tuning. Both extend to MDPs given action-value estimates.",
+      "assumptions": "Action-value estimates available; epsilon or beta tuned to the problem; exploration must persist enough to satisfy infinite visitation but decay enough to exploit.",
+      "breakdown_regime": "No universally optimal exploration schedule (problem-dependent, no automated way). Too much exploration wastes reward; too little locks onto suboptimal actions. Boltzmann's beta->0 is uniform random, beta->inf is greedy; the softmax is the same link function as the online layer's entropic mirror descent.",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's play-calling balances exploration (probing uncertain calls) and exploitation (calling the best-known play) via a softmax/Boltzmann policy over Q-values — the SAME entropic link function as the online layer's mirror descent. The temperature beta is GSE's aggressiveness dial. The book's warning that no automated tuning exists means GSE must calibrate beta per game situation, not assume a universal schedule.",
+        "source_operator": "explore_exploit_balance",
+        "telemetry": "GSE telemetry: exploration schedule epsilon(t) or beta; Boltzmann play-call distribution over Q; relative-value-aware exploration; per-situation beta calibration."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "t0",
+      "think": "The Foundry now has its neurons (Nielsen), its deep representations (Prince), its fleet (Reddi), its in-game online constitution (Shalev-Shwartz 2012), and its pre-game generalization epistemology (Shalev-Shwartz & Ben-David 2014). Szepesvari's monograph supplies the missing decision layer: reinforcement learning, the theory of an agent that learns to ACT, not merely to predict. This is the layer that turns GSE from a calibrated forecaster into a play-caller. The football game is a Markov Decision Process: the state is down, distance, field position, formation, personnel, score and time; the action is the play or coverage call; the transition kernel is the stochastic outcome of that call. The decisive identification is that the 10,000-world crucible simulator IS an empirical estimate of the transition kernel P0. Every world the crucible rolls is a sample from P0(.|x,a), and the ensemble's average is the expected return the MDP theory optimizes. The objective is the discounted return, immediate EPA plus gamma-discounted future win-probability, and gamma is GSE's tempo dial — how much a play's future consequences weigh against its immediate gain. The value function V*(x) is the win-probability of a game state under optimal play-calling, and the action-value Q*(x,a) is the value of a specific call. The Bellman equation is the crucible's recursive evaluation rule: the value of a state is the immediate reward plus the discounted value of the resulting state, maximized over calls. Because the Bellman operators are maximum-norm contractions for gamma<1, the crucible's backward induction converges geometrically to a UNIQUE value surface — Banach's fixed-point theorem is the convergence guarantee of the whole simulation. Value iteration is that backward induction; policy iteration is the alternate refine-the-playbook loop (evaluate the current playbook, then improve it greedily). The Singh-Yee bound quantifies the stakes: a Q-estimation error of eps costs at most 2eps/(1-gamma) in policy value, so as gamma approaches one GSE must tighten its value accuracy or the play-call suboptimality blows up. The learning algorithms are how GSE acquires these values from data. Temporal-difference learning bootstraps — it uses its own predictions as targets — and the TD error, realized reward plus discounted next-state estimate minus current estimate, is exactly GSE's calibration surprise signal, updated snap-by-snap without waiting for the drive to end. TD is a stochastic-approximation algorithm tracking a stable linear ODE whose fixed point is the true value, and the Robbins-Monro step-size conditions are GSE's convergence contract; the book's warning that constant step-sizes give convergence in distribution (persistent variance) is GSE's calibration-jitter floor when tracking a shifting defense. TD(lambda) with eligibility traces is GSE's drive-level credit assignment: a touchdown's reward flows back across the drive's plays, and lambda controls how far back the credit reaches. Because the game-state space is enormous, the value function must be approximated as V_theta(x)=theta^T phi(x), where phi is the football ontology's feature map — the same inductive bias the PAC layer demanded — and averager-style features keep the learner max-norm well-behaved against the deadly triad of bootstrapping, off-policy sampling, and function approximation. Q-learning is the crown of the control layer. Its key insight is structural: the optimal ACTION-value is an expectation (the sup sits inside), so it can be estimated incrementally from sampled outcomes, whereas the optimal STATE-value has the sup outside and cannot. Q-learning is inherently OFF-POLICY — its max backup learns the value of the best call WOULD have been even when a different call was made. This is precisely how GSE mines decades of game film: it recovers optimal play values from the plays actually called, recovering the counterfactual the bandit layer said was unobservable. The price is the infinite-visitation condition: every state-action pair must be tried infinitely often, which makes exploration mandatory. Post-decision states (afterstates) are GSE's compute saving: learn the value of the resulting down-distance before the next stochastic event, and greedy action selection avoids a nested stochastic optimization. Finally, exploration. A pure-greedy learner can lock onto a suboptimal action with positive probability and incur large loss — the formal death of the tout's 'lock'. GSE must probe non-greedy calls, and the principled way is optimism in the face of uncertainty: UCB1 adds an uncertainty bonus R sqrt(2 log t / n_t) that is larger for less-tried calls, so the crucible automatically explores the whole playbook. The Boltzmann/softmax play-call distribution over Q-values is the SAME entropic link function as the online layer's mirror descent, tying the decision layer back to the regret layer. The RLVR reward verifier closes the loop by checking the Bellman residual T*Q-Q as a consistency gate: a learned play-value surface that violates its own Bellman equation is refused, not published. One more distinction organizes the whole layer. GSE runs BOTH a model-based and a model-free learner: the crucible is model-based (it simulates the transition kernel and plans by value iteration), while Q-learning on historical film is model-free (it estimates action-values directly from sampled transitions without ever building P0). The two must agree — a model-free Q-surface that contradicts the model-based crucible values signals a misspecified kernel or a non-stationary defense, and the disagreement is itself a calibration diagnostic. The actor-critic methods, the learned counterpart of policy iteration, split this into a critic that estimates value and an actor that improves the policy on a slower timescale, which is how GSE can refine its playbook online without re-running the full crucible at every snap. Every equation is a load-bearing law of GSE's play-call decision engine, the layer that turns calibrated prediction into optimal action.",
+      "retrocausal_genealogy": "Retrocausal genealogy: the MDP framework descends from Bellman (1957, dynamic programming and the Bellman equation) and Howard (1960, policy iteration); the contraction/fixed-point analysis from Banach (1922); value iteration's geometric convergence and the greedy-policy performance bound from Singh and Yee (1994); temporal-difference learning from Sutton (1984, 1988) with the TD(lambda)/eligibility-trace unification; the stochastic-approximation ODE method from Robbins-Monro (1951), Kushner, and Borkar (1998); iterate-averaging from Polyak-Juditsky (1992); Q-learning from Watkins (1989) with convergence proofs by Watkins-Dayan (1992), Tsitsiklis (1994), Jaakkola et al. (1994), and finite-sample rates by Even-Dar-Mansour (2003); post-decision states from Powell (2007) and Sutton-Barto afterstates (1998); the bandit from Robbins (1952); epsilon-greedy and UCB1 from Auer-Cesa-Bianchi-Fischer (2002); the OFU principle from Lai-Robbins (1985); variance-aware UCB from Audibert et al. (2009); the Gittins index from Gittins (1989); UCRL2 for MDPs. Each GSE decision law is the final cause of a decades-long chain of sequential-decision necessity, pulled backward from the crucible's need to call optimal plays.",
+      "theory_of_mind": "Recursive theory of mind: an MDP is a theory-of-mind game against Nature. The transition kernel P0 is Nature's stochastic response to the agent's action; the agent models P0 to predict the consequences of its calls, and the value function is the agent's model of how its own future decisions will compound. In football the recursion is literal: the offense models the defense's coverage response to a call, the defense models the offense's tendency, and the engine models both — the Bellman backup nests these models recursively over the game tree. Off-policy Q-learning is a theory-of-mind superpower: it reasons about what the best call WOULD have been (the greedy target) while observing what was actually called (the behavior), exactly the counterfactual reasoning the bandit layer flagged as the hard part of partial feedback.",
+      "cross_layer_veto": "Cross-layer veto adjudication: the online layer (2012) VETOES treating the in-game sequence as i.i.d. — the MDP transition kernel, not a fixed distribution, governs it. The PAC layer (2014) VETOES an unbounded-complexity value function class and demands the ontology features as inductive bias. The contraction layer VETOES gamma=1 value iteration without episodic structure (no contraction, no unique fixed point) and VETOES loose value accuracy as gamma->1 (the 2/(1-gamma) amplification). The Q-learning layer VETOES claiming convergence without infinite state-action visitation, and VETOES the deadly-triad combination (bootstrapping + off-policy + function approximation) without a well-behaved architecture. The exploration layer VETOES pure-greedy play-calling (positive-probability lock-on). The RLVR verifier VETOES any learned Q-surface with a nonzero Bellman residual T*Q-Q. When layers conflict the binding constraint wins and the gatekeeper PASSes rather than fabricating a guarantee: an unconverged value surface is refused, not published. Same fail-closed discipline as the pick-publication gate."
+    }
+  ],
+  "universal_lens": "Any agent that learns to act sequentially in a stochastic environment is governed by the MDP/Bellman framework: the value of a state is the immediate reward plus the discounted value of the next state, optimized over actions; the Bellman operators are contractions guaranteeing a unique fixed point; value/policy iteration compute it; TD/Q-learning estimate it from sampled transitions (Q-learning off-policy because action-values are expectations); and exploration is mandatory because pure greed locks onto suboptimal actions with positive probability. These laws bind any sequential decision system — robotics, inventory, routing, finance, and football play-calling alike.",
+  "gsi_mapping": "For GSI, this monograph is the epistemology of learning to ACT under uncertainty. It formalizes why a decision system must model the consequences of its actions (the transition kernel), why value estimation converges only under contraction and infinite visitation, why off-policy learning recovers counterfactual action values from observed behavior, why exploration is provably necessary (pure greed fails), and why a learned value surface must satisfy its own Bellman equation (the RLVR residual gate). It gives GSI the fail-closed verification discipline for decision systems: refuse unconverged or Bellman-inconsistent value surfaces, never claim optimality without the visitation and contraction conditions.",
+  "gse_mapping": "For GSE, the play-call engine is an MDP reinforcement learner: state = down/distance/field/formation/personnel/score/time, action = play/coverage call, transition kernel = the 10,000-world crucible simulator, reward = EPA/win-probability added, discount gamma = the tempo dial. V*(x) is the win-probability of a game state; the Bellman backup is the crucible's recursive play-sequence evaluation; value iteration is backward induction over the game tree; the TD error is the per-snap calibration surprise; TD(lambda) is drive-level credit assignment; Q-learning learns optimal play values OFF-POLICY from historical film; post-decision states avoid nested stochastic optimization; and OFU/UCB exploration probes the whole playbook. The RLVR verifier gates on the Bellman residual. This is the decision layer that turns GSE's calibrated prediction into optimal action."
+}
