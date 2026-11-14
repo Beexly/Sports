@@ -498,3 +498,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 22:25:57 | COMPLETE | 217c20c5e6ddf302 | primitives=23 think_words=964
 - 2026-11-13 22:29:21 | CLAIMED | 5a81486aa9ceb741 | worker=hermes-inline file=2016 Find the Open Receiver QB Decision Making.pdf
 - 2026-11-13 22:33:07 | COMPLETE | 5a81486aa9ceb741 | primitives=22 think_words=1042
+- 2026-11-13 22:34:01 | CLAIMED | 0cf53b76efe80564 | worker=hermes-inline file=2016 Recognizing and Analyzing Ball Screen Defense NBA.pdf
+- 2026-11-13 22:40:30 | COMPLETE | 0cf53b76efe80564 | primitives=22 think_words=1011

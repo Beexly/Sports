@@ -1,0 +1,549 @@
+{
+ "book_id": "0cf53b76efe80564",
+ "title": "Recognizing and Analyzing Ball Screen Defense in the NBA",
+ "author": "Avery McIntyre, Joel Brooks, John Guttag, Jenna Wiens (Michigan + MIT CSAIL)",
+ "year": 2016,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2016 Recognizing and Analyzing Ball Screen Defense NBA.pdf",
+ "source_note": "MIT Sloan Sports Analytics Conference 2016 Research Papers Competition, 10 pages, full read via pymupdf. Identity confirmed (McIntyre/Brooks/Guttag/Wiens, Michigan + MIT CSAIL). CATALOG DOMAIN MISMATCH: queue primary_domain='football' but content is NBA basketball; extracted under true domain math. PDF renders 'f' as Greek-beta U+03D0 (classiϐier=classifier); norm folds U+03D0->'f' (NOT 'fi', confirmed by byte inspection). Softmax/threshold/class-weight/KL reconstructed labeled from clean prose. Data: STATS SportVU (x,y players + x,y,z ball, 25 fps) + play-by-play, 4 seasons (2011-12:254 games, 2012-13:611, 2013-14:1315, 2014-15:716), focus 2013-14. Method: 3-stage pipeline (segment/identify/classify); 4 schemes over/under/switch/trap (4 players: handler, on-ball def, screener, screener def); 340 hand-labeled (199 over/56 under/57 switch/28 trap), label by defining characteristic; align at screen moment (min screener-def distance, 10 frames prior); pairwise-distance features -> summary stats -> fixed vector; stratified 70/30, min/max scale, multinomial logistic regression, 5-fold CV, inverse-frequency class weights. Softmax P(y=j|x)=exp(x'wj)/Σexp(x'wk), argmax. Accuracy 0.69±0.03 (100 splits); trap recall 0.19 (hardest). Confidence threshold h: argmax if maxP>h else unclear; h=0.6 -> 219,372/270,823 unclear. Applied: 146,314 over/69,721 under/37,336 switch/17,451 trap. Team analysis: symmetric KL divergence; Heat trap 13.2% vs 7.5% avg (2nd-most turnovers), Bulls over +7% (sidelines). Player: 53 handlers >300 instances; LeBron switch 0.83 pts/poss (suboptimal); shooters dominate vs under. Defense: scheme-specific pairs, synergy (Noah+Rose) / anti-synergy (Paul+Griffin over ~1.2 allowed); Adams standout; best >2 SD vs league avg. No sportsbook lines used as model inputs.",
+ "domain": "math",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "critical_decision",
+   "name": "Defending the ball screen is a critical coaching decision",
+   "verbatim_quote": "determining how to defend the ball screen is among the most critical decisions faced by NBA coaching staffs.",
+   "page": 1,
+   "latex": "\\text{scheme}^*=\\arg\\min_{s\\in\\{\\text{over,under,switch,trap}\\}}\\ \\mathbb{E}[\\text{pts/poss}\\mid s,\\ \\text{personnel}]",
+   "symbol_and_unit_ledger": {
+    "scheme": "defensive counter to the ball screen [4 classes]",
+    "pts/poss": "points per possession [score]"
+   },
+   "assumptions": [
+    "The ball screen is the NBA's go-to offensive play, so defending it is a critical decision",
+    "The choice of counter (over/under/switch/trap) drives possession outcomes"
+   ],
+   "breakdown_regime": "The optimal scheme is personnel- and situation-dependent; no single counter dominates, so the decision must be conditioned on the handler and the defensive pair.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE coverage-call decision IS this ball-screen choice: the engine selects a defensive counter (coverage scheme) to minimize expected opponent value conditioned on personnel and situation, the coverage-call optimization at the heart of football pass-defense reasoning. GSI: personnel-conditional scheme selection minimizing expected opponent value.",
+    "source_operator": "critical_decision",
+    "telemetry": "scheme distribution; pts/poss by scheme; personnel conditioning"
+   }
+  },
+  {
+   "primitive_id": "coordination_havoc",
+   "name": "The screen creates momentary havoc requiring coordination",
+   "verbatim_quote": "The momentary havoc caused by the screen requires coordination to impede the ball handler, deny an opportunity for the screener, and avoid an untenable mismatch.",
+   "page": 1,
+   "latex": "\\text{screen}\\Rightarrow \\text{transient advantage};\\quad \\text{defense must }(\\text{impede handler})\\land(\\text{deny screener})\\land(\\text{avoid mismatch})",
+   "symbol_and_unit_ledger": {
+    "mismatch": "unfavorable defensive matchup [state]"
+   },
+   "assumptions": [
+    "The screen creates a brief offensive advantage (havoc)",
+    "The defense must simultaneously impede the handler, deny the screener, and avoid a mismatch"
+   ],
+   "breakdown_regime": "The multi-objective coordination under time pressure is the core difficulty; mismanagement yields an offensive advantage and a score, the transient-window coordination problem.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE transient-window coordination IS this screen havoc: the engine models a brief event-created advantage that the defense must neutralize via simultaneous multi-objective coordination (impede/deny/avoid-mismatch) within a short window, the transient-coordination structure of a pick-and-roll or play-action. GSI: multi-objective coordination within an event-created transient window.",
+    "source_operator": "coordination_havoc",
+    "telemetry": "screen-created advantage duration; coordination objectives; mismatch risk"
+   }
+  },
+  {
+   "primitive_id": "over_scheme",
+   "name": "Over: on-ball defender stays between handler and screener",
+   "verbatim_quote": "On-ball defender stays between the ball handler and screener i.e., goes \"over\" the screen",
+   "page": 2,
+   "latex": "\\text{Over}:\\ \\text{on-ball defender remains between handler and screener (fight over the screen)}",
+   "symbol_and_unit_ledger": {
+    "on-ball defender": "defender guarding the ball handler [agent]",
+    "screener": "offensive player setting the screen [agent]"
+   },
+   "assumptions": [
+    "Over means the on-ball defender fights over the screen, staying between handler and screener",
+    "It pressures the handler but can be beaten by a quick pull-up or a roll"
+   ],
+   "breakdown_regime": "Over is one of four mutually-exclusive scheme labels; subtypes (hedge, show) exist but are not resolved at this granularity.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE over-coverage primitive IS this scheme definition: the engine encodes the 'over' coverage (defender fights over the screen, stays with the handler) as a discrete coverage state with its own outcome distribution, the coverage-taxonomy building block. GSI: discrete coverage-state definition with outcome distribution.",
+    "source_operator": "over_scheme",
+    "telemetry": "over frequency; pts/poss vs over; handler pull-up vulnerability"
+   }
+  },
+  {
+   "primitive_id": "switch_scheme",
+   "name": "Switch: defenders swap their original matchups",
+   "verbatim_quote": "On-ball defender and screener defender switch their original matchups",
+   "page": 2,
+   "latex": "\\text{Switch}:\\ \\text{on-ball defender}\\leftrightarrow\\text{screener defender exchange matchups}",
+   "symbol_and_unit_ledger": {
+    "matchup": "defender-offender assignment [pairing]"
+   },
+   "assumptions": [
+    "Switch means the two defenders exchange their original matchups",
+    "It avoids the screen but can create a size/speed mismatch"
+   ],
+   "breakdown_regime": "Switch neutralizes the screen action but trades it for a potential mismatch; its value depends on the defenders' versatility and the handler's skill.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE switch-coverage primitive IS this scheme definition: the engine encodes 'switch' (defenders exchange matchups) as a coverage state that trades screen-neutralization for mismatch risk, valued by defender versatility. GSI: matchup-exchange coverage state with mismatch tradeoff.",
+    "source_operator": "switch_scheme",
+    "telemetry": "switch frequency; pts/poss vs switch; mismatch creation"
+   }
+  },
+  {
+   "primitive_id": "trap_scheme",
+   "name": "Trap: both defenders double the ball handler",
+   "verbatim_quote": "On-ball defender and screener defender double the ball handler i.e., \"trap\" the ball-handler",
+   "page": 2,
+   "latex": "\\text{Trap}:\\ \\text{both defenders converge on the ball handler (double-team)}",
+   "symbol_and_unit_ledger": {
+    "double-team": "two defenders on the handler [state]"
+   },
+   "assumptions": [
+    "Trap means the on-ball and screener defenders double the ball handler",
+    "It forces the ball out of the handler's hands but leaves a roller open"
+   ],
+   "breakdown_regime": "Trap is the rarest and hardest-to-classify scheme (recall 0.19); it creates a turnover opportunity but a numbers disadvantage elsewhere, the high-variance aggressive counter.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE trap-coverage primitive IS this scheme definition: the engine encodes 'trap' (double the handler) as a high-variance aggressive coverage that forces turnovers but surrenders a numbers advantage, the risk-reward aggressive-counter state. GSI: high-variance double-team coverage with turnover/numbers tradeoff.",
+    "source_operator": "trap_scheme",
+    "telemetry": "trap frequency; turnover forcing; recall difficulty; roller exposure"
+   }
+  },
+  {
+   "primitive_id": "supervised_not_rules",
+   "name": "Supervised learning, not hand-coded rules, for scheme classification",
+   "verbatim_quote": "Rather than hand-coding a set of rules, we used supervised learning to automatically build models that can be used to classify defensive activity",
+   "page": 3,
+   "latex": "\\hat{y}=f_\\theta(x),\\quad \\theta\\ \\text{learned from hand-labeled examples (not hand-coded rules)}",
+   "symbol_and_unit_ledger": {
+    "f_theta": "learned classifier [model]",
+    "x": "feature vector from trajectories [features]",
+    "y": "scheme label [4 classes]"
+   },
+   "assumptions": [
+    "The classifier is learned from labeled data rather than hand-coded rules",
+    "This lets the model capture subtle trajectory patterns a rule set would miss"
+   ],
+   "breakdown_regime": "The learned model is only as good as its labels and features; it does not achieve 100% accuracy, so downstream analysis must use relative rather than absolute comparisons.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE learned-coverage-recognition IS this supervised approach: the engine learns to recognize coverage schemes from tracking data via supervised classification rather than hand-coded rules, capturing subtle spatial patterns, the data-driven coverage-recognition principle. GSI: supervised recognition of tactical states from trajectory data.",
+    "source_operator": "supervised_not_rules",
+    "telemetry": "learned classifier; label quality; accuracy ceiling"
+   }
+  },
+  {
+   "primitive_id": "screen_moment_alignment",
+   "name": "Align examples at the screen moment (minimum defender-screen distance)",
+   "verbatim_quote": "we define the \"screen moment\" as the when the distance between the screen and the on-ball defender is minimum.",
+   "page": 3,
+   "latex": "t_{\\text{screen}}=\\arg\\min_t\\ \\big\\|x_{\\text{screener}}(t)-x_{\\text{on-ball def}}(t)\\big\\|;\\quad \\text{align all examples at }t_{\\text{screen}}",
+   "symbol_and_unit_ledger": {
+    "t_screen": "screen moment (min screener-defender distance) [time]",
+    "x(t)": "player position at time t [feet]"
+   },
+   "assumptions": [
+    "Examples vary in length, so they are aligned at the screen moment",
+    "The screen moment is when the screener-on-ball-defender distance is minimum; 10 frames prior are used"
+   ],
+   "breakdown_regime": "The alignment anchor is a modeling choice; the variable-length trajectories are summarized relative to this event, making the features comparable across examples.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE event-anchored alignment IS this screen-moment alignment: the engine aligns variable-length play trajectories at a defining event (minimum defender-screen distance) so features are comparable, the event-anchored temporal-normalization technique. GSI: event-anchored alignment of variable-length trajectories.",
+    "source_operator": "screen_moment_alignment",
+    "telemetry": "screen-moment anchor; 10-frame pre-window; trajectory alignment"
+   }
+  },
+  {
+   "primitive_id": "pairwise_distance_features",
+   "name": "Features from pairwise distances of the four player trajectories",
+   "verbatim_quote": "we extracted features based on the pairwise distances between the four player trajectories.",
+   "page": 3,
+   "latex": "x=\\text{summary-stats}\\big(\\{\\|x_a(t)-x_b(t)\\|\\}_{a<b\\in\\{\\text{handler,def,screener,screener-def}\\}}\\big)",
+   "symbol_and_unit_ledger": {
+    "x_a,x_b": "positions of the four involved players [feet]",
+    "pairwise distance": "distance between player pair [feet]"
+   },
+   "assumptions": [
+    "Features are the pairwise distances between the four involved players' trajectories",
+    "Variable-length distance signals are reduced to summary statistics (mean/max/min) into a fixed-length vector"
+   ],
+   "breakdown_regime": "The pairwise-distance representation captures the spatial relationships that define the scheme; the summary-statistic reduction loses some temporal detail but yields a fixed-length input.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE relational-distance features IS this pairwise-distance representation: the engine featurizes a tactical situation by the pairwise distances among the involved agents, reduced to summary statistics, capturing the spatial relationships that define the coverage state. GSI: pairwise-distance featurization of a multi-agent tactical state.",
+    "source_operator": "pairwise_distance_features",
+    "telemetry": "pairwise distances; summary statistics; fixed-length feature vector"
+   }
+  },
+  {
+   "primitive_id": "class_imbalance_weights",
+   "name": "Class weights inversely proportional to frequencies (imbalance handling)",
+   "verbatim_quote": "adjusting class weights to be inversely proportional to class frequencies",
+   "page": 3,
+   "latex": "w_c\\propto\\frac{1}{\\text{freq}(c)};\\quad \\text{stratified 70/30 split preserves class distribution}",
+   "symbol_and_unit_ledger": {
+    "w_c": "loss weight for class c [dimensionless]",
+    "freq(c)": "frequency of class c in training data [fraction]"
+   },
+   "assumptions": [
+    "The four schemes are not uniformly represented (199 over, 56 under, 57 switch, 28 trap)",
+    "Class weights are set inversely proportional to frequency, and stratified splits preserve the distribution"
+   ],
+   "breakdown_regime": "Inverse-frequency weighting compensates for imbalance but the rarest class (trap) is still hardest to classify; weighting alone cannot overcome severe under-representation.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE class-imbalance handling IS this inverse-frequency weighting: the engine weights rare tactical classes inversely to their frequency and uses stratified splits, so rare-but-important schemes (trap/blitz) are not drowned out by common ones, the imbalance-correction discipline. GSI: inverse-frequency class weighting with stratified sampling.",
+    "source_operator": "class_imbalance_weights",
+    "telemetry": "class frequencies; inverse weights; stratified split; trap recall"
+   }
+  },
+  {
+   "primitive_id": "softmax_classifier",
+   "name": "Multinomial logistic regression: softmax over four scheme classes",
+   "verbatim_quote": "our classifier produces a probability estimate for each class j",
+   "page": 3,
+   "latex": "P(y=j\\mid x)=\\frac{\\exp(x^\\top w_j)}{\\sum_{k=1}^{4}\\exp(x^\\top w_k)};\\quad \\hat{y}=\\arg\\max_j P(y=j\\mid x)",
+   "symbol_and_unit_ledger": {
+    "P(y=j|x)": "posterior probability of scheme j given features [probability]",
+    "w_j": "learned regression coefficients for class j [weights]",
+    "x": "feature vector [features]"
+   },
+   "assumptions": [
+    "The classifier is a linear multiclass model (multinomial logistic regression)",
+    "It outputs a softmax probability per class and assigns the argmax label; hyperparameters chosen by 5-fold CV"
+   ],
+   "breakdown_regime": "The softmax gives calibrated-ish class probabilities, but the linear model and limited labels cap accuracy at 0.69; the probabilities feed the confidence threshold.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE softmax scheme posterior IS this multinomial logistic classifier: the engine produces a probability distribution over coverage schemes via softmax and takes the argmax, the probabilistic coverage-recognition core whose posteriors feed confidence gating. GSI: softmax posterior over tactical classes with argmax decision.",
+    "source_operator": "softmax_classifier",
+    "telemetry": "softmax posteriors; argmax label; 5-fold CV; 0.69 accuracy"
+   }
+  },
+  {
+   "primitive_id": "accuracy_ceiling",
+   "name": "Overall accuracy 0.69 ± 0.03 over 100 splits",
+   "verbatim_quote": "We achieve an overall average accuracy of 0.69 (±0.03).",
+   "page": 4,
+   "latex": "\\text{accuracy}=0.69\\pm0.03\\ \\text{(averaged over 100 train/test splits)}",
+   "symbol_and_unit_ledger": {
+    "accuracy": "fraction of correctly classified screens [fraction]"
+   },
+   "assumptions": [
+    "The classifier achieves 0.69 average accuracy across 100 random splits",
+    "Performance is measured by per-class precision and recall plus overall accuracy"
+   ],
+   "breakdown_regime": "The 0.69 ceiling means labels are noisy; the engine must treat scheme labels as probabilistic, not ground truth, and use relative comparisons downstream.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE recognition-accuracy ceiling IS this 0.69 result: the engine recognizes its coverage classifier is imperfect (0.69), so it treats scheme labels as noisy probabilistic signals and avoids absolute claims, the accuracy-aware downstream discipline. GSI: imperfect-recognition ceiling driving probabilistic downstream use.",
+    "source_operator": "accuracy_ceiling",
+    "telemetry": "accuracy 0.69±0.03; per-class precision/recall; 100 splits"
+   }
+  },
+  {
+   "primitive_id": "rare_class_difficulty",
+   "name": "Trap is hardest to classify and least represented",
+   "verbatim_quote": "Among the four different schemes, the classifier has the greatest difficulty classifying traps.",
+   "page": 4,
+   "latex": "\\text{recall}_{\\text{trap}}=0.19\\ \\text{(lowest)};\\quad \\text{trap least represented in training (28 examples)}",
+   "symbol_and_unit_ledger": {
+    "recall_trap": "fraction of true traps correctly identified [fraction]"
+   },
+   "assumptions": [
+    "Trap has the lowest recall (0.19) and is the least represented class",
+    "Rare classes are hardest to learn, even with inverse-frequency weighting"
+   ],
+   "breakdown_regime": "The rare-class difficulty means trap labels are especially unreliable; the engine must down-weight or confidence-gate rare-scheme predictions rather than trust them.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE rare-class reliability IS this trap difficulty: the engine recognizes that rare tactical classes are hardest to classify and least reliable, so it confidence-gates or down-weights rare-scheme predictions rather than trusting them at face value. GSI: rare-class reliability discount in tactical recognition.",
+    "source_operator": "rare_class_difficulty",
+    "telemetry": "trap recall 0.19; class representation; rare-class reliability"
+   }
+  },
+  {
+   "primitive_id": "confidence_threshold",
+   "name": "Confidence threshold h: label only if max probability exceeds h, else unclear",
+   "verbatim_quote": "By thresholding how confident the classifier must be in its prediction, we can increase overall precision.",
+   "page": 4,
+   "latex": "\\hat{y}=\\begin{cases}\\arg\\max_j P(y=j\\mid x)&\\text{if }\\max_j P(y=j\\mid x)>h\\\\ \\text{unclear}&\\text{otherwise}\\end{cases}",
+   "symbol_and_unit_ledger": {
+    "h": "confidence threshold [probability]",
+    "max P": "highest class posterior [probability]",
+    "unclear": "abstain label [class]"
+   },
+   "assumptions": [
+    "A threshold h on the max class probability increases precision",
+    "Below h the example is labeled 'unclear' (abstain), trading recall for precision"
+   ],
+   "breakdown_regime": "The threshold creates an explicit abstain/'unclear' regime: at h=0.6, 219,372 of 270,823 screens are unclear, so the engine PASSes on low-confidence recognitions rather than forcing a label.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE confidence-gated abstention IS this threshold: the engine abstains ('unclear'/PASS) when its recognition confidence is below a threshold, trading recall for precision so it acts only on high-confidence recognitions, the confidence-gated PASS discipline. GSI: confidence-threshold abstention (precision-recall tradeoff).",
+    "source_operator": "confidence_threshold",
+    "telemetry": "threshold h; unclear fraction (219,372/270,823 at h=0.6); precision-recall tradeoff"
+   }
+  },
+  {
+   "primitive_id": "precision_recall_tradeoff",
+   "name": "Thresholding trades recall for precision",
+   "verbatim_quote": "This results in a reduction in recall since an example may not be labeled as belonging to any class",
+   "page": 4,
+   "latex": "\\uparrow h\\Rightarrow \\uparrow\\text{precision},\\ \\downarrow\\text{recall}\\quad\\text{(abstain on low-confidence)}",
+   "symbol_and_unit_ledger": {
+    "precision": "fraction of labeled predictions that are correct [fraction]",
+    "recall": "fraction of true instances labeled correctly [fraction]"
+   },
+   "assumptions": [
+    "Raising the threshold reduces recall because some examples get no label",
+    "In analyses where precision matters more than recall, this tradeoff is accepted"
+   ],
+   "breakdown_regime": "The precision-recall tradeoff is a deliberate objective choice: the engine selects the threshold based on whether the downstream task values precision (acting correctly) over recall (covering everything).",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE objective-driven threshold IS this precision-recall tradeoff: the engine selects its confidence threshold based on the downstream objective (precision when acting must be right, recall when coverage matters), making the abstention rate an explicit design choice. GSI: objective-driven precision-recall threshold selection.",
+    "source_operator": "precision_recall_tradeoff",
+    "telemetry": "precision/recall vs h; objective-driven threshold; abstention rate"
+   }
+  },
+  {
+   "primitive_id": "kl_strategy_comparison",
+   "name": "Symmetric KL divergence compares team scheme distributions",
+   "verbatim_quote": "We compared teams to each other by calculating the difference between the distributions using symmetric version of the Kullback-Leibler divergence.",
+   "page": 5,
+   "latex": "D_{\\text{sym}}(p\\|q)=\\tfrac12\\big(D_{\\text{KL}}(p\\|q)+D_{\\text{KL}}(q\\|p)\\big),\\quad p,q=\\text{team scheme distributions}",
+   "symbol_and_unit_ledger": {
+    "p,q": "team scheme probability distributions [probability vectors]",
+    "D_KL": "Kullback-Leibler divergence [bits/nats]"
+   },
+   "assumptions": [
+    "Teams are compared by the symmetric KL divergence between their scheme distributions",
+    "Symmetrizing makes the comparison a proper pairwise distance for identifying outliers"
+   ],
+   "breakdown_regime": "KL divergence measures distributional difference, not outcome quality; it identifies stylistic outliers (Heat trap-heavy, Bulls over-heavy) but must be paired with outcome data to judge effectiveness.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE strategy-distribution distance IS this symmetric KL comparison: the engine compares teams'/agents' tactical distributions via symmetric KL divergence to identify stylistic outliers, the distributional-strategy-distance measure. GSI: symmetric KL distance between tactical distributions.",
+    "source_operator": "kl_strategy_comparison",
+    "telemetry": "pairwise symmetric KL; scheme-distribution outliers; style distance"
+   }
+  },
+  {
+   "primitive_id": "relative_not_absolute",
+   "name": "Imperfect classifier => use relative, not absolute, comparisons",
+   "verbatim_quote": "Because our classifier does not achieve 100% accuracy, we consider relative differences across teams and seasons.",
+   "page": 5,
+   "latex": "\\text{accuracy}<1\\Rightarrow \\text{compare }\\Delta\\text{ (relative)},\\ \\text{not absolute scheme rates}",
+   "symbol_and_unit_ledger": {
+    "accuracy": "classifier accuracy [fraction]"
+   },
+   "assumptions": [
+    "Since the classifier is not 100% accurate, absolute scheme rates are unreliable",
+    "Relative differences across teams and seasons are robust to the shared labeling noise"
+   ],
+   "breakdown_regime": "The shared-noise argument is load-bearing: systematic classifier error cancels in relative comparisons, so the engine compares differences rather than trusting absolute recognition rates.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE shared-noise relative comparison IS this discipline: the engine recognizes that imperfect recognition introduces shared noise that cancels in relative comparisons, so it compares differences across entities/time rather than trusting absolute rates, the relative-over-absolute discipline. GSI: shared-noise-cancelling relative comparison under imperfect measurement.",
+    "source_operator": "relative_not_absolute",
+    "telemetry": "relative vs absolute scheme rates; shared-noise cancellation"
+   }
+  },
+  {
+   "primitive_id": "heat_trap_outlier",
+   "name": "Miami Heat trapped ~2x the league average (turnover forcing)",
+   "verbatim_quote": "The 2013-2014 Miami Heat trapped nearly twice as frequently (13.2% of opponent screens) as the average team that season (just 7.5%).",
+   "page": 5,
+   "latex": "\\text{trap rate}_{\\text{MIA}}=13.2\\%\\ \\text{vs}\\ \\overline{\\text{trap rate}}=7.5\\%\\Rightarrow \\text{aggressive outlier (2nd-most turnovers)}",
+   "symbol_and_unit_ledger": {
+    "trap rate": "fraction of opponent screens trapped [fraction]"
+   },
+   "assumptions": [
+    "The Heat trapped 13.2% of opponent screens vs the 7.5% league average",
+    "This aggressive style is linked to forcing the second-most turnovers that season"
+   ],
+   "breakdown_regime": "The trap-heavy style is a strategic identity with a measurable outcome (turnovers); the engine links scheme distribution to outcome to judge whether an outlier style is effective.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE scheme-identity-to-outcome IS this Heat outlier: the engine identifies a team's aggressive scheme identity (trap-heavy) and links it to its outcome (turnover forcing), judging whether a stylistic outlier is effective, the strategy-identity-outcome link. GSI: tactical-identity identification linked to outcome.",
+    "source_operator": "heat_trap_outlier",
+    "telemetry": "trap rate outlier; turnover forcing; scheme-outcome link"
+   }
+  },
+  {
+   "primitive_id": "personnel_drives_scheme",
+   "name": "Scheme choice is driven by the handler's shooting ability",
+   "verbatim_quote": "how teams choose to defend a ball screen is strongly related to the offensive skill set (particularly the shooting ability) of the ball handler.",
+   "page": 6,
+   "latex": "\\text{scheme}=g(\\text{handler skill},\\ \\text{shooting ability});\\quad \\text{shooters}\\Rightarrow \\text{over/switch},\\ \\text{non-shooters}\\Rightarrow \\text{under}",
+   "symbol_and_unit_ledger": {
+    "handler skill": "ball handler's offensive skill set [profile]",
+    "shooting ability": "three-point shooting threat [rating]"
+   },
+   "assumptions": [
+    "Defensive scheme choice is strongly related to the handler's skill, especially shooting",
+    "Good shooters are gone over or switched; poor shooters are gone under"
+   ],
+   "breakdown_regime": "The personnel-conditioning is the core strategic insight: the engine must condition the coverage call on the specific handler's threats, not use a uniform scheme.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE personnel-conditional coverage IS this shooting-driven scheme: the engine conditions the coverage call on the specific ball-handler's threats (shooting ability drives over/under/switch), the personnel-conditional coverage principle central to football pass-defense matching. GSI: threat-profile-conditional tactical selection.",
+    "source_operator": "personnel_drives_scheme",
+    "telemetry": "scheme vs handler shooting; personnel conditioning; over/under/switch mapping"
+   }
+  },
+  {
+   "primitive_id": "lebron_switch_suboptimal",
+   "name": "Switching on LeBron may be suboptimal (he scores more vs switch)",
+   "verbatim_quote": "James is slightly more effective when the defense switches (vs. over/under) suggesting that switch as the strategy of choice when defending against LeBron may be suboptimal.",
+   "page": 7,
+   "latex": "\\text{pts/poss}_{\\text{LeBron}}(\\text{switch})=0.83>\\text{pts/poss}(\\text{over/under})\\Rightarrow \\text{switch suboptimal vs LeBron}",
+   "symbol_and_unit_ledger": {
+    "pts/poss": "points per possession [score]"
+   },
+   "assumptions": [
+    "LeBron faced switch most often but is slightly more effective against it",
+    "So switching on LeBron may be suboptimal; the popular counter is not the best counter"
+   ],
+   "breakdown_regime": "The popular scheme is not always the optimal scheme: the engine must verify the counter's effectiveness against the specific player rather than follow the conventional choice, the data-over-convention discipline.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE counter-effectiveness verification IS this LeBron case: the engine verifies that a conventional counter (switch on LeBron) is actually effective against the specific player, discovering it may be suboptimal, so it overrides convention with measured effectiveness. GSI: measured counter-effectiveness overriding conventional choice.",
+    "source_operator": "lebron_switch_suboptimal",
+    "telemetry": "pts/poss by scheme vs LeBron; switch frequency; convention override"
+   }
+  },
+  {
+   "primitive_id": "scheme_specific_pairs",
+   "name": "Defensive pairs are scheme-specific, not universally dominant",
+   "verbatim_quote": "pairs that defend well with one scheme do not appear dominant across all schemes",
+   "page": 8,
+   "latex": "\\text{effectiveness}(\\text{pair},\\text{scheme})\\ \\text{varies by scheme};\\quad \\text{no pair dominant across all}",
+   "symbol_and_unit_ledger": {
+    "pair": "two defensive players [agent pair]",
+    "scheme": "defensive counter [4 classes]"
+   },
+   "assumptions": [
+    "A pair that defends well with one scheme is not dominant across all schemes",
+    "Defenders vary considerably in their ability to thwart different screen actions"
+   ],
+   "breakdown_regime": "Defensive effectiveness is scheme- and pair-specific, so the engine cannot assign a single global defensive rating; it must evaluate effectiveness conditional on scheme and partnership.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE scheme-conditional defensive rating IS this pair specificity: the engine evaluates defensive effectiveness conditional on scheme and partnership rather than a single global rating, because a pair dominant in one scheme may be weak in another, the context-conditional rating discipline. GSI: scheme- and partnership-conditional effectiveness rating.",
+    "source_operator": "scheme_specific_pairs",
+    "telemetry": "pair-by-scheme effectiveness; no universal dominance; context-conditional rating"
+   }
+  },
+  {
+   "primitive_id": "synergy_antisynergy",
+   "name": "Defensive synergy: some pairs outperform their individual averages",
+   "verbatim_quote": "Joakim and Rose appear to be particularly synergistic; paired with others, neither do very well, but together they rank among the top defenders.",
+   "page": 9,
+   "latex": "\\text{pts/poss}_{\\text{allowed}}(\\text{pair})<\\min\\big(\\text{individual averages}\\big)\\Rightarrow \\text{synergy};\\quad >\\Rightarrow \\text{anti-synergy}",
+   "symbol_and_unit_ledger": {
+    "pts/poss allowed": "points allowed per possession [score]",
+    "synergy": "pair outperforms individual averages [effect]"
+   },
+   "assumptions": [
+    "Noah+Rose are synergistic (top defenders together, weak apart)",
+    "Paul+Griffin are anti-synergistic on over (worse together than apart, ~1.2 pts allowed)"
+   ],
+   "breakdown_regime": "Synergy/anti-synergy means the pair's value is not the sum of individual values; the engine must model interaction effects (complementarity) rather than additive individual ratings.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE interaction-effect valuation IS this synergy: the engine models defensive (or any agent-pair) value as including interaction effects (synergy/anti-synergy) rather than additive individual ratings, because some pairs outperform and others underperform their parts, the complementarity discipline. GSI: interaction-effect (non-additive) pair valuation.",
+    "source_operator": "synergy_antisynergy",
+    "telemetry": "pair vs individual pts/poss allowed; synergy/anti-synergy; complementarity"
+   }
+  },
+  {
+   "primitive_id": "discretize_beyond_summary",
+   "name": "Scheme classification discretizes the game beyond summary statistics",
+   "verbatim_quote": "The classification process that we present for identifying defensive schemes helps discretize the game in a way that offers value beyond summary statistics.",
+   "page": 10,
+   "latex": "\\text{continuous tracking}\\xrightarrow{\\text{classify}}\\text{discrete scheme labels}\\Rightarrow \\text{insight beyond summary stats}",
+   "symbol_and_unit_ledger": {
+    "scheme labels": "discrete tactical categories [4 classes]",
+    "summary stats": "aggregate box-score metrics [count]"
+   },
+   "assumptions": [
+    "Classifying schemes discretizes the continuous game into actionable tactical categories",
+    "This yields insight (player-level reporting, strategic planning) beyond summary statistics"
+   ],
+   "breakdown_regime": "The discretization is the value-creation step: raw tracking becomes tactical knowledge that supports player development and game-planning, the process-over-summary principle.",
+   "domain": "math",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE tactical discretization IS this scheme classification: the engine discretizes continuous tracking into tactical categories that yield insight beyond summary statistics, enabling player-level reporting and strategic planning, the tracking-to-tactical-knowledge transformation. GSI: discretization of continuous data into actionable tactical knowledge.",
+    "source_operator": "discretize_beyond_summary",
+    "telemetry": "scheme labels; player-level reporting; strategic planning applications"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "mcintyre2016_ballscreen_defense",
+   "think": "This inline cycle extracts McIntyre, Brooks, Guttag and Wiens's 2016 MIT Sloan Research Papers Competition entry, Recognizing and Analyzing Ball Screen Defense in the NBA, a ten-page paper from Michigan and MIT that adds a supervised tactical-recognition and confidence-gating layer to the Foundry's sports-analytics stack. Two provenance notes are required: the corpus catalog tags the primary domain as football but the content is unambiguously NBA basketball, so it is extracted under its true domain and the mismatch recorded; and the PDF renders the letter f as the Greek-beta glyph U+03D0, so classifier extracts as classiϐier and the normalizer must fold that glyph to f, not fi, a distinction confirmed by inspecting the raw bytes, while the softmax, confidence-threshold, class-weight, and KL-divergence formulas are reconstructed as labeled LaTeX from the clean prose. Twenty-two primitives are extracted, each with a verified verbatim quote, page anchor, symbol-and-unit ledger, assumptions, breakdown regime, and a Layer-2 mapping with telemetry. No sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from the earlier on-ball-screen detector through the SportVU tracking era into this supervised scheme-classification application. The load-bearing object is a three-stage pipeline that segments tracking into actions, identifies on-ball screens, and classifies how each was defended into four schemes, over, under, switch, and trap, defined by the trajectories of four players, the ball handler, the on-ball defender, the screener, and the screener defender. Rather than hand-code rules, the authors hand-labeled 340 screens from six games, labeled by the most defining characteristic so an over-then-trap is a trap, aligned the variable-length examples at the screen moment when the screener-defender distance is minimum, featurized them by pairwise distances reduced to summary statistics, and trained a multinomial logistic regression with stratified splits and class weights inversely proportional to frequency, reaching 0.69 accuracy over 100 splits and applying it to 270,823 screens across four seasons. The genealogy is precise that the screen creates momentary havoc requiring the defense to simultaneously impede the handler, deny the screener, and avoid an untenable mismatch, a transient multi-objective coordination problem.\n\nThe recursive theory of mind models the coaching staff as a reasoner choosing a counter conditioned on the handler's threats, and the analyst as a reasoner who must respect the classifier's imperfection. The deepest insight is the confidence threshold: by labeling a screen only when the maximum class probability exceeds h and otherwise marking it unclear, the authors trade recall for precision, and at h equals 0.6 fully 219,372 of the 270,823 screens are unclear, an explicit abstain regime. The analyst must therefore reason about reliability, because the classifier is not 100 percent accurate, so absolute scheme rates are untrustworthy and only relative differences across teams and seasons are robust, the shared labeling noise cancelling in comparison; and the rarest class, trap, is hardest to classify with recall 0.19, so rare-scheme predictions must be down-weighted. The strategic reasoning is personnel-conditional, scheme choice is strongly related to the handler's shooting ability, and the conventional counter can be wrong, LeBron is slightly more effective against the switch that everyone uses on him, so switching on him may be suboptimal, while three-point shooters dominate when the defense goes under.\n\nThe cross-layer veto adjudication is where this paper earns its place beside the accounting, regression, network, deterrence, decision-EV, EPV, risk, and geospatial layers. The first veto is the confidence-gated abstention requirement: the engine PASSes on low-confidence recognitions rather than forcing a label, the threshold creating an explicit unclear regime that trades recall for precision by objective. The second veto is the shared-noise relative-comparison discipline: because recognition is imperfect, the engine compares relative differences across entities and time rather than trusting absolute rates, and down-weights rare-class predictions. The third veto is the personnel-conditional coverage requirement: the scheme call is conditioned on the specific handler's threats, and the conventional counter is verified against measured effectiveness rather than followed blindly, the LeBron-switch suboptimality. The fourth veto is the context-conditional rating discipline: defensive effectiveness is scheme- and pair-specific, no pair dominates across all schemes, and pairs carry interaction effects, Noah and Rose synergistic, Paul and Griffin anti-synergistic on over, so value is non-additive and must be evaluated conditional on scheme and partnership. The fifth veto is the sample-size and discretization discipline: only pairs with enough samples are judged, and the classification discretizes continuous tracking into tactical knowledge that supports player-level reporting and strategic planning beyond summary statistics. The softmax posterior links to the engine's coverage-recognition probability, the KL divergence to strategy-distribution distance, and the scheme-outcome link to coverage effectiveness.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The class-imbalance handling is explicit, 199 over, 56 under, 57 switch, and 28 trap training examples, with inverse-frequency weights and stratified 70/30 splits preserving the distribution, yet weighting alone cannot overcome the trap's severe under-representation, so its recall stays at 0.19 and its precision is the most threshold-sensitive. The feature pipeline aligns at the screen moment and uses ten frames prior, reducing variable-length pairwise-distance signals to mean, maximum, and minimum summary statistics into a fixed-length vector, a temporal-normalization that makes examples comparable but loses some detail. The team-level analysis uses symmetric Kullback-Leibler divergence to identify stylistic outliers, the 2013-2014 Heat trapping 13.2 percent against a 7.5 percent average and forcing the second-most turnovers, the Bulls going over almost 7 percent more than average to force handlers toward the sidelines, and the scheme distribution is reasonably consistent across seasons with a slight increase in under. The player-level analysis covers 53 handlers with more than 300 labeled instances, computing points per possession by scheme, and the defensive analysis averages each player across all partnerships to surface standouts like Steven Adams, with the best defenders more than two standard deviations better than league average. These invariants ground the engine's confidence-gated coverage recognition, shared-noise relative comparison, personnel-conditional scheme selection, non-additive pair valuation, imbalance-aware classification, and tracking-to-tactical discretization, completing a sovereign supervised tactical-recognition layer that sits beside the geospatial QB-decision layer and connects directly to the engine's coverage recognition and confidence-gated PASS machinery, all grounded in clean verbatim prose with honestly labeled reconstructions.",
+   "retrocausal_genealogy": "The genealogy runs from the earlier on-ball-screen detector (McQueen/Wiens/Guttag 2014) through the SportVU era into this supervised scheme classification. The load-bearing object is a 3-stage pipeline (segment actions, identify screens, classify defense) into over/under/switch/trap, defined by four players' trajectories (handler, on-ball defender, screener, screener defender). 340 hand-labeled screens (label by most defining characteristic), aligned at the screen moment (min screener-defender distance), featurized by pairwise distances -> summary stats, multinomial logistic regression with stratified splits + inverse-frequency class weights, 0.69 accuracy over 100 splits, applied to 270,823 screens (4 seasons). The screen creates momentary havoc requiring simultaneous impede-handler/deny-screener/avoid-mismatch coordination.",
+   "theory_of_mind": "The coaching staff chooses a counter conditioned on the handler's threats; the analyst respects the classifier's imperfection. The deepest insight is the confidence threshold: label only if max class probability > h, else 'unclear', trading recall for precision; at h=0.6, 219,372/270,823 screens are unclear (explicit abstain). Because accuracy <100%, absolute scheme rates are untrustworthy, only relative differences are robust (shared noise cancels); trap (recall 0.19, rarest) must be down-weighted. Strategy is personnel-conditional (scheme ~ handler shooting), and the conventional counter can be wrong (LeBron more effective vs the switch everyone uses -> suboptimal); three-point shooters dominate when defense goes under.",
+   "cross_layer_veto": "Five vetoes adjudicate beside the accounting/regression/network/deterrence/decision-EV/EPV/risk/geospatial layers. Confidence-gated abstention: PASS on low-confidence recognition (unclear regime), trade recall for precision by objective. Shared-noise relative comparison: compare relative differences not absolute rates, down-weight rare classes. Personnel-conditional coverage: condition scheme on handler threats, verify conventional counter vs measured effectiveness (LeBron-switch). Context-conditional rating: effectiveness is scheme- and pair-specific, pairs carry interaction effects (Noah+Rose synergy, Paul+Griffin anti-synergy), value non-additive. Sample-size and discretization: judge only sufficiently-sampled pairs; classification discretizes tracking into tactical knowledge beyond summary stats. Softmax links to coverage-recognition probability, KL to strategy-distribution distance, scheme-outcome to coverage effectiveness."
+  }
+ ],
+ "universal_lens": "McIntyre et al. 2016 contributes the supervised tactical-recognition and confidence-gating layer to the Foundry sports-analytics stack: a multinomial-logistic (softmax) classifier recognizes ball-screen defense as over/under/switch/trap from pairwise-distance features of four players' trajectories, aligned at the screen moment, with inverse-frequency class weights for imbalance, reaching 0.69 accuracy on 270,823 screens. A confidence threshold h creates an explicit 'unclear' abstain regime (219,372 unclear at h=0.6), trading recall for precision. Its load-bearing invariants are confidence-gated abstention, shared-noise relative comparison, rare-class reliability discount, personnel-conditional scheme selection, conventional-counter verification, scheme- and pair-conditional non-additive rating, and tracking-to-tactical discretization.",
+ "gsi_mapping": "For GSI these primitives are the general supervised tactical-recognition and confidence-gating layer: recognize tactical states from multi-agent trajectory features via a softmax classifier, handle class imbalance with inverse-frequency weights and stratified splits, abstain ('unclear') below a confidence threshold trading recall for precision by objective, compare entities via relative differences (shared noise cancels) rather than absolute rates under imperfect recognition, down-weight rare-class predictions, condition tactical selection on the agent's threat profile, verify conventional counters against measured effectiveness, and rate effectiveness conditional on context and partnership with non-additive interaction effects. Symmetric KL distances tactical distributions.",
+ "gse_mapping": "For GSE this maps directly onto the engine's coverage recognition and confidence-gated PASS: the softmax scheme classifier IS the coverage-recognition probability over defensive schemes; the confidence threshold h IS the confidence-gated PASS/unclear regime; inverse-frequency weights IS rare-scheme (blitz) imbalance handling; shared-noise relative comparison IS the imperfect-recognition discipline; personnel-conditional scheme IS coverage matching to the QB/receiver threat profile; the LeBron-switch suboptimality IS conventional-counter verification; scheme-specific pairs and synergy IS non-additive matchup valuation; symmetric KL IS strategy-distribution distance; and the discretization IS tracking-to-tactical-knowledge for game-planning. Equations are labeled reconstructions from clean prose; no sportsbook line is a model input."
+}
