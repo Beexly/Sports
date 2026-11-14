@@ -1,0 +1,858 @@
+{
+  "book_id": "026d30fb53c6e2d0",
+  "source_status": "COMPLETE",
+  "source_note": "True source: Miguel A. Hernan and James M. Robins, Causal Inference: What If, Chapman & Hall/CRC, Boca Raton, 2020 (suggested citation printed in the file: Hernan MA, Robins JM (2020), Causal Inference: What If). Local file: the authors' freely distributed online edition PDF held in Garrett's library (title page of this copy dated August 19, 2026; copyright 2020, 2026), 11,315,465 bytes, sha256 026d30fb53c6e2d00deb2d70333f019722ac73411ffc216246b961a69807efb2, book_id 026d30fb53c6e2d0 computed by the gatekeeper scan rule sha256(str(size) + file bytes). Text quality: clean born-digital LaTeX text across 23 chapters in three parts; the two-column layout interleaves in the raw extraction in places and some math glyphs (superscripts, the not-equal sign, the independence symbol) render imperfectly, so all verbatim quotes were taken from clean prose passages and verified as exact normalized substrings of the extracted text file HernanRobins-2020-CausalInferenceWhatIf.pdf.txt. Catalog check: authors, title, and year match the assignment; no title or author correction is needed. This dense monograph supports 38 genuine primitives at fleet granularity rather than the usual 25 to 35, because its three parts each introduce load-bearing machinery (identification, model based estimation, time-varying g-methods) that the later parts reuse but do not restate. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "counterfactual_individual_effect",
+      "name": "An individual causal effect is the contrast between one person's outcome under treatment and under no treatment",
+      "verbatim_quote": "These two vignettes illustrate how humans reason about causal effects: We compare (usually only mentally) the outcome when an action A is taken versus the outcome when the action A is withheld.",
+      "page": "Ch 1 Sec 1.1; text lines 340-392",
+      "latex": "Y_i^{a=1} - Y_i^{a=0}",
+      "symbol_and_unit_ledger": {
+        "Y_i^{a=1}": "individual i's outcome under treatment a=1 [outcome units]",
+        "Y_i^{a=0}": "individual i's outcome under no treatment a=0 [outcome units]"
+      },
+      "assumptions": [
+        "Counterfactual outcomes Y^a are taken as primitives: each is the outcome that would occur under a specified intervention a.",
+        "Deterministic counterfactuals are assumed for pedagogy until Chapter 10; the definitions survive under nondeterministic counterfactuals."
+      ],
+      "breakdown_regime": "Only one of the two counterfactual outcomes is ever observed for an individual, so individual effects are not identifiable from data without extra structure such as crossover designs with no carryover.",
+      "domain": "causal_foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's atomic causal unit is a contrast between two worlds for the same unit, never a contrast between two different observed groups. Any projected quantity must be expressible as a difference of outcomes for the same player, team, or game state under two specified scenarios.",
+        "source_operator": "counterfactual_individual_effect",
+        "telemetry": "Paired scenario projections for the same unit under intervention and control settings."
+      }
+    },
+    {
+      "primitive_id": "average_causal_effect",
+      "name": "A population causal effect is a contrast of the distributions (usually means) of counterfactual outcomes under two interventions",
+      "verbatim_quote": "The average causal effect, defined by a contrast of means of counterfactual outcomes, is the most commonly used population causal effect.",
+      "page": "Ch 1 Technical Point 1.1; text lines 520-560",
+      "latex": "E[Y^{a=1}] - E[Y^{a=0}]",
+      "symbol_and_unit_ledger": {
+        "E[Y^{a=1}]": "mean counterfactual outcome if the whole population received a=1 [outcome units]",
+        "E[Y^{a=0}]": "mean counterfactual outcome if the whole population received a=0 [outcome units]"
+      },
+      "assumptions": [
+        "The population of interest is well defined, so the counterfactual means exist.",
+        "For dichotomous outcomes the counterfactual mean equals the counterfactual risk Pr[Y^a = 1]."
+      ],
+      "breakdown_regime": "A contrast of marginal counterfactual distributions hides heterogeneity: opposite individual effects can cancel, and nonlinear functionals (variance, median) of the contrast do not equal contrasts of the functional.",
+      "domain": "causal_foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine estimands are stated as contrasts of counterfactual means over a declared population (league, slate, season window), never as raw observed group differences. The population is part of the estimand and travels with the number.",
+        "source_operator": "average_causal_effect",
+        "telemetry": "Projected mean outcomes under each scenario, aggregated over the declared population."
+      }
+    },
+    {
+      "primitive_id": "sharp_causal_null",
+      "name": "The sharp null hypothesis says treatment changes no individual's outcome at all, a stronger claim than a null average effect",
+      "verbatim_quote": "When there is no causal effect for any individual in the population, i.e., Y a=1 = Y a=0 for all individuals, we say that the sharp causal null hypothesis is true.",
+      "page": "Ch 1 Sec 1.2; text lines 565-590",
+      "latex": "Y^{a=1} = Y^{a=0}",
+      "symbol_and_unit_ledger": {
+        "Y^{a=1} = Y^{a=0}": "equality of both counterfactual outcomes for every individual [dimensionless condition]"
+      },
+      "assumptions": [
+        "The sharp null implies the null hypothesis of no average effect, but not conversely."
+      ],
+      "breakdown_regime": "The sharp null is almost always scientifically implausible for real interventions; its role is as the reference hypothesis that randomization tests and the g-null test can actually test.",
+      "domain": "causal_foundations",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine distinguishes 'no effect on average' from 'no effect anywhere': a null pooled projection does not license a claim that a factor is inert in every matchup, because cancellation across subgroups is exactly the failure mode the sharp null names.",
+        "source_operator": "sharp_causal_null",
+        "telemetry": "Subgroup level projected effects screened for cancellation patterns behind a null pooled effect."
+      }
+    },
+    {
+      "primitive_id": "effect_measures_scales",
+      "name": "The same causal effect is quantified on additive (risk difference) and multiplicative (risk ratio, odds ratio) scales, and the scale is part of the claim",
+      "verbatim_quote": "Because the causal risk difference, risk ratio, and odds ratio (and other summaries) measure the causal effect, we refer to them as effect measures.",
+      "page": "Ch 1 Sec 1.3; text lines 600-665",
+      "latex": "\\frac{\\Pr[Y^{a=1} = 1]}{\\Pr[Y^{a=0} = 1]}",
+      "symbol_and_unit_ledger": {
+        "Pr[Y^{a=1} = 1]": "counterfactual risk under treatment [probability]",
+        "Pr[Y^{a=0} = 1]": "counterfactual risk under no treatment [probability]",
+        "ratio": "causal risk ratio [dimensionless]"
+      },
+      "assumptions": [
+        "Risk difference equals the average of individual causal effects; the risk ratio is not an average of individual ratio effects.",
+        "The number needed to treat is the reciprocal of the absolute risk difference (Fine Point 1.2)."
+      ],
+      "breakdown_regime": "Measures disagree across scales when baseline risk varies: a large ratio can accompany a trivial absolute effect, and noncollapsible measures (odds ratio, hazard ratio) change under stratification even without confounding.",
+      "domain": "causal_foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine output carries its scale explicitly. Additive outputs (expected points, win probability points) answer resource questions; multiplicative outputs answer relative strength questions; the two are never interchanged when a claim is stated.",
+        "source_operator": "effect_measures_scales",
+        "telemetry": "Baseline rates plus projected rates under each scenario, reported on both scales."
+      }
+    },
+    {
+      "primitive_id": "association_is_not_causation",
+      "name": "Association contrasts disjoint subsets defined by received treatment; causation contrasts the same population under two interventions",
+      "verbatim_quote": "association is defined by a different risk in two disjoint subsets of the population",
+      "page": "Ch 1 Sec 1.5; text lines 855-885",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The observed groups (treated, untreated) are generally not the same people, so an associational contrast mixes the effect with baseline differences between groups."
+      ],
+      "breakdown_regime": "Whenever treatment receipt correlates with prognosis, association and causation diverge; in the book's example the associational risk ratio is 1.5 while the causal risk ratio is 0.5.",
+      "domain": "causal_foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine's central labeling law: a split computed over units that happened to receive different conditions is an associational split, and it may not be relabeled as the effect of the condition until an identification argument is attached.",
+        "source_operator": "association_is_not_causation",
+        "telemetry": "Observed group contrasts flagged as associational until an identification route is named."
+      }
+    },
+    {
+      "primitive_id": "consistency_identity",
+      "name": "Consistency links counterfactuals to data: a unit that actually received a has its observed outcome equal to its counterfactual outcome under a",
+      "verbatim_quote": "an individual with observed treatment A equal to a, has observed outcome Y equal to his counterfactual outcome Y a",
+      "page": "Ch 1 Sec 1.1 and Ch 3 Sec 3.5; text lines 405-430",
+      "latex": "Y = Y^A",
+      "symbol_and_unit_ledger": {
+        "Y": "observed outcome [outcome units]",
+        "Y^A": "counterfactual outcome evaluated at the treatment actually received [outcome units]"
+      },
+      "assumptions": [
+        "Consistency has two components: the counterfactual Y^a must be precisely defined, and the observed treatment value must correspond to that defined intervention."
+      ],
+      "breakdown_regime": "Consistency fails silently when the recorded treatment variable does not correspond to the intervention that defines the counterfactual, for example when one label covers many materially different versions of treatment.",
+      "domain": "identification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A data column is not an intervention. The engine requires each modeled lever (a lineup change, a rest pattern, a role change) to be defined operationally before its recorded proxy in the data is allowed to stand in for it.",
+        "source_operator": "consistency_identity",
+        "telemetry": "Operational definitions of each intervention variable matched against the fields actually recorded."
+      }
+    },
+    {
+      "primitive_id": "no_interference_sutva",
+      "name": "Counterfactuals are well defined per unit only under no interference: one unit's outcome may not depend on other units' treatment values",
+      "verbatim_quote": "In the presence of interference, the counterfactual Yia for an individual i is not well defined because an individual’s outcome depends on other individuals’ treatment values.",
+      "page": "Ch 1 Fine Point 1.1; text lines 478-498",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "No interference was labeled 'no interaction between units' by Cox (1958) and is part of the stable-unit-treatment-value assumption (SUTVA) of Rubin (1980).",
+        "The book assumes no interference throughout unless otherwise specified."
+      ],
+      "breakdown_regime": "Interference is intrinsic in contagious processes, shared resources, and head to head competition, where one unit's treatment changes another unit's outcome; the single unit counterfactual must then be indexed by the whole allocation.",
+      "domain": "causal_foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sports are interference native: a player's usage change alters teammates' and opponents' outcomes. The engine treats per player counterfactuals as allocation dependent and prefers team or lineup level interventions where interference is contained inside the unit.",
+        "source_operator": "no_interference_sutva",
+        "telemetry": "Lineup and allocation configurations as the intervention unit; spillover channels enumerated per scenario."
+      }
+    },
+    {
+      "primitive_id": "well_defined_interventions",
+      "name": "A causal question is meaningful only when its interventions are sufficiently well defined to be described as a protocol; effects of vague states are ill defined",
+      "verbatim_quote": "Interventions are well-defined when they correspond to actions that can be described as part of the protocol of an experiment.",
+      "page": "Ch 3 Sec 3.4; text lines 2050-2160",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Perfect specification is impossible; expert agreement that no meaningful vagueness remains is the operative standard.",
+        "For non-intervention variables, well definedness can be rescued by an effective no-direct-effect (ENDE) intervention that changes the variable and reaches the outcome only through it."
+      ],
+      "breakdown_regime": "Effects of states such as obesity or blood pressure, with no specified way of setting them, have no unique counterfactual: different ways of achieving the same state give different effects, so the single quoted effect is an artifact of an unstated version mix.",
+      "domain": "identification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine refuses estimands of the form 'the effect of being a high usage player' and rewrites them as protocols: which lever changes, by how much, starting when, sustained how. A question that cannot be protocolized is returned as ill defined rather than answered with a number.",
+        "source_operator": "well_defined_interventions",
+        "telemetry": "Intervention protocols (lever, magnitude, start, duration) attached to every causal query."
+      }
+    },
+    {
+      "primitive_id": "exchangeability",
+      "name": "Exchangeability: the treated and untreated would have had the same outcome distribution under the same treatment; randomization produces it by design",
+      "verbatim_quote": "Exchangeability means that the risk of death in the white group would have been the same as the risk of death in the grey group had individuals in the white group received the treatment given to those in the grey group.",
+      "page": "Ch 2 Sec 2.1; text lines 1010-1075",
+      "latex": "Y^a \\perp\\!\\!\\!\\perp A",
+      "symbol_and_unit_ledger": {
+        "Y^a": "counterfactual outcome under treatment value a [outcome units]",
+        "A": "received treatment [indicator]",
+        "independence": "counterfactual outcome independent of received treatment for all a [dimensionless]"
+      },
+      "assumptions": [
+        "Mean exchangeability E[Y^a | A = a'] = E[Y^a] suffices to identify mean effects; full exchangeability is stronger than needed.",
+        "Exchangeability concerns counterfactuals, not observed outcomes: Y^a independent of A does not imply Y independent of A when treatment has an effect."
+      ],
+      "breakdown_regime": "Exchangeability is untestable from observed data because it restricts the distribution of unobserved counterfactuals; in observational data it is an assumption bought with subject matter knowledge, not a diagnostic result.",
+      "domain": "identification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Exchangeability is the engine's comparability certificate. Two groups may be contrasted causally only when a mechanism (randomization, or conditioning on a sufficient covariate set) makes their counterfactual distributions comparable; otherwise the contrast stays labeled associational.",
+        "source_operator": "exchangeability",
+        "telemetry": "Assignment mechanisms and covariate balance evidence supporting each causal contrast."
+      }
+    },
+    {
+      "primitive_id": "identifiability_triad",
+      "name": "An observational study identifies causal effects only when it can be viewed as a conditionally randomized experiment: consistency, conditional exchangeability, and positivity together",
+      "verbatim_quote": "We say that an average causal effect is (nonparametrically) identifiable under a particular set of assumptions if these assumptions imply that the distribution of the observed data is compatible with a single value of the effect measure.",
+      "page": "Ch 3 Sec 3.1 and Fine Point 3.1; text lines 1615-1690",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The three conditions are consistency (observed outcome equals the counterfactual under received treatment), conditional exchangeability Y^a independent of A given L, and positivity.",
+        "In ideal randomized experiments the conditions hold by design; in observational studies they must be assumed, which is why the inferences are viewed with suspicion."
+      ],
+      "breakdown_regime": "If any condition fails, the same observed data are compatible with several values of the effect: the effect is nonidentifiable and no estimator or sample size repairs it.",
+      "domain": "identification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The triad is the engine's gate for promoting any observational pattern into a causal input: define the intervention (consistency), argue comparability given measured covariates (exchangeability), and verify every compared condition actually occurs across the covariate range (positivity). All three are recorded with the estimate.",
+        "source_operator": "identifiability_triad",
+        "telemetry": "Per estimate checklist: intervention definition, adjustment set rationale, overlap diagnostics."
+      }
+    },
+    {
+      "primitive_id": "positivity",
+      "name": "Positivity: every treatment level in the contrast must occur with positive probability in every covariate stratum used for exchangeability",
+      "verbatim_quote": "Thus we say that there is positivity if Pr [A = a|L = l] > 0 for all a involved in the causal contrast.",
+      "page": "Ch 3 Sec 3.3; text lines 1828-1900",
+      "latex": "\\Pr[A = a \\mid L = l] > 0",
+      "symbol_and_unit_ledger": {
+        "Pr[A = a | L = l]": "probability of receiving treatment level a within covariate stratum l [probability]",
+        "a": "treatment level in the causal contrast",
+        "l": "covariate value present in the population"
+      },
+      "assumptions": [
+        "Positivity is required only for covariate values l that occur in the population of interest and only for variables needed for exchangeability.",
+        "Unlike exchangeability, positivity can sometimes be checked empirically from the data."
+      ],
+      "breakdown_regime": "Structural violations (some strata can never receive a treatment) force restriction of the target population; random violations (empty cells in finite samples) invite model based smoothing, which is extrapolation wearing a parametric costume.",
+      "domain": "identification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Positivity becomes an overlap audit in the engine: any scenario contrast is computed only over the region of matchup space where both scenarios are actually observed; outside that region the engine reports nonidentification instead of extrapolating silently.",
+        "source_operator": "positivity",
+        "telemetry": "Stratum level counts of each compared condition across the covariate grid."
+      }
+    },
+    {
+      "primitive_id": "standardization_g_formula",
+      "name": "Standardization identifies the counterfactual mean by averaging stratum specific observed means over the population covariate distribution; the parametric g-formula is its model based form",
+      "verbatim_quote": "Under conditional exchangeability, this standardized risk can be interpreted as the (counterfactual) risk that would have been observed had all the individuals in the population been treated.",
+      "page": "Ch 2 Sec 2.3 and Ch 13 Sec 13.4; text lines 1300-1330",
+      "latex": "\\sum_l E[Y \\mid L = l, A = a] \\Pr[L = l]",
+      "symbol_and_unit_ledger": {
+        "E[Y | L = l, A = a]": "observed mean outcome in stratum l under treatment a [outcome units]",
+        "Pr[L = l]": "population share of stratum l [probability]",
+        "sum over l": "standardization to the whole population distribution"
+      },
+      "assumptions": [
+        "Requires conditional exchangeability, positivity, and consistency; under them the standardized mean equals E[Y^a].",
+        "The parametric g-formula replaces the conditional means with model based estimates; IP weighting and standardization are both estimators of the same g-formula."
+      ],
+      "breakdown_regime": "With many strata the nonparametric version dies of empty cells (curse of dimensionality); the parametric version survives by borrowing across strata and inherits model misspecification risk.",
+      "domain": "estimation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Standardization is the engine's baseline causal estimator: project each matchup stratum under a scenario, then reweight strata to the target population mix. Scenario projections for a new population are produced by changing the standard, not by refitting the world.",
+        "source_operator": "standardization_g_formula",
+        "telemetry": "Stratum level projected means plus the target population's stratum distribution."
+      }
+    },
+    {
+      "primitive_id": "ip_weighting_pseudopopulation",
+      "name": "Inverse probability weighting creates a pseudo-population, by weighting each unit by the inverse probability of the treatment it received, in which treatment is unconfounded",
+      "verbatim_quote": "An individual’s IP weight depends on the individual’s values of treatment A and covariate L.",
+      "page": "Ch 2 Sec 2.4 and Technical Point 2.2; text lines 1440-1560",
+      "latex": "W^A = \\frac{1}{f[A \\mid L]}",
+      "symbol_and_unit_ledger": {
+        "W^A": "inverse probability weight for a unit [dimensionless]",
+        "f[A | L]": "conditional density (probability) of the treatment actually received given covariates [probability]"
+      },
+      "assumptions": [
+        "Under conditional exchangeability and positivity, the associational contrast in the pseudo-population equals the causal contrast in the original population.",
+        "Standardization and IP weighting are mathematically equivalent for discrete data; they differ in which conditional probabilities they model."
+      ],
+      "breakdown_regime": "Near violations of positivity produce enormous weights and unstable estimates; for continuous treatments the density denominator makes naive IP weighting ill posed.",
+      "domain": "estimation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "IP weighting is the engine's reweighting dual of standardization: instead of projecting strata, reweight observed units so the comparison set mimics a randomized assignment, then read the contrast directly. Weight distributions are audited for domination by a few units.",
+        "source_operator": "ip_weighting_pseudopopulation",
+        "telemetry": "Estimated assignment probabilities per unit and the resulting weight distribution."
+      }
+    },
+    {
+      "primitive_id": "effect_modification",
+      "name": "Average effects are population specific: a null pooled effect can mask equal and opposite effects in subsets, and effects vary with the distribution of effect modifiers",
+      "verbatim_quote": "Our example shows that a null average causal effect in the population does not imply a null average causal effect in a particular subset of the population.",
+      "page": "Ch 4 Sec 4.1; text lines 2620-2690",
+      "latex": "E[Y^{a=1} \\mid V = v] - E[Y^{a=0} \\mid V = v]",
+      "symbol_and_unit_ledger": {
+        "V": "pre-treatment characteristic defining subsets (effect modifier)",
+        "v": "a level of V",
+        "contrast": "stratum specific average causal effect [outcome units]"
+      },
+      "assumptions": [
+        "Effect modification is scale dependent: heterogeneity on the additive scale need not imply heterogeneity on the multiplicative scale.",
+        "The chapter's thesis: there is no such thing as the causal effect of a treatment; the effect depends on the characteristics of the population under study."
+      ],
+      "breakdown_regime": "Stratification identifies effect modification only within strata where the identifiability conditions hold; chasing modifiers post hoc across many subsets manufactures heterogeneity from noise.",
+      "domain": "causal_foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine never ships a single pooled effect for a factor whose effect plausibly flips sign across contexts (matchup type, pace, role). Conditional effects by declared modifiers are first class outputs, and pooled numbers are labeled as averages over a stated modifier mix.",
+        "source_operator": "effect_modification",
+        "telemetry": "Projected effects stratified by pre declared modifiers, plus the modifier distribution of the target population."
+      }
+    },
+    {
+      "primitive_id": "sufficient_component_causes",
+      "name": "Sufficient-component causes decompose outcomes into minimal sets of component causes; two treatments interact mechanistically when they co-occur in one sufficient cause",
+      "verbatim_quote": "A sufficient cause interaction between A and E exists in the population if A and E occur together in a sufficient cause.",
+      "page": "Ch 5 Sec 5.4-5.5; text lines 3760-3890",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Background factors U are, by definition, not intervenable and not affected by treatment.",
+        "Counterfactual interaction (effect of A differs across levels of E) and sufficient cause interaction (shared mechanism) are different concepts; neither requires the other in general."
+      ],
+      "breakdown_regime": "Sufficient cause interaction is about mechanisms, not identifiable contrasts: its presence generally cannot be verified from data without extra assumptions such as monotonicity, and the framework needs the full set of background factors, which is never fully known.",
+      "domain": "causal_foundations",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The sufficient cause lens gives the engine a mechanism checklist for combined factors: two levers that only bite when a third background condition is present are modeled as one joint component set, not as two independent additive terms.",
+        "source_operator": "sufficient_component_causes",
+        "telemetry": "Co-occurrence requirements of factor combinations, recorded as joint conditions rather than separate main effects."
+      }
+    },
+    {
+      "primitive_id": "d_separation_and_faithfulness",
+      "name": "D-separation reads independence off a causal graph: variables are d-separated when every path between them is blocked, and the causal Markov condition plus faithfulness tie graph structure to data",
+      "verbatim_quote": "Two variables are d-separated if all paths between them are blocked (otherwise they are d-connected).",
+      "page": "Ch 6 Sec 6.3 and Fine Point 6.2; text lines 4478-4560",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A path is blocked if it contains a conditioned non-collider, or a collider that is not conditioned on and has no conditioned descendant.",
+        "Causal Markov assumption: each variable is independent of its non-descendants given its parents; Pearl's theorem then turns d-separation into statistical independence.",
+        "Faithfulness is the converse assumption: every independence in the data reflects d-separation, so absent arrows can be read as absent effects."
+      ],
+      "breakdown_regime": "Faithfulness fails under exact cancellation of opposing effects and under deterministic relations; the book's own example has a real effect in every individual and a null average effect, a distribution unfaithful to its graph.",
+      "domain": "graphs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's dependency graphs are read with the same rules: a claimed independence between a signal and an outcome must trace to a blocked path, and conditioning sets are audited for colliders that would open paths the analyst intended to close.",
+        "source_operator": "d_separation_and_faithfulness",
+        "telemetry": "Declared graph structure over signals, states, and outcomes; conditioning sets per query."
+      }
+    },
+    {
+      "primitive_id": "structural_classification_of_bias",
+      "name": "Systematic bias is structural association not arising from the causal effect, and it classifies by graph structure into confounding, selection, and measurement bias",
+      "verbatim_quote": "Informally, we often refer to systematic bias as any structural association between treatment and outcome that does not arise from the causal effect of treatment on outcome in the population of interest.",
+      "page": "Ch 6 Sec 6.5; text lines 4670-4765",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Systematic bias persists at infinite sample size; no estimator is consistent under it.",
+        "Confounding arises from common causes, selection bias from conditioning on common effects, measurement bias from measurement error; all three can afflict experiments as well as observational studies."
+      ],
+      "breakdown_regime": "The classification is only as good as the graph: an unrecorded common cause or an unnoticed conditioning step hides a bias source from the taxonomy entirely.",
+      "domain": "bias",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every disputed engine number gets a bias autopsy in this taxonomy before any model change: is the distortion a shared cause (adjust), a conditioning artifact (uncondition or reweight), or a measurement artifact (fix the instrument)? The remedy differs by class, so the class is decided first.",
+        "source_operator": "structural_classification_of_bias",
+        "telemetry": "Bias classification per disputed estimate, with the graph path responsible named."
+      }
+    },
+    {
+      "primitive_id": "backdoor_criterion",
+      "name": "A covariate set identifies the effect by the backdoor criterion when it blocks every backdoor path from treatment to outcome and contains no descendants of treatment",
+      "verbatim_quote": "A set of covariates L satisfies the backdoor criterion if all backdoor paths between A and Y are blocked by conditioning on L and L contains no variables that are descendants of treatment A.",
+      "page": "Ch 7 Sec 7.3; text lines 5056-5075",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Under faithfulness and the book's FFRCISTG model, conditional exchangeability given L holds if and only if L satisfies the backdoor criterion.",
+        "A set meeting the criterion is a sufficient set for confounding adjustment; the empty set qualifies when treatment and outcome share no common causes."
+      ],
+      "breakdown_regime": "The criterion presumes the true causal graph is known. With a wrong graph the criterion certifies the wrong set with full confidence, and adjusting for descendants of treatment or for colliders can create the bias it was meant to remove.",
+      "domain": "graphs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Adjustment set selection in the engine is a graph operation, not a correlation screen: candidate covariates are admitted by path blocking logic, and variables downstream of the intervention are excluded by construction.",
+        "source_operator": "backdoor_criterion",
+        "telemetry": "The working causal graph plus the path audit for each proposed adjustment set."
+      }
+    },
+    {
+      "primitive_id": "selection_bias_collider_conditioning",
+      "name": "Selection bias is the bias from conditioning on a common effect of treatment (or its causes) and outcome (or its causes), including restriction to the uncensored",
+      "verbatim_quote": "Both Figures 8.1 and 8.2 depict examples of selection bias in which the bias arises because of conditioning on a common effect of treatment and outcome",
+      "page": "Ch 8 Sec 8.1; text lines 5925-5950",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Selection bias arises under the null as well as under alternatives; structures causing it include loss to follow up, restriction to survivors, and conditioning on a descendant of a collider.",
+        "Unlike confounding, selection bias can occur in randomized experiments once analysis conditions on post assignment events."
+      ],
+      "breakdown_regime": "Adjustment is possible only when the variables driving selection are measured and the selection mechanism can be reweighted; selection on unmeasured factors is generally not correctable from the selected data alone.",
+      "domain": "bias",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any engine dataset built by filtering (completed games only, players who stayed in the rotation, possessions that reached a shot) is a conditioned sample. The filter is drawn as a node, checked for collider structure, and either justified or reweighted before its numbers are used.",
+        "source_operator": "selection_bias_collider_conditioning",
+        "telemetry": "Inclusion filters per dataset with their causal parents enumerated."
+      }
+    },
+    {
+      "primitive_id": "measurement_error_structure",
+      "name": "Measurement bias arises when only mismeasured versions of treatment, outcome, or confounders are available; error is classified by independence and nondifferentiality",
+      "verbatim_quote": "The measurement error eA of treatment is nondifferential if its pdf is independent of the outcome Y , i.e., f (eA |Y ) = f (eA ).",
+      "page": "Ch 9 Sec 9.1-9.2 and Technical Point 9.1; text lines 6590-6690",
+      "latex": "f(e_A \\mid Y) = f(e_A)",
+      "symbol_and_unit_ledger": {
+        "e_A": "measurement error of treatment, e_A = A* - A [treatment units]",
+        "f(e_A | Y)": "density of treatment error given the true outcome",
+        "f(e_A)": "marginal density of treatment error; equality defines nondifferential error"
+      },
+      "assumptions": [
+        "The error of treatment is nondifferential when its distribution does not depend on the true outcome, and symmetrically for the outcome's error.",
+        "Independent errors have joint density equal to the product of marginals; dependent errors arise when one recall or recording process drives both measurements."
+      ],
+      "breakdown_regime": "Differential or dependent measurement error can bias in either direction and by any amount; the folk rule that mismeasurement only attenuates is false outside narrow nondifferential binary cases.",
+      "domain": "bias",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine input is a measured proxy (tracked events, charted plays, reported injuries) standing for a true state. The proxy error structure is declared per source: whether the error plausibly depends on the outcome (differential) decides whether the source can feed causal contrasts at all.",
+        "source_operator": "measurement_error_structure",
+        "telemetry": "Per source error model: what the proxy is, what the truth is, and whether error can depend on outcomes."
+      }
+    },
+    {
+      "primitive_id": "identification_vs_estimation",
+      "name": "Identification (can the effect be computed at infinite sample size under stated assumptions) is logically prior to estimation (finite sample precision)",
+      "verbatim_quote": "Statisticians have a name for problems in which we can assume the size of the study population is effectively infinite: identification problems.",
+      "page": "Ch 10 Sec 10.1; text lines 7197-7260",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An estimand is the target parameter; an estimator is a rule mapping data to a number; consistency means estimates converge to the estimand as sample size grows.",
+        "Random variability shrinks with sample size; systematic bias does not, which is why the book spends nine chapters on identification before estimation."
+      ],
+      "breakdown_regime": "Treating an identification failure as an estimation problem produces precise nonsense: narrow intervals around a quantity the data cannot determine under any sampling scheme.",
+      "domain": "estimation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine diagnostics split into two ledgers that are never merged: identification debts (assumptions the data cannot check) and estimation debts (variance the next data batch can shrink). More data is prescribed only for the second kind.",
+        "source_operator": "identification_vs_estimation",
+        "telemetry": "Per output: named estimand, identifying assumptions, and sample size feeding the estimate."
+      }
+    },
+    {
+      "primitive_id": "curse_of_dimensionality",
+      "name": "Nonparametric adjustment collapses in high dimensions: with more strata than observations, the adjusted estimator becomes uninformative even when unbiased",
+      "verbatim_quote": "there will at most be only a few strata of L that will contain both a treated and an untreated individual",
+      "page": "Ch 10 Sec 10.5; text lines 7881-7955",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The example: 100 binary covariates make 2^100 strata against 240 individuals, so almost no stratum contains both a treated and an untreated unit.",
+        "The adjusted estimator is only guaranteed to beat the unadjusted one when the ratio of individuals to unknown parameters is large (a rule of thumb minimum of about 10)."
+      ],
+      "breakdown_regime": "The curse is the hard wall behind all exact stratification; escaping it requires structure: parametric models, dimension reduction through scores, or doubly robust machine learning, each importing its own assumptions.",
+      "domain": "estimation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Matchup space is combinatorial, so the engine treats exact cell matching as a diagnostic, never the estimator. Sparse cells trigger pooling through models or scores, and the pooling choice is reported as part of the result.",
+        "source_operator": "curse_of_dimensionality",
+        "telemetry": "Cell occupancy counts across the conditioning grid for each causal query."
+      }
+    },
+    {
+      "primitive_id": "bias_variance_tradeoff",
+      "name": "Modeling trades bias for variance: richer models protect against misspecification bias and pay with wider intervals; the choice cannot be dodged, only made explicit",
+      "verbatim_quote": "In general, the larger the number of parameters in the model, the fewer restrictions the model imposes; the less smooth the model, the more protection afforded against bias from model misspecification.",
+      "page": "Ch 11 Sec 11.5; text lines 8357-8430",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A correctly specified smaller model is nested in the larger one and remains unbiased; a misspecified small model is biased with falsely narrow intervals.",
+        "The book proceeds by assuming correct specification to isolate causal problems, while insisting careful investigators probe sensitivity across specifications."
+      ],
+      "breakdown_regime": "There is no data only resolution: fit statistics reward prediction, not the causal contrast, so a better predicting model can be a worse causal model when its flexibility is spent on the wrong structure.",
+      "domain": "estimation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine model selection for causal quantities is documented as a bias variance decision per estimand: what restriction was imposed, what bias it risks, what variance it buys. Predictive leaderboard rank is not accepted as evidence for a causal specification.",
+        "source_operator": "bias_variance_tradeoff",
+        "telemetry": "Specification variants per estimand with the restriction each imposes named."
+      }
+    },
+    {
+      "primitive_id": "marginal_structural_models",
+      "name": "Marginal structural models parameterize the counterfactual mean itself and are fit by IP weighting a pseudo-population, with stabilized weights f(A)/f(A|L) keeping the weights near 1",
+      "verbatim_quote": "Models for the marginal mean of a counterfactual outcome are referred to as marginal structural mean models.",
+      "page": "Ch 12 Sec 12.3-12.4; text lines 8760-8940",
+      "latex": "E[Y^a] = \\beta_0 + \\beta_1 a, \\qquad SW^A = \\frac{f(A)}{f(A \\mid L)}",
+      "symbol_and_unit_ledger": {
+        "E[Y^a]": "marginal mean counterfactual outcome under treatment a [outcome units]",
+        "beta_1": "average causal effect E[Y^{a=1}] - E[Y^{a=0}] [outcome units]",
+        "SW^A": "stabilized inverse probability weight [dimensionless, mean 1]",
+        "f(A)": "marginal density of received treatment",
+        "f(A | L)": "conditional density of received treatment given covariates"
+      },
+      "assumptions": [
+        "In the weighted pseudo-population, association is causation, so an associational fit recovers the structural parameters.",
+        "Stabilized weights have the same point estimates as nonstabilized weights in saturated models but narrower intervals in nonsaturated ones; their sample mean should be checked against 1 as a positivity and specification diagnostic (Fine Point 12.2).",
+        "Marginal structural models are null preserving: under no average effect the model is correctly specified for any treatment form."
+      ],
+      "breakdown_regime": "For continuous treatments the denominator is a density that is hard to estimate in high dimensions, making IP weighted dose response curves fragile; misspecified treatment models propagate directly into the structural parameters.",
+      "domain": "estimation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dose questions (how much rest, how much usage, how many minutes) are answered in the engine as structural curves over the counterfactual mean, fit on a reweighted comparison population, with weight diagnostics reported beside the curve.",
+        "source_operator": "marginal_structural_models",
+        "telemetry": "Treatment assignment model, stabilized weight distribution, and the fitted counterfactual dose curve."
+      }
+    },
+    {
+      "primitive_id": "doubly_robust_estimation",
+      "name": "Doubly robust estimators combine a treatment model and an outcome model so that consistency requires only one of the two to be correct",
+      "verbatim_quote": "Under the usual identifiability assumptions, a doubly robust estimator consistently estimates the causal effect if at least one of the two models is correct (and one need not know which of the two models is correct).",
+      "page": "Ch 13 Sec 13.4 and Fine Point 13.2; text lines 9513-9565",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Built from the IP weighting and standardization (plug-in g-formula) components; the augmented IP weighted estimator is the other canonical form (Technical Point 13.2).",
+        "Double robustness protects against one model failure, not against failures of exchangeability, positivity, or consistency, which no estimator can repair."
+      ],
+      "breakdown_regime": "If both models are wrong, the estimator is wrong, and its bias need not be smaller than either single model estimator; double robustness is two chances, not a guarantee.",
+      "domain": "estimation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Where the engine estimates an effect two ways (assignment model and outcome model), the doubly robust combination is the default reported number, and disagreement between the two singly robust inputs is surfaced as a misspecification alarm rather than averaged away.",
+        "source_operator": "doubly_robust_estimation",
+        "telemetry": "Both nuisance model fits plus the combined estimate and their pairwise discrepancies."
+      }
+    },
+    {
+      "primitive_id": "structural_nested_models_g_estimation",
+      "name": "Structural nested models parameterize the effect of a final blip of treatment given history; g-estimation finds the parameter value that makes the implied untreated counterfactual independent of treatment given covariates",
+      "verbatim_quote": "In this game, choosing the correct value of ψ1 is equivalent to choosing which one of the three candidate counterfactuals H(ψ † ) is the true counterfactual",
+      "page": "Ch 14 Sec 14.3-14.5; text lines 9960-10080 and 10160-10240",
+      "latex": "E[Y^a - Y^{a=0} \\mid A = a, L] = \\beta_1 a + \\beta_2 aL",
+      "symbol_and_unit_ledger": {
+        "Y^a - Y^{a=0}": "individual level contrast removed by the blip [outcome units]",
+        "beta_1, beta_2": "blip effect parameters, possibly modified by L [outcome units]",
+        "A = a, L": "conditioning on received treatment and covariates, the nesting that makes the model structural"
+      },
+      "assumptions": [
+        "The candidate counterfactual H(psi) = Y - psi*A under the rank preserving form; the true psi makes H(psi) unassociated with A given L, which is exactly conditional exchangeability restated.",
+        "Structural nested models leave the nuisance structure (the L to Y relation) unspecified, so they are immune to outcome model misspecification and exposed instead to treatment model misspecification, the mirror image of outcome regression (Fine Point 15.1)."
+      ],
+      "breakdown_regime": "G-estimation adjusts for confounding but not, by itself, for selection bias from censoring, which must first be handled by IP weighting; rank preservation is a strong special case and is scientifically implausible for most treatments.",
+      "domain": "estimation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The blip framing maps to sequential decision points in a game or season: the effect of one more intervention given everything that has already happened. G-estimation's inversion logic (find the effect size at which the residual counterfactual is independent of the action taken) is the engine's template for estimating such local effects.",
+        "source_operator": "structural_nested_models_g_estimation",
+        "telemetry": "Action histories with covariates at each decision point, and the independence diagnostic across candidate effect sizes."
+      }
+    },
+    {
+      "primitive_id": "propensity_score_balancing",
+      "name": "The propensity score pi(L) = Pr[A = 1 | L] is a balancing score: conditioning on it alone reproduces exchangeability and positivity from the full covariate set",
+      "verbatim_quote": "π(L) measures the propensity of individuals to receive treatment given the information available in the covariates L.",
+      "page": "Ch 15 Sec 15.2 and Technical Point 15.1; text lines 10560-10670",
+      "latex": "\\pi(L) = \\Pr[A = 1 \\mid L]",
+      "symbol_and_unit_ledger": {
+        "pi(L)": "propensity score: probability of treatment given covariates [probability]",
+        "L": "measured covariates sufficient for exchangeability"
+      },
+      "assumptions": [
+        "Balancing property: within levels of pi(L), the distribution of L is the same in treated and untreated (A independent of L given pi(L)).",
+        "Rosenbaum and Rubin (1983): conditional exchangeability given L implies conditional exchangeability given pi(L), and positivity transfers likewise."
+      ],
+      "breakdown_regime": "The score balances only measured covariates; unmeasured confounding survives intact inside every stratum. Estimated scores also inherit treatment model misspecification, and extreme scores near 0 or 1 signal positivity trouble rather than strong evidence.",
+      "domain": "estimation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The propensity score is the engine's one dimensional compression of assignment context: matchups are compared within bands of assignment propensity when the full covariate grid is too sparse, with balance checks reported per band.",
+        "source_operator": "propensity_score_balancing",
+        "telemetry": "Assignment probability model per unit and covariate balance within score bands."
+      }
+    },
+    {
+      "primitive_id": "instrumental_variable_conditions",
+      "name": "An instrument Z identifies effects through three conditions: association with treatment, no direct effect on the outcome (exclusion restriction), and exchangeability of Z itself",
+      "verbatim_quote": "It can be argued that this variable meets the three instrumental conditions if (i) cigarette price affects the decision to quit smoking, (ii) cigarette price affects weight change only through its effect on smoking cessation, and (iii) no common causes of cigarette price and weight change exist.",
+      "page": "Ch 16 Sec 16.1 and Technical Point 16.1; text lines 10985-11095",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Only condition (i), relevance, is empirically verifiable; the exclusion restriction and instrument exchangeability rest on subject matter argument and can at best be falsified in special cases.",
+        "Causal instruments affect treatment; surrogate instruments (such as physician preference or genetic variants in Mendelian randomization) merely proxy an unmeasured causal instrument."
+      ],
+      "breakdown_regime": "Weak instruments (small Z to A association) amplify any violation of conditions (ii) and (iii) into large bias and huge variance; the book's own example yields a 95 percent interval from -36.5 to 41.3 kg.",
+      "domain": "identification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats natural experiments (schedule quirks, arbitrary thresholds, assignment lotteries) as candidate instruments and grades them on exactly these three conditions, with relevance measured and the other two argued in writing before any estimate is produced.",
+        "source_operator": "instrumental_variable_conditions",
+        "telemetry": "Candidate instrument registry with relevance strength and the exclusion argument per candidate."
+      }
+    },
+    {
+      "primitive_id": "iv_estimand_partial_identification",
+      "name": "The usual IV estimand is the ratio of the instrument's effect on the outcome to its effect on treatment; without a fourth condition (homogeneity or monotonicity) an instrument alone yields only bounds, not a point estimate",
+      "verbatim_quote": "Anyway, the above estimators are only valid when the usual IV estimand can be interpreted as the average causal effect of treatment A on the outcome Y",
+      "page": "Ch 16 Sec 16.2-16.4 and Technical Point 16.2; text lines 11095-11295",
+      "latex": "\\frac{E[Y \\mid Z = 1] - E[Y \\mid Z = 0]}{E[A \\mid Z = 1] - E[A \\mid Z = 0]}",
+      "symbol_and_unit_ledger": {
+        "numerator": "intention-to-treat effect of assignment Z on outcome Y [outcome units]",
+        "denominator": "effect of assignment Z on treatment received A [probability difference]",
+        "ratio": "Wald estimand [outcome units]"
+      },
+      "assumptions": [
+        "With perfect adherence the denominator is 1 and the estimand reduces to the effect of assignment; as adherence falls the ratio inflates correspondingly.",
+        "Point identification as the average causal effect needs a fourth condition: effect homogeneity, or monotonicity, under which the estimand is the effect in compliers."
+      ],
+      "breakdown_regime": "Bounds from an instrument alone (natural bounds, sharp Balke Pearl bounds) are typically wide and include the null; pretending the ratio is the population average effect without the fourth condition is the standard IV overclaim.",
+      "domain": "identification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine rule for quasi experimental estimates: report the ratio with its denominator strength attached, name the fourth condition being invoked and the subpopulation it restricts the claim to, and show the assumption light bounds beside the point estimate.",
+        "source_operator": "iv_estimand_partial_identification",
+        "telemetry": "First stage strength, the named fourth condition, complier share, and bound width per IV estimate."
+      }
+    },
+    {
+      "primitive_id": "survival_from_hazards",
+      "name": "Survival is the product of one minus the hazards; the Kaplan-Meier estimator is that product computed from observed interval hazards",
+      "verbatim_quote": "That is, the survival at k equals the product of one minus the hazard at all previous times.",
+      "page": "Ch 17 Sec 17.1-17.2; text lines 12150-12190",
+      "latex": "\\Pr[D_k = 0] = \\prod_{m=1}^{k} \\left(1 - \\Pr[D_m = 1 \\mid D_{m-1} = 0]\\right)",
+      "symbol_and_unit_ledger": {
+        "Pr[D_m = 1 | D_{m-1} = 0]": "discrete time hazard: event probability in interval m given survival to m [probability]",
+        "Pr[D_k = 0]": "survival probability through interval k [probability]"
+      },
+      "assumptions": [
+        "Hazards condition on survival so far; risks and survival probabilities are the marginal quantities with direct causal readings.",
+        "Causal contrasts should be reported as differences or ratios of risks at a fixed horizon, which are defined for the whole starting population."
+      ],
+      "breakdown_regime": "The hazard ratio carries built in selection bias (Fine Point 17.2): conditioning on survival to k compares depleted treated survivors with undepleted untreated survivors, so a time specific hazard ratio can fall below 1 with no benefit to any individual, and a single Cox hazard ratio is an opaquely weighted average of time varying ratios.",
+      "domain": "survival",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Time to event questions in the engine (time to injury return, survival of a lineup, drought duration) are reported as risk curves at fixed horizons. Hazard ratios are treated as intermediate modeling quantities, never as the headline effect, because of the survivor conditioning trap.",
+        "source_operator": "survival_from_hazards",
+        "telemetry": "Interval level event and at risk counts producing full risk curves per scenario."
+      }
+    },
+    {
+      "primitive_id": "doubly_robust_machine_learning",
+      "name": "Doubly robust machine learning pairs flexible nuisance models with sample splitting and cross-fitting; its bias is the product of the two nuisance errors, which is what makes valid inference possible in high dimensions",
+      "verbatim_quote": "A small bias is easier to achieve with doubly robust estimators",
+      "page": "Ch 18 Sec 18.3-18.4 and Technical Point 18.1; text lines 13120-13250",
+      "latex": "\\hat\\psi = \\frac{1}{n} \\sum_{i=1}^{n} \\left\\{ \\hat b(X_i) + \\frac{A_i}{\\hat\\pi(X_i)} \\left( Y_i - \\hat b(X_i) \\right) \\right\\}",
+      "symbol_and_unit_ledger": {
+        "psi hat": "augmented IP weighted estimate of E[Y^{a=1}] [outcome units]",
+        "b hat(X)": "machine learned outcome regression E[Y | A = 1, X] [outcome units]",
+        "pi hat(X)": "machine learned propensity Pr[A = 1 | X] [probability]",
+        "A_i, Y_i, X_i": "unit i's treatment, outcome, covariates"
+      },
+      "assumptions": [
+        "Second order bias: the estimator's bias scales with the product of nuisance errors, so each nuisance may converge slower than root n while their product still beats the root n threshold needed for valid Wald intervals.",
+        "Sample splitting breaks the correlation between nuisance fits and the estimation sample; cross-fitting swaps the halves and averages to recover full sample efficiency."
+      ],
+      "breakdown_regime": "Full sample machine learning plug-ins without splitting have bias of unpredictable size and direction from own observation overfitting; and if both nuisance functions are genuinely hard (neither smooth nor sparse), no method restores root n inference.",
+      "domain": "machine_learning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is the engine's license for using learned models inside causal estimates: flexible predictors may estimate assignment and outcome surfaces, but only inside a doubly robust, cross-fit wrapper, and the product error diagnostic is reported so a weak nuisance pair cannot hide behind a flexible learner.",
+        "source_operator": "doubly_robust_machine_learning",
+        "telemetry": "Cross-fit nuisance predictions, fold assignments, and the product error scale per estimate."
+      }
+    },
+    {
+      "primitive_id": "sequential_exchangeability",
+      "name": "For time-varying treatments, exchangeability must hold at every time point given the recorded past: sequential exchangeability under the strategy being evaluated",
+      "verbatim_quote": "as sequential exchangeability for Y g under any—static or dynamic—strategy g",
+      "page": "Ch 19 Sec 19.4; text lines 13680-13760",
+      "latex": "Y^g \\perp\\!\\!\\!\\perp A_k \\mid \\bar A_{k-1}, \\bar L_k",
+      "symbol_and_unit_ledger": {
+        "Y^g": "counterfactual outcome under treatment strategy g [outcome units]",
+        "A_k": "treatment at time k",
+        "A bar, L bar": "treatment and covariate histories through the indicated times"
+      },
+      "assumptions": [
+        "A sequentially randomized experiment, where each A_k is assigned using only recorded history, implies sequential exchangeability for every strategy g.",
+        "Identification also needs sequential positivity and sequential consistency; under all three, E[Y^g] is identified by the g-formula for static and dynamic strategies alike."
+      ],
+      "breakdown_regime": "Identification can hold for some strategies and fail for others in the same study: an unmeasured cause of a time varying covariate can leave static strategies identified while dynamic strategies that respond to that covariate are not.",
+      "domain": "longitudinal",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In game and season sequences, the engine checks comparability at each decision point given the recorded past (score state, fatigue state, prior choices), not once at the start. A strategy evaluation is valid only for the strategies whose decision inputs are fully recorded.",
+        "source_operator": "sequential_exchangeability",
+        "telemetry": "Time indexed treatment, covariate, and state histories with per time assignment mechanisms."
+      }
+    },
+    {
+      "primitive_id": "treatment_confounder_feedback",
+      "name": "When a time-varying confounder is affected by prior treatment, traditional adjustment fails in both directions and only g-methods adjust correctly",
+      "verbatim_quote": "the treatment affects the confounder. There is treatment-confounder feedback",
+      "page": "Ch 20 Sec 20.1-20.2; text lines 14090-14290",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Feedback structure: L_k points into A_k while A_{k-1} points into L_k; the same variable is simultaneously a confounder for later treatment and a mediator of earlier treatment.",
+        "The g-null test and g-null theorem (Technical Point 20.1) give the sharp null a testable form under sequential randomization."
+      ],
+      "breakdown_regime": "Stratifying or regressing on L_k blocks part of the earlier treatment's effect and opens collider paths; not adjusting leaves confounding. The book's sequentially randomized example has true effect zero while traditional adjustment returns a non-null estimate, with full data and no unmeasured confounding.",
+      "domain": "longitudinal",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Feedback is the default in sports sequences: today's load changes tomorrow's readiness, which changes tomorrow's assignment. The engine therefore bans one shot regression adjustment for longitudinal levers and routes them through g-method machinery that respects the dual role of each time varying state.",
+        "source_operator": "treatment_confounder_feedback",
+        "telemetry": "Longitudinal state variables flagged when they are both caused by prior actions and predictive of later actions."
+      }
+    },
+    {
+      "primitive_id": "g_formula_time_varying",
+      "name": "The g-formula for time-varying treatments standardizes the outcome mean over covariate histories drawn from the distribution they would have under the intervention itself",
+      "verbatim_quote": "This conditioning on prior history is not necessary in the time-fixed case in which both treatment and confounders are measured at a single time point.",
+      "page": "Ch 21 Sec 21.1; text lines 14592-14720",
+      "latex": "E[Y^{\\bar a}] = \\sum_{\\bar l} E[Y \\mid \\bar A = \\bar a, \\bar L = \\bar l] \\prod_{k=0}^{K} f(l_k \\mid \\bar a_{k-1}, \\bar l_{k-1})",
+      "symbol_and_unit_ledger": {
+        "E[Y^{a bar}]": "mean outcome had everyone followed treatment history a bar [outcome units]",
+        "f(l_k | a bar_{k-1}, l bar_{k-1})": "density of time k covariates given past treatment and covariate history under the intervention",
+        "sum over l bar": "integration over all covariate histories"
+      },
+      "assumptions": [
+        "Equivalently a simulation: assign the strategy with probability 1 at each time while letting covariates evolve by their observed conditional laws; this builds the counterfactual tree of the whole population.",
+        "Every component must condition on the full relevant past; omitting a time varying confounder from L destroys the causal reading of the whole expression."
+      ],
+      "breakdown_regime": "The formula needs models for every time point's covariate density, so misspecification compounds across time; the big g-formula (Sec 21.6) shows the price of full generality is modeling the joint evolution of all time varying variables including unmeasured ones' proxies.",
+      "domain": "longitudinal",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "This is the engine's sequence simulator: roll the population forward under a candidate strategy, letting states evolve by their learned conditional laws while actions are forced by the strategy, and read the outcome distribution at the horizon. It is the formal version of every what if simulation the engine runs.",
+        "source_operator": "g_formula_time_varying",
+        "telemetry": "Conditional evolution models for each time varying state given history, plus the strategy definition."
+      }
+    },
+    {
+      "primitive_id": "censoring_as_treatment",
+      "name": "Censoring is a time-varying treatment: the target estimand is the outcome under the joint intervention that applies the strategy and prevents loss to follow up, estimated by censoring weights",
+      "verbatim_quote": "The nonstabilized IP weights abolish censoring in the pseudo-population.",
+      "page": "Ch 21 Sec 21.5; text lines 16060-16145",
+      "latex": "W^{\\bar C} = \\prod_{k=1}^{K+1} \\frac{1}{\\Pr[C_k = 0 \\mid C_{k-1} = 0, \\bar A_{k-1}, \\bar L_{k-1}]}",
+      "symbol_and_unit_ledger": {
+        "W^{C bar}": "censoring weight accumulated over follow up [dimensionless]",
+        "C_k": "censoring indicator at time k (0 = still under follow up)",
+        "conditioning set": "remaining uncensored given treatment and covariate history"
+      },
+      "assumptions": [
+        "The superscript c = 0 makes explicit the contrast most analyses intend: the effect of treatment had nobody been lost to follow up.",
+        "Identifiability conditions are applied to the joint treatment (strategy, no censoring); in the weighted pseudo-population the censored are replaced by copies of comparable uncensored units."
+      ],
+      "breakdown_regime": "If censoring depends on unmeasured outcome predictors, the joint intervention is not identified and weighting manufactures a pseudo-population that misrepresents the target; administrative censoring at a common end time is the benign special case.",
+      "domain": "longitudinal",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Attrition in engine data (players leaving a rotation, games dropped from a feed, tracking gaps) is modeled as an intervention target, not a filter: analyses state the no attrition estimand and reweight the observed remainder to stand for the full cohort.",
+        "source_operator": "censoring_as_treatment",
+        "telemetry": "Per time censoring indicators with their predictors, and censoring weight distributions."
+      }
+    },
+    {
+      "primitive_id": "target_trial_emulation",
+      "name": "Every observational causal analysis should specify the protocol of the randomized trial it emulates: eligibility, strategies, assignment, outcomes, follow up, and the causal contrast",
+      "verbatim_quote": "At the very least, specifying a target trial helps us align causal questions to interventions that are feasible or at least not totally unrealistic.",
+      "page": "Ch 3 Sec 3.6 and Ch 22; text lines 2332-2365",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Key protocol components: eligibility criteria, treatment strategies, assignment, outcomes, start and end of follow up (time zero), and causal contrasts.",
+        "Time zero alignment is a load bearing component (Sec 22.4): eligibility, strategy assignment, and the start of follow up must coincide, or the emulation manufactures immortal time and selection artifacts; when eligibility recurs, emulate a sequence of trials."
+      ],
+      "breakdown_regime": "Emulation fails where the data cannot express the protocol, for example strategies that cannot be assigned at time zero from recorded variables; the honest output then is a revised, answerable protocol, not a forced estimate of the original one.",
+      "domain": "identification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Target trial emulation is the engine's intake form for causal questions: before any computation, the question is rewritten as a protocol with eligibility, strategies, time zero, and contrast. Questions that cannot survive the rewrite are returned for respecification instead of being answered loosely.",
+        "source_operator": "target_trial_emulation",
+        "telemetry": "A protocol record per causal query: eligibility, strategies, time zero, follow up, contrast."
+      }
+    },
+    {
+      "primitive_id": "intention_to_treat_vs_per_protocol",
+      "name": "The intention-to-treat effect (effect of assignment) is unconfounded by design; the per-protocol effect (effect of actually following the strategy) turns the trial back into an observational study requiring full adjustment",
+      "verbatim_quote": "That is, estimation of the per-protocol effect requires viewing the randomized experiment as an observational study.",
+      "page": "Ch 22 Sec 22.1; text lines 16520-16630",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Assignment Z is randomized, so exchangeability for Z holds by design and the unadjusted Z to Y association estimates the intention-to-treat effect.",
+        "Naive as treated and per protocol subset analyses are biased: restricting to adherers conditions on a post assignment collider and reintroduces confounding (Fine Point 22.3)."
+      ],
+      "breakdown_regime": "Intention-to-treat answers the assignment question, which may not be the decision question; the common claim that it is automatically a conservative lower bound for the per-protocol effect fails when the exclusion restriction fails or adherence patterns differ by arm.",
+      "domain": "identification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine keeps the assignment effect and the execution effect as separate outputs for every strategy: what happens when a plan is announced versus when it is actually carried out. Adherence is modeled, never conditioned away by subsetting to compliers.",
+        "source_operator": "intention_to_treat_vs_per_protocol",
+        "telemetry": "Assignment records, received action records, and adherence predictors per unit."
+      }
+    },
+    {
+      "primitive_id": "mediation_natural_effects",
+      "name": "Natural (pure) direct and total indirect effects decompose a total effect through a mediator using cross-world counterfactuals, identified by the mediation formula only under an unverifiable cross-world independence",
+      "verbatim_quote": "The pure direct effect of A on Y not through M is the average causal effect of A on Y if, for each individual, the value of M had been set to the value that M would have taken if A had been set to 0",
+      "page": "Ch 23 Sec 23.1 and Technical Point 23.1; text lines 17440-17550",
+      "latex": "E[Y^{a=1, M^{a=0}}] = \\sum_m E[Y \\mid A = 1, M = m] \\Pr[M = m \\mid A = 0]",
+      "symbol_and_unit_ledger": {
+        "Y^{a=1, M^{a=0}}": "cross-world counterfactual: outcome under treatment with mediator set to its untreated value [outcome units]",
+        "sum over m": "mediation formula weighting outcome means by the mediator distribution under no treatment"
+      },
+      "assumptions": [
+        "Pure direct plus total indirect effects sum to the total effect by consistency.",
+        "Identification needs the cross-world independence Y^{a=1,m} independent of M^{a=0}, assumed under an NPSEM-IE and not under the book's preferred FFRCISTG model, under which only sharp bounds are available.",
+        "Controlled direct effects, which set M to a fixed value for everyone, are ordinary joint intervention effects and avoid the cross-world assumption."
+      ],
+      "breakdown_regime": "No experiment, even in principle, can verify cross-world independence, because the two worlds cannot be jointly observed; mediation decompositions therefore carry a permanent unverifiable assumption that total and controlled effects do not.",
+      "domain": "mediation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pathway questions in the engine (does this factor work through pace, through shot quality, through rest) are answered first as controlled direct effects under joint interventions, which are identified; natural effect decompositions are offered only with the cross-world assumption printed on the result.",
+        "source_operator": "mediation_natural_effects",
+        "telemetry": "Mediator measurements under each arm and the mediator outcome confounder set."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "026d30fb53c6e2d0-t1",
+      "think": "This book is the operating manual for one disciplined move: refuse to discuss effects until the effect has been defined as a contrast between counterfactual worlds, then refuse to estimate it until the assumptions that connect those worlds to observed data have been stated out loud. The first layer is definitional. A causal effect is a comparison of outcomes for the same units under two interventions, summarized for a population as a contrast of counterfactual means, risks, or other functionals, on a declared scale. Association is a different object, a contrast between disjoint groups that happened to receive different treatments, and the book's running example shows the two can point in opposite directions. Around the definition sit three quiet prerequisites that do most of the work: consistency, which forces the recorded treatment to be the intervention that defines the counterfactual; no interference, which keeps each unit's counterfactual from depending on the whole allocation; and sufficiently well defined interventions, which disqualify questions about vague states whose effects change with the unstated method of achieving them. The second layer is identification. Randomized experiments are privileged for exactly one reason: assignment by chance manufactures exchangeability, so association inside the experiment is causation. Observational studies earn the same reading only by emulating a conditionally randomized experiment, which requires conditional exchangeability given measured covariates, positivity in every stratum used, and consistency. The graph machinery of Chapters 6 and 7 converts these conditions into auditable structure: d-separation reads independencies off the graph, the backdoor criterion certifies adjustment sets, and the structural classification of bias sorts every distortion into common causes (confounding), conditioning on common effects (selection bias), or measurement error. Two honesty constraints run through this layer. Exchangeability cannot be tested from the data it is meant to interpret, and identification is a property that infinite data cannot fix when it fails, which is why the book separates identification from estimation as different kinds of problems. The third layer is estimation, and its unifying discovery is that standardization, inverse probability weighting, outcome regression, propensity scores, and structural models are not rival recipes but views of one object, the g-formula. Standardization averages stratum specific means over the target covariate distribution; IP weighting builds a pseudo-population where treatment is unconfounded and reads the contrast there; marginal structural models parameterize the counterfactual mean directly and are fit in that pseudo-population, with stabilized weights as the variance control. Structural nested models take the conditional route, parameterizing the effect of a final blip of treatment given history, and g-estimation inverts exchangeability itself: search for the effect size that makes the implied untreated counterfactual independent of the treatment actually taken. Doubly robust estimators then insure each approach against the other, needing only the treatment model or the outcome model to be right, and doubly robust machine learning extends the insurance to high dimensional data through product form bias plus cross-fitting. The bias variance trade-off and the curse of dimensionality mark where this layer breaks: exact adjustment dies in sparse strata, and every escape imports modeling assumptions that must be declared. The book proves the coherence of this layer on one running example: the effect of smoking cessation on weight gain in the NHEFS cohort is estimated in turn by IP weighting, standardization, g-estimation, outcome regression, and propensity score methods, and the estimates land within a few tenths of a kilogram of one another even though each rests on different modeling assumptions, so their agreement is evidence about the assumptions rather than about any single fit. Where such methods disagree in other settings, the disagreement is itself the diagnostic, pointing at the nuisance model most likely to be misspecified. The fourth layer is time. Once treatments and confounders evolve together, the confounder is also a mediator of past treatment, and the book proves by a clean sequentially randomized example that traditional adjustment fails even with perfect data: treatment-confounder feedback. The repair is conceptual before it is computational. Exchangeability, positivity, and consistency are restated sequentially, strategies replace single treatments as the object of inference, censoring is promoted to a time varying treatment so the estimand becomes the effect had nobody been lost, and the g-formula generalizes into a simulation that rolls the whole population forward under a forced strategy while covariates evolve by their observed laws. Target trial emulation sits on top as the design discipline: specify eligibility, strategies, assignment, time zero, and contrast first, and let the observational analysis be judged as an emulation of that protocol, with intention-to-treat and per-protocol effects kept apart because the second quietly converts any trial back into an observational study. The boundary cases define the limits of the whole framework. Instruments trade the exchangeability assumption for three conditions of their own and, without a fourth homogeneity or monotonicity condition, deliver bounds rather than points, a standing lesson in partial identification. Hazard ratios are demoted from effect measures because conditioning on survival builds selection into the estimand. Mediation is admitted but taxed: natural direct and indirect effects need a cross-world independence that no experiment can verify, while controlled direct effects remain ordinary joint interventions. What this changes for a reasoning engine is procedural, not decorative. Every causal claim must arrive with its intervention protocol, its target population, its scale, its identification argument, and its known failure modes, or it is stored as an association and labeled as one. Sensitivity analysis is the admitted remainder throughout: because the central assumptions cannot be verified, the mature output of the framework is often not a single number but a map from posited violations, such as a posited degree of nonexchangeability in g-estimation, to the conclusions that survive them.",
+      "retrocausal_genealogy": "The lineage runs from Neyman's 1923 counterfactual notation for randomized experiments, through Rubin's extension of potential outcomes to observational studies in the 1970s and Rosenbaum and Rubin's 1983 propensity score, to Robins's 1986 g-formula and structural nested models, which supply the book's estimation spine. A parallel line from Rothman's sufficient-component causes contributes the mechanistic view of interaction, and Pearl's graph theory contributes d-separation, the backdoor criterion, and the do-calculus, which the book absorbs as a second notation for the same conditions. The target trial synthesis is the authors' own: Hernan and Robins spent two decades teaching this material at Harvard and building the methods for longitudinal HIV and clinical data, and the book is that program written as one coherent system rather than a survey of other people's results.",
+      "theory_of_mind": "The authors model the reader as a competent analyst whose characteristic failure is casual language: reporting the effect of a variable that names no intervention, adjusting for whatever was measured, and letting the software choose the estimand. Their remedy is to make the analyst behave like a trialist: the causal question is a protocol, the assumptions are part of the result, and data analysis is the last step rather than the first. They are metaphysically agnostic and operationally strict: causation is whatever survives being defined as an intervention contrast and identified under declared assumptions. They also distrust recipes and black boxes in equal measure, insisting that every method in the book be derivable from the counterfactual definitions, so that when a method fails the reader can locate which assumption failed instead of shopping for another method.",
+      "cross_layer_veto": "Several results in this work veto claims that other layers of a reasoning system might want to make. Positivity vetoes extrapolation: a contrast is undefined in strata where one of the compared interventions never occurs, however smooth the fitted model looks there. The well defined intervention requirement vetoes questions themselves, before any data are consulted, when the treatment is a state with no specified way of setting it. Collider logic vetoes convenient subsets: conditioning on survival, completion, adherence, or any common effect manufactures association that no sample size removes. Treatment-confounder feedback vetoes the entire traditional adjustment family for longitudinal questions, regardless of how many covariates were measured. And the untestability of exchangeability and of cross-world independence vetoes certainty itself: observational causal claims carry assumption risk permanently, and any layer that reports them without that risk attached is overruled by this one."
+    }
+  ],
+  "universal_lens": "Read as a general template, the book says that every quantitative claim about what would happen under a change is secretly a claim about a hypothetical experiment. Make the experiment explicit: who is eligible, what exactly is done, what is compared, over what horizon. Then ask what in the observed world licenses treating it as that experiment, and write the license down as checkable conditions. Most confusion in applied work is not bad arithmetic but an unlicensed experiment: the number is correct for a question nobody asked. The framework transfers intact to any domain where interventions, populations, and follow up can be named, from product changes to policy to training programs, because the discipline is about the structure of the question, not about medicine.",
+  "gsi_mapping": "The Galaxy Sports Institute takes from this work its research hygiene standard. Studies are registered as target trial protocols before analysis: eligibility, strategies, time zero, contrast, and scale. Identification arguments are reviewed separately from estimation code, and bias autopsies follow the structural taxonomy of confounding, selection, and measurement. Longitudinal questions are required to declare whether feedback is present, which decides the allowed method family in advance. Instruments and natural experiments are graded on relevance, exclusion, and the fourth condition needed for a point claim, with bounds reported when the fourth condition is not defensible. Mediation results are published only with their cross-world assumption stated, and hazard ratio based claims are re-expressed as risk contrasts at fixed horizons.",
+  "gse_mapping": "The Galaxy Sports Edge engine adopts the book as its causal layer constitution. Associational splits from tracking and play by play data stay labeled associational until a protocol, an adjustment argument, and an overlap audit promote them. Scenario projections are computed by standardization and g-formula simulation over declared populations, so a projection for a new context is a change of standard rather than a refit. Sequential levers such as load management, rotation choices, and in game adjustments are handled as treatment strategies under sequential exchangeability, with time varying states allowed to be both confounders and mediators. Assignment versus execution effects are reported separately for every recommended strategy, and every causal number the engine emits carries its identification assumptions and its positivity region with it."
+}
