@@ -1,0 +1,396 @@
+{
+ "book_id": "210fff49ce7fc373",
+ "title": "Bashuk 2011 — Using Cumulative Win Probabilities to Predict NCAA Basketball Performance",
+ "source_status": "READABLE",
+ "source_note": "Mark Bashuk (Business Intelligence, RaceTrac Petroleum), 'Using Cumulative Win Probabilities to Predict NCAA Basketball Performance' (2011, SevenOvertimes.com method paper). 10 PDF pages, text-extractable via pymupdf. Full read: abstract, introduction, methodologies (play-by-play acquisition, metadata star schema, rankings), simulations (SOS blend, home court, in-game segment weighting), comparisons, limitations, future work, conclusions, appendices (WPA clutch definition, R^2=0.9854). The paper references Las Vegas opening/closing lines ONLY as external accuracy benchmarks; the sovereign primitives extracted here are win-probability mathematics (CWP, WPA, win-probability matrix, leverage, margin-to-WP calibration of the engine's own predicted margin) and use NO sportsbook betting line as an input. Equation symbols garbled in the PDF text layer (alpha/x_home/x_away/gamma/phi/beta) are transcribed and labeled reassembled-from-printed-text; prose verbatim. Not retracted; title matches content.",
+ "pages_total": 10,
+ "pages_read": 10,
+ "primitives": [
+  {
+   "primitive_id": "cwp_premise",
+   "name": "Cumulative win probability measures performance, not the final score",
+   "verbatim_quote": "The central premise of SOM is that we can use cumulative win probabilities to accurately measure team performance.",
+   "page": 2,
+   "latex": "\\mathrm{CWP}=\\frac{1}{T}\\int_0^T \\mathrm{WP}(t)\\,dt\\quad\\text{(time-average of the win-probability path)}",
+   "symbol_and_unit_ledger": {
+    "WP(t)": "win probability at game time t [probability 0-1]",
+    "CWP": "cumulative (time-averaged) win probability [probability]",
+    "T": "game duration [time]"
+   },
+   "assumptions": [
+    "The path of win probability over the game carries more information than the terminal score",
+    "Built from a play-by-play win-probability model"
+   ],
+   "breakdown_regime": "If the win-probability model is miscalibrated, CWP inherits the error; games without play-by-play need a fallback estimate.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's team-strength estimate IS cumulative win probability: rather than judging a team by the final score (which garbage-time and buzzer-beaters distort), the engine integrates the win-probability path over the whole game. A team that led by 20 at half and won by 9 is rated differently from one tied at half that won by 9, because their CWP paths differ. This is the sovereign principle that performance is the win-probability trajectory, not the terminal margin.",
+    "source_operator": "cwp_premise",
+    "telemetry": "GSE telemetry: per-team CWP from the integrated win-probability path; verify it diverges from final-margin rating on garbage-time games."
+   }
+  },
+  {
+   "primitive_id": "final_score_insufficient",
+   "name": "The final score rarely tells the whole story",
+   "verbatim_quote": "I believe it is still limited in its usefulness because the final score rarely tells the whole story.",
+   "page": 1,
+   "latex": "\\text{final margin} \\not\\Rightarrow \\text{performance};\\quad \\mathrm{WP}(t)\\ \\text{path required}",
+   "symbol_and_unit_ledger": {
+    "final margin": "terminal point difference [points]",
+    "WP path": "full win-probability trajectory [probability over time]"
+   },
+   "assumptions": [
+    "Average scoring margin and RPI focus only on the final score",
+    "A single late play should not dominate the judgment of a team"
+   ],
+   "breakdown_regime": "Terminal-score metrics conflate very different game paths that happen to end at the same margin.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine vetoes final-score-only evaluation: a 1-point loss and a 1-point win are not the whole story, and a comfortable win padded by garbage time is not the same performance as a clutch win. The engine reasons over the full win-probability trajectory, so a last-second buzzer-beater does not retroactively rewrite the team's measured strength. This is the epistemic discipline that the terminal outcome is a noisy summary of the underlying performance path.",
+    "source_operator": "final_score_insufficient",
+    "telemetry": "GSE telemetry: trajectory-based vs terminal-score rating divergence; verify late plays do not dominate the strength estimate."
+   }
+  },
+  {
+   "primitive_id": "win_probability_matrix",
+   "name": "Win probability matrix: expected WP from time left and lead",
+   "verbatim_quote": "A Win Probability Matrix is a table that gives the expected win probability for a game based on the time left and the lead.",
+   "page": 2,
+   "latex": "\\mathrm{WP}=\\mathcal{M}(\\text{time left},\\ \\text{lead});\\quad \\text{e.g. home up 3, 4 min left}\\Rightarrow 0.757",
+   "symbol_and_unit_ledger": {
+    "M": "empirical win-probability matrix [probability]",
+    "time left": "remaining game time [time]",
+    "lead": "score difference [points]"
+   },
+   "assumptions": [
+    "Matrix built from a population of historical games",
+    "Home/away and lead/time index the expected win probability"
+   ],
+   "breakdown_regime": "The matrix is only as good as the population behind it; sparse cells (large lead, little time) need smoothing or a continuous fit.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's win-probability model IS a win-probability matrix indexed by time remaining and score lead: the engine looks up (or fits) the expected win probability from the game state, exactly as Bashuk's matrix gives 75.7% for a home team up 3 with 4 minutes left. This is the sovereign state-to-win-probability map that the engine's leverage and decision logic are built on, and its calibration is bounded by the historical population behind it.",
+    "source_operator": "win_probability_matrix",
+    "telemetry": "GSE telemetry: state-indexed win-probability lookup and calibration vs held-out games; verify sparse-cell smoothing."
+   }
+  },
+  {
+   "primitive_id": "cwp_sos_blend",
+   "name": "Team rating blends own CWP with strength of schedule (31/69)",
+   "verbatim_quote": "At the end of the year, the optimal rating system was a combination of 31% of a team's CWP and 69% of its SOS.",
+   "page": 3,
+   "latex": "\\mathrm{Rating}=0.31\\,\\mathrm{CWP}+0.69\\,\\mathrm{SOS}\\quad\\text{(optimal end-of-season blend)}",
+   "symbol_and_unit_ledger": {
+    "CWP": "own cumulative win probability [probability]",
+    "SOS": "strength of schedule [probability]",
+    "0.31/0.69": "optimal blend weights [dimensionless]"
+   },
+   "assumptions": [
+    "Optimal weights found by simulation over 2009-2011",
+    "Strength of schedule dominates own performance late in the season"
+   ],
+   "breakdown_regime": "The blend is sport/season specific; the 31/69 optimum is NCAA-basketball empirical, not universal.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's team rating blends a team's own win-probability performance with the quality of its opposition (strength of schedule), and the optimal blend is empirically tuned — Bashuk found 31% own CWP + 69% SOS. The engine must not rate a team on its own results alone; a great CWP against weak opposition is discounted. This is the sovereign principle that performance is opponent-adjusted, and the adjustment weight is a tuned, not assumed, quantity.",
+    "source_operator": "cwp_sos_blend",
+    "telemetry": "GSE telemetry: opponent-adjusted rating blend and tuned CWP/SOS weights; verify strength-of-schedule discounting."
+   }
+  },
+  {
+   "primitive_id": "sos_recency_ramp",
+   "name": "Strength-of-schedule weight ramps up over the season (recency)",
+   "verbatim_quote": "my initial value for SOS is 31% and it goes up by .275% per day until it reaches 69% on the last day of the season.",
+   "page": 3,
+   "latex": "w_{SOS}(t)=0.31+0.00275\\,t,\\quad w_{SOS}\\to 0.69\\ \\text{by season end}",
+   "symbol_and_unit_ledger": {
+    "w_SOS(t)": "SOS weight at day t [dimensionless]",
+    "0.00275": "daily ramp [per day]"
+   },
+   "assumptions": [
+    "Early season: own performance weighted more (small sample)",
+    "Late season: schedule weight grows as evidence accumulates"
+   ],
+   "breakdown_regime": "The linear ramp is a heuristic; a principled recency/Bayesian update could replace it.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's rating weights are time-varying: early in the season a team's own performance is weighted more (the schedule sample is small and noisy), and as the season progresses the strength-of-schedule evidence accumulates and its weight ramps up (31% to 69%). This is the sovereign recency/evidence-accumulation discipline — the engine's blend is not static but shifts toward the more reliable signal as data accrues, the practical form of a Bayesian prior giving way to likelihood.",
+    "source_operator": "sos_recency_ramp",
+    "telemetry": "GSE telemetry: time-varying CWP/SOS weights and evidence accumulation; verify the recency ramp."
+   }
+  },
+  {
+   "primitive_id": "home_court_advantage",
+   "name": "Home court advantage: a measured ~4.74-point mean",
+   "verbatim_quote": "An analysis of 13,937 games from 2007-2012 shows a mean home court advantage of 4.74 points per game",
+   "page": 3,
+   "latex": "\\gamma=\\mathbb{E}[\\text{home margin}]\\approx 4.74\\ \\text{points}\\quad(13{,}937\\ \\text{games})",
+   "symbol_and_unit_ledger": {
+    "gamma": "home court advantage [points]",
+    "13937": "sample size [games]"
+   },
+   "assumptions": [
+    "Home advantage estimated from a large historical population",
+    "Applied as a point bump to the home team"
+   ],
+   "breakdown_regime": "A single league-wide constant ignores team-specific and venue-specific variation; the author notes individualized HCA as future work.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's home-field adjustment is a measured population mean (Bashuk's 4.74 points over 13,937 games), not an assumed constant. The engine applies a home advantage bump grounded in historical data, and recognizes that a league-wide constant is a simplification — team- and venue-specific advantages are a refinement. This is the sovereign principle that the home edge is an empirically estimated quantity with a known sample, not a guess.",
+    "source_operator": "home_court_advantage",
+    "telemetry": "GSE telemetry: home-advantage estimate and sample size; verify it is population-measured, with team/venue refinement flagged."
+   }
+  },
+  {
+   "primitive_id": "end_game_leverage_weighting",
+   "name": "End-of-game performance is more telling than early-game",
+   "verbatim_quote": "a team's performance at the end of game is more telling than their performance at the beginning of the game.",
+   "page": 3,
+   "latex": "\\mathrm{CWP}_w=\\frac{\\sum_s w_s\\,\\mathrm{WP}_s}{\\sum_s w_s},\\quad w_{late}>w_{early}",
+   "symbol_and_unit_ledger": {
+    "w_s": "segment weight [dimensionless]",
+    "WP_s": "segment win probability [probability]",
+    "late/early": "game-time segments"
+   },
+   "assumptions": [
+    "Hypothesis: late-game performance carries more signal",
+    "Tested by segment-weight simulation"
+   ],
+   "breakdown_regime": "Over-weighting the end can overfit to clutch noise; the weights are empirically tuned, not assumed.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's leverage weighting IS this end-of-game emphasis: late-game performance is more predictive than early-game performance, so the engine weights the closing segments more heavily (Bashuk's optimal weights .33,.33,.33,.33,1,1,1). This is the sovereign leverage principle — not all game time is equally informative, and the engine's win-probability aggregation must weight high-leverage late segments more, the quantitative basis of clutch and leverage reasoning.",
+    "source_operator": "end_game_leverage_weighting",
+    "telemetry": "GSE telemetry: segment-weighted CWP with late-game emphasis; verify tuned leverage weights, not uniform."
+   }
+  },
+  {
+   "primitive_id": "segment_weighting_accuracy",
+   "name": "Tuned segment weights beat uniform weighting (74.87% vs 74.0%)",
+   "verbatim_quote": "The most accurate simulation (#2107) had segments weights of (.33, .33, .33, .33, 1.00, 1.00, 1.00) and predicted 74.87% of 2011's games correctly.",
+   "page": 4,
+   "latex": "\\text{accuracy}(w^*)=74.87\\% > \\text{accuracy}(\\text{uniform})=74.0\\%",
+   "symbol_and_unit_ledger": {
+    "w*": "optimal segment weights [dimensionless]",
+    "accuracy": "game-outcome prediction accuracy [probability]"
+   },
+   "assumptions": [
+    "6561 (3^8) trials over eight segments",
+    "Down-weighting the first 15 minutes and up-weighting the last 15 improves accuracy"
+   ],
+   "breakdown_regime": "The gain (0.87 pt) is modest and sample-specific; it validates the direction, not a universal magnitude.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's leverage weighting is empirically validated: tuning segment weights to emphasize the end of the game raised prediction accuracy from 74.0% (uniform) to 74.87% (optimal). The engine treats this as evidence that leverage weighting helps, while respecting that the gain is modest and sample-specific — the direction (late > early) is the sovereign lesson, not the exact magnitude. This is the discipline of validating a leverage hypothesis by simulation rather than asserting it.",
+    "source_operator": "segment_weighting_accuracy",
+    "telemetry": "GSE telemetry: tuned-vs-uniform leverage accuracy gain; verify the direction is validated and the magnitude is sample-bounded."
+   }
+  },
+  {
+   "primitive_id": "wpa_definition",
+   "name": "Win Probability Added: the play-to-play win-probability delta",
+   "verbatim_quote": "WPA is calculated by finding the difference in win probability between any two consecutive plays in the play-by-play data.",
+   "page": 5,
+   "latex": "\\mathrm{WPA}_i=\\mathrm{WP}_{i}-\\mathrm{WP}_{i-1}\\quad\\text{(consecutive-play delta)}",
+   "symbol_and_unit_ledger": {
+    "WPA_i": "win probability added by play i [probability]",
+    "WP_i": "win probability after play i [probability]"
+   },
+   "assumptions": [
+    "Each play is credited with the change in win probability it causes",
+    "Sum of WPA over a game telescopes to the terminal WP change"
+   ],
+   "breakdown_regime": "WPA depends entirely on the win-probability model's calibration; a biased WP model gives biased WPA.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's per-play leverage IS Win Probability Added: each snap is credited with the change in win probability it causes (WPA_i = WP_i - WP_{i-1}). This is the sovereign per-play impact measure that the engine uses to rank plays, players, and decisions by their actual contribution to winning, rather than by raw yards or points. The telescoping sum means a game's total WPA is exactly its terminal win-probability change — a conservation law the engine can audit.",
+    "source_operator": "wpa_definition",
+    "telemetry": "GSE telemetry: per-snap WPA and telescoping game total; verify WPA sums to the terminal WP change."
+   }
+  },
+  {
+   "primitive_id": "wpa_player_flaw",
+   "name": "WPA is flawed at player level but accurate at team level",
+   "verbatim_quote": "WPA is very flawed in measuring an individual player's performance, but is still accurate at measuring the collective performance of a team.",
+   "page": 5,
+   "latex": "\\mathrm{WPA}_{team}\\ \\text{valid};\\quad \\mathrm{WPA}_{player}\\ \\text{biased (scoring-only, defense-blind)}",
+   "symbol_and_unit_ledger": {
+    "WPA_team": "team-level WPA [valid collective measure]",
+    "WPA_player": "player-level WPA [biased]"
+   },
+   "assumptions": [
+    "WPA credits scoring with little regard to efficiency",
+    "WPA cannot account for individual defense"
+   ],
+   "breakdown_regime": "Attributing team WPA to individual scorers overrates offense and underrates defenders; player WPA needs adjustment.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's attribution veto IS this WPA limitation: WPA accurately measures collective team performance but is flawed for individuals because it credits scoring (ignoring efficiency) and is blind to defense. A defender who shuts down the star earns no WPA. The engine must not attribute team win-probability gains to individual scorers alone — it requires a defense-aware, efficiency-adjusted attribution layer. This is the sovereign warning against the box-score attribution fallacy.",
+    "source_operator": "wpa_player_flaw",
+    "telemetry": "GSE telemetry: team-vs-player WPA validity and defense-aware attribution; verify player WPA is not used unadjusted."
+   }
+  },
+  {
+   "primitive_id": "wpa_defense_blind",
+   "name": "WPA is blind to defensive influence",
+   "verbatim_quote": "If a defender spends most of his energy shutting down the other team's star player, the WPA metric is not aware of the defender's influence on the game.",
+   "page": 5,
+   "latex": "\\mathrm{WPA}\\ \\text{captures offense};\\quad \\text{defensive suppression}\\ \\notin \\mathrm{WPA}",
+   "symbol_and_unit_ledger": {
+    "defensive suppression": "opponent scoring reduced by a defender [points/WP, uncredited]"
+   },
+   "assumptions": [
+    "A defender's value is in preventing opponent win-probability gains",
+    "WPA only sees the offensive side of the ball"
+   ],
+   "breakdown_regime": "Pure WPA systematically underrates defenders and overrates scorers; a complete model needs a defensive counterfactual.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's defensive-value reasoning IS this WPA blind spot: a defender's contribution is the opponent win-probability he prevents, which WPA never sees. The engine must model defense as a counterfactual — how much worse the team's win probability would be without the defender — rather than relying on WPA, which only credits offense. This is the sovereign principle that defensive value is a prevented-loss counterfactual, not a recorded gain.",
+    "source_operator": "wpa_defense_blind",
+    "telemetry": "GSE telemetry: defensive counterfactual value (prevented WP loss); verify defense is not inferred from WPA."
+   }
+  },
+  {
+   "primitive_id": "full_strength_assumption",
+   "name": "The model assumes full strength — no injuries, travel, or suspensions",
+   "verbatim_quote": "SOM assumes that all the teams are playing at full strength for all games -- it does not currently account for the rigors of travel, injuries, or suspensions.",
+   "page": 5,
+   "latex": "\\text{rating}\\ \\big|\\ \\text{full strength};\\quad \\text{injury/travel/suspension}\\ \\Rightarrow\\ \\text{overrate risk}",
+   "symbol_and_unit_ledger": {
+    "full strength": "all players available [assumption]",
+    "injury/travel/suspension": "unmodeled availability shocks"
+   },
+   "assumptions": [
+    "Automated system may overrate a team missing its star",
+    "Human-adjusted lines incorporate availability that the model ignores"
+   ],
+   "breakdown_regime": "Any rating that ignores availability is biased when a key player is out; the engine must adjust for the actual roster.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's availability veto IS this full-strength assumption: a win-probability rating that assumes every team is at full strength will overrate a team missing its star, and ignores travel fatigue and suspensions. The engine must adjust its ratings for the actual available roster, injuries, and travel — the very factors the automated model omits. This is the sovereign discipline that a strength estimate is conditional on availability, and the engine's injury/roster layer is what closes this gap.",
+    "source_operator": "full_strength_assumption",
+    "telemetry": "GSE telemetry: availability-adjusted rating vs full-strength baseline; verify injury/travel/suspension adjustments."
+   }
+  },
+  {
+   "primitive_id": "margin_to_winprob_calibration",
+   "name": "Point margin maps to win probability (Stern's NFL relationship)",
+   "verbatim_quote": "The relationship between the spread and the likelihood that home team wins for NCAA basketball",
+   "page": 5,
+   "latex": "\\beta=48.85\\%+3.35\\,\\varphi\\ \\text{(NCAA)};\\quad \\beta_{NFL}=50.00\\%+3.00\\,\\varphi\\ \\text{(Stern)}",
+   "symbol_and_unit_ledger": {
+    "beta": "home win probability [probability]",
+    "varphi": "point margin/spread [points]",
+    "3.35/3.00": "margin-to-WP slope [probability per point]"
+   },
+   "assumptions": [
+    "Linear margin-to-win-probability calibration fit over 2007-2011 games",
+    "NCAA slope close to Stern's NFL slope of 3.00 per point"
+   ],
+   "breakdown_regime": "The linear fit is an approximation near the center; extreme margins saturate at 0/1 and the linear form breaks down.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's margin-to-win-probability calibration IS this relationship: a predicted point margin maps to a win probability with a slope of about 3 probability-points per point (Stern's NFL 50% + 3*margin; Bashuk's NCAA 48.85% + 3.35*margin). Here varphi is the engine's OWN predicted margin, not a sportsbook line. This is the sovereign calibration that converts the engine's point-margin output into a win probability, and its linear form is valid near the center but must saturate at extreme margins.",
+    "source_operator": "margin_to_winprob_calibration",
+    "telemetry": "GSE telemetry: predicted-margin to win-probability calibration slope; verify saturation at extreme margins (no sportsbook input)."
+   }
+  },
+  {
+   "primitive_id": "clutch_definition",
+   "name": "Clutch: average WPA in close, late game situations",
+   "verbatim_quote": "Clutch is defined as average WPA for games within five points in the last five minutes of a game.",
+   "page": 10,
+   "latex": "\\mathrm{Clutch}=\\mathbb{E}[\\mathrm{WPA}\\mid |\\text{lead}|\\le 5,\\ t_{left}\\le 5\\,\\text{min}]",
+   "symbol_and_unit_ledger": {
+    "Clutch": "average WPA in close late situations [probability]",
+    "lead<=5": "within five points [points]",
+    "t_left<=5": "last five minutes [time]"
+   },
+   "assumptions": [
+    "Clutch isolates high-leverage close-and-late performance",
+    "Players must have >=10 plays to qualify"
+   ],
+   "breakdown_regime": "Clutch samples are small and noisy; a high clutch WPA can be variance, not a stable skill.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's clutch metric IS this high-leverage WPA: average win probability added in close (within 5 points) and late (last 5 minutes) situations. The engine isolates clutch performance as leverage-weighted WPA, but respects that clutch samples are small and noisy — a high clutch WPA may be variance rather than a stable skill, so the engine shrinks it toward the mean rather than treating it as a reliable player trait. This is the sovereign leverage definition with an honest small-sample caveat.",
+    "source_operator": "clutch_definition",
+    "telemetry": "GSE telemetry: close-and-late WPA (clutch) with small-sample shrinkage; verify clutch is not over-trusted."
+   }
+  },
+  {
+   "primitive_id": "data_quality_limitation",
+   "name": "Play-by-play availability and corruption bound the method",
+   "verbatim_quote": "many games are either missing entirely or feature incomplete or corrupted data.",
+   "page": 5,
+   "latex": "\\text{CWP/WPA quality}\\le \\text{play-by-play completeness}",
+   "symbol_and_unit_ledger": {
+    "play-by-play": "source event log [completeness/correctness]",
+    "corruption": "scores in player fields, missing names/descriptions"
+   },
+   "assumptions": [
+    "Many games missing or corrupted (scores in player fields, missing names)",
+    "Games without play-by-play need a fallback WP estimate"
+   ],
+   "breakdown_regime": "Garbage-in: corrupted or missing play-by-play propagates into CWP and WPA; the method is bounded by data quality.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's data-quality veto IS this play-by-play limitation: CWP and WPA are only as good as the underlying event log, and missing or corrupted plays (scores in player fields, missing descriptions) propagate into the ratings. The engine must gate on data completeness and correctness, use a principled fallback for games without play-by-play, and never let corrupted events drive a win-probability estimate. This is the sovereign discipline that the win-probability layer is bounded by source-data quality.",
+    "source_operator": "data_quality_limitation",
+    "telemetry": "GSE telemetry: play-by-play completeness/correctness gate and fallback handling; verify corrupted events do not drive WP."
+   }
+  },
+  {
+   "primitive_id": "sport_generality",
+   "name": "Cumulative win probability generalizes across sports",
+   "verbatim_quote": "the idea of using cumulative win probabilities to measure team performance could be applied to any sport or league",
+   "page": 6,
+   "latex": "\\mathrm{CWP/WPA}\\ \\text{sport-agnostic};\\quad \\mathcal{M}\\ \\text{sport-specific}",
+   "symbol_and_unit_ledger": {
+    "CWP/WPA": "win-probability framework [sport-agnostic]",
+    "M": "win-probability matrix [sport-specific calibration]"
+   },
+   "assumptions": [
+    "The framework applies to MLB, NFL, soccer, NBA",
+    "The win-probability matrix must be rebuilt per sport"
+   ],
+   "breakdown_regime": "The method is general but the calibration is sport-specific; transferring a matrix across sports is invalid.",
+   "domain": "math",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's cross-sport architecture IS this generality: the cumulative-win-probability and WPA framework is sport-agnostic, but the win-probability matrix must be calibrated per sport. The engine can reuse the CWP/WPA machinery across NFL, NBA, MLB, and soccer, but must rebuild the state-to-win-probability map for each. This is the sovereign separation of a general framework from sport-specific calibration — the engine's reusable core versus its per-league calibration layer.",
+    "source_operator": "sport_generality",
+    "telemetry": "GSE telemetry: sport-agnostic CWP/WPA core with per-sport WP-matrix calibration; verify no cross-sport matrix transfer."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "210fff49ce7fc373-t1",
+   "think": "Retrocausal Genealogy. Bashuk's 2011 paper is the layer that gives the Foundry its win-probability accounting, and its lineage runs backward from the GSE leverage engine to the play-by-play win-probability path. The root is the observation that the final score is a noisy summary of performance: a team that led by 20 at half and won by 9 in garbage time is not the same as a team tied at half that won by 9 on clutch free throws, so the terminal margin cannot be the measure. From this root grows the win-probability matrix, an empirical map from game state (time left and lead) to expected win probability, built from a population of historical games. Integrating that path over the game gives the cumulative win probability (CWP), the time-average of the win-probability trajectory, which measures performance more faithfully than average scoring margin or RPI. The team rating blends own CWP with strength of schedule (an empirically tuned 31/69, with the schedule weight ramping up over the season as evidence accumulates), adds a measured home-court advantage (~4.74 points over 13,937 games), and weights the end of the game more than the beginning (the leverage hypothesis, validated by a 6,561-trial simulation that raised accuracy from 74.0% uniform to 74.87% tuned). The per-play impact is Win Probability Added, the difference in win probability between consecutive plays, which telescopes to the terminal win-probability change. The method's honest limits are part of the genealogy too: WPA is valid for teams but flawed for individuals (it credits scoring, ignores efficiency, and is blind to defense), the model assumes full strength (no injuries, travel, or suspensions), and everything is bounded by play-by-play data quality. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the team-strength estimate is CWP, the per-snap leverage is WPA, the state-to-win-probability map is the win-probability matrix, the clutch metric is close-and-late WPA, and the injury layer is what closes the full-strength gap.\n\nRecursive Theory of Mind. The engine reasons about the game as a nested belief-updating process. At the base, every play updates the win probability, and the engine reasons about each play's impact as the belief change it causes (WPA), not as the raw yards or points it produces. One level up, the engine reasons about how a team's performance should be judged against its opposition: a great win-probability path against weak schedule is discounted, so the engine models the strength-of-schedule adjustment as a recursive awareness that own results are only meaningful relative to the opponent quality. The engine also reasons about the limits of attribution: it knows that WPA credits the scorer but is blind to the defender who suppressed the opponent, so it reasons about a defensive counterfactual (how much worse the win probability would be without the defender) rather than reading value off the box score. The full-strength assumption adds recursive humility: the engine knows a rating that ignores injuries and travel will overrate a team missing its star, so it reasons about the actual available roster rather than the nominal one. The clutch metric adds a final recursion: the engine knows close-and-late WPA is a small, noisy sample, so it reasons about shrinking clutch toward the mean rather than treating a hot clutch stretch as a stable trait.\n\nCross-Layer Veto Adjudication. The win-probability layer supplies the vetoes that bind the stack to honest accounting. First, the trajectory veto: the final score is not performance, so the engine vetoes terminal-margin-only rating and requires the integrated win-probability path (CWP). Second, the opponent veto: own results are only meaningful relative to schedule, so the engine vetoes unadjusted ratings and requires the strength-of-schedule blend with a tuned, time-varying weight. Third, the leverage veto: not all game time is equally informative, so the engine vetoes uniform weighting and requires empirically tuned end-of-game emphasis. Fourth, the attribution veto: WPA is valid for teams but flawed for individuals (scoring-only, defense-blind), so the engine vetoes unadjusted player WPA and requires a defense-aware, efficiency-adjusted counterfactual. Fifth, the availability veto: a full-strength rating overrates a team missing its star, so the engine vetoes ignoring injuries, travel, and suspensions and requires the actual-roster adjustment. Sixth, the data-quality veto: CWP and WPA are bounded by play-by-play completeness and correctness, so the engine vetoes corrupted or missing events driving a win-probability estimate and requires a completeness gate plus a principled fallback. Seventh, the calibration veto: the margin-to-win-probability map is linear only near the center and must saturate at extreme margins, and the win-probability matrix is sport-specific, so the engine vetoes cross-sport matrix transfer and extreme-margin linear extrapolation. The adjudication order is fixed: require the trajectory first, then opponent adjustment, then leverage weighting, then honest attribution, then availability, then data quality, then calibration bounds. A candidate failing any veto is PASSed, and the whole win-probability accounting is bound to these invariants rather than to box-score intuition.\n\nThe load-bearing isomorphism is that the GSE leverage and team-strength engine IS cumulative win probability plus Win Probability Added. The team-strength estimate is the time-averaged win-probability path (CWP), opponent-adjusted by a tuned strength-of-schedule blend; the per-snap leverage is the play-to-play win-probability delta (WPA), which telescopes to the terminal win-probability change as a conservation law; the state-to-win-probability map is the empirical win-probability matrix indexed by time left and lead; the clutch metric is close-and-late WPA with small-sample shrinkage; and the margin-to-win-probability calibration (Stern's ~3 probability-points per point) converts the engine's own predicted margin into a win probability. Bashuk unifies with the other layers: CWP is the integral of the Bayesian posterior over the game (Murphy/Bishop), WPA is the per-step belief update that the online layer (Shalev-Shwartz) and the RL TD error (Szepesvari) formalize, the leverage weighting is the decision layer's expected-loss emphasis (Bishop), the strength-of-schedule recency ramp is the evidence-accumulation of the Bayesian prior giving way to likelihood, and the WPA attribution veto is the causal-inference warning that a recorded gain is not a caused gain. Bashuk does not sit beside the stack; it is the win-probability accounting layer that turns the engine's per-play and per-team reasoning into a calibrated, auditable belief trajectory, and it is what lets the Foundry treat leverage, clutch, and team strength as win-probability mathematics rather than as box-score intuition. The primitives are win-probability invariants; no sportsbook betting line is used as an input.",
+   "retrocausal_genealogy": "Retrocausal Genealogy. Bashuk's 2011 paper is the layer that gives the Foundry its win-probability accounting, and its lineage runs backward from the GSE leverage engine to the play-by-play win-probability path. The root is the observation that the final score is a noisy summary of performance: a team that led by 20 at half and won by 9 in garbage time is not the same as a team tied at half that won by 9 on clutch free throws, so the terminal margin cannot be the measure. From this root grows the win-probability matrix, an empirical map from game state (time left and lead) to expected win probability, built from a population of historical games. Integrating that path over the game gives the cumulative win probability (CWP), the time-average of the win-probability trajectory, which measures performance more faithfully than average scoring margin or RPI. The team rating blends own CWP with strength of schedule (an empirically tuned 31/69, with the schedule weight ramping up over the season as evidence accumulates), adds a measured home-court advantage (~4.74 points over 13,937 games), and weights the end of the game more than the beginning (the leverage hypothesis, validated by a 6,561-trial simulation that raised accuracy from 74.0% uniform to 74.87% tuned). The per-play impact is Win Probability Added, the difference in win probability between consecutive plays, which telescopes to the terminal win-probability change. The method's honest limits are part of the genealogy too: WPA is valid for teams but flawed for individuals (it credits scoring, ignores efficiency, and is blind to defense), the model assumes full strength (no injuries, travel, or suspensions), and everything is bounded by play-by-play data quality. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the team-strength estimate is CWP, the per-snap leverage is WPA, the state-to-win-probability map is the win-probability matrix, the clutch metric is close-and-late WPA, and the injury layer is what closes the full-strength gap.",
+   "theory_of_mind": "Recursive Theory of Mind. The engine reasons about the game as a nested belief-updating process. At the base, every play updates the win probability, and the engine reasons about each play's impact as the belief change it causes (WPA), not as the raw yards or points it produces. One level up, the engine reasons about how a team's performance should be judged against its opposition: a great win-probability path against weak schedule is discounted, so the engine models the strength-of-schedule adjustment as a recursive awareness that own results are only meaningful relative to the opponent quality. The engine also reasons about the limits of attribution: it knows that WPA credits the scorer but is blind to the defender who suppressed the opponent, so it reasons about a defensive counterfactual (how much worse the win probability would be without the defender) rather than reading value off the box score. The full-strength assumption adds recursive humility: the engine knows a rating that ignores injuries and travel will overrate a team missing its star, so it reasons about the actual available roster rather than the nominal one. The clutch metric adds a final recursion: the engine knows close-and-late WPA is a small, noisy sample, so it reasons about shrinking clutch toward the mean rather than treating a hot clutch stretch as a stable trait.",
+   "cross_layer_veto": "Cross-Layer Veto Adjudication. The win-probability layer supplies the vetoes that bind the stack to honest accounting. First, the trajectory veto: the final score is not performance, so the engine vetoes terminal-margin-only rating and requires the integrated win-probability path (CWP). Second, the opponent veto: own results are only meaningful relative to schedule, so the engine vetoes unadjusted ratings and requires the strength-of-schedule blend with a tuned, time-varying weight. Third, the leverage veto: not all game time is equally informative, so the engine vetoes uniform weighting and requires empirically tuned end-of-game emphasis. Fourth, the attribution veto: WPA is valid for teams but flawed for individuals (scoring-only, defense-blind), so the engine vetoes unadjusted player WPA and requires a defense-aware, efficiency-adjusted counterfactual. Fifth, the availability veto: a full-strength rating overrates a team missing its star, so the engine vetoes ignoring injuries, travel, and suspensions and requires the actual-roster adjustment. Sixth, the data-quality veto: CWP and WPA are bounded by play-by-play completeness and correctness, so the engine vetoes corrupted or missing events driving a win-probability estimate and requires a completeness gate plus a principled fallback. Seventh, the calibration veto: the margin-to-win-probability map is linear only near the center and must saturate at extreme margins, and the win-probability matrix is sport-specific, so the engine vetoes cross-sport matrix transfer and extreme-margin linear extrapolation. The adjudication order is fixed: require the trajectory first, then opponent adjustment, then leverage weighting, then honest attribution, then availability, then data quality, then calibration bounds. A candidate failing any veto is PASSed, and the whole win-probability accounting is bound to these invariants rather than to box-score intuition."
+  }
+ ],
+ "universal_lens": "Any system that measures performance from a sequential stochastic process is governed by win-probability accounting: integrate the belief (win-probability) path over the process rather than judging the terminal outcome; credit each step with the belief change it causes (the telescoping added-value); adjust for opponent quality with a tuned, time-varying weight; emphasize high-leverage late segments; recognize that added-value is valid collectively but biased individually when it ignores prevention and efficiency; condition on actual availability; bound everything by source-data quality; and calibrate the outcome-to-belief map within its valid range, saturating at the extremes.",
+ "gsi_mapping": "For GSI, this is the epistemology of measuring performance from a belief trajectory rather than a terminal outcome: why the final score is a noisy summary, why per-step impact is the belief delta (which telescopes to a conservation law), why own results must be opponent-adjusted, why leverage is time-varying, why recorded gains are not caused gains (the attribution/defense blind spot), why ratings are conditional on availability, and why the whole accounting is bounded by data quality and calibration range. It is the discipline that turns performance evaluation into calibrated, auditable win-probability mathematics with explicit attribution and availability vetoes.",
+ "gse_mapping": "For GSE, this is the win-probability accounting layer: team strength = time-averaged win-probability path (CWP), opponent-adjusted by a tuned 31/69 strength-of-schedule blend with a seasonal recency ramp; per-snap leverage = WPA (consecutive-play win-probability delta, telescoping to the terminal change); state-to-win-probability = the empirical win-probability matrix (time left x lead); clutch = close-and-late WPA with small-sample shrinkage; margin-to-win-probability = Stern-style ~3 probability-points per point calibration of the engine's OWN predicted margin (no sportsbook input); home edge = measured ~4.74-point population mean; vetoes = trajectory-over-terminal, opponent adjustment, leverage weighting, defense-aware attribution, availability adjustment, data-quality gate, and calibration saturation. The full-strength assumption is the gap the engine's injury/roster layer closes.",
+ "layer2_summary": "[ISOMORPHISM] GSE leverage/team-strength engine IS cumulative win probability + WPA: team strength = time-averaged win-probability path (CWP) opponent-adjusted by tuned 31/69 SOS blend with seasonal recency ramp; per-snap leverage = WPA (consecutive-play WP delta, telescoping to terminal change); state-to-WP = empirical win-probability matrix (time left x lead); clutch = close-and-late WPA with shrinkage; margin-to-WP = Stern-style ~3 prob-points/point calibration of the engine's OWN predicted margin (no sportsbook input); home edge = measured ~4.74 pts; vetoes = trajectory-over-terminal, opponent adjustment, leverage weighting, defense-aware attribution, availability, data-quality, calibration saturation. Full-strength assumption = the gap the injury/roster layer closes."
+}

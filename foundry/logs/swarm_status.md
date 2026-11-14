@@ -478,3 +478,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 20:49:34 | REFUSAL_ACCEPTED | 3a88f7ddf53d358c | INSUFFICIENT_OCR: Image-only scanned PDF: 495 pages, pymupdf get_text() returns 0 characters on every sampled page (0, 9, 50), each page carrying exactly one raster image and no text layer. No OCR text is available inl
 - 2026-11-13 20:49:35 | CLAIMED | 6bbdbe4a5b49d89d | worker=hermes-inline file=OpenStax-2013-AnatomyAndPhysiology.pdf
 - 2026-11-13 21:08:45 | COMPLETE | 6bbdbe4a5b49d89d | primitives=20 think_words=1061
+- 2026-11-13 21:09:57 | CLAIMED | 210fff49ce7fc373 | worker=hermes-inline file=2011 Using Cumulative Win Probabilities to Predict NCAA Performance - Bashuk.pdf
+- 2026-11-13 21:14:32 | COMPLETE | 210fff49ce7fc373 | primitives=16 think_words=1045
