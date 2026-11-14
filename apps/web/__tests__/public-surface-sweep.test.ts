@@ -45,7 +45,16 @@ const KEEP_OUT_PATTERNS: ReadonlyArray<readonly [string, RegExp]> = [
   // spelling misses the form that actually ships. Word boundaries keep this
   // off "separate"/"reparation".
   ["metric family: QBR", /\bqbr\b/i],
-  ["metric family: separation", /\bseparation\b/i],
+  // Data-bearing spelling only. The bare English word appears in honest method
+  // prose ("receiver separation and route-win charting") that is not an exposure
+  // — this file's own doctrine says the sweep must key on a file that READS
+  // internal material, not on marketing copy that shares an English word. This
+  // matches avgSeparation, avg_separation, separationYd, separationScore,
+  // separationAtCatch and `separation:` — not "receiver separation".
+  [
+    "metric family: separation",
+    /[A-Za-z0-9][_-]?(?:separation|Separation)[A-Za-z0-9_]*|\b(?:separation|Separation)[A-Z_]\w*|\b(?:separation|Separation)\s*[:=]/,
+  ],
   ["metric family: WOPR", /\bwopr\b/i],
   ["metric family: EPA", /\bepa\b/i],
   ["signal ledger / raw signals", /signal_ledger|signalLedger|signal_snapshots|pick_signal/i],
