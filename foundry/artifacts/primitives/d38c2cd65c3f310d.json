@@ -1,0 +1,446 @@
+{
+  "book_id": "d38c2cd65c3f310d",
+  "title": "Analytic Methods in Sports (3rd ed) — Severini",
+  "source": "Thomas A. Severini, Analytic Methods in Sports: Using Mathematics and Statistics to Understand Data from Baseball, Football, Basketball, and Other Sports, Third Edition (CRC Press). Garrett-hand-delivered Downloads PDF, ~674 pages. Verified title/author/edition; clean born-digital text; not a retraction; not a derivative AI summary. Drive '(1)' copy 4b983bb86c9835a2 is the same work (DUPLICATE_WORK).",
+  "source_note": "Sports-analytics statistics textbook. Sovereign kernels with printed equations: expected points E[X]=sum x P(X=x); true talent pi vs observed p (law of large numbers); conditional probability P(B|C)=P(B and C)/P(C); win probability as P(win|state) and win probability added; law of total probability / direct (subclassification) adjustment Y*=sum p_i Y_i; margin of error ~2S/sqrt(n); Bill James Pythagorean F^gamma/(F^gamma+A^gamma) with gamma refined 2->1.83; correlation; regression to the mean (Z-score slope = r); logistic regression log-odds=a+bX. IMPORTANT: 'odds' and 'log-odds' in this source are the STATISTICAL ratio P/(1-P), NOT sportsbook lines; no betting odds are used or implied. Stacked fractions in the pymupdf dump are denominator-first; equations reconstructed from the unambiguous prose and labeled. Pages are printed book page numbers where shown.",
+  "primary_domain": "math",
+  "extraction_mode": "FULL_BOOK_CLEAN_BORN_DIGITAL",
+  "primitives": [
+    {
+      "primitive_id": "expected_points",
+      "name": "Expected points as a state value",
+      "verbatim_quote": "the use of expected points is an important general approach that has yielded many insights into baseball as well as other sports.",
+      "page": 101,
+      "latex": "E[X] = \\sum_{x} x\\,P(X=x)",
+      "symbol_and_unit_ledger": {
+        "X": "points/runs scored from a state (count, points)",
+        "x": "a possible scoring outcome (points)",
+        "P(X=x)": "probability of outcome x (dimensionless, [0,1])",
+        "E[X]": "expected points of the state (points)"
+      },
+      "assumptions": [
+        "A scenario (outs+runners, or down+distance+field position) defines a scoring distribution",
+        "Distribution estimated from historical data or a play-outcome probability model"
+      ],
+      "breakdown_regime": "Single-number summary hides distribution shape; league-wide averages do not capture team/player specifics.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expected points E[X]=sum x P(X=x) IS the GSE state-value function: the mean of the scoring distribution attached to a game state, and the play's value is the change in E[X]. This is the exact EP ontology the engine uses to grade decisions.",
+        "source_operator": "expected_points",
+        "telemetry": "per-state scoring distribution -> EP value function; play value = delta E[X]"
+      }
+    },
+    {
+      "primitive_id": "ep_distribution_shape",
+      "name": "Equal expected points can hide different risk",
+      "verbatim_quote": "the expected value of runs scored is a single-number summary of a probability distribution, and in some cases more information regarding the distribution might be important.",
+      "page": 102,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "X1,X2": "two states with nearly equal E[X]",
+        "P(X=0)": "probability of being held scoreless",
+        "P(X>=2)": "probability of a big inning"
+      },
+      "assumptions": [
+        "E[X1]=1.445 vs E[X2]=1.451 (nearly equal)",
+        "But P(X1=0)=0.143 vs P(X2=0)=0.302 (double the scoreless risk)"
+      ],
+      "breakdown_regime": "EP-alone is insufficient when variance/skew or the scoreless probability drives the decision (late-game, close-score).",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The distribution-shape caveat IS the tail-risk veto on EP: two states with identical expected points can have very different scoreless and big-inning probabilities, so GSE must carry the full scoring distribution (or its tail moments), not just the mean, when the decision is risk-sensitive.",
+        "source_operator": "ep_distribution_shape",
+        "telemetry": "equal-mean states -> compare P(scoreless) and P(big inning) tail risk"
+      }
+    },
+    {
+      "primitive_id": "ep_league_average",
+      "name": "Expected points are league averages, not team-specific",
+      "verbatim_quote": "the probability distributions of runs and expected runs are based on averages over several years and for all teams.",
+      "page": 102,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "scope": "multi-year, all-team average",
+        "limitation": "does not reflect the specific teams/players in the game"
+      },
+      "assumptions": [
+        "Historical averaging smooths over roster and matchup specifics"
+      ],
+      "breakdown_regime": "Misprices specific matchups when team quality deviates from the league mean; rare states have sparse historical data.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The league-average caveat IS the team-adjustment requirement: raw EP is a population prior, so GSE must condition it on the actual offenses/defenses and matchup before using it for a specific game, else it misprices strong/weak units.",
+        "source_operator": "ep_league_average",
+        "telemetry": "league-average EP prior -> condition on team/matchup strength"
+      }
+    },
+    {
+      "primitive_id": "true_talent_lln",
+      "name": "True talent vs observed rate (law of large numbers)",
+      "verbatim_quote": "This law states that, for a large sample size, empirical quantities such as sample means, relative frequencies, and so on will approach their “true” values.",
+      "page": 103,
+      "latex": "p = \\frac{\\text{successes}}{n} \\;\\xrightarrow{n\\to\\infty}\\; \\pi",
+      "symbol_and_unit_ledger": {
+        "pi": "true talent probability (dimensionless, [0,1]), unknown",
+        "p": "observed relative frequency (hits/at-bats, [0,1])",
+        "n": "sample size (at-bats, count)"
+      },
+      "assumptions": [
+        "Trials modeled as identically distributed (constant hit probability)",
+        "p -> pi as n grows (law of large numbers)"
+      ],
+      "breakdown_regime": "Constant-probability assumption fails across pitchers/parks/situations; small n gives large sampling noise.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "True-talent pi vs observed p IS the signal-vs-noise separation: GSE must treat a small-sample observed rate as a noisy estimate of latent talent and shrink it toward a prior, because the LLN only guarantees convergence at large n.",
+        "source_operator": "true_talent_lln",
+        "telemetry": "observed rate p -> latent talent pi with sample-size-weighted shrinkage"
+      }
+    },
+    {
+      "primitive_id": "conditional_probability",
+      "name": "Conditional probability",
+      "verbatim_quote": "Conditional probabilities are useful because they allow us to incorporate additional assumptions, or additional information, into the probability calculation.",
+      "page": 104,
+      "latex": "P(B\\mid C) = \\frac{P(B\\cap C)}{P(C)}",
+      "symbol_and_unit_ledger": {
+        "P(B|C)": "probability of B given C (dimensionless, [0,1])",
+        "P(B and C)": "joint probability",
+        "P(C)": "probability of the conditioning event (>0)"
+      },
+      "assumptions": [
+        "P(C) > 0",
+        "Conditioning restricts the reference class to events satisfying C"
+      ],
+      "breakdown_regime": "Undefined when P(C)=0; conditioning on a rare or post-treatment event can mislead.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "P(B|C)=P(B and C)/P(C) IS the belief-update operator: GSE updates any event probability by restricting to the observed context (down, score, personnel), the foundation of situational probability and the win-probability model.",
+        "source_operator": "conditional_probability",
+        "telemetry": "context C -> restrict reference class and recompute P(B|C)"
+      }
+    },
+    {
+      "primitive_id": "win_probability",
+      "name": "Win probability as a conditional state value",
+      "verbatim_quote": "These win probabilities can be viewed as the conditional probabilities that a team wins the game given the current status (possibly hypothetical) of the game.",
+      "page": 112,
+      "latex": "WP(s) = P(\\text{win}\\mid s)",
+      "symbol_and_unit_ledger": {
+        "s": "game state (score, down, distance, field position, time remaining)",
+        "WP(s)": "P(win | state s) (dimensionless, [0,1])"
+      },
+      "assumptions": [
+        "League-wide model, not team-specific",
+        "Evolves play-by-play as the state changes"
+      ],
+      "breakdown_regime": "League-wide calibration ignores team strength; heavily context-dependent (clock/score).",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "WP(s)=P(win|s) IS the GSE win-probability value function: the terminal-reward analogue of EP, conditioning on the full game state including clock and score, so the same play has different value by leverage.",
+        "source_operator": "win_probability",
+        "telemetry": "game state s -> WP(s); play value = delta WP"
+      }
+    },
+    {
+      "primitive_id": "win_probability_added",
+      "name": "Win probability added (WPA)",
+      "verbatim_quote": "the “win probability added” of a player by computing the change in win probability resulting from the plays in which he is involved.",
+      "page": 113,
+      "latex": "WPA = \\sum_{\\text{plays}} \\Delta WP",
+      "symbol_and_unit_ledger": {
+        "Delta WP": "change in win probability from a play (dimensionless)",
+        "WPA": "sum of Delta WP over a player's plays"
+      },
+      "assumptions": [
+        "Each play moves the state and thus WP",
+        "Credit is assigned by the WP swing"
+      ],
+      "breakdown_regime": "Inherits WP's league-wide and context assumptions; sums can cancel (positive and negative swings).",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "WPA=sum Delta WP IS the leverage-weighted play credit: GSE grades a player or decision by the win-probability swing it produces, which automatically weights clutch (high-leverage) plays above garbage-time plays.",
+        "source_operator": "win_probability_added",
+        "telemetry": "per-play WP swing -> leverage-weighted player/decision credit"
+      }
+    },
+    {
+      "primitive_id": "wp_context_dependence",
+      "name": "Win probability is leverage-dependent",
+      "verbatim_quote": "The main difference between win probabilities and expected points is that win probabilities are heavily context dependent.",
+      "page": 113,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "example": "same 50-yd completion to the 20: Q4 tied -> WP 0.61->0.78; Q1 -> 0.53->0.64"
+      },
+      "assumptions": [
+        "Clock and score modulate the value of an identical play"
+      ],
+      "breakdown_regime": "EP ignores clock/score; WP captures them, so using EP for late-game decisions undervalues leverage.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The context-dependence IS the leverage multiplier: GSE must weight plays by game situation because an identical yardage gain is worth far more late in a close game, so EP and WP are not interchangeable value functions.",
+        "source_operator": "wp_context_dependence",
+        "telemetry": "identical play -> situation-scaled WP swing (leverage)"
+      }
+    },
+    {
+      "primitive_id": "direct_adjustment",
+      "name": "Law of total probability / direct adjustment",
+      "verbatim_quote": "The law of total probability provides a method of adjusting statistics for different players or teams to make the statistics directly comparable.",
+      "page": 113,
+      "latex": "Y^{*} = \\sum_{i=1}^{m} p_i\\,Y_i",
+      "symbol_and_unit_ledger": {
+        "Y_i": "subclass-specific statistic (e.g., BAA vs RHB/LHB)",
+        "q_i": "observed subclass weights (sum to 1)",
+        "p_i": "standard subclass weights (sum to 1)",
+        "Y*": "adjusted statistic under standard weights"
+      },
+      "assumptions": [
+        "Y = sum q_i Y_i (weighted subclass form)",
+        "Replace observed weights q_i with standard p_i to compare like-for-like"
+      ],
+      "breakdown_regime": "Invalid for ratios whose numerator AND denominator both depend on subclass weights; result depends on the chosen standard weights.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Y*=sum p_i Y_i IS the matchup/schedule-normalization kernel: GSE adjusts a player's or team's rate to a standard opponent mix (strength of schedule, handedness, coverage mix) so rates are comparable, removing the confound of differing opportunity weights.",
+        "source_operator": "direct_adjustment",
+        "telemetry": "observed opponent mix q -> standard mix p; adjusted rate Y*"
+      }
+    },
+    {
+      "primitive_id": "adjustment_weights_caveat",
+      "name": "Adjusted statistics depend on the chosen standard",
+      "verbatim_quote": "Although the standard weights are generally chosen with some objectivity in mind, they do represent a hypothetical scenario that may or may not be realistic.",
+      "page": 116,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "standard weights p_i": "a hypothetical reference mix",
+        "consequence": "relative adjusted values shift with the choice of p_i"
+      },
+      "assumptions": [
+        "Different standard mixes can reorder comparisons"
+      ],
+      "breakdown_regime": "With few subclasses, reporting subclass-specific values is more informative than a single adjusted number.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The weights caveat IS the normalization-sensitivity veto: GSE must report which standard mix an adjusted stat uses and test sensitivity, because two reasonable standards can reorder players, so an adjusted ranking is not assumption-free.",
+        "source_operator": "adjustment_weights_caveat",
+        "telemetry": "choice of standard mix p -> sensitivity of adjusted ranking"
+      }
+    },
+    {
+      "primitive_id": "margin_of_error",
+      "name": "Margin of error of an average",
+      "verbatim_quote": "note that doubling the sample size does not cut the margin of error in half",
+      "page": 124,
+      "latex": "MoE \\approx \\frac{2S}{\\sqrt{n}}",
+      "symbol_and_unit_ledger": {
+        "S": "sample standard deviation (stat units)",
+        "n": "sample size (count)",
+        "MoE": "margin of error ~2S/sqrt(n) (stat units)"
+      },
+      "assumptions": [
+        "Approximate normality of the sample mean",
+        "MoE shrinks with sqrt(n), not n"
+      ],
+      "breakdown_regime": "sqrt(n) scaling: doubling n only cuts MoE by ~29%; assumes independent, roughly identically distributed observations.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "MoE~2S/sqrt(n) IS the sample-size confidence gate: GSE must attach an uncertainty band to every rate and refuse to treat small-sample differences as real, because halving the error requires quadrupling the sample.",
+        "source_operator": "margin_of_error",
+        "telemetry": "rate estimate -> +/- 2S/sqrt(n) band; small-n differences are noise"
+      }
+    },
+    {
+      "primitive_id": "pythagorean_expectation",
+      "name": "Pythagorean winning percentage",
+      "verbatim_quote": "Teams whose winning percentage exceeds their Pythagorean winning percentage might be considered to be “lucky,” winning more games than they “should” based on the number of runs they scored and allowed.",
+      "page": 195,
+      "latex": "WP = \\frac{F^{\\gamma}}{F^{\\gamma}+A^{\\gamma}},\\quad \\gamma=1.83",
+      "symbol_and_unit_ledger": {
+        "F": "runs/points scored (count)",
+        "A": "runs/points allowed (count)",
+        "gamma": "exponent, refined from 2 to 1.83 (dimensionless)"
+      },
+      "assumptions": [
+        "Bill James's run-differential win proxy",
+        "Exponent empirically refined (1.83 for MLB)"
+      ],
+      "breakdown_regime": "Empirical fit, not a law; the book finds it is NOT a better future predictor than actual win% (corr 0.458 vs 0.472).",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pythagorean F^gamma/(F^gamma+A^gamma) IS the point-differential talent proxy: GSE uses scoring differential to estimate underlying team strength and flag actual records that overshoot it as luck due to regress, a prior on future win rate.",
+        "source_operator": "pythagorean_expectation",
+        "telemetry": "scoring differential F,A -> expected win%; actual-vs-Pythagorean gap = luck"
+      }
+    },
+    {
+      "primitive_id": "pythagorean_predictor_check",
+      "name": "Pythagorean is not a better predictor than actual record",
+      "verbatim_quote": "Carrying out these calculations for each team, the correlation between the first-half Pythagorean winning percentage and the second-half actual winning percentage for the 150 teams (30 teams in each of five seasons) is 0.458.",
+      "page": 196,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "corr(Pythagorean 1st, actual 2nd)": "0.458",
+        "corr(actual 1st, actual 2nd)": "0.472",
+        "sample": "150 team-seasons, 2008-2012 MLB"
+      },
+      "assumptions": [
+        "Empirical test across five MLB seasons"
+      ],
+      "breakdown_regime": "Anecdotal claims of Pythagorean superiority are not supported by this test; do not assume a proxy is better without validation.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The predictor check IS the calibration discipline: GSE must validate a talent proxy against out-of-sample outcomes rather than assume it beats the raw record, because here the Pythagorean proxy did not out-predict actual win percentage.",
+        "source_operator": "pythagorean_predictor_check",
+        "telemetry": "proxy vs raw record -> out-of-sample correlation comparison"
+      }
+    },
+    {
+      "primitive_id": "correlation_linear",
+      "name": "Correlation measures linear association only",
+      "verbatim_quote": "One drawback of the correlation coefficient is that it measures a specific type of relationship, a linear one between the two variables.",
+      "page": 197,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "r": "Pearson correlation coefficient (dimensionless, [-1,1])"
+      },
+      "assumptions": [
+        "r captures linear, not general, dependence",
+        "Rank correlation is offered for monotone nonlinear cases"
+      ],
+      "breakdown_regime": "r near 0 can coexist with strong nonlinear dependence; sensitive to outliers and range restriction.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The linear-only caveat IS the association-model gate: GSE must not read a low Pearson r as 'no relationship' when the dependence is nonlinear, and should use rank or nonlinear measures when the relationship is monotone but curved.",
+        "source_operator": "correlation_linear",
+        "telemetry": "Pearson r -> linear-only; use rank/nonlinear for curved dependence"
+      }
+    },
+    {
+      "primitive_id": "regression_to_mean",
+      "name": "Regression to the mean (Z-score shrinkage)",
+      "verbatim_quote": "Note that regression to the mean is a statement about averages, not individual observations.",
+      "page": 264,
+      "latex": "\\frac{\\hat{Y}-\\bar{Y}}{S_Y} = r\\,\\frac{X-\\bar{X}}{S_X}",
+      "symbol_and_unit_ledger": {
+        "Yhat": "predicted Y",
+        "Ybar,Xbar": "means of Y and X",
+        "S_Y,S_X": "standard deviations",
+        "r": "correlation ([-1,1])"
+      },
+      "assumptions": [
+        "In Z-scores the regression slope equals r and intercept 0",
+        "|r|<1 implies predicted Y is closer to its mean than X is to its mean"
+      ],
+      "breakdown_regime": "Applies to averages, not individuals (a player can be extreme on both); requires |r|<1 and a linear relationship.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "(Yhat-Ybar)/S_Y = r (X-Xbar)/S_X IS the shrinkage kernel: GSE regresses extreme observed performance toward the mean in proportion to the reliability r, the formal reason an outlier season or small-sample hot streak should not be extrapolated at face value.",
+        "source_operator": "regression_to_mean",
+        "telemetry": "extreme observed X -> shrunk prediction toward mean by factor r"
+      }
+    },
+    {
+      "primitive_id": "binary_response",
+      "name": "Binary response and its probability structure",
+      "verbatim_quote": "In sports data often the response variable of interest is binary, with two possible values: win or loss, hit or no hit, shot made or shot missed are a few examples.",
+      "page": 390,
+      "latex": "E[Y]=P(Y=1),\\quad \\mathrm{Var}(Y)=P(Y=1)\\,P(Y=0)",
+      "symbol_and_unit_ledger": {
+        "Y": "binary outcome (0/1)",
+        "P(Y=1)": "success probability (dimensionless, [0,1])",
+        "E[Y]": "= P(Y=1)",
+        "Var(Y)": "= P(Y=1)P(Y=0)"
+      },
+      "assumptions": [
+        "A binary variable is Bernoulli (binomial with n=1)",
+        "Distribution fully described by P(Y=1)"
+      ],
+      "breakdown_regime": "Variance is mean-dependent (heteroskedastic), so constant-variance linear models are inappropriate.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The binary-response structure IS the Bernoulli likelihood foundation: GSE models win/loss, completion, and made-shot as Bernoulli trials whose variance p(1-p) peaks at p=0.5, which dictates the confidence and the choice of link function.",
+        "source_operator": "binary_response",
+        "telemetry": "win/loss, completion, made-shot -> Bernoulli(p), Var=p(1-p)"
+      }
+    },
+    {
+      "primitive_id": "linear_probability_drawback",
+      "name": "Why a linear probability model fails",
+      "verbatim_quote": "the rate of change of P(Y = 1) with respect to X is constant in the sense that it does not depend on the value of X.",
+      "page": 392,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "linear model": "P(Y=1)=a+bX",
+        "drawbacks": "can leave [0,1]; constant slope; non-constant variance"
+      },
+      "assumptions": [
+        "Win probability vs points scored is nonlinear (4 pts near 0 -> +0.013; near 20-30 -> +0.15)"
+      ],
+      "breakdown_regime": "Linear probability model violates 0<=P<=1 and constant-slope assumptions for win-probability data.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The linear-probability failure IS the bounded-response veto: GSE must not model win probability as a straight line in points, because the true effect of scoring is small near the extremes and large in the middle, and a line can predict impossible probabilities.",
+        "source_operator": "linear_probability_drawback",
+        "telemetry": "probability response -> require bounded, nonlinear (sigmoid) link"
+      }
+    },
+    {
+      "primitive_id": "logistic_regression",
+      "name": "Logistic regression (statistical log-odds)",
+      "verbatim_quote": "the resulting model for Y is known as a logistic regression model.",
+      "page": 393,
+      "latex": "\\ln\\frac{P(Y=1)}{P(Y=0)} = a + bX \\;\\Rightarrow\\; P(Y=1)=\\frac{e^{a+bX}}{1+e^{a+bX}}",
+      "symbol_and_unit_ledger": {
+        "P(Y=1)": "success probability ([0,1])",
+        "a": "intercept (log-odds units)",
+        "b": "slope (log-odds per unit X)",
+        "X": "predictor",
+        "odds": "STATISTICAL P/(1-P), NOT sportsbook lines"
+      },
+      "assumptions": [
+        "Log-odds ln(P/(1-P)) modeled as linear in X",
+        "Implies the sigmoid P=exp(a+bX)/(1+exp(a+bX))"
+      ],
+      "breakdown_regime": "Assumes the log-odds are linear in X; separation and rare events destabilize estimates; statistical odds only, no sportsbook input.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Logistic log-odds=a+bX IS the sigmoid win-probability kernel: GSE maps a linear predictor through the logistic link to a bounded probability with a state-dependent slope, the correct shape for win/completion probability. The 'odds' here are the statistical ratio P/(1-P), never betting lines.",
+        "source_operator": "logistic_regression",
+        "telemetry": "linear predictor a+bX -> sigmoid probability via logistic link"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "analyticmethods3e_trace_01",
+      "think": "Analytic Methods in Sports is a statistics textbook whose sovereign core is the probability-and-regression toolkit that turns raw sports outcomes into decision-grade value functions, and its retrocausal genealogy is the statistical lineage rather than any football origin story. It begins by modeling the results of sporting events as random variables, a Bernoulli trial for a hit or a win, then invokes the law of large numbers to separate a player's unknown true talent pi from the observed relative frequency p, which only converges to pi as the sample grows. From there it builds conditional probability P(B|C)=P(B and C)/P(C) as the belief-update operator, the law of total probability as the adjustment operator, and finally expected points and win probability as state-value functions. The expected-runs tables of Tango, Lichtman, and Dolphin and Bill James's Pythagorean formula are the concrete historical artifacts this lineage produced. The through-line is that every headline statistic is a noisy, context-laden estimate of a latent quantity, and the book's purpose is to supply the machinery to quantify that noise and remove the context confound. The recursive theory of mind centers on the decision-maker updating beliefs under leverage. Win probability is the conditional probability of winning given the current game state, and it evolves play by play, so a coach's belief about the right call must be indexed to score, down, distance, field position, and clock. Win probability added credits a play by the swing it produces, which means the identical 50-yard completion is worth far more in the fourth quarter of a tied game than in the first quarter. The recursive trap is treating expected points and win probability as interchangeable: EP ignores clock and score while WP captures them, so a comfort call that looks fine on EP can be a leverage mistake on WP. The belief clash is between the coach's gut and the state-conditioned value function, and the book's machinery is what adjudicates it. The cross-layer veto adjudication is a stack of statistical vetoes on naive reads. The distribution-shape veto: two states with nearly identical expected points can have double the scoreless probability, so a risk-sensitive decision must carry the tail of the scoring distribution, not just the mean. The league-average veto: expected points and win probability are population priors that must be conditioned on the actual teams before use. The sample-size veto: the margin of error scales as 2S over the square root of n, so doubling the sample only cuts the error by about a third, and small-sample differences are noise. The regression-to-mean veto: in Z-scores the regression slope is the correlation r, so an extreme observed performance must be shrunk toward the mean in proportion to reliability, and this is a statement about averages, not individuals. The adjustment-weights veto: a directly adjusted statistic depends on the chosen standard mix, so an adjusted ranking is not assumption-free. The universal lens is standardization and bounded-probability modeling. The law of total probability gives direct adjustment Y*=sum p_i Y_i, which reweights subclass-specific rates to a common opponent mix so players and teams are comparable; this is the strength-of-schedule and matchup normalization kernel. The Pythagorean formula F^gamma over F^gamma plus A^gamma, with the exponent refined from 2 to 1.83, is a point-differential talent proxy, and the book honestly tests it and finds it is not a better future predictor than the actual record. Correlation measures only linear association, so a low r is not evidence of no relationship. For binary responses the linear probability model fails because it can leave the unit interval and imposes a constant slope, and logistic regression replaces it by modeling the statistical log-odds as linear in the predictors, which implies a sigmoid probability with a state-dependent slope. Connecting this to the engine, these are the exact value functions and normalization operators the GSE ontology needs: expected points and win probability as the state-value functions, win probability added as leverage-weighted play credit, direct adjustment as matchup normalization, regression to the mean as the shrinkage prior on small samples, the margin of error as the sample-size confidence gate, and the logistic link as the bounded win-probability model. The implementation invariants are that EP and WP are not interchangeable because WP carries leverage, that every rate needs an uncertainty band and a reliability-weighted shrinkage, that adjusted statistics must declare their standard mix, and that a talent proxy must be validated out-of-sample before it is trusted over the raw record. Crucially, the odds and log-odds in this source are the statistical ratio P over one minus P, never sportsbook lines; no betting odds enter the model, and the logistic kernel is a probability link, not a wager. The book prints real equations, so these are dimensionally homogeneous kernels with symbol ledgers, not heuristic toy formulas, and each carries its explicit breakdown regime. The later chapters extend the same discipline to model evaluation and multivariate structure: cross-validation guards against overfitting by testing a model on held-out games, random forests classify outcomes without a linear link, principal components summarize correlated player metrics, and the Elo model updates team ratings from results, all reinforcing that a model must earn its place out-of-sample rather than by in-sample fit alone.",
+      "retrocausal_genealogy": "The lineage is statistical, not a football origin story: sports outcomes modeled as Bernoulli random variables, the law of large numbers separating true talent pi from observed p, conditional probability as belief update, the law of total probability as adjustment, and expected points (Tango/Lichtman/Dolphin) plus win probability as state-value functions, with Bill James's Pythagorean formula as a concrete artifact. The through-line is that every headline stat is a noisy, context-laden estimate of a latent quantity, and the book supplies the machinery to quantify the noise and strip the context confound.",
+      "theory_of_mind": "Win probability is P(win|state) and evolves play-by-play, so the coach's belief about the right call must be indexed to score, down, distance, field position, and clock. WPA credits a play by its WP swing, making the same completion worth more in a tied fourth quarter than the first. The recursive trap is treating EP and WP as interchangeable: EP ignores leverage, WP captures it, so a comfort call fine on EP can be a leverage mistake on WP. The machinery adjudicates the coach's gut against the state-conditioned value function.",
+      "cross_layer_veto": "A stack of statistical vetoes: distribution-shape (equal EP can hide double the scoreless risk), league-average (EP/WP are population priors needing team conditioning), sample-size (MoE~2S/sqrt(n), small-n differences are noise), regression-to-mean (Z-score slope=r shrinks extremes toward the mean, about averages not individuals), and adjustment-weights (adjusted rankings depend on the chosen standard mix). The Pythagorean proxy is honestly tested and found not to out-predict the actual record, a calibration veto on trusting unvalidated proxies."
+    }
+  ],
+  "universal_lens": "A probability-and-regression toolkit for decision-grade sports value: expected points and win probability as state-value functions, WPA as leverage-weighted credit, direct adjustment (law of total probability) as matchup normalization, regression-to-mean as shrinkage, margin of error as the sample-size gate, Pythagorean as a validated point-differential proxy, and logistic regression as the bounded-probability link. Statistical odds only, never sportsbook lines.",
+  "gsi_mapping": "GSI ingests the kernels as calibrated estimators: Bernoulli likelihoods with mean-dependent variance, true-talent shrinkage weighted by reliability, uncertainty bands from 2S/sqrt(n), and direct adjustment to a standard opponent mix. The logistic link maps linear predictors to bounded probabilities; every proxy is validated out-of-sample before replacing the raw record.",
+  "gse_mapping": "GSE uses EP and WP as the state-value functions (WP carries clock/score leverage), WPA for play credit, direct adjustment for strength-of-schedule and matchup normalization, regression-to-mean to avoid overreacting to small samples, and the logistic sigmoid for win/completion probability. Distribution tails, not just means, drive risk-sensitive calls; no sportsbook odds are used anywhere."
+}
