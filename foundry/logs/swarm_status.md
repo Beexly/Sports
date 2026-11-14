@@ -540,3 +540,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 00:57:15 | COMPLETE | 1ee71ed92a395628 | primitives=30 think_words=882
 - 2026-11-14 00:57:54 | CLAIMED | 3abc60e73bee4af1 | worker=hermes-inline shard03 file=2020 Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracking Data - Dutta, Yurko, Ventura.pdf
 - 2026-11-14 01:07:36 | COMPLETE | 3abc60e73bee4af1 | primitives=26 think_words=879
+- 2026-11-14 01:09:43 | CLAIMED | 348416db47413aa7 | worker=hermes-inline shard03 file=2024 Feeling the Pressure - A Unified Framework for Automating Pass Rushing Statistics in NFL Games.pdf
+- 2026-11-14 01:13:39 | COMPLETE | 348416db47413aa7 | primitives=30 think_words=896

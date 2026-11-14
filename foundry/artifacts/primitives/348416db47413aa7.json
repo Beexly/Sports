@@ -1,0 +1,618 @@
+{
+  "book_id": "348416db47413aa7",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_LIGATURE_FOLD",
+  "source_note": "'Feeling the Pressure: A Unified Framework for Automating Pass Rushing Statistics in NFL Games', NFL Big Data Bowl 2024 submission, Paper ID 193952. fi/fl ligatures folded; display math (position rule, percent-change, BCE/total loss, blocker-interference) renders with shifted math glyphs and is reconstructed as labeled LaTeX from the prose, flagged in assumptions. Blocker-interference decay constant k and the exact orthogonal-distance formula are not printed, so the exponential falloff is labeled as a reconstruction. Outputs are statistical pressure probabilities from NGS tracking; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "pressure_beyond_outcomes",
+      "name": "Pressure exists even without a sack",
+      "verbatim_quote": "Even if a player does not record a sack, they can still generate pressure and impact the play.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Public pass-rush stats capture only final outcomes (sack, pass-made), not the in-play dynamics of pressure generation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Outcome-only stats undercount contribution; GSE values process (pressure generated) not just terminal events, the same causal-attribution discipline.",
+        "source_operator": "pressure_beyond_outcomes",
+        "telemetry": "pressure != sack; process > outcome"
+      }
+    },
+    {
+      "primitive_id": "three_challenges",
+      "name": "Three challenges: identify, match, estimate",
+      "verbatim_quote": "First, blockers and rushers who create a pocket must be identified from among all the players on the field.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The framework decomposes into (1) blocker/rusher identification, (2) blocker-rusher matchup (resistance), (3) pressure-score estimation over time."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A causal pipeline must first identify the agents, then their interactions, then the outcome; GSE's OL causal breakdown follows the same identify-match-estimate order.",
+        "source_operator": "three_challenges",
+        "telemetry": "identify -> matchup -> pressure"
+      }
+    },
+    {
+      "primitive_id": "ngs_tracking",
+      "name": "NGS tracking: 22 players at 10 Hz",
+      "verbatim_quote": "Tracking data is measured for each of the 22 players on the field at a rate of 10Hz.",
+      "page": 3,
+      "latex": "(x,y),\\ (s,a,s_X,s_Y),\\ \\text{dir},\\ (\\text{relX},\\text{relY},\\text{relDist}),\\ 10\\ \\text{Hz}",
+      "symbol_and_unit_ledger": {
+        "x,y": "field coordinates (yards), x centered on LOS",
+        "s,a": "speed/acceleration",
+        "relDist": "distance to QB (yards)"
+      },
+      "assumptions": [
+        "Normalized so offense moves left-to-right; x centered on line of scrimmage (negative=offense), y scaled 0-1 lateral; speed/accel standard-scaled."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A normalized multi-agent kinematic feed is the same substrate GSE builds its pressure and coverage features on.",
+        "source_operator": "ngs_tracking",
+        "telemetry": "22 players, 10 Hz, LOS-centered"
+      }
+    },
+    {
+      "primitive_id": "pff_expert_labels",
+      "name": "PFF expert labels as supervision",
+      "verbatim_quote": "PFF uses subject matter experts to manually label each play, indicating which players are blocking and which are rushing, who performed what block type on which player, and whether the rusher generated pressure.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Blockers/rushers are boolean flags; matchups are player-ID mappings; pressure is hurry/hit/sack. These expert labels supervise the models."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expert annotation is the ground-truth source GSE must respect and audit; label quality bounds model fidelity.",
+        "source_operator": "pff_expert_labels",
+        "telemetry": "PFF: role flags + matchup map + pressure"
+      }
+    },
+    {
+      "primitive_id": "hurry_subjectivity",
+      "name": "Hurry is subjective; sack/hit are objective",
+      "verbatim_quote": "Hurry on the other hand is a more subjective concept and different labelers may not assign a hurry the same way on the same play.",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Sack and hit are easy to determine on film; hurry is judgment-dependent, so label noise concentrates in the hurry class."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Label noise is class-dependent; GSE must down-weight subjective labels (hurry) and expect lower precision there, the same epistemic caution.",
+        "source_operator": "hurry_subjectivity",
+        "telemetry": "hurry subjective, sack/hit objective"
+      }
+    },
+    {
+      "primitive_id": "position_rule_baseline",
+      "name": "Rule-based role baseline by position",
+      "verbatim_quote": "For each position, we calculate the probability of assuming the roles pass rush, pass block, pass route, coverage, or other using approximately 8,800 plays from the 2018 season.",
+      "page": 4,
+      "latex": "\\text{role}(pos)=\\arg\\max_{r} p_r(pos)",
+      "symbol_and_unit_ledger": {
+        "p_r(pos)": "empirical probability position plays role r (dimensionless)"
+      },
+      "assumptions": [
+        "Assign each position its highest-probability role; F1 94%, accuracy >95% for 12 of 19 positions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A position-prior baseline is the same cheap prior GSE seeds before dynamic evidence; it is strong for linemen, weak for hybrid roles.",
+        "source_operator": "position_rule_baseline",
+        "telemetry": "role = argmax p_r(pos), F1 0.94"
+      }
+    },
+    {
+      "primitive_id": "hybrid_positions_hard",
+      "name": "Hybrid roles are the baseline's weak spot",
+      "verbatim_quote": "The model has the lowest accuracy for the outside linebacker (OLB, 62%), linebacker (LB, 70%), fullback (FB, 75%), and running back (RB, 85%).",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "OLB/LB/FB/RB switch between rush, block, route, and coverage, so a static position prior misclassifies them; dynamic features are needed."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Role ambiguity is exactly where static priors fail and motion evidence must dominate; GSE treats hybrid agents as high-uncertainty.",
+        "source_operator": "hybrid_positions_hard",
+        "telemetry": "OLB 62%, LB 70%, FB 75%, RB 85%"
+      }
+    },
+    {
+      "primitive_id": "dynamic_features_lift",
+      "name": "Dynamic 2-3s features lift F1 to 0.99",
+      "verbatim_quote": "The AutoGluon models that include location, velocity, and acceleration trajectories during the first two to three seconds of play show the highest improvement, with F1-scores about 5.5 percent above the baseline, at values of about 0.99.",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Adding x,y,sX,sY,aX,aY over the first 2-3 seconds beats static position features; OLB accuracy rises ~56%, LB ~40%."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Early-motion evidence resolves role ambiguity that alignment cannot; GSE uses the same first-seconds kinematics to identify rushers.",
+        "source_operator": "dynamic_features_lift",
+        "telemetry": "dynamic 2-3s -> F1 0.99, OLB +56%"
+      }
+    },
+    {
+      "primitive_id": "matchup_121_pairs",
+      "name": "Matchup over 121 offensive-defensive pairs",
+      "verbatim_quote": "we calculated the distances at snap of the play for all possible pairs of offensive and defensive players (11 players from each side results in 121 pairs).",
+      "page": 6,
+      "latex": "11\\times 11=121\\ \\text{candidate pairs}",
+      "symbol_and_unit_ledger": {
+        "121": "all offensive-defensive player pairs per play (count)"
+      },
+      "assumptions": [
+        "Matchup is a binary classification over each pair; one offensive player can have multiple defenders assigned (double team)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A pairwise assignment over all agent pairs is the same matchup graph GSE builds for OL/DL causal attribution.",
+        "source_operator": "matchup_121_pairs",
+        "telemetry": "11x11 = 121 pairs"
+      }
+    },
+    {
+      "primitive_id": "min_distance_signal",
+      "name": "Minimum distance during play signals matchup",
+      "verbatim_quote": "we knew that defensive players had to get close to offensive players if they were matchups, so calculating the minimum distances during the play would likely be an important indicator.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Distance-at-snap plus minimum distance over the play separate matching from non-matching pairs; percentage of time a pair is closest adds granularity."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Proximity over time is the same engagement signal GSE uses to infer who is blocking whom.",
+        "source_operator": "min_distance_signal",
+        "telemetry": "min distance + % time closest"
+      }
+    },
+    {
+      "primitive_id": "gnn_nodes_edges",
+      "name": "GNN: players as nodes, matchups as edges",
+      "verbatim_quote": "Players represent nodes in the graph, and their matchup relationships represent the edges connecting the nodes.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A graph encodes the whole play; node classification (rusher/blocker) and link prediction (matchup) share one representation."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A player-interaction graph is the same relational structure GSE uses to model line play jointly rather than per-player.",
+        "source_operator": "gnn_nodes_edges",
+        "telemetry": "nodes=22 players, edges=matchups"
+      }
+    },
+    {
+      "primitive_id": "gnn_two_tasks_one_pass",
+      "name": "Unified GNN solves both tasks in one pass",
+      "verbatim_quote": "we train a unified graph neural network model to accomplish two tasks simultaneously in a single forward pass: (1) classify each player as either a blocker/rusher or a non-blocker/rusher, and (2) classify each possible pairing of offensive and defensive players on the field as a true blocking matchup or not",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "GATv2 convolution (PyTorch Geometric), two decoding branches, Adam, 10,000 epochs; 22 nodes and 121 candidate links per play."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Multi-task joint learning over a shared graph is the same efficiency GSE wants when role and matchup are coupled.",
+        "source_operator": "gnn_two_tasks_one_pass",
+        "telemetry": "GATv2, node + link heads, one pass"
+      }
+    },
+    {
+      "primitive_id": "gnn_weighted_bce",
+      "name": "Weighted BCE: heavier link loss for sparsity",
+      "verbatim_quote": "We put a heavier weight on link prediction loss, as links are sparse among all possible pairs.",
+      "page": 7,
+      "latex": "\\mathcal{L}=\\text{BCE}_{\\text{nodes}}+\\lambda\\,\\text{BCE}_{\\text{links}},\\quad \\text{BCE}=-\\frac1N\\sum_i w_i[y_i\\log\\sigma(x_i)+(1-y_i)\\log(1-\\sigma(x_i))]",
+      "symbol_and_unit_ledger": {
+        "lambda": "link-loss weight (>1, dimensionless)",
+        "w_i": "class weight",
+        "sigma": "sigmoid"
+      },
+      "assumptions": [
+        "True matchups are a small fraction of 121 pairs, so link loss is up-weighted; edges drawn when min distance <3 yards."
+      ],
+      "breakdown_regime": "class imbalance; GNN still over-predicts links (0.954 AP vs AutoGluon 0.969)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sparse-positive link prediction needs loss reweighting, the same imbalance handling GSE applies to rare matchup edges.",
+        "source_operator": "gnn_weighted_bce",
+        "telemetry": "L = BCE_node + lambda*BCE_link"
+      }
+    },
+    {
+      "primitive_id": "gnn_overpredict_links",
+      "name": "GNN over-predicts sparse matchup links",
+      "verbatim_quote": "The GNN model over predicts the existence of links between nodes due to the sparsity of actual matchups between all pairs of players.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "GNN matchup AP 0.954 vs AutoGluon 0.969; future fixes include loss tweaks or validating links only between predicted rusher/blocker nodes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A joint model can trade a little link precision for unified inference; GSE records the trade-off rather than hiding it.",
+        "source_operator": "gnn_overpredict_links",
+        "telemetry": "GNN 0.954 AP < AutoGluon 0.969"
+      }
+    },
+    {
+      "primitive_id": "calibration_required",
+      "name": "Pressure model must be well calibrated",
+      "verbatim_quote": "It is important for the final model to be well calibrated so that the model prediction can be directly translated into a reliable probability indicating the likelihood of pressure over time",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Calibration lets the output move from per-play pressure flags to a continuous, trustworthy pressure score over time."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A probability used downstream must mean its stated frequency; GSE enforces calibration before any score feeds a decision, the same discipline.",
+        "source_operator": "calibration_required",
+        "telemetry": "calibrated -> continuous pressure score"
+      }
+    },
+    {
+      "primitive_id": "blocker_interference_why",
+      "name": "Blockers change the meaning of distance",
+      "verbatim_quote": "there is a big difference between a player being two yards away from the passer, but facing a double team and a player being the same distance with no blockers in his way.",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Modeling a rusher in isolation misses resistance; the same distance to the QB means very different pressure depending on intervening blockers."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Distance alone is not pressure; the blocker context is the same causal modifier GSE applies to any rusher-to-QB geometry.",
+        "source_operator": "blocker_interference_why",
+        "telemetry": "2 yd + double team != 2 yd + free path"
+      }
+    },
+    {
+      "primitive_id": "blocker_interference_metric",
+      "name": "Blocker-interference: cosine + orthogonal distance",
+      "verbatim_quote": "we developed a metric that calculates the presence of blockers between the rusher and the quarterback, which we call blocker-interference.",
+      "page": 8,
+      "latex": "\\cos\\theta=\\frac{(q-r)\\cdot(b-r)}{\\|q-r\\|\\,\\|b-r\\|},\\quad w(d_\\perp)=\\begin{cases}1 & d_\\perp\\le 1\\ \\text{yd}\\\\ e^{-k d_\\perp} & \\text{else}\\end{cases}",
+      "symbol_and_unit_ledger": {
+        "r,q,b": "rusher/QB/blocker positions",
+        "cos theta": "alignment of rusher-QB and rusher-blocker vectors",
+        "d_perp": "orthogonal distance to path (yards)"
+      },
+      "assumptions": [
+        "Drop blockers with cos<0 (behind defender) or behind the passer; weight by orthogonal distance to the rusher-QB path."
+      ],
+      "breakdown_regime": "geometric proxy, not a physical force; exponential decay constant k not printed",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A path-obstruction metric is the same resistance kernel GSE uses to discount a rusher's pressure when a blocker occupies his lane.",
+        "source_operator": "blocker_interference_metric",
+        "telemetry": "cosine filter + 1-yd full weight, exp decay"
+      }
+    },
+    {
+      "primitive_id": "interference_one_yard",
+      "name": "Within 1 yard of path = full interference",
+      "verbatim_quote": "If a player is within 1 yard of the direct path, they are assigned a value of 1 otherwise their influence decreases exponentially.",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A blocker on the direct rusher-QB path fully interferes; influence decays exponentially with lateral offset."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A hard 1-yard lane threshold with exponential falloff is the same spatial gating GSE uses for blocker occupancy.",
+        "source_operator": "interference_one_yard",
+        "telemetry": "1 yd -> 1, else exp decay"
+      }
+    },
+    {
+      "primitive_id": "heuristic_pressure_target",
+      "name": "Heuristic pressure target supplements PFF",
+      "verbatim_quote": "we define pressure as any play where a rusher gets within 1 yard of the passer during the pass rush or within 1.5 yards of the passer at the time of the pass.",
+      "page": 9,
+      "latex": "\\text{pressure}=\\mathbb{1}[\\min_t d(r,q)\\le 1\\ \\text{yd}\\ \\lor\\ d_{\\text{throw}}(r,q)\\le 1.5\\ \\text{yd}]",
+      "symbol_and_unit_ledger": {
+        "d(r,q)": "rusher-passer distance (yards)"
+      },
+      "assumptions": [
+        "Combined with PFF hurry/hit/sack into one boolean; play-level (fixed), so a flag exists even at snap, letting the model learn pre-snap pressure likelihood."
+      ],
+      "breakdown_regime": "heuristic proximity is a proxy for pressure, not identical to the subjective PFF label",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A distance-based heuristic target is the same objective proxy GSE uses to regularize noisy expert labels.",
+        "source_operator": "heuristic_pressure_target",
+        "telemetry": "1 yd during rush OR 1.5 yd at throw"
+      }
+    },
+    {
+      "primitive_id": "per_timestamp_not_lstm",
+      "name": "Per-timestamp model, not LSTM/transformer",
+      "verbatim_quote": "We also choose to model each timestamp rather than using temporally aware models such as transformers or LSTMs.",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Speed, acceleration, and direction already encode temporal information, so an instantaneous per-snapshot model suffices and cuts inference latency."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When kinematics already carry history, a memoryless snapshot model is cheaper and equally valid; GSE avoids unnecessary sequence models.",
+        "source_operator": "per_timestamp_not_lstm",
+        "telemetry": "snapshot model; kinematics encode time"
+      }
+    },
+    {
+      "primitive_id": "rf_over_nn_autogluon",
+      "name": "Random forest chosen for calibration",
+      "verbatim_quote": "Ultimately, the random forest model handled the class imbalance well and provided cleanly calibrated and consistent probability estimates.",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Feed-forward NN biased toward the dominant no-pressure class; AutoGluon boosted trees gave noisy probabilities; RF gave clean calibration."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Model selection is driven by calibration quality, not raw accuracy; GSE picks the estimator whose probabilities are trustworthy.",
+        "source_operator": "rf_over_nn_autogluon",
+        "telemetry": "RF > NN (class bias), AutoGluon (noise)"
+      }
+    },
+    {
+      "primitive_id": "rf_400_granularity",
+      "name": "400 estimators for 0.25% probability granularity",
+      "verbatim_quote": "The final random forest model uses 400 estimators.",
+      "page": 10,
+      "latex": "\\hat p=\\frac{1}{400}\\sum_{j=1}^{400}\\mathbb{1}[\\text{tree}_j=\\text{pressure}],\\ \\Delta p=0.25\\%",
+      "symbol_and_unit_ledger": {
+        "400": "number of trees",
+        "Delta p": "probability resolution = 1/400"
+      },
+      "assumptions": [
+        "RF probability is a vote fraction, so many trees are needed for granular probabilities; trained on 20% of 2018, evaluated 2019-2022."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Vote-fraction resolution scales with ensemble size; GSE sizes its probability ensembles to the granularity the downstream metric needs.",
+        "source_operator": "rf_400_granularity",
+        "telemetry": "400 trees -> 0.25% steps"
+      }
+    },
+    {
+      "primitive_id": "moving_average_smooth",
+      "name": "3-step centered moving average smoothing",
+      "verbatim_quote": "Final probability estimates were smoothed using a 3-step centered moving average to make the probabilities more consistent over time and limit the presence of spikes.",
+      "page": 10,
+      "latex": "\\tilde p_t=\\frac{p_{t-1}+p_t+p_{t+1}}{3}",
+      "symbol_and_unit_ledger": {
+        "p_t": "raw pressure probability at frame t"
+      },
+      "assumptions": [
+        "Smoothing limits spikes and makes the pressure trace consistent over time; full-season inference runs in under a minute."
+      ],
+      "breakdown_regime": "centered window uses future frames (offline, not real-time causal)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A short centered smoother is the same trace-stabilization GSE applies to noisy per-frame scores for offline analysis.",
+        "source_operator": "moving_average_smooth",
+        "telemetry": "3-step centered MA"
+      }
+    },
+    {
+      "primitive_id": "calibration_primary_metric",
+      "name": "Calibration is the primary evaluation",
+      "verbatim_quote": "This is the primary metric of evaluation, as the reliability of the predicted probability is necessary for calculating downstream metrics.",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Evaluate by binning predicted probabilities and comparing to observed frequency; classification (precision-focused) is secondary; outliers reviewed by humans."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reliability of the probability outranks discrimination when the score feeds downstream metrics; GSE ranks calibration first, the same priority.",
+        "source_operator": "calibration_primary_metric",
+        "telemetry": "calibration primary, classification secondary"
+      }
+    },
+    {
+      "primitive_id": "ece_mce_values",
+      "name": "ECE 0.56%, MCE 7.56%",
+      "verbatim_quote": "The expected calibration error (ECE) indicates that we can expect the predicted probability to be within 0.6% of the truth and the maximum calibration error (MCE) says that the maximum error expected is about 7.6%",
+      "page": 11,
+      "latex": "\\text{ECE}=\\sum_b \\frac{n_b}{N}|\\,\\text{acc}(b)-\\text{conf}(b)\\,|=0.56\\%,\\quad \\text{MCE}=\\max_b|\\text{acc}(b)-\\text{conf}(b)|=7.56\\%",
+      "symbol_and_unit_ledger": {
+        "ECE": "expected calibration error",
+        "MCE": "maximum calibration error",
+        "b": "probability bin"
+      },
+      "assumptions": [
+        "Predicted 40% -> ~39% actual; predicted 80% -> ~83% actual (slight under-confidence at high probabilities)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "ECE/MCE quantify how far a probability is from truth; GSE uses the same calibration-error ledger to gate any score it publishes.",
+        "source_operator": "ece_mce_values",
+        "telemetry": "ECE 0.56%, MCE 7.56%"
+      }
+    },
+    {
+      "primitive_id": "max_prob_evaluation",
+      "name": "Evaluate at the play's maximum pressure",
+      "verbatim_quote": "we choose to evaluate based on the maximum probability as this is most similar to how the PFF labels were determined.",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A human labeler assigns pressure at the point of maximum pressure on the passer, so the model is evaluated at its peak probability over the play."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Aligning the evaluation point with the labeling process avoids a train/eval mismatch; GSE matches its metric to how ground truth was assigned.",
+        "source_operator": "max_prob_evaluation",
+        "telemetry": "eval at max_t p(t), matches PFF"
+      }
+    },
+    {
+      "primitive_id": "beats_dominant_class",
+      "name": "Model cuts remaining uncertainty by half",
+      "verbatim_quote": "Our model achieves 98.3% accuracy when looking at all defenders and 95.8% accuracy when looking only at rushers, cutting the remaining uncertainty by more than half.",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Always-no-pressure baseline gives 95.2% (all defenders) / 87.8% (rushers); the model beats it; pressure precision 84% reflects subjective hurry labels."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Accuracy must be judged against the dominant-class baseline, not in absolute terms; GSE reports lift over the trivial predictor.",
+        "source_operator": "beats_dominant_class",
+        "telemetry": "98.3% vs 95.2% baseline; 84% pressure precision"
+      }
+    },
+    {
+      "primitive_id": "outliers_are_label_noise",
+      "name": "Outliers are labeling/event inconsistencies",
+      "verbatim_quote": "After human review of these outliers were determined to be primarily due to inconsistencies in labeling or in the definition of what constitutes the end of a pass rush event.",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "NGS may end the rush on a scramble while PFF credits a sack on the later tackle; some high-pressure plays get no PFF flag (would be hurries). NGS events are treated as truth."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Most apparent model errors are upstream label/event disagreements, not model failures; GSE audits the ground truth before blaming the model.",
+        "source_operator": "outliers_are_label_noise",
+        "telemetry": "outliers = NGS vs PFF mismatch"
+      }
+    },
+    {
+      "primitive_id": "thirteen_pressure_metrics",
+      "name": "13 derived pressure metrics",
+      "verbatim_quote": "The continuous nature of the pressure probability predictions allows subject matter experts at the NFL to break down the model output 13 distinct metrics including the time of the pressure, the peak pressure, quick pressures, pressure rate over expectation, etc.",
+      "page": 16,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Continuous probabilities yield time-of-pressure, peak pressure, quick pressures, pressure-rate-over-expectation, aggregable per play or season."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A continuous score is a substrate for many derived metrics; GSE builds its pressure-time and over-expectation measures the same way.",
+        "source_operator": "thirteen_pressure_metrics",
+        "telemetry": "13 metrics from continuous p(t)"
+      }
+    },
+    {
+      "primitive_id": "ol_causal_visibility",
+      "name": "Matchups quantify offensive-line performance",
+      "verbatim_quote": "we can also begin to quantify offensive line performance, which until now has had very limited visibility from a statistical perspective.",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Combining identification + matchup + pressure attributes sacks to individual blockers and discerns double teams, giving the OL statistical visibility it lacked."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The same pipeline that credits rushers debits blockers; GSE's OL causal breakdown is exactly this matchup-attributed pressure prevention.",
+        "source_operator": "ol_causal_visibility",
+        "telemetry": "matchup -> sack attribution + double teams"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "feeling_pressure2024_trace",
+      "think": "The retrocausal genealogy of this paper is a measurement gap in the pass rush. Pass rushers are among the highest-paid defensive players, yet public pass-rushing statistics record only terminal outcomes, sacks and passes made, and say nothing about the in-play dynamics of how much pressure a rusher generates. A rusher who never records a sack can still collapse the pocket and change the play. The lineage runs through ESPN's Pass Block and Pass Rush Win Rates, which used raw positions, orientations, and pairwise distances; pre-snap rusher-likelihood predictors; a backtracking method that minimized unblocked defenders; the STRAIN metric borrowed from materials-science strain rate; and IDPI, which used an LSTM to compare disruption probability with and without each lineman. The gap this paper fills is fine-grained individual pressure throughout the play, with the positions of blockers explicitly incorporated rather than ignored. The framework decomposes into three challenges that must be solved in order. First, identify which of the 22 players are blockers and rushers; second, determine the blocker-rusher matchups that set the resistance each rusher faces; third, estimate a pressure score over time. Identification starts from a rule-based position prior, F1 0.94, strong for linemen but weak for hybrid OLB, LB, FB, and RB roles, then AutoGluon ensembles add location, velocity, and acceleration over the first two to three seconds and lift F1 to 0.99, raising OLB accuracy by about 56 percent. Matchup is a binary classification over the 121 offensive-defensive pairs, using distance at snap, minimum distance during the play, and the fraction of time a pair is closest. A unified graph neural network then solves both tasks in one forward pass, players as nodes and matchups as edges, with GATv2 convolution and a weighted binary cross-entropy that up-weights the sparse link loss. The recursive theory of mind is the pressure model reasoning about a rusher's configuration relative to the passer and to the blockers in his path. The central insight is that distance alone is not pressure: a rusher two yards from the quarterback facing a double team is in a very different situation from one two yards away with a free path. The blocker-interference metric encodes this by computing the cosine alignment of the rusher-quarterback and rusher-blocker vectors, discarding blockers behind the defender or behind the passer, and weighting the orthogonal distance to the direct path, full weight within one yard and exponential decay beyond. The model then asks, given this rusher's current speed, direction, distance to the passer, and nearby blockers, how likely is he to apply pressure at some point during the play. It answers per timestamp rather than with an LSTM, because the kinematic features already carry the temporal information. Cross-layer veto adjudication is calibration-first. Because the probability feeds downstream metrics, it must mean its stated frequency, so calibration is the primary evaluation and classification is secondary. The random forest was chosen over a feed-forward network that biased toward the dominant no-pressure class and over AutoGluon boosted trees that gave noisy probabilities; 400 estimators give 0.25 percent probability granularity, and a three-step centered moving average smooths the trace. Expected calibration error is 0.56 percent and maximum calibration error 7.56 percent, with slight under-confidence at high probabilities. Against the always-no-pressure baseline of 95.2 percent for all defenders, the model reaches 98.3 percent, cutting remaining uncertainty by more than half, though pressure precision is only 84 percent because hurry labels are subjective. The outlier veto is honest: most apparent errors are inconsistencies between NGS event definitions and PFF labels, a scramble that ends the rush while PFF credits a sack on the later tackle, or high pressure that earns no hurry flag, and NGS events are treated as the truth. The implementation invariants are what GSE should lift. Identify the agents, then their matchups, then the outcome; build a relational blocker-interference feature so resistance modifies raw geometry; produce a calibrated continuous pressure score rather than per-play flags; filter the action window to the active pass rush, ending at the pass or sack and reassigning the passer on trick plays; and combine a distance-based heuristic target with the noisy expert labels. The same pipeline that credits rushers also debits blockers, attributing sacks to individual linemen and discerning double teams, which gives the offensive line the statistical visibility it has lacked. This is precisely GSE's offensive-line causal-breakdown kernel, and the outputs are statistical pressure probabilities from tracking data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. NGS tracks 22 players at 10 Hz, normalized with x centered on the line of scrimmage and y scaled laterally; the pressure model trains on 6,000 pass plays from 2018 and evaluates on 2019 through 2022, with a full season inferred in under a minute. The Micah Parsons example grounds the metrics: 35.4 percent pressure at the snap from a wide-nine alignment, a quick pressure within two seconds, 74.8 percent average over the dropback, 39.4 points over expectation, and peak pressure converging to 100 percent. The authors' future work is an average-player expectation to standardize the metrics and a multi-modal tracking-plus-video approach to classify line techniques, and they note the framework generalizes to hockey and soccer. The invariant for GSE is to carry the identify-match-estimate pipeline, the blocker-interference resistance kernel, and the calibration-first veto, while recording hurry subjectivity and NGS event fidelity as the honest limits.",
+      "retrocausal_genealogy": "The paper originates in a pass-rush measurement gap: public stats record only sacks and passes made, not in-play pressure, so a rusher who never sacks still goes uncredited. The lineage runs through ESPN's PBWR/PRWR, pre-snap rusher predictors, backtracking blocking assignment, the materials-science STRAIN metric, and the LSTM-based IDPI. The gap is fine-grained individual pressure throughout the play with blockers explicitly modeled. The framework decomposes into three ordered challenges, identify blockers/rushers, determine their matchups, then estimate pressure over time, which is the same identify-match-estimate causal order GSE uses for offensive-line breakdown.",
+      "theory_of_mind": "The pressure model reasons about a rusher's configuration relative to the passer and the blockers in his path. Distance alone is not pressure: two yards from the QB facing a double team differs from two yards with a free path. The blocker-interference metric encodes resistance via cosine alignment of rusher-QB and rusher-blocker vectors, discarding blockers behind the defender or passer, and weighting orthogonal distance to the path (full within 1 yard, exponential decay beyond). The model asks, given this rusher's current speed, direction, distance, and nearby blockers, how likely is pressure at some point in the play, answering per timestamp because kinematics already encode time.",
+      "cross_layer_veto": "Calibration is the primary veto because the probability feeds downstream metrics. Random forest was chosen over a class-biased neural net and noisy AutoGluon boosted trees; 400 estimators give 0.25% granularity, smoothed by a 3-step centered moving average. ECE is 0.56%, MCE 7.56%, with slight under-confidence at high probabilities. Against the 95.2% always-no-pressure baseline the model reaches 98.3% (all defenders), though pressure precision is 84% due to subjective hurry labels. The outlier veto is honest: most errors are NGS-event vs PFF-label inconsistencies (a scramble ends the rush but PFF sacks the later tackle), and NGS events are treated as truth."
+    }
+  ],
+  "universal_lens": "Pass-rush contribution is measured by an identify-match-estimate pipeline: classify blockers/rushers from kinematics, infer their matchup graph, then estimate a calibrated continuous pressure probability per rusher that explicitly discounts for blocker interference along the rusher-to-quarterback path.",
+  "gsi_mapping": "GSI treats pressure as a calibrated per-timestamp probability from a random forest over rusher-passer geometry plus a blocker-interference feature (cosine alignment + orthogonal-distance weighting, full within 1 yard, exponential decay); a GATv2 graph with weighted node/link BCE jointly identifies roles and matchups over 121 pairs, ECE 0.56% / MCE 7.56%.",
+  "gse_mapping": "GSE lifts the identify-match-estimate causal order, the blocker-interference resistance kernel, and the calibration-first veto; the same pipeline credits rushers and attributes sacks to individual blockers (double teams included), giving the offensive line causal visibility, with all outputs statistical pressure probabilities, never sportsbook lines."
+}
