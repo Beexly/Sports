@@ -1,0 +1,658 @@
+{
+  "book_id": "3e6cfe96736c9592",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_SOCIAL_MEDIA_FOOTBALL_PREDICTION_QUALITATIVE_CLEAN_OCR",
+  "source_note": "Kampakis & Adamides (University College London), 'Using Twitter to predict football outcomes', undated manuscript circa 2014, 10 pages. First Twitter-based prediction study for association football (soccer): English Premier League, partial season 21 March - 11 May 2014. Three-model incremental design (Twitter-only / historical-statistics-only / combined) testing whether fan text adds information beyond historical statistics. Twitter pipeline: 1,975,614 fan tweets via open Streaming API for 20 teams; single-team hashtag assignment, multi-team discard, cross-sport nickname-collision filtering (Southampton Saints=NFL New Orleans Saints, Tottenham Spurs=NBA San Antonio Spurs); CMU ARK TwitterNLP POS filter (Adjective/Verb/Noun/Adverb/Interjection/Emoticon/Possessive), Porter stemmer, separate home/away unigram+bigram bags ranked by chi-square p-value + mutual information (1-35 features/side). Historical features: rolling pre-game averages (goals/corners/shots on target/fouls/yellow/red cards/squad age) + static market value/international players/EPL honours. Three-class outcome (home win/away win/draw), input x=[x_home,x_away]. Classifiers Naive Bayes/Random Forest/Logistic Regression/SVM (RBF/sigmoid/polynomial), leave-one-out CV, RF 100 seeds 10-1000 trees with OOB error; evaluated by accuracy + Cohen's kappa. Results: Twitter-only RF kappa 0.25/acc 65.6%, historical NB kappa 0.239/acc 58.9%, combined RF kappa 0.28/acc 69.6%; best bigrams via chi-square at ~11-15 features/side; combined beats individuals -> Twitter info not in simple stats. Volume skew (Liverpool 426,457 vs Fulham 15,530). Limitations: partial season, historical data hard to acquire (baseline fairness), majority-class accuracy inflation (kappa close), bigrams>unigrams (trigrams untested), nature of predictive info (fan emotion/news/injuries) not disambiguated. Extracted faithfully (not a derivative summary). Mostly qualitative/empirical: the only printed formulas (input-vector concatenation, feature-table symbols) extract garbled; input vector and Cohen's kappa reconstructed in labeled LaTeX and flagged here and in assumptions; remaining primitives are qualitative decision/processing heuristics with latex empty and breakdown_regime no_equation_domain. Domain football matches catalog (association football / soccer English Premier League social-media prediction). Directly relevant to GSE's complementary social-signal layer, entity-resolution/collision vetoes, venue-conditioned vocabulary, supervised feature selection, incremental-signal-value test, and chance-corrected evaluation. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "twitter_predictive_source",
+      "name": "Twitter proven predictive source across stock market / disease / sports domains",
+      "verbatim_quote": "Twitter has been proven to be a notable source for predictive modeling on various domains",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Stylianos Kampakis, Andreas Adamides; University College London; undated manuscript circa 2014, 10 pages) opens from the premise that Twitter has been proven to be a notable source for predictive modeling on various domains such as the stock market, the dissemination of diseases or sports outcomes, citing election (Tumasjan 2010), stock-market (Bollen 2011), box-office (Asur-Huberman 2010) and disease (Paul-Dredze 2011) prediction."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The cross-domain social-signal precedent is the same alternative-data prior GSE weighs for sentiment features.",
+        "source_operator": "twitter_predictive_source",
+        "telemetry": "Twitter proven predictive source: stock market/disease/sports; elections Tumasjan 2010, stock Bollen 2011, box-office Asur-Huberman 2010, disease Paul-Dredze 2011"
+      }
+    },
+    {
+      "primitive_id": "first_soccer_study",
+      "name": "First Twitter prediction study for football (soccer); prior work was NFL",
+      "verbatim_quote": "such a study has not been conducted in football (soccer) so far",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The authors state that such a study has not been conducted in football (soccer) so far; prior Twitter sports prediction was NFL (Sinha 2013 n-grams matching/exceeding statistics-only) and TwitterPaul for the 2010 World Cup (up to 88% accuracy), so this is the first soccer application."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The first-soccer-application gap is the same domain-novelty framing GSE uses for new signal sources.",
+        "source_operator": "first_soccer_study",
+        "telemetry": "first Twitter soccer study; prior NFL Sinha 2013 (n-grams match/exceed stats), TwitterPaul 2010 World Cup up to 88%; soccer gap"
+      }
+    },
+    {
+      "primitive_id": "three_model_design",
+      "name": "Three-model design: Twitter-only vs historical-only vs combined (incremental-info test)",
+      "verbatim_quote": "First, we assess the performance of model that is based solely on Twitter features",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The study uses three models: first a model based solely on Twitter features, then a model based on historical and other statistics about the teams compared with the Twitter model, and finally a combination of both approaches to understand whether Twitter provides additional information on top of what historical statistics already supply."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Twitter/historical/combined incremental design is literally GSE's alternative-signal marginal-value test.",
+        "source_operator": "three_model_design",
+        "telemetry": "three models: Twitter-only / historical-only / combined; test whether Twitter adds info beyond historical statistics (incremental value)"
+      }
+    },
+    {
+      "primitive_id": "twitter_complementary_info",
+      "name": "Twitter can carry info absent from statistical/historical sources (injuries, sacked coaches, sentiment)",
+      "verbatim_quote": "more informative data than the ones found in other statistical or historical sources, or at some cases data that do not exist at all",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Twitter can be a valuable source because it can provide, in some cases, more informative data than the ones found in other statistical or historical sources, or in some cases data that do not exist at all; the value proposition is complementary or non-existent-in-stats information."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The complementary-info premise is literally GSE's justification for non-statistical signal layers.",
+        "source_operator": "twitter_complementary_info",
+        "telemetry": "Twitter more informative than stats/historical sources OR data that do not exist at all; complementary/non-existent-in-stats value"
+      }
+    },
+    {
+      "primitive_id": "injuries_sentiment_examples",
+      "name": "Candidate Twitter signals: player injuries, sacked coaches, fan-base average sentiment",
+      "verbatim_quote": "A few examples are players' injuries, sacked coaches, and the average sentiment amongst the fan base of each team",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A few examples of Twitter-only information are players' injuries, sacked coaches, and the average sentiment amongst the fan base of each team; these are the speculative useful sources the discussion later flags as not yet disambiguated."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The injury/coach/sentiment signal candidates are literally GSE's news-and-sentiment feature hypotheses.",
+        "source_operator": "injuries_sentiment_examples",
+        "telemetry": "Twitter-only info candidates: player injuries, sacked coaches, fan-base average sentiment; speculative sources not disambiguated"
+      }
+    },
+    {
+      "primitive_id": "dataset_period",
+      "name": "Data: N games over 21 March - 11 May 2014 (partial EPL season, 8-10 matches/team)",
+      "verbatim_quote": "The data consists of N games collected over the period 21st of March - 11th of May 2014",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The data consists of N games collected over the period 21st of March to 11th of May 2014 (the day of the last league match); three datasets (Twitter, historical/simple-statistics, combined merge); eight to ten matches per team since clubs had different remaining fixtures."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The partial-season window is the same temporal-scope bound GSE flags on social-signal samples.",
+        "source_operator": "dataset_period",
+        "telemetry": "N games 21 March-11 May 2014 (last league match day); 3 datasets Twitter/historical/combined; 8-10 matches/team (different remaining fixtures)"
+      }
+    },
+    {
+      "primitive_id": "tweet_count",
+      "name": "1,975,614 fan tweets retrieved via Twitter open Streaming API for 20 EPL teams",
+      "verbatim_quote": "The exact final number of retrieved tweets for all twenty teams was 1,975,614",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Twitter dataset consisted of around 2 million fan tweets about their favourite teams retrieved through Twitter's open Streaming API; the exact final number of retrieved tweets for all twenty teams was 1,975,614."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The streaming-API corpus scale is the same social-data volume GSE logs for sentiment features.",
+        "source_operator": "tweet_count",
+        "telemetry": "~2M fan tweets via Twitter open Streaming API; exact 1,975,614 for 20 EPL teams"
+      }
+    },
+    {
+      "primitive_id": "hashtag_assignment",
+      "name": "Tweet assigned to a team iff it carries hashtags for exactly one EPL team",
+      "verbatim_quote": "if a tweet contained any number of hashtags corresponding to exactly one Premier League team, the tweet was assigned to that team only",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A hashtag list strongly associated with each of the twenty teams was built from online resources identifying official hashtags and nicknames; if a tweet contained any number of hashtags corresponding to exactly one Premier League team, the tweet was assigned to that team only and used for analysis."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The single-team hashtag assignment is literally GSE's entity-resolution rule for team-tagged social text.",
+        "source_operator": "hashtag_assignment",
+        "telemetry": "hashtag list per team (official + nicknames from online resources); tweet assigned to team iff hashtags for EXACTLY one EPL team"
+      }
+    },
+    {
+      "primitive_id": "multi_team_discard",
+      "name": "Multi-team-hashtag tweets discarded (focus + avoid cross-table duplication)",
+      "verbatim_quote": "We discarded tweets that contained hashtags for more than one team",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Tweets containing hashtags for more than one team were discarded to maintain focus on comments about particular games from one team's perspective and to avoid massive duplication across the per-team database tables; including them risked tweets not associated with only one team."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The multi-team discard is literally GSE's ambiguity-rejection filter for team attribution.",
+        "source_operator": "multi_team_discard",
+        "telemetry": "discard tweets with hashtags for >1 team; focus single-team game perspective + avoid cross-table duplication; ambiguity rejection"
+      }
+    },
+    {
+      "primitive_id": "nickname_collision",
+      "name": "Nickname-collision filtering: Southampton Saints=NFL, Tottenham Spurs=NBA filtered out",
+      "verbatim_quote": "the nickname of the team of Southampton F.C., Saints is identical to the nickname of the National Football League (NFL) team",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An obvious correlation exists between some EPL nicknames and other sports teams: Southampton F.C. 'Saints' is identical to the NFL New Orleans Saints, and Tottenham Hotspur 'Spurs' matches the NBA San Antonio Spurs; tweets matching these collisions were filtered out so results would be representative for those two teams."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The cross-sport nickname disambiguation is literally GSE's entity-collision veto on social signals.",
+        "source_operator": "nickname_collision",
+        "telemetry": "nickname collisions: Southampton Saints=NFL New Orleans Saints, Tottenham Spurs=NBA San Antonio Spurs; filter colliding tweets for representativeness"
+      }
+    },
+    {
+      "primitive_id": "tweet_skew",
+      "name": "Significant tweet-volume skew across teams (fame/fan-base driven)",
+      "verbatim_quote": "there is a significant skew in the total number of tweets amongst each of the twenty teams",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "There is a significant skew in the total number of tweets amongst the twenty teams, reasonable because a few teams are much more famous, well-known and successful with greater fan numbers; this volume imbalance is a sampling caveat for per-team sentiment features."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The tweet-volume skew is the same fan-base-size confound GSE flags for social-signal weighting.",
+        "source_operator": "tweet_skew",
+        "telemetry": "significant tweet-volume skew across 20 teams; fame/success/fan-base driven; sampling caveat for per-team sentiment"
+      }
+    },
+    {
+      "primitive_id": "liverpool_most_tweets",
+      "name": "Liverpool most tweets (426,457), Man United 416,767; Fulham lowest (15,530)",
+      "verbatim_quote": "The team with the most retrieved tweets for this period is Liverpool F.C. with 426,457 tweets",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The team with the most retrieved tweets for this period is Liverpool F.C. with 426,457 tweets, second Manchester United with 416,767, while the lowest are Fulham with 15,530 and Swansea City with 15,668 mentions; the roughly 27x max/min ratio quantifies the volume skew."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The max/min tweet ratio is the same quantitative fan-volume imbalance GSE records.",
+        "source_operator": "liverpool_most_tweets",
+        "telemetry": "Liverpool 426457 most, Man United 416767 second; Fulham 15530 lowest, Swansea 15668; ~27x max/min ratio"
+      }
+    },
+    {
+      "primitive_id": "pos_filter",
+      "name": "POS filter: keep Adjective/Verb/Noun/Adverb/Interjection/Emoticon/Possessive (CMU ARK TwitterNLP)",
+      "verbatim_quote": "We only included words with the following tags: Adjective, Verb, Noun, Adverb, Interjection, Emoticons or Possesive",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Data were processed using the TwitterNLP and Part-of-Speech Tagger published by the ARK social media research group at Carnegie Mellon; only words tagged Adjective, Verb, Noun, Adverb, Interjection, Emoticons or Possessive were included (source spells 'Possesive')."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The POS content-word filter is the same social-text preprocessing GSE applies before sentiment features.",
+        "source_operator": "pos_filter",
+        "telemetry": "CMU ARK TwitterNLP + POS tagger; keep Adjective/Verb/Noun/Adverb/Interjection/Emoticons/Possessive only"
+      }
+    },
+    {
+      "primitive_id": "porter_stemmer_ngrams",
+      "name": "Porter stemmer (Java) then split into unigram and bigram versions",
+      "verbatim_quote": "We then stemmed the words in the dataset by using the Java implementation of the Porter stemmer",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Words were stemmed using the Java implementation of the Porter stemmer, then the dataset was split into two versions, one with unigrams and one with bigrams; these bag-of-words representations feed the Twitter model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The stem-then-ngram pipeline is the same text-normalization GSE uses for social bag-of-words.",
+        "source_operator": "porter_stemmer_ngrams",
+        "telemetry": "Porter stemmer (Java) -> split unigram + bigram versions; bag-of-words for Twitter model"
+      }
+    },
+    {
+      "primitive_id": "historical_features_updated",
+      "name": "Historical features: F1-6 + F8 averages updated pre-game; market value/age/honours static",
+      "verbatim_quote": "Features 1-6 and F8 represent averages that had to be updated before each game in the dataset",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The historical dataset (Table 1) uses average goals, corners, shots on target, fouls committed, yellow cards, red cards (F1-F6) plus average squad age (F8) as averages updated before each game, while total market value, number of international players, EPL wins, EPL runners-up and double winners remained unchanged; the feature symbols print garbled in the source table."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The rolling-average versus static-feature split is the same time-varying covariate discipline GSE applies.",
+        "source_operator": "historical_features_updated",
+        "telemetry": "historical F1-6 (avg goals/corners/shots on target/fouls/yellow/red) + F8 (avg squad age) updated pre-game; static market value/international players/EPL wins/runners-up/doubles; table symbols garbled"
+      }
+    },
+    {
+      "primitive_id": "three_class_outcome",
+      "name": "Three-class outcome: home win / away win / draw; each instance = one match",
+      "verbatim_quote": "the prediction of the outcome of a game as being a win for the home team, a win for the away team or a draw",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The purpose was prediction of the outcome of a game as a win for the home team, a win for the away team or a draw; each instance represents a match split into home-team features, away-team features and the response variable."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The three-class match-outcome target is literally GSE's home/draw/away prediction framing.",
+        "source_operator": "three_class_outcome",
+        "telemetry": "3-class outcome home win/away win/draw; each instance = one match (home features + away features + response)"
+      }
+    },
+    {
+      "primitive_id": "input_vector_match",
+      "name": "Input vector x = [home features, away features] (concatenated per match)",
+      "verbatim_quote": "Each instance of the dataset represents a match",
+      "page": 6,
+      "latex": "x=[x_{home},\\ x_{away}]",
+      "symbol_and_unit_ledger": {
+        "x": "match input feature vector",
+        "x_home": "home-team feature block",
+        "x_away": "away-team feature block"
+      },
+      "assumptions": [
+        "Each instance of the dataset represents a match; the input vector consists of two parts, the home features and the away features, concatenated as x=[x_home, x_away]; for the Twitter model these are bags of unigrams or bigrams, for the historical model the per-club statistics, and for the combined model both. The input-vector equation is printed with garbled math symbols and reconstructed here.",
+        "Input-vector concatenation x=[x_home,x_away] printed with garbled math symbols; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Symbolic concatenation; feature blocks differ by dataset",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The home-away concatenated input is literally GSE's bilateral match-feature vector.",
+        "source_operator": "input_vector_match",
+        "telemetry": "x=[x_home, x_away] concatenated per match; Twitter=bag of unigrams/bigrams, historical=per-club stats, combined=both; math symbols garbled reconstructed"
+      }
+    },
+    {
+      "primitive_id": "chisq_mi_selection",
+      "name": "Bag-of-words ranked by chi-square p-value + mutual information per n-gram",
+      "verbatim_quote": "The bag-of-words for the Twitter was pre-processed through the use of chi-square and the mutual information index",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The bag-of-words for Twitter was pre-processed through chi-square and the mutual information index: the p-value of a chi-square test and the mutual information were calculated for each unigram and bigram and ranked by importance, then models tested on different feature counts; this is a supervised filter feature-selection step."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The chi-square-plus-MI filter ranking is literally GSE's supervised social-feature selection kernel.",
+        "source_operator": "chisq_mi_selection",
+        "telemetry": "bag-of-words preprocessed via chi-square p-value + mutual information per unigram/bigram, ranked by importance; supervised filter feature selection"
+      }
+    },
+    {
+      "primitive_id": "ngram_range_1_35",
+      "name": "Models tested on 1-35 unigrams/bigrams per side (feature-count sweep)",
+      "verbatim_quote": "The machine learning models were then tested on different numbers of unigrams and bigrams, from 1 to 35",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The machine learning models were tested on different numbers of unigrams and bigrams from 1 to 35; the x-axis feature count is per side, so a value of 10 means 20 total features (a size-10 home bag plus a size-10 away bag)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The per-side feature-count sweep is the same capacity-tuning GSE runs on social feature bags.",
+        "source_operator": "ngram_range_1_35",
+        "telemetry": "tested 1-35 unigrams/bigrams per side; x-axis per-side so 10 = 20 total features (10 home + 10 away bag)"
+      }
+    },
+    {
+      "primitive_id": "separate_home_away_bags",
+      "name": "Separate home and away bags-of-words (same team differs by venue role)",
+      "verbatim_quote": "We ended up having a different bag-of-words for the home teams and a different bag-of-words for the away teams",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A different bag-of-words was used for home teams and for away teams: Liverpool and Manchester United share the same home features when playing at home but have different features when playing away, so the vocabulary is conditioned on the venue role rather than the club identity alone."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The venue-role-conditioned vocabulary is literally GSE's home/away context split for social features.",
+        "source_operator": "separate_home_away_bags",
+        "telemetry": "separate home/away bags; same clubs share home features but differ away; vocabulary conditioned on venue role not club identity alone"
+      }
+    },
+    {
+      "primitive_id": "classifiers_loo",
+      "name": "Classifiers: Naive Bayes / RF / Logistic regression / SVM; leave-one-out CV",
+      "verbatim_quote": "The models used were Naïve Bayes, Random forests, Logistic regression and SVM",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The models used were Naive Bayes, Random forests, Logistic regression and SVM, all tested through leave-one-out cross-validation; the SVM was tested with radial-basis-function, sigmoid and polynomial kernels and various parameter settings."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The classifier battery plus LOO is the same model-comparison protocol GSE uses for outcome prediction.",
+        "source_operator": "classifiers_loo",
+        "telemetry": "Naive Bayes/RF/Logistic regression/SVM; leave-one-out CV; SVM RBF/sigmoid/polynomial kernels + parameter settings"
+      }
+    },
+    {
+      "primitive_id": "rf_seeds_trees",
+      "name": "RF: 100 CV rounds with different seeds; 10-1000 trees; OOB error as test estimate",
+      "verbatim_quote": "we conducted 100 rounds of cross-validation for random forests, using a different random seed each time",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because random forests use a random seed that can affect the result, 100 rounds of cross-validation were conducted with a different seed each time, with tree counts from 10 up to 1000; the out-of-bag error was used as an estimate of test-set accuracy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The seed-averaged RF with OOB estimate is the same variance-controlled evaluation GSE applies.",
+        "source_operator": "rf_seeds_trees",
+        "telemetry": "RF 100 CV rounds different seeds (seed affects result); 10-1000 trees; out-of-bag error as test-accuracy estimate"
+      }
+    },
+    {
+      "primitive_id": "cohens_kappa_random",
+      "name": "Cohen's kappa evaluates classifier vs random guessing (0=random, 1=perfect)",
+      "verbatim_quote": "Cohen's kappa is particularly useful for assessing the performance of a classifier against a classifier that is guessing at random",
+      "page": 7,
+      "latex": "\\kappa=\\frac{p_o-p_e}{1-p_e}",
+      "symbol_and_unit_ledger": {
+        "kappa": "Cohen's chance-corrected agreement [dimensionless -1..1]",
+        "p_o": "observed agreement proportion",
+        "p_e": "chance-expected agreement proportion"
+      },
+      "assumptions": [
+        "Results were evaluated through accuracy and Cohen's kappa; kappa is particularly useful for assessing a classifier against one guessing at random, with values close to zero indicating no better than random and close to 1 perfect performance; the standard chance-corrected form is kappa=(p_o-p_e)/(1-p_e) with p_o observed agreement and p_e chance agreement. The kappa formula is not printed and is reconstructed here as the standard definition the prose describes.",
+        "Cohen's kappa formula not printed; standard chance-corrected definition reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Standard definition reconstructed; prose describes random-baseline comparison",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The chance-corrected kappa is literally GSE's better-than-random validation metric for outcome classifiers.",
+        "source_operator": "cohens_kappa_random",
+        "telemetry": "accuracy + Cohen's kappa; kappa vs random guessing (0=random,1=perfect); kappa=(p_o-p_e)/(1-p_e), p_o observed/p_e chance agreement; formula not printed reconstructed"
+      }
+    },
+    {
+      "primitive_id": "twitter_rf_best",
+      "name": "Twitter-only best = RF: kappa 0.25±0.093, accuracy 65.6%±4.33%",
+      "verbatim_quote": "Regarding the twitter model, the random forest was the best classifier",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Regarding the Twitter model, the random forest was the best classifier (Table 2): mean kappa 0.25±0.093 (min 0.047, max 0.389) and mean accuracy 65.6%±4.33% (min 56.3%, max 74.7%), significantly better than chance by kappa and comparable to the historical model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The Twitter-only RF performance is the same social-signal baseline GSE benchmarks.",
+        "source_operator": "twitter_rf_best",
+        "telemetry": "Twitter-only best RF: kappa 0.25±0.093 (0.047-0.389), accuracy 65.6%±4.33% (56.3-74.7%); better than chance, comparable to historical"
+      }
+    },
+    {
+      "primitive_id": "bigrams_chisq_best",
+      "name": "Best Twitter results: bigrams selected by chi-square (over unigrams / information gain)",
+      "verbatim_quote": "the best results are achieved using bigrams derived by chi-square",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Figure 3 (out-of-bag error for the Twitter random forest) clearly shows the best results are achieved using bigrams derived by chi-square, over unigrams and over information-gain selection; bigrams capture more complex information than unigrams."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The chi-square-bigram optimum is the same n-gram/selection finding GSE records for social text.",
+        "source_operator": "bigrams_chisq_best",
+        "telemetry": "best Twitter results bigrams via chi-square (over unigrams + information gain); Fig3 OOB error; bigrams capture more complex info"
+      }
+    },
+    {
+      "primitive_id": "feature_count_peak",
+      "name": "Performance peaks at ~11-15 features per side then falls (overfitting beyond)",
+      "verbatim_quote": "the performance keeps rising until we reach about 11-15 features for each side, and then starts falling",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Performance keeps rising until about 11-15 features for each side and then starts falling, for both the Twitter and combined datasets; this is the optimal bag-of-words capacity beyond which additional n-grams degrade out-of-bag performance."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The feature-count optimum-then-decline is the same capacity-overfitting curve GSE tunes.",
+        "source_operator": "feature_count_peak",
+        "telemetry": "performance rises to ~11-15 features/side then falls (Twitter + combined); optimal bag capacity, beyond degrades OOB"
+      }
+    },
+    {
+      "primitive_id": "majority_class_caveat",
+      "name": "RF Twitter may predict majority class often: high accuracy at expense of misclassification (kappa close to NB)",
+      "verbatim_quote": "the random forest for the Twitter dataset might predict the majority class quite often, leading to a high accuracy score at the expense of misclassifying quite a few examples",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The historical Naive Bayes accuracy is lower than the Twitter random forest but the kappa statistics are very close, which might indicate the Twitter random forest predicts the majority class quite often, leading to a high accuracy score at the expense of misclassifying quite a few examples; this is the accuracy-versus-kappa divergence caveat."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The majority-class accuracy inflation is literally GSE's kappa-over-accuracy caution for imbalanced outcomes.",
+        "source_operator": "majority_class_caveat",
+        "telemetry": "historical NB lower accuracy but kappa close to Twitter RF; RF may predict majority class often -> high accuracy at expense of misclassification; accuracy-vs-kappa divergence"
+      }
+    },
+    {
+      "primitive_id": "combined_improves",
+      "name": "Combined best = RF: kappa 0.28±0.065, accuracy 69.6%±2.4% (beats both individuals)",
+      "verbatim_quote": "The additional historical features, however, improved both the accuracy and the kappa statistic of the classifier",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "For the combined model random forest was best; the additional historical features improved both accuracy and kappa: final kappa 0.28 versus 0.25 Twitter-only and 0.239 historical, and average accuracy 69.6% versus 65.6% Twitter-only and 58.9% historical (Table 2 combined kappa 0.28±0.065, accuracy 69.6%±2.4%, min 64.4%, max 74.7%)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The combined-beats-individuals result is literally GSE's incremental-signal-value confirmation.",
+        "source_operator": "combined_improves",
+        "telemetry": "combined RF kappa 0.28±0.065 / acc 69.6%±2.4% (64.4-74.7%) > Twitter 0.25/65.6% > historical 0.239/58.9%; historical features improve both"
+      }
+    },
+    {
+      "primitive_id": "twitter_info_not_in_stats",
+      "name": "Twitter info NOT available in simple stats (combination beats each individual)",
+      "verbatim_quote": "information contained in Twitter is not available in simple statistics, since the combination of the two datasets improved the results beyond what could be achieved by each individual dataset",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Something clear from the results is that Twitter contains enough information to be useful for predicting Premier League outcomes, and that information contained in Twitter is not available in simple statistics, since combining the two datasets improved results beyond what each individual dataset achieved."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The non-redundant-social-info conclusion is literally GSE's orthogonal-signal evidence.",
+        "source_operator": "twitter_info_not_in_stats",
+        "telemetry": "Twitter useful for EPL prediction; info NOT in simple stats (combination beats each individual); orthogonal signal"
+      }
+    },
+    {
+      "primitive_id": "partial_season_limit",
+      "name": "Limitation: partial season not whole EPL; future work full season + cross-season transfer",
+      "verbatim_quote": "the experiment was not conducted on the whole English Premier League Season, but instead on a part of it",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A primary limitation is that the experiment was not conducted on the whole English Premier League season but on a part of it; future work would repeat on a complete season and use models built on one season to predict the next (cross-season transfer)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The partial-season scope is the same temporal-coverage limitation GSE flags on social studies.",
+        "source_operator": "partial_season_limit",
+        "telemetry": "partial EPL season not whole; future: complete season + train-one-season-predict-next (cross-season transfer)"
+      }
+    },
+    {
+      "primitive_id": "historical_data_difficulty",
+      "name": "Historical data hard to acquire; weaker historical result may be source/feature side-effect",
+      "verbatim_quote": "acquiring historical data proved to be extremely difficult and time-consuming",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Acquiring historical data proved extremely difficult and time-consuming; the weaker historical-dataset results could be a side-effect of the sources or features used, so the study is not a complete comparison between historical statistics and Twitter-mined features, though this does not limit the conclusion that Twitter contains useful predictive information."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The historical-data-quality caveat is the same baseline-fairness caution GSE applies to comparisons.",
+        "source_operator": "historical_data_difficulty",
+        "telemetry": "historical data difficult/time-consuming to acquire; weaker historical result may be source/feature side-effect; not complete comparison; Twitter-useful conclusion stands"
+      }
+    },
+    {
+      "primitive_id": "bigrams_over_unigrams",
+      "name": "Bigrams > unigrams: Twitter info more complex than unigrams capture (trigrams future)",
+      "verbatim_quote": "It was observed that bigrams perform better than unigrams, which indicates that the information contained in Twitter is more complex than simple unigrams can provide",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "It was observed that bigrams perform better than unigrams, indicating the information contained in Twitter is more complex than simple unigrams can provide; whether higher-order n-grams (trigrams etc.) could perform even better is left to future work."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The bigram-over-unigram complexity finding is the same phrase-level signal evidence GSE records.",
+        "source_operator": "bigrams_over_unigrams",
+        "telemetry": "bigrams > unigrams -> Twitter info more complex than unigrams; higher-order trigrams future work"
+      }
+    },
+    {
+      "primitive_id": "info_nature_unclear",
+      "name": "Open question: nature of predictive info (fan emotion / outcome discussion / injury news) not disambiguated",
+      "verbatim_quote": "what exactly was the nature of the information that helped in the predictions",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An interesting open question is what exactly was the nature of the information that helped the predictions; the introduction speculated different useful sources — fan emotion, discussions about the outcome, or news stories such as injuries not included in a statistical model — and future research could clarify which sources are used and to what extent."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The undisambiguated-signal-source caveat is literally GSE's feature-attribution honesty for social models.",
+        "source_operator": "info_nature_unclear",
+        "telemetry": "open question nature of predictive info; speculated fan emotion/outcome discussion/injury news (not in stats); future clarify which sources + extent; not disambiguated"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "twitterfootball2014_trace",
+      "think": "The retrocausal genealogy of this paper is the social-media-as-alternative-data turn in sports prediction. Stylianos Kampakis and Andreas Adamides of University College London, in an undated manuscript from around 2014, build on the demonstrated use of Twitter to predict elections, the stock market, box-office revenues and disease spread, and on the NFL-specific Twitter prediction of Sinha and colleagues and the TwitterPaul World Cup system, to ask whether the same signal works for association football, where no such study had yet been conducted. The work sits alongside the Bayesian historical-statistics lineage of Rue and Salvesen and Baio and Blangiardo, and tests whether fan-generated text carries information that those statistical models do not. The recursive theory of mind is the three-model incremental-value design. The authors construct a Twitter-only model, a historical-statistics-only model, and a combined model, so that the comparison answers not just whether Twitter predicts but whether it adds information beyond what historical statistics already supply. The Twitter pipeline retrieves about two million fan tweets through the open Streaming API over a partial Premier League season, assigns each tweet to exactly one team by hashtag, discards multi-team tweets, and filters cross-sport nickname collisions such as Southampton's Saints against the NFL and Tottenham's Spurs against the NBA; it then part-of-speech tags with the Carnegie Mellon ARK TwitterNLP tool, keeps content words and emoticons, stems with the Porter stemmer, and builds separate home and away bags of unigrams and bigrams ranked by chi-square and mutual information. Cross-layer veto adjudication is the classifier battery and its chance-corrected evaluation. Naive Bayes, random forests, logistic regression and support vector machines are compared under leave-one-out cross-validation, with the random forest averaged over one hundred seeds and ten to one thousand trees and its out-of-bag error used as the test estimate; performance is judged by accuracy and Cohen's kappa, the latter measuring improvement over random guessing. The Twitter random forest reaches a kappa of about zero point two five and accuracy of sixty-five point six percent, the historical Naive Bayes about zero point two four and fifty-eight point nine percent, and the combined random forest about zero point two eight and sixty-nine point six percent, with bigrams selected by chi-square and roughly eleven to fifteen features per side giving the best out-of-bag performance. The implementation invariants map directly onto GSE. The single-team hashtag assignment and the cross-sport nickname filtering are GSE's entity-resolution and collision vetoes for team-tagged social text; the separate home and away vocabularies are GSE's venue-role context split; the chi-square-plus-mutual-information ranking is GSE's supervised social-feature selection; the combined-beats-individuals result is GSE's orthogonal-signal evidence that fan text carries information absent from simple statistics; and the accuracy-versus-kappa divergence, where the Twitter forest may predict the majority class often, is GSE's caution against reading raw accuracy on imbalanced three-class outcomes. The empirical detail and the caveats together bound the claim. The corpus is exactly one million nine hundred seventy-five thousand six hundred fourteen tweets across twenty teams over the twenty-first of March to the eleventh of May 2014, with a pronounced volume skew — Liverpool at four hundred twenty-six thousand four hundred fifty-seven tweets against Fulham at fifteen thousand five hundred thirty — that reflects fan-base size and is a sampling caveat for per-team sentiment. The historical features mix rolling pre-game averages of goals, corners, shots on target, fouls and cards with static market value, squad age and honours, and the authors concede that acquiring historical data was difficult and that the weaker historical result may be a side-effect of the sources rather than a fair comparison. The related-work lineage and the feature engineering sharpen what the comparison actually tests. The authors position the study against Sinha's NFL Twitter n-grams, which matched or exceeded a statistics-only model, and against TwitterPaul's eighty-eight percent World Cup accuracy, while the historical side inherits the Bayesian generalized linear models of Rue and Salvesen and the hierarchical attack-defence goal models of Baio and Blangiardo; the historical feature set itself is modest, mixing six rolling pre-game averages and average squad age with static total market value, international-player count and a count of Premier League titles, runners-up finishes and doubles, so the historical baseline is a simple-statistics benchmark rather than a state-of-the-art Bayesian predictor. The bag-of-words is also venue-asymmetric by construction: a size-ten home bag plus a size-ten away bag means twenty total features at the x-axis value ten, and the same club carries different vocabulary at home than away, which is why the optimal eleven-to-fifteen features per side corresponds to roughly twenty-two to thirty total n-grams. The limitations close the account honestly. The experiment covers only part of a season, not a whole one, and cross-season transfer is left to future work; bigrams outperform unigrams, suggesting the information is more complex than single words capture, but whether trigrams help is untested; and crucially the nature of the predictive information — fan emotion, outcome discussion, or injury news absent from statistical models — is speculated but not disambiguated. The invariant for GSE is to treat Twitter-derived bag-of-words features as a complementary, venue-conditioned, entity-resolved signal layer whose incremental value over historical statistics is demonstrated by the combined model, while carrying the partial-season scope, the volume skew, the majority-class accuracy inflation, the historical-baseline fairness question, and the undisambiguated signal source as honest bounds on what the social features can claim.",
+      "retrocausal_genealogy": "Social-media-as-alternative-data turn in sports prediction. Stylianos Kampakis, Andreas Adamides (University College London); undated manuscript ~2014, 10 pages. Builds on Twitter predicting elections (Tumasjan 2010), stock market (Bollen 2011), box-office (Asur-Huberman 2010), disease (Paul-Dredze 2011); NFL Twitter (Sinha 2013 arXiv:1310.6998 n-grams match/exceed stats), TwitterPaul 2010 World Cup (UzZaman 2012 up to 88%). First soccer application. Alongside Bayesian historical lineage Rue-Salvesen 2000, Baio-Blangiardo 2010. Tests whether fan text adds info beyond historical stats. No DOI/arXiv for this manuscript itself.",
+      "theory_of_mind": "Three-model incremental design: Twitter-only / historical-only / combined (does Twitter add beyond stats). Twitter pipeline: ~2M fan tweets via open Streaming API, 21 March-11 May 2014 partial EPL season, exact 1975614 tweets/20 teams; single-team hashtag assignment, discard multi-team, filter cross-sport nickname collisions (Southampton Saints=NFL New Orleans, Tottenham Spurs=NBA San Antonio); CMU ARK TwitterNLP POS (keep Adj/Verb/Noun/Adv/Interjection/Emoticon/Possessive), Porter stemmer (Java), separate home/away unigram+bigram bags ranked by chi-square p-value + mutual information (1-35 features/side). Historical F1-6+F8 rolling pre-game averages (goals/corners/shots on target/fouls/yellow/red/squad age) + static market value/international players/EPL wins/runners-up/doubles. 3-class home/away/draw; input x=[x_home,x_away] (math garbled reconstructed).",
+      "cross_layer_veto": "Classifiers Naive Bayes/RF/Logistic regression/SVM (RBF/sigmoid/poly kernels); leave-one-out CV; RF 100 seeds 10-1000 trees, OOB error as test estimate; accuracy + Cohen's kappa (kappa=(p_o-p_e)/(1-p_e), 0=random/1=perfect, formula reconstructed). Results Table 2: Twitter-only RF kappa 0.25±0.093 (0.047-0.389)/acc 65.6%±4.33% (56.3-74.7); historical NB kappa 0.239±0.075/acc 58.9%±5.97%; combined RF kappa 0.28±0.065/acc 69.6%±2.4% (64.4-74.7). Best bigrams via chi-square, ~11-15 features/side then falls. Majority-class caveat: Twitter RF high accuracy at expense of misclassification (kappa close to NB). Volume skew Liverpool 426457/Man United 416767 vs Fulham 15530/Swansea 15668 (~27x). Combined beats individuals -> Twitter info NOT in simple stats (orthogonal). Limitations: partial season not whole (future full + cross-season transfer), historical data difficult to acquire (weaker result may be source side-effect, not fair comparison), bigrams>unigrams (trigrams untested), nature of info (fan emotion/outcome discussion/injury news) speculated NOT disambiguated. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A University College London study tests whether fan tweets predict English Premier League outcomes by building Twitter-only, historical-statistics-only, and combined classifiers over a partial 2014 season, resolving tweets to single teams by hashtag while filtering cross-sport nickname collisions, selecting home/away bag-of-words n-grams by chi-square and mutual information, and evaluating with accuracy and Cohen's kappa; the Twitter random forest reaches about 65.6% accuracy and kappa 0.25, the combined model about 69.6% and kappa 0.28, and because the combination beats each individual the authors conclude Twitter carries information absent from simple statistics, while honestly bounding the claim with the partial-season scope, the fan-volume skew, the majority-class accuracy inflation, and the undisambiguated nature of the predictive signal.",
+  "gsi_mapping": "GSI treats three-model incremental design (Twitter-only/historical-only/combined); Twitter 1975614 tweets/20 teams/21 March-11 May 2014 partial EPL via open Streaming API; single-team hashtag assignment + multi-team discard + cross-sport nickname-collision filter (Southampton Saints=NFL, Tottenham Spurs=NBA); CMU ARK TwitterNLP POS (Adj/Verb/Noun/Adv/Interjection/Emoticon/Possessive) + Porter stemmer + separate home/away unigram/bigram bags ranked chi-square p-value + mutual information (1-35/side); historical rolling pre-game averages (goals/corners/shots on target/fouls/yellow/red/squad age) + static market value/internationals/EPL honours; 3-class home/away/draw, x=[x_home,x_away] (garbled reconstructed); classifiers NB/RF/LR/SVM (RBF/sigmoid/poly), leave-one-out CV, RF 100 seeds 10-1000 trees OOB; accuracy + Cohen's kappa=(p_o-p_e)/(1-p_e) (reconstructed); Twitter RF kappa 0.25±0.093/acc 65.6%±4.33%, historical NB 0.239/58.9%, combined RF 0.28±0.065/69.6%±2.4%; best bigrams chi-square ~11-15/side then falls; majority-class accuracy inflation (kappa close to NB); volume skew Liverpool 426457/Fulham 15530 (~27x); combined beats individuals -> Twitter info not in stats; limitations partial season/historical-data difficulty (baseline fairness)/bigrams>unigrams (trigrams untested)/info nature (fan emotion/news/injuries) not disambiguated; mostly qualitative, input vector + kappa reconstructed.",
+  "gse_mapping": "GSE lifts the single-team hashtag assignment and cross-sport nickname-collision filtering as its entity-resolution and collision vetoes for team-tagged social text, the separate home/away bags-of-words as its venue-role-conditioned vocabulary, the chi-square-plus-mutual-information n-gram ranking as its supervised social-feature selection, the Twitter/historical/combined incremental design as its orthogonal-signal marginal-value test (combined beats individuals -> fan text carries info absent from simple statistics), the Cohen's-kappa chance-corrected evaluation as its better-than-random metric with the majority-class accuracy-inflation caution, and the rolling-versus-static historical feature split as its time-varying covariate discipline; treats the fan-volume skew as a per-team sentiment sampling caveat and carries the partial-season scope, the historical-baseline fairness question, the bigram-over-unigram complexity finding, and the undisambiguated predictive-signal nature (fan emotion versus outcome discussion versus injury news) as honest bounds; all outputs are social-text-derived outcome probabilities, never sportsbook lines."
+}

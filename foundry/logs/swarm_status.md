@@ -628,3 +628,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 06:40:22 | COMPLETE | 18166c7364bb19c7 | primitives=34 think_words=943
 - 2026-11-14 06:41:42 | CLAIMED | 3a610f0512401167 | worker=hermes-inline shard03 file=2026 - The life and death of football team runs survival of collective modes shapes L vy-like transport - S nchez et al.pdf
 - 2026-11-14 06:47:50 | COMPLETE | 3a610f0512401167 | primitives=40 think_words=852
+- 2026-11-14 06:48:51 | CLAIMED | 3e6cfe96736c9592 | worker=hermes-inline shard03 file=Using_Twitter_to_predict_football_outcom.pdf
+- 2026-11-14 06:53:12 | COMPLETE | 3e6cfe96736c9592 | primitives=33 think_words=881
