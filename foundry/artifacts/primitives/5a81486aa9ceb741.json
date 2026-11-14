@@ -1,0 +1,553 @@
+{
+ "book_id": "5a81486aa9ceb741",
+ "title": "Finding the Open Receiver: A Quantitative Geospatial Analysis of Quarterback Decision-Making",
+ "author": "Jeremy Hochstedler (Telemetry Sports & Massachusetts Institute of Technology)",
+ "year": 2016,
+ "source_pdf": "G:/My Drive/GSE-Research/sports-research-papers/2016 Find the Open Receiver QB Decision Making.pdf",
+ "source_note": "MIT Sloan Sports Analytics Conference 2016 Research Papers Competition, 10 pages, full read via pymupdf. Identity confirmed (Jeremy Hochstedler, Telemetry Sports & MIT). CATALOG DOMAIN MISMATCH: queue primary_domain='psych' but content is NFL football geospatial analytics; extracted under true domain football. PDF tab-delimited with soft-hyphen+U+2010 compounds; enhanced norm strips U+00AD and folds hyphen variants. Expected-payoff equation prints clean ASCII (used directly); Voronoi/openness/elusiveness reconstructed labeled. Data: NFL RFID (Zebra, since 2014) non-public, so video-captured coords of all 22 players at 3 Hz to 0.25 yd for 2014 Colts 231 base-offense pass plays (1st/2nd down, <15-pt differential, >5 min left in half, between 20s). Method: predictive Voronoi (project 2 frames=2/3 s at constant velocity), zone area (yd2) + zone integrity (projected nearest-defender distance) -> openness classes (wide-open >200yd2 or >8yd; open 100-200 or 4-8; defended 50-100 or 2-4; well-defended <50 or <2). Expected payoff = P(CMP|openness) x Expected Yards (max zone y, ideal play). Luck completion % by openness 71/70/58/52; decision percentile 80 ideal/50 preferred/20 neutral/<20 undesirable; Luck ideal+preferred 75.8% (ideal 40.5%, preferred 35.2%, undesirable 4.4%). Elusiveness = actual-expected yards (RB 4.14 > TE 1.53 > WR 1.04). Limitations: constant velocity (no acceleration), completion prob omits receiver depth from LOS (Goldsberry), 0.25yd/3Hz resolution. Better passers reduce losses + receiver concussions (2012-2015). No sportsbook lines used as model inputs.",
+ "domain": "football",
+ "tier": "A",
+ "shard": "A",
+ "worker": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "predictive_geometry",
+   "name": "Predictive tessellation: where a player will be, not where he stands",
+   "verbatim_quote": "the game relies on \"where a player will be\" not necessarily \"where he currently stands,\"",
+   "page": 2,
+   "latex": "\\text{zone}_i=\\mathrm{Voronoi}\\big(\\{x_j+v_j\\cdot\\Delta t\\}_j\\big),\\quad \\Delta t=\\tfrac{2}{3}\\text{ s}",
+   "symbol_and_unit_ledger": {
+    "x_j": "player j current position [yards]",
+    "v_j": "player j velocity [yards/s]",
+    "Delta t": "projection horizon (2 frames) [seconds]"
+   },
+   "assumptions": [
+    "Player velocity matters in addition to position, so the tessellation projects positions forward",
+    "The game is about where a player will be, not where he currently stands"
+   ],
+   "breakdown_regime": "The projection assumes constant velocity (no acceleration); it is a short-horizon (2/3 s) prediction, accurate only while velocity is roughly constant.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE predictive spatial geometry IS this velocity-projected tessellation: the engine values spatial control by where agents will be (projecting velocity forward) rather than where they stand, so openness reflects the future state the decision actually exploits. GSI: velocity-projected spatial-control valuation.",
+    "source_operator": "predictive_geometry",
+    "telemetry": "projected Voronoi zones; projection horizon; velocity-aware openness"
+   }
+  },
+  {
+   "primitive_id": "zone_size",
+   "name": "Zone size: projected Voronoi area a receiver owns",
+   "verbatim_quote": "the Voronoi Tessellation is performed after projecting each player's position forward two frames (2/3 of a second) and finding the respective zone area (yards2) for each player.",
+   "page": 3,
+   "latex": "A_i=\\text{area of receiver }i\\text{'s projected Voronoi cell}\\ [\\text{yards}^2]",
+   "symbol_and_unit_ledger": {
+    "A_i": "projected zone area for receiver i [yards^2]"
+   },
+   "assumptions": [
+    "Zone area is computed per eligible receiver per frame after the velocity projection",
+    "Larger zone area means more field the receiver owns"
+   ],
+   "breakdown_regime": "Zone size measures spatial ownership but not safety; a defender may lurk nearby, so size alone is insufficient and must be paired with integrity.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE spatial-ownership metric IS this zone area: the engine quantifies how much space an agent controls via its projected Voronoi cell area, the spatial-ownership measure that feeds openness. GSI: projected spatial-control area per agent.",
+    "source_operator": "zone_size",
+    "telemetry": "zone area distribution at QB release; per-frame per-receiver area"
+   }
+  },
+  {
+   "primitive_id": "zone_integrity",
+   "name": "Zone integrity: projected distance to nearest defender",
+   "verbatim_quote": "Zone integrity is measured as the projected distance to nearest defender from an eligible receiver.",
+   "page": 4,
+   "latex": "I_i=\\min_{d\\in\\text{defenders}}\\ \\big\\|x_i^{\\text{proj}}-x_d^{\\text{proj}}\\big\\|\\ [\\text{yards}]",
+   "symbol_and_unit_ledger": {
+    "I_i": "zone integrity (distance to nearest defender) [yards]",
+    "x_proj": "projected position [yards]"
+   },
+   "assumptions": [
+    "Integrity is the projected distance from the receiver to the nearest defender",
+    "A defender lurking nearby can break up the pass even if the zone is large"
+   ],
+   "breakdown_regime": "Integrity complements size: a large zone with a close defender is not truly open, so the two must be combined to classify openness.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE threat-proximity metric IS this zone integrity: the engine measures spatial safety as the distance to the nearest threat (defender), pairing it with ownership area so a large-but-guarded zone is not mistaken for open. GSI: nearest-threat distance as a safety metric.",
+    "source_operator": "zone_integrity",
+    "telemetry": "integrity (nearest-defender distance); size-integrity pairing"
+   }
+  },
+  {
+   "primitive_id": "openness_classification",
+   "name": "Openness classes from zone size and integrity thresholds",
+   "verbatim_quote": "Receiver openness is classified as: wide-open, open, defended, or well-defended.",
+   "page": 4,
+   "latex": "\\text{openness}=\\begin{cases}\\text{wide-open}&A>200\\text{ yd}^2\\ \\lor\\ I>8\\text{ yd}\\\\ \\text{open}&100<A\\le200\\ \\lor\\ 4<I\\le8\\\\ \\text{defended}&50<A\\le100\\ \\lor\\ 2<I\\le4\\\\ \\text{well-defended}&A\\le50\\ \\lor\\ I\\le2\\end{cases}",
+   "symbol_and_unit_ledger": {
+    "A": "zone area [yards^2]",
+    "I": "zone integrity [yards]",
+    "openness": "categorical openness class [4 levels]"
+   },
+   "assumptions": [
+    "Openness combines zone size and integrity into four classes via thresholds",
+    "Wide-open >200 yd2 or >8 yd; open 100-200 or 4-8; defended 50-100 or 2-4; well-defended <50 or <2"
+   ],
+   "breakdown_regime": "The thresholds are modeling choices; the OR-combination means either large area or high integrity can qualify a receiver, a simplification of the joint spatial state.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE openness discretization IS this classification: the engine discretizes the continuous spatial state (ownership area + threat distance) into actionable openness classes via thresholds, so the QB decision model consumes a categorical openness signal. GSI: threshold discretization of a joint spatial state.",
+    "source_operator": "openness_classification",
+    "telemetry": "openness class thresholds; completion % by class (71/70/58/52)"
+   }
+  },
+  {
+   "primitive_id": "completion_by_openness",
+   "name": "Completion percentage rises with openness",
+   "verbatim_quote": "Luck completed a higher percentage of passes to open and wide-open receivers than those who were defended or well-defended.",
+   "page": 4,
+   "latex": "P(\\text{CMP}\\mid\\text{openness}):\\ \\text{wide-open }71\\%,\\ \\text{open }70\\%,\\ \\text{defended }58\\%,\\ \\text{well-defended }52\\%",
+   "symbol_and_unit_ledger": {
+    "P(CMP|openness)": "completion probability given openness class [probability]"
+   },
+   "assumptions": [
+    "Completion percentage is higher for open/wide-open receivers (71/70%) than defended/well-defended (58/52%)",
+    "Openness is a predictive signal of completion probability"
+   ],
+   "breakdown_regime": "The completion-by-openness table is empirical (Luck 2014, 231 plays); it is the calibration linking the spatial openness signal to the outcome probability used in expected payoff.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE openness-to-probability calibration IS this completion table: the engine calibrates the spatial openness signal to an outcome probability (completion %), so the geometric measure is grounded in observed success rates rather than assumed. GSI: empirical calibration of a spatial signal to outcome probability.",
+    "source_operator": "completion_by_openness",
+    "telemetry": "completion % by openness class; sample 231 plays; calibration curve"
+   }
+  },
+  {
+   "primitive_id": "expected_payoff_equation",
+   "name": "Expected payoff = completion probability times expected yards",
+   "verbatim_quote": "P(CMP% for openness factor) * Expected Yards = Expected Payoff Yds",
+   "page": 7,
+   "latex": "\\text{Expected Payoff}_i=P(\\text{CMP}\\mid\\text{openness}_i)\\times\\text{Expected Yards}_i\\ [\\text{yards}]",
+   "symbol_and_unit_ledger": {
+    "P(CMP|openness)": "completion probability for the openness class [probability]",
+    "Expected Yards": "expected gain if targeted [yards]",
+    "Expected Payoff": "expected yardage payoff of targeting receiver i [yards]"
+   },
+   "assumptions": [
+    "Expected payoff multiplies the completion probability for the openness class by the expected yards",
+    "This is the per-option expected value the QB decision is graded against"
+   ],
+   "breakdown_regime": "The expected payoff is a two-factor product (probability x magnitude), the exact expected-value structure of a decision under uncertainty; it ignores receiver distance from LOS (a stated limitation).",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE per-option expected value IS this expected-payoff equation: the engine values each target option as P(success|state) times expected magnitude, the probability-times-payoff expected-value core that grades the QB's choice against all available options. GSI: probability-times-magnitude expected value per option.",
+    "source_operator": "expected_payoff_equation",
+    "telemetry": "expected payoff per option; probability x yards product; target percentile"
+   }
+  },
+  {
+   "primitive_id": "expected_gain_maxy",
+   "name": "Expected gain: furthest downfield point of the predicted zone",
+   "verbatim_quote": "expected yardage is also derived by observing the maximum y-value of that receiver's predicted zone.",
+   "page": 4,
+   "latex": "\\text{Expected Yards}_i=\\max_{p\\in\\text{zone}_i}\\ y(p)\\ [\\text{yards downfield}]",
+   "symbol_and_unit_ledger": {
+    "y(p)": "downfield coordinate of point p in the zone [yards]",
+    "Expected Yards": "maximum downfield gain in the predicted zone [yards]"
+   },
+   "assumptions": [
+    "Expected gain is the maximum y-value (furthest downfield point) of the receiver's predicted zone",
+    "It assumes an ideal throw, catch, and tackle (a theoretical pure play)"
+   ],
+   "breakdown_regime": "The ideal-play assumption means expected gain is an upper bound realized only with perfect execution; actual gain deviates via QB/receiver/defender actions (elusiveness).",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE ideal-play expected magnitude IS this max-y gain: the engine estimates the expected magnitude of an option as the best downfield point of the controlled zone under ideal execution, an upper-bound magnitude that execution quality then modulates. GSI: ideal-execution upper-bound magnitude per option.",
+    "source_operator": "expected_gain_maxy",
+    "telemetry": "expected gain (max zone y); ideal-play assumption; Wayne +26 vs actual 21"
+   }
+  },
+  {
+   "primitive_id": "elusiveness_definition",
+   "name": "Elusiveness: actual yards gained beyond expectation",
+   "verbatim_quote": "the additional yardage gained from the expected yardage defines a player's \"elusiveness.\"",
+   "page": 6,
+   "latex": "\\text{Elusiveness}_i=\\text{Actual Yards}_i-\\text{Expected Yards}_i\\ [\\text{yards}]",
+   "symbol_and_unit_ledger": {
+    "Actual Yards": "realized gain [yards]",
+    "Expected Yards": "predicted ideal-play gain [yards]",
+    "Elusiveness": "yards gained above expectation [yards]"
+   },
+   "assumptions": [
+    "Elusiveness is the difference between actual and expected yardage",
+    "More yards gained than expected means a more elusive player"
+   ],
+   "breakdown_regime": "Elusiveness isolates the player's post-catch contribution (broken tackles) from the spatial expectation; it is a residual that credits the receiver beyond the geometry.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE actual-vs-expected residual IS this elusiveness: the engine measures an agent's contribution as the residual of actual outcome over the spatially-expected outcome, isolating skill (broken tackles) from the opportunity the geometry created. GSI: outcome-over-expectation residual as a skill measure.",
+    "source_operator": "elusiveness_definition",
+    "telemetry": "elusiveness = actual - expected yards; per-receiver residual"
+   }
+  },
+  {
+   "primitive_id": "position_elusiveness",
+   "name": "Running backs are more elusive than tight ends and receivers",
+   "verbatim_quote": "Notice how running backs (RB) are more elusive than tight ends (TE) and wide receivers (WR).",
+   "page": 6,
+   "latex": "\\overline{\\text{Elusiveness}}_{\\text{RB}}=4.14>\\overline{\\text{Elusiveness}}_{\\text{TE}}=1.53>\\overline{\\text{Elusiveness}}_{\\text{WR}}=1.04\\ [\\text{yards/catch}]",
+   "symbol_and_unit_ledger": {
+    "Elusiveness_RB/TE/WR": "mean yards above expectation by position [yards/catch]"
+   },
+   "assumptions": [
+    "RBs average 4.14 yards above expectation, TEs 1.53, WRs 1.04",
+    "Position systematically modulates elusiveness (RBs break more tackles)"
+   ],
+   "breakdown_regime": "The position effect means elusiveness must be compared within position or position-adjusted; raw cross-position comparison confounds role with skill.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE role-adjusted skill residual IS this position elusiveness: the engine recognizes that the actual-vs-expected residual is role-dependent (RBs more elusive), so skill comparison must be position-adjusted to avoid confounding role with ability. GSI: role-conditional adjustment of a skill residual.",
+    "source_operator": "position_elusiveness",
+    "telemetry": "mean elusiveness by position; RB/TE/WR ordering; role adjustment"
+   }
+  },
+  {
+   "primitive_id": "decision_percentile_grading",
+   "name": "Target decisions graded by expected-payoff percentile",
+   "verbatim_quote": "A percentile of 80 was classified as an ideal target decision.",
+   "page": 7,
+   "latex": "\\text{decision grade}=\\begin{cases}\\text{ideal}&\\text{percentile}\\ge80\\\\ \\text{preferred}&\\text{percentile}\\ge50\\\\ \\text{neutral}&\\text{percentile}\\ge20\\\\ \\text{undesirable}&\\text{percentile}<20\\end{cases}",
+   "symbol_and_unit_ledger": {
+    "percentile": "rank of the chosen target's expected payoff among all options [percentile]"
+   },
+   "assumptions": [
+    "The chosen target's expected payoff is ranked against all available options",
+    "80th percentile = ideal, 50th = preferred, 20th = neutral, below 20 = undesirable"
+   ],
+   "breakdown_regime": "The percentile grades the decision relative to the option set, not the absolute outcome; a good decision can still produce a bad outcome (and vice versa), the process-over-outcome separation.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE decision-quality percentile IS this target grading: the engine grades a decision by the percentile of its expected value among the available options, separating decision quality from realized outcome, the option-relative decision-grading discipline. GSI: option-set-relative percentile grading of a choice.",
+    "source_operator": "decision_percentile_grading",
+    "telemetry": "target payoff percentile; ideal/preferred/neutral/undesirable; Luck 75.8% ideal+preferred"
+   }
+  },
+  {
+   "primitive_id": "luck_decision_quality",
+   "name": "Luck made ideal or preferred decisions on 75.8% of plays",
+   "verbatim_quote": "QB Andrew Luck made an ideal or preferred decision on more than 75% of the pass plays analyzed.",
+   "page": 7,
+   "latex": "\\Pr(\\text{ideal}\\cup\\text{preferred})=40.5\\%+35.2\\%=75.8\\%\\ \\text{(2014 base offense)}",
+   "symbol_and_unit_ledger": {
+    "Pr(ideal or preferred)": "fraction of plays with a top-half decision [fraction]"
+   },
+   "assumptions": [
+    "Luck chose an ideal (40.5%) or preferred (35.2%) target on 75.8% of analyzed plays",
+    "Only 4.4% of decisions were undesirable (below 20th percentile)"
+   ],
+   "breakdown_regime": "The decision-quality distribution is a process metric independent of completion luck; it grades the QB's choice quality, not the result, the process-over-outcome evaluation.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE decision-quality distribution IS this Luck grading: the engine summarizes an agent's decision quality as the distribution of option-relative grades (ideal/preferred/neutral/undesirable), evaluating the choice process independent of outcome luck. GSI: distribution of option-relative decision grades.",
+    "source_operator": "luck_decision_quality",
+    "telemetry": "decision-grade distribution; 75.8% ideal+preferred; 4.4% undesirable"
+   }
+  },
+  {
+   "primitive_id": "utility_definition",
+   "name": "Utility defined as completions and yards gained",
+   "verbatim_quote": "The success outcomes that this analysis considers are completions and yards gained.",
+   "page": 2,
+   "latex": "\\text{utility}=f(\\text{completions},\\ \\text{yards gained})",
+   "symbol_and_unit_ledger": {
+    "completions": "successful catches [count]",
+    "yards gained": "yardage advanced [yards]"
+   },
+   "assumptions": [
+    "Utility for decision evaluation is defined over completions and yards gained",
+    "These are the success outcomes the expected-payoff model targets"
+   ],
+   "breakdown_regime": "The utility definition is a modeling choice; it excludes touchdowns/turnovers explicitly here, focusing on the completion-yardage margin appropriate to base downs.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE utility specification IS this outcome definition: the engine specifies the utility (success outcomes) a decision model optimizes, here completions and yards, making the objective explicit rather than implicit. GSI: explicit utility/outcome specification for a decision model.",
+    "source_operator": "utility_definition",
+    "telemetry": "utility outcomes; completion-yardage objective"
+   }
+  },
+  {
+   "primitive_id": "base_offense_filter",
+   "name": "Base-offense filter isolates stable strategic situations",
+   "verbatim_quote": "the \"base offense\" is defined as 1st & 2nd down, less than 15-point differential, greater than five minutes remaining in a half, and between the 20 yard lines.",
+   "page": 2,
+   "latex": "\\text{base offense}=\\{1\\text{st}/2\\text{nd down},\\ |\\Delta\\text{score}|<15,\\ t_{\\text{half}}>5\\text{ min},\\ 20<\\text{field pos}<80\\}",
+   "symbol_and_unit_ledger": {
+    "down": "1st or 2nd [ordinal]",
+    "score differential": "point margin [points]",
+    "time remaining": "time left in half [minutes]",
+    "field position": "between the 20-yard lines [yards]"
+   },
+   "assumptions": [
+    "Base offense filters to 1st/2nd down, <15-point margin, >5 min left in half, between the 20s",
+    "This removes end-of-half and red-zone situations where strategy changes"
+   ],
+   "breakdown_regime": "The filter isolates situations where the marginal benefit of yardage is direct and strategy is stable; applying the model outside this regime (3rd/4th down, red zone) would be a category error.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE situational-regime filtering IS this base-offense filter: the engine restricts a decision model to the situational regime where its assumptions hold (stable strategy, direct yardage benefit), excluding end-of-half/red-zone/late-down regimes that change the objective. GSI: situational-regime gating of a decision model.",
+    "source_operator": "base_offense_filter",
+    "telemetry": "base-offense filter criteria; regime exclusion (3rd/4th, red zone, end-half)"
+   }
+  },
+  {
+   "primitive_id": "firstdown_marginal_utility",
+   "name": "1st/2nd down chosen because yardage benefit is direct",
+   "verbatim_quote": "this dataset focuses on 1st and 2nd down plays since the marginal team benefit of additional yardage is more direct, which doesn't hold true on 3rd and 4th downs.",
+   "page": 2,
+   "latex": "\\frac{\\partial\\,\\text{team benefit}}{\\partial\\,\\text{yards}}\\ \\text{direct on 1st/2nd};\\quad \\text{threshold (first down) on 3rd/4th}",
+   "symbol_and_unit_ledger": {
+    "marginal benefit": "change in team benefit per additional yard [benefit/yard]"
+   },
+   "assumptions": [
+    "On 1st/2nd down the marginal benefit of additional yardage is more direct",
+    "On 3rd/4th down the benefit is concentrated at the first-down threshold, not linear in yards"
+   ],
+   "breakdown_regime": "The down-dependent utility shape means a linear yards objective is only valid on early downs; the engine must use a threshold utility on late downs, the situational-utility discipline.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE down-dependent utility shape IS this marginal-benefit distinction: the engine recognizes the utility of yardage is linear-ish on early downs but threshold-shaped (first-down conversion) on late downs, so the objective must be down-conditional. GSI: situation-conditional utility shape (linear vs threshold).",
+    "source_operator": "firstdown_marginal_utility",
+    "telemetry": "marginal yardage benefit by down; linear vs threshold utility"
+   }
+  },
+  {
+   "primitive_id": "qb_target_ownership",
+   "name": "The target decision ultimately belongs to the QB",
+   "verbatim_quote": "the decision of which receiver to target ultimately comes down to the QB.",
+   "page": 6,
+   "latex": "a_{\\text{target}}=\\arg\\max_{i\\in\\text{eligible}}\\ \\text{Expected Payoff}_i\\quad\\text{(QB's choice)}",
+   "symbol_and_unit_ledger": {
+    "a_target": "QB's chosen target [choice]",
+    "eligible": "non-blocking skill players [set]"
+   },
+   "assumptions": [
+    "Although plays designate primary/secondary/tertiary targets, the QB makes the final target choice",
+    "The QB can check down options and decide whom to target"
+   ],
+   "breakdown_regime": "The QB is the decision agent whose choice is graded against the option set; the engine models the QB as the allocator selecting among spatially-valued options.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE decision-agent allocation IS this QB target ownership: the engine models the QB as the allocating agent who selects among spatially-valued receiver options, grading the choice against the available set, the agent-as-allocator framing. GSI: allocating agent selecting among valued options.",
+    "source_operator": "qb_target_ownership",
+    "telemetry": "QB target choice; option set; check-down progression"
+   }
+  },
+  {
+   "primitive_id": "better_passers_safety",
+   "name": "Better passers reduce team losses and receiver concussions",
+   "verbatim_quote": "better passers reduce team losses and receiver concussions.",
+   "page": 1,
+   "latex": "\\uparrow\\text{Passer Rating}\\Rightarrow \\downarrow\\text{Team Losses}\\ \\land\\ \\downarrow\\text{WR/TE Concussions}",
+   "symbol_and_unit_ledger": {
+    "Passer Rating": "QB passer rating [rating]",
+    "Team Losses": "losses per year [count/year]",
+    "Concussions": "WR/TE concussions [count]"
+   },
+   "assumptions": [
+    "Better passing (finding the open receiver) is associated with fewer team losses and fewer receiver concussions",
+    "Good decisions put receivers in safer, more successful positions"
+   ],
+   "breakdown_regime": "The passer-rating/concussion link is an association from 2012-2015 injury data; it suggests decision quality has a safety externality, not just a yardage one.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE decision-quality safety externality IS this passer-safety link: the engine recognizes that good decisions (finding the open receiver) carry a safety externality (fewer concussions) beyond the primary objective, so decision quality has multi-objective value. GSI: safety externality of decision quality.",
+    "source_operator": "better_passers_safety",
+    "telemetry": "passer rating vs losses/concussions; safety externality; 2012-2015"
+   }
+  },
+  {
+   "primitive_id": "constant_velocity_limitation",
+   "name": "Limitation: constant velocity, no acceleration profiles",
+   "verbatim_quote": "This research projects instantaneous velocity as a constant (no acceleration)",
+   "page": 7,
+   "latex": "x(t+\\Delta t)=x(t)+v(t)\\Delta t\\quad\\text{(no }a\\text{ term, no individualized acceleration)}",
+   "symbol_and_unit_ledger": {
+    "v(t)": "instantaneous velocity held constant [yards/s]",
+    "a": "acceleration (omitted) [yards/s^2]"
+   },
+   "assumptions": [
+    "The projection assumes constant velocity with no acceleration",
+    "All players are assumed to perform at current velocities (no individualized acceleration profiles)"
+   ],
+   "breakdown_regime": "The constant-velocity assumption breaks for cutting/accelerating routes; the engine must recognize the projection is a short-horizon approximation that degrades when agents change speed/direction.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE projection-model limitation IS this constant-velocity caveat: the engine recognizes a velocity-projection model omits acceleration and individualized profiles, so its spatial predictions degrade for cutting/accelerating agents and must be bounded to short horizons. GSI: constant-velocity projection limit and acceleration omission.",
+    "source_operator": "constant_velocity_limitation",
+    "telemetry": "constant-velocity assumption; acceleration omission; horizon bound"
+   }
+  },
+  {
+   "primitive_id": "distance_limitation",
+   "name": "Limitation: completion probability ignores receiver distance from LOS",
+   "verbatim_quote": "does not account for receiver distance from line of scrimmage in the completion probability equation",
+   "page": 7,
+   "latex": "P(\\text{CMP}\\mid\\text{openness})\\ \\text{omits distance-from-LOS}\\quad\\text{(Goldsberry: depth matters)}",
+   "symbol_and_unit_ledger": {
+    "distance from LOS": "receiver depth beyond line of scrimmage [yards]"
+   },
+   "assumptions": [
+    "The completion-probability equation does not account for receiver distance from the line of scrimmage",
+    "Deeper throws are harder to complete (Goldsberry Pass Atlas), so openness-only probability is incomplete"
+   ],
+   "breakdown_regime": "Omitting throw depth means the completion probability is mis-calibrated for deep vs short routes; the engine must include depth as a covariate, the omitted-variable calibration caveat.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE omitted-covariate calibration IS this distance limitation: the engine recognizes a probability model that omits a relevant covariate (throw depth) is mis-calibrated, so it must include the missing factor rather than trust the openness-only probability. GSI: omitted-covariate detection in a probability calibration.",
+    "source_operator": "distance_limitation",
+    "telemetry": "depth omission; completion-probability mis-calibration; Goldsberry reference"
+   }
+  },
+  {
+   "primitive_id": "data_resolution_limitation",
+   "name": "Limitation: video capture only 0.25 yards at 3 Hz",
+   "verbatim_quote": "it is only accurate to within 0.25 yards at 3 Hz.",
+   "page": 7,
+   "latex": "\\text{resolution}=0.25\\text{ yd spatial},\\ 3\\text{ Hz temporal}\\quad\\text{(video; RFID finer)}",
+   "symbol_and_unit_ledger": {
+    "spatial resolution": "0.25 yards [yards]",
+    "temporal resolution": "3 frames/second [Hz]"
+   },
+   "assumptions": [
+    "The video-captured coordinates are accurate to 0.25 yards at 3 Hz",
+    "RFID tracking would provide more accurate, more frequent data"
+   ],
+   "breakdown_regime": "The coarse resolution limits the precision of zone geometry and velocity estimation; the engine must treat the spatial signal as noisy at this resolution and prefer finer tracking when available.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE data-resolution caveat IS this 0.25yd/3Hz limit: the engine recognizes the spatial signal's precision is bounded by capture resolution, so geometry and velocity estimates carry measurement noise that finer tracking would reduce. GSI: measurement-resolution bound on a spatial signal.",
+    "source_operator": "data_resolution_limitation",
+    "telemetry": "0.25 yd / 3 Hz resolution; RFID improvement; measurement noise"
+   }
+  },
+  {
+   "primitive_id": "good_decision_good_outcome",
+   "name": "Good decision and good outcome are separable (Appendix play)",
+   "verbatim_quote": "Luck threw to a wide-open Wayne (good decision) for a reception and gain of 21 yards (good outcome).",
+   "page": 10,
+   "latex": "\\text{decision quality}\\perp\\!\\!\\!\\!\\!\\diagup\\ \\text{outcome};\\quad \\text{good decision}\\ \\land\\ \\text{good outcome (this play)}",
+   "symbol_and_unit_ledger": {
+    "decision quality": "openness/percentile of the target choice [grade]",
+    "outcome": "reception and yards [result]"
+   },
+   "assumptions": [
+    "The Appendix labels the decision (threw to wide-open Wayne) and the outcome (21-yard reception) separately",
+    "A good decision can be paired with a good or bad outcome; they are distinct evaluations"
+   ],
+   "breakdown_regime": "Separating decision from outcome is the process-over-outcome principle in action: the engine grades the choice (wide-open target) independently of the result (completion/yards).",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE decision-outcome separation IS this Appendix labeling: the engine evaluates the decision (was the target open/high-percentile) separately from the outcome (completion/yards), so a good process is credited even when the result is noisy, the process-over-outcome discipline. GSI: independent evaluation of decision quality and realized outcome.",
+    "source_operator": "good_decision_good_outcome",
+    "telemetry": "decision grade vs outcome; wide-open target; 21-yard result"
+   }
+  },
+  {
+   "primitive_id": "rfid_data_access",
+   "name": "RFID tracking data is not public (video proxy used)",
+   "verbatim_quote": "NFL RFID data is not publically available for analysis at this time.",
+   "page": 2,
+   "latex": "\\text{RFID (Zebra, since 2014)}\\ \\text{non-public}\\Rightarrow \\text{video-captured proxy coordinates}",
+   "symbol_and_unit_ledger": {
+    "RFID": "radio-frequency identification player tracking [data source]",
+    "video proxy": "coordinates captured from game video [data source]"
+   },
+   "assumptions": [
+    "NFL RFID tracking (Zebra, since 2014) is not publicly available",
+    "The authors captured spatial coordinates from game video as a proxy"
+   ],
+   "breakdown_regime": "The data-access constraint forces a lower-resolution proxy; the engine must recognize when a signal is a proxy for a richer unavailable source and account for the resolution gap.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE proxy-data-source discipline IS this RFID-access constraint: the engine recognizes when a spatial signal is a lower-resolution proxy for a richer unavailable source (RFID), and accounts for the access-driven resolution gap rather than treating the proxy as the full signal. GSI: proxy-source identification and resolution-gap accounting.",
+    "source_operator": "rfid_data_access",
+    "telemetry": "RFID non-public; video proxy; access-driven resolution gap"
+   }
+  },
+  {
+   "primitive_id": "nfl_analytics_lag",
+   "name": "NFL analytics lags other sports; geospatial tracking is the opportunity",
+   "verbatim_quote": "The NFL and American football have lagged behind other sports when it comes to analytical player and team analysis",
+   "page": 8,
+   "latex": "\\text{NFL analytics maturity}<\\text{other sports};\\quad \\text{geospatial tracking}\\Rightarrow \\text{opportunity}",
+   "symbol_and_unit_ledger": {
+    "analytics maturity": "degree of analytical player/team analysis [ordinal]"
+   },
+   "assumptions": [
+    "NFL analytical player/team analysis has lagged other sports",
+    "Geospatial tracking opens significant opportunities as data is analyzed privately and publicly"
+   ],
+   "breakdown_regime": "The lag is the research motivation; the engine treats the geospatial-decision layer as a frontier where football reasoning can advance beyond terminal-event metrics.",
+   "domain": "football",
+   "confidence": 0.9,
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE frontier-opportunity framing IS this NFL-lag observation: the engine identifies geospatial decision analysis as a frontier where football reasoning lags other sports, motivating the spatial-decision layer as advance beyond terminal-event metrics. GSI: frontier identification where a domain's analytics lags.",
+    "source_operator": "nfl_analytics_lag",
+    "telemetry": "NFL analytics lag; geospatial opportunity; frontier motivation"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "hochstedler2016_open_receiver_qb",
+   "think": "This inline cycle extracts Jeremy Hochstedler's 2016 MIT Sloan Research Papers Competition entry, Finding the Open Receiver: A Quantitative Geospatial Analysis of Quarterback Decision-Making, a ten-page paper from Telemetry Sports and MIT that adds a velocity-aware spatial-decision layer to the Foundry's football stack and maps almost directly onto the GSE engine's own quarterback-reasoning machinery. Two provenance notes are required: the corpus catalog tags the primary domain as psych but the content is unambiguously NFL football geospatial analytics, so it is extracted under its true domain and the mismatch recorded; and the PDF is tab-delimited with soft-hyphen-plus-U+2010 compound words, so the normalizer strips the soft hyphen and folds the hyphen variants, while the expected-payoff equation prints in clean ASCII and is used directly and the Voronoi, openness, and elusiveness definitions are reconstructed as labeled LaTeX. Twenty-two primitives are extracted, each with a verified verbatim quote, page anchor, symbol-and-unit ledger, assumptions, breakdown regime, and a Layer-2 mapping with telemetry. No sportsbook line is used as a model input.\n\nThe retrocausal genealogy runs from the traditional Voronoi tessellation used to quantify NBA rebounding through the Zebra RFID tracking era into this video-captured geospatial application. The load-bearing insight is that the game relies on where a player will be, not where he currently stands, so the tessellation projects every player's position forward two frames, two-thirds of a second, at constant velocity before computing each receiver's zone area in square yards. Because NFL RFID data is not public, the authors captured all twenty-two players' coordinates from game video at three frames per second to the nearest quarter yard for the 2014 Indianapolis Colts' 231 base-offense pass plays, where base offense means first and second down, under a fifteen-point margin, more than five minutes left in the half, and between the twenty-yard lines, a filter that removes the end-of-half and red-zone situations where strategy changes. Zone size measures how much field a receiver owns, but a defender may lurk nearby, so zone integrity, the projected distance to the nearest defender, is paired with it, and the two are combined into four openness classes, wide-open, open, defended, and well-defended, via explicit area and distance thresholds.\n\nThe recursive theory of mind models the quarterback as an allocating agent who checks down his options and chooses a target, and the analyst as a reasoner who values each option by its expected payoff and grades the choice against the option set rather than the result. The expected payoff is the completion probability for the openness class times the expected yards, where expected yards is the maximum downfield point of the receiver's predicted zone under an ideal throw, catch, and tackle, and the completion probability is calibrated empirically from Luck's 2014 completion percentages by openness, 71 percent wide-open down to 52 percent well-defended. The chosen target's expected payoff is ranked as a percentile among all options, with the eightieth percentile graded ideal, the fiftieth preferred, the twentieth neutral, and below twenty undesirable, and Luck made an ideal or preferred decision on 75.8 percent of plays. The deepest principle is the separation of decision from outcome, illustrated in the Appendix where Luck throwing to a wide-open Wayne is labeled a good decision and the 21-yard reception a good outcome, two distinct evaluations, so a good process is credited even when the result is noisy. Elusiveness, the actual yards minus the expected yards, then isolates the receiver's post-catch contribution from the spatial opportunity, and it is role-dependent, running backs averaging 4.14 yards above expectation against 1.53 for tight ends and 1.04 for receivers.\n\nThe cross-layer veto adjudication is where this paper earns its place beside the accounting, regression, network, deterrence, decision-EV, EPV, and risk layers. The first veto is the predictive-geometry requirement: spatial control must be valued by where agents will be, projecting velocity forward, not where they stand, so openness reflects the future state the decision exploits. The second veto is the size-integrity pairing: a large zone with a close defender is not open, so ownership area must be paired with nearest-threat distance before classifying openness. The third veto is the empirical-calibration requirement: the openness signal is grounded in observed completion percentages, not assumed, and the expected payoff is the probability-times-magnitude product that grades the choice. The fourth veto is the option-relative decision grading and process-over-outcome separation: the decision is graded by its expected-payoff percentile among the options, independently of the realized outcome. The fifth veto is the situational-regime and limitation discipline: the model is gated to base offense where the yardage utility is direct rather than threshold-shaped, and it carries explicit limits, constant velocity with no acceleration profiles, completion probability that omits receiver depth from the line of scrimmage, and a quarter-yard-at-three-hertz resolution that finer RFID would improve. The better-passer safety link adds a multi-objective externality, good decisions reduce both losses and receiver concussions.\n\nSeveral implementation invariants complete the layer and push the reasoning past the minimum. The down-dependent utility shape is load-bearing, because on first and second down the marginal team benefit of additional yardage is direct, while on third and fourth down it is concentrated at the first-down threshold, so a linear yards objective is only valid on early downs and the engine must switch to a threshold utility on late downs. The ideal-play assumption makes expected gain an upper bound realized only with perfect execution, illustrated by Wayne's expected 26 yards becoming an actual 21 when Luck slightly underthrows and flattens the route, and the elusiveness residual credits the receiver beyond the geometry while requiring position adjustment to avoid confounding role with skill. The openness thresholds are modeling choices combined with an OR, so either large area or high integrity can qualify a receiver, a simplification of the joint spatial state. The data-access constraint forces a video proxy for the richer non-public RFID source, and the engine must account for the access-driven resolution gap rather than treat the proxy as the full signal. These invariants ground the engine's velocity-projected spatial geometry, size-integrity openness, empirically calibrated expected payoff, option-relative decision grading, down-conditional utility, role-adjusted skill residuals, and resolution-aware proxy discipline, completing a sovereign geospatial quarterback-decision layer that sits beside the EPV capstone and connects directly to the engine's snap-by-snap spatial reasoning, all grounded in clean verbatim prose with honestly labeled reconstructions.",
+   "retrocausal_genealogy": "The genealogy runs from traditional Voronoi tessellation (NBA rebounding, Maheswaran) through the Zebra RFID era into this video-captured geospatial application. The load-bearing insight: the game relies on where a player will be, not where he stands, so the tessellation projects positions forward 2 frames (2/3 s) at constant velocity, computing zone area (yd2). RFID is non-public, so coordinates were captured from video at 3 Hz to 0.25 yd for 2014 Colts 231 base-offense pass plays (1st/2nd down, <15-pt margin, >5 min left, between 20s). Zone size (ownership) is paired with zone integrity (projected distance to nearest defender) into four openness classes (wide-open/open/defended/well-defended) via area+distance thresholds.",
+   "theory_of_mind": "The QB is an allocating agent checking down options and choosing a target; the analyst values each option by expected payoff and grades the choice against the option set, not the result. Expected payoff = P(CMP|openness) x Expected Yards, where expected yards is the max downfield point of the predicted zone under ideal throw/catch/tackle, and P(CMP) is calibrated from Luck's completion % by openness (71/70/58/52). The target's payoff percentile grades the decision (80 ideal, 50 preferred, 20 neutral, <20 undesirable); Luck ideal+preferred on 75.8%. Decision and outcome are separated (Appendix: wide-open Wayne = good decision, 21-yd reception = good outcome). Elusiveness = actual - expected yards isolates post-catch skill, role-dependent (RB 4.14 > TE 1.53 > WR 1.04).",
+   "cross_layer_veto": "Five vetoes adjudicate beside the accounting/regression/network/deterrence/decision-EV/EPV/risk layers. Predictive geometry: value spatial control by where agents will be (velocity projection), not where they stand. Size-integrity pairing: a large zone with a close defender is not open, pair ownership area with nearest-threat distance. Empirical calibration: ground openness in observed completion %, expected payoff = probability x magnitude. Option-relative grading and process-over-outcome: grade by expected-payoff percentile among options, independent of result. Situational-regime and limitation discipline: gate to base offense (direct yardage utility vs threshold on late downs), and respect constant-velocity/no-acceleration, omitted receiver-depth, and 0.25yd/3Hz resolution limits. Better-passer safety link adds a multi-objective externality (fewer losses and concussions)."
+  }
+ ],
+ "universal_lens": "Hochstedler 2016 contributes the velocity-aware geospatial quarterback-decision layer to the Foundry football stack: predictive Voronoi tessellation (project positions 2/3 s forward at constant velocity) yields zone size (ownership area) paired with zone integrity (nearest-defender distance) into openness classes, calibrated to completion probability, and combined into expected payoff = P(CMP|openness) x Expected Yards. Decisions are graded by the target's expected-payoff percentile among options (ideal/preferred/neutral/undesirable), separated from outcome; elusiveness = actual - expected yards isolates post-catch skill. Its load-bearing invariants are predictive geometry, size-integrity pairing, empirical probability calibration, option-relative decision grading, process-over-outcome separation, down-conditional utility, role-adjusted residuals, and resolution-aware proxy discipline.",
+ "gsi_mapping": "For GSI these primitives are the general velocity-projected spatial-decision layer: value spatial control by where agents will be (project velocity), pair ownership area with nearest-threat distance, discretize the joint spatial state into actionable classes, calibrate the spatial signal to outcome probability empirically, value each option as probability times magnitude, grade the chosen option by its percentile among the option set independent of outcome, isolate skill as the actual-over-expected residual with role adjustment, gate the model to the situational regime where its utility shape holds, and respect projection/resolution/omitted-covariate limits. The decision-outcome separation keeps process evaluation honest.",
+ "gse_mapping": "For GSE this maps almost one-to-one onto the engine's quarterback spatial reasoning: predictive Voronoi IS the velocity-projected openness geometry the engine computes per snap; zone size + integrity IS the ownership-and-threat openness signal; openness classes IS the discretized coverage state; expected payoff = P(CMP|openness) x Expected Yards IS the per-target expected value the snap-by-snap JEV simulation grades; the target percentile IS option-relative decision grading; decision-outcome separation IS process-over-outcome credit; elusiveness IS the actual-vs-expected skill residual; the base-offense filter IS situational-regime gating; down-conditional utility IS the early-down-linear vs late-down-threshold objective; and the constant-velocity/depth/resolution limits IS the projection-calibration discipline. Equations are clean ASCII or labeled reconstructions; no sportsbook line is a model input."
+}
