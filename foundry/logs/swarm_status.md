@@ -468,3 +468,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-13 18:59:49 | COMPLETE | 12019510754a8e57 | primitives=19 think_words=916
 - 2026-11-13 19:05:14 | CLAIMED | 130cb31e98511398 | worker=hermes-inline file=Bishop-2006-PatternRecognitionAndMachineLearning.pdf
 - 2026-11-13 19:11:11 | COMPLETE | 130cb31e98511398 | primitives=19 think_words=914
+- 2026-11-13 19:17:59 | CLAIMED | 5862404626d4c32a | worker=hermes-inline file=HastieTibshiraniFriedman-2009-ElementsOfStatisticalLearning.pdf
+- 2026-11-13 19:31:38 | COMPLETE | 5862404626d4c32a | primitives=18 think_words=900
