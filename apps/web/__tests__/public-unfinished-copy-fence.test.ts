@@ -65,6 +65,19 @@ describe("public unfinished-copy fence", () => {
     expect(hits.map((h) => h.phrase).sort()).toEqual(["coming soon", "not finished"]);
   });
 
+  it("allows the under-construction state label when the surface points at the live product", () => {
+    // Board-page shape: the honest label plus a door out to both live surfaces.
+    const copy =
+      'This route is under construction. <Link href="/packages">Galaxy Picks</Link>' +
+      '<Link href="/fantasy/dfs">DFS</Link>';
+    expect(findUnfinishedPublicCopy(copy)).toEqual([]);
+  });
+
+  it("flags a bare under-construction label with nowhere to go", () => {
+    const hits = findUnfinishedPublicCopy("Board is under construction.");
+    expect(hits.map((h) => h.phrase)).toEqual(["under construction"]);
+  });
+
   it("keeps public app pages free of unfinished advertising copy", () => {
     const pages: string[] = [];
     for (const root of PUBLIC_ROOTS) {

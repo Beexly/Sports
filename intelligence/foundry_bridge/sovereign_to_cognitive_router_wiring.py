@@ -37,6 +37,9 @@ if str(REPO_ROOT) not in sys.path:
 from intelligence.foundry_bridge.week10_reasoning_mind_bridge import (
     AUTHORITATIVE_WEEK10_TRUTH_2026_11_13,
 )
+from intelligence.foundry_bridge.gcp_entity_and_injury_truth_reconciler import (
+    build_week10_entity_and_venue_truth_rows,
+)
 
 MASK_BITS = 288
 MASK_WORDS = 9
@@ -489,51 +492,9 @@ def run_wiring_and_export(
                 }
             )
 
-    entity_rows: List[Dict[str, Any]] = []
-    truth = AUTHORITATIVE_WEEK10_TRUTH_2026_11_13
-    for player, team in sorted(truth.get("active_player_team", {}).items()):
-        old_new = truth.get("earned_to_active_team_remaps", {}).get(player)
-        entity_rows.append(
-            {
-                "ingested_at_utc": now_iso,
-                "as_of_date": truth["as_of_date"],
-                "week": int(truth["week"]),
-                "entity_type": "PLAYER_ROSTER_TRUTH",
-                "entity_name": player,
-                "active_team": team,
-                "previous_team": old_new[0] if old_new else None,
-                "status": truth.get("practice_watchlist", {}).get(player, "ACTIVE"),
-                "detail": "Authoritative Week 10 active roster mapping",
-            }
-        )
-    for player in truth.get("unavailable_players", []):
-        entity_rows.append(
-            {
-                "ingested_at_utc": now_iso,
-                "as_of_date": truth["as_of_date"],
-                "week": int(truth["week"]),
-                "entity_type": "INJURY_UNAVAILABLE",
-                "entity_name": player,
-                "active_team": "OUT_IR",
-                "previous_team": None,
-                "status": "OUT_IR",
-                "detail": "Unavailable for Week 10 play (Stage 0 Gate 0A blocked)",
-            }
-        )
-    for matchup_id, vinfo in sorted(truth.get("venue_truth", {}).items()):
-        entity_rows.append(
-            {
-                "ingested_at_utc": now_iso,
-                "as_of_date": truth["as_of_date"],
-                "week": int(truth["week"]),
-                "entity_type": "STADIUM_VENUE_TRUTH",
-                "entity_name": matchup_id,
-                "active_team": matchup_id.split("@")[-1],
-                "previous_team": None,
-                "status": str(vinfo.get("roof") or "verified"),
-                "detail": f"{vinfo.get('venue')} ({vinfo.get('country')}) neutral={vinfo.get('neutral_site')} circadian_hrs={vinfo.get('circadian_travel_hours')}",
-            }
-        )
+    entity_rows, entity_reconciliation_summary = build_week10_entity_and_venue_truth_rows(
+        now_iso=now_iso,
+    )
 
     # Compute bounded Positive-Part James-Stein intelligence density prior per situational family
     family_summary: Dict[str, Dict[str, Any]] = {}
@@ -580,6 +541,7 @@ def run_wiring_and_export(
         "domain_counts": dict(sorted(domain_counts.items())),
         "context_mask_uint32_words_9": mask_words,
         "six_situational_families": family_summary,
+        "week10_entity_reconciliation_summary": entity_reconciliation_summary,
     }
 
     audit_out_dir.mkdir(parents=True, exist_ok=True)

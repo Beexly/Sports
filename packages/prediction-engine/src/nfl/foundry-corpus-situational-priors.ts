@@ -368,21 +368,30 @@ export function evaluateSplitFieldCoverageOverlay(
   const seamZ = clamp(finiteOrZero(input.verticalShotMismatchZ), 2.5);
 
   const checks = SPLIT_FIELD_QUARTERS_COVERAGE_OPERATORS.checks;
+  const c0 = checks[0]?.logOddsScale ?? 0;
+  const c1 = checks[1]?.logOddsScale ?? 0;
+  const c2 = checks[2]?.logOddsScale ?? 0;
+  const c3 = checks[3]?.logOddsScale ?? 0;
+  const c4 = checks[4]?.logOddsScale ?? 0;
+  const c5 = checks[5]?.logOddsScale ?? 0;
   const rawShellDelta =
-    splitZ * checks[0].logOddsScale + // MOD
-    isoZ * checks[1].logOddsScale + // MEG
-    flatZ * checks[2].logOddsScale + // Palms/2-Read
-    tripsZ * checks[3].logOddsScale + // Poach/Solo vs 3x1
-    (tripsZ * 0.5 + flatZ * 0.5) * checks[4].logOddsScale - // Stubbie/Special
-    seamZ * checks[5].logOddsScale; // Cover 6/8 seam vulnerability under vertical stress
+    splitZ * c0 + // MOD
+    isoZ * c1 + // MEG
+    flatZ * c2 + // Palms/2-Read
+    tripsZ * c3 + // Poach/Solo vs 3x1
+    (tripsZ * 0.5 + flatZ * 0.5) * c4 - // Stubbie/Special
+    seamZ * c5; // Cover 6/8 seam vulnerability under vertical stress
 
   const coverageShellDeltaLogOdds = Number(
     clamp(rawShellDelta, MAX_ABS_CORPUS_LOG_ODDS).toFixed(6),
   );
+  const e0 = checks[0]?.explosivePassSuppressionWeight ?? 0;
+  const e3 = checks[3]?.explosivePassSuppressionWeight ?? 0;
+  const e5 = checks[5]?.explosivePassSuppressionWeight ?? 0;
   const rawExplosiveDelta =
-    splitZ * checks[0].explosivePassSuppressionWeight +
-    tripsZ * checks[3].explosivePassSuppressionWeight -
-    seamZ * checks[5].explosivePassSuppressionWeight;
+    splitZ * e0 +
+    tripsZ * e3 -
+    seamZ * e5;
   const explosivePassSuppressionDelta = Number(
     clamp(rawExplosiveDelta, MAX_CORPUS_FAMILY_PROB_MODULATION).toFixed(6),
   );
@@ -434,9 +443,12 @@ export function evaluateRulebookAndPsychologyOverlay(
   const composureZ = clamp(finiteOrZero(input.clutchComposureEdgeZ), 2.5);
   const firstStart = input.firstCareerStartFlag ? 1 : 0;
 
+  const r0 = NFL_2026_PLAYING_RULES_OPERATORS.rules[0]?.logOddsScale ?? 0;
+  const r1 = NFL_2026_PLAYING_RULES_OPERATORS.rules[1]?.logOddsScale ?? 0;
+  const r2 = NFL_2026_PLAYING_RULES_OPERATORS.rules[2]?.logOddsScale ?? 0;
   const ruleRaw =
-    kickoffZ * (NFL_2026_PLAYING_RULES_OPERATORS.rules[0].logOddsScale + NFL_2026_PLAYING_RULES_OPERATORS.rules[1].logOddsScale) * 0.5 +
-    onsideZ * NFL_2026_PLAYING_RULES_OPERATORS.rules[2].logOddsScale;
+    kickoffZ * (r0 + r1) * 0.5 +
+    onsideZ * r2;
   const psychRaw =
     arousalZ * SPORTS_PSYCHOLOGY_PRESSURE_OPERATORS.yerkesDodsonOverarousalWeight +
     firstStart * SPORTS_PSYCHOLOGY_PRESSURE_OPERATORS.firstCareerStartComposureScale +
@@ -552,5 +564,153 @@ export function evaluateUnifiedCorpusSituationalStack(
     unifiedClampedLogOddsDelta,
     unifiedClampedProbModulation,
     allFiniteNonNan,
+  };
+}
+
+export type Week10EntityDisposition =
+  | "VERIFIED_ACTIVE"
+  | "REMAPPED_ACTIVE_TEAM"
+  | "BLOCKED_UNAVAILABLE"
+  | "QUARANTINED_SOURCE_ANOMALY";
+
+export interface Week10EntityReconciliationResult {
+  readonly canonicalPlayer: string;
+  readonly printedTeam: string | null;
+  readonly authoritativeTeam: string | null;
+  readonly disposition: Week10EntityDisposition;
+  readonly eligibleForStage0: boolean;
+  readonly note: string;
+}
+
+const WEEK10_ACTIVE_PLAYER_TEAM_MAP: Readonly<Record<string, string>> = {
+  "greg dortch": "BUF",
+  "kendrick bourne": "ARI",
+  "kyler murray": "MIN",
+  "k.murray": "MIN",
+  "kirk cousins": "MIN",
+  "k.cousins": "MIN",
+  "jacoby brissett": "BAL",
+  "j.brissett": "BAL",
+  "j.j. mccarthy": "NYG",
+  "j.mccarthy": "NYG",
+  "josh downs": "KC",
+  "j.downs": "KC",
+  "keenan allen": "SF",
+  "k.allen": "SF",
+  "kenneth walker iii": "KC",
+  "k.walker": "KC",
+  "tyler allgeier": "ARI",
+  "t.allgeier": "ARI",
+  "myles garrett": "LAR",
+  "jared verse": "CLE",
+  "jeffery simmons": "CHI",
+  "trent mcduffie": "LAR",
+  "amani hooker": "BUF",
+  "jessie bates": "JAX",
+  "carson beck": "ARI",
+  "kyle mccord": "MIA",
+  "drew lock": "SEA",
+  "fernando mendoza": "LV",
+  "shedeur sanders": "CLE",
+} as const;
+
+const WEEK10_CANONICAL_NAMES: Readonly<Record<string, string>> = {
+  "k.murray": "Kyler Murray",
+  "k.cousins": "Kirk Cousins",
+  "j.brissett": "Jacoby Brissett",
+  "j.mccarthy": "J.J. McCarthy",
+  "j.downs": "Josh Downs",
+  "k.allen": "Keenan Allen",
+  "k.walker": "Kenneth Walker III",
+  "t.allgeier": "Tyler Allgeier",
+} as const;
+
+const WEEK10_UNAVAILABLE_PLAYERS_SET: ReadonlySet<string> = new Set([
+  "micah parsons",
+  "puka nacua",
+  "davante adams",
+  "brandon aiyuk",
+  "jake ferguson",
+  "aaron brewer",
+  "zach sieler",
+  "gardner minshew",
+  "gardner minshew ii",
+  "sam darnold",
+  "jaxson dart",
+  "lamar jackson",
+  "tyler huntley",
+  "malik willis",
+  "dj moore",
+]);
+
+/**
+ * Pure Edge-safe Stage-0 Gate-0A entity & sweep-CSV reconciliation helper (`GCP-LEV-04`).
+ * Remaps earned-season stale team tags (e.g., `K.Murray` ARI->MIN, `K.Cousins` LV->MIN,
+ * `J.Brissett` ARI->BAL, `J.McCarthy` MIN->NYG, `Josh Downs` IND->KC), blocks Week 10
+ * OUT/IR/PUP players, and quarantines unverified source anomalies (`J.Daniels` @ `TB`).
+ */
+export function reconcileWeek10EntityAndAvailability(
+  playerName: string,
+  printedTeam?: string | null,
+): Week10EntityReconciliationResult {
+  const trimmed = playerName.trim().replace(/\s+/g, " ");
+  const normKey = trimmed.toLowerCase().replace(/\.\s+/g, ".");
+  const normTeamRaw = printedTeam ? printedTeam.trim().toUpperCase() : null;
+  const normTeam =
+    normTeamRaw === "LA" ? "LAR" : normTeamRaw === "WSH" ? "WAS" : normTeamRaw;
+
+  if (normKey.includes("daniels") && normTeam === "TB") {
+    return {
+      canonicalPlayer: trimmed,
+      printedTeam: normTeam,
+      authoritativeTeam: null,
+      disposition: "QUARANTINED_SOURCE_ANOMALY",
+      eligibleForStage0: false,
+      note: "Unverified second J.Daniels entry at TB in sfdata-qb-ryoe; quarantined fail-closed.",
+    };
+  }
+
+  const canonicalPlayer =
+    WEEK10_CANONICAL_NAMES[normKey] ??
+    WEEK10_CANONICAL_NAMES[trimmed.toLowerCase()] ??
+    trimmed;
+
+  if (
+    WEEK10_UNAVAILABLE_PLAYERS_SET.has(normKey) ||
+    WEEK10_UNAVAILABLE_PLAYERS_SET.has(canonicalPlayer.toLowerCase())
+  ) {
+    return {
+      canonicalPlayer,
+      printedTeam: normTeam,
+      authoritativeTeam: null,
+      disposition: "BLOCKED_UNAVAILABLE",
+      eligibleForStage0: false,
+      note: "Blocked by Stage 0 Gate 0A (OUT / IR / PUP / Exempt for Week 10).",
+    };
+  }
+
+  const authTeam =
+    WEEK10_ACTIVE_PLAYER_TEAM_MAP[normKey] ??
+    WEEK10_ACTIVE_PLAYER_TEAM_MAP[canonicalPlayer.toLowerCase()] ??
+    normTeam;
+
+  if (authTeam && normTeam && authTeam !== normTeam) {
+    return {
+      canonicalPlayer,
+      printedTeam: normTeam,
+      authoritativeTeam: authTeam,
+      disposition: "REMAPPED_ACTIVE_TEAM",
+      eligibleForStage0: true,
+      note: `Remapped earned-season tag ${normTeam} to verified Week 10 active team ${authTeam}.`,
+    };
+  }
+
+  return {
+    canonicalPlayer,
+    printedTeam: normTeam,
+    authoritativeTeam: authTeam,
+    disposition: "VERIFIED_ACTIVE",
+    eligibleForStage0: Boolean(authTeam),
+    note: "Verified active Week 10 team assignment.",
   };
 }

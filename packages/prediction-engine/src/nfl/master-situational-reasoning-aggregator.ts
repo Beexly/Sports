@@ -608,7 +608,16 @@ export interface OverlayInput {
   /** Optional Kats market CUSUM & harmonic regime input. */
   katsCusumInput?: Parameters<typeof detectKatsMarketCusumAndHarmonicRegime>[0];
   /** Optional Stage 0 roster gate config path and candidate player names to verify. */
-  stage0Check?: { configPath: string; candidatePlayerNames: readonly string[] };
+  stage0Check?: {
+    configPath: string;
+    candidatePlayerNames: readonly string[];
+    /**
+     * Clock for the freshness gate. Production omits it, so the gate reads the
+     * wall clock and stays fail-closed; a test pins a date instead of rotting
+     * every max_age_days when a fixture config ages out.
+     */
+    now?: Date;
+  };
   /** Optional TEB failed-avalanche & D(S3) braid overlay input. */
   tebAvalancheBraidInput?: TebAvalancheBraidInput;
   /** Optional Zero-Orphan Expected-Metrics & W1-W14/F1-F4 Dossier overlay input. */
@@ -830,7 +839,7 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     mark("15G:detectKatsMarketCusumAndHarmonicRegime", true, `drift=${result.katsCusum.changePointDetected}`);
   }
   if (input.stage0Check) {
-    const cfg = loadStage0Config(input.stage0Check.configPath);
+    const cfg = loadStage0Config(input.stage0Check.configPath, input.stage0Check.now);
     assertNamesClean(input.stage0Check.candidatePlayerNames, cfg);
     result.stage0Verified = {
       week: cfg.week,

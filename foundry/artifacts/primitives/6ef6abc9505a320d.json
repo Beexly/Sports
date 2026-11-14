@@ -1,0 +1,306 @@
+{
+  "book_id": "6ef6abc9505a320d",
+  "source_status": "COMPLETE",
+  "title": "2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al",
+  "file_name": "2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al.md",
+  "sha256": "6ef6abc9505a320dd79e81f580914e6d8f87468f3cc99c14300533ccea61206f",
+  "primary_domain": "football",
+  "pages_total": 26,
+  "pages_read": 26,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 26,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Defensive value distribution via graph neural networks integrates EPV shifts, player responsibilities, and threat deterrence into unified probabilistic attribution. Graph neural networks encode soccer actions as node-conditioned probabilistic defenses, mapping spatial and temporal dynamics to defensive responsibility distributions via attention-weighted message passing.",
+  "gsi_mapping": "Bayesian inference maps defender contributions to EPV changes using conformal predictive distributions over pass failure and shot blocking scenarios. Bayesian inference maps failed action graphs to posterior defensive credit distributions using cross-entropy loss and softmax-normalized logits from GAT models.",
+  "gse_mapping": "Situational reasoning models defender state transitions through threat detection and EPV modulation using kernel-weighted responsibility functions. Situational reasoning encodes defensive state transitions through graph-based action prediction, where each node's embedding evolves based on relational context and observed failure events.",
+  "primitives": [
+    {
+      "primitive_id": "6ef6abc9505a320d_w0_g1",
+      "name": "2026 - Better Prevent than Tackle Valuing  Ch.1 Grounded Operator",
+      "verbatim_quote": "Introduction** The accurate player evaluation is critical in professional soccer, where players' market values have reached astronomical levels.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6ef6abc9505a320d_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6ef6abc9505a320d_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6ef6abc9505a320d_w0_g2",
+      "name": "2026 - Better Prevent than Tackle Valuing  Ch.1 Grounded Operator",
+      "verbatim_quote": "However, unlike other sports where key performance indicators are more explicitly measurable, soccer lacks clear, frequent, and directly observable metrics that can fully capture a player's contribution [8].",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6ef6abc9505a320d_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6ef6abc9505a320d_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6ef6abc9505a320d_w0_g3",
+      "name": "2026 - Better Prevent than Tackle Valuing  Ch.1 Grounded Operator",
+      "verbatim_quote": "As a result, player evaluation has traditionally relied on subjective assessment made by domain experts, who must watch numerous matches to form qualitative judgments.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6ef6abc9505a320d_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6ef6abc9505a320d_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "defensive_value_allocation",
+      "name": "Defensive Value Allocation",
+      "verbatim_quote": "This value was then distributed to the defending players according to Equation (6).",
+      "page": 7,
+      "latex": "\\mathcal{D}_s = \\sum_{a \\in A^{(k)}} \\mathcal{D}_{s,a} \\cdot \\mathbb{I}(a \\in A^{(k)})",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{D}_s': 'dimensionless defensive value per event', '\\\\mathcal{D}_{s,a}': 'defensive value for deterring option a', 'A^{(k)}': 'set of threatening actions at time k'}",
+      "assumptions": "Threatening actions are defined by EPV increase upon success; defender responsibilities are normalized.",
+      "breakdown_regime": "When pass fails due to positioning, all defensive value attributed to defenders.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel-based attribution of defensive credit to players based on responsibility weights and threat magnitude.",
+        "source_operator": "defensive_value_allocation",
+        "telemetry": "EPV change post-pass, defender positioning metrics"
+      }
+    },
+    {
+      "primitive_id": "threat_deterrence_credit",
+      "name": "Threat Deterrence Credit",
+      "verbatim_quote": "Because multiple threatening options may exist, this defensive value should then be allocated to individual defenders according to both the relative importance of deterring each option and the defender responsibilities for the option.",
+      "page": 7,
+      "latex": "\\mathcal{D}_{s,a} = \\frac{\\Delta \\text{EPV}_{a}}{\\sum_{a' \\in A^{(k)}} \\Delta \\text{EPV}_{a'}} \\cdot \\mathcal{D}_s",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{D}_{s,a}': 'defensive value for deterring action a', '\\\\Delta \\\\text{EPV}_{a}': 'change in expected possession value if a succeeds', '\\\\mathcal{D}_s': 'total defensive value for state s'}",
+      "assumptions": "Each threatening action contributes proportionally to its EPV impact.",
+      "breakdown_regime": "When multiple threats exist, credit is split based on relative EPV gain.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping between threat sets and defensive credit allocation via EPV differentials.",
+        "source_operator": "threat_deterrence_credit",
+        "telemetry": "EPV differential across possible actions, defender responsibility matrix"
+      }
+    },
+    {
+      "primitive_id": "positioning_penalty_assignment",
+      "name": "Positioning Penalty Assignment",
+      "verbatim_quote": "In such cases, the primary reason for the failed pass is the defending players' positioning, which reduced the pass success probability and disturbed the ball possessor from completing the pass.",
+      "page": 7,
+      "latex": "\\mathcal{P}_{\\text{pos}} = \\alpha \\cdot (1 - p_{\\text{success}}) \\cdot \\beta \\cdot \\mathcal{R}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{P}_{\\\\text{pos}}': 'positioning penalty', 'p_{\\\\text{success}}': 'pass success probability', '\\\\alpha, \\\\beta': 'normalization constants', '\\\\mathcal{R}': 'responsibility weight vector'}",
+      "assumptions": "Penalty scales with deviation from optimal positioning and defender responsibility.",
+      "breakdown_regime": "Failure due to positioning alone triggers full penalty assignment.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel-weighted penalty assignment based on positional deviation and responsibility.",
+        "source_operator": "positioning_penalty_assignment",
+        "telemetry": "Ball trajectory deviation, defender distance to pass line"
+      }
+    },
+    {
+      "primitive_id": "shot_blocking_defense",
+      "name": "Shot Blocking Defense",
+      "verbatim_quote": "Rather, the selection of a reflects the defending team's effective positioning, which k has neutralized more threatening alternatives and forced the attacker to select a less valuable option.",
+      "page": 7,
+      "latex": "\\mathcal{D}_{\\text{block}} = \\mathbb{I}(\\text{not blocked}) \\cdot \\left(\\text{EPV}_{\\text{before}} - \\text{EPV}_{\\text{after}}\\right)",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{D}_{\\\\text{block}}': 'defensive credit for shot blocking', '\\\\text{EPV}_{\\\\text{before}}, \\\\text{EPV}_{\\\\text{after}}': 'expected possession values before/after shot attempt'}",
+      "assumptions": "Blocking failure incurs penalty regardless of outcome; shot outcome affects EPV differently.",
+      "breakdown_regime": "Non-blocked shots yield negative credit unless goal prevented.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to pass failure model but applied to shot context with EPV shift.",
+        "source_operator": "shot_blocking_defense",
+        "telemetry": "Shot location, goalkeeper performance, EPV difference"
+      }
+    },
+    {
+      "primitive_id": "defensive_responsibility_assignment",
+      "name": "Defensive Responsibility Assignment",
+      "verbatim_quote": "A softmax is then applied over the u [ u] logits of the defending players v∈V- to yield a probability distribution representing their ^ responsibilities (yu,v)v∈V- for defending the given action : v - where Hu = (hu,v) - denotes the node embeddings of the defending players.",
+      "page": 14,
+      "latex": "\\mathbf{y}_{u,v} = \\frac{\\exp(h_{u,v})}{\\sum_{v' \\in V_-} \\exp(h_{u,v'})}",
+      "symbol_and_unit_ledger": "{'y_{u,v}': 'probability of player v defending action u (dimensionless)', 'h_{u,v}': 'logit score for player v defending action u (dimensionless)'}",
+      "assumptions": "Actions are modeled as graph nodes with fixed spatial-temporal coordinates; defenders' responsibilities are conditionally independent given action type.",
+      "breakdown_regime": "When action fails and defender identity is known, softmax normalizes logits to form valid probability distribution over defenders.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Defensive responsibility assignment mirrors Bayesian posterior inference over player roles in action failure scenarios.",
+        "source_operator": "defensive_responsibility_assignment",
+        "telemetry": "Cross-entropy loss between predicted and actual defender identities."
+      }
+    },
+    {
+      "primitive_id": "action_graph_encoding",
+      "name": "Action Graph Encoding",
+      "verbatim_quote": "To encode this conditioning, we extend the original 25 node features with an additional binary indicator specifying the action of interest, assigning 1 to the node corresponding to the intended u receiver (or goal) and 0 to all other nodes.",
+      "page": 14,
+      "latex": "X^{\\text{ext}} = [X, \\mathbf{e}_u]",
+      "symbol_and_unit_ledger": "{'X': 'original 25-node feature matrix (dimensionless)', 'e_u': 'binary indicator vector for action u (dimensionless)', 'X^{\\\\text{ext}}': 'extended feature matrix (dimensionless)'}",
+      "assumptions": "Each action has a unique receiver node; binary encoding preserves sparsity and interpretability.",
+      "breakdown_regime": "When action is specified, binary indicator activates target node to guide attention mechanism.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Extends standard node features with action-specific context to enable conditional graph processing.",
+        "source_operator": "action_graph_encoding",
+        "telemetry": "Accuracy of action identification in graph structure."
+      }
+    },
+    {
+      "primitive_id": "unblocked_shot_xg_model",
+      "name": "Unblocked Shot Expected Goals Model",
+      "verbatim_quote": "We train a logistic regression model using six shot features: the (x, y) location relative to the goal, the distance and angle to the goal, and binary indicators for whether the shot was taken from a set-piece and was a header.",
+      "page": 14,
+      "latex": "\\hat{p}(\\text{goal}) = \\sigma(\\beta_0 + \\sum_{i=1}^6 \\beta_i f_i(x,y,d,a,s,h))",
+      "symbol_and_unit_ledger": "{'p(goal)': 'probability of scoring goal (dimensionless)', '\\\\sigma': 'sigmoid function (dimensionless)', '\\\\beta_i': 'model coefficients (dimensionless)', 'f_i': 'shot feature functions (dimensionless)', 'x,y': 'shot location coordinates (meters)', 'd': 'distance to goal (meters)', 'a': 'angle to goal (radians)', 's': 'set-piece indicator (0/1)', 'h': 'header indicator (0/1)'}",
+      "assumptions": "Shot outcomes are independent of blocking events; features capture spatial and tactical relevance.",
+      "breakdown_regime": "Only applies to unblocked shots; excludes contextual interference from defenders.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Logistic regression maps shot geometry to expected goal probability, analogous to probabilistic outcome estimation in GSI.",
+        "source_operator": "unblocked_shot_xg_model",
+        "telemetry": "Brier score and log-loss on test set of unblocked shots."
+      }
+    },
+    {
+      "primitive_id": "gat_message_passing",
+      "name": "Graph Attention Network Message Passing",
+      "verbatim_quote": "The GAT processes the graph with these extended node * |V|×26 features X = X; e<sup>∈R</sup> and produces node-wise logits.",
+      "page": 14,
+      "latex": "\\mathbf{h}_v^{(l+1)} = \\sigma\\left(\\sum_{u \\in \\mathcal{N}(v)} \\alpha_{vu} \\mathbf{W}^{(l)} \\mathbf{h}_u^{(l)}\\right)",
+      "symbol_and_unit_ledger": "{'h_v^{(l)}': 'node embedding at layer l (dimensionless)', 'W^{(l)}': 'learnable weight matrix (dimensionless)', 'α_{vu}': 'attention coefficient from u to v (dimensionless)', 'N(v)': 'neighborhood of node v (dimensionless)', 'σ': 'activation function (dimensionless)'}",
+      "assumptions": "Node representations evolve via weighted neighbor aggregation; attention weights reflect relational importance.",
+      "breakdown_regime": "Attention mechanism dynamically adjusts influence of neighbors based on learned relevance scores.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Attention-weighted message passing enables dynamic relational modeling in GSE state transitions.",
+        "source_operator": "gat_message_passing",
+        "telemetry": "Perplexity and accuracy on action prediction tasks."
+      }
+    },
+    {
+      "primitive_id": "temporal_defensive_credit",
+      "name": "Temporal Defensive Credit",
+      "verbatim_quote": "Interactive Timeline** 23 To support practical match-analysis workflows, we develop an interactive timeline visualization (Figure 10) that enables analysts to efficiently retrieve key defensive moments in terms of credit gain and loss.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C(t)': 'Defensive credit at time t, dimensionless', 't': 'Time in seconds, s'}",
+      "assumptions": "Credit is a scalar function of time; temporal resolution is fixed per event.",
+      "breakdown_regime": "Discrete time intervals with event-based credit updates.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Temporal credit trajectory maps to GSI's Bayesian belief update over time, enabling retroactive tactical attribution.",
+        "source_operator": "temporal_defensive_credit",
+        "telemetry": "Event timestamps and assigned credit values from interactive timeline."
+      }
+    },
+    {
+      "primitive_id": "spatial_defensive_heatmap",
+      "name": "Spatial Defensive Heatmap",
+      "verbatim_quote": "These visualizations reveal spatial patterns of each team's offensive and defensive performance that cannot be captured through action counts alone.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H(x,y)': 'Defensive heat intensity at position (x,y), dimensionless', 'x,y': 'Spatial coordinates on pitch, meters'}",
+      "assumptions": "Heatmap represents normalized defensive contribution density across pitch space.",
+      "breakdown_regime": "Continuous spatial domain with discrete sampling.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Spatial kernel encodes defensive influence field; used in GSE for tactical positioning diagnostics.",
+        "source_operator": "spatial_defensive_heatmap",
+        "telemetry": "Pixel-level credit distribution across pitch grid from heatmap visualization."
+      }
+    },
+    {
+      "primitive_id": "relational_pairwise_credit",
+      "name": "Relational Pairwise Defensive Credit",
+      "verbatim_quote": "This pattern reflects their reactive defensive performance: forced deep into their box, often succeeding in last-moment interventions but still allowing the opponent to reach threatening areas too frequently.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{ij}': 'Defensive credit of player i against attacker j, dimensionless', 'i,j': 'Player indices'}",
+      "assumptions": "Each player pair contributes independent credit value; matrix is asymmetric.",
+      "breakdown_regime": "Graph node-pair interaction with directional credit assignment.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pairwise credit matrix mirrors GSI's relational Bayesian network for player matchup evaluation.",
+        "source_operator": "relational_pairwise_credit",
+        "telemetry": "Matrix entries from Figure 12 showing credit/penalty per defender-attacker pair."
+      }
+    },
+    {
+      "primitive_id": "interactive_timeline_visualization",
+      "name": "Interactive Timeline Visualization",
+      "verbatim_quote": "The tool is implemented using Plotly<sup>3</sup> , allowing users to zoom into specific time intervals and inspect events by hovering over the timeline, which reveals the action index, action type, involved players, and assigned defensive credit.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Timeline duration, seconds', 'E_i': 'Event index, dimensionless', 'A_i': 'Action type, categorical'}",
+      "assumptions": "Timeline supports real-time query and hover inspection; event metadata is structured.",
+      "breakdown_regime": "Event-driven temporal slicing with metadata overlay.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Timeline kernel enables GSE state transition queries by event sequence and credit.",
+        "source_operator": "interactive_timeline_visualization",
+        "telemetry": "Hover-triggered event metadata and credit values from Plotly interface."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6ef6abc9505a320d_t0",
+      "think": "Window 1 Synthesis: Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6ef6abc9505a320d_t1",
+      "think": "Chapter 2.4–2.6 introduces a probabilistic framework for evaluating defensive contributions in soccer using Expected Possession Value (EPV) and graph-based player responsibilities. It begins by defining how defensive value is attributed to players after a pass failure, based on Equation (6), which distributes a total defensive value Ds among defenders according to their individual responsibilities. This is followed by a detailed treatment of how threatening actions—those that would increase EPV if successful—are identified and weighted in determining the defensive value assigned to each player. The framework further extends to shot blocking, where a penalty is assigned to defenders when a shot is not blocked, regardless of whether it results in a goal. This approach allows for a granular evaluation of defensive performance across various game states, integrating both static positioning and dynamic threat response. The methodological underpinning relies on conditional probabilities and kernel-weighted attribution, enabling scalable and interpretable modeling of complex defensive interactions. The framework supports aggregation over matches to assess long-term defensive impact, aligning with modern data-driven approaches in sports analytics. Window 2 Synthesis: Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on EPV modeling by K. P. S. et al. (2018) and extended by recent graph neural network applications in football analytics, particularly in player role decomposition and tactical attribution. Retrocausal Genealogy (Window 2): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models defenders as strategic agents responding to attacker intent and spatial dynamics, assigning credit or blame based on predicted outcomes rather than just observed results. Theory of Mind (Window 2): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to single-event outcomes by enforcing proportional attribution across multiple threats and integrating temporal dependencies via EPV transitions. Cross-Layer Veto (Window 2): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6ef6abc9505a320d_t2",
+      "think": "Chapter 3 focuses on modeling defensive behavior in soccer using graph neural networks (GNNs), particularly Graph Attention Networks (GATs). It introduces a framework where each game event is represented as a graph with nodes denoting players and edges capturing spatial relationships. The key innovation lies in conditioning the model on failed actions—specifically, identifying which defender would have intercepted or blocked a given action. This is achieved by extending node features with binary indicators for the intended receiver or goal, enabling GATs to produce logits for each defender’s likelihood of involvement. These logits are normalized using softmax to generate a probability distribution over defenders, effectively assigning defensive responsibility. The paper also addresses challenges in training models for rare events like shots and goals by leveraging large-scale external datasets of unblocked shots to train an Expected Goals (xG) model. This approach avoids dependency on contextual information such as blocking, making it suitable for reliable estimation. Training uses cross-entropy loss against ground truth defenders, ensuring alignment with empirical observations. The methodology supports generalization across seasons by using 2023–24 data for training and evaluating on 2024–25 data. Additionally, the work explores how different models perform on various subtasks—pass success, shot blocking, and goal prediction—highlighting strengths of attention mechanisms in relational contexts while noting limitations in classification tasks where pooling strategies may discard relational detail. Finally, the study correlates defensive contributions with market values, analyzing intercepts, concedes, and net credits across positions to assess model validity.",
+      "retrocausal_genealogy": "Building upon prior work in graph-based modeling of sports dynamics, this chapter extends traditional GNN architectures with attention mechanisms to better capture complex relational structures in football. Inspired by recent advances in social network analysis and reinforcement learning, it adapts these concepts to soccer-specific action graphs. Retrocausal Genealogy (Window 3): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Modeling assumes rational agent behavior where defenders act optimally to minimize opponent threat. Each player's defensive credit reflects strategic decision-making under uncertainty, influenced by spatial awareness and historical action patterns. Theory of Mind (Window 3): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by separating action-specific encoding from general player attributes. Leakage is mitigated by restricting xG model training to unblocked shots, avoiding confounding effects from defensive interventions. Cross-Layer Veto (Window 3): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6ef6abc9505a320d_t3",
+      "think": "Chapter 4 focuses on integrating defensive credit valuation into practical match analysis workflows through three core dimensions: temporal, spatial, and relational. Temporal credit tracking via interactive timelines allows analysts to pinpoint critical defensive moments, leveraging time-series credit dynamics to infer tactical behavior. Spatial visualization reveals how defensive effort is distributed across the pitch, identifying high-risk zones and reactive patterns—such as deep defensive positioning leading to frequent penalties. Relational analysis captures player-to-player defensive effectiveness, offering insights into matchup-specific vulnerabilities and strengths. These primitives form a unified framework where graph neural networks underpin the computation of defensive credit, while interactive visualizations provide actionable intelligence for real-time tactical decisions. The interplay between these dimensions enables a holistic understanding of defensive performance beyond simple action counts, supporting both retrospective analysis and predictive modeling. Window 4 Synthesis: Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Building upon prior work in expected pass models and goal-scoring probabilities, this chapter extends analytical frameworks to include dynamic, multi-dimensional defensive credit, aligning with recent advancements in spatio-temporal football analytics. Retrocausal Genealogy (Window 4): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Players are modeled as agents with varying defensive capabilities, influenced by spatial context and relational dynamics. Coaches and analysts interpret these signals to predict opponent strategies and optimize lineup selections. Theory of Mind (Window 4): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that temporal, spatial, and relational credit measures do not redundantly encode similar information. Leakage is mitigated by enforcing orthogonal feature spaces for each dimension. Cross-Layer Veto (Window 4): Rooted in 2026 - Better Prevent than Tackle Valuing Defense in Soccer Based on Graph Neural Networks - Kim et al (6ef6abc9505a320d, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import {
   MAX_ABS_CORPUS_LOG_ODDS,
   MAX_CORPUS_FAMILY_PROB_MODULATION,
   NFL_2026_PLAYING_RULES_OPERATORS,
+  reconcileWeek10EntityAndAvailability,
   SPLIT_FIELD_QUARTERS_COVERAGE_OPERATORS,
   SPORTS_PSYCHOLOGY_PRESSURE_OPERATORS,
 } from "../nfl/foundry-corpus-situational-priors.js";
@@ -207,5 +208,39 @@ describe("foundry-corpus-situational-priors", () => {
     expect(Math.abs(saturated.unifiedClampedProbModulation)).toBeLessThanOrEqual(
       MAX_CORPUS_FAMILY_PROB_MODULATION,
     );
+  });
+
+  it("reconciles Week 10 stale sfdata tags, blocks OUT/IR players, and quarantines source anomalies fail-closed", () => {
+    const murray = reconcileWeek10EntityAndAvailability("K.Murray", "ARI");
+    expect(murray.canonicalPlayer).toBe("Kyler Murray");
+    expect(murray.authoritativeTeam).toBe("MIN");
+    expect(murray.disposition).toBe("REMAPPED_ACTIVE_TEAM");
+    expect(murray.eligibleForStage0).toBe(true);
+
+    const cousins = reconcileWeek10EntityAndAvailability("K.Cousins", "LV");
+    expect(cousins.canonicalPlayer).toBe("Kirk Cousins");
+    expect(cousins.authoritativeTeam).toBe("MIN");
+    expect(cousins.disposition).toBe("REMAPPED_ACTIVE_TEAM");
+
+    const brissett = reconcileWeek10EntityAndAvailability("J.Brissett", "ARI");
+    expect(brissett.authoritativeTeam).toBe("BAL");
+
+    const mccarthy = reconcileWeek10EntityAndAvailability("J.McCarthy", "MIN");
+    expect(mccarthy.authoritativeTeam).toBe("NYG");
+
+    const downs = reconcileWeek10EntityAndAvailability("Josh Downs", "IND");
+    expect(downs.authoritativeTeam).toBe("KC");
+    expect(downs.disposition).toBe("REMAPPED_ACTIVE_TEAM");
+
+    const parsons = reconcileWeek10EntityAndAvailability("Micah Parsons", "GB");
+    expect(parsons.disposition).toBe("BLOCKED_UNAVAILABLE");
+    expect(parsons.eligibleForStage0).toBe(false);
+
+    const anomaly = reconcileWeek10EntityAndAvailability(
+      "J.Daniels (second entry as printed)",
+      "TB",
+    );
+    expect(anomaly.disposition).toBe("QUARANTINED_SOURCE_ANOMALY");
+    expect(anomaly.eligibleForStage0).toBe(false);
   });
 });

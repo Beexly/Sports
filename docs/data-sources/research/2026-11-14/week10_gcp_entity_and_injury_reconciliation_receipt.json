@@ -1,0 +1,35 @@
+{
+  "schema": "gse.gcp_entity_and_injury_reconciliation.v1",
+  "generated_at_utc": "2026-11-14T09:45:56.969500+00:00",
+  "week": 10,
+  "as_of_date": "2026-11-13",
+  "gcp_project": "galaxysportsedge",
+  "enabled_gcp_apis_verified": [
+    "kgsearch.googleapis.com",
+    "bigquery.googleapis.com",
+    "vision.googleapis.com",
+    "videointelligence.googleapis.com"
+  ],
+  "source_csvs_mutated": 0,
+  "sweep_csv_audit": {
+    "csv_count": 64,
+    "composite_sha256": "39bd2ad138cd1ab7a539bc63a494ee89d10b851efc6d418b4d33e34f8a9c0d33",
+    "sfdata_stale_remaps_count": 16,
+    "earned_stat_convention_splits_count": 2,
+    "quarantined_anomalies_count": 1
+  },
+  "confirmed_qb1_teams": 32,
+  "nflverse_week10_injury_rows": 296,
+  "total_entity_truth_rows": 518,
+  "counts_by_entity_type": {
+    "CONFIRMED_WEEK10_QB1": 32,
+    "EARNED_TEAM_CONVENTION_SPLIT": 2,
+    "INJURY_UNAVAILABLE": 132,
+    "NFLVERSE_WEEK10_INJURY_REPORT": 296,
+    "PLAYER_ROSTER_TRUTH": 23,
+    "QUARANTINED_SOURCE_ANOMALY": 1,
+    "SFDATA_STALE_TAG_REMAP": 16,
+    "STADIUM_VENUE_TRUTH": 14,
+    "VERIFIED_HEAD_COACH": 2
+  }
+}

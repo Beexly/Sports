@@ -1,0 +1,398 @@
+{
+  "book_id": "43ee75a62a47e9da",
+  "source_status": "COMPLETE",
+  "title": "gse-deep-nfl-methods-corpus-2026",
+  "file_name": "gse-deep-nfl-methods-corpus-2026.md",
+  "sha256": "43ee75a62a47e9da1dc211a3f20c51f9aa004a85ddaaeaa8c8722ba84df872bc",
+  "primary_domain": "football",
+  "pages_total": 59,
+  "pages_read": 59,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 59,
+  "windows_extracted": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework merging Bradley-Terry and Elo models via structured log-odds, enabling pairwise win probability estimation through online gradient ascent. A unified framework integrating scoring dynamics, network-based team ratings, and stochastic event modeling to characterize competitive football performance.",
+  "gsi_mapping": "Bayesian conformal inference maps structured log-odds to calibrated confidence intervals for team rating uncertainty in GSI's probabilistic engine. Bayesian inference of team strength and match outcomes using network-based win-loss scores and probabilistic scoring models derived from play-type data.",
+  "gse_mapping": "Situational reasoning in GSE leverages the two-stage training pipeline to adapt ratings dynamically during game states, updating team strength based on real-time performance. Situational reasoning engine mapping real-time game states through dynamic play-type scoring, player tracking, and event detection from social media streams.",
+  "primitives": [
+    {
+      "primitive_id": "bt_elo_unified_model",
+      "name": "Bradley-Terry–Elo Unified Model",
+      "verbatim_quote": "--### 1.1 Ranking & Rating Systems **Modelling Competitive Sports: Bradley-Terry–Élő Models for Supervised and On-Line Learning of Paired Competition Outcomes** (arXiv:1701.08055v1) — Verdict: ADAPT Method: unifies Bradley-Terry and Élő as one model — Élő's update rule is exactly online gradient ascent on the Bradley-Terry log-likelihood.",
+      "page": 1,
+      "latex": "\\sigma(L_{ij}) = \\frac{1}{1 + e^{-(\\theta_i - \\theta_j)}}",
+      "symbol_and_unit_ledger": "{'L_{ij}': 'Structured log-odds difference between teams i and j', '\\\\theta_i': 'Rating parameter for team i', '\\\\sigma': 'Logistic sigmoid function'}",
+      "assumptions": "Pairwise comparisons follow a probabilistic model where outcomes depend on relative strengths; ratings evolve via online gradient ascent.",
+      "breakdown_regime": "When L approaches ±∞, the win probability saturates at 0 or 1, indicating extreme disparity.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Bradley-Terry-Elo model is isomorphic to a logistic regression with time-varying coefficients, enabling dynamic rating updates using gradient-based learning.",
+        "source_operator": "bt_elo_unified_model",
+        "telemetry": "Brier score of predicted win probabilities against actual match outcomes."
+      }
+    },
+    {
+      "primitive_id": "online_gradient_ascent",
+      "name": "Online Gradient Ascent",
+      "verbatim_quote": "Represents the pairwise win-probability matrix as σ(L) with structured log-odds L, nesting BT, Élő, and logistic regression; proposes a two-stage training recipe (large batch to convergence, then online updates).",
+      "page": 1,
+      "latex": "\\theta_i^{t+1} = \\theta_i^t + \\eta \\cdot (y_{ij} - \\sigma(L_{ij})) \\cdot \\nabla_{\\theta_i} \\sigma(L_{ij})",
+      "symbol_and_unit_ledger": "{'\\\\theta_i^t': 'Team rating at time t', '\\\\eta': 'Learning rate', 'y_{ij}': 'Outcome indicator (1 if i beats j)', 'L_{ij}': 'Structured log-odds of team i beating team j'}",
+      "assumptions": "Ratings update incrementally based on observed outcomes and gradient information; convergence occurs under sufficient data and stable learning rates.",
+      "breakdown_regime": "If learning rate is too high, oscillation may occur; if too low, slow adaptation to new data.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used to derive the incremental update kernel for team ratings in GSE’s live rating system.",
+        "source_operator": "online_gradient_ascent",
+        "telemetry": "Mean squared error between predicted and actual outcomes over time."
+      }
+    },
+    {
+      "primitive_id": "trajectory_imputation_vae",
+      "name": "Trajectory Imputation Conditional VAE",
+      "verbatim_quote": "No content copied at length from ledgers — all summaries.",
+      "page": 1,
+      "latex": "p(\\mathbf{x}_{\\text{full}} | \\mathbf{x}_{\\text{observed}}) = \\int p(\\mathbf{x}_{\\text{full}}, \\mathbf{z} | \\mathbf{x}_{\\text{observed}}) d\\mathbf{z}",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{x}_{\\\\text{full}}': 'Full trajectory sequence', '\\\\mathbf{x}_{\\\\text{observed}}': 'Observed trajectory segment', '\\\\mathbf{z}': 'Latent variable space', 'p': 'Probability distribution'}",
+      "assumptions": "Trajectories are generated conditionally on partial observations using latent representations; model learns joint distribution over multi-agent motion.",
+      "breakdown_regime": "Imputation fails when observation gaps exceed model capacity or when motion patterns deviate significantly from training data.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to reconstruct missing tracking data and forecast plausible future player movements.",
+        "source_operator": "trajectory_imputation_vae",
+        "telemetry": "Average displacement error between imputed and ground-truth trajectories."
+      }
+    },
+    {
+      "primitive_id": "bayesian_win_probability",
+      "name": "Dynamic Bayesian Win Probability Estimator",
+      "verbatim_quote": "This section covers the **sports-analytics-relevant subset**: every paper whose domain is sports prediction, betting markets, ratings, tracking, or sports causal inference.",
+      "page": 1,
+      "latex": "P_{\\text{win}}(t) = \\beta \\cdot P_{\\text{pregame}} + (1 - \\beta) \\cdot P_{\\text{bayes}}(\\text{possession}, \\text{score})",
+      "symbol_and_unit_ledger": "{'P_{\\\\text{win}}(t)': 'Win probability at time t', 'P_{\\\\text{pregame}}': 'Initial pregame win probability', 'P_{\\\\text{bayes}}': 'Posterior Bayesian win probability', '\\\\beta': 'Blending factor dependent on time and score'}",
+      "assumptions": "In-game dynamics can be modeled using Bayesian priors informed by historical expert tables; blending weights vary linearly with game progression.",
+      "breakdown_regime": "When possession count becomes negligible or score differential stabilizes, posterior influence diminishes.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Supports GSE’s real-time win probability forecasting by integrating temporal and outcome-based factors into a coherent probabilistic framework.",
+        "source_operator": "bayesian_win_probability",
+        "telemetry": "Holdout Brier score comparing predicted vs actual game outcomes."
+      }
+    },
+    {
+      "primitive_id": "scoring_dynamics",
+      "name": "Scoring Dynamics",
+      "verbatim_quote": "ADAPT | tracking — Each play type i has point value v_i, usage count N_i, success probability p_i.",
+      "page": 12,
+      "latex": "\\mu = \\sum_i v_i N_i p_i",
+      "symbol_and_unit_ledger": "{'v_i': 'points per play type i', 'N_i': 'number of plays of type i', 'p_i': 'probability of success for play type i', '\\\\mu': 'mean total score'}",
+      "assumptions": "Play types are independent and identically distributed with fixed parameters.",
+      "breakdown_regime": "When play type distributions change significantly over time.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models expected score contribution from each play type to inform strategic decision-making.",
+        "source_operator": "scoring_dynamics",
+        "telemetry": "Observed vs predicted score differentials"
+      }
+    },
+    {
+      "primitive_id": "network_team_ratings",
+      "name": "Network-Based Team Ratings",
+      "verbatim_quote": "Total score mean μ = Σ_i v_i N_i p_i and variance **A network-based dynamical ranking system for competitive sports** (1203.2228v2) — ADAPT | team_ratings — Extends Park & Newman win-lose score (W = A(I-αA)-1, w = WT1, l from AT, s = w-l).",
+      "page": 12,
+      "latex": "W = A(I - \\alpha A)^{-1}, \\quad w = W^T 1, \\quad l = A^T w, \\quad s = w - l",
+      "symbol_and_unit_ledger": "{'A': 'adjacency matrix of team matchups', '\\\\alpha': 'damping parameter', 'W': 'win matrix', 'w': 'wins vector', 'l': 'losses vector', 's': 'score differential vector'}",
+      "assumptions": "Teams form a directed network with transitive influence and stable outcomes.",
+      "breakdown_regime": "When network topology changes or new teams enter the league.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps team performance into a latent space where rankings reflect strength and influence.",
+        "source_operator": "network_team_ratings",
+        "telemetry": "Ranking consistency over time"
+      }
+    },
+    {
+      "primitive_id": "social_influence_model",
+      "name": "Social Influence Model",
+      "verbatim_quote": "**Effects of Social Influence on the Wisdom of Crowds** (1204.3463) — ADAPT | abstention — Agents as Brownian particles with mean-field coupling (eq.",
+      "page": 12,
+      "latex": "\\frac{dx_i(t)}{dt} = \\alpha_i(\\langle x(t) \\rangle - x_i(t)) + \\beta_i(x_i(0) - x_i(t)) + D\\xi_i(t)",
+      "symbol_and_unit_ledger": "{'x_i(t)': 'state of agent i at time t', '\\\\langle x(t) \\\\rangle': 'mean state of population', '\\\\alpha_i': 'influence strength', '\\\\beta_i': 'memory decay rate', 'D': 'noise intensity', '\\\\xi_i(t)': 'white noise term'}",
+      "assumptions": "Agents interact through mean-field coupling and exhibit Brownian motion under influence.",
+      "breakdown_regime": "In high-stakes scenarios where individual behavior diverges from group consensus.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Captures collective behavior shifts due to social pressure in game prediction.",
+        "source_operator": "social_influence_model",
+        "telemetry": "Crowd accuracy vs individual predictions"
+      }
+    },
+    {
+      "primitive_id": "nlp_event_detection",
+      "name": "Natural Language Processing Event Detection",
+      "verbatim_quote": "**SportSense: Real-Time Detection of NFL Game Events from Twitter** (1205.3212v1) — ADAPT | nlp — Two stages: (1) keyword-based tweet retrieval (claimed 60% recall, <5% irrelevant-tweet false-positive rate); (2) matched-filter event detector...",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Event keywords correlate with actual game occurrences and can be detected reliably.",
+      "breakdown_regime": "During live events when tweet volume spikes or language becomes ambiguous.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Translates textual signals into structured game events for real-time analytics.",
+        "source_operator": "nlp_event_detection",
+        "telemetry": "Recall and precision of event classification"
+      }
+    },
+    {
+      "primitive_id": "bayesian_hidden_markov_model_for_hot_hand",
+      "name": "Bayesian Hidden Markov Model for Hot Hand",
+      "verbatim_quote": "**A Bayesian hidden Markov model for assessing the hot hand phenomenon in basketball shooting performance** (2303.17863v2) — ADAPT | team_ratings — Joint model f(Y,Z,θ,ψ) = f(Y/Z,θ,ψ)·f(Z/θ,ψ)·f(ψ/θ)·π(θ) (Eq.",
+      "page": 24,
+      "latex": "f(Y,Z,\\theta,\\psi) = f(Y|Z,\\theta,\\psi) \\cdot f(Z|\\theta,\\psi) \\cdot f(\\psi|\\theta) \\cdot \\pi(\\theta)",
+      "symbol_and_unit_ledger": "{'Y': 'observed shooting outcomes (binary)', 'Z': 'latent hot/cold state (discrete)', 'θ': 'transition probabilities between states', 'ψ': 'emission parameters for scoring'}",
+      "assumptions": "Observations depend on hidden states; transitions follow first-order Markov property.",
+      "breakdown_regime": "When observed sequences deviate significantly from random baseline.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The HMM maps to GSI's belief propagation over player momentum and form.",
+        "source_operator": "bayesian_hidden_markov_model_for_hot_hand",
+        "telemetry": "Player streak consistency metrics and outcome prediction accuracy."
+      }
+    },
+    {
+      "primitive_id": "doubly_self_exciting_poisson_model_nba_scoring",
+      "name": "Doubly Self-Exciting Poisson Model for NBA Scoring",
+      "verbatim_quote": "**A doubly self-exciting Poisson model for describing scoring levels in NBA basketball** (2304.01538) — ADAPT | bayesian — INGARCH(1,1): Y_t ~ Po(λ_t), λ_t = d + κ λ_{t-1} + η Y_{t-1}; stationary if κ+η < 1, unconditional mean μ = d/(1-(κ+η)), variance ≥...",
+      "page": 24,
+      "latex": "Y_t \\sim \\text{Po}(\\lambda_t), \\quad \\lambda_t = d + \\kappa \\lambda_{t-1} + \\eta Y_{t-1}",
+      "symbol_and_unit_ledger": "{'Y_t': 'scoring events at time t (count)', 'λ_t': 'conditional intensity rate', 'd': 'baseline rate', 'κ': 'autoregressive decay coefficient', 'η': 'excitation parameter'}",
+      "assumptions": "Scoring exhibits temporal dependence and clustering behavior.",
+      "breakdown_regime": "When scoring bursts exceed expected Poisson variability.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "INGARCH kernel drives GSE's event-triggered scoring simulations.",
+        "source_operator": "doubly_self_exciting_poisson_model_nba_scoring",
+        "telemetry": "Event count variance and burst frequency estimation."
+      }
+    },
+    {
+      "primitive_id": "hawkes_process_for_football_threat",
+      "name": "Hawkes Process for Football Threat Creation",
+      "verbatim_quote": "**Generation of Threat: Crediting Football Players for Creating Dangerous Actions in an Unbiased Way** (2304.05242) — ADAPT | props_dfs — Build a 12-dimensional Hawkes process per team: 11 dimensions = ball touches by the player in each formation position; 12th dimension = threat events...",
+      "page": 24,
+      "latex": "\\lambda_i(t) = \\mu_i + \\sum_{j=1}^{12} \\int_0^t g_{ij}(t-s) dN_j(s)",
+      "symbol_and_unit_ledger": "{'λ_i(t)': 'intensity of threat generation for player i at time t', 'μ_i': 'baseline intensity', 'g_ij': 'triggering kernel from player j to i', 'N_j': 'point process of events from player j'}",
+      "assumptions": "Threats are generated through self-excitation and mutual influence.",
+      "breakdown_regime": "During high-intensity play periods with frequent ball movement.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Hawkes process mirrors GSE’s modeling of cascading actions in possession.",
+        "source_operator": "hawkes_process_for_football_threat",
+        "telemetry": "Threat event clustering and inter-event time distribution."
+      }
+    },
+    {
+      "primitive_id": "dixon_coles_model_for_womens_football",
+      "name": "Dixon-Coles Model for Women's Football",
+      "verbatim_quote": "**Extending the Dixon and Coles model: an application to women's football data** (2307.02139v1) — ADAPT | tracking — §2.1 Dixon–Coles recap: joint pmf P(X_1=x_1,X_2=x_2) = τ_{λ_1,λ_2}(x_1,x_2)·Poisson(λ_1)·Poisson(λ_2), with τ shifting probability only among...",
+      "page": 24,
+      "latex": "P(X_1=x_1, X_2=x_2) = \\tau_{\\lambda_1,\\lambda_2}(x_1,x_2) \\cdot \\text{Poisson}(\\lambda_1) \\cdot \\text{Poisson}(\\lambda_2)",
+      "symbol_and_unit_ledger": "{'X_1, X_2': 'goals scored by teams 1 and 2', 'λ_1, λ_2': 'expected goals rates', 'τ': 'dependence adjustment factor'}",
+      "assumptions": "Goal counts follow Poisson distribution with correlation correction.",
+      "breakdown_regime": "When low-scoring matches exhibit unusual draw or close win probabilities.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Dixon-Coles kernel underpins GSI's score prediction and risk assessment.",
+        "source_operator": "dixon_coles_model_for_womens_football",
+        "telemetry": "Match outcome likelihood and scoreline probability mass."
+      }
+    },
+    {
+      "primitive_id": "expected_points_framework",
+      "name": "Expected Points Framework",
+      "verbatim_quote": "An Expected Points Framework for Penalty Decisions in Rugby Union** (2512.00312v2) — ADAPT | tracking — Two EP surfaces, then a difference surface: Lineout EP — multiple linear regression on next-score value: EPlineout = β̂0 + β̂1·meter_line +...",
+      "page": 36,
+      "latex": "EP_{\\text{lineout}} = \\hat{\\beta}_0 + \\hat{\\beta}_1 \\cdot \\text{meter}_{\\text{line}}",
+      "symbol_and_unit_ledger": "{'EP_{\\\\text{lineout}}': 'Expected points from lineout, dimensionless', '\\\\text{meter}_{\\\\text{line}}': 'Distance from goal line in meters, m', '\\\\hat{\\\\beta}_0': 'Intercept term, dimensionless', '\\\\hat{\\\\beta}_1': 'Slope coefficient, points per meter'}",
+      "assumptions": "Linear relationship between distance and expected points; static environment during lineout execution.",
+      "breakdown_regime": "At boundary distances where \\text{meter}_{\\text{line}} = 0 or maximum field length.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps spatial positioning to immediate scoring potential in rugby union, enabling tactical decision-making.",
+        "source_operator": "expected_points_framework",
+        "telemetry": "Lineout success rate vs. expected point gain."
+      }
+    },
+    {
+      "primitive_id": "temporal_dominance_score",
+      "name": "Temporal Dominance Score",
+      "verbatim_quote": "(2602.19513v1) — ADAPT | win_spread_total — (a) T-score function T(a,b): [0,∞)2→R mapping scores to continuous dominance, with draw benchmark c satisfying T(x,x)=c and sign(T(a,b)-c)=sign(a-b)....",
+      "page": 37,
+      "latex": "T(a,b) = \\frac{a - b}{a + b + c}",
+      "symbol_and_unit_ledger": "{'T(a,b)': 'Temporal dominance score, dimensionless', 'a': 'Score of team A, points', 'b': 'Score of team B, points', 'c': 'Draw benchmark constant, points'}",
+      "assumptions": "Scores are non-negative integers; draw occurs when a = b.",
+      "breakdown_regime": "When a = b (draw case), T(a,b) = 0; when a >> b, T approaches 1.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a normalized difference measure used in win probability modeling.",
+        "source_operator": "temporal_dominance_score",
+        "telemetry": "Win probability change per time interval."
+      }
+    },
+    {
+      "primitive_id": "multi_agent_video_analysis",
+      "name": "Multi-Agent Video Analysis",
+      "verbatim_quote": "**COACH: Collaborative Agents for Contextual Highlighting — A Multi-Agent Framework for Sports Video Analysis** (2512.01853v2) — ADAPT | tracking — (a) Shared backbone: Flan-T5-XL (LLM) + TC-CLIP-B/16 video encoder + Q-Former vision-language alignment; captioning-task alignment; fully supervised...",
+      "page": 36,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Video data is temporally aligned with game events; agent collaboration improves localization accuracy.",
+      "breakdown_regime": "Failure when video resolution drops below threshold or event misalignment exceeds tolerance.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables automated highlight generation via distributed agent coordination over visual and textual modalities.",
+        "source_operator": "multi_agent_video_analysis",
+        "telemetry": "Highlight precision-recall tradeoff."
+      }
+    },
+    {
+      "primitive_id": "probabilistic_shot_model",
+      "name": "Probabilistic Shot Model",
+      "verbatim_quote": "**Beyond Expected Goals: A Probabilistic Framework for Shot Occurrences in Soccer** (2512.00203v2) — ADAPT | experimental — Two separate XGBoost models trained on engineered features (§3.3): xS: predicts the probability that a shot will occur in the next second; xG:...",
+      "page": 36,
+      "latex": "P(\\text{shot}) = \\sigma(\\theta^T \\mathbf{x})",
+      "symbol_and_unit_ledger": "{'P(\\\\text{shot})': 'Probability of shot occurrence, dimensionless', '\\\\sigma': 'Logistic sigmoid function', '\\\\theta': 'Model weights vector, dimensionless', '\\\\mathbf{x}': 'Feature vector, dimensionless'}",
+      "assumptions": "Shot occurrence follows Bernoulli distribution; features are independent and stationary.",
+      "breakdown_regime": "At extreme feature values where P(shot) approaches 0 or 1.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps sequence of actions to shot likelihood, enabling predictive modeling in soccer.",
+        "source_operator": "probabilistic_shot_model",
+        "telemetry": "Shot detection F1-score."
+      }
+    },
+    {
+      "primitive_id": "luck_neutralized_epa",
+      "name": "Luck-Neutralized Expected Points Added",
+      "verbatim_quote": "**3.4.3 Luck-neutralized EPA.** `src/nfl/luck-neutralized-epa.ts` (from dgrifka/luck-neutralized-epa, MIT) — adjusts EPA for high-variance outcomes (fumble recoveries, tipped INTs, missed FGs) so team strength reflects process quality, not coin-flip luck; `deserveToWin` replays games with neutralized EPA.",
+      "page": 48,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'EPA': 'Expected Points Added (dimensionless)', 'LNEPA': 'Luck-Neutralized EPA (dimensionless)'}",
+      "assumptions": "High-variance events are modeled as Bernoulli trials with known probabilities; EPA is decomposable into deterministic and stochastic components.",
+      "breakdown_regime": "When variance exceeds threshold (e.g., fumbles, INTs), LNEPA reweights outcomes to reflect true process quality.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "LNEPA serves as a refined estimator of team performance in GSI's Bayesian calibration pipeline, reducing noise from random fluctuations.",
+        "source_operator": "luck_neutralized_epa",
+        "telemetry": "Replay-based deviation from standard EPA indicates luck-adjustment efficacy."
+      }
+    },
+    {
+      "primitive_id": "expected_metrics",
+      "name": "Play-Level Expected Metrics",
+      "verbatim_quote": "**3.4.4 Expected metrics.** `src/expected-metrics/` — drives, expected completion, expected points, expected rush yards, expected YAC, from linear and logistic fits on nflverse pbp mapping.",
+      "page": 48,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E[drives]': 'Expected number of drives (dimensionless)', 'E[completion]': 'Expected pass completion rate (probability)', 'E[points]': 'Expected points scored (dimensionless)', 'E[rush_yards]': 'Expected rushing yards (yards)', 'E[YAC]': 'Expected yards after catch (yards)'}",
+      "assumptions": "Linear/logistic regression models capture conditional expectations given play context; pbp data is representative of underlying process.",
+      "breakdown_regime": "At low sample sizes or extreme contexts, expected values may diverge from empirical averages due to model misspecification.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Expected metrics provide input features for GSE’s situational reasoning engine, enabling dynamic state transitions based on probabilistic play outcomes.",
+        "source_operator": "expected_metrics",
+        "telemetry": "Mean squared error between observed and expected values across plays indicates model fidelity."
+      }
+    },
+    {
+      "primitive_id": "dispersion_estimation",
+      "name": "Per-Sport Dispersion Estimation",
+      "verbatim_quote": "**3.4.5 Per-sport dispersion estimation.** `src/dispersion/estimate-phi.ts` — estimates NB2 φ per sport from settled results (MLB VMR ≈ 2.15 → φ ≈ 3.7; NHL goals ≈ Poisson, no dispersion).",
+      "page": 48,
+      "latex": "\\hat{\\phi} = \\frac{\\text{Var}(Y)}{\\mathbb{E}[Y]} - 1",
+      "symbol_and_unit_ledger": "{'Y': 'Count variable (e.g., goals, touchdowns)', 'φ': 'Dispersion parameter (dimensionless)', 'Var(Y)': 'Variance of Y (dimensionless)', 'E[Y]': 'Expected value of Y (dimensionless)'}",
+      "assumptions": "Counts follow Negative Binomial distribution; observed variance exceeds mean by φ times the mean.",
+      "breakdown_regime": "When φ approaches zero, distribution converges to Poisson; when φ > 0, overdispersion is present.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dispersion estimation enables GSI to adjust prior beliefs about event likelihoods according to sport-specific variability, aligning with GSE’s ensemble forecasting logic.",
+        "source_operator": "dispersion_estimation",
+        "telemetry": "Ratio of actual vs predicted variance confirms dispersion estimate accuracy."
+      }
+    },
+    {
+      "primitive_id": "inplay_wp_markov",
+      "name": "In-Play Win Probability Markov Chain",
+      "verbatim_quote": "### 3.5 Live / in-play layer **3.5.1 In-play WP Markov chain.** `src/inplay/inplay-wp-markov.ts` — discrete-time Markov chain over lead states (-40...+40) with empirical per-second scoring tempo and lead-conditioned scoring balance; team-conditioned variant fits leader-scores probabilities by logistic from Elo/spread priors.",
+      "page": 48,
+      "latex": "P_{ij}(t) = \\sum_k P_{ik}(t-1) \\cdot P_{kj}(1)",
+      "symbol_and_unit_ledger": "{'P_{ij}(t)': 'Probability of transitioning from lead state i to j at time t (probability)', 't': 'Time step (seconds)', 'P_{kj}(1)': 'Transition probability over one second (probability)'}",
+      "assumptions": "Game state evolves as a discrete-time Markov chain; scoring tempo and lead effects are stationary over time intervals.",
+      "breakdown_regime": "At large leads (>20 points), transition probabilities stabilize; near tie games show higher volatility.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Markov chain provides a probabilistic foundation for GSE’s live-inference system, allowing real-time updates of win probabilities conditioned on evolving game states.",
+        "source_operator": "inplay_wp_markov",
+        "telemetry": "Brier score difference between predicted and realized outcomes validates chain accuracy."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "43ee75a62a47e9da_t0",
+      "think": "Chapter 1 of the GSE Deep NFL Methods Corpus outlines foundational analytical methods drawn from arXiv research, emphasizing adaptive and adoptive strategies for integrating advanced statistical models into the Galaxy Sports Engine. It begins with a structured overview of the arXiv methods corpus, detailing how 750+ papers were evaluated for relevance to sports analytics. The core focus lies in identifying and applying mathematical frameworks such as Bradley-Terry–Elo unification, online gradient ascent, trajectory imputation via conditional VAEs, and Bayesian win probability estimation. These primitives form the backbone of GSE’s predictive architecture, enabling robust, context-aware decision-making in real-time scenarios. Each method is vetted through empirical validation and mapped to specific layers of GSI and GSE functionality, ensuring alignment with both theoretical rigor and practical utility. The chapter also underscores the importance of avoiding overfitting and maintaining model integrity through principled adaptation rather than blind adoption. Window 1 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 20th-century work on paired comparison models (Bradley-Terry) and modern reinforcement learning techniques (Elo), these methods evolved through machine learning integration in sports analytics literature. Retrocausal Genealogy (Window 1): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models account for strategic behavior by assuming rational agents with bounded knowledge, incorporating uncertainty and feedback loops in team and player performance modeling. Theory of Mind (Window 1): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity checks ensure that derived features do not redundantly encode similar information across layers, preventing leakage from affecting model generalization. Cross-Layer Veto (Window 1): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "43ee75a62a47e9da_t1",
+      "think": "Chapter 2 explores foundational methods for analyzing football performance through statistical and computational lenses. It begins by establishing core metrics such as scoring dynamics, which quantify how different play types contribute to overall team performance. This leads naturally into network-based team rating systems that extend classical win-loss models to incorporate complex inter-team relationships. The inclusion of social influence models introduces a behavioral dimension, suggesting that crowd wisdom may be shaped by interpersonal dynamics within teams or fan bases. Finally, natural language processing techniques enable real-time event detection from social media, bridging digital communication with structured game intelligence. These primitives collectively support a multi-layered understanding of football that integrates deterministic scoring, relational structures, behavioral patterns, and emergent information sources. Window 2 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on network theory and game analytics, evolving through developments in stochastic modeling and machine learning applications in sports data science. Retrocausal Genealogy (Window 2): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models both conscious and unconscious influences on team performance, including how coaches might anticipate opponent strategies and how public sentiment affects player morale. Theory of Mind (Window 2): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting by ensuring that each primitive operates independently without redundant assumptions across layers, particularly avoiding circular dependencies between scoring and influence models. Cross-Layer Veto (Window 2): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "43ee75a62a47e9da_t2",
+      "think": "Chapter 3 explores foundational statistical and machine learning frameworks for modeling sports dynamics. The integration of Bayesian methods with stochastic processes enables nuanced understanding of player behavior and team interactions. Key themes include probabilistic modeling of event sequences, such as the hot hand in basketball and threat generation in football, alongside more traditional approaches like the Dixon-Coles model for football scoring. These models are unified under a common thread of probabilistic inference, where latent variables capture unobservable aspects of performance. The chapter emphasizes empirical validation through structured datasets and simulation environments, particularly in the context of fantasy sports and betting markets. This aligns with GSI's focus on real-time inference and GSE's emphasis on predictive state transitions. The use of advanced techniques like Hawkes processes and INGARCH models reflects a shift towards capturing temporal dependencies and self-excitation in sports data, which is critical for accurate forecasting and strategic planning. Window 3 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on Poisson processes and Markov chains, extended by developments in Bayesian nonparametrics and temporal point processes in sports analytics. Retrocausal Genealogy (Window 3): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models account for both individual player agency and collective team behavior, incorporating feedback loops and emergent patterns in gameplay dynamics. Theory of Mind (Window 3): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Avoids conflating deterministic strategies with probabilistic outcomes; ensures that models do not overfit to historical data without considering generalizability. Cross-Layer Veto (Window 3): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "43ee75a62a47e9da_t3",
+      "think": "Chapter 4 explores foundational methods for integrating probabilistic modeling, temporal dominance metrics, and multi-agent systems into sports intelligence frameworks. The expected points framework provides a structured approach to evaluating strategic decisions in rugby, while temporal dominance scores offer a continuous measure of competitive balance. Multi-agent video analysis enables scalable highlight generation, and probabilistic shot models enhance predictive capabilities in soccer. These primitives form a coherent foundation for GSI’s Bayesian inference and GSE’s situational reasoning engines, supporting both real-time tactical decisions and long-term performance analytics. Window 4 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on expected goals and win probability models, evolving through machine learning integration and multi-agent architectures in modern sports analytics. Retrocausal Genealogy (Window 4): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models simulate opposing teams' decision-making under uncertainty, incorporating player skill, environmental constraints, and strategic objectives. Theory of Mind (Window 4): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that probabilistic shot models and expected points frameworks do not redundantly encode similar spatial-temporal features, maintaining distinct signal dimensions. Cross-Layer Veto (Window 4): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "43ee75a62a47e9da_t4",
+      "think": "Chapter 5 introduces foundational primitives that bridge statistical modeling and real-time game intelligence. The core idea is to disentangle luck from skill through luck-neutralized EPA, which allows for more accurate team strength assessments. Expected metrics derived from regression models offer predictive signals at the play level, essential for situational reasoning engines. Per-sport dispersion estimation accounts for variance differences across sports, ensuring calibrated probabilistic forecasts. In-play win probability modeling uses Markov chains to simulate game evolution dynamically, incorporating both temporal and contextual dependencies. These primitives collectively enable GSI to perform Bayesian inference on team capabilities and GSE to reason about evolving game states. Ensemble methods further refine these signals, combining multiple models to produce robust predictions. The DFS layer adds another dimension by optimizing player selections under payout structures, integrating risk and reward trade-offs. Together, they constitute a layered architecture where each component builds upon previous ones to support complex, multi-agent decision-making in football analytics. Window 5 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on EPA and win probability models, this chapter extends earlier frameworks by introducing luck adjustment, dispersion modeling, and Markovian state transitions, building on seminal contributions from FiveThirtyEight and advanced machine learning techniques. Retrocausal Genealogy (Window 5): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models assume rational agents with bounded information processing, where teams optimize strategies within constraints imposed by rules, personnel, and opponent behavior. Coaches and players are modeled as optimizing decision-makers whose actions influence game outcomes probabilistically. Theory of Mind (Window 5): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that luck-neutralized EPA does not overlap with expected metrics in signal space. Leakage is prevented by isolating in-play WP from ensemble forecasts, avoiding double-counting of predictive information. Cross-Layer Veto (Window 5): Rooted in gse-deep-nfl-methods-corpus-2026 (43ee75a62a47e9da, 59/59 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

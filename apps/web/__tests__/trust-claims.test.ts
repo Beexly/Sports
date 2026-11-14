@@ -180,6 +180,24 @@ describe("Banned-phrase scanner", () => {
     ).toBe(true);
   });
 
+  it("exempts the Week-9 lane-report surname shapes (leaderboard parenthetical, kebab slug)", () => {
+    const isLock = (text: string, opts?: { lockDigestExempt?: boolean }) =>
+      scanForBannedPhrases(text, opts).some((h) => h.claimId === "banned.lock");
+
+    // "(Lock 127.3)" — a passer-rating leaderboard parenthetical, not a pick claim.
+    expect(
+      isLock("highest passer rating 2026, min. 200 attempts (Lock 127.3); OL rankings ahead of Week 9"),
+    ).toBe(false);
+    // "hawkblogger-lock-darnold-...csv" — a lane report's file slug.
+    expect(isLock("CSV hawkblogger-lock-darnold-turnover-halves-2026.csv.")).toBe(false);
+    // The slangs the exemption must not swallow.
+    expect(isLock("my lock of the day pays 2.5u")).toBe(true);
+    expect(isLock("bills/lock/chiefs parlay")).toBe(true);
+    expect(isLock("the total is a Lock 2.5u")).toBe(true);
+    // A bare leaderboard surname with no parenthetical and no digest flag still hits.
+    expect(isLock("leaderboard: Allen 2.9, Purdy 2.8, Lock 2.77.")).toBe(true);
+  });
+
   // Tripwire (2026-09-02 automated review): the "AI picks" family only
   // covered plural "AI picks" and hyphenated "AI-generated picks" — the
   // singular and un-hyphenated variants slipped past the gate. All six

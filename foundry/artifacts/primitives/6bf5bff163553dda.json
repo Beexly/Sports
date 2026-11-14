@@ -1,0 +1,306 @@
+{
+  "book_id": "6bf5bff163553dda",
+  "source_status": "COMPLETE",
+  "title": "2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE",
+  "file_name": "2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE.txt",
+  "sha256": "6bf5bff163553ddaa50a483eb03ec4868d2db7a84aabd5134bb3c9c602d7ce06",
+  "primary_domain": "psych",
+  "pages_total": 29,
+  "pages_read": 29,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 29,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "The transition from suppressed diagnostic overlays to active probability engines is mathematically unified via dynamic weighting of empirical situational priors. By excising zero-weight suppression, the system enforces a strict bijective mapping between verified literature and ranking probabilities, ensuring that physical context directly modulates market consensus without hallucination. Multi-layer HNSW graph traversal with dual-frequency spectral routing enables rapid retrieval of causally relevant premises from verified literature, integrating high-dimensional embeddings with structured symbolic reasoning.",
+  "gsi_mapping": "GSI maps these primitives through Bayesian updating where external directional opinions are treated as noisy observations. The Price Rule acts as a conformal inference filter, re-pricing historical wagers against live exchange tape to quantify consumed Closing Line Value, thereby isolating true predictive alpha from exhausted syndicate steam. GSI leverages the HNSW indexing and BRIDGE routing to compute validated causal traces through Bayesian inference over structured knowledge graphs, ensuring integrity via 38-Gate bus verification.",
+  "gse_mapping": "Within GSE, situational reasoning operates as a state-transition mechanism. Empirical evaluators—such as altitude fatigue decay or coaching tendencies—directly adjust factor breakdowns for Spread and Totals. Fail-closed entity resolution ensures that taxonomic divergences across bookmakers do not introduce collinear noise into the Layer-2 scoring engine. GSE employs the multi-stage causal engine to model dynamic game states, using symbolic Jacobians and second-order Hessians to simulate real-time strategic transitions and player interaction dynamics.",
+  "primitives": [
+    {
+      "primitive_id": "dynamic_corpus_weighting",
+      "name": "Dynamic Corpus Adjustment Operator",
+      "verbatim_quote": "In process-sport.ts (lines 1378–1395), legacy zero-weight suppression on corpusAdjustment was excised, setting corpusWeight: 1.0 dynamically so that verified literature and situational shifts directly adjust the model ranking probability (rankingP) over the de-vigged market baseline.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "corpusWeight: dimensionless scalar [0, 1]; rankingP: probability mass [0, 1]",
+      "assumptions": "Verified literature provides non-zero information gain relative to the de-vigged market baseline.",
+      "breakdown_regime": "Breaks down when situational priors become perfectly collinear with market consensus, rendering corpusWeight redundant.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Directly maps to the activation of Layer-2 situational scoring by removing artificial zero-suppression on empirical priors.",
+        "source_operator": "dynamic_corpus_weighting",
+        "telemetry": "Variance in rankingP adjustments post-corpus integration."
+      }
+    },
+    {
+      "primitive_id": "empirical_situational_evaluators",
+      "name": "Empirical Situational Evaluator Wiring",
+      "verbatim_quote": "Simultaneously, game-context.ts (lines 980–1080), scoring.ts (lines 918–932), and index.ts (lines 640–665) were expanded to wire four empirical situational evaluators directly into Spread, Total, and Moneyline factor breakdowns: evaluateHighAltitudeFatigueDecay, evaluateRefereeCrewTendencies, evaluateRedZonePersonnelGrouping, and evaluateCoachingTendencies.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Spread: points; Total: points; Moneyline: implied probability; Evaluators: dimensionless feature vectors",
+      "assumptions": "Physical, schematic, and behavioral contexts exert independent, measurable pressure on standard betting markets.",
+      "breakdown_regime": "Fails if evaluator outputs exhibit high multicollinearity with existing Layer-1 market pricing.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the injection of orthogonal feature spaces into the core probabilistic state machine.",
+        "source_operator": "empirical_situational_evaluators",
+        "telemetry": "Factor contribution scores per market leg."
+      }
+    },
+    {
+      "primitive_id": "decision_time_repricing",
+      "name": "Decision-Time Re-Pricing Delta",
+      "verbatim_quote": "The resulting price delta is formulated as: \\Delta_{\\text{price}} = P_{t_{\\text{read}}} - P_{t_{\\text{slip}}} This \\Delta_{\\text{price}} scalar is stamped onto the ingestion record and routed directly into Layer-2 situational scoring via computeLineMovementScore.",
+      "page": 1,
+      "latex": "\\Delta_{\\text{price}} = P_{t_{\\text{read}}} - P_{t_{\\text{slip}}}",
+      "symbol_and_unit_ledger": "\\Delta_{\\text{price}}: points or decimal odds shift; P_{t_{\\text{read}}}: live market price at read time; P_{t_{\\text{slip}}}: historical slip price",
+      "assumptions": "Live market tape accurately reflects current aggregate syndicate intelligence.",
+      "breakdown_regime": "Singularities occur during extreme liquidity droughts where P_{t_{\\text{read}}} fails to reflect true consensus.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Calculates the exact Closing Line Value (CLV) consumed prior to ingestion, preventing alpha decay.",
+        "source_operator": "decision_time_repricing",
+        "telemetry": "Magnitude of \\Delta_{\\text{price}} relative to initial public lines."
+      }
+    },
+    {
+      "primitive_id": "fail_closed_entity_resolution",
+      "name": "Fail-Closed Entity Resolution",
+      "verbatim_quote": "When canonical entity mapping cannot establish an exact bijective match for a player prop or parlay leg, the resolver flags the leg as UNMATCHED or MISSING_INPUT, resolves remaining valid legs transparently, and is mathematically barred from hallucinating or interpolating an approximate line.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Entity Match: Boolean; Leg Status: Enum {VALID, UNMATCHED, MISSING_INPUT}",
+      "assumptions": "Bookmaker taxonomies are structurally divergent but logically reducible to a canonical schema.",
+      "breakdown_regime": "System halts ingestion for a specific leg if bijective mapping confidence falls below absolute certainty.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforces strict data integrity boundaries, acting as a veto layer against hallucinated inputs in multimodal OCR pipelines.",
+        "source_operator": "fail_closed_entity_resolution",
+        "telemetry": "Rate of UNMATCHED flags across DraftKings/FanDuel/Caesars taxonomies."
+      }
+    },
+    {
+      "primitive_id": "idx_lit_premises_context_gin",
+      "name": "Contextual Literature Premise Index",
+      "verbatim_quote": "IN index idx_lit_premises_context_gin over the canonical view v_class_a_literature_premises (WHERE record_class = 'CITABLE_VERIFIED' AND citable = TRUE AND verification_tier = 'MSVH_S1_EXACT' AND status = 'ACTIVE').",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All premises are verified and citable; indexed under canonical view for retrieval.",
+      "breakdown_regime": "Active records only, filtered by MSVH_S1_EXACT tier.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps textual literature to structured premise database via GIN index, enabling fast retrieval for causal inference in GSI.",
+        "source_operator": "idx_lit_premises_context_gin",
+        "telemetry": "Retrieval latency <1.5ms, recall@20 ≥ 0.992"
+      }
+    },
+    {
+      "primitive_id": "class_a_hnsw_graph_traversal",
+      "name": "Class-A HNSW Graph Traversal",
+      "verbatim_quote": "In Stage B (Multi-Layer pgvector HNSW Graph Traversal, reducing \\sim 2,500 \\to 250 candidates in <1.5\\text{ ms}), each Class-A premise embedding \\mathbf{v}_i \\in \\mathbb{R}^{1024} is indexed in idx_lit_premises_class_a_hnsw (m = 24, \\text{ef\\_construction} = 200, scale multiplier m_L = 1/\\ln(24) \\approx 0.3147).",
+      "page": 8,
+      "latex": "\\mathbf{v}_i \\in \\mathbb{R}^{1024}",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{v}_i': 'Embedding vector of dimension 1024'}",
+      "assumptions": "Embeddings are normalized; HNSW parameters fixed for performance.",
+      "breakdown_regime": "Reduces 2500 candidates to 250 in <1.5ms.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Performs efficient nearest neighbor search in high-dimensional space using HNSW graph structure.",
+        "source_operator": "class_a_hnsw_graph_traversal",
+        "telemetry": "Search ef_search = 64 (in-play), ef_search = 128 (pre-game)"
+      }
+    },
+    {
+      "primitive_id": "bridge_dual_frequency_spectral_routing",
+      "name": "Bridge Dual-Frequency Spectral Routing",
+      "verbatim_quote": "In Stage C (BRIDGE Dual-Frequency Spectral Routing, reducing 250 \\to 50 active mechanisms in <1.2\\text{ ms}), to prevent cosine over-alignment from suppressing high-frequency situational nuances, arxiv-hnsw-bridge.ts applies Dual-Frequency Graph Evidence (DFGE) over the normalized context-premise bipartite graph \\hat{\\mathbf{A}}_{ui} = \\mathbf{D}^{-1/2}\\mathbf{A}_{ui}\\mathbf{D}^{-1/2}.",
+      "page": 8,
+      "latex": "\\hat{\\mathbf{A}}_{ui} = \\mathbf{D}^{-1/2}\\mathbf{A}_{ui}\\mathbf{D}^{-1/2}",
+      "symbol_and_unit_ledger": "{'\\\\hat{\\\\mathbf{A}}_{ui}': 'Normalized bipartite adjacency matrix', '\\\\mathbf{D}': 'Degree matrix', '\\\\mathbf{A}_{ui}': 'Adjacency matrix'}",
+      "assumptions": "Graph evidence is normalized; DFGE prevents loss of high-frequency details.",
+      "breakdown_regime": "Reduces 250 to 50 active mechanisms in <1.2ms.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applies spectral decomposition to extract low/mid/high frequency components for nuanced causal modeling.",
+        "source_operator": "bridge_dual_frequency_spectral_routing",
+        "telemetry": "Spectral bands: 22/21/21 (low/mid/high)"
+      }
+    },
+    {
+      "primitive_id": "symbolic_jacobian_hessian_coupling",
+      "name": "Symbolic Jacobian-Hessian Coupling",
+      "verbatim_quote": "In Stage D (Cross-Equation Symbolic Jacobians and Second-Order Hessian Couplings), rather than summing isolated premise deltas linearly, all 50,000 formulas across Clusters M1 through M6 are compiled into typed symbolic operators v_{\\text{out}(i)} = f_i(\\mathbf{v}_{\\text{in}(i)}; \\beta_i).",
+      "page": 8,
+      "latex": "v_{\\text{out}(i)} = f_i(\\mathbf{v}_{\\text{in}(i)}; \\beta_i)",
+      "symbol_and_unit_ledger": "{'v_{\\\\text{out}(i)}': 'Output vector', '\\\\mathbf{v}_{\\\\text{in}(i)}': 'Input vector', '\\\\beta_i': 'Parameter vector'}",
+      "assumptions": "Formulas are typed and compiled symbolically; coupling enables nonlinear interaction modeling.",
+      "breakdown_regime": "Handles 50,000 symbolic operators across clusters M1–M6.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes causal relationships between inputs and outputs via symbolic differentials, enabling state transition modeling in GSE.",
+        "source_operator": "symbolic_jacobian_hessian_coupling",
+        "telemetry": "Nonlinear coupling of 50K formulas across clusters"
+      }
+    },
+    {
+      "primitive_id": "dual_speed_synaptic_plasticity",
+      "name": "Dual-Speed Synaptic Plasticity",
+      "verbatim_quote": "Dual-Speed Synaptic Plasticity: Orthogonal TTT Fast Weights and ReHarness Continual Memory Standard Retrieval-Augmented Generation (RAG) architectures never alter internal model weights, while naive continual fine-tuning suffers from catastrophic forgetting of physical and mathematical laws.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Model weights remain fixed during standard RAG operations; fast weights enable transient adaptation without permanent modification.",
+      "breakdown_regime": "Catastrophic forgetting occurs when model weights are updated naively in continual learning settings.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "TTT fast weights map to GSE's dynamic attention mechanism; ReHarness memory aligns with GSI's episodic recall kernel.",
+        "source_operator": "dual_speed_synaptic_plasticity",
+        "telemetry": "Memory retention vs. adaptation rate under continual training protocols."
+      }
+    },
+    {
+      "primitive_id": "re_harness_continual_learning",
+      "name": "ReHarness Continual Learning",
+      "verbatim_quote": "In parallel, ReHarness (arXiv:2610.12668v1) prevents overgeneralized reflections (such as \"WR1 injury boosts WR2 targets\") from persisting in memory and misleading future decisions via a two-step recurrent loop over harness state h_t = \\{R_i\\}_{i < t}.",
+      "page": 16,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Overgeneralizations arise due to lack of contextual filtering in memory retrieval; iterative revision corrects these errors.",
+      "breakdown_regime": "Failure to revise erroneous patterns leads to persistent misgeneralization in decision-making.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Two-step loop maps to GSE's feedback control architecture; harness state h_t corresponds to GSI's episodic memory buffer.",
+        "source_operator": "re_harness_continual_learning",
+        "telemetry": "Reduction in false-positive reflection propagation across sequential queries."
+      }
+    },
+    {
+      "primitive_id": "m_dot_pfn_causal_modeling",
+      "name": "M-DoT-PFN Causal Modeling",
+      "verbatim_quote": "To model both betting markets and in-game trajectories as continuous-time stochastic processes, packages/prediction-engine/src/causal/continuous-time-cpfn.ts integrates the Continuous-Time Causal Prior-Data Fitted Network (CT-CPFN / M-DoT-PFN) of Thumm and Chen (Oct 8, 2026, arXiv:2610.12537v1) alongside Causal POMDP policy evaluation (CausalPPO, arXiv:2512.18135v1).",
+      "page": 16,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Interventions can be modeled as time-varying causal effects; continuous-time dynamics require state-space representations.",
+      "breakdown_regime": "Observational bias arises when confounders are not properly accounted for in discrete-time models.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "M-DoT-PFN maps to GSE's interventional policy evaluation framework; CausalPPO aligns with GSI's action selection logic.",
+        "source_operator": "m_dot_pfn_causal_modeling",
+        "telemetry": "Bias reduction in estimated causal impacts compared to observational regressions."
+      }
+    },
+    {
+      "primitive_id": "cross_modal_agreement_deception_score",
+      "name": "Cross-Modal Agreement Deception Score",
+      "verbatim_quote": "H2_WED_FULL_BOARD (Wednesday 14:00 CT) T - 28\\text{h} TNF / T - 92\\text{h} Sun Wednesday practice participation reports, DraftKings \\$50,000 DFS salaries, Sleeper/ESPN rosters.",
+      "page": 18,
+      "latex": "\\text{DeceptionScore}(q \\to r) = 1 - \\cos\\left(\\mathbf{e}_{\\text{sideline}}^{\\text{AV-HuBERT}}(q \\to r), \\;\\; \\mathbf{e}_{\\text{podium}}^{\\text{Whisper}}(q \\to r)\\right)",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{e}_{\\\\text{sideline}}^{\\\\text{AV-HuBERT}}': 'Visual affect embedding vector (dimensionless)', '\\\\mathbf{e}_{\\\\text{podium}}^{\\\\text{Whisper}}': 'Audio/text embedding vector (dimensionless)', '\\\\text{DeceptionScore}': 'Scalar measure of modal agreement (0 to 1)'}",
+      "assumptions": "Disagreement between modal embeddings indicates deception or inconsistency in communication.",
+      "breakdown_regime": "High deception score (>0.65) signals potential misinformation that should be filtered from prior beliefs.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CMA score acts as a GSI confidence filter; modality alignment drives robust belief updating in GSE.",
+        "source_operator": "cross_modal_agreement_deception_score",
+        "telemetry": "Frequency of flagged COACHSPEAK_MUTED events and associated impact on decision accuracy."
+      }
+    },
+    {
+      "primitive_id": "6bf5bff163553dda_w3_g1",
+      "name": "2026-10-22_GSE_Omni-Cognitive_World_Model_ Ch.4 Grounded Operator",
+      "verbatim_quote": ", and lower conformal edge >0.015 enter Tier 2 (CORE_VALIDATED), while high-horizon-variance matchups enter Tier 3 (SURVEILLANCE_WATCH), publishing the full causal dossier with 0.00\\% capital risked until a pre-registered CC-* boundary-node trigger fires.",
+      "page": 22,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6bf5bff163553dda_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6bf5bff163553dda_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6bf5bff163553dda_w3_g2",
+      "name": "2026-10-22_GSE_Omni-Cognitive_World_Model_ Ch.4 Grounded Operator",
+      "verbatim_quote": "Synchronous Post-Settlement Self-Improvement Loop and Production Wire-In Reconciliation T16 Murphy Brier Partition, Laplace–Kalman Filtering, and BBP Abductive Node Invention Upon BettingEvent.GameStatus == \"Final\", drainPendingSettlementLoopLearning() in packages/ingestion-pipeline/src/post-settlement-work.ts executes the synchronous T16 self-improvement loop (settlement-loop.ts, 17/17 tests passing) across four coupled mathematical stages.",
+      "page": 22,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6bf5bff163553dda_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6bf5bff163553dda_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "6bf5bff163553dda_w3_g3",
+      "name": "2026-10-22_GSE_Omni-Cognitive_World_Model_ Ch.4 Grounded Operator",
+      "verbatim_quote": "In g7-circuit-breaker.ts (wired live into proven-path-engine.ts and selective-publish-runtime.ts at commit 405de4ed2), incorporating the finite-sample binomial noise floor (\\text{diff} > \\text{bias} + 2\\text{SE} + 0.02) prevents small-window variance from falsely halting 393/400 healthy market families while immediately populating g7HaltedGroups whenever true calibration drift breaches threshold.",
+      "page": 22,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 6bf5bff163553dda_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "6bf5bff163553dda_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6bf5bff163553dda_t0",
+      "think": "The architectural evolution detailed in pages 1 through 4 represents a fundamental paradigm shift from passive observation to active, production-wired probabilistic modeling. Historically, sports analytics relied heavily on Layer-1 market consensus, treating closing lines as infallible oracles. However, the September 28 staleness audit exposed a critical vulnerability: the ingestion of stale market opinions without temporal re-evaluation. The introduction of the Price Rule, formalized by the equation \\Delta_{\\text{price}} = P_{t_{\\text{read}}} - P_{t_{\\text{slip}}}, establishes a rigorous mathematical framework for quantifying consumed Closing Line Value (CLV). This ensures that external directional opinions, whether harvested from TailMe or Action Network, are strictly evaluated against live exchange tape, effectively neutralizing the risk of chasing exhausted syndicate steam.\n\nFurthermore, the excision of zero-weight suppression on corpusAdjustment signifies a doctrinal commitment to empirical situational priors. By dynamically setting corpusWeight to 1.0, the engine integrates verified literature—such as altitude fatigue decay or referee crew tendencies—directly into the ranking probability matrix. This is not merely an additive adjustment but a multiplicative modulation of the de-vigged market baseline. Concurrently, the implementation of fail-closed entity resolution addresses the chaotic reality of bookmaker taxonomy divergence. By mathematically barring interpolation when bijective matches fail, the system prioritizes epistemic integrity over completeness. This triad of innovations—temporal re-pricing, dynamic corpus weighting, and strict entity resolution—collectively constructs a robust Layer-2 cognitive architecture capable of extracting sustainable predictive alpha in a highly efficient market environment.",
+      "retrocausal_genealogy": "This architecture inherits from early efficient market hypothesis critiques in finance, adapting them to sports betting. It evolves past simple regression models by integrating real-time order flow dynamics (Price Rule) and strict ontological constraints (Match Rule), reflecting a mature understanding of market microstructure and informational latency. Retrocausal Genealogy (Window 1): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The system models opposing agents—syndicates, recreational bettors, and bookmakers—as rational actors operating under varying informational constraints. By tracking \\Delta_{\\text{price}}, it infers syndicate intent before the broader market adjusts. Similarly, evaluating coaching tendencies allows the engine to anticipate strategic adaptations, effectively simulating the cognitive states of head coaches during critical game-script transitions. Theory of Mind (Window 1): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "To prevent leakage, the engine employs strict anti-collinearity checks. If an empirical situational evaluator (e.g., altitude fatigue) produces a signal already fully priced into the Layer-1 spread, the corpusWeight is dynamically suppressed to avoid double-counting alpha. Furthermore, fail-closed resolution acts as a hard veto, rejecting any multimodal OCR input that cannot be bijectively mapped, thereby ensuring that Layer-2 reasoning is never contaminated by hallucinated or ambiguous market data."
+    },
+    {
+      "trace_id": "6bf5bff163553dda_t1",
+      "think": "This chapter introduces a multi-stage causal reasoning pipeline designed for high-throughput, low-latency processing of sports intelligence data. The process begins with indexing verified literature premises using GIN over a canonical view, followed by HNSW-based graph traversal to reduce candidate sets. The BRIDGE module applies dual-frequency spectral routing to preserve high-frequency situational nuances, preventing over-alignment in cosine similarity. Subsequently, symbolic Jacobians and Hessians couple cross-equation relationships, enabling precise modeling of complex interactions. Each stage enforces integrity checks via the 38-Gate bus and validates causal traces before execution. This architecture supports both pre-game and in-play scenarios with varying recall and latency requirements. The framework integrates unit-rescaling invariance and handles non-causal collider paths through selective filtering, ensuring robustness against selection bias while maintaining computational efficiency. Window 2 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in Shpitser-Pearl ID/IDC calculus and FCI algorithms, extended with modern graph neural network techniques and causal discovery methods. Retrocausal Genealogy (Window 2): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agents through interaction vectors and belief shrinkage operators, capturing adversarial strategies and defensive adjustments. Theory of Mind (Window 2): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity enforced via spectral band decomposition; leakage vetoes occur when high-frequency signals are suppressed during normalization. Cross-Layer Veto (Window 2): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6bf5bff163553dda_t2",
+      "think": "Chapter window 3 explores foundational cognitive architectures for real-time sports intelligence. The core insight is that dual-speed synaptic plasticity allows for rapid adaptation without compromising learned principles—this mirrors how human cognition balances novelty with stability. ReHarness continual learning addresses the problem of overgeneralization by implementing a two-step process: forward reading followed by backward revision. This structure ensures that past experiences inform but do not rigidly constrain future decisions. The integration of M-DoT-PFN causal modeling provides a rigorous framework for understanding interventions in complex systems such as sports outcomes. It explicitly accounts for hidden confounders and offers a principled way to estimate causal effects even under partial observability. Finally, the Cross-Modal Agreement Deception Score introduces an empirical method to detect inconsistencies in narrative reporting, which is crucial for maintaining accurate priors in GSI’s belief system. Together, these primitives form a coherent foundation for building adaptive, interpretable, and robust cognitive engines capable of navigating high-dimensional, temporally evolving environments like professional sports. Window 3 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early work on synaptic plasticity and reinforcement learning, extended through recent advances in continual learning and causal inference. Influenced by developments in multimodal fusion and test-time training paradigms. Retrocausal Genealogy (Window 3): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing agents through structured causal graphs where each actor has latent intentions and observable behaviors. Coaches, players, and syndicates are represented as nodes with probabilistic transitions reflecting strategic uncertainty and information asymmetries. Theory of Mind (Window 3): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents leakage between layers by enforcing strict modality separation in embedding spaces and applying vetoes based on cross-modal disagreement scores. Ensures that deceptive narratives do not contaminate higher-level reasoning modules. Cross-Layer Veto (Window 3): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "6bf5bff163553dda_t3",
+      "think": "Window 4 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 2026-10-22_GSE_Omni-Cognitive_World_Model_Architecture_1G1CYptE (6bf5bff163553dda, 29/29 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}
