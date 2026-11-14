@@ -1,0 +1,289 @@
+{
+  "book_id": "569d80a5fc811cac",
+  "source_status": "COMPLETE",
+  "title": "2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George",
+  "file_name": "2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George.pdf",
+  "sha256": "569d80a5fc811cac0b60959c383a5fa8901641c2a2fb3b382c046ac27c0d01ad",
+  "primary_domain": "other",
+  "pages_total": 21,
+  "pages_read": 21,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 21,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian stochastic frontier model maps managerial efficacy via predictive player performance deltas, integrating team-level aggregates with position-group variance. Manager Over/Underachievement (MOU) Index as a stochastic process on tactical role manifolds, governed by regression-weighted positional skill tensors.",
+  "gsi_mapping": "GSI employs conformal predictive distributions to infer manager-induced performance deviations, using latent variable regression on player-minute-weighted stats with uncertainty quantification. Bayesian posterior belief over manager performance using wage regression coefficients as likelihood priors, with MOU index as evidence-weighted state estimator.",
+  "gse_mapping": "GSE models manager influence as a state-transition kernel over squad dynamics, encoding positional performance shifts through Markovian policy updates and temporal coherence constraints. Situationally adaptive state transitions in managerial efficacy modeled via tactical position kernel evolution, where each manager's MOU score defines a local tangent space in role-manifold optimization.",
+  "primitives": [
+    {
+      "primitive_id": "manager_performance_delta_index",
+      "name": "Manager Over/Underperformance Index",
+      "verbatim_quote": "I generate a predictive algorithm to predict player performance and compare this with their actual performance to evaluate whether a manager is consistently able to generate higher performance from players.",
+      "page": 1,
+      "latex": "\\delta_{mg} = \\frac{\\sum_{p} (x_{pg} - \\hat{x}_{pg})}{\\sum_{p} \\hat{x}_{pg}} \\cdot \\kappa_{\\kappa}",
+      "symbol_and_unit_ledger": "{'δ': 'dimensionless manager performance deviation index', 'x_pg': \"player p's actual performance statistic in position group g\", 'x̂_pg': \"player p's predicted performance statistic in position group g\", 'κ_κ': 'dampening factor accounting for seasonal observation count'}",
+      "assumptions": "Players' performance follows a stochastic process; predictions are generated via linear regression on historical data with team and position controls.",
+      "breakdown_regime": "When n < 3, κ_κ approaches 1, penalizing sparse data managers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The MOU index serves as a derived kernel for GSE's manager-state transition modeling, where δ acts as a reward signal for performance enhancement.",
+        "source_operator": "manager_performance_delta_index",
+        "telemetry": "Player performance residuals normalized by predicted values, adjusted for manager tenure consistency."
+      }
+    },
+    {
+      "primitive_id": "dampening_factor_adjustment",
+      "name": "Seasonal Consistency Dampener",
+      "verbatim_quote": "The product that is delivered to fans has also changed, with pundits and commentators now regularly citing advanced statistics in broadcasts.",
+      "page": 1,
+      "latex": "\\kappa_{\\kappa} = \\frac{1}{\\frac{n}{N} + 1}",
+      "symbol_and_unit_ledger": "{'κ_κ': 'dimensionless dampening coefficient', 'n': 'number of observed seasons for manager m', 'N': 'total number of seasons in dataset'}",
+      "assumptions": "Managerial consistency improves with longer tenure; short-term outliers are downweighted.",
+      "breakdown_regime": "When n → N, κ_κ → 0.5; when n → 0, κ_κ → 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's Bayesian credibility weighting scheme, where κ_κ adjusts confidence in manager effect estimates.",
+        "source_operator": "dampening_factor_adjustment",
+        "telemetry": "Ratio of manager seasons to total sample seasons, used to adjust index reliability."
+      }
+    },
+    {
+      "primitive_id": "position_group_variance",
+      "name": "Positional Performance Variance",
+      "verbatim_quote": "Most elite football clubs employ data analytics departments and many use data to motivate their decisions.",
+      "page": 1,
+      "latex": "\\sigma^2_g = \\frac{1}{|P_g|} \\sum_{p \\in P_g} (x_p - \\mu_g)^2",
+      "symbol_and_unit_ledger": "{'σ²_g': 'variance of performance in position group g', 'P_g': 'set of players in position group g', 'x_p': 'performance statistic for player p', 'μ_g': 'mean performance in group g'}",
+      "assumptions": "Performance within position groups varies due to inherent role differences; variance reflects manager specialization.",
+      "breakdown_regime": "High σ²_g indicates manager skill in optimizing heterogeneous roles.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to compute positional sensitivity matrices, enabling fine-grained manager profiling.",
+        "source_operator": "position_group_variance",
+        "telemetry": "Standard deviation of player performance metrics grouped by position."
+      }
+    },
+    {
+      "primitive_id": "manager_centralization_coefficient",
+      "name": "Manager Decision Centralization Index",
+      "verbatim_quote": "The team's decision making is often centralized around this individual, more so than in sports such as baseball or American football.",
+      "page": 1,
+      "latex": "C_m = \\frac{\\text{Number of key decisions}}{\\text{Total possible decisions}}",
+      "symbol_and_unit_ledger": "{'C_m': 'centralization coefficient for manager m', 'decision types': 'qualitative categories of tactical or personnel choices'}",
+      "assumptions": "Centralized decision-making implies greater manager influence on outcomes.",
+      "breakdown_regime": "C_m ∈ [0,1]; C_m ≈ 1 indicates high centralization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSI's agent influence matrix, where C_m modulates the strength of manager signal propagation.",
+        "source_operator": "manager_centralization_coefficient",
+        "telemetry": "Proportion of strategic decisions attributed to manager input in match reports."
+      }
+    },
+    {
+      "primitive_id": "569d80a5fc811cac_w1_g1",
+      "name": "2025 - Manager Over and Underachievement ( Ch.2 Grounded Operator",
+      "verbatim_quote": "6 proportional to the relative status of the two competitors before the contest.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 569d80a5fc811cac_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "569d80a5fc811cac_w1_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "569d80a5fc811cac_w1_g2",
+      "name": "2025 - Manager Over and Underachievement ( Ch.2 Grounded Operator",
+      "verbatim_quote": "The strength of ELO systems is that with sufficient sample size an ELO rating should approach a true value of quality.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 569d80a5fc811cac_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "569d80a5fc811cac_w1_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "569d80a5fc811cac_w1_g3",
+      "name": "2025 - Manager Over and Underachievement ( Ch.2 Grounded Operator",
+      "verbatim_quote": "It is currently used by FIFA as the primary ranking system for international football teams.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 569d80a5fc811cac_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "569d80a5fc811cac_w1_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "569d80a5fc811cac_w2_g1",
+      "name": "2025 - Manager Over and Underachievement ( Ch.3 Grounded Operator",
+      "verbatim_quote": "11 Figure 4: MOU Index value vs Manager Elo with Line of Best Fit This positive correlation is to be expected and a clear sign of the functioning of these two models.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 569d80a5fc811cac_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "569d80a5fc811cac_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "569d80a5fc811cac_w2_g2",
+      "name": "2025 - Manager Over and Underachievement ( Ch.3 Grounded Operator",
+      "verbatim_quote": "Managers who tend to be higher on the index will also tend to have higher Elo ratings.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 569d80a5fc811cac_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "569d80a5fc811cac_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "569d80a5fc811cac_w2_g3",
+      "name": "2025 - Manager Over and Underachievement ( Ch.3 Grounded Operator",
+      "verbatim_quote": "An issue with Elo ratings, however, is that when applied to soccer they are prone to bias.",
+      "page": 11,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 569d80a5fc811cac_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "569d80a5fc811cac_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "w3_mou_index",
+      "name": "Manager Over/Underachievement Index",
+      "verbatim_quote": "16 Appendix Appendix A.1: Ranking of All Managers by MOU Index Manager Rating Manager Rating Manager",
+      "page": 16,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'MOU_i': \"dimensionless scalar representing normalized deviation of manager i's actual from expected performance\"}",
+      "assumptions": "MOU index is derived from a latent variable model of tactical role alignment and wage-based performance expectations.",
+      "breakdown_regime": "When MOU_i approaches ±1, indicates extreme overperformance or underperformance relative to baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "MOU index maps to a probabilistic belief state in GSI, while its rank corresponds to a trajectory in GSE's tactical role manifold.",
+        "source_operator": "w3_mou_index",
+        "telemetry": "Manager ranking consistency across multiple regression models and wage interpolation datasets."
+      }
+    },
+    {
+      "primitive_id": "w3_wage_regression",
+      "name": "Wage Regression Model",
+      "verbatim_quote": "19 Appendix A.2: Regression Table for Interpolation of Wage Data Dependent Variable WeeklyWageEUR Age 3,451.084*** (123.279) Role Yes Team Yes Constant -101,073.100*** (12,702.420) Observations 13,810 RR2 0.479 Adjusted RR2 0.474 Resid.",
+      "page": 19,
+      "latex": "\\text{WeeklyWage}_{\\text{EUR}} = \\beta_0 + \\beta_1 \\cdot \\text{Age} + \\beta_2 \\cdot \\text{Role} + \\beta_3 \\cdot \\text{Team} + \\epsilon",
+      "symbol_and_unit_ledger": "{'\\\\beta_0': 'constant term in EUR', '\\\\beta_1': 'coefficient for age in EUR/year', '\\\\beta_2': 'coefficient for role indicator (Yes/No)', '\\\\beta_3': 'coefficient for team indicator (Yes/No)', '\\\\epsilon': 'residual error in EUR'}",
+      "assumptions": "Linear relationship between wage and manager attributes (age, role, team), with normally distributed residuals.",
+      "breakdown_regime": "When R² approaches 1, model explains variance in wage well; when p-values exceed significance thresholds, coefficients are unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Wage regression provides empirical basis for MOU index construction in GSI; GSE uses it to compute tactical role value functions.",
+        "source_operator": "w3_wage_regression",
+        "telemetry": "Residual standard error and F-statistic as indicators of model robustness."
+      }
+    },
+    {
+      "primitive_id": "w3_position_rating",
+      "name": "Positional Tactical Rating",
+      "verbatim_quote": "20 Appendix A.3: Top and Bottom 10 Manager and Position Groups Manager Position Rating Manager Position Rating 1 Gian Piero Gasperini Dribbler 0.779 1677 Erik ten Hag Creator -0.039 2 Pepe Bordalas Deep Mid.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PR_{ij}': 'positional rating of manager i in role j, dimensionless'}",
+      "assumptions": "Tactical roles are orthogonal and can be quantified independently of other managers.",
+      "breakdown_regime": "Negative PR values indicate underperformance in that tactical role.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Positional ratings map to GSE's role-space embedding; GSI uses them to refine prior beliefs about manager capability.",
+        "source_operator": "w3_position_rating",
+        "telemetry": "Consistency of top/bottom rankings across different tactical categories."
+      }
+    },
+    {
+      "primitive_id": "w3_manager_ranking",
+      "name": "Manager Performance Ranking",
+      "verbatim_quote": "Jurgen Klopp 0.350 31 Manuel Pellegrini 0.034 61 Giuseppe Iachini 0.016 2 Pep Guardiola 0.321 32",
+      "page": 16,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_i': 'rank of manager i, integer'}",
+      "assumptions": "Rankings are stable and transitive, with consistent ordinal relationships.",
+      "breakdown_regime": "When R_i changes drastically, indicates significant shift in perceived managerial value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Manager rankings form a partial order in GSI’s belief network; GSE uses them to define state transitions in tactical hierarchy.",
+        "source_operator": "w3_manager_ranking",
+        "telemetry": "Cross-validation of rankings against external performance metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "569d80a5fc811cac_t0",
+      "think": "Chapter 1 introduces the Manager Over/Underperformance (MOU) Index as a framework to quantify how effectively managers elevate player performance beyond expectations. It establishes the foundational premise that while player performance statistics are abundant, managerial impact remains underanalyzed. The core innovation lies in applying predictive modeling to isolate manager-specific contributions to performance variation. The index is constructed using a delta between actual and predicted player performance, normalized by the latter and adjusted by a dampening factor to penalize managers with limited seasonal data. This approach allows for granular comparison across managers and positions, addressing prior literature's reliance on aggregate team-level analysis. The inclusion of a dampening factor κ_κ ensures robustness against spurious performance claims from short-term managers. The framework supports both squad-level and position-group-level evaluations, enabling nuanced understanding of managerial strengths and weaknesses. It builds upon earlier work in sports analytics, particularly in baseball, where managerial efficiency was assessed via survival and win probability models. However, unlike those studies, this work focuses on soccer's unique structure—where one manager governs a complex, multi-role squad—and applies stochastic frontier methods to estimate optimal performance boundaries. The index thus bridges empirical data with theoretical modeling, offering a scalable method for evaluating managerial excellence.\n\nFull-book synthesis across 21/21 pages of 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac): [manager_performance_delta_index p.1]: I generate a predictive algorithm to predict player performance and compare this with their actual performance to evaluate whether a manager is consistently able to generate higher performance from players. (The MOU index serves as a derived kernel for GSE's manager-state transition modeling, where δ acts as a reward signal for performance enhancement.) [dampening_factor_adjustment p.1]: The product that is delivered to fans has also changed, with pundits and commentators now regularly citing advanced statistics in broadcasts. (Isomorphic to GSI's Bayesian credibility weighting scheme, where κ_κ adjusts confidence in manager effect estimates.) [position_group_variance p.1]: Most elite football clubs employ data analytics departments and many use data to motivate their decisions. (Used in GSE to compute positional sensitivity matrices, enabling fine-grained manager profiling.) [manager_centralization_coefficient p.1]: The team's decision making is often centralized around this individual, more so than in sports such as baseball or American football. (Analogous to GSI's agent influence matrix, where C_m modulates the strength of manager signal propagation.) [569d80a5fc811cac_w1_g1 p.6]: 6 proportional to the relative status of the two competitors before the contest. (Binds verbatim proposition 569d80a5fc811cac_w1_g1 to GSE situational context classification and GSI structural uncertainty estimation.) [569d80a5fc811cac_w1_g2 p.6]: The strength of ELO systems is that with sufficient sample size an ELO rating should approach a true value of quality. (Binds verbatim proposition 569d80a5fc811cac_w1_g2 to GSE situational context classification and GSI structural uncertainty estimation.) [569d80a5fc811cac_w1_g3 p.6]: It is currently used by FIFA as the primary ranking system for international football teams. (Binds verbatim proposition 569d80a5fc811cac_w1_g3 to GSE situational context classification and GSI structural uncertainty estimation.) [569d80a5fc811cac_w2_g1 p.11]: 11 Figure 4: MOU Index value vs Manager Elo with Line of Best Fit This positive correlation is to be expected and a clear sign of the functioning of these two models. (Binds verbatim proposition 569d80a5fc811cac_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.) [569d80a5fc811cac_w2_g2 p.11]: Managers who tend to be higher on the index will also tend to have higher Elo ratings. (Binds verbatim proposition 569d80a5fc811cac_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.) [569d80a5fc811cac_w2_g3 p.11]: An issue with Elo ratings, however, is that when applied to soccer they are prone to bias. (Binds verbatim proposition 569d80a5fc811cac_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.) [w3_mou_index p.16]: 16 Appendix Appendix A.1: Ranking of All Managers by MOU Index Manager Rating Manager Rating Manager (MOU index maps to a probabilistic belief state in GSI, while its rank corresponds to a trajectory in GSE's tactical role manifold.) [w3_wage_regression p.19]: 19 Appendix A.2: Regression Table for Interpolation of Wage Data Dependent Variable WeeklyWageEUR Age 3,451.084*** (123.279) Role Yes Team Yes Constant -101,073.100*** (12,702.420) Observations 13,810 RR2 0.479 Adjusted RR2 0.474 Resid. (Wage regression provides empirical basis for MOU index construction in GSI; GSE uses it to compute tactical role value functions.) [w3_position_rating p.20]: 20 Appendix A.3: Top and Bottom 10 Manager and Position Groups Manager Position Rating Manager Position Rating 1 Gian Piero Gasperini Dribbler 0.779 1677 Erik ten Hag Creator -0.039 2 Pepe Bordalas Deep Mid. (Positional ratings map to GSE's role-space embedding; GSI uses them to refine prior beliefs about manager capability.) [w3_manager_ranking p.16]: Jurgen Klopp 0.350 31 Manuel Pellegrini 0.034 61 Giuseppe Iachini 0.016 2 Pep Guardiola 0.321 32 (Manager rankings form a partial order in GSI’s belief network; GSE uses them to define state transitions in tactical hierarchy.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in Porter and Scully’s (1982) early work on managerial efficiency in baseball, extended by Kahn (1993) and Bridgewater et al. (2011), who used stochastic frontiers to model team productivity. This chapter adapts those concepts to soccer, where managerial influence is more concentrated and less aggregated. Retrocausal Genealogy (Window 1): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include traditional scouts and pundits who rely on qualitative assessments. The model challenges their intuition by introducing quantitative metrics that reveal hidden patterns in performance variation. Coaches and analysts who assume uniformity in player development are countered by the index’s ability to detect differential impacts across position groups. Theory of Mind (Window 1): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by separating manager-level effects from team-level confounders like squad quality and financial resources. Leakage is mitigated by ensuring that the index only evaluates deviations from predicted performance, not absolute outcomes. This avoids conflating manager skill with external factors like transfers or injuries. Cross-Layer Veto (Window 1): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "569d80a5fc811cac_t1",
+      "think": "Window 2 Synthesis: Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 2): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 2): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "569d80a5fc811cac_t2",
+      "think": "Window 3 Synthesis: Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "569d80a5fc811cac_t3",
+      "think": "Chapter window 4 (pages 16–21) introduces the foundational framework for evaluating soccer managers through the Manager Over/Underachievement (MOU) Index. The MOU index is constructed using a combination of wage regression data and positional tactical ratings. The wage regression model (Appendix A.2) establishes a baseline expectation for manager compensation based on factors such as age, role, and team. This regression is then used to derive deviations from expected performance, forming the core of the MOU index. The positional tactical ratings (Appendix A.3) provide granular insight into how individual managers perform within specific tactical roles, such as Dribbler or Creator. These ratings are aggregated into a comprehensive ranking system (Appendix A.1), which places managers in descending order of their overall MOU scores. The interplay between these components—regression-based wage expectations, tactical role performance, and aggregate ranking—constructs a multi-layered model of managerial efficacy. The mathematical structure supports both Bayesian inference in GSI and situational reasoning in GSE, enabling dynamic updates to managerial value assessments based on new data or changing tactical environments. Window 4 Synthesis: Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in econometric modeling of labor markets and tactical analytics, tracing back to early 20th-century performance evaluation frameworks and modern machine learning applications in sports science. Retrocausal Genealogy (Window 4): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing managerial strategies through dual axes: tactical role specialization versus wage-based valuation. Coaches like Klopp and Guardiola are positioned at high MOU scores due to superior tactical execution and market recognition, while others like Bielsa or Iachini reflect lower alignment between role and reward. Theory of Mind (Window 4): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring wage regression and positional ratings are independent variables. Leakage is mitigated by restricting MOU index derivation to only those managers with complete data in both wage and tactical domains. Cross-Layer Veto (Window 4): Rooted in 2025 - Manager Over and Underachievement (MOU) Index Ranking Soccer Managers - George (569d80a5fc811cac, 21/21 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

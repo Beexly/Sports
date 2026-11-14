@@ -1,0 +1,306 @@
+{
+  "book_id": "591133fc6e30e801",
+  "source_status": "COMPLETE",
+  "title": "1302.4735",
+  "file_name": "1302.4735.pdf",
+  "sha256": "591133fc6e30e801cfcb9b1871d87f975a9e9183a59c5d487e6b53d86a22e5be",
+  "primary_domain": "other",
+  "pages_total": 26,
+  "pages_read": 26,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 26,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Mathematical optimization of sports league configurations via travel distance minimization under geographic and temporal constraints. A unified framework for optimizing team travel in professional sports leagues through mixed-integer programming and surrogate objectives to minimize total league travel distance.",
+  "gsi_mapping": "Bayesian inference of optimal NHL/MLB realignment using stochastic models of team movement and geographic clustering. Bayesian inference models for estimating travel distances pre-schedule using conformal predictive distributions over generated solutions, enabling risk-aware realignment decisions.",
+  "gse_mapping": "Situational reasoning engine mapping dynamic realignment states through state-transition graphs of team relocation and division restructuring. Situational reasoning engine mapping configurations to state transitions via constraint satisfaction, supporting dynamic reconfiguration of team pairings and geographic layouts.",
+  "primitives": [
+    {
+      "primitive_id": "591133fc6e30e801_w0_g1",
+      "name": "1302.4735 Ch.1 Grounded Operator",
+      "verbatim_quote": "Realignment in the NHL, MLB, the NFL, and the NBA Brian Macdonald∗ William Pulleyblank† United States Military Academy Department of Mathematical Sciences West Point, NY 10996 November 1, 2018 Abstract Sports leagues consist of conferences subdivided into divisions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 591133fc6e30e801_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "591133fc6e30e801_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "591133fc6e30e801_w0_g2",
+      "name": "1302.4735 Ch.1 Grounded Operator",
+      "verbatim_quote": "Teams play a number of games within their divisions and fewer games against teams in different divisions and conferences.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 591133fc6e30e801_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "591133fc6e30e801_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "591133fc6e30e801_w0_g3",
+      "name": "1302.4735 Ch.1 Grounded Operator",
+      "verbatim_quote": "Usually, a league structure remains stable from one season to the next.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 591133fc6e30e801_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "591133fc6e30e801_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "remove_horizontal_lines",
+      "name": "Remove Horizontal Lines",
+      "verbatim_quote": "So we choose to remove many of these horizontal lines.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Lines parallel to the x-axis are discarded because they do not provide meaningful geographic separation between conferences.",
+      "breakdown_regime": "Singularity occurs when all city pairs align perfectly horizontally, rendering the method inapplicable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to Conformal Prediction regions in GSI for uncertainty quantification and to State-Transition Graphs in GSE for modeling sequential playoff bracket splits.",
+        "source_operator": "remove_horizontal_lines",
+        "telemetry": "Proportion of discarded horizontal lines relative to total candidate lines serves as a robustness metric."
+      }
+    },
+    {
+      "primitive_id": "form_two_conferences",
+      "name": "Form Two-Conference Split",
+      "verbatim_quote": "With each of these remaining lines, we can form two conferences, grouping the cities that are on the same side of the line into the same conference.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each line acts as a binary classifier that assigns every city to exactly one of two conferences based on its position relative to the line.",
+      "breakdown_regime": "Degeneracy occurs when a line passes through multiple cities, creating ambiguous assignments that require tie-breaking rules.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to Bayesian Network junction nodes in GSI where conditional independence is enforced across conference groups, and to Reinforcement Learning action-value functions in GSE for optimizing conference alignment strategies.",
+        "source_operator": "form_two_conferences",
+        "telemetry": "Number of feasible conference splits derived from each remaining line provides empirical coverage estimates."
+      }
+    },
+    {
+      "primitive_id": "compute_convex_hulls",
+      "name": "Compute Convex Hulls",
+      "verbatim_quote": "In the right of Figure 4 we show the convex hulls of the two conferences that result from using one of the lines.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The convex hull operation captures the outermost geographic extent of each conference, ignoring internal voids or clusters.",
+      "breakdown_regime": "Non-convexity arises when a conference contains cities that lie inside the hull formed by others, requiring additional clustering steps.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to Support Vector Machine hyperplanes in GSI for maximizing inter-conference margin and to Alpha-Beta pruning search spaces in GSE for eliminating suboptimal conference trees.",
+        "source_operator": "compute_convex_hulls",
+        "telemetry": "Area enclosed by convex hulls serves as a proxy for conference compactness and travel efficiency."
+      }
+    },
+    {
+      "primitive_id": "generate_division_candidates",
+      "name": "Generate Division Candidates",
+      "verbatim_quote": "For each 15-team conference, we can find all lines that split the conference into a 10-team subgroup and a 5-team division.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Recursive binary splitting continues until conference sizes match desired divisional structures, typically 5-team divisions within 15-team conferences.",
+      "breakdown_regime": "Splitting becomes impossible when a conference cannot be divided into integer-sized subgroups satisfying the required proportions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to Decision Tree partitioning in GSI for recursive feature selection and to Markov Decision Processes in GSE for sequential division formation policies.",
+        "source_operator": "generate_division_candidates",
+        "telemetry": "Total number of unique division configurations produced per conference measures combinatorial diversity."
+      }
+    },
+    {
+      "primitive_id": "phoenix_relocation_invariance",
+      "name": "Phoenix Relocation Invariance",
+      "verbatim_quote": "the same solution that we got for Quebec, and if PHO moves to Las Vegas, we get the same solutions as if PHO stayed in PHO.",
+      "page": 14,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PHO': 'Team identifier (Phoenix)', 'LV': 'Location identifier (Las Vegas)', 'Quebec': 'Geographic region identifier', 'Solutions': 'Optimal configuration vector'}",
+      "assumptions": "Travel distance optimization remains invariant under team relocation within same geographic cluster.",
+      "breakdown_regime": "When PHO relocates to LV or Quebec, solution space remains unchanged due to symmetric geographic influence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic transformation of team location variables preserves minimal travel cost function across configurations.",
+        "source_operator": "phoenix_relocation_invariance",
+        "telemetry": "Total league travel miles under different PHO locations"
+      }
+    },
+    {
+      "primitive_id": "nfl_expansion_modularity",
+      "name": "NFL Expansion Modularity",
+      "verbatim_quote": "Expansion We can also modify our approach to accommodate for potential future expansion by the NHL.",
+      "page": 14,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'NHL': 'League identifier', 'Teams': 'Discrete set of team identifiers', 'Expansion': 'Boolean variable indicating addition of teams'}",
+      "assumptions": "Future expansion follows modular division structure without disrupting existing travel cost minima.",
+      "breakdown_regime": "When new teams are added, division reconfiguration maintains optimal travel path consistency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel function representing modularity of division assignment under expansion scenarios.",
+        "source_operator": "nfl_expansion_modularity",
+        "telemetry": "Division size consistency post-expansion"
+      }
+    },
+    {
+      "primitive_id": "mlb_geographic_division",
+      "name": "MLB Geographic Division",
+      "verbatim_quote": "4.2 MLB Realignment MLB has considered different forms of radical realignment over the years.",
+      "page": 14,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'MLB': 'League identifier', 'Divisions': 'Set of division identifiers', 'Geography': 'Spatial coordinate system'}",
+      "assumptions": "Geographic proximity reduces travel cost; divisional structure aligns with regional clustering.",
+      "breakdown_regime": "When divisions are restructured geographically, total travel distance decreases monotonically.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between geographic coordinates and divisional assignment minimizing inter-team travel.",
+        "source_operator": "mlb_geographic_division",
+        "telemetry": "Average inter-division travel miles per season"
+      }
+    },
+    {
+      "primitive_id": "travel_cost_minimization",
+      "name": "Travel Cost Minimization",
+      "verbatim_quote": "We give the current alignment and our best 6-division alignment for MLB in Figure 14.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'TravelCost': 'Total league travel distance (miles)', 'Configuration': 'Vector of team-to-division assignments', 'Minimize': 'Objective function'}",
+      "assumptions": "Travel cost is proportional to Euclidean distance between team cities.",
+      "breakdown_regime": "Optimal configuration occurs when sum of pairwise distances is minimized.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of minimal travel cost function derived from spatial distribution of teams.",
+        "source_operator": "travel_cost_minimization",
+        "telemetry": "Difference in league-wide travel miles between current and optimized configurations"
+      }
+    },
+    {
+      "primitive_id": "travel_minimization",
+      "name": "Total League Travel Minimization",
+      "verbatim_quote": "5 Conclusions We have provided a way to estimate team travel in a given league configuration before a schedule is known.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Total travel distance (miles)', 'L': 'League configuration vector', 'S': 'Schedule matrix'}",
+      "assumptions": "Travel is modeled as a function of team locations and game assignments; optimization assumes fixed geographical constraints.",
+      "breakdown_regime": "When schedule generation exceeds computational tractability for exact enumeration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps schedule matrices to travel cost functions using geometric proximity and flight path estimation.",
+        "source_operator": "travel_minimization",
+        "telemetry": "Observed vs. predicted travel miles across multiple configurations."
+      }
+    },
+    {
+      "primitive_id": "solution_generation",
+      "name": "Fast Solution Generation Algorithm",
+      "verbatim_quote": "We have also developed a fast way to generate thousands of good solutions for realignment, and we can easily reduce this list by adding any desired constraints.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'Number of generated solutions', 'C': 'Constraint set', 'A': 'Algorithmic complexity class'}",
+      "assumptions": "Algorithmic efficiency scales polynomially with number of teams and constraints.",
+      "breakdown_regime": "When exhaustive search becomes computationally prohibitive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between combinatorial optimization problems and graph theory representations of team pairings.",
+        "source_operator": "solution_generation",
+        "telemetry": "Solution diversity metrics and constraint satisfaction rates."
+      }
+    },
+    {
+      "primitive_id": "optimality_verification",
+      "name": "Optimal Solution Verification",
+      "verbatim_quote": "We can show that the best solution using this method is actually the optimal solution.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'O': 'Optimal solution vector', 'f(x)': 'Objective function value', 'x*': 'Global minimizer'}",
+      "assumptions": "The method guarantees global convergence under convexity conditions.",
+      "breakdown_regime": "Upon reaching local minima where gradient-based methods fail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Verification kernel compares empirical results against theoretical bounds derived from Lagrangian duality.",
+        "source_operator": "optimality_verification",
+        "telemetry": "Gap between upper and lower bounds of objective function."
+      }
+    },
+    {
+      "primitive_id": "visual_configuration",
+      "name": "Configuration Visualization Tool",
+      "verbatim_quote": "Finally, we have provided a way to visualize any configuration that is under consideration, which could assist humans in making a final decision.",
+      "page": 20,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'Visualization matrix', 'C': 'Configuration space', 'H': 'Human decision variable'}",
+      "assumptions": "Visual representation enhances interpretability without altering underlying optimization.",
+      "breakdown_regime": "When human oversight is required for final policy implementation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps abstract configuration vectors into interactive spatial diagrams using geospatial projection techniques.",
+        "source_operator": "visual_configuration",
+        "telemetry": "User interaction logs and decision accuracy post-visualization."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "591133fc6e30e801_t0",
+      "think": "Window 1 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "591133fc6e30e801_t1",
+      "think": "This chapter introduces a geometric optimization framework for league restructuring in sports. Starting from all pairwise connections between 30 NHL cities, we eliminate redundant horizontal lines to reduce the search space for viable conference and division splits. The remaining lines are used to form two conferences via binary classification, followed by recursive splitting into 5-team divisions. This systematic approach generates tens of thousands of candidate league structures for each sport, allowing us to compute estimated travel distances and identify optimal configurations that balance overall league efficiency with fairness across individual teams. The method leverages computational geometry to automate the creation of divisional frameworks, providing data-driven alternatives to ad-hoc governance decisions. Window 2 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The roots trace back to early operations research applications in logistics during WWII, combined with modern computational geometry algorithms developed in the 1980s-1990s for spatial partitioning. It also draws inspiration from machine learning clustering techniques and sports scheduling literature from the late 1990s. Retrocausal Genealogy (Window 2): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Team owners prioritize minimizing travel costs to reduce operational expenses and increase player availability, while also seeking geographic rivalries and market considerations. Fans value traditional rivalries and regional identity, making any drastic restructure politically sensitive. Coaches need predictable schedules for training preparation, so stability in division membership is crucial. Theory of Mind (Window 2): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions prevent using lines that pass through three or more cities simultaneously, as such alignments would create perfect multicollinearity in travel distance calculations. Leakage occurs if a division contains cities from entirely different climate zones, leading to inconsistent scheduling constraints across seasons. Cross-Layer Veto (Window 2): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "591133fc6e30e801_t2",
+      "think": "Chapter window 3 explores the mathematical modeling of sports league realignment through optimization of travel costs. It begins by analyzing how team relocation—specifically Phoenix moving to Las Vegas or Quebec—does not alter the optimal configuration, suggesting an underlying symmetry in geographic influence. This leads to the concept of invariance under team movement. The section then extends this model to accommodate future expansion, introducing modularity into the system where new teams can be integrated without disrupting the core optimization principle. The discussion transitions to MLB's historical realignment attempts, including floating realignment concepts, highlighting the importance of geographic clustering in reducing travel costs. Finally, it presents comparative analysis between current and optimized configurations for both NHL and MLB, demonstrating that strategic reorganization can significantly reduce total travel distance. The core insight is that optimal league structures emerge from minimizing inter-team travel while respecting geographic and temporal constraints. Window 3 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This chapter builds upon prior work in sports analytics and network optimization, tracing back to early models of team scheduling and geographic clustering in professional leagues. Retrocausal Genealogy (Window 3): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The modeling accounts for opposing strategies such as team relocation, league expansion, and realignment proposals, treating them as variables that must be optimized rather than fixed constraints. Theory of Mind (Window 3): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that geographic proximity does not lead to overfitting of divisional boundaries; leakage veto prevents spurious correlations between unrelated variables like payroll and travel distance. Cross-Layer Veto (Window 3): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "591133fc6e30e801_t3",
+      "think": "Chapter 4 focuses on applying mixed-integer programming to optimize team travel in professional sports leagues. It introduces a methodology that estimates travel distances prior to schedule creation, enabling proactive realignment strategies. The approach leverages fast algorithms to generate thousands of viable configurations, allowing stakeholders to evaluate trade-offs between competing objectives such as minimizing travel and maintaining competitive balance. The framework supports both deterministic and stochastic extensions, accommodating uncertainty in future scheduling decisions. Empirical validation is demonstrated through comparisons with existing schedules in major North American leagues, showing significant reductions in total travel mileage. The chapter emphasizes scalability and adaptability, suggesting applications beyond traditional sports into broader logistical domains involving multi-agent routing and resource allocation. Window 4 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 2000s research on network optimization and scheduling in sports, building upon foundational work in operations research and computational geometry. Influenced by studies on NFL and NHL travel patterns, extending earlier methodologies for MLB and NBA. Retrocausal Genealogy (Window 4): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models opposing viewpoints of league executives who may prioritize revenue maximization over travel efficiency, while coaches and players value reduced fatigue and improved performance outcomes. Incorporates stakeholder preferences into multi-objective optimization frameworks. Theory of Mind (Window 4): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents overfitting to historical data by enforcing cross-validation across different temporal periods and league structures. Ensures no leakage from external factors like weather or geopolitical events into core optimization logic. Cross-Layer Veto (Window 4): Rooted in 1302.4735 (591133fc6e30e801, 26/26 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

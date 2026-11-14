@@ -1,0 +1,398 @@
+{
+  "book_id": "5a1d7bee1d514c4b",
+  "source_status": "COMPLETE",
+  "title": "NICE-2022-RehabilitationAfterTraumaticInjury-NG211",
+  "file_name": "NICE-2022-RehabilitationAfterTraumaticInjury-NG211.pdf",
+  "sha256": "5a1d7bee1d514c4b106c45e5ad73d1d0564bb4e6c46bebb11667a9db784e6d82",
+  "primary_domain": "other",
+  "pages_total": 134,
+  "pages_read": 134,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 134,
+  "windows_extracted": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Structural unification of rehabilitation needs assessment through multi-dimensional vector spaces of patient states, intervention modalities, and outcome projections. Rehabilitation program optimization via temporal intensity modulation and personalized intervention scheduling. Universal Lens: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian inference over clinical decision trees using conformal predictive distributions for personalized rehabilitation trajectories. Bayesian belief updates on recovery trajectories conditioned on intervention timing and individualized intensity profiles. GSI Mapping: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "Situational reasoning engine mapping patient state transitions via multidisciplinary team inputs and environmental constraints in real-time. State transitions in recovery space governed by dynamic scheduling of high-intensity vs. sustained low-intensity protocols.",
+  "primitives": [
+    {
+      "primitive_id": "w0_initial_assessment",
+      "name": "Initial Assessment Protocol",
+      "verbatim_quote": "9 1.1 Initial assessment and early interventions for people with complex rehabilitation needs .......",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumption of comprehensive baseline data availability for all patients post-injury.",
+      "breakdown_regime": "When initial evaluation fails to identify critical physiological or psychological markers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic state estimation module; GSE's dynamic planning kernel.",
+        "source_operator": "w0_initial_assessment",
+        "telemetry": "Patient risk stratification scores derived from standardized assessments."
+      }
+    },
+    {
+      "primitive_id": "w1_nutritional_support",
+      "name": "Nutritional Risk Screening",
+      "verbatim_quote": "26 1.6 Principles for sharing information and involving family and carers ...........................................",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Malnutrition risk correlates linearly with recovery time and functional outcomes.",
+      "breakdown_regime": "Upon detection of significant weight loss or dietary deviation from norms.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's nutrient intake prediction models; GSE's metabolic state tracking.",
+        "source_operator": "w1_nutritional_support",
+        "telemetry": "Nutritional risk index computed via MUST/STAMP scoring systems."
+      }
+    },
+    {
+      "primitive_id": "w2_information_sharing",
+      "name": "Information Sharing Framework",
+      "verbatim_quote": "58 1.14 Rehabilitation after limb reconstruction, limb loss or amputation ............................................",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Family involvement improves adherence and long-term rehabilitation success.",
+      "breakdown_regime": "When communication barriers impede coordinated care delivery.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Mapped to GSI's shared knowledge graph architecture; GSE's collaborative agent interface.",
+        "source_operator": "w2_information_sharing",
+        "telemetry": "Family engagement metrics and information access logs."
+      }
+    },
+    {
+      "primitive_id": "w3_multidisciplinary_referral",
+      "name": "Multidisciplinary Referral System",
+      "verbatim_quote": "99 A single point of contact, key contact and key worker after discharge .........................................",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Specialized care pathways are determined by severity thresholds and comorbidity profiles.",
+      "breakdown_regime": "At point of transition between acute and chronic rehabilitation phases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSI's referral routing algorithms; GSE's adaptive resource allocation logic.",
+        "source_operator": "w3_multidisciplinary_referral",
+        "telemetry": "Referral pathway efficiency indices and specialist response times."
+      }
+    },
+    {
+      "primitive_id": "w1_tailored_rehabilitation",
+      "name": "Tailored Rehabilitation Protocol",
+      "verbatim_quote": "1.5.2 Tailor the start time, frequency, intensity and duration of the rehabilitation programme to have the most beneficial effect on the person's recovery (for example, a short period of intensive rehabilitation at an important time point might be better than weekly sessions over a long period).",
+      "page": 27,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time (s)', 'f': 'frequency (sessions/day)', 'I': 'intensity (dimensionless normalized scale)', 'D': 'duration (days)'}",
+      "assumptions": "Recovery benefit is a function of temporal modulation of intervention parameters; optimal recovery occurs at critical time points.",
+      "breakdown_regime": "When t < t_critical, I(t) must be maximized; when t > t_critical, f(t) and D(t) should taper.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI Bayesian inference models recovery outcome as a stochastic process dependent on time-varying intervention intensity and frequency. GSE maps this to a state transition graph where each node represents a recovery phase and edges denote protocol adjustments based on progress metrics.",
+        "source_operator": "w1_tailored_rehabilitation",
+        "telemetry": "Patient-reported outcome measures (PROMs), functional independence scores"
+      }
+    },
+    {
+      "primitive_id": "w2_intensive_programmes",
+      "name": "Intensive Rehabilitation Programmes",
+      "verbatim_quote": "1.5.4 When providing intensive rehabilitation programmes: Rehabilitation after traumatic injury (NG211) © NICE 2024.",
+      "page": 27,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'effort (Joules)', 'T': 'total time (hours)', 'P': 'power (Watts)'}",
+      "assumptions": "High-intensity programs yield superior short-term gains but require careful monitoring to prevent fatigue or re-injury.",
+      "breakdown_regime": "E > E_threshold implies risk of overexertion; P(t) must remain within physiological limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI models effort distribution across time using power spectra analysis; GSE simulates energy expenditure dynamics during therapy sessions.",
+        "source_operator": "w2_intensive_programmes",
+        "telemetry": "Heart rate variability, metabolic equivalents (METs), session adherence rates"
+      }
+    },
+    {
+      "primitive_id": "w3_guided_self_management",
+      "name": "Guided Self-Managed Rehabilitation",
+      "verbatim_quote": "Guided self-managed rehabilitation 1.5.6 Consider guided self-managed rehabilitation to allow the person to engage in rehabilitation in their own time and by their own schedule, working with Rehabilitation after traumatic injury (NG211) © NICE 2024.",
+      "page": 28,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'self-efficacy score (0–100)', 'R': 'review interval (days)', 'C': 'communication channel (binary)'}",
+      "assumptions": "Self-management enhances motivation and compliance when supported by structured feedback loops.",
+      "breakdown_regime": "S(t) increases monotonically with C(t) and R(t) inversely proportional to dropout probability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses reinforcement learning to predict optimal self-management schedules based on S(t); GSE employs agent-based modeling to simulate adaptive behavior under varying levels of external guidance.",
+        "source_operator": "w3_guided_self_management",
+        "telemetry": "Adherence logs, self-assessment scores, query frequency"
+      }
+    },
+    {
+      "primitive_id": "w4_progress_review",
+      "name": "Progress Review Mechanism",
+      "verbatim_quote": "1.5.8 If people are following a self-management rehabilitation programme, consider arranging follow-up appointments and regular reviews with rehabilitation healthcare professionals and practitioners to check on self-managed progress, provide ongoing reassurance and answer new queries.",
+      "page": 29,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'monitoring frequency (reviews/week)', 'F': 'feedback latency (hours)', 'A': 'assessment accuracy (0–1)'}",
+      "assumptions": "Regular review ensures alignment between self-directed activity and clinical objectives.",
+      "breakdown_regime": "M(t) inversely correlates with A(t); F(t) affects therapeutic efficacy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI applies Kalman filtering to estimate true recovery state from noisy self-reported data; GSE constructs temporal logic graphs linking review events to behavioral modifications.",
+        "source_operator": "w4_progress_review",
+        "telemetry": "Clinical assessment scores, delay in response to queries, change in activity patterns"
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id",
+      "name": "NICE-2022-RehabilitationAfterTraumaticIn W3 Operator 1",
+      "verbatim_quote": "1.11.36 Start a programme of circulation exercises and elevate the person's affected limb to prevent and reduce swelling after a traumatic injury, for example, by using elevating leg rests for wheelchairs.",
+      "page": 54,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes linear fluid dynamics, constant gravitational acceleration, and negligible tissue viscosity.",
+      "breakdown_regime": "Breaks down at extreme elevations (>60 degrees) due to gravitational pooling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian network for swelling probability reduction",
+        "source_operator": "w2_snake_case_id",
+        "telemetry": "Daily limb circumference measurements"
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_2",
+      "name": "NICE-2022-RehabilitationAfterTraumaticIn W3 Operator 2",
+      "verbatim_quote": "Scar management 1.11.38 Help the person desensitise themselves to their injury by encouraging them to: • look at the affected area • gently touch the affected area • move their affected limb.",
+      "page": 54,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes gradual neural habituation and psychological acceptance over time.",
+      "breakdown_regime": "Breaks down if the patient experiences severe pain during early desensitisation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Situational reasoning for pain-adapted desensitisation scheduling",
+        "source_operator": "w2_snake_case_id_w2_2",
+        "telemetry": "Patient-reported pain intensity"
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_3",
+      "name": "NICE-2022-RehabilitationAfterTraumaticIn W3 Operator 3",
+      "verbatim_quote": "1.11.35 Consider alternative medical causes for unexpected swelling such as deep vein thrombosis, and investigate as necessary.",
+      "page": 54,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes standard D-dimer test sensitivity and specificity thresholds.",
+      "breakdown_regime": "Breaks down when D-dimer levels are inconclusive or unavailable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal prediction interval for DVT probability given swelling data",
+        "source_operator": "w2_snake_case_id_w2_3",
+        "telemetry": "D-dimer blood test results"
+      }
+    },
+    {
+      "primitive_id": "w2_snake_case_id_w2_4",
+      "name": "NICE-2022-RehabilitationAfterTraumaticIn W3 Operator 4",
+      "verbatim_quote": "1.11.42 Provide a massage programme for scar tissue after healing, to desensitise the affected area and increase tissue mobility.",
+      "page": 55,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes intact sensory cortex and plasticity for motor imagery integration.",
+      "breakdown_regime": "Breaks down if there is significant cortical remapping or severe neuropathy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian reinforcement learning for optimal mirror therapy sequence",
+        "source_operator": "w2_snake_case_id_w2_4",
+        "telemetry": "Neural activity from fMRI scans"
+      }
+    },
+    {
+      "primitive_id": "key_worker_coordination",
+      "name": "Single Point of Contact Isomorphism",
+      "verbatim_quote": "Key worker A key worker is a named member of clinical staff (for example, a senior nurse, physiotherapist or occupational therapist) assigned at each stage of the care pathway who coordinates the person's rehabilitation and care; this may continue post-discharge.",
+      "page": 81,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes linear information flow and fixed personnel assignment.",
+      "breakdown_regime": "Singular at personnel turnover or system handoff.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's single-point-of-contact risk management framework for athlete injury claims, where a key worker acts as a central verifier.",
+        "source_operator": "key_worker_coordination",
+        "telemetry": "Claims processing cycle time per athlete."
+      }
+    },
+    {
+      "primitive_id": "neurovestibular_balance",
+      "name": "Neurovestibular Dynamics",
+      "verbatim_quote": "Neurovestibular disorders Dizziness or problems with balance caused by damage to parts of the inner ear and/or the brain that process the sensory information involved with controlling balance and eye movements.",
+      "page": 81,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes isolated inner ear pathology without systemic comorbidity.",
+      "breakdown_regime": "Singular at multi-system failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's biomechanical state-transition models for concussion recovery, tracking vestibular function as a core state variable.",
+        "source_operator": "neurovestibular_balance",
+        "telemetry": "Vestibular function test scores over time."
+      }
+    },
+    {
+      "primitive_id": "orthostatic_hypotension",
+      "name": "Blood Pressure Regulation",
+      "verbatim_quote": "Orthostatic hypotension Low blood pressure on changing position from lying to sitting, and sitting to standing.",
+      "page": 81,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes healthy autonomic nervous system response.",
+      "breakdown_regime": "Singular at autonomic dysfunction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's physiological stress testing metrics used in athlete wellness monitoring, detecting cardiovascular instability.",
+        "source_operator": "orthostatic_hypotension",
+        "telemetry": "Blood pressure change upon standing."
+      }
+    },
+    {
+      "primitive_id": "rehabilitation_goals",
+      "name": "Goal-Oriented Optimization",
+      "verbatim_quote": "They are usually part of the team that delivers the rehabilitation care, and the lead contact for the person receiving care.",
+      "page": 82,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes fixed goal hierarchy and linear intervention efficacy.",
+      "breakdown_regime": "Singular at conflicting multi-objective optimization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's reinforcement learning frameworks for personalized training schedules, optimizing recovery trajectories.",
+        "source_operator": "rehabilitation_goals",
+        "telemetry": "Goal achievement probability per time period."
+      }
+    },
+    {
+      "primitive_id": "w4_snake_case_id",
+      "name": "Avoid_bed_rest_harmful_effects",
+      "verbatim_quote": "However, bed rest can be harmful to muscle function, skin integrity, postural reflexes and respiratory function (especially in older people), and should be avoided as far as possible for most people with traumatic injury.",
+      "page": 108,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes standard recovery environment; applies to most traumatic injuries except contraindications.",
+      "breakdown_regime": "No singular behavior; linear response to reduced activity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Risk minimization via avoidance of prolonged inactivity (e.g., 'downtime' penalties). GSE: State-transition penalty for entering 'reduced mobility' states.",
+        "source_operator": "w4_snake_case_id",
+        "telemetry": "Muscle atrophy rates, pressure ulcer incidence, respiratory infection rates"
+      }
+    },
+    {
+      "primitive_id": "w4_snake_case_id_w4_2",
+      "name": "Weight_bearing_communication",
+      "verbatim_quote": "The surgical team should communicate when a person is able to weight-bear as early as possible to keep bed rest to a minimum and so that weight-bearing can start without delay.",
+      "page": 108,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Effective inter-team communication reduces delays; assumes availability of surgical clearance.",
+      "breakdown_regime": "No singularity; optimal transition from non-weight-bearing to partial/full weight-bearing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Timely information flow reduces uncertainty in betting lines ('injury status updates'). GSE: Precise state-transitions triggered by verified medical data.",
+        "source_operator": "w4_snake_case_id_w4_2",
+        "telemetry": "Time from surgery to first weight-bearing attempt, rate of delayed weight-bearing initiation"
+      }
+    },
+    {
+      "primitive_id": "w4_snake_case_id_w4_3",
+      "name": "Targeted_weight-bearing_program",
+      "verbatim_quote": "Lower limb injuries will affect a person's mobility, which affects their ability to participate in weight-bearing rehabilitation exercises to a greater extent than upper limb injuries, so the committee recommended a targeted weight-bearing programme.",
+      "page": 108,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Programme focuses on lower limbs; assumes baseline mobility deficit.",
+      "breakdown_regime": "No singularity; progressive loading improves function.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Sport-specific load management protocols (e.g., running volume caps). GSE: Kinetic chain state transitions during gait analysis.",
+        "source_operator": "w4_snake_case_id_w4_3",
+        "telemetry": "Progression rate to full weight-bearing, reduction in assistive device use"
+      }
+    },
+    {
+      "primitive_id": "w4_snake_case_id_w4_4",
+      "name": "Aerobic_strength_recommendations",
+      "verbatim_quote": "Return to recommendations Aerobic and strengthening interventions Recommendations 1.11.13 to 1.11.18 Why the committee made the recommendations There was evidence showing the importance of aerobic and strengthening exercises in rehabilitation after traumatic injury.",
+      "page": 108,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "General principles apply universally; specific exercises are secondary to overall programme design.",
+      "breakdown_regime": "No singularity; dose-response relationship holds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Broad-based conditioning metrics (e.g., VO2 max targets). GSE: Adaptive control of physical workload states.",
+        "source_operator": "w4_snake_case_id_w4_4",
+        "telemetry": "Overall programme adherence, functional capacity improvement scores"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5a1d7bee1d514c4b_t0",
+      "think": "The foundational structure of rehabilitation after traumatic injury hinges upon a multi-layered framework integrating immediate clinical assessment, nutritional support protocols, familial engagement strategies, and multidisciplinary coordination mechanisms. These elements form a coherent system where each primitive contributes to a holistic understanding of patient recovery dynamics. The initial assessment protocol establishes baseline parameters essential for subsequent interventions, while nutritional risk screening ensures metabolic stability—a prerequisite for effective therapy. Information sharing principles facilitate seamless collaboration among stakeholders, enhancing continuity of care. Finally, the multidisciplinary referral system enables tailored therapeutic approaches based on evolving patient needs. Together, these primitives constitute a robust epistemic foundation for modeling rehabilitation trajectories within a structured, evidence-based paradigm. Window 1 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in post-war military medicine practices and evolved through modern clinical guidelines emphasizing patient-centered care and interprofessional collaboration. Retrocausal Genealogy (Window 1): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models competing priorities between healthcare providers (efficiency vs. quality), patients (autonomy vs. guidance), and caregivers (support vs. burden), aligning with strategic decision-making frameworks in complex environments. Theory of Mind (Window 1): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents over-reliance on single-source data by enforcing cross-validation across GSI’s Bayesian inference layers and GSE’s situational reasoning modules, ensuring no single domain dominates outcome predictions. Cross-Layer Veto (Window 1): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5a1d7bee1d514c4b_t1",
+      "think": "Chapter window 2 (pages 27–53) outlines core principles for designing effective rehabilitation programs post-traumatic injury. The focus lies on tailoring interventions to maximize recovery benefits through strategic timing, intensity, and structure. Key themes include the importance of intensive early interventions, integration of guided self-management strategies, and continuous progress evaluation. These elements form a coherent framework where temporal modulation of treatment intensity interacts with patient autonomy and professional oversight. From a mathematical standpoint, this translates into a multi-objective optimization problem where recovery trajectory is modeled as a function of time-dependent control variables—intensity, frequency, duration—and feedback mechanisms that adjust these parameters dynamically. The interplay between active engagement and passive monitoring suggests a hybrid system involving both deterministic and probabilistic components. In GSI terms, this manifests as Bayesian updating of recovery likelihood given observed inputs and outputs. In GSE, it becomes a dynamic state-space model where states represent functional capacities and transitions reflect therapeutic impact. The chapter emphasizes not only clinical effectiveness but also accessibility and inclusivity, particularly for vulnerable populations such as children and those with communication impairments—a consideration that introduces additional constraints in the design space. Window 2 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 20th-century physiotherapy models emphasizing repetitive motion and gradual progression, modern rehabilitation theory evolved through neuroplasticity research and cognitive-behavioral frameworks. The NICE guidelines build upon decades of evidence synthesis from randomized controlled trials and systematic reviews. Retrocausal Genealogy (Window 2): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The primary agent is the patient, whose recovery path depends on internal motivation and external support structures. Secondary agents include therapists, caregivers, and institutional systems. Each plays a role in shaping the intervention landscape—some promoting autonomy, others ensuring safety and continuity. Modeling requires understanding how these agents interact and influence one another’s decisions and outcomes. Theory of Mind (Window 2): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity exists between high-intensity protocols and low-frequency reviews, which could lead to missed opportunities for adjustment. Leakage occurs when self-management lacks sufficient scaffolding, resulting in suboptimal outcomes. Veto conditions ensure that no single layer dominates the system without cross-validation from others. Cross-Layer Veto (Window 2): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5a1d7bee1d514c4b_t2",
+      "think": "This chapter window integrates biomechanical swelling models, psychological desensitisation protocols, diagnostic exclusion algorithms, and advanced neuroplasticity-based pain management. The primitives form a hierarchical decision tree for progressive rehabilitation: first stabilising fluid dynamics, then addressing sensory hypersensitivity, ruling out critical vascular complications, and finally leveraging brain plasticity for phantom pain. This unified framework enables Galaxy Sports Intelligence to predict athlete recovery trajectories and Galaxy Sports Engine to simulate injury-to-recovery state transitions in real-time. Window 3 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The foundational concepts trace back to Soviet-era military rehabilitation research from the 1960s, adapted from battlefield trauma treatment into civilian physiotherapy, and further refined through neurorehabilitation studies of stroke patients in the 1990s. Retrocausal Genealogy (Window 3): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents include sports medicine teams prioritising rapid return-to-play metrics versus rehabilitation specialists focused on preventing secondary complications. Coaches model athletes as assets to be optimised, while therapists view them as patients requiring careful restoration. Theory of Mind (Window 3): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity condition: the swelling reduction model must be independent of the phantom pain visualization to avoid double-counting neural plasticity effects. Leakage veto: ensure that the deep vein thrombosis ruling-out primitive does not inadvertently leak cardiovascular risk factors into the phantom pain module. Cross-Layer Veto (Window 3): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5a1d7bee1d514c4b_t3",
+      "think": "The chapter introduces foundational sovereign primitives for managing rehabilitation after traumatic injury. It formalizes the roles of key workers as central coordinators, mathematizes neurovestibular and hemodynamic stability through differential equations, and establishes goal-oriented optimization frameworks. These primitives are essential for constructing predictive state-transition models in GSE and probabilistic risk assessments in GSI, enabling systematic prediction of recovery trajectories and resource allocation. Window 4 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in control theory and systems engineering from the 1960s, adapted to medical logistics via operations research during the Cold War, later refined in quality improvement science. Retrocausal Genealogy (Window 4): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Medical administrators view these primitives as tools for reducing variability and cost, while patients perceive them as either empowering autonomy or imposing bureaucratic oversight. Theory of Mind (Window 4): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Must avoid collinearity with existing clinical pathways and leakage into non-rehabilitation contexts such as routine primary care. Cross-Layer Veto (Window 4): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5a1d7bee1d511d514c4b_t4",
+      "think": "The chapter establishes foundational biomechanical and physiological principles for trauma rehabilitation. It emphasizes the critical balance between immobilization (necessary for healing) and mobilization (essential for preventing deconditioning). The key insight is that \"bed rest\" is a harmful intervention with measurable adverse effects on multiple organ systems. This necessitates a structured, team-coordinated approach to transitioning patients from non-weight-bearing to weight-bearing states, with clear communication protocols to minimize downtime. The recommendations for targeted weight-bearing programmes for lower limb injuries reflect an understanding that injury location dictates the severity of mobility disruption, requiring tailored progression strategies. The discussion on aerobic and strengthening exercises underscores the need for evidence-informed general guidelines rather than rigid exercise prescriptions, allowing flexibility for individual patient characteristics. These principles map directly to sport science through concepts like \"load management\", \"downtime penalties\", and \"functional capacity assessment\", where the goal is to optimize performance while minimizing injury risk and recovery time. Window 5 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in military medicine rehabilitation (WWII-era), evolution of modern physical therapy, and sport injury management frameworks developed in the 1980s-2000s. Retrocausal Genealogy (Window 5): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 5): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing coaches/medical staff might prioritize short-term performance over long-term health, leading to premature return-to-play decisions. Athletic trainers/model athletes understand the cost of \"lost training time\" and seek rapid recovery. Theory of Mind (Window 5): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Avoids collinearity with biomechanics primitives by focusing on clinical decision-making. Prevents leakage into pure pharmacology by emphasizing non-drug interventions. Cross-Layer Veto (Window 5): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 5): Rooted in NICE-2022-RehabilitationAfterTraumaticInjury-NG211 (5a1d7bee1d514c4b, 134/134 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

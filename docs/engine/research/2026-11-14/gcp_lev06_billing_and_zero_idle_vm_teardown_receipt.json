@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "task_id": "GCP-LEV-06",
-  "generated_at_utc": "2026-11-14T10:58:42.481244+00:00",
+  "generated_at_utc": "2026-11-14T11:36:56.901857+00:00",
   "credit_stack_ledger": {
     "gcp_project_id": "galaxysportsedge",
     "active_gcp_credit_buffer_usd": 103.11,
@@ -66,33 +66,33 @@
   ],
   "live_unpack_progress": {
     "per_node_file_counts": {
-      "node1": 1491,
-      "node2": 1376,
-      "node3": 941,
-      "node4": 942
+      "node1": 1526,
+      "node2": 1414,
+      "node3": 969,
+      "node4": 971
     },
-    "total_branch_blobs": 4750,
-    "unique_filenames_flat": 4692,
+    "total_branch_blobs": 4880,
+    "unique_filenames_flat": 4822,
     "branch_commits": {
-      "origin/gcp/foundry-shard-b-2026-11-13": "4fc874c88a7444d33c17450674e0dbda53941943",
-      "origin/gcp/foundry-node2-2026-11-13": "0e593501cfe70379a8be135859fd2fa69bd13f59",
-      "origin/gcp/foundry-node3-2026-11-13": "30c32c97f5358ac6a7bdff6f49d0fd730d2d15c9",
-      "origin/gcp/foundry-node4-2026-11-13": "8ed376c6d410afe4bcbb43ce3870f3a6e7e3486d"
+      "origin/gcp/foundry-shard-b-2026-11-13": "83a8d0da10620447a7df2b244d97b0e08b9e012b",
+      "origin/gcp/foundry-node2-2026-11-13": "df34b8cda4957aa1d47b89528225fcece9e60cfd",
+      "origin/gcp/foundry-node3-2026-11-13": "91f57fded3c5a9bef2d5144ebe41d0865aeb1fd6",
+      "origin/gcp/foundry-node4-2026-11-13": "942771d32d713105f50f53166250ddae99cc52c3"
     },
-    "written_in_latest_sync": 107
+    "written_in_latest_sync": 111
   },
   "teardown_gate": {
     "decision": "KEEP_RUNNING_ACTIVE_SHARD_B_SWEEP",
     "teardown_authorized": false,
     "delegated_target": 8598,
-    "unique_filenames_flat": 4692,
-    "completion_ratio": 0.5457,
+    "unique_filenames_flat": 4822,
+    "completion_ratio": 0.5608,
     "missing_flat_files_count": 0,
-    "written_in_latest_sync": 107,
+    "written_in_latest_sync": 111,
     "minutes_since_last_branch_advance": 0.0,
     "blocking_reasons": [
-      "ACTIVE_DRAIN_IN_PROGRESS: 4692/8598 unique docs unpacked (54.6%)",
-      "RECENT_DELTAS_WRITTEN: 107 new files unpacked on latest sync",
+      "ACTIVE_DRAIN_IN_PROGRESS: 4822/8598 unique docs unpacked (56.1%)",
+      "RECENT_DELTAS_WRITTEN: 111 new files unpacked on latest sync",
       "QUIET_WINDOW_UNMET: 0.0m < 30.0m"
     ],
     "teardown_gcloud_commands_when_authorized": [

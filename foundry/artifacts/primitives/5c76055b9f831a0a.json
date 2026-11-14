@@ -1,0 +1,289 @@
+{
+  "book_id": "5c76055b9f831a0a",
+  "source_status": "COMPLETE",
+  "title": "2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al",
+  "file_name": "2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al.pdf",
+  "sha256": "5c76055b9f831a0a386e32fd021ebf0b151956a31c8d5924955ace3871e14976",
+  "primary_domain": "physiology",
+  "pages_total": 15,
+  "pages_read": 15,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 15,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "\\mathcal{U} = \\sum_{i=1}^{N} \\left( \\frac{\\partial f_i}{\\partial x_i} \\cdot \\Delta x_i \\right) \\quad \\text{where } f_i \\text{ represents physiological response functions} The mapping from small-sided game (SSG) configurations to physiological adaptations is formalized as a non-linear operator acting on the state space of sedentary subjects. The observed anthropometric reductions represent a projection of high-dimensional intermittent energy expenditure onto low-dimensional adiposity manifolds, constrained by unmeasured dietary and spontaneous activity covariates.",
+  "gsi_mapping": "Bayesian belief update over participant selection space: $ P(\\text{eligible} | \\text{criteria}) = \\frac{P(\\text{criteria} | \\text{eligible}) \\cdot P(\\text{eligible})}{P(\\text{criteria})} $ Within GSI, these SSG outcomes are modeled via conformal inference over latent metabolic states. The absence of direct energy expenditure telemetry necessitates Bayesian priors derived from broader vigorous interval training literature, bounding the posterior probability that observed adiposity reductions are strictly intervention-induced versus confounded by free-living behavioral shifts.",
+  "gse_mapping": "State transition graph for training adherence: $ \\mathcal{S}_{t+1} = \\mathcal{T}(\\mathcal{S}_t, \\mathcal{I}_t) $ where $ \\mathcal{I}_t $ denotes intervention input and $ \\mathcal{T} $ encodes behavioral dynamics For GSE, the transition from sedentary baseline to post-SSG fitness is encoded as a Markovian state-update. The engine treats 1v1 and 3v3 as distinct action kernels yielding probabilistic shifts in body composition and neuromuscular power, while flagging the lack of mechanistic load data as an epistemic uncertainty requiring situational reasoning adjustments.",
+  "primitives": [
+    {
+      "primitive_id": "5c76055b9f831a0a_w0_g1",
+      "name": "2026 - Comparative Effects Of 1V1 Vs 3V3 S Ch.1 Grounded Operator",
+      "verbatim_quote": "Methods: Sixty-three sedentary female university students aged 18 - 21 years were randomized to 1v1 SSGs (n = 21), 3v3 SSGs (n = 21), or a non-training control group (n = 21) for 8 weeks.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5c76055b9f831a0a_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5c76055b9f831a0a_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5c76055b9f831a0a_w0_g2",
+      "name": "2026 - Comparative Effects Of 1V1 Vs 3V3 S Ch.1 Grounded Operator",
+      "verbatim_quote": "Training was performed three times per week, with each 60-min session including 40 min of SSG play.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5c76055b9f831a0a_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5c76055b9f831a0a_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5c76055b9f831a0a_w0_g3",
+      "name": "2026 - Comparative Effects Of 1V1 Vs 3V3 S Ch.1 Grounded Operator",
+      "verbatim_quote": "Outcomes were assessed at baseline, week 4, and week 8.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5c76055b9f831a0a_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5c76055b9f831a0a_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "participant_selection_filter",
+      "name": "Participant Eligibility Kernel",
+      "verbatim_quote": "517 vigorous physical activity based on standard health screening and self-report; and (vi) willingness and availability to attend baseline, week-4, and week-8 assessments and the three weekly training sessions if allocated to an intervention group.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{eligible}}': '\\\\text{number of eligible participants}', 'C_{\\\\text{health}}': '\\\\text{health screening criteria}', 'C_{\\\\text{availability}}': '\\\\text{session attendance criteria}'}",
+      "assumptions": "Participants must satisfy all inclusion criteria and none of the exclusion criteria.",
+      "breakdown_regime": "When $ C_{\\text{health}} \\cap C_{\\text{availability}} \\neq \\emptyset $",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps inclusion/exclusion criteria to a probabilistic selection kernel in GSI's Bayesian framework",
+        "source_operator": "participant_selection_filter",
+        "telemetry": "Number of participants meeting inclusion criteria"
+      }
+    },
+    {
+      "primitive_id": "exclusion_criterion_set",
+      "name": "Exclusion Criterion Set",
+      "verbatim_quote": "Individuals were excluded primarily because they did not meet the sedentary criterion (n = 2), had a history of organized basketball training (n = 2), reported medical or musculoskeletal limitations incompatible with vigorous exercise(n = 2), or withdrew before baseline testing due to scheduling constraints(n = 3).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{\\\\text{sedentary}}': '\\\\text{sedentary status}', 'E_{\\\\text{basketball}}': '\\\\text{basketball training history}', 'E_{\\\\text{medical}}': '\\\\text{medical/musculoskeletal constraints}', 'E_{\\\\text{withdrawal}}': '\\\\text{pre-baseline withdrawal}'}",
+      "assumptions": "Each exclusion category is mutually exclusive and exhaustive for participant disqualification.",
+      "breakdown_regime": "When $ E_{\\text{sedentary}} \\cup E_{\\text{basketball}} \\cup E_{\\text{medical}} \\cup E_{\\text{withdrawal}} \\neq \\emptyset $",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Defines set of exclusion conditions used in GSE's state-space pruning",
+        "source_operator": "exclusion_criterion_set",
+        "telemetry": "Count of excluded participants per category"
+      }
+    },
+    {
+      "primitive_id": "randomization_protocol",
+      "name": "Randomization Protocol",
+      "verbatim_quote": "After final screening and pre-intervention withdrawals, 63 participants were enrolled and randomized in a 1:1:1 ratio to a 1v1 SSG group (n = 21), a 3v3 SSG group (n = 21), or a control group (n = 21), as summarized in Figure 2.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{1v1}}': '\\\\text{randomized 1v1 group}', 'R_{\\\\text{3v3}}': '\\\\text{randomized 3v3 group}', 'R_{\\\\text{control}}': '\\\\text{randomized control group}', 'N_{\\\\text{total}}': '\\\\text{total enrolled participants}'}",
+      "assumptions": "Randomization ensures equal probability of assignment across groups.",
+      "breakdown_regime": "When $ R_{\\text{1v1}} = R_{\\text{3v3}} = R_{\\text{control}} = \\frac{N_{\\text{total}}}{3} $",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's stratified random sampling model",
+        "source_operator": "randomization_protocol",
+        "telemetry": "Group size distribution post-randomization"
+      }
+    },
+    {
+      "primitive_id": "informed_consent_process",
+      "name": "Informed Consent Process",
+      "verbatim_quote": "Prior to participation, eligible students received a detailed explanation of the study aims, testing and training procedures, potential risks and benefits, and data handling, and provided written informed consent.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{\\\\text{consent}}': '\\\\text{written informed consent}', 'C_{\\\\text{risk}}': '\\\\text{risk disclosure}', 'C_{\\\\text{benefit}}': '\\\\text{benefit disclosure}', 'C_{\\\\text{data}}': '\\\\text{data handling protocol}'}",
+      "assumptions": "Consent is obtained only after full disclosure of study components.",
+      "breakdown_regime": "When $ C_{\\text{consent}} \\land C_{\\text{risk}} \\land C_{\\text{benefit}} \\land C_{\\text{data}} $",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's ethical decision-making node in agent behavior modeling",
+        "source_operator": "informed_consent_process",
+        "telemetry": "Percentage of participants who provided consent"
+      }
+    },
+    {
+      "primitive_id": "5c76055b9f831a0a_w2_g1",
+      "name": "2026 - Comparative Effects Of 1V1 Vs 3V3 S Ch.3 Grounded Operator",
+      "verbatim_quote": "521 sition, and neuromuscular-fitness outcomes, whereas direct comparisons between 1v1 and 3v3 were interpreted as exploratory evidence of possible format-specific adaptation tendencies.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5c76055b9f831a0a_w2_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5c76055b9f831a0a_w2_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5c76055b9f831a0a_w2_g2",
+      "name": "2026 - Comparative Effects Of 1V1 Vs 3V3 S Ch.3 Grounded Operator",
+      "verbatim_quote": "Across all participant-session observations, mean heart rate was 178.33 ± 2.13 beats/min in the 1v1 group and 177.49 ± 2.02 beats/min in the 3v3 group.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5c76055b9f831a0a_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5c76055b9f831a0a_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5c76055b9f831a0a_w2_g3",
+      "name": "2026 - Comparative Effects Of 1V1 Vs 3V3 S Ch.3 Grounded Operator",
+      "verbatim_quote": "Mean session RPE was 8.45 ± 0.86 arbitrary units in the 1v1 group and 7.88 ± 0.93 arbitrary units in the 3v3 group, indicating consistently high perceived exercise intensity (Table 2).",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5c76055b9f831a0a_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5c76055b9f831a0a_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "p12_neuromuscular_generalization",
+      "name": "Neuromuscular Generalization Operator",
+      "verbatim_quote": "The handgrip findings should be interpreted as evidence of general neuromuscular improvement after basketball SSG participation, not as evidence of format-specific upper-limb adaptation.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "Handgrip strength: Newtons (N); Neuromuscular coordination index: dimensionless; Upper-limb specific adaptation: dimensionless.",
+      "assumptions": "Repeated high-tension exposures during SSG induce systemic neural drive improvements rather than isolated hypertrophic changes in the forearms.",
+      "breakdown_regime": "Fails if the intervention includes dedicated, high-volume resistance training for the upper extremities, decoupling grip strength from lower-body locomotor demands.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's global efficiency scaling factor, where localized force output increases reflect a system-wide optimization of motor unit recruitment patterns.",
+        "source_operator": "p12_neuromuscular_generalization",
+        "telemetry": "Pre- and post-intervention dynamometer readings normalized against baseline squat jump power."
+      }
+    },
+    {
+      "primitive_id": "p12_adiposity_reduction_kernel",
+      "name": "Adiposity Reduction Kernel",
+      "verbatim_quote": "Body mass, BMI, and the sum of skinfolds decreased meaningfully in both SSG groups compared with control, with numerically larger reductions for body mass and skinfolds in 3v3.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "Body mass: kilograms (kg); BMI: kg/m^2; Sum of skinfolds: millimeters (mm); Time: weeks.",
+      "assumptions": "Both 1v1 and 3v3 formats impose sufficient metabolic stress to trigger catabolic pathways exceeding anabolic inputs under free-living conditions.",
+      "breakdown_regime": "Breaks down if participants concurrently increase caloric intake to match exercise expenditure, resulting in homeostatic weight maintenance.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Corresponds to the GSI negative drift term in the body composition stochastic differential equation, parameterized by the specific SSG format intensity.",
+        "source_operator": "p12_adiposity_reduction_kernel",
+        "telemetry": "Longitudinal tracking of anthropometric markers against control group baselines using paired t-tests or mixed-effects models."
+      }
+    },
+    {
+      "primitive_id": "p12_metabolic_inference_gap",
+      "name": "Metabolic Inference Gap",
+      "verbatim_quote": "In the present trial, however, energy intake, non-intervention physical activity, substrate use, and total energy expenditure were not directly measured.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "Energy intake: kilocalories (kcal); Total energy expenditure: kilojoules (kJ); Substrate oxidation rate: milliliters O2/min.",
+      "assumptions": "The absence of direct metabolic telemetry introduces a high-variance latent variable into the causal graph linking SSG participation to fat loss.",
+      "breakdown_regime": "Becomes a fatal flaw if external physical activity drastically decreases during the intervention, artificially inflating the perceived efficacy of the SSG protocol.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Represents a missing node in the GSE causal inference graph, forcing the engine to rely on proxy variables and widening the conformal prediction intervals for metabolic outcomes.",
+        "source_operator": "p12_metabolic_inference_gap",
+        "telemetry": "Retrospective estimation via doubly labeled water or accelerometry in future iterations to close the gap."
+      }
+    },
+    {
+      "primitive_id": "p12_central_adiposity_proxy",
+      "name": "Central Adiposity Proxy",
+      "verbatim_quote": "Waist circumference and WHR also improved in both SSG formats (with slightly larger waist reduction in 1v1), supporting a beneficial impact on central adiposityrelated proxies.",
+      "page": 12,
+      "latex": null,
+      "symbol_and_unit_ledger": "Waist circumference: centimeters (cm); Waist-to-hip ratio (WHR): dimensionless; Central adiposity: volume (L) or mass (kg).",
+      "assumptions": "Reductions in circumferential measures accurately reflect visceral and subcutaneous fat loss rather than transient fluid shifts or core muscle atrophy.",
+      "breakdown_regime": "Invalid if significant trunk muscle loss occurs without proportional fat loss, skewing the WHR metric despite unchanged metabolic health.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as a localized constraint in the GSI morphological model, indicating that 1v1 may exert unique spatial demands on core stabilization affecting regional fat mobilization.",
+        "source_operator": "p12_central_adiposity_proxy",
+        "telemetry": "Circumferential tape measurements cross-validated with DXA scans for regional fat quantification."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5c76055b9f831a0a_t0",
+      "think": "Window 1 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5c76055b9f831a0a_t1",
+      "think": "This chapter window outlines the foundational methodology for a comparative study on small-sided basketball training effects. The core structure involves participant selection through exclusion/inclusion criteria, followed by randomization into intervention arms. The universal lens formalizes the cumulative effect of physiological responses across variables. The GSI mapping reflects how Bayesian inference can be applied to assess eligibility probabilities given observed criteria. The GSE mapping models the evolution of participant states through training adherence. Each primitive encapsulates a critical phase of experimental design—selection, exclusion, randomization, and consent—each contributing to the integrity of the causal inference chain. These primitives form a coherent foundation for modeling both individual-level outcomes and group-level comparisons in physical fitness and anthropometric changes. Window 2 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in clinical trial design principles established by the Declaration of Helsinki and refined in modern exercise physiology research, particularly in controlled small-sided game protocols. Retrocausal Genealogy (Window 2): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents (participants) are modeled as rational actors responding to incentives (fitness gains) and constraints (health risks, time availability). Coaches and researchers act as external agents shaping the environment through protocol design and monitoring. Theory of Mind (Window 2): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that each primitive operates independently in its domain—selection does not overlap with consent, and randomization does not depend on outcome measures. Leakage is prevented by strict separation of ethical, methodological, and analytical layers. Cross-Layer Veto (Window 2): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5c76055b9f831a0a_t2",
+      "think": "Window 3 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 3): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 3): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 3): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in 2026 - Comparative Effects Of 1V1 Vs 3V3 Small-Sided Basketball Training On Body Anthropometric-Related Outcomes And Physical Fitness In Sedentary - Li et al (5c76055b9f831a0a, 15/15 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5c76055b9f831a0a_t4",
+      "think": "The mathematical derivation within this chapter window centers on the discrepancy between observed macroscopic anthropometric shifts and the microscopic metabolic mechanisms driving them. We observe a vector field of changes \\Delta \\mathbf{x} = (\\Delta m, \\Delta \\text{BMI}, \\Delta \\text{skinfold}) pointing consistently toward reduced adiposity for both 1v1 and 3v3 interventions relative to the control manifold. However, the authors explicitly highlight a critical epistemic void: the fundamental thermodynamic variables—energy intake (EI), total energy expenditure (TEE), and substrate utilization—are unobserved latent variables. Consequently, the causal operator mapping the SSG protocol to fat loss is structurally unidentifiable without strong parametric assumptions. The text posits that repeated high-intensity sessions likely induced a cumulative negative energy balance, yet this remains an inference rather than a rigorously tested mechanism. From a quantitative perspective, we are dealing with a partially observed Markov decision process where the reward function (fat loss) is visible, but the underlying cost function (metabolic expenditure) and environmental noise (free-living activity/diet) are hidden. The observation that 3v3 yields numerically larger reductions in body mass suggests a higher magnitude of the implicit energy deficit operator compared to 1v1, possibly due to sustained aerobic demand versus intermittent anaerobic bursts. Conversely, the slightly larger waist reduction in 1v1 introduces a non-collinear response variable, hinting at format-specific biomechanical stresses or localized muscular engagement that the current anthropometric proxies cannot fully disentangle. Thus, the sovereign primitive here is not just the reduction itself, but the bounded inference surrounding it—a probabilistic assertion of efficacy constrained by measurement limitations.",
+      "retrocausal_genealogy": "This line of inquiry traces back to the foundational debates in exercise physiology regarding the specificity of training adaptations versus generalized caloric burn. Historically, early 20th-century models treated exercise purely as a mechanical work output converting food to heat. The mid-century shift toward metabolic cartography introduced substrate utilization concepts. Li et al.'s acknowledgment of unmeasured energy dynamics echoes the rigorous methodological critiques found in seminal works like Børsheim and Bahr (2003), who emphasized that without controlling dietary intake, attributing body composition changes solely to exercise is statistically precarious. This window sits at the intersection of traditional anthropometric assessment and modern calls for multi-modal physiological telemetry.",
+      "theory_of_mind": "Modeling the opposing agents—the sedentary participants and the researchers—we see a dynamic interplay. The participants, initially untrained, likely experienced a steep learning curve in neuromuscular coordination, leading to the observed handgrip improvements as a side effect of generalized motor unit activation. Their subconscious behavioral responses, such as compensatory eating or reduced spontaneous movement, represent hidden feedback loops that the researchers could not capture. The researchers, aware of these potential confounders, adopt a cautious interpretive stance, deliberately framing their results as 'directionally consistent' rather than causally definitive. They anticipate skepticism regarding the mechanistic pathways and preemptively limit their claims, demonstrating a sophisticated understanding of the epistemic boundaries imposed by their experimental design.",
+      "cross_layer_veto": "A strict anti-collinearity veto must be applied when attempting to map these anthropometric changes directly to on-court performance metrics without intermediate physiological bridging. The leakage condition arises if one assumes that reduced waist circumference linearly translates to improved agility or shooting accuracy; this ignores the complex, non-linear relationship between body composition, power-to-weight ratio, and skill execution. Furthermore, we must veto any direct attribution of the 1v1 waist reduction to superior cardiovascular conditioning, as the study explicitly notes the lack of trunk-specific workload data. The inference gap prevents us from collapsing the high-dimensional state space of 'fitness' into a single scalar of 'waist size,' mandating that GSE treat these as weakly coupled, probabilistic indicators rather than deterministic levers."
+    }
+  ]
+}

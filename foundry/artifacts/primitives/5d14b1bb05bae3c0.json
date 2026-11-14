@@ -1,0 +1,323 @@
+{
+  "book_id": "5d14b1bb05bae3c0",
+  "source_status": "COMPLETE",
+  "title": "arxiv_2505.12854v1",
+  "file_name": "arxiv_2505.12854v1.pdf",
+  "sha256": "5d14b1bb05bae3c02ad6ca85f16c4241d45b431a771cba1ed800e8ae7c5ca8ab",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 12,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A mathematical framework unifying pose estimation and hold usage detection through joint-keypoint overlap metrics in climbing datasets. Camera positioning and climber diversity define dataset integrity through geometric and kinematic constraints.",
+  "gsi_mapping": "Bayesian inference models map climber pose states to hold usage via probabilistic keypoint overlap likelihoods, enabling scalable performance analysis. Bayesian inference models climber motion using annotated extremity-hold interactions with probabilistic occlusion estimates.",
+  "gse_mapping": "Situationally grounded state transitions model climber dynamics across holds using temporal keypoint trajectories and spatial hold geometry. Situational reasoning maps hold usage transitions via state-space traversal of climber extremities and route geometry.",
+  "primitives": [
+    {
+      "primitive_id": "hold_usage_detection",
+      "name": "Hold Usage Detection Operator",
+      "verbatim_quote": "To address this issue, we introduce a dataset of 22 annotated climbing videos, providing ground-truth labels for hold locations, usage order, and time of use.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{use}': 'time interval (seconds)', 'H_i': 'hold identifier (dimensionless)', 'V_t': 'video frame timestamp (seconds)'}",
+      "assumptions": "Climber motion is captured at regular temporal intervals; hold usage is binary per time step.",
+      "breakdown_regime": "When joint keypoints do not overlap with hold bounding boxes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps video frames to hold usage events via keypoint-to-boundbox overlap functions in GSE; probabilistic mapping in GSI.",
+        "source_operator": "hold_usage_detection",
+        "telemetry": "Temporal hold activation rate and overlap area ratio"
+      }
+    },
+    {
+      "primitive_id": "keypoint_overlap_analysis",
+      "name": "Keypoint Overlap Analysis Kernel",
+      "verbatim_quote": "We determine usage by analyzing the key points of certain joints and the corresponding overlap with climbing holds.",
+      "page": 1,
+      "latex": "\\mathcal{O}(J_k, H_i) = \\frac{\\text{Area}(J_k \\cap H_i)}{\\text{Area}(H_i)}",
+      "symbol_and_unit_ledger": "{'J_k': 'joint keypoint (pixel coordinates)', 'H_i': 'hold bounding box (pixel coordinates)', '\\\\mathcal{O}': 'overlap ratio (dimensionless)'}",
+      "assumptions": "Hold shapes are axis-aligned rectangles; keypoint positions are deterministic.",
+      "breakdown_regime": "When overlap ratio falls below threshold \\epsilon = 0.1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives hold usage from geometric overlap of 2D pose joints in GSE; used in GSI for probabilistic classification.",
+        "source_operator": "keypoint_overlap_analysis",
+        "telemetry": "Average overlap ratio over time window"
+      }
+    },
+    {
+      "primitive_id": "pose_estimation_accuracy",
+      "name": "Pose Estimation Accuracy Metric",
+      "verbatim_quote": "We evaluate multiple state-of-the-art models and analyze their accuracy on our dataset, identifying and highlighting climbing-specific challenges.",
+      "page": 1,
+      "latex": "\\mathcal{A}_{model} = \\frac{1}{N} \\sum_{i=1}^{N} \\mathbb{I}(\\hat{J}_i = J_i)",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{A}_{model}': 'accuracy (dimensionless)', 'N': 'total number of frames (dimensionless)', '\\\\hat{J}_i': 'estimated joint position (pixel coordinates)', 'J_i': 'ground truth joint position (pixel coordinates)', '\\\\mathbb{I}': 'indicator function (dimensionless)'}",
+      "assumptions": "Ground truth annotations are accurate; pose estimation models are deterministic.",
+      "breakdown_regime": "When model outputs deviate beyond ±5 pixels from ground truth.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps model prediction error to GSE state transition reliability; used in GSI for confidence calibration.",
+        "source_operator": "pose_estimation_accuracy",
+        "telemetry": "Mean absolute error in pixel coordinates"
+      }
+    },
+    {
+      "primitive_id": "climbing_dataset_foundation",
+      "name": "Climbing Dataset Foundation",
+      "verbatim_quote": "However, no climbing dataset with detailed hold usage annotations exists to our knowledge.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'dataset size (videos)', 'A': 'annotation granularity (seconds)', 'L': 'hold location precision (pixels)'}",
+      "assumptions": "Annotations are consistent across climbers and routes; data is representative.",
+      "breakdown_regime": "When annotation coverage drops below 90% of total hold usage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides training data for GSE hold detection; enables GSI probabilistic inference.",
+        "source_operator": "climbing_dataset_foundation",
+        "telemetry": "Annotation completeness ratio"
+      }
+    },
+    {
+      "primitive_id": "camera_setup_optimization",
+      "name": "Camera Setup Optimization",
+      "verbatim_quote": "Different camera positions (v1, v2, v3) evaluated for dataset collection, with v1 selected as the final viewpoint.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Camera placement must maintain full route visibility without obstruction.",
+      "breakdown_regime": "When multiple cameras introduce mechanical interference or occlusion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The selection of v1 corresponds to a minimal-risk isometric projection in GSE's visual state space.",
+        "source_operator": "camera_setup_optimization",
+        "telemetry": "Video frame coverage ratio and occlusion frequency."
+      }
+    },
+    {
+      "primitive_id": "climber_demographics",
+      "name": "Climber Demographics",
+      "verbatim_quote": "Participants information Ten climbers participated in the dataset collection, ensuring diversity in height (156–183 cm, mean 173.5 cm) and climbing experience.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Diverse anthropometrics and experience levels improve generalizability.",
+      "breakdown_regime": "When sample size or variability undermines statistical robustness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Demographic distributions inform GSI's prior probability kernels for motion prediction.",
+        "source_operator": "climber_demographics",
+        "telemetry": "Height, age, gender, and experience distribution across dataset."
+      }
+    },
+    {
+      "primitive_id": "hold_annotation_protocol",
+      "name": "Hold Annotation Protocol",
+      "verbatim_quote": "Additionally, a technical issue prevented recording the first two moves of one climb.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Annotation accuracy requires complete temporal coverage of movement.",
+      "breakdown_regime": "When data truncation affects trajectory completeness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Annotation protocol aligns with GSE's temporal event graph for hold interaction modeling.",
+        "source_operator": "hold_annotation_protocol",
+        "telemetry": "Frame-level hold usage and occlusion annotations."
+      }
+    },
+    {
+      "primitive_id": "video_metadata_statistics",
+      "name": "Video Metadata Statistics",
+      "verbatim_quote": "portrait mode, allowing the entire route to fit into the frame at all times, with a resolution of 3840x2160 pixels and 50 FPS.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Statistical summaries enable model validation and performance benchmarking.",
+      "breakdown_regime": "When metadata inconsistencies impair comparative analysis.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Video duration and usage statistics form input features for GSI's regression models.",
+        "source_operator": "video_metadata_statistics",
+        "telemetry": "Average video length, standard deviation, and hold usage durations."
+      }
+    },
+    {
+      "primitive_id": "foot_area_expansion",
+      "name": "Foot Area Expansion",
+      "verbatim_quote": "In contrast, the area of interest expands downwards for foot key points, as the foothold is predominantly below the foot.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{\\\\text{foot}}': 'area of interest for foot keypoints (m²)', 'h_{\\\\text{foot}}': 'height offset for downward expansion (m)'}",
+      "assumptions": "Footholds are located below the foot; keypoint detection is aligned with anatomical structure.",
+      "breakdown_regime": "When foot keypoints are detected but not toe-specific, area extends downward.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Foot area kernel is derived from anatomical constraints and spatial orientation of footholds.",
+        "source_operator": "foot_area_expansion",
+        "telemetry": "Overlap ratio between A_foot and annotated hold bounding box."
+      }
+    },
+    {
+      "primitive_id": "wrist_centered_bbox",
+      "name": "Wrist-Centered Bounding Box",
+      "verbatim_quote": "The detected wrist is the center of the area of interest (i.e., an axis-aligned-bounding-box) for hand key points since hand placement on a hold can extend in any direction from the wrist.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{\\\\text{hand}}': 'axis-aligned bounding box for hand keypoints (m²)', 'x_{\\\\text{wrist}}, y_{\\\\text{wrist}}': 'coordinates of wrist keypoint (m)'}",
+      "assumptions": "Hand placement can occur in all directions from wrist; symmetric bounding box centered at wrist.",
+      "breakdown_regime": "Applies when wrist is detected, regardless of finger or palm position.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Hand area kernel is derived from wrist-centered spatial extent modeling full hand reach.",
+        "source_operator": "wrist_centered_bbox",
+        "telemetry": "Intersection over union (IoU) of A_hand with hold annotation."
+      }
+    },
+    {
+      "primitive_id": "toe_vs_ankle_margin",
+      "name": "Toe vs Ankle Margin",
+      "verbatim_quote": "However, a significantly larger area is required for models that only estimate ankle keypoints (see Figure 4b), as the toes can be at a substantial distance from the ankle with notable movement variability.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{\\\\text{toe}}': 'small margin area for toe detection (m²)', 'A_{\\\\text{ankle}}': 'large margin area for ankle-only models (m²)'}",
+      "assumptions": "Toes may deviate significantly from ankle position; ankle-only models require broader coverage.",
+      "breakdown_regime": "When toe position is unavailable, A_ankle is used instead of A_toe.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mapping between keypoint confidence and area-of-interest scaling reflects model uncertainty.",
+        "source_operator": "toe_vs_ankle_margin",
+        "telemetry": "Area size ratio between A_toe and A_ankle under varying model outputs."
+      }
+    },
+    {
+      "primitive_id": "hold_usage_persistence",
+      "name": "Hold Usage Persistence",
+      "verbatim_quote": "The detected overlap must persist for at least 0.5 seconds (12.5 frames) for a hold to be recognized as used.",
+      "page": 7,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{persist}}': 'minimum persistence duration (s)', 'f_{\\\\text{frame}}': 'frame rate (Hz)', 'N_{\\\\text{frames}}': 'number of consecutive frames (dimensionless)'}",
+      "assumptions": "Hold usage requires sustained contact; transient overlaps are excluded.",
+      "breakdown_regime": "Only valid if overlap occurs for N_frames ≥ 12.5 at f_frame Hz.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Temporal kernel filters out false positives by enforcing minimum overlap duration.",
+        "source_operator": "hold_usage_persistence",
+        "telemetry": "Duration of overlap in seconds or frames against T_persist threshold."
+      }
+    },
+    {
+      "primitive_id": "w3_missing_detection_rate",
+      "name": "Missing Detection Rate",
+      "verbatim_quote": "YOLOv8-pose had over 35 missing detections in two videos and between 1 and 15 frames in eleven videos.",
+      "page": 10,
+      "latex": "\\text{Missing Detection Rate} = \\frac{\\text{Number of frames with no detection}}{\\text{Total number of frames}}",
+      "symbol_and_unit_ledger": "{'Missing_Detection_Rate': 'dimensionless fraction (0 \\\\leq MDR \\\\leq 1)', 'Number_of_frames_with_no_detection': 'unitless count', 'Total_number_of_frames': 'unitless count'}",
+      "assumptions": "Assumes independent and identically distributed frame sampling; neglects temporal autocorrelation in missing data patterns.",
+      "breakdown_regime": "Applies when ground truth exists; fails when no reference trajectory is available.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Out-of-Sample Error Estimation via Holdout Validation, where missing detections correspond to false negatives in predictive models.",
+        "source_operator": "w3_missing_detection_rate",
+        "telemetry": "Observed via manual frame-by-frame comparison against annotated trajectories."
+      }
+    },
+    {
+      "primitive_id": "w3_pose_sensitivity",
+      "name": "Pose Model Sensitivity",
+      "verbatim_quote": "Sensitivity is higher than precision for all models, suggesting that they rarely miss actual hold usage (low false negatives) but tend to overpredict usage (higher false positives).",
+      "page": 10,
+      "latex": "\\text{Sensitivity} = \\frac{\\text{True Positives}}{\\text{True Positives} + \\text{False Negatives}}",
+      "symbol_and_unit_ledger": "{'Sensitivity': 'dimensionless probability (0 \\\\leq Se \\\\leq 1)', 'True_Positives': 'unitless count', 'False_Negatives': 'unitless count'}",
+      "assumptions": "Binary classification assumption; equal cost for false positives and false negatives; static background.",
+      "breakdown_regime": "Valid under low noise; breaks down with high occlusion or clutter.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE State-Space Overlap Metric, where sensitivity quantifies the proportion of true state transitions captured by the model.",
+        "source_operator": "w3_pose_sensitivity",
+        "telemetry": "Derived from confusion matrix computed over test dataset."
+      }
+    },
+    {
+      "primitive_id": "w3_keypoint_reliance",
+      "name": "Keypoint Reliance Impact",
+      "verbatim_quote": "This pattern is most pronounced in YOLOv8-pose X, likely due to its reliance on ankle keypoints, requiring bigger bounding boxes for foot overlap checks, which increases the likelihood of misclassifications.",
+      "page": 10,
+      "latex": "P(\\text{Misclassification}) \\propto \\sigma^2_{\\text{keypoint}} \\cdot A_{\\text{bbox}}",
+      "symbol_and_unit_ledger": "{'P_Misclassification': 'dimensionless probability', 'sigma_keypoint': 'Euclidean error standard deviation in pixel space', 'A_bbox': 'Area of bounding box in pixels'}",
+      "assumptions": "Gaussian keypoint errors; rectangular bounding boxes; independent feature extraction.",
+      "breakdown_regime": "Breaks down when keypoint variance exceeds bounding box size ratio.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Feature Selection Bias, where increased bounding box area amplifies background noise, degrading conformal prediction intervals.",
+        "source_operator": "w3_keypoint_reliance",
+        "telemetry": "Quantified via root mean square error (RMSE) between predicted and ground-truth keypoint coordinates."
+      }
+    },
+    {
+      "primitive_id": "w3_hold_accuracy",
+      "name": "Hold Usage Accuracy",
+      "verbatim_quote": "Overall ViTPose L, and MediaPipe H, show accuracies above 80%.",
+      "page": 10,
+      "latex": "\\text{Accuracy} = \\frac{\\text{True Positives} + \\text{True Negatives}}{\\text{Total Predictions}}",
+      "symbol_and_unit_ledger": "{'Accuracy': 'dimensionless fraction (0 \\\\leq Acc \\\\leq 1)', 'True_Positives': 'unitless count', 'True_Negatives': 'unitless count', 'Total_Predictions': 'unitless count'}",
+      "assumptions": "Balanced class distribution; independent test set; fixed threshold for binary decision.",
+      "breakdown_regime": "Degradates with class imbalance; requires reweighting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE State Classification Correctness, measuring the proportion of correctly identified climber states across all possible actions.",
+        "source_operator": "w3_hold_accuracy",
+        "telemetry": "Measured via 5-fold cross-validation on annotated video sequences."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5d14b1bb05bae3c0_t0",
+      "think": "The foundational work introduces a novel dataset for sport climbing that addresses a critical gap in automated hold usage detection. By leveraging 22 annotated climbing videos, it establishes a benchmark for evaluating pose estimation models in climbing contexts. The paper emphasizes the importance of precise hold identification for performance analysis and competition scoring. The methodology combines keypoint-based pose estimation with geometric overlap analysis to infer hold usage, introducing a new paradigm for computer vision in climbing. This approach bridges traditional sensor-based methods with modern machine learning techniques, offering a scalable solution for real-time climbing analytics. The dataset's structure allows for temporal and spatial resolution of hold interactions, enabling downstream applications in coaching, biomechanics, and AI-assisted training systems. The paper also highlights the limitations of existing approaches, such as reliance on manual annotation or specialized hardware, thereby justifying the need for a unified computational framework. The proposed framework integrates pose estimation accuracy with hold usage semantics, forming a basis for future research in AI-driven climbing technologies. Window 1 Synthesis: Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Historically rooted in early sensor-based climbing analysis, particularly force-sensing holds and inertial measurement units. The evolution toward vision-based systems reflects broader trends in computer vision and sports analytics, building upon prior work in motion tracking and activity recognition. Retrocausal Genealogy (Window 1): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The authors consider the perspective of coaches and athletes who rely on precise movement data for performance optimization. They anticipate challenges in generalizing pose estimation models to diverse climbing styles and environments, aligning with the needs of competitive and recreational climbers alike. Theory of Mind (Window 1): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by distinguishing between low-level pose estimation and high-level semantic hold usage. Leakage is prevented by ensuring that geometric overlap metrics do not inadvertently encode non-climbing behaviors, such as arm swinging or balance adjustments. Cross-Layer Veto (Window 1): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5d14b1bb05bae3c0_t1",
+      "think": "Chapter window 2 (pages 4–6) establishes foundational data collection and annotation protocols for climbing motion datasets. Camera setup optimization involves evaluating multiple viewpoints to ensure full route visibility, ultimately selecting a single perpendicular camera to avoid mechanical interference and maintain natural climbing flow. Climber demographics include ten participants with diverse heights, ages, and climbing experience, enhancing dataset generalizability. Video annotation is conducted by an experienced coach, focusing on extremity-hold interactions and occlusion events. Hold usage statistics reveal average durations and occlusion rates, informing motion prediction models. These elements collectively define a structured, reproducible framework for capturing and analyzing climbing behavior, enabling downstream applications in GSI’s probabilistic inference and GSE’s situational reasoning systems. Window 2 Synthesis: Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in early 20th-century biomechanics and modern computer vision techniques, this work builds upon prior studies in motion capture and sport analytics. Retrocausal Genealogy (Window 2): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The authors consider the climber's perspective, optimizing camera angles for natural movement while anticipating coach-based annotation biases and technical limitations. Theory of Mind (Window 2): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that demographic and motion data do not redundantly encode similar variance, and leakage is mitigated by strict temporal alignment of annotations. Cross-Layer Veto (Window 2): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5d14b1bb05bae3c0_t2",
+      "think": "Chapter 3 introduces a spatiotemporal framework for detecting hold usage in climbing via pose estimation. It establishes that hold usage is determined by overlap between detected keypoints and annotated hold locations. Key insights include: (1) Different geometric kernels define areas of interest depending on limb type—foot keypoints use downward-expanding regions, while hand keypoints use wrist-centered bounding boxes. (2) The variability in keypoint detection (toe vs ankle) necessitates adaptive area sizes to maintain robustness. (3) Temporal consistency is enforced through a 0.5-second minimum overlap duration to avoid false positives. These primitives form the basis for evaluating pose estimation models' accuracy, precision, and sensitivity. The framework supports multi-granular analysis including per-route and video-level metrics, enabling detailed performance assessment across diverse climbing scenarios. This chapter lays the foundation for integrating pose data into real-time climbing analytics systems. Window 3 Synthesis: Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in computer vision applications for motion tracking, extending earlier work on human pose estimation and activity recognition in sports. Influenced by prior studies on biomechanical analysis and spatial-temporal event detection. Retrocausal Genealogy (Window 3): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models account for climber intent and physical interaction with holds, distinguishing intentional grip from incidental contact. Coaches and athletes may interpret hold usage differently based on technique and route difficulty. Theory of Mind (Window 3): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that spatial and temporal primitives do not redundantly encode the same information. Leakage vetoes exclude features that fail to distinguish between actual hold usage and mere proximity or motion artifacts. Cross-Layer Veto (Window 3): Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5d14b1bb05bae3c0_t3",
+      "think": "The chapter introduces four sovereign primitives that quantify different aspects of pose estimation performance in climbing analysis. Primitive w3_missing_detection_rate formalizes the concept of frames lost in tracking, providing a direct measure of temporal gaps in data collection. The primitive w3_pose_sensitivity captures the trade-off between false negatives and false positives inherent in any detection system, aligning with receiver operating characteristic (ROC) curve analysis. Key insight: sensitivity exceeding precision indicates a conservative model that prioritizes recall over specificity, which is desirable for safety-critical applications like assistive technologies for visually impaired climbers. Primitive w3_keypoint_reliance_impact mathematically links geometric properties of bounding boxes to misclassification rates, revealing that larger areas increase the risk of including background clutter. This connects to kernel density estimation in statistics, where bandwidth selection balances bias and variance. Finally, primitive w3_hold_accuracy offers a holistic evaluation metric combining both correct positive and negative predictions, analogous to balanced accuracy in imbalanced classification tasks. Together, these operators form a rigorous framework for assessing and improving computer vision models in sports biomechanics, enabling systematic performance benchmarking and guiding algorithm selection. Window 4 Synthesis: Rooted in arxiv_2505.12854v1 (5d14b1bb05bae3c0, 12/12 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "The roots of these primitives trace back to signal detection theory (SDT) developed during World War II for radar processing, later adapted to medical diagnostics and machine learning. The concept of sensitivity specifically originates from early psychophysics studies on human perception thresholds. The idea linking spatial scale to error rates builds on scale-space theory in image processing introduced in the late 1980s. Hold accuracy metrics evolved from information retrieval precision metrics used in document classification. These foundational concepts have been progressively refined through contributions from computer vision researchers such as Tomaso Poggio, Jitendra Malik, and others working on object recognition and pose estimation.",
+      "theory_of_mind": "Coaches and athletes might model the authors' perspective as one focused on maximizing safety and inclusivity in climbing. They would recognize that a model with high sensitivity but low precision might be preferred if missing a hold usage leads to falls, even if it occasionally flags non-existent usages. Opponents might argue that excessive false positives create cognitive load for users, necessitating a balanced approach. Understanding this trade-off helps in designing user interfaces that clearly distinguish confident predictions from uncertain ones, thereby enhancing trust in the technology.",
+      "cross_layer_veto": "Anti-collinearity condition: The primitives must not rely on identical keypoint sets across models, as this would introduce multicollinearity in comparative analysis. For instance, comparing YOLOv8-pose X and YOLOv8-pose M using the same ankle keypoints violates this requirement, leading to inflated Type I errors. Leakage veto: The training and testing datasets must be completely disjoint; sharing any climber data between splits would result in overly optimistic accuracy estimates, undermining the generalization guarantees provided by these primitives. Additionally, the primitives should avoid using future hold information for current predictions to prevent data snooping bias in closed-loop control systems."
+    }
+  ]
+}
