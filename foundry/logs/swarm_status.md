@@ -604,3 +604,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 04:52:01 | COMPLETE | 238bb03f7c401b23 | primitives=12 think_words=872
 - 2026-11-14 04:53:00 | CLAIMED | 1c8f0d087d5d4fed | worker=hermes-inline shard03 file=2025 - AI Special Feature AI-Assisted Substitution Decisions A Fuzzy Logic Approach to Real-Time Game Management - Farias.pdf
 - 2026-11-14 04:59:33 | COMPLETE | 1c8f0d087d5d4fed | primitives=32 think_words=919
+- 2026-11-14 05:01:28 | CLAIMED | 35a21ae0e8047e7a | worker=hermes-inline shard03 file=2024 - Generation of threat crediting football players for creating dangerous actions in an unbiased way - Baouan et al.pdf
+- 2026-11-14 05:06:48 | COMPLETE | 35a21ae0e8047e7a | primitives=34 think_words=882

@@ -1,0 +1,714 @@
+{
+  "book_id": "35a21ae0e8047e7a",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_FOOTBALL_HAWKES_CLEAN_OCR_RECONSTRUCTED_EQ",
+  "source_note": "Baouan, Coustou, Lacome, Pulido & Rosenbaum, 'Generation of threat: crediting football players for creating dangerous actions in an unbiased way', Journal of Quantitative Analysis in Sports 2025 aop (received July 2024, accepted Aug 2025, published online Sept 2025), DOI 10.1515/jqas-2024-0107, 23 pages. A 12-dimensional Hawkes process (11 position ball-touch components + a threat component counting danger-area entries) models non-Markovian player interactions; the branching matrix K and descendant matrix M=K(I-K)^-1 (immigration-birth representation) yield four Generation of Threat indices: GoT(dir)=K_{12,p}, GoT(ind)=M_{12,p}, and per-90 versions, the indirect per-90 a player-removal counterfactual. Stats-perform F24 event data with explicit processing rules (threat refractory, possession-gap compression, set-piece-cross exclusion), formation-cluster role homogeneity, separable consistent MLE (non-concave beta fixed per row), and a simulation study establishing reliability from 600 min. Applications: Chelsea 2016-17 (Hazard direct creator, Kante indirect hub, Costa finisher-not-creator), Stade Rennais 2021-22, Ligue 1 2021-22 position-specific ranking (Messi/Di Maria/Simon/Mbappe). Extracted faithfully (not a derivative summary). All display equations (Hawkes intensity, branching matrix/stability, exponential kernel, Proposition 1, the four GoT definitions, log-likelihood Eq 1, wMAPE) are printed in a shifted/custom math font that extracts garbled; reconstructed in labeled LaTeX and flagged here and in assumptions. Domain football matches catalog; soccer. The Hawkes interaction kernel, immigration-birth credit graph, direct/indirect split, player-removal counterfactual, double-counting veto, non-Markovian memory, and position-conditioned valuation are directly isomorphic to GSE's player-valuation and credit-attribution layer. No sportsbook lines/spreads/totals/implied odds in source or lifted into GSE.",
+  "primitives": [
+    {
+      "primitive_id": "credit_attribution_question",
+      "name": "Core question: which player to credit for a successful action/sequence",
+      "verbatim_quote": "Which player should be credited for a successful action or sequence in a football match?",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The paper (Baouan, Coustou, Lacome, Pulido, Rosenbaum; CMAP Ecole Polytechnique + Parma Calcio; JQAS 2025 aop, DOI 10.1515/jqas-2024-0107) asks which player should be credited for a successful action: the striker who finishes, the passer who assists, the second-to-last pass that creates disequilibrium, or even a goalkeeper clearance; the goal is a quantitative unbiased methodology to assess a player's importance in generating dangerous actions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The credit-attribution question is literally GSE's player-value attribution problem across a possession chain.",
+        "source_operator": "credit_attribution_question",
+        "telemetry": "credit striker/pass/second-to-last pass/GK clearance; unbiased danger-creation attribution"
+      }
+    },
+    {
+      "primitive_id": "threat_definition_danger_area",
+      "name": "Threat = a team player gets the ball in the opponent's danger area",
+      "verbatim_quote": "By a threat, we simply mean a situation where a player of the team of interest gets the ball in the danger area of the opposing team",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A threat is defined as a situation where a player of the team of interest gets the ball in the danger area of the opposing team, a rectangular region around the opponent's goal where the likelihood of scoring from a shot is high; this is the event the twelfth Hawkes component counts."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The danger-area-entry threat definition is the same xT-style threat-zone event GSE values.",
+        "source_operator": "threat_definition_danger_area",
+        "telemetry": "threat = ball possession in opponent danger area (high shot-scoring likelihood)"
+      }
+    },
+    {
+      "primitive_id": "danger_area_geometry",
+      "name": "Danger area = box 50% pitch width x 25% length, closer to midfield than penalty box",
+      "verbatim_quote": "The danger area is defined as a box around the opposing goal covering 50 % of the width of the pitch and 25 % of its length",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The danger area is a box around the opposing goal covering 50% of the pitch width and 25% of its length; compared to the penalty surface it is slightly closer to midfielders and defenders, enabling capture of more threat events generated by deeper positions (shot probability per location from Singh 2018)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The widened danger-zone geometry is the same threat-region design GSE uses to credit deeper buildup.",
+        "source_operator": "danger_area_geometry",
+        "telemetry": "danger box 50% width x 25% length; wider/deeper than penalty box -> credits defenders/MF"
+      }
+    },
+    {
+      "primitive_id": "non_markovian_memory_needed",
+      "name": "Current game state alone is insufficient; past dynamics must be remembered",
+      "verbatim_quote": "simply relying on the current state of the game (players and ball's positions) as the information set is not enough for modeling the game accurately",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Relying only on the current game state (player and ball positions) as the information set is insufficient; the dynamics prior to time t must be considered so that, e.g., a defender's great pass is still remembered when the ball reaches the danger area several touches later — a non-Markovian requirement."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The non-Markovian memory requirement is GSE's sequence-aware valuation beyond a state-only snapshot.",
+        "source_operator": "non_markovian_memory_needed",
+        "telemetry": "current state insufficient; remember past pass through later touches; non-Markovian"
+      }
+    },
+    {
+      "primitive_id": "markovian_xg_xa_xt_contrast",
+      "name": "xG/xA/xT are Markovian: value from game state at t only, no past patterns",
+      "verbatim_quote": "they define a value for an action (pass or shot), that is determined by the game state at time t only and does not look at the past patterns of play",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Expected goals (Green 2012), expected assists (Whitmore 2021), and expected threat (Singh 2018) all define an action's value from the game state at time t only (shot distance/angle, pass type/target, ball position) without looking at past patterns of play; the Markov assumption is natural for chance quality but misses chain credit, which GoT addresses."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Markovian-vs-memory contrast is GSE's distinction between state-only xT and sequence-aware chain credit.",
+        "source_operator": "markovian_xg_xa_xt_contrast",
+        "telemetry": "xG (Green 2012)/xA (Whitmore 2021)/xT (Singh 2018) Markovian state-at-t; GoT non-Markovian"
+      }
+    },
+    {
+      "primitive_id": "hawkes_11_player_components",
+      "name": "11-component Hawkes process: component i = player i's ball-touch count",
+      "verbatim_quote": "we implement a Hawkes process with 11 components (number of players in the team), with component i corresponding to player i of the team of interest",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A Hawkes process with 11 components (one per team player/position) is implemented; component i at time t is the number of times player i has touched the ball from game start to t, incrementing by one at each touch; the innovation is collecting timestamps and their cross-player correlations."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The multivariate touch-count process is the same player-event point process GSE models for interactions.",
+        "source_operator": "hawkes_11_player_components",
+        "telemetry": "11-component Hawkes; component i = player i touch count; cross-player timestamp correlation"
+      }
+    },
+    {
+      "primitive_id": "twelfth_threat_component",
+      "name": "Twelfth Hawkes component = threat (danger-area entries)",
+      "verbatim_quote": "we add a twelfth component to our Hawkes process that we call threat",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A twelfth component called threat is added, whose value at t is the number of times the ball has reached the opponent's danger area between game start and t; treating it as part of the Hawkes process models each player's influence on threat generation. Remark 1 notes the twelfth state could instead track ball losses to credit turnover accountability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The threat-as-a-component design is the same outcome-event-in-the-process GSE uses to attribute creation.",
+        "source_operator": "twelfth_threat_component",
+        "telemetry": "12th component = threat count; alternative: ball-loss component for turnover accountability"
+      }
+    },
+    {
+      "primitive_id": "decaying_event_impact",
+      "name": "Hawkes memory decays: recent touches matter far more than old ones",
+      "verbatim_quote": "The impact on this probability of a player touching the ball a long time before t is negligible compared to a player who had possession right before t",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The probability player i gets the ball shortly after t depends on which players had possession before t and how long ago; a touch long before t has negligible impact versus one right before t, the decaying-memory property that suits football (a central defender's near-future possession probability is high if he or another CB touched recently, low if forwards held the ball for a minute)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The decaying temporal kernel is the same recency-weighted possession memory GSE applies.",
+        "source_operator": "decaying_event_impact",
+        "telemetry": "P(touch i after t) depends on who had ball + how long ago; decaying memory; CB example"
+      }
+    },
+    {
+      "primitive_id": "self_excitation_property",
+      "name": "Self-excitation: each jump raises near-future intensity, triggering chains",
+      "verbatim_quote": "each jump increases the intensity in the near future; therefore, exciting new jumps, that in turn trigger other jumps",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A constant baseline intensity mu generates initial jumps; each jump then increases the intensity in the near future, exciting new jumps that trigger further jumps — the self-excitation chain reaction; diagonal kernel components phi_{i,i} are significant because a player's own touches occur in short succession, off-diagonal phi_{i,j} reflect touch j raising touch i."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The self-exciting cascade is the same possession-momentum chain GSE models.",
+        "source_operator": "self_excitation_property",
+        "telemetry": "self-excitation; diagonal phi_ii (own successive touches); off-diagonal phi_ij (j->i)"
+      }
+    },
+    {
+      "primitive_id": "branching_matrix_interaction",
+      "name": "Branching matrix K = integral of kernel; stability spectral radius rho(K)<1",
+      "verbatim_quote": "In the context of football event-based data, K provides us with a measure of the interaction between players",
+      "page": 4,
+      "latex": "\\lambda_i(t)=\\mu_i+\\sum_{j=1}^{d}\\sum_{t_k^{(j)}<t}\\phi_{i,j}(t-t_k^{(j)}),\\qquad K=\\int_0^\\infty \\phi(t)\\,dt,\\qquad \\rho(K)<1",
+      "symbol_and_unit_ledger": {
+        "lambda_i(t)": "intensity (event rate) of component i at t [1/time]",
+        "mu_i": "baseline intensity of i [1/time]",
+        "phi_{i,j}": "excitation kernel from j to i [1/time]",
+        "t_k^{(j)}": "k-th event time of component j [time]",
+        "K_{i,j}": "expected direct children of type i from type j [dimensionless]",
+        "rho(K)": "spectral radius of branching matrix [dimensionless]; <1 for stability"
+      },
+      "assumptions": [
+        "The branching matrix K = integral_0^infinity phi(t) dt measures interaction between players: higher K_{i,j} means ball touches from i more likely follow a touch from j; the process is stable if all kernel integrals are finite and the spectral radius rho(K) < 1. The definitions are printed in a shifted math font and reconstructed here.",
+        "Definitions 1-2 (Hawkes intensity, branching matrix, stability) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Stability requires rho(K)<1; supercritical rho>=1 explodes (no stationary regime)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The branching matrix is literally GSE's player-interaction kernel; the stability condition is its stationarity guard.",
+        "source_operator": "branching_matrix_interaction",
+        "telemetry": "K=integral phi dt; K_ij = i-follows-j interaction; stable iff rho(K)<1"
+      }
+    },
+    {
+      "primitive_id": "exponential_kernel_decay",
+      "name": "Exponential kernel phi=alpha*exp(-beta*t); K=alpha/beta; beta=decay speed",
+      "verbatim_quote": "Exponential kernels are particularly nice from a computational viewpoint in estimation",
+      "page": 4,
+      "latex": "\\phi_{i,j}(t)=\\alpha_{i,j}\\,e^{-\\beta_{i,j}t}\\,\\mathbf{1}_{t\\ge 0},\\qquad K_{i,j}=\\frac{\\alpha_{i,j}}{\\beta_{i,j}}",
+      "symbol_and_unit_ledger": {
+        "alpha_{i,j}": "excitation amplitude j->i [1/time]",
+        "beta_{i,j}": "decay rate j->i [1/time]",
+        "phi_{i,j}(t)": "kernel value at lag t [1/time]",
+        "K_{i,j}": "branching coefficient = alpha/beta [dimensionless]"
+      },
+      "assumptions": [
+        "The parametric exponential kernel phi_{i,j}(t) = alpha_{i,j} exp(-beta_{i,j} t) 1_{t>=0} is used: computationally convenient for estimation and interpretable, with branching matrix K_{i,j} = alpha_{i,j}/beta_{i,j} and decay parameter beta_{i,j} giving the speed at which cross-excitation decreases. Definition 3 is printed shifted-font and reconstructed here.",
+        "Definition 3 (exponential kernel) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Exponential kernel; rapid decay vs game duration makes concatenation error negligible (Remark 5)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The exponential excitation kernel is the same decaying-interaction parameterization GSE uses.",
+        "source_operator": "exponential_kernel_decay",
+        "telemetry": "phi_ij=alpha_ij exp(-beta_ij t); K_ij=alpha_ij/beta_ij; beta=decay speed"
+      }
+    },
+    {
+      "primitive_id": "f24_statsperform_events",
+      "name": "Data: Stats-perform F24 discrete event files (not continuous tracking)",
+      "verbatim_quote": "We use the F24 files provided by Stats-perform",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The data are Stats-perform F24 files: a time-coded feed of discrete player-action events (passes, shots, goals, set pieces) with player, team, event type, pitch coordinates, timestamp, and qualifiers, plus formation and player positions; unlike tracking data they do not record continuous movement, naturally encouraging point-process models."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The event-feed point-process framing is the same discrete-event input GSE uses for Hawkes-style models.",
+        "source_operator": "f24_statsperform_events",
+        "telemetry": "Stats-perform F24; discrete events (pass/shot/goal/set piece) + coords + timestamp + qualifiers"
+      }
+    },
+    {
+      "primitive_id": "position_based_not_identity",
+      "name": "Components track positions, not identities; evaluate a player only in a given position",
+      "verbatim_quote": "we only consider sequences of games where the player in question is playing in that position",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each dimension p in {1,...,11} records ball touches by the player occupying position p regardless of identity (Stats-perform position numbering); to evaluate a player's performance in a specific position, only sequences of games where that player plays in that position are considered, with other positions recorded regardless of occupant."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The position-conditioned modeling is the same role-aware valuation GSE uses to find a player's optimal position.",
+        "source_operator": "position_based_not_identity",
+        "telemetry": "components = positions not identities; evaluate player only in given position; others anonymous"
+      }
+    },
+    {
+      "primitive_id": "threat_refractory_rule",
+      "name": "Rule 3: after a threat, pause recording until ball exits danger area by 2m",
+      "verbatim_quote": "Once a threat state is triggered, no jumps or time are recorded until the ball exits the danger area",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rule 3: once a threat state is triggered, no jumps or time are recorded until the ball exits the danger area, resuming when the ball is outside by at least two meters; this avoids consecutive threat states and the auto-exciting property of threat events, which the authors do not want to model."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The threat-refractory rule is the same event-debouncing GSE applies to avoid double-counting a sustained threat.",
+        "source_operator": "threat_refractory_rule",
+        "telemetry": "Rule 3: pause after threat until ball exits danger area >=2m; no threat auto-excitation"
+      }
+    },
+    {
+      "primitive_id": "possession_loss_compression",
+      "name": "Rule 4: opponent possession compressed to avg 12s (two exponentials param 6)",
+      "verbatim_quote": "the possession times of the opponent are compressed into an average of 12 seconds",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rule 4: when the ball is lost, time and events are not recorded until possession is regained, then a random duration averaging 12 seconds (sum of two exponential distributions of parameter six) is added; this compresses opponent possession stretches so the team's possession is treated as uninterrupted, the 12s based on average inter-event duration plus an exponential penalization for losing the ball."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The possession-gap compression is the same sequence-segmentation GSE uses to keep own-possession chains contiguous.",
+        "source_operator": "possession_loss_compression",
+        "telemetry": "Rule 4: opponent possession -> avg 12s gap (2x Exp(6)); own possession uninterrupted"
+      }
+    },
+    {
+      "primitive_id": "exclude_setpiece_crosses_bias",
+      "name": "Rule 5: exclude free-kick/corner crosses to remove set-piece-taker bias",
+      "verbatim_quote": "we choose to discard these events to remove bias from our measure of danger creation and ensure fair player comparisons",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rule 5 excludes crossing events from free kicks or corners because crosses are highly correlated with threat events and the designated set-piece taker would naturally be responsible for more threats; discarding them removes bias from the danger-creation measure and ensures fair player comparisons."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The set-piece-bias exclusion is the same role-confound removal GSE applies for fair open-play credit.",
+        "source_operator": "exclude_setpiece_crosses_bias",
+        "telemetry": "Rule 5: drop FK/corner crosses; set-piece taker bias removed; fair open-play comparison"
+      }
+    },
+    {
+      "primitive_id": "formation_clusters_homogeneity",
+      "name": "Formation clusters ensure position-role homogeneity across assembled games",
+      "verbatim_quote": "we group them into clusters based on their structural shapes",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Because position number p maps to different roles across formations, games are analyzed only where each position represents the same role; formations are grouped into structural-shape clusters (Cluster 1: 433/4141/4231/4321; Cluster 2: 442/41212/451/4411/4222; Cluster 3: 532/352/31312/3511/3412; Cluster 4: 343/541/3421) with the same number of players per line, allowing one-to-one position assignment, and each team's most common cluster is used."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The formation-cluster homogeneity is the same role-alignment GSE enforces before pooling games.",
+        "source_operator": "formation_clusters_homogeneity",
+        "telemetry": "4 formation clusters by line structure; same role per position; team's main cluster used"
+      }
+    },
+    {
+      "primitive_id": "immigration_birth_cascade",
+      "name": "Immigration-birth representation: events as individuals triggering descendant cascades",
+      "verbatim_quote": "Each event can be viewed as an individual that potentially triggers a cascade of subsequent events",
+      "page": 7,
+      "latex": "M = K(I-K)^{-1},\\qquad M_{i,j}=\\mathbb{E}[\\text{descendants of type }i\\text{ from one individual of type }j]",
+      "symbol_and_unit_ledger": {
+        "K": "branching matrix (direct children) [dimensionless]",
+        "I": "identity matrix",
+        "M": "total-descendant matrix [dimensionless]",
+        "M_{i,j}": "expected descendants of type i from type j (all generations)"
+      },
+      "assumptions": [
+        "The Hawkes-Oakes 1974 immigration-birth representation views each event as an individual generating offspring (touches/threats) recursively; K_{i,j} is the expected number of direct children of type i from type j, and Proposition 1 gives M = K(I-K)^{-1} whose entry M_{i,j} is the expected total descendants of type i from an individual of type j, capturing direct and indirect influence. Proposition 1 is printed shifted-font and reconstructed here.",
+        "Proposition 1 (descendant matrix) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Requires stability rho(K)<1 so (I-K)^-1 = sum K^n converges",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The immigration-birth hierarchy is literally GSE's credit-attribution graph linking a touch to its descendant threats.",
+        "source_operator": "immigration_birth_cascade",
+        "telemetry": "immigration-birth (Hawkes-Oakes 1974); K_ij direct children; M=K(I-K)^-1 total descendants"
+      }
+    },
+    {
+      "primitive_id": "responsibility_not_direct_pass",
+      "name": "Responsibility != the direct pass; Hawkes imputes the most likely parent event",
+      "verbatim_quote": "being responsible for an action does not necessarily mean providing the pass that leads to it",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Being responsible for an action does not necessarily mean providing the pass that leads to it: the second-to-last pass may be the crucial step, with several noisy in-between events; Hawkes processes eliminate these noisy intermediates and impute responsibility to the most likely parent event even if it occurred before other touches, quantifying the average dangerous actions attributable to a player."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The parent-event imputation is the same noise-robust chain credit GSE assigns beyond the final pass.",
+        "source_operator": "responsibility_not_direct_pass",
+        "telemetry": "responsibility != direct pass; second-to-last pass crucial; Hawkes imputes most likely parent"
+      }
+    },
+    {
+      "primitive_id": "got_dir_intrinsic",
+      "name": "GoT(dir)(p) = K_{12,p}: direct threats per touch (last link in chain)",
+      "verbatim_quote": "This metric describes the intrinsic ability of the player to create dangerous situations",
+      "page": 8,
+      "latex": "GoT^{(dir)}(p) = K_{12,p}",
+      "symbol_and_unit_ledger": {
+        "K_{12,p}": "branching coefficient from position p to threat component 12 [threats per touch]",
+        "GoT(dir)(p)": "direct generation of threat per touch [threats/touch]"
+      },
+      "assumptions": [
+        "GoT(dir)(p) = K_{12,p} is the average number of first-generation threat events caused by one touch from the player in position p, the intrinsic ability to create danger as the last link in the chain; it is read directly from the estimated branching matrix. The formula is printed shifted-font and reconstructed here.",
+        "GoT(dir) definition printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Direct = first-generation children of type threat only",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GoT(dir) is the same direct-threat-per-touch credit GSE assigns to the final creator.",
+        "source_operator": "got_dir_intrinsic",
+        "telemetry": "GoT(dir)(p)=K_{12,p}; direct threats/touch; last link; intrinsic creation ability"
+      }
+    },
+    {
+      "primitive_id": "got_ind_root_credit",
+      "name": "GoT(ind)(p) = M_{12,p}: total threats rooted at the player's touch",
+      "verbatim_quote": "we credit the player touch for being at the root of the generation process and not for the crucial creative step",
+      "page": 8,
+      "latex": "GoT^{(ind)}(p) = M_{12,p},\\qquad M=K(I-K)^{-1}",
+      "symbol_and_unit_ledger": {
+        "M_{12,p}": "expected threat descendants rooted at a touch by p [threats per touch]",
+        "GoT(ind)(p)": "indirect (total-chain) generation of threat per touch [threats/touch]"
+      },
+      "assumptions": [
+        "GoT(ind)(p) = M_{12,p} with M = K(I-K)^{-1} is the expected number of threat events whose chain of events originates from a touch by player p, including direct threats and those via sequences of other touches; it credits the touch for being at the root of the generation process rather than the crucial creative step. The formula is printed shifted-font and reconstructed here.",
+        "GoT(ind) definition printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Counts all generations; credits root, not the final creative pass",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GoT(ind) is the same root-of-chain credit GSE assigns to the initiator of a danger sequence.",
+        "source_operator": "got_ind_root_credit",
+        "telemetry": "GoT(ind)(p)=M_{12,p}; M=K(I-K)^-1; root of chain incl. indirect; not just creative step"
+      }
+    },
+    {
+      "primitive_id": "got90_dir_normalize",
+      "name": "GoT_90(dir) = E[N_p(T)] x GoT(dir)(p); E[N(T)] ~ (I-K)^-1 mu T",
+      "verbatim_quote": "We may want to account for the involvement in the game of a given player by normalizing",
+      "page": 8,
+      "latex": "GoT^{(dir)}_{90}(p)=\\mathbb{E}[N_p(T)]\\times GoT^{(dir)}(p),\\qquad \\mathbb{E}[N(T)]\\approx (I-K)^{-1}\\mu\\,T",
+      "symbol_and_unit_ledger": {
+        "N_p(T)": "touch count of position p over horizon T [touches]",
+        "E[N_p(T)]": "expected touches [touches]",
+        "mu": "baseline intensity vector [1/time]",
+        "T": "horizon = 90 processed minutes [time]",
+        "GoT_90(dir)": "direct threats per 90 processed min [threats/90min]"
+      },
+      "assumptions": [
+        "GoT_90(dir) = E[N_p(T)] x GoT(dir)(p) normalizes direct threat by the player's expected touches over T=90 min to account for involvement; the expected-touch vector is approximated by the law of large numbers as E[N(T)] ~ (I-K)^{-1} mu T. Note 90 min here is 90 min of processed data, not match time, due to possession concatenation. Formulas printed shifted-font and reconstructed here.",
+        "GoT_90(dir) and expected-touch formulas printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "90 min = processed data time, not match time (possession concatenation)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The per-90 involvement normalization is the same volume-adjusted rate GSE uses to compare players.",
+        "source_operator": "got90_dir_normalize",
+        "telemetry": "GoT_90(dir)=E[N_p(T)]*GoT(dir)(p); E[N(T)]~(I-K)^-1 mu T; T=90 processed min"
+      }
+    },
+    {
+      "primitive_id": "got90_ind_player_removal",
+      "name": "GoT_90(ind) = player-removal counterfactual: threats with minus without player",
+      "verbatim_quote": "the average number of threat events subtracted by the average number of threat events if the considered player is removed from the pitch",
+      "page": 8,
+      "latex": "GoT^{(ind)}_{90}(p)=\\mathbb{E}\\!\\left[N_{12}(T,K,\\mu)-N_{12}(T,K^{(-p)},\\mu^{(-p)})\\right],\\quad \\mathbb{E}[N_{12}]\\approx\\left((I-K)^{-1}\\mu T\\right)_{12}",
+      "symbol_and_unit_ledger": {
+        "N_12(T,K,mu)": "threat count over T with full branching K and baseline mu [threats]",
+        "K^{(-p)}": "K with p-th row and column zeroed (player removed)",
+        "mu^{(-p)}": "mu with p-th coordinate zeroed",
+        "GoT_90(ind)": "marginal threats attributable to player p per 90 processed min [threats/90min]"
+      },
+      "assumptions": [
+        "GoT_90(ind) = E[N_12(T,K,mu) - N_12(T,K^{-p},mu^{-p})] is the average threat events minus the average if the player is removed from the pitch, where K^{-p} zeroes the p-th row and column and mu^{-p} zeroes the p-th coordinate; E[N_12(T,K,mu)] ~ ((I-K)^{-1} mu T)_12. This is a genuine player-removal counterfactual. Formulas printed shifted-font and reconstructed here.",
+        "GoT_90(ind) counterfactual printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Counterfactual removal; avoids double-counting (Remark 3)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The player-removal counterfactual is literally GSE's what-if-player-absent value (the same swap logic as the defender CNN-LSTM receiver swap).",
+        "source_operator": "got90_ind_player_removal",
+        "telemetry": "GoT_90(ind)=E[N_12(K,mu)-N_12(K^-p,mu^-p)]; K^-p zeroes row/col p; removal counterfactual"
+      }
+    },
+    {
+      "primitive_id": "remark3_double_count_veto",
+      "name": "Remark 3: GoT(ind) x touches would OVERESTIMATE (double-count multi-touch circuits)",
+      "verbatim_quote": "we would count multiple times the circuits leading to threat where the player touches the ball more than once",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Remark 3 warns that computing GoT_90(ind) by multiplying GoT(ind) by the player's average touches would overestimate involvement, because it would count multiple times the circuits leading to threat where the player touches the ball more than once; the player-removal counterfactual avoids this double-counting."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The double-counting veto is literally GSE's credit-attribution guard against counting a multi-touch chain repeatedly.",
+        "source_operator": "remark3_double_count_veto",
+        "telemetry": "Remark 3: GoT(ind)*touches overestimates; multi-touch circuits counted repeatedly; removal avoids"
+      }
+    },
+    {
+      "primitive_id": "mle_separable_consistent",
+      "name": "MLE: log-likelihood separable into d subproblems, consistent, O(d^2 N(T))",
+      "verbatim_quote": "the optimization can be performed separately d different times to estimate each subset of parameters",
+      "page": 9,
+      "latex": "\\ell(\\theta)=\\sum_{i=1}^{d}\\left(-\\int_0^T \\lambda_i(s,\\theta)\\,ds+\\sum_{t_k^{(i)}<T}\\log\\lambda_i(t_k^{(i)},\\theta)\\right)",
+      "symbol_and_unit_ledger": {
+        "ell(theta)": "log-likelihood [dimensionless]",
+        "lambda_i(s,theta)": "component i intensity under parameters theta [1/time]",
+        "theta=(mu,alpha,beta)": "Hawkes parameters",
+        "T": "observation horizon [time]"
+      },
+      "assumptions": [
+        "Maximum likelihood estimation maximizes the log-likelihood ell(theta) = sum_i [-integral_0^T lambda_i(s,theta) ds + sum_{t_k<T} log lambda_i(t_k,theta)] (Eq 1); it separates into d independent subfunctions (one per component's mu_i and alpha/beta row), is consistent (Ogata 1978), and for exponential kernels computes in O(d^2 N(T)) (Ogata 1981) via the recursion R(i)=exp(-beta(t_i-t_{i-1}))(1+R(i-1)). Equation 1 is printed shifted-font and reconstructed here.",
+        "Equation 1 (log-likelihood) printed shifted-font; reconstructed in labeled LaTeX and flagged."
+      ],
+      "breakdown_regime": "Not concave in beta (Remark 4); fix beta_{k,l}=beta_k per row (Bonnet 2022) for d=12",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The separable consistent MLE is the same per-component calibration GSE runs for interaction kernels.",
+        "source_operator": "mle_separable_consistent",
+        "telemetry": "MLE Eq1; separable d subproblems; consistent (Ogata 1978); O(d^2 N(T)); recursive R(i)"
+      }
+    },
+    {
+      "primitive_id": "nonconcave_beta_fix",
+      "name": "Remark 4: likelihood non-concave in beta; fix beta per row for d=12",
+      "verbatim_quote": "The likelihood function is not concave with respect to",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Remark 4: the likelihood is not concave in the beta parameters in the exponential case, so convergence to the global maximum is not guaranteed especially in large dimensions; fixing beta_{k,l}=beta_k for all l (Bonnet et al. 2022) gives very good results for d=12, reducing each objective's non-concavity to a single parameter."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The non-concavity mitigation is the same optimization-stability guard GSE applies to kernel calibration.",
+        "source_operator": "nonconcave_beta_fix",
+        "telemetry": "Remark 4: non-concave in beta; fix beta_{k,l}=beta_k (Bonnet 2022); d=12 works"
+      }
+    },
+    {
+      "primitive_id": "reliable_from_600min",
+      "name": "Simulation: reliable branching-matrix estimation from 600 min of data",
+      "verbatim_quote": "We find that reliable estimation can be obtained from 600 min of football data",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A simulation study (100 simulations; mu~U[0.006,0.01], beta~U[0.5,1] constant, alpha~geometric(p=0.4)x40 so 40% zero) finds reliable estimation from 600 min; Table 1 relative error (wMAPE) falls 27.0% at 300 min, 18.6% at 600, 13.4% at 1200, 9.5% at 2400, with false positives 3.1%/0.4%/0.0%/0.0%; calibration requires at least 10 games."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The data-amount accuracy curve is the same sample-size reliability threshold GSE enforces before trusting a kernel.",
+        "source_operator": "reliable_from_600min",
+        "telemetry": "100 sims; wMAPE 27%@300/18.6%@600/13.4%@1200/9.5%@2400 min; reliable >=600 min; >=10 games"
+      }
+    },
+    {
+      "primitive_id": "null_link_detection",
+      "name": "Null-kernel detection: >=50% of true zero links correctly identified",
+      "verbatim_quote": "Our estimation consistently detects at least 50 % of null links",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The simulation assesses detection of null kernels (phi_{i,j}=0, no exciting effect, an informative absence of connection between players): estimation consistently detects at least 50% of null links with very low error on the rest, and correctly detects existing links even at small horizons (false-positive threshold 1e-8); wMAPE = sum|Khat-K| 1_{K>0} / sum K 1_{K>0}."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The null-link detection is the same sparsity/absence-of-connection test GSE uses to prune interaction graphs.",
+        "source_operator": "null_link_detection",
+        "telemetry": "detect >=50% null links (phi_ij=0); existing links detected even small horizon; threshold 1e-8; wMAPE"
+      }
+    },
+    {
+      "primitive_id": "hazard_direct_threat",
+      "name": "Chelsea: Hazard leads all GoT; dir~ind -> direct threat creator (dribbling)",
+      "verbatim_quote": "his primary way of creating danger is through direct threat",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In Chelsea's 2016-17 flat 343 (13 games, constant starting 11), Eden Hazard leads all GoT metrics (GoT(dir) 0.16, GoT(ind) 0.21, GoT_90(dir) 14.2, GoT_90(ind) 15.0, with Monte Carlo SE from 100 re-estimated sample paths); no significant difference between his dir and ind per-90 indices indicates his primary danger creation is direct threat, consistent with his aggressive direct dribbling play."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The direct-creator profile is the same final-third threat signature GSE identifies for dribbling wingers.",
+        "source_operator": "hazard_direct_threat",
+        "telemetry": "Hazard GoT dir .16/ind .21/dir90 14.2/ind90 15.0; dir~ind -> direct creator; MC SE 100 paths"
+      }
+    },
+    {
+      "primitive_id": "kante_box_to_box_circuits",
+      "name": "Kante 4th in GoT_90(ind): box-to-box hub of multiple threat circuits",
+      "verbatim_quote": "Kante is a box to box midfielder and that he is at the center of multiple circuits that end in a threat",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "N'Golo Kante ranks fourth in GoT_90(ind) (6.2) despite a low GoT(dir) (0.02), evidence of his box-to-box role at the center of multiple threat-ending circuits: Kante->Pedro->Threat, Kante->Moses->Pedro->Threat, Kante->Matic->Hazard->Threat; the PFA Player of the Year is not limited to defense. Two wing buildup triangles (Cahill-Alonso-Matic, Kante-Azpilicueta-Moses) connect via the Matic-Kante link."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The indirect-hub profile is the same deep-lying playmaker credit GSE surfaces beyond direct stats.",
+        "source_operator": "kante_box_to_box_circuits",
+        "telemetry": "Kante ind90 6.2 (4th) vs dir .02; circuits Kante->Pedro/Moses->Pedro/Matic->Hazard; Matic-Kante link"
+      }
+    },
+    {
+      "primitive_id": "costa_finisher_not_creator",
+      "name": "Costa low GoT: striker finishes chances rather than originating danger",
+      "verbatim_quote": "he is responsible for transforming the goalscoring chances rather than being at the origin of the danger",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Diego Costa generates few threats despite being a striker because he is responsible for transforming goalscoring chances rather than being at the origin of danger; his GoT_90(ind) is particularly low given few touches per time unit and many danger-zone touches not recorded in the counting process — illustrating that GoT measures creation, not finishing."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The creator-vs-finisher distinction is the same separation GSE makes between threat generation and conversion.",
+        "source_operator": "costa_finisher_not_creator",
+        "telemetry": "Costa low GoT (finisher not creator); few touches; danger-zone touches unrecorded; GoT != finishing"
+      }
+    },
+    {
+      "primitive_id": "indirect_important_defenders",
+      "name": "Indirect contribution essential for defenders/midfielders (base of danger creation)",
+      "verbatim_quote": "considering indirect contribution to threat generation is important for defenders and midfielders",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Considering indirect contribution is important for defenders and midfielders, who are generally at the base of the danger-creation process with small GoT(dir) indices; indirect generated threat combined with touch volume allows effective comparison of deeper-position players (e.g., David Luiz minimal in the wing-reliant flat 343, spreading play to Cahill/Azpilicueta)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The deep-position indirect credit is the same buildup-value GSE assigns to defenders and midfielders.",
+        "source_operator": "indirect_important_defenders",
+        "telemetry": "indirect essential for DEF/MF (base of creation, small dir); indirect+touches compares deep positions"
+      }
+    },
+    {
+      "primitive_id": "position_specific_optimal",
+      "name": "GoT is position-specific: same player differs by position -> optimal-position tool",
+      "verbatim_quote": "we cannot expect the same player to produce the same GoT metrics at two different positions",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each position imposes a different role, so the same player cannot be expected to produce the same GoT metrics at two positions; players are evaluated per position (filter >=600 min at a position, counting games where they feature >=45 min), which also determines the optimal position to maximize a GoT metric of interest; substitutions truncate the game's counting process."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The position-specific optimal-role identification is the same role-fit optimization GSE runs for lineup decisions.",
+        "source_operator": "position_specific_optimal",
+        "telemetry": "GoT position-specific; >=600 min filter (games >=45 min); optimal position to max GoT; sub truncates"
+      }
+    },
+    {
+      "primitive_id": "simon_small_sample_caveat",
+      "name": "Small-sample caveat: good GoT = performance across considered games only (Simon)",
+      "verbatim_quote": "a good GoT metric should be interpreted as a measure of performance across the considered games only",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fewer minutes at a position means a less accurate GoT estimate, and estimation relies on selected games only; Moses Simon ranking third in GoT(dir) reflects seven assists in 1,200 min but only one more assist in other formations/positions, so a good GoT metric with limited minutes should be interpreted as performance across the considered games only. Ligue 1 GoT(dir) leaders: Messi (pos 10, PSG, 630 min) 0.130, Di Maria 0.128, Simon 0.120, Mbappe 0.110."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The selected-games small-sample caveat is the same selection-bias guard GSE applies to position-split ratings.",
+        "source_operator": "simon_small_sample_caveat",
+        "telemetry": "Simon 3rd dir but 7 assists/1200 min then 1 elsewhere; GoT = considered-games only; Messi .130/Di Maria .128/Simon .120/Mbappe .110"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "got2024_trace",
+      "think": "The retrocausal genealogy of this paper is the replacement of Markovian action valuation with a memory-bearing point process for crediting danger creation. Ali Baouan, Sebastien Coustou, Mathieu Lacome, Sergio Pulido, and Mathieu Rosenbaum, from the Centre de Mathematiques Appliquees at Ecole Polytechnique together with Parma Calcio's performance and analytics group, publishing in the Journal of Quantitative Analysis in Sports in 2025, start from the question of which player should be credited for a successful action: the finisher, the assister, the second-to-last pass that creates disequilibrium, or even a goalkeeper's clearance. They observe that expected goals, expected assists, and expected threat all value an action from the game state at time t alone, a Markov assumption that is natural for chance quality but cannot remember a defender's pass through the several touches that follow it. Their remedy is a multivariate Hawkes process, a self-exciting point process borrowed from earthquake, neuroscience, and finance modeling, whose decaying memory imputes responsibility to the most likely parent event. The recursive theory of mind is the twelve-dimensional Hawkes construction and its branching algebra. Eleven components count ball touches by position, not by identity, and a twelfth counts entries into the opponent's danger area, a box covering fifty percent of the pitch width and twenty-five percent of its length, deliberately wider and deeper than the penalty box so that defenders and midfielders can be credited. The intensity of each component is a baseline plus a sum of exponential kernels over past events, the branching matrix K is the integral of the kernel, and stability requires the spectral radius of K to be below one. The Hawkes-Oakes immigration-birth representation turns each touch into an individual that generates descendant touches and threats, and Proposition 1 gives the total-descendant matrix M equals K times the inverse of I minus K. The data are Stats-perform F24 discrete events, processed with explicit rules: a threat refractory period until the ball exits the danger area by two meters, opponent possession compressed to an average twelve-second gap, and set-piece crosses excluded to remove the designated taker's bias. Cross-layer veto adjudication is the four Generation of Threat indices and the double-counting guard. GoT direct per touch is the branching coefficient K from the player's position to the threat component, the last-link credit; GoT indirect per touch is the descendant coefficient M, the root-of-chain credit; the per-ninety versions normalize by expected touches, with the indirect per-ninety defined as a genuine player-removal counterfactual, the expected threats with the player minus the expected threats with the player's row and column zeroed out of the branching matrix. Remark 3 is the crucial veto: multiplying indirect GoT by touch count would overestimate involvement because it would count multi-touch circuits repeatedly, which the removal counterfactual avoids. Estimation is by a separable, consistent maximum likelihood that is non-concave in the decay parameters, mitigated by fixing a common decay per row, and a simulation study establishes reliable estimation from six hundred minutes with weighted mean absolute percentage error falling from twenty-seven percent at three hundred minutes to nine and a half percent at twenty-four hundred. The implementation invariants map directly onto GSE. The branching matrix is GSE's player-interaction kernel; the immigration-birth hierarchy is GSE's credit-attribution graph; the direct-versus-indirect split is GSE's final-creator-versus-chain-initiator distinction; the player-removal counterfactual is GSE's what-if-player-absent value, the same swap logic as a defender trajectory model's receiver substitution; and the double-counting veto is GSE's guard against repeated chain credit. The non-Markovian memory is GSE's sequence-aware valuation beyond a state-only expected-threat snapshot, and the position-conditioned modeling with formation clusters is GSE's role-aware alignment. The outputs are threat-generation indices from event data; GSE lifts no sportsbook lines, spreads, totals, or implied odds. The application results make the profiles concrete. In Chelsea's 2016-17 flat 343 over thirteen games with a constant starting eleven, Eden Hazard leads every index with direct and indirect per-ninety nearly equal at about fourteen and fifteen, marking him a direct dribbling creator, while N'Golo Kante ranks fourth in indirect per-ninety despite a tiny direct index, the box-to-box hub of circuits such as Kante to Pedro to threat and Kante to Matic to Hazard to threat. Diego Costa the striker scores low because he finishes chances rather than originating them, and David Luiz is minimal in a wing-reliant system, confirming that indirect credit is essential for deep positions. The Ligue 1 ranking is position-specific, led by Messi, Di Maria, Moses Simon, and Mbappe in direct GoT, with the honest caveat that Simon's high rank reflects seven assists in twelve hundred selected minutes and only one more elsewhere. The caveats close the account with the sample-size and selection limits. Reliable estimation needs at least six hundred minutes and roughly ten games, fewer minutes means a less accurate kernel, and a high GoT on limited minutes measures performance across the considered games only, not a universal talent rating; the ninety-minute horizon is processed data time rather than match time because possession stretches are concatenated. The invariant for GSE is to carry the Hawkes interaction kernel, the immigration-birth credit graph, the direct-indirect split, and the player-removal counterfactual while recording the double-counting veto, the non-concavity mitigation, the six-hundred-minute reliability floor, and the selected-games selection bias before any quantitative reuse, treating GoT as a creation metric distinct from finishing and as a per-position rather than per-identity valuation.",
+      "retrocausal_genealogy": "Replace Markovian action valuation with memory-bearing Hawkes point process for danger-creation credit. Baouan, Coustou, Lacome, Pulido, Rosenbaum (CMAP Ecole Polytechnique + Parma Calcio); JQAS 2025 aop, DOI 10.1515/jqas-2024-0107. Question: credit finisher/assister/second-to-last pass/GK clearance. xG (Green 2012)/xA (Whitmore 2021)/xT (Singh 2018) Markovian state-at-t; cannot remember a pass through later touches. Hawkes (1971) self-exciting point process (earthquake/neuro/finance). 12-dim: 11 position touch counts + threat (danger-area entry). Stats-perform F24 events. Immigration-birth (Hawkes-Oakes 1974). Applications Chelsea 2016-17, Stade Rennais 2021-22, Ligue 1 2021-22 ranking.",
+      "theory_of_mind": "Hawkes intensity lambda_i=mu_i+sum_j sum_{t_k<t} phi_ij(t-t_k); exponential phi=alpha exp(-beta t); branching K=integral phi, K_ij=alpha/beta; stability rho(K)<1. Danger box 50% width x 25% length (deeper than penalty box). Rules: threat refractory until exit >=2m; opponent possession compressed avg 12s (2x Exp(6)); exclude FK/corner crosses (taker bias). Formation clusters (433/442/532/343 families) for role homogeneity; position-not-identity. Prop1 M=K(I-K)^-1 total descendants. GoT(dir)=K_{12,p}; GoT(ind)=M_{12,p}; GoT_90(dir)=E[N_p(T)]*GoT(dir), E[N(T)]~(I-K)^-1 mu T; GoT_90(ind)=E[N_12(K,mu)-N_12(K^-p,mu^-p)] removal counterfactual. MLE Eq1 separable/consistent/O(d^2 N); non-concave beta fix per row (Bonnet 2022). Equations shifted-font reconstructed.",
+      "cross_layer_veto": "Remark 3: GoT(ind)*touches OVERESTIMATES (multi-touch circuits double-counted); removal counterfactual avoids. Simulation 100 sims: reliable >=600 min (>=10 games); wMAPE 27%@300/18.6%@600/13.4%@1200/9.5%@2400; null-link detection >=50%. Chelsea flat 343 13 games: Hazard dir .16/ind .21/dir90 14.2/ind90 15.0 (dir~ind direct creator); Kante ind90 6.2 4th (box-to-box hub Kante->Pedro/Matic->Hazard); Costa low (finisher not creator); David Luiz minimal (wing system). Ligue 1 position-specific (>=600 min filter): Messi .130/Di Maria .128/Simon .120/Mbappe .110 dir; Simon selection caveat (7 assists/1200 min then 1 elsewhere). 90 min = processed time not match time. Zero sportsbook lines lifted."
+    }
+  ],
+  "universal_lens": "A twelve-dimensional Hawkes process credits football players for creating danger in a non-Markovian way: eleven components count ball touches by position and a twelfth counts entries into a widened danger area, the self-exciting exponential kernels form a branching matrix K whose descendant matrix M=K(I-K)^-1 yields direct (last-link) and indirect (root-of-chain) Generation-of-Threat indices, with the indirect per-90 defined as a player-removal counterfactual that avoids the double-counting of multi-touch circuits; calibrated by separable maximum likelihood on Stats-perform events and validated by simulation to be reliable from 600 minutes, it separates direct creators like Hazard from indirect hubs like Kante and finishers like Costa, and ranks players per position rather than per identity.",
+  "gsi_mapping": "GSI treats 12-dim Hawkes (11 position touches + threat); threat = danger-area entry (box 50% width x 25% length, deeper than penalty box); intensity lambda_i=mu_i+sum phi_ij(t-t_k), exponential phi=alpha exp(-beta t), K=integral phi=alpha/beta, stability rho(K)<1; immigration-birth (Hawkes-Oakes 1974), Prop1 M=K(I-K)^-1; GoT(dir)=K_{12,p}/GoT(ind)=M_{12,p}/GoT_90(dir)=E[N_p(T)]*GoT(dir) with E[N(T)]~(I-K)^-1 mu T/GoT_90(ind)=E[N_12(K,mu)-N_12(K^-p,mu^-p)] removal counterfactual; Remark3 double-count veto; F24 events + rules (threat refractory >=2m, possession gap avg 12s 2xExp(6), exclude FK/corner crosses); formation clusters role homogeneity; position-not-identity; MLE Eq1 separable/consistent/O(d^2 N), non-concave beta fixed per row; simulation reliable >=600 min wMAPE 27->9.5%, null-link >=50%; Chelsea Hazard/Kante/Costa/Luiz; Ligue 1 Messi .130/Di Maria .128/Simon .120/Mbappe .110 position-specific (>=600 min); equations shifted-font reconstructed.",
+  "gse_mapping": "GSE lifts the Hawkes player-interaction kernel, the immigration-birth credit-attribution graph, the direct-versus-indirect (last-link vs root-of-chain) split, and the player-removal counterfactual as its sequence-aware player-valuation layer, treating the non-Markovian memory as the upgrade over state-only expected threat and the position-conditioned formation-cluster modeling as role-aware alignment; enforces the Remark-3 double-counting veto, the non-concavity mitigation, the 600-minute reliability floor, and the selected-games selection-bias caveat as honest limits; all outputs are threat-generation indices from event data, never sportsbook lines, and GoT is a creation metric distinct from finishing and a per-position rather than per-identity valuation."
+}
