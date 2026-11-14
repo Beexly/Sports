@@ -41,6 +41,21 @@ import {
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = join(HERE, "..");
 
+/**
+ * A module DECLARES `ENABLED = false` — it is not merely a file whose comment
+ * mentions the convention. `src/research/types.ts` is a types-only module whose
+ * JSDoc says the convention is "mirrored" here; substring matching counted it as
+ * a disabled model and put the registry one entry behind the filesystem (203 on
+ * disk vs 202 registered) with nothing actually missing. Comments are stripped
+ * before the match so a doc sentence cannot look like a declaration, and the
+ * generator script uses the same rule so the two can never disagree.
+ */
+const COMMENT_BLOCK = /\/\*[\s\S]*?\*\//g;
+const COMMENT_LINE = /^\s*\/\/[^\n]*$/gm;
+// Any flag whose identifier ENDS in ENABLED: ENABLED, MLB_INDEPENDENT_MODEL_ENABLED,
+// SHADOW_EPROCESS_ENABLED. Those modules are disabled by the same convention.
+const DECLARES_ENABLED_FALSE = /\b\w*ENABLED\s*=\s*false\b/;
+
 /** Walk src/ and return every production .ts module declaring ENABLED = false. */
 function scanDisabledModules(): string[] {
   const out: string[] = [];
@@ -59,7 +74,7 @@ function scanDisabledModules(): string[] {
       // counting them as model modules would make the registry self-referential.
       if (entry.startsWith("model-registry")) continue;
       const txt = readFileSync(full, "utf8");
-      if (txt.includes("ENABLED = false")) {
+      if (DECLARES_ENABLED_FALSE.test(txt.replace(COMMENT_BLOCK, "").replace(COMMENT_LINE, ""))) {
         out.push(relative(SRC, full).split(sep).join("/"));
       }
     }

@@ -119,6 +119,24 @@ def _classify(txt: str, stems: set[str]) -> tuple[str, str]:
     return "SELF_CONTAINED", "callable with local structs"
 
 
+# A module DECLARES `ENABLED = false`; a comment that merely mentions the
+# convention does not count. src/research/types.ts is a types-only module whose
+# JSDoc says the convention is "mirrored" there, and plain substring matching
+# counted it as a disabled model -- putting the generated registry one entry
+# behind the filesystem with nothing actually missing. The ratchet test in
+# packages/prediction-engine/src/__tests__/model-registry.test.ts strips comments
+# with the same rule, so the generator and its guard cannot disagree.
+_COMMENT_BLOCK = re.compile(r"/\*.*?\*/", re.S)
+_COMMENT_LINE = re.compile(r"^\s*//[^\n]*$", re.M)
+# Any flag whose identifier ENDS in ENABLED (ENABLED, MLB_INDEPENDENT_MODEL_ENABLED,
+# SHADOW_EPROCESS_ENABLED) -- same convention, same module class.
+_DECLARES_ENABLED_FALSE = re.compile(r"\b\w*ENABLED\s*=\s*false\b")
+
+
+def _strip_comments(text: str) -> str:
+    return _COMMENT_LINE.sub("", _COMMENT_BLOCK.sub("", text))
+
+
 def collect() -> list[dict]:
     all_ts = [p for p in SRC.rglob("*.ts") if ".test." not in p.name and "node_modules" not in p.parts]
     disabled = []
@@ -130,7 +148,7 @@ def collect() -> list[dict]:
         if p.name.startswith("model-registry"):
             continue
         txt = p.read_text(encoding="utf-8", errors="ignore")
-        if "ENABLED = false" in txt:
+        if _DECLARES_ENABLED_FALSE.search(_strip_comments(txt)):
             disabled.append(p)
     stems = {p.stem for p in disabled}
 

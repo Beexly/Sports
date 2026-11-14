@@ -7,12 +7,12 @@
  * `ENABLED = false` (ACCEPTANCE_GATE / BARREL_ONLY). Each entry records what input the module needs and why it
  * is off, so the reasoning engine can query availability without grepping.
  *
- * module-set digest: 34354b4d3dfe5923
+ * module-set digest: 45c47f548291c47b
  */
 
 import type { ModelRegistryEntry } from "./model-registry.js";
 
-export const MODEL_REGISTRY_DIGEST = "34354b4d3dfe5923";
+export const MODEL_REGISTRY_DIGEST = "45c47f548291c47b";
 
 export const MODEL_REGISTRY: readonly ModelRegistryEntry[] = [
   {id: "1807-09236-empirical-bayes-btl.ts", name: "1807-09236-empirical-bayes-btl", lines: 137, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["shrinkBtl"], hasTest: true, hasGate: true},
@@ -32,7 +32,6 @@ export const MODEL_REGISTRY: readonly ModelRegistryEntry[] = [
   {id: "2606-18512-causal-panel-forecasting.ts", name: "2606-18512-causal-panel-forecasting", lines: 49, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["counterfactualEfficiency"], hasTest: true, hasGate: true},
   {id: "2609-22641v1-consistworld-evidence-routing-for-consistent.ts", name: "2609-22641v1-consistworld-evidence-routing-for-consistent", lines: 66, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["fuseViews", "crossViewDisagreement"], hasTest: true, hasGate: true},
   {id: "2609-33664-hmm-pass-blocking.ts", name: "2609-33664-hmm-pass-blocking", lines: 86, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["gammaIt", "adjustedPlusMinus", "pocketSurvival"], hasTest: true, hasGate: true},
-  {id: "acceptance-gate.ts", name: "acceptance-gate", lines: 70, tier: "SELF_CONTAINED", reason: "locally-typed params (Pick)", exports: ["acceptanceGate"], hasTest: false, hasGate: true},
   {id: "automl/2003-06505v1-autogluon-tabular-search.ts", name: "2003-06505v1-autogluon-tabular-search", lines: 89, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["stackNNLS", "logScoreStacking", "regimeStackWeights"], hasTest: true, hasGate: true},
   {id: "automl/2003-10865v2-async-hpo-service.ts", name: "2003-10865v2-async-hpo-service", lines: 171, tier: "SELF_CONTAINED", reason: "locally-typed params (config, loss)", exports: ["successiveHalving", "bracketSampleProb", "fantasizePending", "asyncSpeedup", "rbfKernelGp", "gpPosterior1d", "rffFeatures", "krrFit", "uncertaintyMetaLoss"], hasTest: true, hasGate: true},
   {id: "bayesian/1503-07642-ordinal-structure-select.ts", name: "1503-07642-ordinal-structure-select", lines: 317, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["fitCumulativeLogit", "fitNonPO", "predictProbs", "heldOutLogLoss", "selectStructure", "checkStochasticOrdering"], hasTest: true, hasGate: true},
@@ -154,8 +153,8 @@ export const MODEL_REGISTRY: readonly ModelRegistryEntry[] = [
   {id: "injuries/2205-07193v2-division-pair-hfa-causal.ts", name: "2205-07193v2-division-pair-hfa-causal", lines: 165, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["stratifiedATT", "permutationP", "rosenbaumGammaBound", "maxAbsSmd", "truncateWeights", "overlapCheck", "ipwATE", "ipwATT", "smd", "discreteGFormula"], hasTest: true, hasGate: true},
   {id: "injuries/2305-14612-acl-risk-video-scoring.ts", name: "2305-14612-acl-risk-video-scoring", lines: 66, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["attentionRow", "trajectoryAttention", "smoothAttention"], hasTest: true, hasGate: true},
   {id: "inplay/2103-04647-marked-point-process-live.ts", name: "2103-04647-marked-point-process-live", lines: 80, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["hawkesIntensity", "hawkesLogLik", "hawkesGridFit"], hasTest: true, hasGate: true},
-  {id: "literature/literature-causal.ts", name: "literature-causal", lines: 323, tier: "DATA_MODEL_ARTIFACT", reason: "requires model_artifact input (matched 'latent')", exports: ["listPromotedEdges", "runCausalPromotionSweep", "retireFailedEdges", "markTestsOfRetiredEdges"], hasTest: false, hasGate: true},
   {id: "markets/1106-4509-ml-market-pooling.ts", name: "1106-4509-ml-market-pooling", lines: 129, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["mixturePool", "productPool", "interpolatedPool", "updateWealth", "logLoss", "fitAlpha"], hasTest: true, hasGate: true},
+  {id: "markets/1301-0594-information-incorporation-surprise.ts", name: "1301-0594-information-incorporation-surprise", lines: 99, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["logit", "deltaLogit", "surpriseScore", "isSteamFlag", "binaryEntropy", "expectedEntropyLoss"], hasTest: false, hasGate: false},
   {id: "markets/1310-6998v1-twitter-volume-momentum.ts", name: "1310-6998v1-twitter-volume-momentum", lines: 108, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["ewma", "volumeMomentumFeature", "beatWriterSentiment", "totalsModelFeatures"], hasTest: true, hasGate: true},
   {id: "markets/1802-08848v1-odds-history-fusion.ts", name: "1802-08848v1-odds-history-fusion", lines: 80, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["devig", "convexFuse", "logLoss", "fitFusionWeight", "fusionGate"], hasTest: true, hasGate: true},
   {id: "markets/1910-08858v2-spread-win-probability-table.ts", name: "1910-08858v2-spread-win-probability-table", lines: 137, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["brierScore", "logLoss", "rankedProbScore", "eceProbs", "pairedT", "normalCdfLocal", "spearman", "fbeta", "classWeightedBCE"], hasTest: true, hasGate: true},
@@ -163,6 +162,7 @@ export const MODEL_REGISTRY: readonly ModelRegistryEntry[] = [
   {id: "markets/2010-12508v1-decorrelation-penalty-loss.ts", name: "2010-12508v1-decorrelation-penalty-loss", lines: 253, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["logistic", "irlsFit", "logisticLogLoss", "stadiumFactorFit", "brierScore", "logLoss", "rankedProbScore", "eceProbs", "pairedT", "normalCdfLocal", "spearman", "fbeta", "classWeightedBCE"], hasTest: true, hasGate: true},
   {id: "markets/2106-05799v1-hybrid-ability-xgboost.ts", name: "2106-05799v1-hybrid-ability-xgboost", lines: 272, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["solveLinear", "ridgeFit", "ridgePredict", "arxFit", "adjustedPlusMinus", "normalCdf", "normalQuantile", "gaussCopulaSample", "gaussCopulaJoint", "negBinPmf", "negBinMoments", "zinbPmf", "negBinLogLik"], hasTest: true, hasGate: true},
   {id: "markets/2107-08827v1-fractional-kelly-sizing.ts", name: "2107-08827v1-fractional-kelly-sizing", lines: 65, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["kellyBinary", "kellySized", "drawdownGate", "kellyGrowthRate"], hasTest: true, hasGate: true},
+  {id: "markets/2108-02419v1-bbe-implementer.ts", name: "2108-02419v1-bbe-implementer", lines: 270, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["expectedPointsStub", "winProbStub", "advanceDrive", "bettorFairEstimate", "bettorStake", "syntheticOddsTick", "generateSyntheticTape", "closingLineMoveMad", "meanLogLoss", "relativeLogLoss", "acceptanceGatePasses"], hasTest: false, hasGate: false},
   {id: "markets/2112-13001v3-dcp-prop-framework.ts", name: "2112-13001v3-dcp-prop-framework", lines: 168, tier: "SELF_CONTAINED", reason: "locally-typed params (b0, b1, b2)", exports: ["poissonPmf", "poissonLogLik", "poissonMle", "poissonSample", "ingarchFilter", "ingarchLogLik", "cmpPmf", "nestedScoreSim", "negBinPmf", "negBinMoments", "zinbPmf", "negBinLogLik"], hasTest: true, hasGate: true},
   {id: "markets/2401-06086v1-imitation-inplay-betting.ts", name: "2401-06086v1-imitation-inplay-betting", lines: 83, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["epsilonGreedyStep", "ucb1Step", "gammaSample", "thompsonBetaStep", "decayEps"], hasTest: true, hasGate: true},
   {id: "metalearning/1703-03400v3-maml-rookie-adapter.ts", name: "1703-03400v3-maml-rookie-adapter", lines: 122, tier: "PURE_MATH", reason: "all params primitive/local; no external imports", exports: ["innerAdapt", "queryLoss", "mamlMetaLoss", "foMetaGradient", "metaTrain"], hasTest: true, hasGate: true},
@@ -220,9 +220,9 @@ export const MODEL_REGISTRY: readonly ModelRegistryEntry[] = [
 export const MODEL_REGISTRY_COUNTS = Object.freeze({
   total: 200,
   data_game: 5,
-  data_model_artifact: 5,
+  data_model_artifact: 4,
   data_slate: 6,
   data_tracking: 2,
-  pure_math: 156,
-  self_contained: 26,
+  pure_math: 158,
+  self_contained: 25,
 });
