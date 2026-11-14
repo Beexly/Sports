@@ -1,0 +1,369 @@
+{
+  "book_id": "2b993f18a6c6a83d",
+  "title": "USA Today Special Edition: 2026 NFL Draft Guide",
+  "source": "USA Today Special Edition: 2026 NFL Draft Guide (USA TODAY Network, 2026). Garrett-hand-delivered Downloads PDF, ~132 pages. Verified title; readable; not a retraction; not a derivative AI summary. TIER-B magazine / sports journalism, NOT a peer-reviewed or textbook source.",
+  "source_note": "TIER-B MAGAZINE provenance: prospect rankings, mock-draft rationale, team needs, sleepers, boom/bust, and historical steals/busts are editorial evaluation and opinion, not measured constants. The one cited statistic (NCAA funnel: of ~1M high-school players, 7.5% reach college, 3% reach Division I) is attributed to an NCAA analysis. Ligature-garbled OCR (ft->¤, fi->², fl->£, ffi->¥, and dropped-ligature words like 'oensive'); only clean verbatim prose selected and verified. Zero printed equations; all primitives qualitative (latex empty, no_equation_domain). Prospect grades are subjective projections, not probabilities. Pages are PDF page indices.",
+  "primary_domain": "football",
+  "extraction_mode": "TIER_B_MAGAZINE_QUALITATIVE_CLEAN_OCR",
+  "primitives": [
+    {
+      "primitive_id": "selection_funnel",
+      "name": "The talent-selection funnel base rate",
+      "verbatim_quote": "Out of the 1 million high school football players, 7.5 percent will make it to the college level, and just 3 percent will play on a Division I team.",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "base population": "~1,000,000 high-school football players",
+        "college rate": "7.5%",
+        "Division I rate": "3%",
+        "source": "cited NCAA analysis"
+      },
+      "assumptions": [
+        "The funnel is a steep selection cascade",
+        "Each stage filters by talent and opportunity"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The selection funnel IS the base-rate prior on talent scarcity: GSE's roster/valuation layer must treat elite football talent as extremely rare (3% of an already-selected pool reach D-I), so prospect value carries a large uncertainty and the replacement level is low.",
+        "source_operator": "selection_funnel",
+        "telemetry": "~1M HS -> 7.5% college -> 3% D-I -> talent-scarcity prior"
+      }
+    },
+    {
+      "primitive_id": "rb_supporting_cast",
+      "name": "Top-10 running back needs a supporting cast",
+      "verbatim_quote": "any team taking a running back in the top 10 needs to have plenty of supporting pieces in place to make the investment work.",
+      "page": 55,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "positional investment": "premium (top-10) pick on a running back",
+        "condition": "offensive line + quarterback support must already exist"
+      },
+      "assumptions": [
+        "A running back's output is dependent on blocking and scheme",
+        "The Jeanty/Raiders integration difficulty is the cautionary example"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The supporting-cast dependency IS the context-conditional value veto: GSE must not value a running back (or any dependent position) in isolation, because the output is a function of the offensive line and quarterback, so a premium pick only pays off when the supporting pieces exist.",
+        "source_operator": "rb_supporting_cast",
+        "telemetry": "RB value -> conditional on OL/QB support; premium pick needs infrastructure"
+      }
+    },
+    {
+      "primitive_id": "positional_value",
+      "name": "Positional value hierarchy at premium picks",
+      "verbatim_quote": "Jerry Jones invited quite a bit of scrutiny regarding positional value",
+      "page": 55,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "positional value": "the relative worth of a position at a given draft slot",
+        "example": "a guard at a premium slot drew derision"
+      },
+      "assumptions": [
+        "Some positions (edge, QB, LT, CB) carry more premium-pick value than others (guard, RB)",
+        "Draft capital should match positional scarcity and impact"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The positional-value hierarchy IS the slot-weighted valuation: GSE's draft-capital model must weight positions by impact and scarcity, because spending a premium pick on a lower-value position (guard) is a misallocation even if the player is good.",
+        "source_operator": "positional_value",
+        "telemetry": "draft slot x positional impact -> capital-allocation efficiency"
+      }
+    },
+    {
+      "primitive_id": "scheme_fit",
+      "name": "Scheme fit over raw production",
+      "verbatim_quote": "neither one quite fits the bill of a Steve Spagnuolo edge rusher.",
+      "page": 55,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "scheme fit": "matching a prospect's traits to a coordinator's system mold",
+        "tradeoff": "more productive players may fit worse"
+      },
+      "assumptions": [
+        "A less productive prospect can be more valuable if he fits the scheme",
+        "The Spagnuolo edge-rusher mold is the template"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Scheme-fit-over-production IS the system-compatibility valuation: GSE must value a prospect relative to the specific scheme he enters, because a productive player in the wrong mold underperforms a lesser producer who fits, so fit is a multiplier on talent.",
+        "source_operator": "scheme_fit",
+        "telemetry": "prospect traits x scheme mold -> fit-adjusted value"
+      }
+    },
+    {
+      "primitive_id": "injury_risk_premium",
+      "name": "Injury history discounts a premium pick",
+      "verbatim_quote": "Tyson has a fairly extensive injury history, which could leave some franchises uneasy about using a premium pick on him.",
+      "page": 55,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "injury history": "extensive prior injuries",
+        "effect": "raises the risk of a premium (early) pick"
+      },
+      "assumptions": [
+        "Durability is a first-class valuation input",
+        "Premium capital amplifies the cost of a bust"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The injury-risk discount IS the durability veto on capital allocation: GSE must down-weight prospects with extensive injury history, especially for premium picks, because the expected value of the pick is the talent times the probability of staying available.",
+        "source_operator": "injury_risk_premium",
+        "telemetry": "injury history -> availability probability -> discounted pick value"
+      }
+    },
+    {
+      "primitive_id": "nil_portal_sleeper",
+      "name": "NIL and the portal reshaped the sleeper landscape",
+      "verbatim_quote": "Small-school standouts now tend to be few and far between",
+      "page": 61,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "NIL": "name, image, likeness deals",
+        "transfer portal": "player mobility between colleges",
+        "effect": "small-school stars transfer up before the draft"
+      },
+      "assumptions": [
+        "Players who build buzz at lower levels move to bigger spotlights (and paydays)",
+        "The classic late-round small-school sleeper is now rarer"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The NIL/portal reshaping IS the regime-change caveat on historical patterns: GSE must not extrapolate old sleeper base rates into the NIL/portal era, because the talent-migration pattern changed, so a historical late-round-gem rate is not stationary.",
+        "source_operator": "nil_portal_sleeper",
+        "telemetry": "NIL + portal -> talent migrates up -> small-school sleeper base rate shifts"
+      }
+    },
+    {
+      "primitive_id": "traits_sleeper_eval",
+      "name": "Traits-based sleeper evaluation",
+      "verbatim_quote": "Lance presents traits and a skill set that teams will be eager to tap into.",
+      "page": 61,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "traits": "measurable tools (size, speed, hands, ball skills)",
+        "projection": "traits project to NFL roles despite raw production or level"
+      },
+      "assumptions": [
+        "Evaluation weighs tools and skill set, not just college stats",
+        "A learning curve is expected against better competition"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Traits-based evaluation IS the projection-over-production heuristic: GSE's prospect model should weight transferable athletic traits and skills above lower-level statistics, because traits project to the NFL while stats are level- and scheme-confounded.",
+        "source_operator": "traits_sleeper_eval",
+        "telemetry": "transferable traits -> NFL projection; stats level-confounded"
+      }
+    },
+    {
+      "primitive_id": "boom_bust_variance",
+      "name": "Boom-or-bust prospects are high-variance",
+      "verbatim_quote": "These players have high upside but also question marks surrounding their NFL potential",
+      "page": 65,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "boom/bust": "high upside paired with significant question marks",
+        "nature": "a wide outcome distribution, not a point estimate"
+      },
+      "assumptions": [
+        "The prospect can become a star or fail to be a long-term starter",
+        "The variance is the defining feature"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The boom/bust label IS the outcome-variance flag: GSE must model such prospects as a wide distribution (star vs rotational/bust) rather than a median projection, so the draft decision becomes a risk-tolerance choice, not a point-value ranking.",
+        "source_operator": "boom_bust_variance",
+        "telemetry": "high upside + question marks -> wide outcome distribution; risk-tolerance decision"
+      }
+    },
+    {
+      "primitive_id": "landing_spot",
+      "name": "Development is landing-spot dependent",
+      "verbatim_quote": "Where Bell lands in the NFL will go a long way toward seeing if he can meet his potential.",
+      "page": 66,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "landing spot": "the team, scheme, and role a prospect enters",
+        "effect": "shapes whether potential is realized"
+      },
+      "assumptions": [
+        "The same prospect can boom in one situation and bust in another",
+        "Development is not purely intrinsic to the player"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Landing-spot dependency IS the situation-conditional development model: GSE must condition a prospect's projection on the destination scheme and role, because player development is an interaction of talent and environment, not a fixed player constant.",
+        "source_operator": "landing_spot",
+        "telemetry": "prospect x destination scheme/role -> realized development"
+      }
+    },
+    {
+      "primitive_id": "comp_prediction_failure",
+      "name": "Player-comparison predictions are unreliable",
+      "verbatim_quote": "Or he might wind up like the others predicted to be the next Samuel (Laviska Shenault, Treylon Burks, etc.) but who never panned out as long-term starters.",
+      "page": 66,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "comp": "a comparison to an established NFL player",
+        "failure": "multiple 'next X' comps never became long-term starters"
+      },
+      "assumptions": [
+        "Similarity to a star does not guarantee the star's outcome",
+        "The comp heuristic has a high false-positive rate"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The comp-prediction failure IS the similarity-heuristic veto: GSE must not treat a prospect's resemblance to a star as a forecast of the star's career, because the 'next X' pattern repeatedly fails, so comps are a scouting shorthand, not a predictive model.",
+        "source_operator": "comp_prediction_failure",
+        "telemetry": "resemblance to star -> NOT a career forecast; high false-positive comp rate"
+      }
+    },
+    {
+      "primitive_id": "inconsistency_bust",
+      "name": "Inconsistency as a bust risk",
+      "verbatim_quote": "or he could end up as a rotational piece at best due to his inconsistency.",
+      "page": 66,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "inconsistency": "large game-to-game variance in production",
+        "risk": "caps the floor at a rotational role"
+      },
+      "assumptions": [
+        "A prospect who does not sustain output is a bust risk even with elite tools"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The inconsistency flag IS the reliability veto: GSE should down-weight prospects with high game-to-game variance, because sustained availability of performance (not peak tools) determines whether a player becomes a starter or a rotational piece.",
+        "source_operator": "inconsistency_bust",
+        "telemetry": "game-to-game variance -> reliability discount; floor capped at rotational"
+      }
+    },
+    {
+      "primitive_id": "portal_roster_economics",
+      "name": "Portal and NIL force year-by-year roster building",
+      "verbatim_quote": "the ability to change schools and make money on side deals forces some coaches to piece together rosters year by year.",
+      "page": 14,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "transfer portal + NIL": "player mobility and compensation",
+        "effect": "rosters rebuilt annually rather than over a four-year plan"
+      },
+      "assumptions": [
+        "Player power to leave for the highest bidder shortens planning horizons",
+        "Roster construction becomes a repeated short-horizon optimization"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The portal/NIL roster economics IS the shortened-horizon planning shift: GSE's roster model must treat team composition as a year-by-year re-optimization under player mobility, not a stable multi-year plan, because retention is no longer guaranteed.",
+        "source_operator": "portal_roster_economics",
+        "telemetry": "player mobility + NIL -> annual roster re-optimization; retention uncertain"
+      }
+    },
+    {
+      "primitive_id": "eraser_defender",
+      "name": "The transformative 'eraser' defender",
+      "verbatim_quote": "who can be an eraser near the line of scrimmage",
+      "page": 55,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "eraser": "a defender who neutralizes offenses' mistakes and creates disruption",
+        "value": "transformative, beyond box-score production"
+      },
+      "assumptions": [
+        "A single elite defender can change a unit's ceiling",
+        "Leadership and range amplify the impact"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The eraser concept IS the non-linear unit-impact valuation: GSE must recognize that certain defenders have a multiplicative effect on a unit (covering others' errors), so their value exceeds additive box-score production, a leverage player on defense.",
+        "source_operator": "eraser_defender",
+        "telemetry": "elite defender -> multiplicative unit impact (error-erasure), not additive stats"
+      }
+    },
+    {
+      "primitive_id": "physicality_jump",
+      "name": "The competition-level learning curve",
+      "verbatim_quote": "There might be a learning curve involved as he faces far more physical defensive backs who will challenge him both at the line of scrimmage and when the ball is in the air.",
+      "page": 61,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "level jump": "lower-division to NFL physicality",
+        "effect": "a learning curve before traits translate"
+      },
+      "assumptions": [
+        "Traits do not instantly translate against faster, more physical opponents",
+        "Technique and route detail must develop"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The physicality-jump caveat IS the adaptation-lag discount: GSE must model a transition period before a prospect's traits translate against NFL physicality, so rookie-year projection should be discounted for the learning curve, especially for lower-level prospects.",
+        "source_operator": "physicality_jump",
+        "telemetry": "level jump -> adaptation lag; discount rookie projection for learning curve"
+      }
+    },
+    {
+      "primitive_id": "outlier_frame",
+      "name": "Outlier frames raise durability questions",
+      "verbatim_quote": "an incredible 6-foot-10-inch wingspan in a 6-foot-3 body",
+      "page": 66,
+      "latex": "",
+      "symbol_and_unit_ledger": {
+        "outlier frame": "unusual length/size combination (e.g., huge wingspan on a shorter body)",
+        "question": "how the frame holds up in the NFL"
+      },
+      "assumptions": [
+        "Unusual physical tools are an upside and a durability uncertainty",
+        "The frame's NFL robustness is unproven"
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The outlier-frame flag IS the tools-vs-durability tension: GSE must treat exceptional but unusual physical traits as both upside and an unproven-durability risk, so the projection carries a variance term for whether the frame survives NFL contact.",
+        "source_operator": "outlier_frame",
+        "telemetry": "outlier physical tools -> upside + unproven-durability variance"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "nfldraftguide2026_trace_01",
+      "think": "The 2026 NFL Draft Guide is a magazine special edition, so its sovereign content is not equations but the decision heuristics a front office uses to allocate scarce draft capital under deep uncertainty, and it must be read as editorial evaluation rather than measured law. The retrocausal genealogy runs from the brutal selection funnel that makes elite talent rare, through the historical record of draft steals and busts that documents how often projection fails, to the modern traits-based evaluation that weighs transferable tools over lower-level production. The cited NCAA analysis gives the base rate: of roughly a million high-school players, only 7.5 percent reach college and just 3 percent reach Division I, so the pool of NFL-caliber talent is a tiny, heavily selected slice. This scarcity is the prior that makes every prospect pick a high-stakes bet on a noisy projection, and the guide's steals-and-busts history is the empirical reminder that the projection error is large. The recursive theory of mind centers on the front office projecting a prospect into an unknown future. The boom-or-bust label is explicitly a high-variance classification: high upside paired with question marks, meaning the outcome is a wide distribution from star to rotational piece, not a point estimate. The guide is candid that development is landing-spot dependent, that where a player lands goes a long way toward whether he meets his potential, so the same talent can boom in one scheme and bust in another. The recursive trap is the player-comparison heuristic: the guide notes that the prospects billed as the next Deebo Samuel, like Laviska Shenault and Treylon Burks, never panned out as long-term starters, so resemblance to a star is a scouting shorthand with a high false-positive rate, not a forecast. Scheme fit compounds this, because a more productive prospect can be less valuable than a lesser producer who fits the coordinator's mold. The cross-layer veto adjudication is a stack of valuation vetoes on naive talent reads. The positional-value veto: spending a premium pick on a lower-impact position such as a guard draws scrutiny, because draft capital must match positional scarcity and impact. The supporting-cast veto: a top-10 running back only pays off if the offensive line and quarterback are already in place, so dependent positions cannot be valued in isolation. The injury-risk veto: an extensive injury history makes franchises uneasy about a premium pick, because pick value is talent times the probability of staying available. The inconsistency veto: large game-to-game variance caps a prospect's floor at a rotational role even with elite tools. The outlier-frame flag adds a durability variance to exceptional but unusual physical traits. The universal lens is the regime change reshaping the draft's economics. The rise of name, image, and likeness deals and the transfer-portal boom have made small-school standouts few and far between, because players who build buzz at lower levels transfer up to a bigger spotlight and payday before the draft, so the classic late-round small-school sleeper is rarer and historical sleeper base rates are not stationary. The same mobility forces coaches to piece together rosters year by year rather than over a four-year plan, turning roster construction into a repeated short-horizon optimization under uncertain retention. Sleeper evaluation itself is traits-based, weighing tools and skill set over lower-level stats, with an explicit learning-curve caveat for the jump to more physical competition. Connecting this to the engine, the draft guide supplies the roster-and-valuation layer's decision heuristics: a talent-scarcity base-rate prior, positional-value weighting of draft capital, scheme-fit and landing-spot conditioning of prospect projection, a durability and reliability discount, and a wide-distribution treatment of boom-or-bust prospects rather than a point ranking. The implementation invariants are that prospect value is a distribution conditioned on destination and health, not a fixed grade; that comps are not forecasts; that dependent positions need supporting infrastructure; and that the NIL/portal era breaks historical sleeper and roster-stability patterns. The honest provenance caveat is load-bearing: this is Tier-B sports journalism, so the rankings and grades are editorial opinion, the only cited statistic is the NCAA funnel, and the ligature-garbled OCR means only clean verbatim prose was extracted. These are qualitative heuristics to inform a valuation model, not probabilities to be evaluated, and they carry no equations because the source prints none. A final strand is the empirical and scenario-planning layer. The historical steals-and-busts section is the base rate of draft prediction error in narrative form: late-round gems such as Harold Fannin Jr. in the third round and Kyle Monangai in the seventh show that value hides beyond the first round, while the all-time busts catalogue the cost of overconfident projection. The mock draft itself is scenario planning, each selection conditional on the picks ahead of it, and the team-needs analysis grades the positional holes of all thirty-two franchises, so a prospect's value is always relative to a specific roster's needs rather than absolute. The difference-makers framing reserves the earliest picks for the few prospects with the potential to transform a franchise, concentrating premium capital on the highest-leverage talent, which is the draft's own version of the leverage-weighted valuation the engine applies to individual plays within a game.",
+      "retrocausal_genealogy": "The lineage runs from the talent-selection funnel (cited NCAA analysis: ~1M high-school players, 7.5% reach college, 3% reach Division I) that makes elite talent rare, through the historical steals-and-busts record documenting large projection error, to modern traits-based evaluation that weighs transferable tools over lower-level production. The scarcity base rate is the prior that makes every pick a high-stakes bet on a noisy projection, and the guide's history is the empirical reminder that projection error is large. This is editorial journalism, not a measured law.",
+      "theory_of_mind": "The front office projects a prospect into an unknown future. Boom-or-bust is explicitly a high-variance class (star to rotational), not a point estimate. Development is landing-spot dependent, so the same talent booms in one scheme and busts in another. The recursive trap is the comp heuristic: the 'next Deebo Samuel' prospects (Shenault, Burks) never panned out, so resemblance to a star is a high-false-positive shorthand, not a forecast. Scheme fit compounds this, since a lesser producer who fits the mold can beat a more productive misfit.",
+      "cross_layer_veto": "Valuation vetoes on naive talent reads: positional-value (a guard at a premium slot is a misallocation), supporting-cast (a top-10 RB needs the OL/QB already in place), injury-risk (extensive history discounts a premium pick because value = talent x availability), inconsistency (game-to-game variance caps the floor at rotational), and outlier-frame durability variance. The NIL/portal regime change breaks historical sleeper base rates and forces year-by-year roster re-optimization, so old patterns must not be extrapolated."
+    }
+  ],
+  "universal_lens": "Draft-capital allocation under uncertainty: a talent-scarcity base-rate prior, positional-value weighting, scheme-fit and landing-spot conditioning of prospect projection, durability and reliability discounts, wide-distribution treatment of boom/bust prospects, and the NIL/portal regime change that reshapes sleeper base rates and forces year-by-year roster building. Editorial heuristics, not measured probabilities.",
+  "gsi_mapping": "GSI ingests the draft heuristics as a valuation layer: prospect value as a destination- and health-conditioned distribution, positional-value weights on draft capital, scheme-fit multipliers, availability and reliability discounts, and a non-stationary sleeper base rate in the NIL/portal era. The NCAA funnel supplies the talent-scarcity prior; comps are flagged as non-predictive.",
+  "gse_mapping": "GSE uses the positional-value hierarchy to allocate draft capital, conditions prospect projection on scheme and landing spot, discounts for injury history and inconsistency, treats boom/bust prospects as wide distributions rather than point rankings, and recognizes the eraser defender's multiplicative unit impact. Roster construction is modeled as annual re-optimization under player mobility. Tier-B magazine provenance is preserved; grades are opinion, not probabilities."
+}
