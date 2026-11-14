@@ -542,3 +542,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 01:07:36 | COMPLETE | 3abc60e73bee4af1 | primitives=26 think_words=879
 - 2026-11-14 01:09:43 | CLAIMED | 348416db47413aa7 | worker=hermes-inline shard03 file=2024 Feeling the Pressure - A Unified Framework for Automating Pass Rushing Statistics in NFL Games.pdf
 - 2026-11-14 01:13:39 | COMPLETE | 348416db47413aa7 | primitives=30 think_words=896
+- 2026-11-14 01:14:35 | CLAIMED | 3c2117aeb4f3493c | worker=hermes-inline shard03 file=2023 Analytics have some humility a statistical view of fourth-down decision making - Brill.pdf
+- 2026-11-14 01:19:11 | COMPLETE | 3c2117aeb4f3493c | primitives=31 think_words=935

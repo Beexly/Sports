@@ -1,0 +1,628 @@
+{
+  "book_id": "3c2117aeb4f3493c",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_LIGATURE_FOLD",
+  "source_note": "Ryan S. Brill & Abraham J. Wyner (University of Pennsylvania), arXiv:2311.03490v1 [stat.AP], 6 Nov 2023, 'Analytics, have some humility: a statistical view of fourth-down decision making'. fi/fl ligatures and U+2212 minus folded; display math (EP weighted sum, catalytic prior, bootstrap CI, bootstrap percentage) reconstructed as labeled LaTeX from prose. The paper's nebulous-count sentence is internally inconsistent (prints '1,968 ... we consider 8,139 (24%)'); the 24% fraction and the 32%/19% Go-vs-kick asymmetry are quoted as the reliable figures and the count discrepancy is flagged in assumptions. Outputs are statistical EP/WP from play-by-play data; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "four_statistical_flaws",
+      "name": "Four flaws of public EP/WP models",
+      "verbatim_quote": "These models, however, are subject to serious statistical flaws: selection bias, overfitting, ignoring autocorrelation, and ignoring uncertainty quantification.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Widely used statistical EP/WP models are fit from historical data but suffer all four flaws; the paper addresses each."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A value function inherits the statistical flaws of its estimator; GSE must audit selection bias, overfitting, autocorrelation, and UQ before trusting any EP/WP.",
+        "source_operator": "four_statistical_flaws",
+        "telemetry": "selection bias + overfit + autocorr + no UQ"
+      }
+    },
+    {
+      "primitive_id": "value_functions_are_models",
+      "name": "Value functions are model-defined, not observable",
+      "verbatim_quote": "Across sports, however, value functions are not observable quantities; they are defined by models.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The optimal decision maximizes the value of the next game-state, but that value must be inferred from historical plays, never read off directly."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every game-state value is an estimate with error bars; GSE treats EP/WP as modeled quantities, the same epistemic stance.",
+        "source_operator": "value_functions_are_models",
+        "telemetry": "value = model output, not observation"
+      }
+    },
+    {
+      "primitive_id": "wp_definition",
+      "name": "Win probability: possession team wins",
+      "verbatim_quote": "Win probability (WP) measures the probability that the team with possession at the current game-state wins the game.",
+      "page": 2,
+      "latex": "\\text{WP}(x)=P(\\text{possession team wins}\\mid x)",
+      "symbol_and_unit_ledger": {
+        "x": "game-state",
+        "WP": "probability in [0,1]"
+      },
+      "assumptions": [
+        "EP measures expected net points of the next scoring event in the half; WP is the win-the-game objective."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "WP is the terminal objective GSE optimizes; EP is an intermediate value, the same hierarchy.",
+        "source_operator": "wp_definition",
+        "telemetry": "WP(x) = P(win | game-state)"
+      }
+    },
+    {
+      "primitive_id": "fourth_down_three_choices",
+      "name": "Fourth down: Go, FG, or Punt",
+      "verbatim_quote": "On fourth down, a football coach has three choices: go for it (Go), attempt a field goal (FG), or punt the ball (Punt).",
+      "page": 2,
+      "latex": "d^*=\\arg\\max_{d\\in\\{\\text{Go},\\text{FG},\\text{Punt}\\}}\\widehat{\\text{WP}}(\\text{next state}\\mid d)",
+      "symbol_and_unit_ledger": {
+        "d": "fourth-down decision"
+      },
+      "assumptions": [
+        "Romer/Burke maximized EP; Baldwin/Burke maximize WP; both found coaches too conservative."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A discrete action set scored by a value function is the same decision structure GSE uses for fourth-down recommendations.",
+        "source_operator": "fourth_down_three_choices",
+        "telemetry": "d* = argmax WP over {Go,FG,Punt}"
+      }
+    },
+    {
+      "primitive_id": "ep_random_team_bias",
+      "name": "EP without team quality is for random teams",
+      "verbatim_quote": "Expected points models, which don't adjust for team quality, report EP for randomly drawn teams, not for average teams.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "No team makes a decision as a random team; the 2022 Eagles want their own EP, not a population average."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A population-average value is the wrong conditioning for a specific team; GSE conditions EP on team quality, the same selection-bias fix.",
+        "source_operator": "ep_random_team_bias",
+        "telemetry": "EP(random team) != EP(average team)"
+      }
+    },
+    {
+      "primitive_id": "good_teams_selection",
+      "name": "Good teams have more plays and score more",
+      "verbatim_quote": "good teams have more plays and good teams score more points",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because good teams appear in more plays near the opponent's endzone and score more, a randomly drawn play over-represents good teams, biasing EP upward."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sampling frequency correlates with quality, so unadjusted aggregates are selection-biased; GSE adjusts for team strength and score differential.",
+        "source_operator": "good_teams_selection",
+        "telemetry": "good teams: more plays + more points"
+      }
+    },
+    {
+      "primitive_id": "tucker_thought_experiment",
+      "name": "Average vs randomly drawn player (Tucker)",
+      "verbatim_quote": "This thought experiment highlights the difference between an average player and a randomly drawn player.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "An average kicker has ~0 probability of a 70-yard FG, Justin Tucker has epsilon>0, so a randomly drawn kicker has positive probability because Tucker can be drawn."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A mixture over heterogeneous agents is not the average agent; GSE distinguishes population draws from team-specific conditioning.",
+        "source_operator": "tucker_thought_experiment",
+        "telemetry": "avg kicker 0, Tucker eps>0, random >0"
+      }
+    },
+    {
+      "primitive_id": "offense_over_defense",
+      "name": "Offensive quality predicts points better than defense",
+      "verbatim_quote": "An interesting football lesson that arises from modeling EP using our own team quality metrics is that offensive quality is more predictive of points than defensive quality",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A knockoffs procedure adapted for autocorrelation finds offensive quality metrics significant and defensive metrics indistinguishable from noise for next-score points."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "For scoring, offense carries more signal than defense; GSE weights offensive quality higher in its EP model, the same empirical finding.",
+        "source_operator": "offense_over_defense",
+        "telemetry": "offense significant, defense ~ noise"
+      }
+    },
+    {
+      "primitive_id": "xgboost_overfits",
+      "name": "XGBoost overfits football play-by-play",
+      "verbatim_quote": "A flexible machine learning model like XGBoost has the capacity to fit such a complicated function given enough data, but in practice we find that it overfits.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Additive multinomial logistic regression underfits (no interactions); XGBoost overfits despite the apparent abundance of data."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Flexible trees need regularization on autocorrelated sports data; GSE shrinks its tree models rather than trusting raw XGBoost.",
+        "source_operator": "xgboost_overfits",
+        "telemetry": "MLR underfits, XGBoost overfits"
+      }
+    },
+    {
+      "primitive_id": "ep_monotonicity_violation",
+      "name": "Overfit EP is non-monotonic in yardline",
+      "verbatim_quote": "expected points via XGBoost classification isn't monotonic in certain variables such as yardline even though it should be.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "EP should increase with yardline, but overfit XGBoost classification violates this; classification still fits end-of-half better than regression by modeling the no-score probability."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A known monotonicity constraint is a structural sanity check; GSE vetoes any EP surface that violates football physics.",
+        "source_operator": "ep_monotonicity_violation",
+        "telemetry": "EP should be monotone in yardline"
+      }
+    },
+    {
+      "primitive_id": "catalytic_prior_idea",
+      "name": "Catalytic prior: synthetic data as a prior",
+      "verbatim_quote": "The idea is to generate synthetic prior data from a simpler model, the catalytic prior model, and then use this synthetic data to represent the prior distribution.",
+      "page": 9,
+      "latex": "\\text{fit } f_{\\text{complex}} \\text{ on } \\{X,X^*\\},\\{y,y^*\\},\\quad y^*\\sim f_{\\text{simple}}(X^*)",
+      "symbol_and_unit_ledger": {
+        "X*": "synthetic game-states (column resampling + Gaussian jitter)",
+        "y*": "synthetic responses from simpler model"
+      },
+      "assumptions": [
+        "The synthetic data pulls the complex model toward the simpler one, reducing overfitting; synthetic plays may be downweighted."
+      ],
+      "breakdown_regime": "synthetic data is fake; number and weight of synthetic points are tuned hyperparameters",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Imputing a prior from a smoother model is the same shrinkage GSE uses to regularize flexible estimators without a Bayesian tree formulation.",
+        "source_operator": "catalytic_prior_idea",
+        "telemetry": "synthetic prior pulls complex -> simple"
+      }
+    },
+    {
+      "primitive_id": "catalytic_first_in_ml",
+      "name": "First catalytic prior in a machine-learning context",
+      "verbatim_quote": "Although catalytic priors were introduced in the context of linear models (Huang et al., 2020, 2022), we are the first, to our knowledge, to use catalytic priors in a machine learning context.",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Catalytic priors (Huang et al.) were for linear models; this paper extends them to tree ensembles."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A regularization technique can transfer across model classes; GSE adopts the catalytic prior for its tree-based value functions.",
+        "source_operator": "catalytic_first_in_ml",
+        "telemetry": "catalytic prior: linear -> ML extension"
+      }
+    },
+    {
+      "primitive_id": "catalytic_laplace_smooth",
+      "name": "Catalytic prior Laplace-smooths trees",
+      "verbatim_quote": "We find that a catalytic prior from a simpler additive regression model effectively \"Laplace smooths\" our tree machine learning models.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A simpler additive regression catalytic prior smooths the XGBoost surface; M=3 million synthetic outcomes, fewer under 30 half-seconds because XGBoost is better at end of half."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Shrinkage toward an additive model is the same smoothing GSE applies to keep tree value functions physically plausible.",
+        "source_operator": "catalytic_laplace_smooth",
+        "telemetry": "additive prior smooths trees"
+      }
+    },
+    {
+      "primitive_id": "catalytic_model_best",
+      "name": "Catalytic model wins out-of-sample",
+      "verbatim_quote": "Finally, the catalytic model, which shrinks the complex XGBoost model towards the simpler multinomial logistic regression model, performs best.",
+      "page": 11,
+      "latex": "\\text{MAE}_{\\text{catalytic}}=3.744 < \\text{MAE}_{\\text{Yurko+}}=3.749 < \\text{MAE}_{\\text{Baldwin+}}=3.753",
+      "symbol_and_unit_ledger": {
+        "MAE": "out-of-sample mean absolute error (points)"
+      },
+      "assumptions": [
+        "Team-quality-adjusted models beat unadjusted; point spread beats hand-crafted quality (more up-to-date, includes injuries); best MLR beats best XGBoost, evidencing overfitting."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Out-of-sample MAE ranks the estimators; GSE selects the catalytic model on the same held-out criterion.",
+        "source_operator": "catalytic_model_best",
+        "telemetry": "catalytic MAE 3.744 best"
+      }
+    },
+    {
+      "primitive_id": "wp_right_objective",
+      "name": "WP is the right objective, not EP",
+      "verbatim_quote": "A team's goal is to win the game, not score more points on average, so win probability (WP) is the right objective function.",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Maximizing EP can be suboptimal for winning; the decision must maximize WP."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The terminal objective (win) outranks the proxy (points); GSE optimizes WP for game decisions, the same objective hierarchy.",
+        "source_operator": "wp_right_objective",
+        "telemetry": "win > points; WP is objective"
+      }
+    },
+    {
+      "primitive_id": "ep_first_moment_of_wp",
+      "name": "EP is only the first moment of WP",
+      "verbatim_quote": "Expected points is only the first moment of win probability, which is a combination of the expected value and the variance of the points of the next score.",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "WP depends on both the mean and variance of next-score points, so EP alone discards the variance that matters for winning."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A first-moment proxy misses risk; GSE recognizes EP ignores the variance term that WP captures.",
+        "source_operator": "ep_first_moment_of_wp",
+        "telemetry": "EP = E[points]; WP uses mean + variance"
+      }
+    },
+    {
+      "primitive_id": "fg_down_six_example",
+      "name": "FG when down 6 late is wrong despite EP",
+      "verbatim_quote": "Even though attempting a field goal produces more points over average, scoring just 3 points when down by 6 at the end of the game all but guarantees a loss.",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Down 6 with a minute left, a field goal yields more expected points but leaves the team needing a touchdown, so going for it maximizes WP."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Score-differential and time context flip the optimal action; GSE conditions fourth-down decisions on the win context, not raw points.",
+        "source_operator": "fg_down_six_example",
+        "telemetry": "down 6 late: FG +EP but -WP"
+      }
+    },
+    {
+      "primitive_id": "autocorrelation_one_winner",
+      "name": "Every game has one winner (autocorrelation)",
+      "verbatim_quote": "This is not true because the binary win/loss response variable is noisy and highly auto-correlated: every game has only one winner.",
+      "page": 12,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "All plays in a game share the same win/loss draw, so the binary responses are not independent; this inflates WP standard errors."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Clustered binary outcomes violate i.i.d. assumptions; GSE must account for game-level autocorrelation in any WP uncertainty.",
+        "source_operator": "autocorrelation_one_winner",
+        "telemetry": "plays in a game share one win/loss draw"
+      }
+    },
+    {
+      "primitive_id": "effective_sample_size",
+      "name": "Effective sample size: plays vs games",
+      "verbatim_quote": "Thus the effective sample size is somewhere between the number of plays (511,264) and the number of non-tied games (4,101) from 2006 to 2021.",
+      "page": 13,
+      "latex": "4{,}101\\ \\text{games}\\ \\le n_{\\text{eff}}\\le 511{,}264\\ \\text{plays}",
+      "symbol_and_unit_ledger": {
+        "n_eff": "effective sample size"
+      },
+      "assumptions": [
+        "The apparent abundance of plays is illusory for WP; this is a limited-data context requiring wide confidence intervals."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Row count overstates information when rows are clustered; GSE sizes its uncertainty by effective, not nominal, sample size.",
+        "source_operator": "effective_sample_size",
+        "telemetry": "n_eff between 4,101 and 511,264"
+      }
+    },
+    {
+      "primitive_id": "random_walk_validation",
+      "name": "Random-walk football with known true WP",
+      "verbatim_quote": "we create a simplified random walk version of football in which the true win probability at each game-state is known.",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Ball moves +/-1 yardline with equal probability, endzone = touchdown, reset to midfield, tie broken by coin; true WP computed by dynamic programming to validate the bootstrap."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A synthetic ground-truth simulator is the same validation harness GSE uses to calibrate its uncertainty machinery before trusting it on real data.",
+        "source_operator": "random_walk_validation",
+        "telemetry": "random-walk football, true WP via DP"
+      }
+    },
+    {
+      "primitive_id": "unbiased_but_wide_ci",
+      "name": "WP models unbiased but need wide CIs",
+      "verbatim_quote": "But, they are subject to substantial uncertainty: to obtain 90% coverage, bootstrapped WP confidence intervals have a substantially wide average width of 8% WP.",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "XGBoost recovers the WP trend (MAE <2%) but 90% coverage requires ~8% WP-wide intervals; real football is more complex, so CIs should be wider still."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Low bias does not imply low uncertainty; GSE carries wide WP intervals even when the point estimate looks accurate.",
+        "source_operator": "unbiased_but_wide_ci",
+        "telemetry": "MAE <2%, but 90% coverage needs 8% width"
+      }
+    },
+    {
+      "primitive_id": "standard_bootstrap_too_narrow",
+      "name": "Standard bootstrap ignores autocorrelation",
+      "verbatim_quote": "the standard bootstrap, which ignores auto-correlation, produces confidence intervals which are too narrow at an average width of about 5% WP, leading to a subpar 73% coverage.",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Resampling plays i.i.d. gives 5% width / 73% coverage; cluster bootstrap 7% / 85%; randomized cluster bootstrap 8% / 90%."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An i.i.d. bootstrap under-covers clustered data; GSE uses a cluster-aware bootstrap, the same coverage fix.",
+        "source_operator": "standard_bootstrap_too_narrow",
+        "telemetry": "SB 73%, CB 85%, RCB 90% coverage"
+      }
+    },
+    {
+      "primitive_id": "randomized_cluster_bootstrap",
+      "name": "Randomized cluster bootstrap achieves 90% coverage",
+      "verbatim_quote": "The randomized cluster bootstrap produces even wider confidence intervals at an average width of about 8% WP, leading to a satisfactory frequentist coverage of 90% over average.",
+      "page": 15,
+      "latex": "\\text{resample } G'=G/2 \\text{ games, then plays within each game};\\ \\text{CI}=[q_{2.5},q_{97.5}]\\text{ of }\\{\\text{WP}_b(x)\\}",
+      "symbol_and_unit_ledger": {
+        "G'": "resampled games = half original",
+        "B": "26 datasets (original + 25)"
+      },
+      "assumptions": [
+        "Resample games with replacement, then plays within each game; B=26 for fast in-game evaluation; widen CIs to [0,1] at WP<0.025 or >0.975."
+      ],
+      "breakdown_regime": "captures sampling uncertainty only, not model uncertainty",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A two-stage cluster bootstrap is the same autocorrelation-aware resampling GSE uses for play-level uncertainty.",
+        "source_operator": "randomized_cluster_bootstrap",
+        "telemetry": "RCB: G/2 games + within-game plays, B=26"
+      }
+    },
+    {
+      "primitive_id": "bootstrap_voting",
+      "name": "Bootstrap percentage = decision reliability",
+      "verbatim_quote": "To quantify uncertainty of this estimate, we use bootstrap percentage, the percentage of bootstrapped models which report decision d as optimal.",
+      "page": 17,
+      "latex": "\\text{BootPct}(d)=\\frac{1}{B}\\sum_{b=1}^{B}\\mathbb{1}[d=\\arg\\max_{d'}\\text{WP}_b(d')]",
+      "symbol_and_unit_ledger": {
+        "B": "26 bootstrapped models",
+        "BootPct(d)": "fraction naming d optimal"
+      },
+      "assumptions": [
+        "If most bootstrapped models agree on d, the point estimate is reliable; if split, it cannot be trusted."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bootstrap voting is exactly GSE's conjunction gate: a recommendation stands only when resampled models agree, else PASS.",
+        "source_operator": "bootstrap_voting",
+        "telemetry": "BootPct(d) = fraction of B models choosing d"
+      }
+    },
+    {
+      "primitive_id": "decision_not_wp_uncertainty",
+      "name": "Quantify uncertainty of the decision itself",
+      "verbatim_quote": "Bootstrap percentage is the right way to bring uncertainty into the decision procedure because it quantifies uncertainty of the decision itself",
+      "page": 17,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Individual Go/FG/Punt WP estimates are correlated across training draws, so their separate CIs mislead; the decision's bootstrap percentage captures the right uncertainty (Friedman et al. 1999)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Uncertainty must attach to the chosen action, not just each option's value; GSE gates on decision agreement, the same principle.",
+        "source_operator": "decision_not_wp_uncertainty",
+        "telemetry": "decision uncertainty != per-option WP uncertainty"
+      }
+    },
+    {
+      "primitive_id": "not_enough_data",
+      "name": "Many game-states lack data to decide",
+      "verbatim_quote": "There is not enough data to estimate win probability with enough granularity to know which decision is best.",
+      "page": 18,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "AFC Championship example: Go point estimate +1.5% WP over FG, but CI [-3.7%,4.5%] and ~half the bootstraps prefer Go, so the decision is unknowable from data."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A point estimate with a zero-straddling gain CI is not a recommendation; GSE PASSes rather than fabricating confidence, the same humility.",
+        "source_operator": "not_enough_data",
+        "telemetry": "Go +1.5% but CI [-3.7,4.5] -> nebulous"
+      }
+    },
+    {
+      "primitive_id": "leave_to_coach",
+      "name": "High uncertainty: defer to the coach",
+      "verbatim_quote": "decision has too much uncertainty, we suggest leaving the decision to the coach's discretion.",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Coaches have information absent from the data (e.g., a key offensive lineman missing); analysts should evaluate coach decisions only on low-uncertainty plays."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Defer to the domain expert when the model is uncertain; GSE's PASS-on-nebulous discipline is the same respect for unmodeled information.",
+        "source_operator": "leave_to_coach",
+        "telemetry": "high uncertainty -> coach's discretion"
+      }
+    },
+    {
+      "primitive_id": "coaches_still_conservative",
+      "name": "Coaches right 91% kicking, 55% going",
+      "verbatim_quote": "Across all fourth-down plays from 2018-2022 that we consider obvious, the coach made the right decision for 91% plays where he should have kicked but just 55% of plays where he should have gone for it.",
+      "page": 23,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Even restricting to obvious (low-uncertainty) decisions, coaches are far too conservative about going for it."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The conservatism finding survives the humility correction; GSE still flags go-for-it spots coaches miss, but only when uncertainty is low.",
+        "source_operator": "coaches_still_conservative",
+        "telemetry": "obvious plays: 91% kick-right, 55% go-right"
+      }
+    },
+    {
+      "primitive_id": "nebulous_asymmetry",
+      "name": "24% of obvious decisions are nebulous",
+      "verbatim_quote": "There is an asymmetry: 32% of previously obvious Go decisions are nebulous and 19% of previously obvious kicks are nebulous.",
+      "page": 22,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Defining obvious as bootstrap percentage >85% (vs old WP-gain >0.015), about 24% of previously obvious decisions become nebulous, more so for Go than kicks."
+      ],
+      "breakdown_regime": "the paper's printed counts (1,968 vs 8,139) are internally inconsistent; the 24% and the 32%/19% asymmetry are the reliable figures",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Effect-size thresholds overstate confidence; GSE replaces them with a bootstrap-agreement threshold, the same recalibration of 'obvious'.",
+        "source_operator": "nebulous_asymmetry",
+        "telemetry": "obvious: BootPct>85%; 32% Go / 19% kicks nebulous"
+      }
+    },
+    {
+      "primitive_id": "sampling_not_model_uncertainty",
+      "name": "Bootstrap captures variance, not bias",
+      "verbatim_quote": "it underestimates uncertainty because it quantifies sampling uncertainty",
+      "page": 24,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The randomized cluster bootstrap quantifies sampling uncertainty (variance) but not model uncertainty (bias); real WP likely depends on unobserved confounders."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Resampling cannot capture model misspecification; GSE records the bias gap honestly rather than claiming full uncertainty coverage.",
+        "source_operator": "sampling_not_model_uncertainty",
+        "telemetry": "sampling (variance) yes, model (bias) no"
+      }
+    },
+    {
+      "primitive_id": "state_space_future",
+      "name": "State-space models as future WP estimators",
+      "verbatim_quote": "we suggest in future work exploring probabilistic state-space models to estimate win probability.",
+      "page": 25,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "State-space models have effective sample size = number of plays (independent transitions), but the next-state distribution is complex (0-yard/TD/penalty spikes, multimodal run/pass) and rules must be encoded carefully."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The bias-variance tradeoff between statistical and state-space WP is unresolved; GSE notes state-space models are not automatically lower-variance.",
+        "source_operator": "state_space_future",
+        "telemetry": "state-space: n_eff=plays, complex transitions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "brill_humility2023_trace",
+      "think": "The retrocausal genealogy of this paper is the fourth-down decision problem and the statistical flaws of the value functions used to solve it. Expected points and win probability are not observable quantities; they are defined by models fit from historical plays, and the optimal decision maximizes the value of the next game-state. The lineage runs from Carter and Machol in 1971 through Carroll's Hidden Game, Romer's 2006 expected-points analysis, Burke's 2009 fourth-down study, and the modern XGBoost models of Yurko and Baldwin, all of which concluded that NFL coaches are too conservative. But the authors identify four serious flaws in these public statistical models: selection bias from not adjusting for team quality, overfitting by flexible trees, ignoring the autocorrelation of play-by-play data, and ignoring uncertainty quantification entirely. The paper's thesis is humility: far fewer fourth-down decisions are as obvious as analysts claim. Selection bias is illustrated by the Justin Tucker thought experiment. An average kicker has essentially zero probability of a 70-yard field goal, Tucker has some positive probability, and a randomly drawn kicker therefore has positive probability because Tucker can be drawn. Expected-points models that ignore team quality report values for randomly drawn teams, not average teams, and no team makes a decision as a random team. Good teams have more plays and score more points, so unadjusted aggregates are biased upward; the fix is to condition on point spread and score differential. A knockoffs analysis adapted for autocorrelation finds offensive quality significant and defensive quality indistinguishable from noise for scoring. Adding these covariates worsens overfitting, so the authors extend the catalytic prior, originally for linear models, to machine learning: synthetic data imputed from a simpler multinomial logistic regression Laplace-smooths the XGBoost surface, and the catalytic model wins out-of-sample with MAE 3.744. The recursive theory of mind is the model reasoning about its own uncertainty. Win probability is the right objective because a team wants to win, not to maximize points, and expected points is only the first moment of win probability; kicking a field goal when down six late yields more points but all but guarantees a loss. The deeper insight is that every game has only one winner, so all plays in a game share the same win-loss draw, the binary response is autocorrelated, and the effective sample size lies between 511,264 plays and 4,101 games. This is a limited-data context. To calibrate the uncertainty machinery, the authors build a random-walk version of football whose true win probability is known by dynamic programming, and show that XGBoost is unbiased, mean absolute error under two percent, but that 90 percent coverage requires confidence intervals about eight percent wide. The model thus knows how much the data trusts its own estimate. Cross-layer veto adjudication is bootstrap voting. The standard bootstrap, which ignores autocorrelation, under-covers at 73 percent; the cluster bootstrap reaches 85 percent; the randomized cluster bootstrap, resampling half the games and then plays within each game, reaches 90 percent. With B equals 26 catalytic XGBoost win-probability models, the bootstrap percentage is the fraction naming a decision optimal, and it quantifies uncertainty of the decision itself, not of each option's correlated win-probability estimate. The veto is that a point estimate is not a recommendation: in the AFC Championship example Go leads by 1.5 percent but the gain confidence interval spans minus 3.7 to plus 4.5 percent and half the bootstraps prefer Go, so the decision is unknowable and left to the coach. By contrast the Commanders' punt has a tiny 0.5 percent edge but a strictly positive interval and near-unanimous bootstraps, so it is recommended, and the Raiders' go-for-it has 100 percent bootstrap agreement and a strictly positive interval, a strong recommendation they ignored to their cost. Defining obvious as bootstrap percentage above 85 percent rather than a win-probability gain above 0.015, about 24 percent of previously obvious decisions become nebulous, asymmetrically 32 percent of Go decisions versus 19 percent of kicks. The implementation invariants are precisely GSE's epistemic kernel. A recommendation must survive bootstrap agreement, not merely a positive point estimate; a zero-straddling gain interval is a PASS, and passing on a nebulous board is a badge of honor rather than a missed bet. The catalytic prior regularizes the tree value functions, the randomized cluster bootstrap respects game-level autocorrelation, and coach decisions are evaluated only on low-uncertainty plays. The humility correction does not erase the conservatism finding: on obvious plays coaches are right 91 percent of the time when they should kick but only 55 percent when they should go for it. The outputs are statistical win probabilities from play-by-play data, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The dataset is 511,264 non-special-teams plays from 2006 to 2021, truncated to 346,400, clustered into 47,874 epochs and split by epoch to avoid data bleed; the bootstrap uses B equals 26 with half the games resampled, and intervals are widened to the unit interval at the extremes. The authors are honest that the bootstrap captures sampling uncertainty, the variance, but not model uncertainty, the bias, because real win probability likely depends on unobserved confounders such as how well a quarterback slept, and that the conversion, field-goal, and punt models carry their own model uncertainty. Future work may explore probabilistic state-space models whose effective sample size is the number of plays, but whose complex next-state distribution and rule encoding mean they are not automatically lower-variance. The invariant for GSE is to carry the bootstrap-agreement gate, the catalytic shrinkage, and the humility to defer to the coach when the data cannot decide.",
+      "retrocausal_genealogy": "The paper originates in the fourth-down decision problem and four statistical flaws of public EP/WP models: selection bias (no team-quality adjustment), overfitting (flexible trees), ignored autocorrelation, and ignored uncertainty. The lineage runs Carter-Machol 1971, Carroll 1989, Romer 2006 (EP), Burke 2009, Yurko 2018 / Baldwin 2021 (WP, XGBoost), all finding coaches too conservative. Value functions are model-defined, not observable. The thesis is humility: far fewer decisions are obvious than analysts claim. The Justin Tucker thought experiment exposes the average-vs-random-team distinction, and the catalytic prior (Huang, linear) is extended to ML to shrink overfit trees.",
+      "theory_of_mind": "The model reasons about its own uncertainty. WP is the right objective (win, not points; EP is only its first moment), and the down-six-late field-goal example shows EP can be suboptimal. Every game has one winner, so plays share a win/loss draw, the response is autocorrelated, and effective sample size lies between 511,264 plays and 4,101 games. A random-walk football simulator with true WP known by dynamic programming validates that XGBoost is unbiased (MAE<2%) but needs ~8%-wide intervals for 90% coverage. The model knows how much the data trusts its own estimate.",
+      "cross_layer_veto": "Bootstrap voting is the veto. Standard bootstrap under-covers (73%), cluster 85%, randomized cluster (resample G/2 games then plays within) 90%. With B=26 catalytic XGBoost models, bootstrap percentage = fraction naming a decision optimal, quantifying uncertainty of the decision itself (Friedman 1999), not the correlated per-option WP. A point estimate is not a recommendation: AFC Championship Go +1.5% but CI [-3.7,4.5] and half the bootstraps prefer Go -> defer to coach; Commanders Punt +0.5% but CI [0,4.8] and near-unanimous -> recommend; Raiders Go 100% agreement, CI [0.30,5.23] -> strong Go. Obvious = BootPct>85% (vs WP-gain>0.015); ~24% of previously obvious become nebulous (32% Go, 19% kicks)."
+    }
+  ],
+  "universal_lens": "Fourth-down decisions are made by maximizing a team-quality-adjusted, catalytic-prior-smoothed win-probability model, with autocorrelation-aware randomized cluster bootstrap voting quantifying uncertainty of the decision itself; when bootstrap agreement is low the decision is nebulous and deferred to the coach, so far fewer decisions are obvious than point estimates claim.",
+  "gsi_mapping": "GSI treats EP/WP as model-defined value functions: adjust for team quality and score differential (selection bias), shrink XGBoost toward a multinomial-logistic catalytic prior (overfitting), and use a randomized cluster bootstrap (G/2 games + within-game plays, B=26) for autocorrelation; bootstrap percentage gates the decision, ECE-style coverage validated on random-walk football with known true WP.",
+  "gse_mapping": "GSE lifts the bootstrap-agreement gate as its conjunction/PASS discipline (a zero-straddling WP-gain CI is a PASS, a badge of honor), the catalytic shrinkage for tree value functions, and the humility to defer to the coach on nebulous game-states; the conservatism finding (91% kick-right vs 55% go-right on obvious plays) survives, with all outputs statistical win probabilities, never sportsbook lines."
+}
