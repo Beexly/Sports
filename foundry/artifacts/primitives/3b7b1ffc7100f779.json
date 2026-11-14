@@ -1,0 +1,467 @@
+{
+ "book_id": "3b7b1ffc7100f779",
+ "title": "Bubeck 2015 — Convex Optimization: Algorithms and Complexity",
+ "source_status": "READABLE",
+ "source_note": "Sebastien Bubeck, Convex Optimization: Algorithms and Complexity, Foundations and Trends in Machine Learning Vol 8 No 3-4 (2015) 231-358, DOI 10.1561/2200000050. 130 PDF pages, 189K chars extracted via pymupdf. Core read: convexity/black-box ch1, projected subgradient descent ch3.1, smooth GD ch3.2, strong convexity ch3.4, lower bounds ch3.5, Nesterov acceleration ch3.7, mirror descent/Bregman ch4, SGD ch6. Printed-page provenance (PDF index != printed page). Not retracted; title matches content. Zero sportsbook odds.",
+ "pages_total": 130,
+ "pages_read": 8,
+ "primitives": [
+  {
+   "primitive_id": "convex_subgradient_lower_bound",
+   "name": "Convexity: a subgradient gives a global linear lower bound",
+   "verbatim_quote": "gives a global information in the form of a linear lower bound on",
+   "page": 236,
+   "latex": "f(y)\\ge f(x)+g^\\top(y-x),\\quad g\\in\\partial f(x)",
+   "symbol_and_unit_ledger": {
+    "g": "subgradient [dual units]",
+    "f": "convex objective [loss units]",
+    "partial f(x)": "subdifferential set"
+   },
+   "assumptions": [
+    "f convex",
+    "A local subgradient certifies a global under-estimator"
+   ],
+   "breakdown_regime": "Non-convex objectives lose the global lower-bound property; local gradients no longer bound the function globally.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE calibration loss is treated as convex in its probability argument: a subgradient at the current prediction gives a global linear lower bound on the loss, which is what makes the online subgradient update (prediction minus reality) a certifiable descent direction rather than a heuristic.",
+    "source_operator": "convex_subgradient_lower_bound",
+    "telemetry": "GSE telemetry: subgradient lower-bound validity; verify the calibration loss is convex in the probability simplex."
+   }
+  },
+  {
+   "primitive_id": "projected_subgradient_descent",
+   "name": "Projected subgradient descent: step then project back to the set",
+   "verbatim_quote": "we make sure that the updated point lies in X by projecting back (if necessary) onto it.",
+   "page": 264,
+   "latex": "y_{t+1}=x_t-\\eta g_t,\\ g_t\\in\\partial f(x_t);\\quad x_{t+1}=\\Pi_X(y_{t+1})",
+   "symbol_and_unit_ledger": {
+    "eta": "step size [units]",
+    "Pi_X": "Euclidean projection onto X",
+    "g_t": "subgradient [dual units]"
+   },
+   "assumptions": [
+    "X compact convex",
+    "Subgradients bounded by L",
+    "Projection keeps iterates feasible"
+   ],
+   "breakdown_regime": "The projection step is itself a convex problem and can be the computational bottleneck.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE online update is projected subgradient descent on the probability simplex: take a step against the calibration surprise, then project back so the probabilities stay valid (non-negative, sum to one). The projection is the feasibility gate that keeps every published probability a proper distribution.",
+    "source_operator": "projected_subgradient_descent",
+    "telemetry": "GSE telemetry: projection feasibility (sum-to-one, non-negative); verify every update stays on the simplex."
+   }
+  },
+  {
+   "primitive_id": "dimension_free_complexity",
+   "name": "Lipschitz oracle complexity is Theta(1/eps^2), independent of dimension",
+   "verbatim_quote": "To put it differently with gradient descent one could hope to reach a reasonable accuracy in very high dimension",
+   "page": 265,
+   "latex": "f\\!\\left(\\frac{1}{t}\\sum_{s=1}^t x_s\\right)-f(x^*)\\le\\frac{RL}{\\sqrt t},\\quad \\#\\text{oracle calls}=\\Theta(1/\\varepsilon^2)",
+   "symbol_and_unit_ledger": {
+    "R": "domain radius [length]",
+    "L": "Lipschitz constant [loss/length]",
+    "t": "iterations [count]",
+    "eps": "target accuracy [loss units]"
+   },
+   "assumptions": [
+    "f convex L-Lipschitz",
+    "The rate is unimprovable from a black-box perspective (Section 3.5)"
+   ],
+   "breakdown_regime": "R and L may themselves depend on dimension; the dimension-free claim is about the iteration count, not the constants.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the GSE ensemble/training scaling law: to reach accuracy epsilon on a convex calibration objective needs Theta(1/epsilon^2) gradient samples, independent of the huge football state dimension. It is the optimization counterpart of the Monte Carlo 1/sqrt(N_s) law and the online regret bound, and it sets the sample budget for calibration.",
+    "source_operator": "dimension_free_complexity",
+    "telemetry": "GSE telemetry: calibration accuracy vs gradient-sample count; verify the 1/eps^2 budget, dimension-independent."
+   }
+  },
+  {
+   "primitive_id": "smoothness_definition",
+   "name": "Beta-smoothness: the gradient is Beta-Lipschitz",
+   "verbatim_quote": "We say that a continuously differentiable function f is β-smooth if the gradient",
+   "page": 266,
+   "latex": "\\|\\nabla f(x)-\\nabla f(y)\\|\\le\\beta\\|x-y\\|",
+   "symbol_and_unit_ledger": {
+    "beta": "smoothness constant [loss/length^2]",
+    "nabla f": "gradient [dual units]"
+   },
+   "assumptions": [
+    "f continuously differentiable",
+    "Equivalent to Hessian eigenvalues <= beta when twice differentiable"
+   ],
+   "breakdown_regime": "Non-smooth objectives (e.g. L1 penalties) violate this and need subgradient or proximal methods.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE loss smoothness constant beta controls how aggressive a training step can be: a smooth calibration loss lets the engine take large stable steps (eta=1/beta), while a non-smooth penalty forces small careful steps. Smoothness is the regularity that makes fast convergence possible.",
+    "source_operator": "smoothness_definition",
+    "telemetry": "GSE telemetry: gradient-Lipschitz constant beta; verify the training step size respects 1/beta."
+   }
+  },
+  {
+   "primitive_id": "smooth_gd_rate",
+   "name": "Smooth gradient descent converges as O(1/t)",
+   "verbatim_quote": "attains a much faster rate in this situation than in the non-smooth case of the previous section.",
+   "page": 267,
+   "latex": "f(x_t)-f(x^*)\\le\\frac{2\\beta\\|x_1-x^*\\|^2}{t-1},\\quad \\eta=1/\\beta",
+   "symbol_and_unit_ledger": {
+    "beta": "smoothness constant",
+    "t": "iterations [count]",
+    "eta": "step size = 1/beta"
+   },
+   "assumptions": [
+    "f convex and beta-smooth",
+    "Constant step size eta=1/beta"
+   ],
+   "breakdown_regime": "Without smoothness the rate degrades to O(1/sqrt(t)); smoothness buys the faster O(1/t).",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine exploits smoothness of the calibration loss to converge as O(1/t) rather than O(1/sqrt(t)): each training epoch buys quadratically more accuracy than the non-smooth case. This is the formal reason the engine prefers smooth losses (cross-entropy) over non-smooth ones for the probability head.",
+    "source_operator": "smooth_gd_rate",
+    "telemetry": "GSE telemetry: convergence rate O(1/t) vs O(1/sqrt(t)); verify the loss smoothness is exploited."
+   }
+  },
+  {
+   "primitive_id": "gradient_auto_tuning",
+   "name": "Smooth gradients auto-tune the step size near the optimum",
+   "verbatim_quote": "as one approaches the optimum the size of the gradients themselves will go to 0, resulting in a sort of “auto-tuning” of the step sizes",
+   "page": 266,
+   "latex": "f(x-\\tfrac{1}{\\beta}\\nabla f(x))-f(x)\\le-\\frac{1}{2\\beta}\\|\\nabla f(x)\\|^2",
+   "symbol_and_unit_ledger": {
+    "nabla f(x)": "gradient magnitude [dual units]",
+    "beta": "smoothness constant"
+   },
+   "assumptions": [
+    "Smoothness makes gradients vanish at the optimum",
+    "Descent lemma guarantees per-step improvement"
+   ],
+   "breakdown_regime": "For non-smooth convex functions the gradients do not vanish, so no auto-tuning occurs and steps stay small.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE training auto-tunes near convergence: as the calibration loss smooths out, the gradients shrink and the effective step size shrinks with them, giving stable fine-tuning without manual scheduling. This is the optimization root of the dynamic learning-rate decay in the DL layer.",
+    "source_operator": "gradient_auto_tuning",
+    "telemetry": "GSE telemetry: gradient norm decay near convergence; verify auto-tuning stabilizes late training."
+   }
+  },
+  {
+   "primitive_id": "strong_convexity_curvature",
+   "name": "Strong convexity: alpha measures curvature",
+   "verbatim_quote": "The strong convexity parameter α is a measure of the curvature of f.",
+   "page": 276,
+   "latex": "f(x)-f(y)\\le\\nabla f(x)^\\top(x-y)-\\frac{\\alpha}{2}\\|x-y\\|^2",
+   "symbol_and_unit_ledger": {
+    "alpha": "strong-convexity parameter [loss/length^2]",
+    "alpha=0": "no curvature (linear)"
+   },
+   "assumptions": [
+    "Improved subgradient inequality with a quadratic term",
+    "Hessian eigenvalues >= alpha when twice differentiable"
+   ],
+   "breakdown_regime": "A linear objective has alpha=0; strong convexity fails and the fast rates disappear.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE calibration loss gains strong convexity from regularization (the KL-to-prior / weight-decay term): alpha measures how curved the loss is, and a larger alpha means faster convergence. This is the formal link between the ontology-prior regularizer and the optimization speed.",
+    "source_operator": "strong_convexity_curvature",
+    "telemetry": "GSE telemetry: strong-convexity alpha from the regularizer; verify larger alpha yields faster calibration convergence."
+   }
+  },
+  {
+   "primitive_id": "strong_convexity_dual_smoothness",
+   "name": "Strong convexity is dual to smoothness (Fenchel)",
+   "verbatim_quote": "strong convexity is a dual assumption to smoothness",
+   "page": 277,
+   "latex": "q^-_x(y)=f(x)+\\nabla f(x)^\\top(y-x)+\\frac{\\alpha}{2}\\|x-y\\|^2\\le f(y);\\quad \\beta\\ge\\alpha",
+   "symbol_and_unit_ledger": {
+    "q^-_x": "quadratic lower bound (strong convexity)",
+    "q^+_y": "quadratic upper bound (smoothness)"
+   },
+   "assumptions": [
+    "Strong convexity gives a quadratic lower bound; smoothness a quadratic upper bound",
+    "beta >= alpha always"
+   ],
+   "breakdown_regime": "The duality is precise via Fenchel duality; the bounds sandwich the function between two quadratics.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE loss is sandwiched between a quadratic lower bound (strong convexity from the prior) and a quadratic upper bound (smoothness): the ontology provides the curvature floor and the loss provides the smoothness ceiling. This sandwich is what makes the calibration problem well-conditioned and provably convergent.",
+    "source_operator": "strong_convexity_dual_smoothness",
+    "telemetry": "GSE telemetry: quadratic lower/upper bound sandwich; verify beta >= alpha and the loss is well-conditioned."
+   }
+  },
+  {
+   "primitive_id": "strongly_convex_big_steps",
+   "name": "Strong convexity: far from optimum, big gradient, big steps",
+   "verbatim_quote": "a point far from the optimum will have a large gradient, and thus gradient descent will make very big steps when far from the optimum.",
+   "page": 276,
+   "latex": "\\text{oracle complexity }O(1/\\varepsilon^2)\\to O(1/(\\alpha\\varepsilon))\\ \\text{(strongly convex, Lipschitz)}",
+   "symbol_and_unit_ledger": {
+    "alpha": "strong-convexity parameter",
+    "eps": "target accuracy [loss units]"
+   },
+   "assumptions": [
+    "Strong convexity improves the rate even without smoothness",
+    "Step sizes still tuned small if non-smooth"
+   ],
+   "breakdown_regime": "The improvement is from O(1/eps^2) to O(1/(alpha*eps)); smoothness adds the exponential rate.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine converges faster when far from a calibrated prediction: strong convexity makes the gradient large far from the optimum, so early training takes big corrective steps. This is the formal reason calibration converges quickly from a bad initial prior and slows as it approaches the truth.",
+    "source_operator": "strongly_convex_big_steps",
+    "telemetry": "GSE telemetry: gradient magnitude vs distance from optimum; verify big early steps under strong convexity."
+   }
+  },
+  {
+   "primitive_id": "strongly_convex_smooth_high_accuracy",
+   "name": "Strongly convex + smooth: large dimension AND high accuracy",
+   "verbatim_quote": "strongly-convex and smooth functions can be optimized in very large dimension and up to very high accuracy.",
+   "page": 276,
+   "latex": "\\text{oracle complexity }O\\!\\left(\\frac{\\beta}{\\alpha}\\log\\frac{1}{\\varepsilon}\\right)",
+   "symbol_and_unit_ledger": {
+    "beta/alpha": "condition number kappa [dimensionless]",
+    "log(1/eps)": "linear convergence [nats]"
+   },
+   "assumptions": [
+    "Both strong convexity and smoothness",
+    "Constant step size achieves a linear (exponential) rate"
+   ],
+   "breakdown_regime": "This achieves the best of both worlds: dimension-independent and log(1/eps) scaling.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the GSE calibration ideal: with a strongly-convex smooth loss the engine reaches high accuracy in the huge football dimension with only logarithmic iterations. It is the formal guarantee that the ontology-regularized calibration problem is tractable at scale, combining the dimension-free and fast-rate advantages.",
+    "source_operator": "strongly_convex_smooth_high_accuracy",
+    "telemetry": "GSE telemetry: condition number kappa and log(1/eps) iteration count; verify high-accuracy calibration at scale."
+   }
+  },
+  {
+   "primitive_id": "linear_convergence_condition_number",
+   "name": "Linear convergence governed by the condition number kappa=beta/alpha",
+   "verbatim_quote": "having both strong convexity and smoothness allows for a drastic improvement in the convergence rate.",
+   "page": 278,
+   "latex": "\\|x_{t+1}-x^*\\|^2\\le\\exp(-t/\\kappa)\\|x_1-x^*\\|^2,\\quad \\kappa=\\beta/\\alpha",
+   "symbol_and_unit_ledger": {
+    "kappa": "condition number beta/alpha [dimensionless]",
+    "exp(-t/kappa)": "exponential contraction"
+   },
+   "assumptions": [
+    "Projected gradient descent eta=1/beta",
+    "kappa measures how ill-conditioned the problem is"
+   ],
+   "breakdown_regime": "Large kappa (ill-conditioned) slows convergence; acceleration improves kappa to sqrt(kappa).",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE calibration convergence rate is governed by the condition number kappa=beta/alpha: a well-conditioned loss (small kappa) converges exponentially fast, an ill-conditioned one crawls. This is why the engine preconditiones and regularizes the loss, and why Nesterov acceleration (sqrt(kappa)) matters for stiff calibration problems.",
+    "source_operator": "linear_convergence_condition_number",
+    "telemetry": "GSE telemetry: condition number kappa; verify preconditioning/acceleration reduces kappa for stiff losses."
+   }
+  },
+  {
+   "primitive_id": "oracle_complexity_lower_bounds",
+   "name": "Nemirovski-Yudin lower bounds: the rates are unimprovable",
+   "verbatim_quote": "We prove here various oracle complexity lower bounds.",
+   "page": 279,
+   "latex": "\\min_{s\\le t}f(x_s)-f(x^*)\\ge\\frac{RL}{2(1+\\sqrt t)}\\ \\text{(Lipschitz)};\\quad \\ge\\frac{3\\beta\\|x_1-x^*\\|^2}{32(t+1)^2}\\ \\text{(smooth)}",
+   "symbol_and_unit_ledger": {
+    "RL/sqrt(t)": "Lipschitz lower bound [loss units]",
+    "beta R^2/t^2": "smooth lower bound [loss units]"
+   },
+   "assumptions": [
+    "Black-box procedure, t <= n",
+    "Lower bounds match the upper bounds -> algorithms are optimal"
+   ],
+   "breakdown_regime": "For t > n exponential rates are possible (Chapter 2); the polynomial lower bounds need t <= n.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the no-free-lunch of optimization for the GSE engine: no black-box algorithm can beat RL/sqrt(t) on Lipschitz objectives or beta*R^2/t^2 on smooth ones. The engine's SGD and acceleration are optimal, not merely convenient, and no clever heuristic can surpass these fundamental limits.",
+    "source_operator": "oracle_complexity_lower_bounds",
+    "telemetry": "GSE telemetry: achieved rate vs the lower bound; verify the engine matches the optimal oracle complexity."
+   }
+  },
+  {
+   "primitive_id": "nesterov_acceleration_optimal",
+   "name": "Nesterov acceleration attains the optimal smooth oracle complexity",
+   "verbatim_quote": "We describe here the original Nesterov’s method which attains the optimal oracle complexity for smooth convex optimization.",
+   "page": 289,
+   "latex": "f(y_t)-f(x^*)\\le\\frac{2\\beta\\|x_1-x^*\\|^2}{t^2}\\ \\text{(convex smooth)}",
+   "symbol_and_unit_ledger": {
+    "t^2": "accelerated rate [count^2]",
+    "beta": "smoothness constant"
+   },
+   "assumptions": [
+    "Momentum-style extrapolation of iterates",
+    "Matches the smooth lower bound -> optimal"
+   ],
+   "breakdown_regime": "Acceleration needs smoothness; on non-smooth objectives it does not improve the RL/sqrt(t) rate.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's momentum is Nesterov acceleration: by extrapolating iterates it converges as O(1/t^2) instead of O(1/t), matching the fundamental lower bound. This is the formal justification for momentum in the DL training layer, and it is provably optimal, not a heuristic speedup.",
+    "source_operator": "nesterov_acceleration_optimal",
+    "telemetry": "GSE telemetry: accelerated O(1/t^2) vs plain O(1/t); verify momentum matches the optimal smooth rate."
+   }
+  },
+  {
+   "primitive_id": "accelerated_strongly_convex",
+   "name": "Accelerated strongly-convex rate: exp(-t/sqrt(kappa))",
+   "verbatim_quote": "Nesterov’s accelerated gradient descent, illustrated in Figure 3.6, can be described as follows",
+   "page": 290,
+   "latex": "f(y_t)-f(x^*)\\le\\frac{\\alpha+\\beta}{2}\\|x_1-x^*\\|^2\\exp\\!\\left(-\\frac{t-1}{\\sqrt\\kappa}\\right)",
+   "symbol_and_unit_ledger": {
+    "sqrt(kappa)": "accelerated condition dependence [dimensionless]",
+    "exp(-t/sqrt(kappa))": "accelerated contraction"
+   },
+   "assumptions": [
+    "Strongly convex and smooth",
+    "Improves kappa to sqrt(kappa) in the exponent"
+   ],
+   "breakdown_regime": "The sqrt(kappa) improvement is the optimal dependence for first-order methods on this class.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine's accelerated calibration converges as exp(-t/sqrt(kappa)) rather than exp(-t/kappa): a quadratic improvement in the condition-number dependence. For stiff, ill-conditioned calibration problems this is the difference between tractable and impractical, and it is the optimal first-order rate.",
+    "source_operator": "accelerated_strongly_convex",
+    "telemetry": "GSE telemetry: sqrt(kappa) accelerated contraction; verify the quadratic condition-number improvement."
+   }
+  },
+  {
+   "primitive_id": "mirror_descent_primal_dual",
+   "name": "Mirror descent: gradient step in the dual via a mirror map",
+   "verbatim_quote": "The great insight of Nemirovski and Yudin is that one can still do a gradient descent by first mapping the point",
+   "page": 297,
+   "latex": "\\nabla\\Phi(y_{t+1})=\\nabla\\Phi(x_t)-\\eta g_t;\\quad x_{t+1}=\\Pi^\\Phi_X(y_{t+1})",
+   "symbol_and_unit_ledger": {
+    "Phi": "mirror map (strictly convex)",
+    "nabla Phi": "primal-to-dual map",
+    "Pi^Phi_X": "Bregman projection"
+   },
+   "assumptions": [
+    "Optimization in a non-Euclidean (Banach) space",
+    "Gradient lives in the dual; map to dual, step, map back, project"
+   ],
+   "breakdown_regime": "In a Hilbert space the mirror map is the identity (Riesz); mirror descent reduces to projected gradient.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE probability simplex is non-Euclidean, so the engine uses mirror descent: map the probability to the dual via the mirror map (the log for the entropic map), take the calibration-surprise step in the dual, map back, and project via Bregman divergence. This is the geometric foundation of the exponentiated-gradient / online mirror descent update.",
+    "source_operator": "mirror_descent_primal_dual",
+    "telemetry": "GSE telemetry: mirror-map primal/dual round-trip; verify the simplex update uses the correct non-Euclidean geometry."
+   }
+  },
+  {
+   "primitive_id": "bregman_divergence",
+   "name": "Bregman divergence: the mirror map's generalized distance",
+   "verbatim_quote": "We also define the Bregman divergence associated to f as",
+   "page": 297,
+   "latex": "D_f(x,y)=f(x)-f(y)-\\nabla f(y)^\\top(x-y)",
+   "symbol_and_unit_ledger": {
+    "D_f": "Bregman divergence [loss units, >=0 for convex f]",
+    "f": "strictly convex generator"
+   },
+   "assumptions": [
+    "D_f >= 0 for convex f, zero iff x=y (strictly convex)",
+    "Asymmetric; not a metric"
+   ],
+   "breakdown_regime": "For f=½||x||^2 the Bregman divergence is the squared Euclidean distance; for the negative entropy it is the KL divergence.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE calibration surprise is a Bregman divergence: with the negative-entropy mirror map it is exactly the KL divergence between the predicted and realized distributions. This unifies the mirror-descent geometry with Murphy's KL and the cross-entropy loss, all one Bregman divergence under different generators.",
+    "source_operator": "bregman_divergence",
+    "telemetry": "GSE telemetry: Bregman divergence under the entropic generator = KL; verify the calibration surprise is the KL Bregman divergence."
+   }
+  },
+  {
+   "primitive_id": "mirror_projection_bregman",
+   "name": "Mirror descent projects via the Bregman divergence",
+   "verbatim_quote": "In mirror descent this projection is done via the Bregman divergence associated to Φ.",
+   "page": 298,
+   "latex": "\\Pi^\\Phi_X(y)=\\arg\\min_{x\\in X\\cap D}D_\\Phi(x,y)",
+   "symbol_and_unit_ledger": {
+    "Pi^Phi_X": "Bregman projection",
+    "D_Phi": "Bregman divergence of the mirror map"
+   },
+   "assumptions": [
+    "Mirror map strictly convex, gradient diverges on boundary",
+    "Projection exists and is unique"
+   ],
+   "breakdown_regime": "The Bregman projection behaves like the Euclidean projection (Lemma 4.1) but in the mirror map's geometry.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE feasibility gate is a Bregman projection: after the dual-space calibration step, the engine projects back onto the probability simplex using the Bregman divergence of the entropic mirror map, which keeps probabilities valid while respecting the simplex geometry. This is the multiplicative-weights / exponentiated-gradient projection.",
+    "source_operator": "mirror_projection_bregman",
+    "telemetry": "GSE telemetry: Bregman projection onto the simplex; verify feasibility preserves the entropic geometry."
+   }
+  },
+  {
+   "primitive_id": "mirror_descent_rate",
+   "name": "Mirror descent rate adapts to the geometry (ell_1: sqrt(log n / t))",
+   "verbatim_quote": "This is only one example of the potential of mirror descent.",
+   "page": 296,
+   "latex": "f\\!\\left(\\frac{1}{t}\\sum_s x_s\\right)-f(x^*)\\le RL\\sqrt{\\frac{2}{\\rho t}};\\quad \\ell_1\\text{-ball: }\\sqrt{\\log(n)/t}\\ \\text{vs}\\ \\sqrt{n/t}",
+   "symbol_and_unit_ledger": {
+    "rho": "mirror-map strong-convexity constant",
+    "log(n)": "dimension dependence under ell_1 geometry"
+   },
+   "assumptions": [
+    "Mirror map rho-strongly convex w.r.t. the norm",
+    "The rate depends on the geometry, not just the dimension"
+   ],
+   "breakdown_regime": "Choosing the wrong mirror map (Euclidean on the simplex) gives the worse sqrt(n/t) rate.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine gains a logarithmic dimension dependence by using the entropic mirror map on the simplex (sqrt(log n / t)) instead of the Euclidean sqrt(n/t): the right geometry turns a polynomial dimension penalty into a logarithmic one. This is the formal reason the calibrated probability update uses multiplicative weights, not additive Euclidean steps.",
+    "source_operator": "mirror_descent_rate",
+    "telemetry": "GSE telemetry: sqrt(log n / t) vs sqrt(n/t) rate; verify the entropic geometry gives the logarithmic dimension dependence."
+   }
+  },
+  {
+   "primitive_id": "sgd_unbiasedness_not_enough",
+   "name": "SGD: unbiasedness alone is not enough for rates",
+   "verbatim_quote": "The unbiasedness assumption by itself is not enough to obtain rates",
+   "page": 320,
+   "latex": "\\mathbb{E}[\\tilde g(x)]=\\nabla f(x),\\quad \\mathbb{E}\\|\\tilde g(x)\\|^2\\le B^2\\ \\text{(bounded variance needed)}",
+   "symbol_and_unit_ledger": {
+    "tilde g": "stochastic gradient [dual units]",
+    "B^2": "second-moment bound [dual units^2]"
+   },
+   "assumptions": [
+    "Unbiased stochastic oracle plus bounded variance",
+    "Rates need the variance bound, not just unbiasedness"
+   ],
+   "breakdown_regime": "Unbounded variance breaks the convergence rate even with an unbiased gradient.",
+   "domain": "cs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE stochastic calibration (per-snap gradients) needs both unbiasedness AND bounded variance: an unbiased but high-variance snap gradient does not converge at the BL/sqrt(t) rate. This is the formal reason the engine uses mini-batches and variance reduction (SVRG) rather than trusting a single noisy snap gradient.",
+    "source_operator": "sgd_unbiasedness_not_enough",
+    "telemetry": "GSE telemetry: stochastic-gradient variance bound; verify mini-batch/variance-reduction keeps the second moment bounded."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "3b7b1ffc7100f779-t1",
+   "think": "Retrocausal Genealogy. Bubeck's Convex Optimization: Algorithms and Complexity is the layer that gives the Foundry its convergence-rate laws and its optimality certificates, and its lineage runs backward from the GSE calibration update to the black-box oracle model. The root is convexity itself: a subgradient gives a global linear lower bound (Section 1.3), which is what makes a local update a certifiable descent direction. From this root grows projected subgradient descent (Eq. 3.2-3.3) with the dimension-free rate RL/sqrt(t) (Theorem 3.2), whose Theta(1/eps^2) oracle complexity is independent of the ambient dimension. Smoothness (the gradient is beta-Lipschitz, Eq. 3.4) buys the faster O(1/t) rate (Theorem 3.3) and an auto-tuning of step sizes as gradients vanish near the optimum. Strong convexity (Eq. 3.13), the dual assumption to smoothness via Fenchel duality, measures curvature and improves the rate to O(1/(alpha*eps)) (Theorem 3.9) and, with smoothness, to the exponential exp(-t/kappa) governed by the condition number kappa=beta/alpha (Theorem 3.10). The Nemirovski-Yudin lower bounds (Theorems 3.13-3.14) prove these rates unimprovable, and Nesterov's accelerated gradient descent (Theorems 3.18-3.19) attains the optimal O(1/t^2) and exp(-t/sqrt(kappa)) rates. Mirror descent (Chapter 4) generalizes the geometry: map primal to dual via a mirror map, step in the dual, project via the Bregman divergence (Eq. 4.1-4.3), achieving sqrt(log n / t) on the ell_1-ball instead of sqrt(n/t). Finally stochastic optimization (Chapter 6) shows unbiasedness alone is not enough; bounded variance is needed for the SGD rates. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the calibration update is projected/mirror descent, the training rate is the smooth/strongly-convex law, momentum is Nesterov acceleration, the simplex geometry is the entropic mirror map, and the sample budget is the dimension-free oracle complexity.\n\nRecursive Theory of Mind. The engine reasons about its own optimization geometry and about the defense's decision geometry in a recursive stack that Bubeck makes precise. At the base the engine knows the curvature of its own loss: it estimates the smoothness beta and strong-convexity alpha, computes the condition number kappa, and reasons about whether its calibration problem is well-conditioned or stiff, choosing acceleration when kappa is large. One level up, the engine reasons about its own geometry choice: it knows the probability simplex is non-Euclidean, so it selects the entropic mirror map to get the logarithmic dimension dependence, a recursive awareness that the wrong geometry would cost a polynomial penalty. The engine also models the defense as an optimizer with its own objective and geometry: the coverage call is the defense's gradient step against the offense's intent, and the engine reasons about the defense's condition number and step size to anticipate how quickly the defense adapts. The lower bounds add recursive humility: the engine knows no black-box method can beat RL/sqrt(t), so it reasons about the fundamental limit of its own calibration speed and does not promise convergence faster than the oracle complexity allows.\n\nCross-Layer Veto Adjudication. Bubeck's optimization layer supplies the vetoes that bind the stack. First, the feasibility veto: every update must project back onto the probability simplex (Eq. 3.3, 4.3), so the engine vetoes any update that leaves the probabilities invalid; the Bregman projection is the gate. Second, the step-size veto: a smooth loss permits eta=1/beta but a non-smooth one forces small steps, so the engine vetoes an aggressive step that violates the smoothness condition (the descent lemma 3.5). Third, the variance veto: unbiasedness alone is not enough for SGD rates (Chapter 6), so the engine vetoes a single noisy snap gradient and requires bounded variance via mini-batches or SVRG. Fourth, the geometry veto: using the Euclidean mirror map on the simplex gives the worse sqrt(n/t) rate, so the engine vetoes the wrong geometry and requires the entropic mirror map for the logarithmic dependence. Fifth, the optimality veto: the Nemirovski-Yudin lower bounds cap the achievable rate, so the engine vetoes any claim of convergence faster than RL/sqrt(t) or beta*R^2/t^2; no heuristic beats the oracle complexity. The adjudication order is fixed: feasibility first, then step-size stability, then variance control, then correct geometry, then respect the optimality floor. A candidate failing any veto is PASSed, and the whole procedure is bound to the fundamental limits of convex optimization rather than to wishful convergence claims.\n\nThe load-bearing isomorphism is that GSE training and calibration IS convex optimization. The calibration update is projected subgradient descent on the simplex (or mirror descent in the entropic geometry); the convergence rate is the smooth O(1/t) or strongly-convex exp(-t/kappa) law; momentum is Nesterov acceleration attaining the optimal O(1/t^2); the simplex geometry is the entropic mirror map whose Bregman divergence is exactly the KL calibration surprise; and the sample budget is the dimension-free Theta(1/eps^2) oracle complexity. Bubeck unifies with the other layers: the 1/sqrt(t) rate is the online regret bound and the Monte Carlo 1/sqrt(N_s) error, the Bregman/KL divergence is Murphy's calibration surprise and the DL cross-entropy, the strong-convexity alpha is the ELBO's KL-to-prior regularizer and the ridge penalty, and the lower bounds are the optimization no-free-lunch matching the PAC and Cover impossibility results. Bubeck does not sit beside the stack; it is the convergence-rate and optimality layer that certifies the engine's training is as fast as fundamentally possible, and it is what lets the Foundry treat its convergence rates and its sample budget as theorems rather than hopes.",
+   "retrocausal_genealogy": "Retrocausal Genealogy. Bubeck's Convex Optimization: Algorithms and Complexity is the layer that gives the Foundry its convergence-rate laws and its optimality certificates, and its lineage runs backward from the GSE calibration update to the black-box oracle model. The root is convexity itself: a subgradient gives a global linear lower bound (Section 1.3), which is what makes a local update a certifiable descent direction. From this root grows projected subgradient descent (Eq. 3.2-3.3) with the dimension-free rate RL/sqrt(t) (Theorem 3.2), whose Theta(1/eps^2) oracle complexity is independent of the ambient dimension. Smoothness (the gradient is beta-Lipschitz, Eq. 3.4) buys the faster O(1/t) rate (Theorem 3.3) and an auto-tuning of step sizes as gradients vanish near the optimum. Strong convexity (Eq. 3.13), the dual assumption to smoothness via Fenchel duality, measures curvature and improves the rate to O(1/(alpha*eps)) (Theorem 3.9) and, with smoothness, to the exponential exp(-t/kappa) governed by the condition number kappa=beta/alpha (Theorem 3.10). The Nemirovski-Yudin lower bounds (Theorems 3.13-3.14) prove these rates unimprovable, and Nesterov's accelerated gradient descent (Theorems 3.18-3.19) attains the optimal O(1/t^2) and exp(-t/sqrt(kappa)) rates. Mirror descent (Chapter 4) generalizes the geometry: map primal to dual via a mirror map, step in the dual, project via the Bregman divergence (Eq. 4.1-4.3), achieving sqrt(log n / t) on the ell_1-ball instead of sqrt(n/t). Finally stochastic optimization (Chapter 6) shows unbiasedness alone is not enough; bounded variance is needed for the SGD rates. This genealogy is retrocausal because the GSE engine's design pulls these results into being: the calibration update is projected/mirror descent, the training rate is the smooth/strongly-convex law, momentum is Nesterov acceleration, the simplex geometry is the entropic mirror map, and the sample budget is the dimension-free oracle complexity.",
+   "theory_of_mind": "Recursive Theory of Mind. The engine reasons about its own optimization geometry and about the defense's decision geometry in a recursive stack that Bubeck makes precise. At the base the engine knows the curvature of its own loss: it estimates the smoothness beta and strong-convexity alpha, computes the condition number kappa, and reasons about whether its calibration problem is well-conditioned or stiff, choosing acceleration when kappa is large. One level up, the engine reasons about its own geometry choice: it knows the probability simplex is non-Euclidean, so it selects the entropic mirror map to get the logarithmic dimension dependence, a recursive awareness that the wrong geometry would cost a polynomial penalty. The engine also models the defense as an optimizer with its own objective and geometry: the coverage call is the defense's gradient step against the offense's intent, and the engine reasons about the defense's condition number and step size to anticipate how quickly the defense adapts. The lower bounds add recursive humility: the engine knows no black-box method can beat RL/sqrt(t), so it reasons about the fundamental limit of its own calibration speed and does not promise convergence faster than the oracle complexity allows.",
+   "cross_layer_veto": "Cross-Layer Veto Adjudication. Bubeck's optimization layer supplies the vetoes that bind the stack. First, the feasibility veto: every update must project back onto the probability simplex (Eq. 3.3, 4.3), so the engine vetoes any update that leaves the probabilities invalid; the Bregman projection is the gate. Second, the step-size veto: a smooth loss permits eta=1/beta but a non-smooth one forces small steps, so the engine vetoes an aggressive step that violates the smoothness condition (the descent lemma 3.5). Third, the variance veto: unbiasedness alone is not enough for SGD rates (Chapter 6), so the engine vetoes a single noisy snap gradient and requires bounded variance via mini-batches or SVRG. Fourth, the geometry veto: using the Euclidean mirror map on the simplex gives the worse sqrt(n/t) rate, so the engine vetoes the wrong geometry and requires the entropic mirror map for the logarithmic dependence. Fifth, the optimality veto: the Nemirovski-Yudin lower bounds cap the achievable rate, so the engine vetoes any claim of convergence faster than RL/sqrt(t) or beta*R^2/t^2; no heuristic beats the oracle complexity. The adjudication order is fixed: feasibility first, then step-size stability, then variance control, then correct geometry, then respect the optimality floor. A candidate failing any veto is PASSed, and the whole procedure is bound to the fundamental limits of convex optimization rather than to wishful convergence claims."
+  }
+ ],
+ "universal_lens": "Any learning system that minimizes a convex objective is governed by oracle complexity: projected subgradient descent converges as RL/sqrt(t) with dimension-free Theta(1/eps^2) complexity; smoothness buys O(1/t) and strong convexity buys exponential exp(-t/kappa) with condition number kappa=beta/alpha; Nesterov acceleration attains the optimal O(1/t^2) and exp(-t/sqrt(kappa)); the Nemirovski-Yudin lower bounds prove these unimprovable. In non-Euclidean geometry, mirror descent maps primal to dual via a mirror map and projects via the Bregman divergence, adapting the rate to the geometry. Stochastic gradients need bounded variance, not just unbiasedness, for the SGD rates.",
+ "gsi_mapping": "For GSI, this is the epistemology of provably-fast learning: why a convex subgradient certifies a global descent direction, why smoothness and strong convexity set the convergence rate, why the condition number governs stiffness, why acceleration is optimal rather than heuristic, why the right geometry (mirror map) turns a polynomial dimension penalty into a logarithmic one, and why no black-box method can beat the oracle-complexity lower bounds. It is the optimization discipline that certifies a learning system converges as fast as fundamentally possible and treats its sample budget and convergence rate as theorems rather than hopes.",
+ "gse_mapping": "For GSE, this is the convergence-rate and optimality layer: the calibration update is projected/mirror descent on the probability simplex (Bregman projection keeps probabilities valid); the training rate is the smooth O(1/t) or strongly-convex exp(-t/kappa) law with kappa=beta/alpha set by the ontology regularizer; momentum is Nesterov acceleration attaining the optimal O(1/t^2); the entropic mirror map gives the logarithmic dimension dependence and its Bregman divergence is the KL calibration surprise; the sample budget is the dimension-free Theta(1/eps^2) oracle complexity; and SGD requires bounded variance (mini-batch/SVRG), not just unbiased snap gradients.",
+ "layer2_summary": "[ISOMORPHISM] GSE training/calibration IS convex optimization: calibration update = projected/mirror descent on the simplex; rate = smooth O(1/t) / strongly-convex exp(-t/kappa), kappa=beta/alpha; momentum = Nesterov acceleration (optimal O(1/t^2)); entropic mirror map Bregman divergence = KL calibration surprise; sample budget = dimension-free Theta(1/eps^2); SGD needs bounded variance; lower bounds = optimization no-free-lunch."
+}
