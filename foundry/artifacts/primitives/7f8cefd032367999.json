@@ -1,0 +1,306 @@
+{
+  "book_id": "7f8cefd032367999",
+  "source_status": "COMPLETE",
+  "title": "2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra",
+  "file_name": "2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra.pdf",
+  "sha256": "7f8cefd0323679997d3846c697202b0dd1aeb5d327f3bc57ab40ccf999782c53",
+  "primary_domain": "math",
+  "pages_total": 19,
+  "pages_read": 19,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 19,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The exact win-probability process constitutes a discrete-time martingale over the Markovian state space. Structural rigidity enforces probability conservation, while hierarchical shrinkage and exponential recency weighting resolve non-stationary scoring drifts without violating the fundamental backward-induction recursion. The calibration-leverage tradeoff manifests as a structural isomorphism between backward induction on Markovian state spaces and conformal prediction under conditional dependence. When one-ball marginals are exactly calibrated, the residual win-probability error strictly bounds the unmodeled temporal autocorrelation of latent momentum.",
+  "gsi_mapping": "GSI maps the estimation layer to a conformal Bayesian hierarchy. Dirichlet pseudo-counts enforce strict calibration across sparse outcome cells, while rolling-origin cross-validation on exponentially weighted data guarantees robust predictive intervals under severe distribution shifts in modern T20 scoring rates. GSI maps this by treating the exact one-ball marginals as the conformal baseline. The systematic deviation in win probability serves as a non-conformity score, isolating the latent innings-level heterogeneity from short-range momentum via permutation null distributions.",
+  "gse_mapping": "GSE utilizes the exact backward sweep to compute instantaneous leverage (Leverage Index). By isolating high-leverage state transitions, GSE identifies structural performance cliffs, mapping raw run-scoring events directly to their true probabilistic impact on match resolution. GSE utilizes the verified marginals to construct a base-state transition matrix. The identified lag-1 to lag-5 autocorrelation dictates dynamic state-augmentation, allowing the engine to modulate leverage calculations when short-range momentum violates strict Markovian independence.",
+  "primitives": [
+    {
+      "primitive_id": "7f8cefd032367999_w0_g1",
+      "name": "2026 - The Calibration-Leverage Tradeoff i Ch.1 Grounded Operator",
+      "verbatim_quote": "The Calibration–Leverage Tradeoff in Exactly Solvable Win-Probability Models Devansh Mishra July 2026 Abstract We study ball-by-ball win probability (WP) for second-innings run chases in Twenty20 cricket, built as an exactly solvable Markov model: we estimate a single object, the per-ball outcome distribution over {0, .",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7f8cefd032367999_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7f8cefd032367999_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "7f8cefd032367999_w0_g2",
+      "name": "2026 - The Calibration-Leverage Tradeoff i Ch.1 Grounded Operator",
+      "verbatim_quote": ", 6, wicket}, and derive WP for every game state by backward induction over the acyclic (balls, wickets, runs-required) chase graph.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7f8cefd032367999_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7f8cefd032367999_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "7f8cefd032367999_w0_g3",
+      "name": "2026 - The Calibration-Leverage Tradeoff i Ch.1 Grounded Operator",
+      "verbatim_quote": "This construction makes WP an exact martingale, which in turn makes leverage (how much a ball can swing WP) and win probability added (WPA) well-defined and exactly attributable; we use them to confirm that finishers and death bowlers occupy the highest-leverage moments.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7f8cefd032367999_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7f8cefd032367999_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "martingale_wp_conservation",
+      "name": "Martingale Win-Probability Conservation",
+      "verbatim_quote": "states), so under the model the WP process is a martingale; from any state, the probabilityweighted WP of the next states equals the current WP.",
+      "page": 5,
+      "latex": "V(b, w, r) = \\sum_{o \\in \\mathcal{O}} p(o | b, w, r) \\cdot V(b', w', r')",
+      "symbol_and_unit_ledger": "V: Win Probability (dimensionless, [0,1]); b: Balls remaining (integer); w: Wickets remaining (integer); r: Runs required (integer); p: Conditional outcome probability (dimensionless)",
+      "assumptions": "Markov property holds for state transitions; boundary conditions are strictly defined at terminal states (win/loss/draw).",
+      "breakdown_regime": "Violated if exogenous shocks alter transition probabilities instantaneously or if post-hoc recalibration breaks the recursive structure.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to risk-neutral pricing in discrete financial mathematics, where V acts as the arbitrage-free asset price and the backward sweep represents dynamic hedging.",
+        "source_operator": "martingale_wp_conservation",
+        "telemetry": "Mean signed one-ball WP change over all balls must equal zero."
+      }
+    },
+    {
+      "primitive_id": "estimation_state_separation",
+      "name": "Estimation-State Separation Principle",
+      "verbatim_quote": "RRR and phase are estimation features only; the dynamic-programming state remains (b, w, r).",
+      "page": 5,
+      "latex": "\\mathcal{S}_{DP} = \\{(b, w, r)\\} \\quad \\text{vs.} \\quad \\mathbf{x}_{est} = \\{RRR, w, \\phi\\}",
+      "symbol_and_unit_ledger": "S_DP: Dynamic programming state space; x_est: Estimation feature vector; RRR: Required run rate (runs/ball); phi: Innings phase (categorical)",
+      "assumptions": "The underlying physical game dynamics are fully captured by (b, w, r), while auxiliary features merely improve the statistical efficiency of estimating the transition kernel.",
+      "breakdown_regime": "Fails if the auxiliary features (e.g., bowler fatigue) contain information not reducible to the core DP state, creating hidden Markov dependencies.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's separation of latent physical state from observed telemetry, allowing flexible feature engineering without altering the core Bellman equation.",
+        "source_operator": "estimation_state_separation",
+        "telemetry": "Gradient boosted models using full features vs base Markov models on identical inputs."
+      }
+    },
+    {
+      "primitive_id": "exponential_recency_weighting",
+      "name": "Exponential Recency Weighting Kernel",
+      "verbatim_quote": "We correct this inside the estimation layer, where it cannot damage the structure: each training ball receives an exponential recency weight with half-life h seasons, and every level of the shrinkage hierarchy is fit from the same weights.",
+      "page": 5,
+      "latex": "w_i = \\exp\\left(-\\frac{\\ln 2}{h} \\Delta t_i\\right)",
+      "symbol_and_unit_ledger": "w_i: Observation weight (dimensionless); h: Half-life parameter (seasons); Delta t_i: Time elapsed since observation i (seasons)",
+      "assumptions": "Scoring era drift is monotonic and can be modeled via continuous exponential decay rather than abrupt regime shifts.",
+      "breakdown_regime": "Breaks down if the effective sample size collapses entirely, leading to high-variance estimates dominated by the most recent few matches.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Directly implements GSI's conformal inference adaptation to non-stationary environments, maintaining calibration by dynamically adjusting the empirical measure.",
+        "source_operator": "exponential_recency_weighting",
+        "telemetry": "Brier score improvement from 0.1637 to 0.1489 on held-out seasons."
+      }
+    },
+    {
+      "primitive_id": "effective_sample_size_veto",
+      "name": "Effective Sample Size Selection Veto",
+      "verbatim_quote": "Because scoring trends monotonically, raw CV loss decreases toward the aggressive end of the grid while the effective sample size collapses; the selection rule, fixed in advance, takes the most aggressive half-life on the improving curve with mean effective sample size at least 15% of the training data.",
+      "page": 5,
+      "latex": "h^* = \\arg\\max_{h} \\{ h \\mid N_{eff}(h) \\geq 0.15 N_{train} \\land \\mathcal{L}_{CV}(h) \\text{ improves} \\}",
+      "symbol_and_unit_ledger": "h*: Optimal half-life (seasons); N_eff: Effective sample size (dimensionless count); L_CV: Cross-validation loss (nats/Brier)",
+      "assumptions": "A hard floor on effective sample size prevents overfitting to transient noise in the most recent scoring spikes.",
+      "breakdown_regime": "If the entire historical dataset becomes irrelevant (e.g., radical rule changes), the 15% constraint may force reliance on obsolete priors.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's anti-collinearity veto, preventing the engine from locking onto degenerate, low-sample tactical anomalies.",
+        "source_operator": "effective_sample_size_veto",
+        "telemetry": "Rolling-origin cross-validation stability across the three most recent training seasons."
+      }
+    },
+    {
+      "primitive_id": "marginal_calibration_check",
+      "name": "Marginal Calibration Check",
+      "verbatim_quote": "We therefore compare the model's own per-ball probabilities against empirical frequencies along the same fine RRR axis.",
+      "page": 10,
+      "latex": "D_{TV}(p_{model}(o|s), p_{emp}(o|s)) \\leq \\epsilon",
+      "symbol_and_unit_ledger": "D_TV: Total variation distance (dimensionless); p_model: Modeled outcome probability (dimensionless); p_emp: Empirical frequency (dimensionless); o: Discrete ball outcome; s: Match state vector; \\epsilon: Tolerance bound.",
+      "assumptions": "Sufficient empirical data exists within fine-grained required-run-rate (RRR) slices to estimate true frequencies without excessive variance.",
+      "breakdown_regime": "Breaks down in extreme tail states (e.g., RRR > 20) where sample sizes collapse, causing high-variance empirical estimates that obscure true miscalibration.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's conformal calibration layer, verifying that the base probabilistic engine accurately reflects observed reality before applying higher-order dependency corrections.",
+        "source_operator": "marginal_calibration_check",
+        "telemetry": "Total variation distance across eight-outcome distributions stratified by RRR."
+      }
+    },
+    {
+      "primitive_id": "backward_induction_exactness",
+      "name": "Backward Induction Exactness",
+      "verbatim_quote": "If the one-ball marginals are correct and consecutive balls are conditionally independent given the state, backward induction reproduces E[y | b, w, r] exactly; that is what the recursion computes.",
+      "page": 10,
+      "latex": "V(s_t) = \\mathbb{E}_{o \\sim p(\\cdot|s_t)} [ V(s_{t+1}) ]",
+      "symbol_and_unit_ledger": "V(s_t): Win probability value function at state t (dimensionless); \\mathbb{E}: Expectation operator; o: Ball outcome; s_t: Current state (balls b, wickets w, runs r).",
+      "assumptions": "Strict conditional independence of sequential outcomes given the explicit state vector (Markov property holds perfectly).",
+      "breakdown_regime": "Fails precisely when hidden states or short-range momentum induce conditional dependence between consecutive balls, violating the Markov assumption.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Forms the foundational DP kernel for GSE's situational reasoning, establishing the theoretical zero-error baseline against which real-world momentum effects are measured.",
+        "source_operator": "backward_induction_exactness",
+        "telemetry": "Discrepancy between Monte-Carlo continuations under IID draws and analytical DP values."
+      }
+    },
+    {
+      "primitive_id": "residual_dependency_extraction",
+      "name": "Residual Dependency Extraction",
+      "verbatim_quote": "The residual is conditional dependence between balls, given the state.",
+      "page": 10,
+      "latex": "\\Delta(s) = \\mathbb{E}[y | s]_{true} - V_{DP}(s)",
+      "symbol_and_unit_ledger": "\\Delta(s): Residual win probability error (dimensionless); \\mathbb{E}[y|s]_{true}: True expected win rate; V_DP(s): Dynamic programming estimated win probability.",
+      "assumptions": "All other sources of model error (state mis-specification, marginal miscalibration) have been rigorously eliminated.",
+      "breakdown_regime": "Becomes indistinguishable from noise if the underlying dataset lacks the statistical power to resolve subtle autocorrelations in high-dimensional state spaces.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSI's latent variable extraction, quantifying the exact magnitude of unmodeled temporal dependencies that must be absorbed by state augmentation.",
+        "source_operator": "residual_dependency_extraction",
+        "telemetry": "Systematic, sign-flipping shape of V(s) miss relative to empirical E[y|s]."
+      }
+    },
+    {
+      "primitive_id": "permutation_null_decomposition",
+      "name": "Permutation Null Decomposition",
+      "verbatim_quote": "The same table computed on the held-out seasons confirms the shape is not an artifact of in-sample fitting.",
+      "page": 10,
+      "latex": "\\rho_{obs}(\\tau) \\neq \\mathbb{E}[\\rho_{perm}(\\tau)]",
+      "symbol_and_unit_ledger": "\\rho_{obs}(\\tau): Observed autocorrelation at lag \\tau (dimensionless); \\rho_{perm}(\\tau): Autocorrelation under random permutation of ball sequences; \\tau: Lag in balls.",
+      "assumptions": "Permuting ball sequences within an innings perfectly destroys short-range momentum while preserving long-range innings-level heterogeneity.",
+      "breakdown_regime": "Invalid if the ordering of balls fundamentally alters the state definition itself, making permutation an illegal operation on the state space.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Operates as GSE's out-of-sample validation primitive, ensuring that extracted momentum kernels generalize across distinct temporal epochs and do not overfit local noise.",
+        "source_operator": "permutation_null_decomposition",
+        "telemetry": "Observed autocorrelation profile exiting the 95% permutation null band at lags 1-5."
+      }
+    },
+    {
+      "primitive_id": "w3_acyclic_state_graph",
+      "name": "Acyclic State Graph",
+      "verbatim_quote": "It is what makes the state graph acyclic, the backward induction exact, and the win probability a martingale: the property Section 4's leverage and WPA constructions stand on.",
+      "page": 15,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Independence of scoring events given the current state (b, w, r); absence of memory effects beyond the scoreboard.",
+      "breakdown_regime": "Violated when sequential scoring persistence extends beyond the current state, introducing cyclic dependencies.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The acyclic state graph in exactly solvable models maps directly to the discrete-time Markov decision process (MDP) framework used in reinforcement learning for sports analytics. In GSI, this isomorphism enables exact Bayesian updating of win probabilities using only the current state vector. For GSE, it underpins efficient state-transition trees for situational reasoning, where each node represents a unique (b, w, r) configuration.",
+        "source_operator": "w3_acyclic_state_graph",
+        "telemetry": "Measurable via the martingale property: the expected win probability after one ball equals the current win probability, verified through empirical data."
+      }
+    },
+    {
+      "primitive_id": "w3_martingale_structure",
+      "name": "Martingale Structure",
+      "verbatim_quote": "V satisfies V (s) = P o po(s) V (s′ o) identically, so that V is a martingale by construction and leverage (the conditional MAD of ∆V ) and WPA (with E[WPA | s] = 0) are exact bookkeeping rather than estimates.",
+      "page": 15,
+      "latex": "V(s) = \\sum_{s'} P(s' | s) V(s')",
+      "symbol_and_unit_ledger": "{'V(s)': 'Dimensionless win probability at state s', \"P(s' | s)\": \"Transition probability from state s to s'\", 'y': 'Binary outcome (1 if win, 0 otherwise)'}",
+      "assumptions": "The model assumes that the chasing team's win probability at any given state is equal to the empirical frequency of winning from that state, conditioned on the model's predictions.",
+      "breakdown_regime": "Fails when there exists a systematic bias between predicted probability p and observed frequency of winning, indicating miscalibration.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The martingale condition equates to the consistency requirement for proper scoring rules in conformal prediction. In GSI, this justifies the use of quantile regression forests to produce well-calibrated probabilistic forecasts. For GSE, it allows for the construction of optimal betting strategies based on risk-neutral measures derived from the win probability surface.",
+        "source_operator": "w3_martingale_structure",
+        "telemetry": "Verified by computing the slope of linear regression of actual wins versus predicted win probability; ideally the slope should be 1 with intercept 0."
+      }
+    },
+    {
+      "primitive_id": "w3_calibration_gap",
+      "name": "Calibration Gap",
+      "verbatim_quote": "One could fit V ∗(s) ≈E[y | s] directly (Section 5's gradient-boosted baseline is this model) and obtain calibration by construction.",
+      "page": 15,
+      "latex": "Gap = H(V) - H(E[y|s])",
+      "symbol_and_unit_ledger": "{'H(V)': 'Entropy of predicted win probability distribution V(s)', 'H(E[y|s])': 'Entropy of empirical win frequency distribution'}",
+      "assumptions": "The model assumes that the underlying data-generating process is stationary and that the set of features (b, w, r) is sufficient to capture all relevant information.",
+      "breakdown_regime": "The gap widens when temporal or contextual shifts introduce heterogeneity that the static state (b, w, r) cannot account for, leading to miscalibration.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The calibration gap serves as a performance metric for evaluating the quality of probability forecasts in GSI, analogous to the Brier score but focused on marginal calibration. In GSE, it informs state-reduction heuristics by identifying which state variables are necessary to maintain accurate situational awareness.",
+        "source_operator": "w3_calibration_gap",
+        "telemetry": "Measured as the difference in entropy between the predicted win probability distribution and the empirical distribution of outcomes, computed over a held-out test set."
+      }
+    },
+    {
+      "primitive_id": "w3_short_range_persistence",
+      "name": "Short-Range Scoring Persistence",
+      "verbatim_quote": "independence discards is identified: short-range sequential scoring persistence of about three to five balls, four-fifths of it beyond anything innings conditions explain, with wicket clustering ruled out.",
+      "page": 15,
+      "latex": "C_k = \\frac{1}{N} \\sum_{t=1}^{N-k} (x_t - \\mu)(x_{t+k} - \\mu)",
+      "symbol_and_unit_ledger": "{'C_k': 'Autocovariance at lag k', 'x_t': 'Runs scored in ball t', '\\\\mu': 'Mean runs scored', 'N': 'Total number of balls'}",
+      "assumptions": "The presence of autocorrelation in scoring sequences violates the independent increments property assumed in the baseline model.",
+      "breakdown_regime": "Persistence becomes dominant when the autocorrelation function decays slowly, indicating that recent scoring events carry predictive power for future scores.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Short-range persistence is captured by autoregressive integrated moving average (ARIMA) kernels in GSI time-series forecasting and by recurrent neural networks (RNNs) in GSE sequence modeling, where the hidden state encodes temporal dependencies.",
+        "source_operator": "w3_short_range_persistence",
+        "telemetry": "Detected via the autocorrelation function (ACF) plot; significant spikes at small lags indicate persistent behavior, while rapid decay suggests independence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7f8cefd032367999_t0",
+      "think": "Window 1 Synthesis: Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 19/19 pages of 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999): [7f8cefd032367999_w0_g1 p.1]: The Calibration–Leverage Tradeoff in Exactly Solvable Win-Probability Models Devansh Mishra July 2026 Abstract We study ball-by-ball win probability (WP) for second-innings run chases in Twenty20 cricket, built as an exactly solvable Markov model: we estimate a single object, the per-ball outcome distribution over {0, . (Binds verbatim proposition 7f8cefd032367999_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.) [7f8cefd032367999_w0_g2 p.1]: , 6, wicket}, and derive WP for every game state by backward induction over the acyclic (balls, wickets, runs-required) chase graph. (Binds verbatim proposition 7f8cefd032367999_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.) [7f8cefd032367999_w0_g3 p.1]: This construction makes WP an exact martingale, which in turn makes leverage (how much a ball can swing WP) and win probability added (WPA) well-defined and exactly attributable; we use them to confirm that finishers and death bowlers occupy the highest-leverage moments. (Binds verbatim proposition 7f8cefd032367999_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.) [martingale_wp_conservation p.5]: states), so under the model the WP process is a martingale; from any state, the probabilityweighted WP of the next states equals the current WP. (Isomorphic to risk-neutral pricing in discrete financial mathematics, where V acts as the arbitrage-free asset price and the backward sweep represents dynamic hedging.) [estimation_state_separation p.5]: RRR and phase are estimation features only; the dynamic-programming state remains (b, w, r). (Maps to GSI's separation of latent physical state from observed telemetry, allowing flexible feature engineering without altering the core Bellman equation.) [exponential_recency_weighting p.5]: We correct this inside the estimation layer, where it cannot damage the structure: each training ball receives an exponential recency weight with half-life h seasons, and every level of the shrinkage hierarchy is fit from the same weights. (Directly implements GSI's conformal inference adaptation to non-stationary environments, maintaining calibration by dynamically adjusting the empirical measure.) [effective_sample_size_veto p.5]: Because scoring trends monotonically, raw CV loss decreases toward the aggressive end of the grid while the effective sample size collapses; the selection rule, fixed in advance, takes the most aggressive half-life on the improving curve with mean effective sample size at least 15% of the training data. (Isomorphic to GSE's anti-collinearity veto, preventing the engine from locking onto degenerate, low-sample tactical anomalies.) [marginal_calibration_check p.10]: We therefore compare the model's own per-ball probabilities against empirical frequencies along the same fine RRR axis. (Isomorphic to GSI's conformal calibration layer, verifying that the base probabilistic engine accurately reflects observed reality before applying higher-order dependency corrections.) [backward_induction_exactness p.10]: If the one-ball marginals are correct and consecutive balls are conditionally independent given the state, backward induction reproduces E[y | b, w, r] exactly; that is what the recursion computes. (Forms the foundational DP kernel for GSE's situational reasoning, establishing the theoretical zero-error baseline against which real-world momentum effects are measured.) [residual_dependency_extraction p.10]: The residual is conditional dependence between balls, given the state. (Directly maps to GSI's latent variable extraction, quantifying the exact magnitude of unmodeled temporal dependencies that must be absorbed by state augmentation.) [permutation_null_decomposition p.10]: The same table computed on the held-out seasons confirms the shape is not an artifact of in-sample fitting. (Operates as GSE's out-of-sample validation primitive, ensuring that extracted momentum kernels generalize across distinct temporal epochs and do not overfit local noise.) [w3_acyclic_state_graph p.15]: It is what makes the state graph acyclic, the backward induction exact, and the win probability a martingale: the property Section 4's leverage and WPA constructions stand on. (The acyclic state graph in exactly solvable models maps directly to the discrete-time Markov decision process (MDP) framework used in reinforcement learning for sports analytics. In GSI, this isomorphism enables exact Bayesian updating of win probabilities using only the current state vector. For GSE, it underpins efficient state-transition trees for situational reasoning, where each node represents a unique (b, w, r) configuration.) [w3_martingale_structure p.15]: V satisfies V (s) = P o po(s) V (s′ o) identically, so that V is a martingale by construction and leverage (the conditional MAD of ∆V ) and WPA (with E[WPA | s] = 0) are exact bookkeeping rather than estimates. (The martingale condition equates to the consistency requirement for proper scoring rules in conformal prediction. In GSI, this justifies the use of quantile regression forests to produce well-calibrated probabilistic forecasts. For GSE, it allows for the construction of optimal betting strategies based on risk-neutral measures derived from the win probability surface.) [w3_calibration_gap p.15]: One could fit V ∗(s) ≈E[y | s] directly (Section 5's gradient-boosted baseline is this model) and obtain calibration by construction. (The calibration gap serves as a performance metric for evaluating the quality of probability forecasts in GSI, analogous to the Brier score but focused on marginal calibration. In GSE, it informs state-reduction heuristics by identifying which state variables are necessary to maintain accurate situational awareness.) [w3_short_range_persistence p.15]: independence discards is identified: short-range sequential scoring persistence of about three to five balls, four-fifths of it beyond anything innings conditions explain, with wicket clustering ruled out. (Short-range persistence is captured by autoregressive integrated moving average (ARIMA) kernels in GSI time-series forecasting and by recurrent neural networks (RNNs) in GSE sequence modeling, where the hidden state encodes temporal dependencies.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7f8cefd032367999_t1",
+      "think": "The foundational doctrine of this chapter window is the rigorous preservation of the martingale property within a non-stationary environment. The author explicitly decouples the dynamic programming state—defined strictly by balls, wickets, and runs—from the estimation features used to approximate the transition kernel. This separation is critical: it allows the incorporation of complex, high-dimensional covariates like required run rate and innings phase into a hierarchical shrinkage estimator without corrupting the exact backward induction that guarantees the win-probability process is a martingale. When confronted with the severe distribution shift of modern T20 scoring, the model avoids the fatal error of post-hoc recalibration, which would break the recursive consistency. Instead, the adjustment is embedded directly into the estimation layer via exponential recency weighting. By tuning the half-life through rolling-origin cross-validation and enforcing a hard floor on the effective sample size, the system navigates the bias-variance tradeoff inherent in adapting to monotonic trends. The resulting primitive demonstrates that structural rigidity—the insistence on an exact Markovian backward sweep—is not a limitation but a robustness mechanism. It ensures that even as the underlying scoring distributions evolve, the internal logic of leverage and probability conservation remains mathematically intact, providing a stable foundation for downstream applications like player clutch analysis.",
+      "retrocausal_genealogy": "This approach inherits from classical dynamic programming in operations research, specifically the backward induction methods pioneered by Bellman. It adapts these deterministic principles to stochastic sports analytics, echoing the evolution of win-expectancy models in baseball (Pythagorean expectations to Run Expectancy Matrices). The explicit handling of non-stationarity via exponential weighting mirrors time-series econometrics and modern machine learning techniques applied to evolving market regimes.",
+      "theory_of_mind": "The model implicitly theorizes the opposing team's strategy as a function of the current state and the global scoring era. By incorporating required run rate and phase into the estimation layer, it accounts for the batsmen's adaptive aggression and the bowlers' tactical responses. The 'clutch' analysis further reveals how elite players deviate from baseline probabilities in high-leverage moments, suggesting a cognitive layer where agents consciously override standard heuristics when the marginal value of a run is maximized.",
+      "cross_layer_veto": "A critical veto condition arises if the estimation features (like RRR) inadvertently leak future information or create spurious correlations with the target variable due to data contamination. The strict separation of the DP state from estimation features acts as a primary guard against this. Furthermore, the effective sample size constraint serves as an anti-collinearity veto, preventing the model from overfitting to highly correlated, low-sample recent data points that might reflect temporary anomalies rather than true structural shifts in the sport's dynamics."
+    },
+    {
+      "trace_id": "7f8cefd032367999_t2",
+      "think": "The derivation begins by establishing the exact solvability of the win-probability model under strict Markovian assumptions. If the one-ball outcome distribution p(o|s) is perfectly calibrated to empirical frequencies, backward induction yields the exact expected win probability E[y|s]. However, empirical analysis reveals a systematic, sign-flipping discrepancy between the dynamic programming value V(s) and the true realized win rates. Since marginal miscalibration is ruled out via rigorous total variation distance checks across fine-grained required-run-rate slices, the residual error must originate from a violation of the conditional independence assumption. This implies the existence of latent temporal dependencies—momentum—that persist beyond the explicit state vector. To isolate this effect, a permutation decomposition is applied to the run residuals. By randomly shuffling ball sequences within innings, we construct a null distribution that preserves innings-level heterogeneity but destroys short-range ordering. The observed autocorrelation significantly exceeds this null at lags 1 through 5, confirming a genuine short-range momentum effect. Crucially, wicket residuals exhibit anti-clustering, suggesting complex, outcome-specific dependency structures. Thus, the calibration-leverage tradeoff is mathematically resolved: perfect marginal calibration exposes the precise magnitude of hidden-state errors, dictating the necessary depth of state augmentation for robust situational reasoning. Window 3 Synthesis: Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This framework extends Bellman's dynamic programming by explicitly quantifying the cost of the Markov assumption in sports. It bridges classical win-probability models with modern conformal inference, treating unmodeled momentum as a measurable non-conformity score. Historically, it moves beyond static leverage tables toward a unified theory of temporal dependence in sequential decision-making environments. Retrocausal Genealogy (Window 3): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "The model implicitly captures the psychological state of opposing agents. Short-range momentum reflects batsmen gaining confidence or bowlers losing rhythm, while wicket anti-clustering suggests defensive adjustments after dismissals. By isolating these latent behavioral shifts from pitch conditions, the engine distinguishes between player-driven momentum and environmental heterogeneity, enabling more accurate predictions of human adaptive strategies. Theory of Mind (Window 3): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "A strict veto is applied to prevent collinearity between short-range momentum and long-term innings composition. If the permutation null band overlaps with the observed autocorrelation, the momentum signal is rejected as mere heterogeneity. Furthermore, any state augmentation proposed to absorb this dependency must not leak future information into the current state vector, preserving the causal integrity of the backward induction process."
+    },
+    {
+      "trace_id": "7f8cefd032367999_t3",
+      "think": "The core insight is that the independence assumption, while enabling exact backward induction and a martingale win probability, introduces a fundamental limitation. When empirical data reveals short-range scoring persistence that exceeds what innings conditions can explain, the model's win probabilities become over-dispersed and miscalibrated. This creates a sharp tradeoff: one can have exact leverage and WPA (via the martingale property) or perfect calibration (via direct fitting of win frequencies), but not both simultaneously within the exactly solvable state-space framework. Closing the calibration gap requires injecting the observed dependence, but doing so disrupts the acyclic graph structure unless a richer state space is adopted. Window 4 Synthesis: Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This tradeoff echoes the bias-variance dilemma in statistical learning theory, where parametric models (like the baseline) achieve low variance but high bias, while nonparametric methods reduce bias at the cost of increased variance. It also parallels the precision-recall tradeoff in information retrieval, with exact recall (martingale) coming at the expense of reduced precision (calibration). Retrocausal Genealogy (Window 4): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts often intuitively understand this tension: they may trust the martingale-based WPA numbers for tactical decisions because they are theoretically sound, but they also recognize that the model's win probabilities are systematically off, especially in high-pressure situations where scoring patterns deviate from historical norms. Theory of Mind (Window 4): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "To avoid collinearity, the injection of dependence must be orthogonal to the existing state variables. For instance, adding a feature that perfectly correlates with the current run rate would not add new information and would simply inflate variance without improving calibration. The dependence must capture novel variation, such as the three-to-five-ball persistence identified in the analysis. Cross-Layer Veto (Window 4): Rooted in 2026 - The Calibration-Leverage Tradeoff in Exactly Solvable Win-Probability Models - Mishra (7f8cefd032367999, 19/19 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

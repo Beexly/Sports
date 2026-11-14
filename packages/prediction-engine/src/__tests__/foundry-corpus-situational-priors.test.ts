@@ -5,6 +5,7 @@ import {
   evaluateFoundryCorpusSituationalPriors,
   evaluateRulebookAndPsychologyOverlay,
   evaluateSplitFieldCoverageOverlay,
+  evaluateUnifiedCorpusSituationalStack,
   FOUNDRY_CORPUS_BASELINE_SNAPSHOT,
   MAX_ABS_CORPUS_LOG_ODDS,
   MAX_CORPUS_FAMILY_PROB_MODULATION,
@@ -140,5 +141,71 @@ describe("foundry-corpus-situational-priors", () => {
     expect(Math.abs(res.coverageShellDeltaLogOdds)).toBeLessThanOrEqual(MAX_ABS_CORPUS_LOG_ODDS);
     expect(Math.abs(res.probModulation)).toBeLessThanOrEqual(MAX_CORPUS_FAMILY_PROB_MODULATION);
     expect(evaluateSplitFieldCoverageOverlay({ offense3x1TripsRateZ: Number.NaN }).probModulation).toBe(0);
+  });
+
+  it("composes corpus priors, 2026 rulebook/psychology, and [DERIVED KERNEL] split-field checks with spectral attenuation and |Delta log-odds| <= 0.35", () => {
+    const unified = evaluateUnifiedCorpusSituationalStack({
+      corpusPriors: {
+        pressureSignalZ: 1.5,
+        coverageMismatchZ: 1.8,
+        qbScriptStabilityZ: 1.2,
+        observedSampleSizeN: 96,
+        collinearCrossLayerVetoes: 1,
+      },
+      rulebookAndPsychology: {
+        kickoffReturnVolatilityZ: 1.4,
+        declaredOnsideComebackNeedZ: 0.9,
+        yerkesDodsonArousalZ: -0.6,
+        clutchComposureEdgeZ: 1.1,
+      },
+      splitFieldCoverage: {
+        offense3x1TripsRateZ: 1.7,
+        defenseSplitFieldQuartersRateZ: 1.9,
+        slotHorizontalStressZ: 1.1,
+      },
+    });
+
+    expect(unified.allFiniteNonNan).toBe(true);
+    expect(Math.abs(unified.spectralAttenuatedCoverageLogOdds)).toBeLessThan(
+      Math.abs(unified.splitFieldCoverageReceipt.coverageShellDeltaLogOdds),
+    );
+    expect(unified.jamesSteinShrinkageFactor).toBeGreaterThan(0);
+    expect(unified.jamesSteinShrinkageFactor).toBeLessThanOrEqual(1);
+    expect(Math.abs(unified.unifiedClampedLogOddsDelta)).toBeLessThanOrEqual(
+      MAX_ABS_CORPUS_LOG_ODDS,
+    );
+    expect(Math.abs(unified.unifiedClampedProbModulation)).toBeLessThanOrEqual(
+      MAX_CORPUS_FAMILY_PROB_MODULATION,
+    );
+
+    const saturated = evaluateUnifiedCorpusSituationalStack({
+      corpusPriors: {
+        pressureSignalZ: 30,
+        weatherDisruptionZ: 30,
+        restFatigueZ: 30,
+        coverageMismatchZ: 30,
+        qbScriptStabilityZ: 30,
+        microstructureDislocationZ: 30,
+        observedSampleSizeN: 1000,
+      },
+      rulebookAndPsychology: {
+        kickoffReturnVolatilityZ: 30,
+        declaredOnsideComebackNeedZ: 30,
+        clutchComposureEdgeZ: 30,
+      },
+      splitFieldCoverage: {
+        offense3x1TripsRateZ: 30,
+        defenseSplitFieldQuartersRateZ: 30,
+        slotHorizontalStressZ: 30,
+        boundaryIsoExposureZ: Number.NaN,
+      },
+    });
+    expect(saturated.allFiniteNonNan).toBe(true);
+    expect(Math.abs(saturated.unifiedClampedLogOddsDelta)).toBeLessThanOrEqual(
+      MAX_ABS_CORPUS_LOG_ODDS,
+    );
+    expect(Math.abs(saturated.unifiedClampedProbModulation)).toBeLessThanOrEqual(
+      MAX_CORPUS_FAMILY_PROB_MODULATION,
+    );
   });
 });

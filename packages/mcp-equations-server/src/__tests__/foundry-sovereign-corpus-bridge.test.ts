@@ -7,6 +7,7 @@ import {
 import {
   buildFoundryCorpusRouterSignals,
   evaluateFoundrySovereignCorpusPrior,
+  evaluateSovereignStageCDCoupling,
   FOUNDRY_SITUATIONAL_FAMILIES,
   loadFoundrySovereignCorpusManifest,
   loadShardBCatalogSummary,
@@ -88,5 +89,101 @@ describe("foundry-sovereign-corpus-bridge", () => {
     expect(catalog).not.toBeNull();
     expect(catalog?.total_markdown_files).toBeGreaterThanOrEqual(6310);
     expect(catalog?.total_extracted_equations).toBeGreaterThanOrEqual(27000);
+  });
+
+  it("composes Sovereign priors and derived kernels through Stage C spectral orthogonalization and Stage D Jacobian/James-Stein coupling", () => {
+    const coupled = evaluateSovereignStageCDCoupling({
+      familyDisplacements: {
+        pressure: 0.14,
+        weather: -0.09,
+        coveragePersonnel: 0.18,
+        qbSkillScript: 0.11,
+      },
+      additionalPremises: [
+        {
+          id: "derived.split_field.poach_solo_3x1",
+          premise: "[DERIVED KERNEL] Poach/Solo 3x1 split-field quarters check",
+          cluster: "foundry.coveragePersonnel",
+          similarity: 0.72,
+          verificationTier: "COMPUTED",
+          verificationStatus: "GATED_EXPERIMENT_CANDIDATE",
+          backtestPassed: true,
+          jacobianSensitivity: 0.9,
+          rawLogOddsDelta: 0.045,
+        },
+        {
+          id: "quarantined.unverified.hypothesis",
+          premise: "Unverified narrative hypothesis",
+          cluster: "narrative.untested",
+          similarity: 0.95,
+          verificationTier: "CITABLE_VERIFIED",
+          verificationStatus: "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST",
+          backtestPassed: false,
+          jacobianSensitivity: 1.5,
+          rawLogOddsDelta: 0.34,
+        },
+        {
+          id: "untrusted.null.tier",
+          premise: "Premise missing verificationTier",
+          cluster: "untrusted.cluster",
+          similarity: 0.88,
+          verificationTier: null,
+          rawLogOddsDelta: 0.3,
+        },
+      ],
+      collinearCrossLayerVetoesTriggered: 1,
+      tauHatCoach: 0.58,
+      sampleHorizonT: 24,
+    });
+
+    expect(coupled.allFiniteNonNan).toBe(true);
+    expect(coupled.activeBitCount).toBe(4);
+    expect(coupled.marchenkoPasturShrinkage).toBeGreaterThan(0);
+    expect(coupled.marchenkoPasturShrinkage).toBeLessThanOrEqual(1);
+    expect(Math.abs(coupled.stageDResult.clampedTotalLogOddsDelta)).toBeLessThanOrEqual(
+      MAX_ABS_DELTA_LOG_ODDS,
+    );
+
+    const quarantinedRow = coupled.stageDResult.selectedPremises.find(
+      (p) => p.id === "quarantined.unverified.hypothesis",
+    );
+    expect(quarantinedRow?.quarantined).toBe(true);
+    expect(quarantinedRow?.shrunkLogOddsDelta).toBe(0);
+
+    const untrustedRow = coupled.stageDResult.selectedPremises.find(
+      (p) => p.id === "untrusted.null.tier",
+    );
+    expect(untrustedRow?.shrunkLogOddsDelta).toBe(0);
+
+    const splitFieldRow = coupled.stageDResult.selectedPremises.find(
+      (p) => p.id === "derived.split_field.poach_solo_3x1",
+    );
+    expect(splitFieldRow?.clusterRank).toBe(1);
+    expect(splitFieldRow!.spectralScore).toBeLessThan(0.72);
+
+    const extremeCoupled = evaluateSovereignStageCDCoupling({
+      familyDisplacements: {
+        pressure: 50,
+        weather: 50,
+        restFatigue: 50,
+        coveragePersonnel: 50,
+        qbSkillScript: 50,
+        marketMicrostructure: 50,
+      },
+      additionalPremises: [
+        {
+          id: "nan.guard.premise",
+          premise: "NaN guard test",
+          cluster: "nan.guard",
+          similarity: Number.NaN,
+          verificationTier: "CITABLE_VERIFIED",
+          rawLogOddsDelta: Number.POSITIVE_INFINITY,
+        },
+      ],
+      tauHatCoach: Number.NaN,
+    });
+    expect(extremeCoupled.allFiniteNonNan).toBe(true);
+    expect(extremeCoupled.stageDResult.clampedTotalLogOddsDelta).toBe(MAX_ABS_DELTA_LOG_ODDS);
+    expect(extremeCoupled.stageDResult.clamped).toBe(true);
   });
 });

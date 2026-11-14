@@ -1,0 +1,1046 @@
+{
+  "schema": "gse.arxiv_and_sovereign_equation_synthesis.v1",
+  "generated_at_utc": "2026-11-14T06:18:18Z",
+  "counts": {
+    "complete_sovereign_books": 180,
+    "refused_stub_books_fail_closed": 11,
+    "gatekeeper_validation_failures": 0,
+    "total_sovereign_primitives": 1478,
+    "total_sovereign_reasoning_traces": 342,
+    "total_pages_inspected": 21248,
+    "trainer_feed_records_emitted": 1820,
+    "active_router_mask_bits": 257,
+    "arxiv_program_unique_ids_indexed": 6183,
+    "sovereign_books_with_explicit_arxiv_id": 0
+  },
+  "context_mask_uint32_words_9": [
+    4223558607,
+    4294967295,
+    4294967295,
+    4294705151,
+    4294967295,
+    4294967295,
+    4294967295,
+    4202682303,
+    983033
+  ],
+  "track_counts": {
+    "football_coaching_rules_and_scouting": 8,
+    "graduate_math_stats_physics_textbooks": 161,
+    "nfl_war_and_fourth_down_decision": 3,
+    "sports_psychology_and_cognition": 8
+  },
+  "six_situational_family_weights": {
+    "pressure": {
+      "sovereign_primitives_count": 79,
+      "bounded_james_stein_weight": 0.156264,
+      "all_finite_non_nan": true
+    },
+    "weather": {
+      "sovereign_primitives_count": 211,
+      "bounded_james_stein_weight": 0.170314,
+      "all_finite_non_nan": true
+    },
+    "restFatigue": {
+      "sovereign_primitives_count": 193,
+      "bounded_james_stein_weight": 0.169463,
+      "all_finite_non_nan": true
+    },
+    "coveragePersonnel": {
+      "sovereign_primitives_count": 162,
+      "bounded_james_stein_weight": 0.167586,
+      "all_finite_non_nan": true
+    },
+    "qbSkillScript": {
+      "sovereign_primitives_count": 768,
+      "bounded_james_stein_weight": 0.177231,
+      "all_finite_non_nan": true
+    },
+    "marketMicrostructure": {
+      "sovereign_primitives_count": 65,
+      "bounded_james_stein_weight": 0.151948,
+      "all_finite_non_nan": true
+    }
+  },
+  "arxiv_program_index": {
+    "files_scanned": 1756,
+    "unique_arxiv_ids_count": 6183,
+    "sample_arxiv_ids": [
+      "0270.2010",
+      "0297.2004",
+      "0327.12031",
+      "0410.1033",
+      "0410.1105",
+      "0410.1234",
+      "0410.1302",
+      "0410.1471",
+      "0705.0763",
+      "0705.2724",
+      "0706.0366",
+      "0706.0742",
+      "0706.1758",
+      "0706.2385",
+      "0706.3188",
+      "0707.0100",
+      "0707.1051",
+      "0707.1532",
+      "0707.2405",
+      "0708.0046",
+      "0708.0242",
+      "0708.0412",
+      "0708.1585",
+      "0710.0485",
+      "0710.3970",
+      "0710.4938",
+      "0710.5098",
+      "0710.5772",
+      "0711.4983",
+      "0712.0380",
+      "0712.2771",
+      "0712.3393",
+      "0712.4003",
+      "0801.4332",
+      "0802.0743",
+      "0802.0747",
+      "0802.0749",
+      "0802.0754",
+      "0802.3843",
+      "0802.4043",
+      "0803.0657",
+      "0803.1319",
+      "0803.1364",
+      "0803.3697",
+      "0804.0327",
+      "0804.0596",
+      "0804.1110",
+      "0804.2288",
+      "0804.4433",
+      "0805.0977"
+    ]
+  },
+  "foundry_db_readonly_audit": {
+    "db_available": true,
+    "total_rows": 17257,
+    "partition_tier_summary": {
+      "0..3|tier_A": {
+        "total": 110,
+        "completed_or_extracted": 54,
+        "pending_unextracted": 54,
+        "pending_with_local_file": 54
+      },
+      "0..3|tier_B": {
+        "total": 835,
+        "pending_unextracted": 835,
+        "pending_with_local_file": 835
+      },
+      "0..3|tier_C": {
+        "total": 3349,
+        "pending_unextracted": 3325,
+        "pending_with_local_file": 3325
+      },
+      "4..7|tier_A": {
+        "total": 129,
+        "completed_or_extracted": 129
+      },
+      "4..7|tier_B": {
+        "total": 814,
+        "pending_unextracted": 811,
+        "pending_with_local_file": 811,
+        "completed_or_extracted": 3
+      },
+      "4..7|tier_C": {
+        "total": 3347,
+        "pending_unextracted": 3303,
+        "pending_with_local_file": 3303,
+        "completed_or_extracted": 1
+      },
+      "8..f|tier_A": {
+        "total": 226,
+        "completed_or_extracted": 10
+      },
+      "8..f|tier_B": {
+        "total": 1606
+      },
+      "8..f|tier_C": {
+        "total": 6841,
+        "completed_or_extracted": 1
+      }
+    },
+    "shard_4to7_tier_a_remaining_with_file": 0,
+    "shard_4to7_tier_a_remaining_preview": [],
+    "shard_4to7_tier_b_pending_candidates_count": 811,
+    "shard_4to7_tier_b_pending_candidates": [
+      {
+        "book_id": "4030a352319afc8b",
+        "title": "PickingWinners (1)",
+        "file_name": "PickingWinners (1).pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "40447c3c8b0b4e98",
+        "title": "2020 - The right place at the right time Advanced off-ball metrics for exploiting an opponent s spatial weakenesses in soccer - Unknown Authors",
+        "file_name": "2020 - The right place at the right time Advanced off-ball metrics for exploiting an opponent s spatial weakenesses in soccer - Unknown Authors.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "4065ec82c7b50525",
+        "title": "2020 - Player Chemistry Striving for a Perfectly Balanced Soccer Team - Unknown Authors",
+        "file_name": "2020 - Player Chemistry Striving for a Perfectly Balanced Soccer Team - Unknown Authors.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "406bc2de1dbfd2c2",
+        "title": "openalex_W4285037190",
+        "file_name": "openalex_W4285037190.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "40750311e88c2a34",
+        "title": "2021 - An Examination of Sport Climbing's Competition Format and Scoring System - Unknown Authors",
+        "file_name": "2021 - An Examination of Sport Climbing's Competition Format and Scoring System - Unknown Authors.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "40769a2ec8cbceb7",
+        "title": "arxiv_2607.11548v1",
+        "file_name": "arxiv_2607.11548v1.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "408fe24196edd0f2",
+        "title": "openalex_W3216650841",
+        "file_name": "openalex_W3216650841.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "40ba01872e3fcfcc",
+        "title": "2606.21814",
+        "file_name": "2606.21814.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "40bb6049e4fbac27",
+        "title": "openalex_W1876742824",
+        "file_name": "openalex_W1876742824.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "40be5ca97301d30a",
+        "title": "2102.05728",
+        "file_name": "2102.05728.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "40beb6fb674bfd76",
+        "title": "openalex_W2306779804",
+        "file_name": "openalex_W2306779804.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "40c9acb4428b8e60",
+        "title": "arxiv_2006.12943v1",
+        "file_name": "arxiv_2006.12943v1.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "40d5fe9f507d3452",
+        "title": "arxiv_2210.00507v1",
+        "file_name": "arxiv_2210.00507v1.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "410493d6c6653955",
+        "title": "arxiv_1207_6083_kulesza_taskar_determinantal_point_processes_book",
+        "file_name": "arxiv_1207_6083_kulesza_taskar_determinantal_point_processes_book.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "417db19f265085f0",
+        "title": "2016 Preventing in-game Injuries NBA",
+        "file_name": "2016 Preventing in-game Injuries NBA.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "4190ec13f813d64c",
+        "title": "arxiv_2411.04501v1",
+        "file_name": "arxiv_2411.04501v1.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "41a8e3173901d4fa",
+        "title": "openalex_W2800090273",
+        "file_name": "openalex_W2800090273.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "41d50469d65b98dd",
+        "title": "arxiv_2106.13742v1",
+        "file_name": "arxiv_2106.13742v1.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "41ef2c0ea1f8545c",
+        "title": "openalex_W2614793251",
+        "file_name": "openalex_W2614793251.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "422ad13731e127ad",
+        "title": "openalex_W4385422854",
+        "file_name": "openalex_W4385422854.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "4262dcf760fef4c0",
+        "title": "openalex_W4387425211",
+        "file_name": "openalex_W4387425211.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "427e4cf27a6cba67",
+        "title": "2020 The Hot Hand and Its Effect on the NBA - Brian McNair,Eric Margolin, Michael Law, Ya'acov Ritov",
+        "file_name": "2020 The Hot Hand and Its Effect on the NBA - Brian McNair,Eric Margolin, Michael Law, Ya'acov Ritov.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "428041954bfd5a41",
+        "title": "Diebold-2024-Forecasting",
+        "file_name": "Diebold-2024-Forecasting.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "42f3b3175a5f8ce1",
+        "title": "openalex_W4238479726",
+        "file_name": "openalex_W4238479726.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "431a4e8aec54d7f5",
+        "title": "2019 - The Evolution of Curling Analytics - Unknown Authors",
+        "file_name": "2019 - The Evolution of Curling Analytics - Unknown Authors.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "43215701b4047b1e",
+        "title": "mlgm_epfl_book",
+        "file_name": "mlgm_epfl_book.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "434fd642fa6ce700",
+        "title": "1912.11762",
+        "file_name": "1912.11762.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "4399c54a07d067a6",
+        "title": "arxiv_2603.17336v1",
+        "file_name": "arxiv_2603.17336v1.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "43b01007d03a204f",
+        "title": "2022 - Winning duels in VALORANT, a visualization of optimal positioning - DeRover",
+        "file_name": "2022 - Winning duels in VALORANT, a visualization of optimal positioning - DeRover.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "43bdd0e33a04f9a7",
+        "title": "cond-mat_9803134",
+        "file_name": "cond-mat_9803134.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "44288099d3201d64",
+        "title": "V11I6-1147",
+        "file_name": "V11I6-1147.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "4442e31a640059cb",
+        "title": "arxiv_2311.03561v2",
+        "file_name": "arxiv_2311.03561v2.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "448a9f24fcc1ce66",
+        "title": "2510.12323v1",
+        "file_name": "2510.12323v1.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "44c3190a3d0eb35e",
+        "title": "openalex_W2951695555",
+        "file_name": "openalex_W2951695555.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "44f184d1e9852cb3",
+        "title": "arxiv_2104.10916v1",
+        "file_name": "arxiv_2104.10916v1.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "4509b58ac5e05fa9",
+        "title": "openalex_W2783762233",
+        "file_name": "openalex_W2783762233.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "4546fadf4b2bf7af",
+        "title": "2025 - A Fatigue Penalty Model for x G Conor Malone - Unknown Authors",
+        "file_name": "2025 - A Fatigue Penalty Model for x G Conor Malone - Unknown Authors.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "456772444fedc340",
+        "title": "openalex_W4415004602",
+        "file_name": "openalex_W4415004602.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "456cd8c277cd8fa7",
+        "title": "openalex_W2794497862",
+        "file_name": "openalex_W2794497862.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      },
+      {
+        "book_id": "4574064e395a043e",
+        "title": "openalex_W2994375231",
+        "file_name": "openalex_W2994375231.pdf",
+        "primary_domain": "other",
+        "tier": "B",
+        "file_size_mb": 0.0
+      }
+    ]
+  },
+  "refused_stubs": [
+    {
+      "book_id": "160c2b78da096e4b",
+      "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "1d16023dfb5cb925",
+      "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "24164ab251a21dbe",
+      "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "3f0633a80a9e8157",
+      "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "51810ec3502aa6a7",
+      "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "527e4d714a574106",
+      "title": "Match Quarters: A Modern Guidebook to Split-Field Coverages (Download Stub)",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "5432be0e4c9c47fe",
+      "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "63cf635c3d045ed5",
+      "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "7ffbf72292a61a18",
+      "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "c3eb423c8b9f92fc",
+      "title": "Split Field Coverages: Understanding Split Field Coverages (Download Stub)",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    },
+    {
+      "book_id": "dd2d91e7961b7189",
+      "title": "",
+      "source_status": "INSUFFICIENT_SOURCE_ACCESS"
+    }
+  ],
+  "tracks_sample": {
+    "football_coaching_rules_and_scouting": [
+      {
+        "book_id": "2b993f18a6c6a83d",
+        "title": "USA Today Sports NFL Draft Guide 2026",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 132,
+        "pages_total": 132,
+        "primitives_count": 18,
+        "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "64f765ba0a849b1d",
+        "title": "2026 Official Playing Rules of the National Football League",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 91,
+        "pages_total": 91,
+        "primitives_count": 17,
+        "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "67ea41a738a6ffa8",
+        "title": "2022 - The Racial Imbalance in College Football Coaching - Unknown Authors",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 10,
+        "pages_total": 10,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "6cf36a29e51c0a02",
+        "title": "The Hidden Game of Football - Bob Carroll, Pete Palmer & John Thorn",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 426,
+        "pages_total": 426,
+        "primitives_count": 19,
+        "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "6ebc61ec0f7d055c",
+        "title": "USA Football Player Progression Guide (Football Development Model)",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 282,
+        "pages_total": 282,
+        "primitives_count": 19,
+        "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "7e636c8a9fc15a9d",
+        "title": "USA Football Player Progression Guide (Football Development Model)",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 282,
+        "pages_total": 282,
+        "primitives_count": 19,
+        "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "ed664ef4306ddb63",
+        "title": "Football Coaching Guide",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 133,
+        "pages_total": 133,
+        "primitives_count": 19,
+        "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "f778f7405707572f",
+        "title": "The Hidden Game of Football - Bob Carroll, Pete Palmer & John Thorn",
+        "primary_domain": "football",
+        "track": "football_coaching_rules_and_scouting",
+        "pages_read": 426,
+        "pages_total": 426,
+        "primitives_count": 19,
+        "traces_count": 5,
+        "arxiv_ids": []
+      }
+    ],
+    "graduate_math_stats_physics_textbooks": [
+      {
+        "book_id": "0096d79a376f6863",
+        "title": "Evaluating Basketball Player Performance via Statistical Network Modeling",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 0,
+        "pages_total": 0,
+        "primitives_count": 18,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0414b2bd02f58929",
+        "title": "0414b2bd02f58929",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 842,
+        "pages_total": 842,
+        "primitives_count": 6,
+        "traces_count": 3,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "04f950c125db1a46",
+        "title": "To Crash or Not To Crash: A quantitative look at the relationship between offensive rebounding and transition defense in the NBA",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 0,
+        "pages_total": 0,
+        "primitives_count": 19,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "07089dec6f73619e",
+        "title": "07089dec6f73619e",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 276,
+        "pages_total": 276,
+        "primitives_count": 8,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "090cfc0da55b02cd",
+        "title": "090cfc0da55b02cd",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 11,
+        "pages_total": 11,
+        "primitives_count": 5,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0a31ef31857e287d",
+        "title": "0a31ef31857e287d",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 23,
+        "pages_total": 23,
+        "primitives_count": 6,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0c444afcd300d1c3",
+        "title": "0c444afcd300d1c3",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 3,
+        "pages_total": 3,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "0cf53b76efe80564",
+        "title": "Recognizing and Analyzing Ball Screen Defense in the NBA",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 0,
+        "pages_total": 0,
+        "primitives_count": 22,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "102f952911d380f9",
+        "title": "102f952911d380f9",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 118,
+        "pages_total": 118,
+        "primitives_count": 6,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "10c8c515e69e40f4",
+        "title": "10c8c515e69e40f4",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 184,
+        "pages_total": 184,
+        "primitives_count": 6,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "118c462e78e37fa7",
+        "title": "118c462e78e37fa7",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 227,
+        "pages_total": 227,
+        "primitives_count": 4,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "13afe72d1ef6bdbd",
+        "title": "13afe72d1ef6bdbd",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 105,
+        "pages_total": 105,
+        "primitives_count": 7,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "1498481931694bd8",
+        "title": "Szepesvari-2010-AlgorithmsForReinforcementLearning",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 98,
+        "pages_total": 98,
+        "primitives_count": 18,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "149c39265778d9b6",
+        "title": "An Improved Adjusted Plus-Minus Statistic for NHL Players",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 0,
+        "pages_total": 0,
+        "primitives_count": 18,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "192267e30813837d",
+        "title": "192267e30813837d",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 505,
+        "pages_total": 505,
+        "primitives_count": 6,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "1976064dcffc0e42",
+        "title": "1976064dcffc0e42",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 18,
+        "pages_total": 18,
+        "primitives_count": 5,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "1cfd792f9b7396d1",
+        "title": "1cfd792f9b7396d1",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 138,
+        "pages_total": 430,
+        "primitives_count": 5,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "1eb756d93ff49446",
+        "title": "Hull-1943-PrinciplesOfBehavior",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 12,
+        "pages_total": 16,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "203aeb745b1aed40",
+        "title": "203aeb745b1aed40",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 189,
+        "pages_total": 189,
+        "primitives_count": 5,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "21544db09ed29308",
+        "title": "21544db09ed29308",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 29,
+        "pages_total": 29,
+        "primitives_count": 7,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "217c20c5e6ddf302",
+        "title": "College deviance and the effects on NFL amateur draft selection: Analyzing the Personal Conduct Policy",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 0,
+        "pages_total": 0,
+        "primitives_count": 23,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "2435ddad2e0ddd16",
+        "title": "2435ddad2e0ddd16",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 170,
+        "pages_total": 170,
+        "primitives_count": 6,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "24cd6351f8d171a6",
+        "title": "24cd6351f8d171a6",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 118,
+        "pages_total": 118,
+        "primitives_count": 5,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "25294936f511d828",
+        "title": "25294936f511d828",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 24,
+        "pages_total": 24,
+        "primitives_count": 6,
+        "traces_count": 2,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "2626db0663ce780e",
+        "title": "X (Twitter) — community, distribution and revenue (GSE internal strategy + build plan)",
+        "primary_domain": "other",
+        "track": "graduate_math_stats_physics_textbooks",
+        "pages_read": 8,
+        "pages_total": 8,
+        "primitives_count": 6,
+        "traces_count": 2,
+        "arxiv_ids": []
+      }
+    ],
+    "nfl_war_and_fourth_down_decision": [
+      {
+        "book_id": "787e3d7f8fa0e629",
+        "title": "2020 - PFF WAR Modeling Player Value in American Football - Unknown Authors",
+        "primary_domain": "football",
+        "track": "nfl_war_and_fourth_down_decision",
+        "pages_read": 14,
+        "pages_total": 14,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "7af2c86af16db0bc",
+        "title": "2017 - Quantifying the causal effects of conservative fourth down decision-making in the National Football League - Unknown Authors",
+        "primary_domain": "football",
+        "track": "nfl_war_and_fourth_down_decision",
+        "pages_read": 1,
+        "pages_total": 1,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "7e8de6a33b1c409b",
+        "title": "2018 nflWAR a reproducible method for offensive player evaluation in football, Journal of Quantitative Analysis in Sports",
+        "primary_domain": "football",
+        "track": "nfl_war_and_fourth_down_decision",
+        "pages_read": 21,
+        "pages_total": 21,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": []
+      }
+    ],
+    "sports_psychology_and_cognition": [
+      {
+        "book_id": "17150554536af787",
+        "title": "James-1890-PrinciplesOfPsychology-Vol2",
+        "primary_domain": "other",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 15,
+        "pages_total": 16,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "1a04a74c1cd2528c",
+        "title": "Traumatic Brain Injury - Recent Advances and Challenges",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 190,
+        "pages_total": 190,
+        "primitives_count": 6,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "4f750a0c8577fe9a",
+        "title": "The Mental Game of Football - Brian Cain & Sean McDonnell",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 70,
+        "pages_total": 70,
+        "primitives_count": 18,
+        "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "76bce88aa7e7d586",
+        "title": "2026 - Movement Regularity and Local Dynamic Stability During Acute and 12-Week Retrained Non-Rearfoot-Strike Running Compared to Habitual Non-Rear - Wu et al",
+        "primary_domain": "other",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 16,
+        "pages_total": 16,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "7763224d3895c486",
+        "title": "2026 - Kicking for Goal or Touch An Expected Points Framework for Penalty Decisions in Rugby Union - Watts et al",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 22,
+        "pages_total": 22,
+        "primitives_count": 3,
+        "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "7e5b2d626cb5c46f",
+        "title": "Sports Psychology (Dr-BGR ISBN-53)",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 219,
+        "pages_total": 219,
+        "primitives_count": 19,
+        "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "aad3618821cc9e26",
+        "title": "Mind Gym: An Athlete's Guide to Inner Excellence - Gary Mack",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 232,
+        "pages_total": 232,
+        "primitives_count": 18,
+        "traces_count": 5,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "e2e0f698eee97fdc",
+        "title": "Psychology in Football: Working with Elite and Professional Players - Mark Nesti",
+        "primary_domain": "psych",
+        "track": "sports_psychology_and_cognition",
+        "pages_read": 22,
+        "pages_total": 22,
+        "primitives_count": 15,
+        "traces_count": 4,
+        "arxiv_ids": []
+      }
+    ]
+  }
+}

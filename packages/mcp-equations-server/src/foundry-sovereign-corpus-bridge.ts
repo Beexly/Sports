@@ -13,11 +13,17 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   buildContextMask,
+  denoiseMarchenkoPasturEffectiveRankShrinkage,
   maskToArray,
   MAX_ABS_DELTA_LOG_ODDS,
   MIN_SAMPLE,
   SIGNAL_FAMILIES,
+  stageC,
+  stageD,
+  type Premise,
   type Signal,
+  type SpectralPremise,
+  type StageDCoupledResult,
 } from "./mcp-cognitive-router.js";
 
 export type FoundrySituationalFamily =
@@ -342,5 +348,160 @@ export function evaluateFoundrySovereignCorpusPrior(params: {
     activeBitCount,
     maxAbsBound: MAX_ABS_DELTA_LOG_ODDS,
     allFiniteNonNan: Number.isFinite(totalDeltaLogOdds),
+  };
+}
+
+export interface SovereignStageCDInputPremise extends Premise {
+  readonly jacobianSensitivity?: number;
+  readonly rawLogOddsDelta?: number;
+}
+
+export interface SovereignStageCDCouplingEvaluation {
+  readonly sourceSchema: string;
+  readonly marchenkoPasturShrinkage: number;
+  readonly vetoDampingFactor: number;
+  readonly spectralPremises: readonly SpectralPremise[];
+  readonly stageDResult: StageDCoupledResult;
+  readonly contextMaskWords: readonly number[];
+  readonly activeBitCount: number;
+  readonly maxAbsBound: number;
+  readonly allFiniteNonNan: boolean;
+}
+
+/**
+ * End-to-end Stage C (Spectral Cluster Orthogonalization) + Stage D (Cross-Equation
+ * Jacobian Coupling, Positive-Part James-Stein Shrinkage, Marchenko-Pastur bulk-noise
+ * clipping, and |Delta log-odds| <= 0.35 clamp) over Sovereign Foundry + GCP Shard B
+ * family priors and auxiliary rulebook/psychology/split-field derived kernels.
+ */
+export function evaluateSovereignStageCDCoupling(params: {
+  readonly familyDisplacements: Partial<Record<FoundrySituationalFamily, number>>;
+  readonly additionalPremises?: readonly SovereignStageCDInputPremise[];
+  readonly collinearCrossLayerVetoesTriggered?: number;
+  readonly tauHatCoach?: number;
+  readonly sampleHorizonT?: number;
+  readonly noiseVarianceSigma2?: number;
+  readonly stageCLimit?: number;
+  readonly clusterRedundancyGamma?: number;
+  readonly manifestOverride?: FoundrySovereignCorpusManifest;
+}): SovereignStageCDCouplingEvaluation {
+  const manifest = loadFoundrySovereignCorpusManifest(params.manifestOverride);
+  const vetoesRaw = params.collinearCrossLayerVetoesTriggered ?? 0;
+  const vetoes = Number.isFinite(vetoesRaw) ? Math.max(0, Math.floor(vetoesRaw)) : 0;
+  const vetoDampingFactor = Number(Math.max(0.25, Math.pow(0.85, vetoes)).toFixed(6));
+
+  const activeFamilies = FOUNDRY_SITUATIONAL_FAMILIES.filter((fam) => {
+    const v = params.familyDisplacements[fam];
+    return v !== undefined && Number.isFinite(v) && Math.abs(v) > 0;
+  });
+  const extraPremises = params.additionalPremises ?? [];
+  const totalDimensionN = activeFamilies.length + extraPremises.length;
+  const horizonT =
+    params.sampleHorizonT !== undefined && Number.isFinite(params.sampleHorizonT)
+      ? Math.max(4, params.sampleHorizonT)
+      : 24;
+  const marchenkoPasturShrinkage = denoiseMarchenkoPasturEffectiveRankShrinkage(
+    totalDimensionN,
+    horizonT,
+  );
+
+  const combinedPremises: SovereignStageCDInputPremise[] = [];
+  for (const fam of activeFamilies) {
+    const disp = params.familyDisplacements[fam] ?? 0;
+    const summary = manifest.six_situational_families[fam];
+    const evidenceCount = summary?.combined_evidence_count ?? 0;
+    const corpusWeight = summary?.bounded_james_stein_log_odds_weight ?? 0.05;
+    const jsShrunk = shrinkPositivePartJamesStein(disp, evidenceCount);
+    const similarity = Number(
+      Math.min(0.99, Math.max(0.55, 0.55 + 0.44 * Math.min(1, evidenceCount / 1200))).toFixed(6),
+    );
+    const verified = evidenceCount >= MIN_SAMPLE;
+    combinedPremises.push({
+      id: `foundry.family.${fam}`,
+      premise: `Foundry Sovereign + GCP Shard B family prior (${fam}, n=${evidenceCount})`,
+      cluster: `foundry.${fam}`,
+      similarity,
+      verificationTier: verified ? "CITABLE_VERIFIED" : "RESEARCH_HYPOTHESIS",
+      verificationStatus: verified
+        ? "HIGH_PRIORITY_PRODUCTION_TARGET"
+        : "RESEARCH_HYPOTHESIS_QUARANTINED_UNTIL_BACKTEST",
+      backtestPassed: verified,
+      jacobianSensitivity: Number(
+        ((0.5 + corpusWeight) * vetoDampingFactor * marchenkoPasturShrinkage).toFixed(6),
+      ),
+      rawLogOddsDelta: jsShrunk,
+    });
+  }
+
+  for (const p of extraPremises) {
+    const safeSim = Number.isFinite(p.similarity)
+      ? Math.max(0, Math.min(1, p.similarity))
+      : 0;
+    const safeRaw =
+      p.rawLogOddsDelta !== undefined && Number.isFinite(p.rawLogOddsDelta)
+        ? clampDeltaLogOdds(p.rawLogOddsDelta)
+        : undefined;
+    const safeJac =
+      p.jacobianSensitivity !== undefined && Number.isFinite(p.jacobianSensitivity)
+        ? Number((p.jacobianSensitivity * vetoDampingFactor * marchenkoPasturShrinkage).toFixed(6))
+        : Number((vetoDampingFactor * marchenkoPasturShrinkage).toFixed(6));
+    combinedPremises.push({
+      ...p,
+      similarity: safeSim,
+      rawLogOddsDelta: safeRaw,
+      jacobianSensitivity: safeJac,
+    });
+  }
+
+  const spectralPremises = stageC(combinedPremises, {
+    limit: params.stageCLimit,
+    clusterRedundancyGamma: params.clusterRedundancyGamma,
+  });
+
+  const safeTauHat =
+    params.tauHatCoach !== undefined && Number.isFinite(params.tauHatCoach)
+      ? Math.max(0.05, Math.min(0.95, params.tauHatCoach))
+      : 0.42;
+  const safeSigma2 =
+    params.noiseVarianceSigma2 !== undefined &&
+    Number.isFinite(params.noiseVarianceSigma2) &&
+    params.noiseVarianceSigma2 >= 0
+      ? params.noiseVarianceSigma2
+      : 0.0025;
+
+  const stageDResult = stageD(spectralPremises, {
+    noiseVarianceSigma2: safeSigma2,
+    tauHatCoach: safeTauHat,
+    maxAbsLogOddsDelta: MAX_ABS_DELTA_LOG_ODDS,
+  });
+
+  const signalsEmitted = buildFoundryCorpusRouterSignals(params.familyDisplacements, manifest);
+  const contextMaskWords = maskToArray(buildContextMask(signalsEmitted));
+  const activeBitCount = contextMaskWords.reduce((acc, w) => {
+    let x = w >>> 0;
+    let c = 0;
+    while (x !== 0) {
+      c += x & 1;
+      x >>>= 1;
+    }
+    return acc + c;
+  }, 0);
+
+  const allFiniteNonNan =
+    Number.isFinite(stageDResult.clampedTotalLogOddsDelta) &&
+    Number.isFinite(stageDResult.unClampedTotalLogOddsDelta) &&
+    Number.isFinite(stageDResult.jamesSteinShrinkageFactor) &&
+    stageDResult.selectedPremises.every((sp) => Number.isFinite(sp.shrunkLogOddsDelta));
+
+  return {
+    sourceSchema: manifest.schema,
+    marchenkoPasturShrinkage,
+    vetoDampingFactor,
+    spectralPremises,
+    stageDResult,
+    contextMaskWords,
+    activeBitCount,
+    maxAbsBound: MAX_ABS_DELTA_LOG_ODDS,
+    allFiniteNonNan,
   };
 }

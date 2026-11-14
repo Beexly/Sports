@@ -461,3 +461,96 @@ export function evaluateRulebookAndPsychologyOverlay(
       Number.isFinite(combinedProbDelta),
   };
 }
+
+export interface UnifiedCorpusSituationalStackInput {
+  readonly corpusPriors?: FoundryCorpusSituationalInput;
+  readonly rulebookAndPsychology?: RulebookAndPsychologyOverlayInput;
+  readonly splitFieldCoverage?: SplitFieldCoverageOverlayInput;
+  readonly clusterRedundancyGamma?: number;
+}
+
+export interface UnifiedCorpusSituationalStackReceipt {
+  readonly corpusPriorsReceipt: FoundryCorpusSituationalReceipt;
+  readonly rulebookPsychologyReceipt: RulebookAndPsychologyOverlayReceipt;
+  readonly splitFieldCoverageReceipt: SplitFieldCoverageOverlayReceipt;
+  readonly spectralAttenuatedCoverageLogOdds: number;
+  readonly jamesSteinShrinkageFactor: number;
+  readonly unifiedClampedLogOddsDelta: number;
+  readonly unifiedClampedProbModulation: number;
+  readonly allFiniteNonNan: boolean;
+}
+
+/**
+ * Pure Edge-safe Stage C/D composition across all 3 Foundry corpus situational stacks:
+ * (1) 6-family Empirical-Bayes corpus priors,
+ * (2) 2026 NFL Rulebook + Sports Psychology composure operators,
+ * (3) `[DERIVED KERNEL]` Split-Field Quarters coverage checks (intra-cluster spectral
+ *     attenuation `1 / sqrt(1 + gamma)` when `coveragePersonnel` also fires so coverage
+ *     evidence is never double-counted),
+ * followed by Positive-Part James-Stein coupling and hard `|Delta log-odds| <= 0.35` clamp.
+ */
+export function evaluateUnifiedCorpusSituationalStack(
+  input: UnifiedCorpusSituationalStackInput = {},
+): UnifiedCorpusSituationalStackReceipt {
+  const corpusPriorsReceipt = evaluateFoundryCorpusSituationalPriors(input.corpusPriors ?? {});
+  const rulebookPsychologyReceipt = evaluateRulebookAndPsychologyOverlay(
+    input.rulebookAndPsychology ?? {},
+  );
+  const splitFieldCoverageReceipt = evaluateSplitFieldCoverageOverlay(
+    input.splitFieldCoverage ?? {},
+  );
+
+  const gammaRaw = input.clusterRedundancyGamma ?? 0.85;
+  const gamma = Number.isFinite(gammaRaw) && gammaRaw >= 0 ? gammaRaw : 0.85;
+  const coverageClusterRank =
+    Math.abs(corpusPriorsReceipt.shrunkFamilyLogOdds.coveragePersonnel) > 0 ? 1 : 0;
+  const spectralAttenuation = 1 / Math.sqrt(1 + gamma * coverageClusterRank);
+  const spectralAttenuatedCoverageLogOdds = Number(
+    (splitFieldCoverageReceipt.coverageShellDeltaLogOdds * spectralAttenuation).toFixed(6),
+  );
+
+  const components = [
+    corpusPriorsReceipt.combinedLogOddsDelta,
+    rulebookPsychologyReceipt.rulebookDeltaLogOdds,
+    rulebookPsychologyReceipt.psychologyDeltaLogOdds,
+    spectralAttenuatedCoverageLogOdds,
+  ];
+  const d = components.filter((v) => Math.abs(v) > 0).length;
+  const sumSq = components.reduce((acc, v) => acc + v * v, 0);
+  const sigma2 = 0.0004;
+  const jamesSteinShrinkageFactor =
+    d >= 3 && sumSq > 1e-12
+      ? Number(Math.max(0, 1 - ((d - 2) * sigma2) / sumSq).toFixed(6))
+      : 1.0;
+
+  const rawCombined =
+    components.reduce((acc, v) => acc + v, 0) *
+    jamesSteinShrinkageFactor *
+    corpusPriorsReceipt.vetoDampingFactor;
+  const unifiedClampedLogOddsDelta = Number(
+    clamp(rawCombined, MAX_ABS_CORPUS_LOG_ODDS).toFixed(6),
+  );
+  const unifiedClampedProbModulation = Number(
+    clamp(unifiedClampedLogOddsDelta * 0.1, MAX_CORPUS_FAMILY_PROB_MODULATION).toFixed(6),
+  );
+
+  const allFiniteNonNan =
+    corpusPriorsReceipt.allFiniteNonNan &&
+    rulebookPsychologyReceipt.allFiniteNonNan &&
+    splitFieldCoverageReceipt.allFiniteNonNan &&
+    Number.isFinite(spectralAttenuatedCoverageLogOdds) &&
+    Number.isFinite(jamesSteinShrinkageFactor) &&
+    Number.isFinite(unifiedClampedLogOddsDelta) &&
+    Number.isFinite(unifiedClampedProbModulation);
+
+  return {
+    corpusPriorsReceipt,
+    rulebookPsychologyReceipt,
+    splitFieldCoverageReceipt,
+    spectralAttenuatedCoverageLogOdds,
+    jamesSteinShrinkageFactor,
+    unifiedClampedLogOddsDelta,
+    unifiedClampedProbModulation,
+    allFiniteNonNan,
+  };
+}
