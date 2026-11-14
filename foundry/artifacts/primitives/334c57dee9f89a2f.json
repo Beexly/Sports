@@ -1,0 +1,634 @@
+{
+  "book_id": "334c57dee9f89a2f",
+  "shard": "3",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "BORN_DIGITAL_CLEAN_LIGATURE_FOLD",
+  "source_note": "Adrian Becker (Dynamic Ideas LLC) & Xu Andy Sun (Georgia Institute of Technology), Journal of Quantitative Analysis in Sports 2016; 12(1): 17-30, DOI 10.1515/jqas-2013-0009, 'An analytical approach for fantasy football draft and lineup management'. fi/fl ligatures and U+2212 minus folded; the MIP objective/constraints, innate-ability product, bilinear least squares, and season-to-week allocation render as garbled display math and are reconstructed as labeled LaTeX from the prose, flagged in assumptions. Outputs are statistical fantasy-point projections and roster decisions; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "no_season_strategy",
+      "name": "No comprehensive season-long fantasy strategy existed",
+      "verbatim_quote": "to the best of our knowledge, there is no method that provides a comprehensive optimization strategy for the entire Fantasy Football season.",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Expert rankings and point projections existed, but no method optimized draft plus weekly lineup plus playoffs as one season-long objective."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A fragmented tool landscape is an integration opportunity; GSE builds the whole-season optimizer rather than isolated projections.",
+        "source_operator": "no_season_strategy",
+        "telemetry": "no holistic season strategy pre-2016"
+      }
+    },
+    {
+      "primitive_id": "two_core_methods",
+      "name": "Two methods: holistic MIP + opponent-context prediction",
+      "verbatim_quote": "A holistic optimization model which manages a team through draft construction and weekly management.",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The second method analyzes a player's weekly historical performance in the context of his opponents and predicts from it."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Optimization and matchup-aware prediction are the two pillars; GSE's DFS engine pairs a roster optimizer with opponent-specific projections.",
+        "source_operator": "two_core_methods",
+        "telemetry": "MIP management + opponent-context prediction"
+      }
+    },
+    {
+      "primitive_id": "real_gm_transfer",
+      "name": "Fantasy methods transfer to real GMs",
+      "verbatim_quote": "While we apply these methodologies to fantasy football, they have potential use to general managers in the real world outside the realm of fantasy sports.",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Real GMs evaluate reserve players in opponent context and manage weekly matchups and playoffs, but also face salary cap, multi-year contracts, and chemistry absent in fantasy."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The stylized fantasy setting isolates the matchup/roster trade-offs that also govern real roster construction; GSE notes the cap/contract factors fantasy omits.",
+        "source_operator": "real_gm_transfer",
+        "telemetry": "fantasy -> GM, minus cap/contracts/chemistry"
+      }
+    },
+    {
+      "primitive_id": "innate_abilities_notion",
+      "name": "Innate abilities per statistic are the distinctive feature",
+      "verbatim_quote": "The distinctive feature of our model is that it introduces the notion of innate abilities of a player or a team in various statistics, and makes prediction based on them.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Each player has an opponent-independent talent for each fantasy statistic; each defense has an ability to suppress it; prediction combines them."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Separating agent talent from opponent suppression is the same matchup-decomposition GSE uses for player projections.",
+        "source_operator": "innate_abilities_notion",
+        "telemetry": "innate ability per stat, opponent-independent"
+      }
+    },
+    {
+      "primitive_id": "losers_curse",
+      "name": "Top draft picks are overvalued (loser's curse)",
+      "verbatim_quote": "Massey and Thaler (2013) finds similar conclusions as in Berri and Simmons (2011) that top draft picks in the real-world NFL drafting are significantly overvalued in a manner that is inconsistent with the notion of rational expectation and efficient markets.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The loser's curse: top picks underperform their draft position relative to rational expectations, a market inefficiency."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Draft market overvalues early picks; GSE treats consensus ranking as a biased signal, not ground truth, the same skepticism of public opinion.",
+        "source_operator": "losers_curse",
+        "telemetry": "top picks overvalued, inefficient market"
+      }
+    },
+    {
+      "primitive_id": "three_season_phases",
+      "name": "Season: draft, weekly play, playoffs",
+      "verbatim_quote": "A fantasy football season is typically divided into three phases: draft, weekly play, and playoffs.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The optimizer must span all three phases; weekly head-to-head wins determine playoff seeding, and the top four play a two-week knockout."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A multi-phase horizon with a terminal playoff objective is the same season structure GSE's DFS optimizer plans across.",
+        "source_operator": "three_season_phases",
+        "telemetry": "draft -> weekly (1-15) -> playoffs (16-17)"
+      }
+    },
+    {
+      "primitive_id": "player_exclusivity",
+      "name": "Each player on at most one fantasy team",
+      "verbatim_quote": "Each NFL player can only be drafted on at most one owner's team, so if a player is drafted, it precludes all other owners from including that player on their teams.",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Exclusivity makes the draft a competitive resource-allocation game; a taken player is unavailable to everyone else."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Exclusive assignment under competition is the same draft constraint GSE models when anticipating which players remain available.",
+        "source_operator": "player_exclusivity",
+        "telemetry": "one player, one team; draft is competitive"
+      }
+    },
+    {
+      "primitive_id": "lineup_position_limits",
+      "name": "Starting lineup position limits",
+      "verbatim_quote": "it is assumed that each owner can start with up to 1 quarterback, 2 running backs, 3 wide receivers, 1 tight end, 1 kicker, and 1 team defense.",
+      "page": 4,
+      "latex": "\\text{PosLimit}=(\\text{QB}{:}1,\\text{RB}{:}2,\\text{WR}{:}3,\\text{TE}{:}1,\\text{K}{:}1,\\text{Def}{:}1)",
+      "symbol_and_unit_ledger": {
+        "PosLimit(j)": "max starters at position j per week"
+      },
+      "assumptions": [
+        "Yahoo default rules; 6 points per touchdown, 1 point per 25 passing yards; the methodology generalizes to other rule sets."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Position-slot constraints are the same roster feasibility constraints GSE's lineup optimizer enforces.",
+        "source_operator": "lineup_position_limits",
+        "telemetry": "1 QB / 2 RB / 3 WR / 1 TE / 1 K / 1 Def"
+      }
+    },
+    {
+      "primitive_id": "bye_and_matchup_adjust",
+      "name": "Bye weeks and matchups force weekly lineup changes",
+      "verbatim_quote": "players on NFL teams which have a bye week score no points and that any particular NFL team may be facing a strong or weak opponent in any given week.",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A bye-week player scores zero, and opponent strength varies weekly, so the optimal starting lineup changes week to week."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Availability (bye) and opponent strength are the same weekly conditioning GSE applies to lineup selection.",
+        "source_operator": "bye_and_matchup_adjust",
+        "telemetry": "bye = 0 points; matchup varies weekly"
+      }
+    },
+    {
+      "primitive_id": "draft_time_pressure",
+      "name": "Draft picks must be made in 1-3 minutes",
+      "verbatim_quote": "during the draft phase, owners typically have a very limited time frame of one to three minutes in which they must make their draft picks.",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The optimization must be computationally tractable to solve within the live draft clock."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A real-time decision budget constrains model complexity; GSE's draft optimizer must solve fast, the same latency requirement.",
+        "source_operator": "draft_time_pressure",
+        "telemetry": "1-3 min per pick -> tractable MIP"
+      }
+    },
+    {
+      "primitive_id": "opponent_rank_distribution",
+      "name": "Opponents draft around the public ranking",
+      "verbatim_quote": "In terms of model development, we feel that it is reasonable to assume that opponent owners will approximately adhere to this probability distribution for drafting.",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Opponents pick players according to a distribution whose expectation is the expert anticipated ranking R0(i); the model is robust to variation around it."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Modeling competitors as noisy followers of a public signal is the same opponent-behavior assumption GSE uses in draft simulation.",
+        "source_operator": "opponent_rank_distribution",
+        "telemetry": "opponent pick ~ distribution centered on R0"
+      }
+    },
+    {
+      "primitive_id": "robust_set_constrains_dm",
+      "name": "Robust uncertainty set constrains the DM, not opponents",
+      "verbatim_quote": "this uncertainty set imposes constraints on the DM's drafting, not on the opponent owners' drafting.",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Between the DM's picks, opponents are assumed to take from the top alpha-times-ranked players; the DM is forbidden from counting on those players later, making her plan robust."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Robust optimization protects the decision-maker against competitor variation rather than predicting it exactly; GSE uses the same protective uncertainty set.",
+        "source_operator": "robust_set_constrains_dm",
+        "telemetry": "uncertainty set binds DM's future picks"
+      }
+    },
+    {
+      "primitive_id": "robust_to_opponent_variation",
+      "name": "Future drafts robust to opponent pick variation",
+      "verbatim_quote": "makes the DM's future drafts robust to any variation of the opponents' picks within this uncertainty set.",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The parameter alpha>=1 controls conservativeness; larger alpha is more risk-averse, and sensitivity analysis shows higher alpha worsens average rank."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A tunable conservativeness knob trades robustness for upside; GSE calibrates alpha rather than maximizing it, the same risk tuning.",
+        "source_operator": "robust_to_opponent_variation",
+        "telemetry": "alpha>=1; larger = more risk-averse"
+      }
+    },
+    {
+      "primitive_id": "win_maximization_objective",
+      "name": "Objective: maximize wins, then total points",
+      "verbatim_quote": "matchups as possible during the weekly play and playoff phases",
+      "page": 6,
+      "latex": "\\max\\ \\lambda_0\\sum_{i,t} f(i,t)x_i^t+\\lambda_1\\sum_{t=1}^{15}z_t+\\lambda_2\\sum_{t=16}^{17}z_t",
+      "symbol_and_unit_ledger": {
+        "z_t": "win indicator (lineup points > beta(t))",
+        "lambda_0,1,2": "calibrated weights (1,100,150)"
+      },
+      "assumptions": [
+        "Winning matchups is the primary objective; total points is secondary; playoff wins weighted highest (lambda2=150)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Win-maximization, not point-maximization, is the correct DFS objective; GSE weights terminal playoff wins highest, the same objective hierarchy.",
+        "source_operator": "win_maximization_objective",
+        "telemetry": "max wins (lambda1,2) + points (lambda0)"
+      }
+    },
+    {
+      "primitive_id": "buffer_position_depth",
+      "name": "Draft more than you start (bye/injury buffer)",
+      "verbatim_quote": "the DM may want to draft at least five wide receivers to prepare for bye weeks and possible injuries, although only three wide receivers can be started at any given week.",
+      "page": 6,
+      "latex": "\\gamma_j=\\text{PosLimit}(j)+1",
+      "symbol_and_unit_ledger": {
+        "gamma_j": "minimum drafted at position j"
+      },
+      "assumptions": [
+        "Calibrated gamma_j = PosLimit(j)+1 buffers bye weeks and injuries; alternative settings buffer only QB/RB/WR."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Roster depth beyond starters is the same injury/bye hedging GSE builds into DFS roster construction.",
+        "source_operator": "buffer_position_depth",
+        "telemetry": "draft PosLimit+1 per position"
+      }
+    },
+    {
+      "primitive_id": "x_relaxation_fast_mip",
+      "name": "Relaxing start variables makes the MIP fast",
+      "verbatim_quote": "this MIP can be solved very fast within a minute on a normal laptop, and accelerates as the draft progresses.",
+      "page": 6,
+      "latex": "x_i^t\\in[0,1]\\ \\text{(relaxed)},\\ y_i,z_t\\in\\{0,1\\};\\ \\approx 640\\ \\text{integer vars}",
+      "symbol_and_unit_ledger": {
+        "640": "integer variables after relaxing x (vs >11,000 binary)",
+        "10550": "continuous variables",
+        "10700": "linear constraints"
+      },
+      "assumptions": [
+        "The special structure lets x_i^t be continuous without loss of generality; as the draft progresses more y_j are fixed, shrinking the problem."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Exploiting structure to relax binaries is the same tractability trick GSE uses to meet the live draft clock.",
+        "source_operator": "x_relaxation_fast_mip",
+        "telemetry": "640 integer vars, <1 min, accelerates"
+      }
+    },
+    {
+      "primitive_id": "pick_on_public_rank",
+      "name": "Pick on public ranking, not internal projection",
+      "verbatim_quote": "ensures that, if the assumption on the uncertainty sets holds, the ultimate team the DM ends up with will be no worse than the anticipated team",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The objective uses internal f(i,t), but the executed pick uses public R_k because opponents draft on R_k; picking on f could lose a high-ranked player to opponents."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Execute on the signal competitors react to, optimize on the private estimate; GSE separates the optimization metric from the execution rule, the same robustness logic.",
+        "source_operator": "pick_on_public_rank",
+        "telemetry": "optimize on f, execute on R_k"
+      }
+    },
+    {
+      "primitive_id": "weekly_greedy_lineup",
+      "name": "Weekly lineup: greedy by projected points",
+      "verbatim_quote": "During the weekly play and playoff phases, we use a simple greedy algorithm to select the starting lineups.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Start the highest-f(i,t) player by position from the roster, updating f weekly with new data; opponent matchups are known that week."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Once the roster is fixed, weekly lineup selection is a greedy per-position max; GSE uses the same simple weekly starter rule.",
+        "source_operator": "weekly_greedy_lineup",
+        "telemetry": "greedy max f(i,t) by position"
+      }
+    },
+    {
+      "primitive_id": "expert_total_season_drawback",
+      "name": "Expert projections are season totals, not weekly",
+      "verbatim_quote": "a drawback of the expert prediction is that they are usually given in the form of total season points of a player or a team.",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Expert predictions carry rookie/roster information history cannot, but are season totals; since the objective is weekly wins, they must be disaggregated."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A season-total projection must be allocated to weeks to serve a weekly objective; GSE disaggregates expert totals the same way.",
+        "source_operator": "expert_total_season_drawback",
+        "telemetry": "expert g(i) = season total, needs weekly split"
+      }
+    },
+    {
+      "primitive_id": "season_to_week_allocation",
+      "name": "Allocate season total to weeks by innate index",
+      "verbatim_quote": "use this index to allocate experts' projections of fantasy points for the entire season to each week.",
+      "page": 7,
+      "latex": "f(i,t)=\\bar f(i,t)\\cdot\\frac{g(i)}{\\sum_{t}\\bar f(i,t)}",
+      "symbol_and_unit_ledger": {
+        "g(i)": "expert season-total projection",
+        "fbar(i,t)": "innate-ability index = when player i scores"
+      },
+      "assumptions": [
+        "The index fbar(i,t) predicts when a player scores; the weekly projection is the season total times the normalized index."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A timing index disaggregates a total into a schedule; GSE allocates season projections to weeks by matchup-driven timing, the same method.",
+        "source_operator": "season_to_week_allocation",
+        "telemetry": "f(i,t) = fbar * g / sum(fbar)"
+      }
+    },
+    {
+      "primitive_id": "innate_ability_product",
+      "name": "Projection = innate ability times opponent defense",
+      "verbatim_quote": "The projection for the level of each statistic achieved by a player in a given week is the product of his innate ability and his opponent's ability to defend.",
+      "page": 7,
+      "latex": "\\hat s_{i,t}=u_i^s\\cdot w_{\\text{Opp}(i,t)}^{Ds}",
+      "symbol_and_unit_ledger": {
+        "u_i^s": "player i innate ability for stat s",
+        "w_j^Ds": "defense j ability to suppress stat s"
+      },
+      "assumptions": [
+        "The product captures the first-order interaction between the two matched-up agents; e.g., Manning pass yards vs Jets = u_Manning * w_Jets."
+      ],
+      "breakdown_regime": "first-order multiplicative interaction; higher-order effects ignored",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A multiplicative talent-times-opponent kernel is the same matchup projection GSE uses for player statistics.",
+        "source_operator": "innate_ability_product",
+        "telemetry": "stat = u_i^s * w_opp^Ds"
+      }
+    },
+    {
+      "primitive_id": "weighted_recent_least_squares",
+      "name": "Weighted recent history + least squares",
+      "verbatim_quote": "we use a weighted average of historical performance with recent performance weighted more heavily as our data, and a least squares estimation as the methodology.",
+      "page": 8,
+      "latex": "HT_k^s=\\sum_{\\tau}2^{\\tau}\\,HT_{k,\\tau}^s",
+      "symbol_and_unit_ledger": {
+        "HT_k^s": "weighted historical total for team k, stat s",
+        "tau": "season index (0=last year, -1=two years ago)"
+      },
+      "assumptions": [
+        "Team offensive/defensive multipliers solve a bilinear least-squares system matching aggregate totals to opponent-adjusted products."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Recency-weighted least squares is the same estimator GSE uses to fit team strength from historical aggregates.",
+        "source_operator": "weighted_recent_least_squares",
+        "telemetry": "recent seasons weighted 2^tau"
+      }
+    },
+    {
+      "primitive_id": "alternating_minimization",
+      "name": "Alternating minimization converges in 2-3 iterations",
+      "verbatim_quote": "convergence is typically achieved within two or three iterations of the above algorithm",
+      "page": 8,
+      "latex": "h(u^{t},w^{t})\\ge h(u^{t},w^{t+1})\\ge h(u^{t+1},w^{t+1}),\\quad h\\ge 0",
+      "symbol_and_unit_ledger": {
+        "h(u,w)": "bilinear least-squares objective"
+      },
+      "assumptions": [
+        "Fixing one multiplier set makes the problem convex quadratic in the other; SVD solves each linear step; monotone convergence theorem guarantees objective convergence."
+      ],
+      "breakdown_regime": "nonconvex overall; converges to a local optimum, R^2 ~ 0.999 goodness-of-fit",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Alternating convex subproblems is the same bilinear fitting GSE uses for talent/opponent multipliers.",
+        "source_operator": "alternating_minimization",
+        "telemetry": "alternate u/w via SVD, 2-3 iters, R^2~0.999"
+      }
+    },
+    {
+      "primitive_id": "nonconvex_no_global_opt",
+      "name": "Nonconvex: no global optimality guarantee",
+      "verbatim_quote": "due to the nonconvex nature of the above optimization problem, we cannot guarantee global optimality of the convergent solution.",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The bilinear problem is nonconvex, so the convergent solution may be local; high R-squared and fast convergence justify the simple algorithm in practice."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A local optimum with excellent fit can be acceptable; GSE records the nonconvexity honestly rather than claiming global optimality.",
+        "source_operator": "nonconvex_no_global_opt",
+        "telemetry": "nonconvex -> local opt, no global guarantee"
+      }
+    },
+    {
+      "primitive_id": "beta_playoff_robust_max",
+      "name": "Playoff beta: max over possible opponents",
+      "verbatim_quote": "to be robust, we calculate the projected fantasy points for each opposing owner in Weeks 16 and 17, then take the maximum point projection for any possible opponent.",
+      "page": 9,
+      "latex": "\\beta(t)=\\max_{\\text{opp}}\\sum_{i\\in\\text{lineup}_{\\text{opp}}} f(i,t)\\ \\text{(playoffs)}",
+      "symbol_and_unit_ledger": {
+        "beta(t)": "points needed to reasonably win week t"
+      },
+      "assumptions": [
+        "Weekly beta simulates the remaining draft by R_k and sums the opponent's best lineup; playoff opponent is unknown, so the maximum projection is used."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A worst-case opponent threshold under unknown matchups is the same robust target GSE sets for playoff DFS.",
+        "source_operator": "beta_playoff_robust_max",
+        "telemetry": "beta = max opponent lineup projection"
+      }
+    },
+    {
+      "primitive_id": "gamma_calibration",
+      "name": "Roster-depth parameters are preference-calibrated",
+      "verbatim_quote": "are a parameter setting that can be calibrated according to the DM's preference for buffering injury risk and accumulating tradeable assets.",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Calibration on 2004-2006 chose alpha=1, gamma_j=PosLimit(j)+1, lambda0=1, lambda1=100, lambda2=150; gamma trades injury buffering against tradeable assets."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Roster-depth and objective weights are tuned to risk preference; GSE calibrates the same knobs rather than fixing them arbitrarily.",
+        "source_operator": "gamma_calibration",
+        "telemetry": "alpha=1, gamma=PosLimit+1, lambda=(1,100,150)"
+      }
+    },
+    {
+      "primitive_id": "simulation_edge_2007",
+      "name": "MIP beats baseline: 2007 win 16.7%, top-2 27.3%",
+      "verbatim_quote": "for 2007 our approach won its fantasy football league 16.7% of the time, coming in at least the second best at nearly 27.3% of the time.",
+      "page": 10,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "300 trials, average rank 4.60 vs baseline 5.5 (uniform 10% each); win-money probability higher at 99.75% confidence; 2008 top-2 20.7%, avg 5.14."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A simulated edge over the consensus baseline, with significance, is the same validation GSE requires before trusting an optimizer.",
+        "source_operator": "simulation_edge_2007",
+        "telemetry": "2007: 16.7% win, 27.3% top-2, rank 4.60"
+      }
+    },
+    {
+      "primitive_id": "weekly_allocation_ablation",
+      "name": "Weekly allocation beats uniform split",
+      "verbatim_quote": "This study finds that using a weekly allocation increases our probability of winning money by a statistically significant amount at the 97.8% confidence level.",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Setting f(i,t)=g(i)/16 uniformly gives top-2 only 15%; matchup-aware weekly allocation lifts it significantly, proving the timing index adds value."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "An ablation isolates the value of matchup-aware timing; GSE validates each component by removing it, the same ablation discipline.",
+        "source_operator": "weekly_allocation_ablation",
+        "telemetry": "uniform 15% top-2 vs weekly allocation, 97.8% conf"
+      }
+    },
+    {
+      "primitive_id": "expert_overprediction_bias",
+      "name": "Experts over-predict, especially skill positions",
+      "verbatim_quote": "this suggests that experts tend to over predict players' fantasy scoring abilities.",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Weekly points overestimated by 4.5 on average; error driven by over-optimism on skill positions; Kicker/Defense errors are smaller (Table 3)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Expert projections carry a systematic optimism bias concentrated in breakout skill players; GSE debiases expert totals, the same correction.",
+        "source_operator": "expert_overprediction_bias",
+        "telemetry": "+4.5 pts/week overestimate, skill-position bias"
+      }
+    },
+    {
+      "primitive_id": "perfect_info_still_hard",
+      "name": "Even perfect information leaves a hard draft",
+      "verbatim_quote": "Even with perfect information on player performance, a fantasy sports draft still remains a challenging optimization problem due to the positional requirements of the roster and the varying week-to-week point production and opponent matchups.",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "With actual performance known, average rank improves to 3.32 and win rate to 39.7%, but positional constraints and weekly variation keep the problem hard."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Forecast error is only part of the difficulty; the combinatorial roster/matchup structure is hard even with perfect data, the same insight for GSE.",
+        "source_operator": "perfect_info_still_hard",
+        "telemetry": "perfect info: rank 3.32, win 39.7%, still hard"
+      }
+    },
+    {
+      "primitive_id": "injury_adversary_extension",
+      "name": "Injury robustness via an adversary",
+      "verbatim_quote": "We could incorporate a robust formulation where an adversary is allowed to pick one or more of our players to injure for the season, ensuring that we do not rely too heavily on the point contributions of a few key players that may be injured.",
+      "page": 13,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A robust extension lets an adversary injure key players, forcing the roster to diversify point contributions rather than concentrate them."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An adversarial injury model is the same concentration-risk hedge GSE builds into DFS rosters.",
+        "source_operator": "injury_adversary_extension",
+        "telemetry": "adversary injures key players -> diversify"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "becker_sun2016_trace",
+      "think": "The retrocausal genealogy of this paper is the absence of a comprehensive, season-long fantasy football optimization strategy. Despite 35 million fantasy players and a cottage industry of expert rankings and point projections, winning a league remained more art than science because no method optimized the draft, the weekly lineups, and the playoffs as a single objective. The lineage runs through Summers, Swartz, and Lockhart's statistical hockey-pool drafting, Fry, Lundberg, and Ohlmann's stochastic dynamic program for a real NFL draft relaxed to a linear program, Gibson, Ohlmann, and Fry's stochastic knapsack with sequential competition, the Kvam-Sokol logistic-regression Markov-chain ratings, and the Massey-Thaler loser's curse showing top draft picks are overvalued. The gap this paper fills is a holistic mixed-integer program that plans the entire season, paired with a prediction method that estimates each player's points in the context of his specific weekly opponents. The optimization model treats the draft as a competitive resource-allocation game under a live clock of one to three minutes per pick. Binary variables decide which players to draft and which to start each week, with an indicator for whether the weekly lineup exceeds the points needed to win. The objective maximizes head-to-head wins across the weekly and playoff phases, with total points as a secondary term and playoff wins weighted highest. Opponent owners are modeled as drafting around the public expert ranking, and a robust uncertainty set, controlled by a conservativeness parameter alpha, forbids the decision-maker from counting on players the opponents are likely to take between her picks. A structural relaxation of the start variables reduces the problem to about 640 integer variables, solvable in under a minute and accelerating as the draft progresses. Crucially, the model optimizes on its internal projection but executes each pick on the public ranking, because that is the signal opponents react to. The recursive theory of mind operates on two levels. First, the model anticipates which players the opponents will draft, treating them as noisy followers of the public ranking and protecting the plan against that variation. Second, it reasons about when each player will score, introducing innate abilities: each player has an opponent-independent talent for each fantasy statistic, each defense has an ability to suppress that statistic, and the weekly projection is the product of the two, a first-order interaction between the matched-up agents. Because expert projections arrive as season totals, an innate-ability timing index allocates the season total to each week, so the model knows not just how much a player scores but when, against which opponents. Cross-layer veto adjudication is rigorous. The talent and defense multipliers are fit by a bilinear least-squares system that becomes convex quadratic when one set is fixed, solved by alternating minimization with SVD; it converges in two or three iterations with R-squared near 0.999, though the nonconvex problem offers no global-optimality guarantee, which the authors state honestly. The win threshold beta is the opponent's projected lineup points, simulated from the public ranking in the weekly phase and taken as the maximum over possible opponents in the playoffs for robustness. Calibration on 2004 to 2006 chose alpha equals 1, roster depth of one extra player per position, and objective weights of 1, 100, and 150. In 300 simulated 2007 seasons the model won 16.7 percent and placed top-two 27.3 percent, average rank 4.60 against a 5.5 baseline, significant at 99.75 percent confidence; an ablation replacing the weekly allocation with a uniform season split dropped top-two to 15 percent, proving the timing index adds value at 97.8 percent confidence. The implementation invariants are exactly GSE's DFS kernel. Optimize for wins, not raw points; build matchup-specific projections from a talent-times-opponent product; allocate season totals to weeks by a timing index; buffer roster depth for byes and injuries; and execute draft picks on the public signal competitors react to while optimizing on the private estimate. The outputs are statistical fantasy-point projections and roster decisions, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The same machinery transfers to real general managers, minus the salary cap, multi-year contracts, and chemistry that fantasy abstracts away. The parameter ledger and the limitations close the account. The data span 2004 to 2008 from Yahoo and the NFL, with expert rankings and mock-draft behavior, simulated in a ten-owner league over 300 trials using AMPL-CPLEX. The authors show that even with perfect information about player performance the draft remains hard, average rank 3.32 and win rate 39.7 percent, because positional requirements and week-to-week variation are intrinsically combinatorial; forecast error is only part of the difficulty. They document a systematic expert optimism bias of about 4.5 points per week concentrated in skill positions, and that higher alpha makes the model more conservative and worse. Future extensions include tier-clustering projections, an uncertainty set around the weekly projection built from historical error, an adversarial injury formulation to avoid concentration risk, robust maximization of the win threshold, and mid-season free-agency reoptimization. The invariant for GSE is to carry the win-maximizing robust draft, the matchup-product projection, and the honest accounting of forecast and injury uncertainty. The 2008 replication, top-two 20.7 percent at average rank 5.14, confirms the edge is not a single-season artifact.",
+      "retrocausal_genealogy": "The paper originates in the absence of a season-long fantasy optimization strategy: despite 35M players and abundant expert projections, winning remained art, not science. The lineage runs Summers hockey pools (statistical), Fry NFL-draft DP (LP relaxation), Gibson stochastic knapsack (agent-based), Kvam-Sokol LRMC, and the Massey-Thaler loser's curse. The gap is a holistic MIP spanning draft, weekly play, and playoffs, paired with opponent-context prediction. The distinctive move is innate abilities per statistic, combined multiplicatively with opponent defense, and a timing index that allocates expert season totals to weeks.",
+      "theory_of_mind": "The model reasons on two levels: it anticipates opponents drafting around the public ranking (protecting the plan via a robust uncertainty set with conservativeness alpha), and it reasons about when each player scores via innate ability u_i^s times opponent defense w_j^Ds. Because expert projections are season totals, the timing index fbar(i,t) disaggregates them to weeks. The model optimizes on internal f(i,t) but executes picks on public R_k, the signal opponents react to, guaranteeing the realized team is no worse than anticipated.",
+      "cross_layer_veto": "The bilinear least-squares fit alternates convex subproblems via SVD, converging in 2-3 iterations (R^2~0.999) but nonconvex, so no global guarantee is claimed. Beta is the opponent's projected lineup (max over opponents in playoffs). Calibration: alpha=1, gamma=PosLimit+1, lambda=(1,100,150). 300 simulated 2007 seasons: 16.7% win, 27.3% top-2, rank 4.60 vs 5.5 baseline (99.75% conf); a uniform-split ablation drops top-2 to 15% (97.8% conf). Expert optimism bias is +4.5 pts/week, concentrated in skill positions; perfect information still leaves a hard combinatorial draft (rank 3.32, win 39.7%)."
+    }
+  ],
+  "universal_lens": "A fantasy season is won by a robust mixed-integer draft optimizer that maximizes head-to-head wins (not raw points) against opponents modeled as noisy followers of the public ranking, fed by matchup-specific projections formed as innate player ability times opponent defense and a timing index that allocates expert season totals to weeks.",
+  "gsi_mapping": "GSI treats the draft as competitive resource allocation under a 1-3 minute clock: binary draft/start variables, a win-indicator objective with calibrated weights (1,100,150), an alpha-controlled robust uncertainty set on opponent picks, x-relaxation to ~640 integer vars, and projections f(i,t)=fbar(i,t)*g(i)/sum(fbar) with fbar from a bilinear u*w least-squares fit (alternating SVD, R^2~0.999).",
+  "gse_mapping": "GSE lifts the win-maximizing robust draft, the talent-times-opponent matchup projection, the season-to-week timing allocation, roster-depth buffering, and the execute-on-public-signal/optimize-on-private-estimate split; all outputs are statistical fantasy projections and roster decisions feeding the DFS lane, never sportsbook lines."
+}
