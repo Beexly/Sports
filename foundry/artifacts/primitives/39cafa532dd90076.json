@@ -1,0 +1,875 @@
+{
+ "book_id": "39cafa532dd90076",
+ "source_status": "COMPLETE",
+ "source_note": "Bruce Hajek, Random Processes for Engineers, Cambridge University Press, March 2015. The local file is the author's freely distributed preproduction copy of the same title (title page note: it supersedes his 'Notes for ECE 534: An Exploration of Random Processes for Engineers', does not incorporate final edits, and is dated July 2014 in the preface signature), PDF 3,605,675 bytes, sha256 39cafa532dd9007624ef2d37de2075394ba3d7ccbb8c133561b3707a65f52483, book_id 39cafa532dd90076 (first 16 hex of sha256 over str(size) plus file bytes). Extracted text (1,379,943 chars, about 208,000 words) is clean and faithful in prose; display math has occasional glyph substitutions (not equal rendered as '6=', the small epsilon as a control character), so all verbatim quotes were chosen from clean prose passages and machine verified as contiguous substrings of the extracted text. No catalog correction needed: author, title, and year match the published edition. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "kolmogorov_axioms_probability_space",
+   "name": "Probability space (Omega, F, P): sigma-algebra of events plus a countably additive measure with P(Omega) = 1",
+   "verbatim_quote": "A probability space is a triplet (Ω, F, P). The first component, Ω, is a nonempty set. Each element ω of Ω is called an outcome and Ω is called the sample space.",
+   "page": "Section 1.1, p. 1",
+   "latex": "P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)",
+   "symbol_and_unit_ledger": {
+    "P": "probability measure on the sigma-algebra F",
+    "A_i": "mutually exclusive events in F",
+    "Omega": "sample space of outcomes"
+   },
+   "assumptions": [
+    "F is a sigma-algebra: closed under complements and countable unions",
+    "The A_i are mutually exclusive for the additivity statement"
+   ],
+   "breakdown_regime": "Breaks when the event collection is not a sigma-algebra (for example all subsets of [0,1] under uniform length), where no consistent measure exists; the Borel sigma-algebra is the standard repair.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine probability statement inherits this contract: an explicit sample space, an event algebra closed under the operations the engine performs, and countable additivity wherever infinite unions of scenarios are aggregated. It is the consistency layer beneath every other primitive in this artifact.",
+    "source_operator": "kolmogorov_axioms_probability_space",
+    "telemetry": "the event schema and scenario definitions used by any probabilistic module"
+   }
+  },
+  {
+   "primitive_id": "conditional_probability_and_bayes",
+   "name": "Conditional probability P(A|B) = P(AB)/P(B), the law of total probability over a partition, and Bayes inversion of conditioning",
+   "verbatim_quote": "More generally, for any event A, the law of total probability holds because A is the union of the mutually exclusive sets AE1 , AE2 , . . . , AEk :",
+   "page": "Section 1.2, pp. 5-7",
+   "latex": "P(E_i|A) = \\frac{P(A|E_i)P(E_i)}{\\sum_{k} P(A|E_k)P(E_k)}",
+   "symbol_and_unit_ledger": {
+    "P(E_i|A)": "posterior probability of partition element E_i given A",
+    "P(A|E_i)": "likelihood of A under E_i",
+    "P(E_i)": "prior probability of E_i",
+    "A": "observed event"
+   },
+   "assumptions": [
+    "P(B) > 0 for elementary conditioning; zero probability conditioning needs the conditional expectation machinery of Chapters 3 and 10",
+    "The E_i form a partition of the sample space for the total probability expansion"
+   ],
+   "breakdown_regime": "Conditioning on probability zero events is undefined at this level and silently returning zero is flagged in the text as a programming error; the failure mode is division by an empty evidence set.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Bayes inversion is the engine's belief revision step: priors over hypotheses, likelihoods of observed evidence under each hypothesis, and a partition that is genuinely exhaustive. The total probability denominator is the audit that the hypothesis set covers the evidence.",
+    "source_operator": "conditional_probability_and_bayes",
+    "telemetry": "prior weights, per-hypothesis likelihoods of incoming evidence"
+   }
+  },
+  {
+   "primitive_id": "borel_cantelli_lemma",
+   "name": "Borel-Cantelli: summable event probabilities occur only finitely often almost surely; for independent events with divergent sum they occur infinitely often almost surely",
+   "verbatim_quote": "definition 1.2 The event {An infinitely often} is the set of ω ∈ Ω such that ω ∈ An for infinitely many values of n.",
+   "page": "Section 1.2, pp. 7-8 (Definition 1.2, Lemma 1.3)",
+   "latex": "P(A_n \\text{ infinitely often}) = 0 \\ \\text{if } \\sum_{n=1}^{\\infty} P(A_n) < \\infty; \\quad = 1 \\ \\text{if } \\sum_{n=1}^{\\infty} P(A_n) = \\infty \\text{ and the } A_n \\text{ are independent}",
+   "symbol_and_unit_ledger": {
+    "P(A_n)": "probability of the nth event in the sequence",
+    "A_n infinitely often": "the event that omega lies in A_n for infinitely many n"
+   },
+   "assumptions": [
+    "Part (a) needs no independence",
+    "Part (b) requires mutual independence of the events"
+   ],
+   "breakdown_regime": "Without independence part (b) fails outright: the text's nested interval example has divergent sum yet the infinitely-often event has probability zero. Nested or strongly coupled event streams are the breakdown regime.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's recurrence audit for rare signals: if the per-period probabilities of a pattern are summable, the pattern dies out almost surely and should not be projected forward; if they are independent with divergent sum, the pattern recurs indefinitely and a model that treats it as finished is wrong.",
+    "source_operator": "borel_cantelli_lemma",
+    "telemetry": "per-period occurrence probabilities of tracked patterns, dependence diagnostics between periods"
+   }
+  },
+  {
+   "primitive_id": "expectation_as_lebesgue_integral",
+   "name": "Expectation defined as a Lebesgue integral over the probability space, built as the limit of expectations of simple random variables",
+   "verbatim_quote": "Thus, E[X] is always well defined in this way, with possible value +∞, if X is a nonnegative random variable.",
+   "page": "Section 1.5, pp. 17-19",
+   "latex": "E[X] = \\int_{\\Omega} X(\\omega)\\, P(d\\omega)",
+   "symbol_and_unit_ledger": {
+    "E[X]": "expected value of X",
+    "X(omega)": "value of the random variable at outcome omega",
+    "P(d omega)": "probability measure element"
+   },
+   "assumptions": [
+    "For signed X, at least one of E[X+] and E[X-] must be finite, else E[X] is undefined",
+    "Approximating simple random variables increase to X for the nonnegative construction"
+   ],
+   "breakdown_regime": "Undefined when both tails are infinitely heavy (E[X+] = E[X-] = +infinity), the Cauchy type regime; Riemann integration over Omega also fails on Dirichlet type variables, which is why the Lebesgue route is mandatory.",
+   "domain": "probability foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's averaging operator is this integral, not a finite sample mean: every reported expectation is a measure weighted integral over the outcome space, and sample averages are only estimators of it whose error is governed by the convergence primitives.",
+    "source_operator": "expectation_as_lebesgue_integral",
+    "telemetry": "outcome space weighting, payoff or measurement function values per outcome"
+   }
+  },
+  {
+   "primitive_id": "failure_rate_function",
+   "name": "Failure rate (hazard) function h(t) = f_T(t) / (1 - F_T(t)); it determines the lifetime distribution through F(t) = 1 - exp(-integral of h)",
+   "verbatim_quote": "The failure rate function, h = (h(t) : t ≥ 0), of T (and of the item itself) is defined by the following limit:",
+   "page": "Section 1.7, p. 25",
+   "latex": "h(t) = \\frac{f_T(t)}{1 - F_T(t)}, \\qquad F(t) = 1 - \\exp\\left(-\\int_0^t h(s)\\, ds\\right)",
+   "symbol_and_unit_ledger": {
+    "h(t)": "instantaneous failure rate at age t, units 1/time",
+    "f_T(t)": "lifetime density at t",
+    "F_T(t)": "lifetime CDF, probability of failure by t",
+    "T": "positive lifetime random variable"
+   },
+   "assumptions": [
+    "T is a positive random variable with a density f_T",
+    "The survival function 1 - F_T(t) is positive on the ages considered"
+   ],
+   "breakdown_regime": "Constant hazard is equivalent to the memoryless exponential law; increasing or bathtub hazards need the integral form. Atoms in the lifetime distribution (positive probability of failing exactly at t) break the density based definition.",
+   "domain": "survival analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hazard form is the right way for the engine to carry any time-to-event quantity: an instantaneous conditional rate given survival so far, which integrates to a survival curve. Aging, wear, and freshness effects enter as the shape of h rather than as ad hoc adjustments to a mean lifetime.",
+    "source_operator": "failure_rate_function",
+    "telemetry": "age or exposure of the entity at risk, event counts by age band, censoring indicators"
+   }
+  },
+  {
+   "primitive_id": "almost_sure_convergence",
+   "name": "Almost sure convergence: pathwise convergence on a probability one set; strongest of the four convergence modes (a.s. implies in probability, which implies in distribution)",
+   "verbatim_quote": "definition 2.1 A sequence of random variables (Xn : n ≥ 1) converges almost surely to a random variable X, if all the random variables are defined on the same probability space, and P {limn→∞ Xn = X} = 1.",
+   "page": "Section 2.1, p. 42",
+   "latex": "P\\left(\\lim_{n\\to\\infty} X_n = X\\right) = 1",
+   "symbol_and_unit_ledger": {
+    "X_n": "nth random variable of the sequence",
+    "X": "limiting random variable on the same probability space"
+   },
+   "assumptions": [
+    "All variables live on one common probability space",
+    "The exceptional null set may depend on the sequence"
+   ],
+   "breakdown_regime": "Fails for the moving shrinking rectangles example: convergence in probability holds while pathwise limits exist nowhere. Any claim about individual trajectories needs this mode, not a weaker one.",
+   "domain": "asymptotics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine distinguishes claims about whole trajectories from claims about distributions: a.s. convergence is the standard required before a per-entity path statement (this entity's estimate settles) is licensed; weaker modes only license statements about the population of paths.",
+    "source_operator": "almost_sure_convergence",
+    "telemetry": "per-entity estimate trajectories over time, pathwise deviation logs"
+   }
+  },
+  {
+   "primitive_id": "convergence_in_distribution_and_characteristic_functions",
+   "name": "Convergence in distribution: CDF convergence at continuity points, equivalent to pointwise convergence of characteristic functions Phi_X(u) = E[e^{juX}]",
+   "verbatim_quote": "definition 2.5 A sequence (Xn : n ≥ 1) of random variables converges in distribution to a random variable X if lim FXn (x) = FX (x) at all continuity points x of FX .",
+   "page": "Section 2.1, pp. 47-49 (Definition 2.5, Proposition 2.6)",
+   "latex": "\\Phi_X(u) = E\\left[e^{juX}\\right], \\qquad X_n \\to X \\text{ in distribution} \\iff \\Phi_{X_n}(u) \\to \\Phi_X(u) \\ \\forall u",
+   "symbol_and_unit_ledger": {
+    "Phi_X(u)": "characteristic function of X at frequency u",
+    "j": "imaginary unit",
+    "F_X": "CDF of X"
+   },
+   "assumptions": [
+    "CDF convergence is required only at continuity points of the limit CDF",
+    "Characteristic functions always exist, unlike moment generating functions"
+   ],
+   "breakdown_regime": "Says nothing about pathwise or pairwise behavior: variables can converge in distribution while being independent copies, so no per-path conclusion follows. Atoms in the limit law are exactly where CDF convergence can fail pointwise.",
+   "domain": "asymptotics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Distributional convergence is the engine's license for replacing a complicated law by a simpler limit law in reported probabilities, and the characteristic function route is the computational check: transforms multiply under independent summation, which is what makes limit calculations tractable.",
+    "source_operator": "convergence_in_distribution_and_characteristic_functions",
+    "telemetry": "empirical distributions of estimates, transform evaluations at test frequencies"
+   }
+  },
+  {
+   "primitive_id": "law_of_large_numbers",
+   "name": "Law of large numbers: sample means converge to the common mean, in mean square under bounded variances and no correlation, in probability for iid variables (weak), and almost surely for iid variables (strong)",
+   "verbatim_quote": "(c) Snn → m if X1 , X2 , . . . are iid. (This version is the strong law of large numbers.)",
+   "page": "Section 2.3, pp. 58-60 (Proposition 2.15)",
+   "latex": "\\frac{S_n}{n} \\to m \\quad \\text{a.s.}, \\qquad S_n = X_1 + \\cdots + X_n",
+   "symbol_and_unit_ledger": {
+    "S_n/n": "sample mean of the first n variables",
+    "m": "common finite mean of the variables",
+    "n": "number of observations"
+   },
+   "assumptions": [
+    "Each X_i has finite mean m",
+    "The strong form stated here assumes the variables are iid"
+   ],
+   "breakdown_regime": "Fails when the mean is infinite or undefined (heavy tailed regime), and the mean square form fails under correlation: correlated samples average far more slowly than the iid rate suggests.",
+   "domain": "asymptotics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's justification for trusting long run averages at all, with the mode of convergence matched to the claim: strong form for pathwise settling of a single tracked average, weak form for population statements. The hypotheses double as a checklist: finite mean, and independence or at least vanishing correlation.",
+    "source_operator": "law_of_large_numbers",
+    "telemetry": "observation counts, running means, pairwise correlation estimates between observations"
+   }
+  },
+  {
+   "primitive_id": "central_limit_theorem",
+   "name": "Central limit theorem: the normalized sum of iid variables converges in distribution to a Gaussian with the same variance",
+   "verbatim_quote": "proposition 2.16 (Central Limit Theorem) Suppose that X1 , X2 , . . . are i.i.d., each with mean µ and variance σ 2 . Let Sn = X1 + · · · + Xn .",
+   "page": "Section 2.3, pp. 60-61 (Proposition 2.16)",
+   "latex": "\\frac{S_n - n\\mu}{\\sqrt{n}} \\to N(0, \\sigma^2) \\quad \\text{in distribution}",
+   "symbol_and_unit_ledger": {
+    "S_n": "sum of n iid variables",
+    "mu": "common mean",
+    "sigma^2": "common finite variance",
+    "n": "sample size"
+   },
+   "assumptions": [
+    "Variables are iid with finite variance sigma^2",
+    "The statement concerns deviations of order 1/sqrt(n) around the mean"
+   ],
+   "breakdown_regime": "The Gaussian approximation is a statement about normal deviations only; for fixed size deviations the probabilities are governed by the large deviation rate, not the CLT, and with infinite variance the limit is a stable law, not Gaussian.",
+   "domain": "asymptotics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's default uncertainty shape for aggregated estimates: sums of many small independent contributions get Gaussian error bars scaled by sqrt(n). The primitive also marks its own boundary, since the same chapter supplies the large deviation correction for tail questions.",
+    "source_operator": "central_limit_theorem",
+    "telemetry": "per-observation variance estimates, counts of independent contributions to an aggregate"
+   }
+  },
+  {
+   "primitive_id": "chernoff_bound_and_cramer_rate_function",
+   "name": "Chernoff bound and Cramer's theorem: P(S_n/n >= a) decays exponentially with rate l(a), the Legendre transform of the log moment generating function",
+   "verbatim_quote": "To make the best use of the Chernoff bound we can optimize the bound by selecting the best θ.",
+   "page": "Section 2.5, pp. 62-65",
+   "latex": "P\\left(\\frac{S_n}{n} \\ge a\\right) \\le e^{-n l(a)}, \\qquad l(a) = \\sup_{\\theta} \\left( \\theta a - \\ln M(\\theta) \\right), \\quad M(\\theta) = E\\left[e^{\\theta X_1}\\right]",
+   "symbol_and_unit_ledger": {
+    "l(a)": "large deviation rate at level a, per observation",
+    "M(theta)": "moment generating function of one observation",
+    "a": "deviation level above the mean",
+    "n": "number of iid observations"
+   },
+   "assumptions": [
+    "Observations are iid with finite mean below a",
+    "The optimized bound needs M(theta) finite for some theta > 0 to give a positive rate"
+   ],
+   "breakdown_regime": "If the moment generating function is infinite for all theta > 0 (heavy right tail), the exponential rate collapses and decay is polynomial, not exponential; Cramer's matching lower bound also needs P(X_1 >= a) > 0.",
+   "domain": "asymptotics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Tail risk in the engine is priced by the rate function, not by Gaussian extrapolation: the probability of a fixed size estimation error decays exponentially in the amount of evidence, with an exponent computed from the actual moment generating function of the increments.",
+    "source_operator": "chernoff_bound_and_cramer_rate_function",
+    "telemetry": "increment distributions of estimation errors, empirical moment generating evaluations"
+   }
+  },
+  {
+   "primitive_id": "orthogonality_principle_and_conditional_expectation",
+   "name": "Orthogonality principle: the MMSE estimator is the projection onto the admissible subspace, characterized by the error being orthogonal to every admissible estimator; conditional expectation is the unconstrained case",
+   "verbatim_quote": "theorem 3.2 (The orthogonality principle) Let V be a closed, linear subspace of L2 (Ω, F, P ), and let X ∈ L2 (Ω, F, P ), for some probability space (Ω, F, P ).",
+   "page": "Section 3.2, pp. 79-81 (Theorem 3.2); Section 3.3.1, pp. 83-85",
+   "latex": "E\\left[(X - \\Pi_V(X)) Z\\right] = 0 \\quad \\forall Z \\in V, \\qquad E\\left[(X - \\Pi_V(X))^2\\right] = E[X^2] - E\\left[\\Pi_V(X)^2\\right]",
+   "symbol_and_unit_ledger": {
+    "Pi_V(X)": "projection of X onto the closed linear subspace V, the MMSE estimator",
+    "Z": "any admissible estimator in V",
+    "L2": "space of finite second moment random variables"
+   },
+   "assumptions": [
+    "X has finite second moment",
+    "V is a closed linear subspace of L2, which is what guarantees existence and uniqueness of the projection"
+   ],
+   "breakdown_regime": "Without finite second moments the geometry collapses and MMSE estimation is undefined; if V is not closed the infimum error may not be attained by any estimator.",
+   "domain": "estimation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the master estimation theorem of the engine: every estimator, from a plain average to a Kalman filter, is a projection, and the orthogonality condition is the testable certificate of optimality, namely that the residual carries no linear information about anything the estimator was allowed to use. Conditional expectation E[X|Y] is the same projection with the largest admissible class.",
+    "source_operator": "orthogonality_principle_and_conditional_expectation",
+    "telemetry": "observation sets available to each estimator, residual series for orthogonality checks"
+   }
+  },
+  {
+   "primitive_id": "linear_mmse_estimator",
+   "name": "Linear MMSE estimator: E-hat[X|Y] = E[X] + Cov(X,Y) Cov(Y,Y)^{-1} (Y - E[Y]), with error covariance Cov(X) - Cov(X,Y) Cov(Y,Y)^{-1} Cov(Y,X)",
+   "verbatim_quote": "Thus, the required orthogonality conditions on A and b become Ee = 0 and Cov(e, Y ) = 0.",
+   "page": "Section 3.3.2, pp. 85-86 (equations 3.6, 3.7)",
+   "latex": "\\hat{E}[X|Y] = E[X] + \\mathrm{Cov}(X, Y)\\, \\mathrm{Cov}(Y, Y)^{-1} (Y - E[Y])",
+   "symbol_and_unit_ledger": {
+    "Cov(X, Y)": "cross covariance matrix between target X and observations Y",
+    "Cov(Y, Y)^{-1}": "inverse observation covariance matrix",
+    "E[X], E[Y]": "mean vectors"
+   },
+   "assumptions": [
+    "Only first and second moments are used; the joint law beyond covariances is irrelevant to this estimator",
+    "Cov(Y, Y) nonsingular for the displayed inverse; otherwise a pseudoinverse or innovations form is needed"
+   ],
+   "breakdown_regime": "Optimal among linear estimators only: when the true conditional mean is nonlinear in Y, this estimator is beaten by E[X|Y], and singular observation covariance breaks the closed form.",
+   "domain": "estimation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's workhorse update: a target is estimated from correlated observations using only means and covariances, with the gain matrix Cov(X,Y) Cov(Y,Y)^{-1} weighting each observation by its information content net of redundancy with the others.",
+    "source_operator": "orthogonality_principle_and_conditional_expectation",
+    "telemetry": "mean and covariance estimates of targets and observation vectors"
+   }
+  },
+  {
+   "primitive_id": "gaussian_conditioning",
+   "name": "For jointly Gaussian vectors the conditional law is Gaussian, the conditional mean equals the linear MMSE estimator, and the conditional covariance does not depend on the observed value",
+   "verbatim_quote": "As shown in the next proposition, if X and Y are jointly Gaussian, the two estimators coincide.",
+   "page": "Section 3.4, pp. 93-94 (Proposition 3.9, equations 3.10-3.11)",
+   "latex": "E[X|Y = y] = E[X] + \\mathrm{Cov}(X, Y)\\, \\mathrm{Cov}(Y)^{-1} (y - E[Y]), \\qquad \\mathrm{Cov}(e) = \\mathrm{Cov}(X) - \\mathrm{Cov}(X, Y)\\, \\mathrm{Cov}(Y)^{-1} \\mathrm{Cov}(Y, X)",
+   "symbol_and_unit_ledger": {
+    "y": "observed value of Y",
+    "Cov(e)": "conditional covariance of X given Y, independent of y",
+    "N(mean, Cov)": "Gaussian law with the displayed parameters"
+   },
+   "assumptions": [
+    "X and Y are jointly Gaussian, not merely marginally Gaussian",
+    "Cov(Y) nonsingular for the displayed formulas"
+   ],
+   "breakdown_regime": "Marginal Gaussianity of X and Y separately is not enough; mixtures and nonlinear transforms of Gaussians break the linearity of the conditional mean and make the conditional covariance value dependent.",
+   "domain": "estimation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine models a target and its observations as jointly Gaussian, conditioning is exact and cheap: the posterior is Gaussian, its mean is the linear estimator, and its covariance can be computed before seeing the data, which makes information value computable in advance.",
+    "source_operator": "linear_mmse_estimator",
+    "telemetry": "joint mean and covariance estimates, Gaussianity diagnostics on residuals"
+   }
+  },
+  {
+   "primitive_id": "kalman_filter_and_innovations",
+   "name": "Discrete time Kalman filter: recursive MMSE estimation for a linear state space model, built by orthogonalizing observations into an innovations sequence so each update uses only the unpredictable part of the new observation",
+   "verbatim_quote": "Kalman filtering is a state-space approach to the problem of estimating one random sequence from another.",
+   "page": "Section 3.5, pp. 95-96; Section 3.6, pp. 96-99 (equations 3.15-3.19)",
+   "latex": "x_{k+1} = F_k x_k + w_k, \\qquad y_k = H_k^T x_k + v_k, \\qquad K_k = F_k \\Sigma_{k|k-1} H_k \\left( H_k^T \\Sigma_{k|k-1} H_k + R_k \\right)^{-1}",
+   "symbol_and_unit_ledger": {
+    "x_k": "hidden state vector at time k",
+    "y_k": "observation vector at time k",
+    "F_k": "state transition matrix",
+    "H_k": "observation matrix",
+    "w_k, v_k": "state and observation noise with covariances Q_k and R_k",
+    "K_k": "Kalman gain matrix",
+    "Sigma_{k|k-1}": "one step prediction error covariance"
+   },
+   "assumptions": [
+    "State and observation equations are linear with known matrices and noise covariances",
+    "Initial state, state noise, and observation noises are pairwise uncorrelated; Gaussianity upgrades the linear estimator to the full conditional mean"
+   ],
+   "breakdown_regime": "Nonlinear dynamics or non-Gaussian noise demote the filter to the best linear recursion only; wrong noise covariances Q and R silently misweight every update, and unmodeled state components leak into the innovations.",
+   "domain": "estimation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's sequential belief updater: a state that evolves by known dynamics, observations that arrive one at a time, and a gain that weighs each innovation by predicted uncertainty. The innovations themselves are a diagnostic stream: white innovations certify the model, correlated innovations indict it.",
+    "source_operator": "orthogonality_principle_and_conditional_expectation",
+    "telemetry": "timestamped observation streams, state transition specifications, noise level estimates, innovation sequences"
+   }
+  },
+  {
+   "primitive_id": "random_process_and_gaussian_process",
+   "name": "Random process as an indexed collection of random variables on one probability space, described by mean, correlation, and covariance functions; a Gaussian process has all finite order laws fixed by its mean and covariance functions",
+   "verbatim_quote": "A random process X is an indexed collection X = (Xt : t ∈ T) of random variables, all on the same probability space (Ω, F, P ).",
+   "page": "Section 4.1, pp. 109-112",
+   "latex": "R_X(s, t) = E[X_s X_t], \\qquad C_X(s, t) = \\mathrm{Cov}(X_s, X_t) = R_X(s, t) - \\mu_X(s)\\mu_X(t)",
+   "symbol_and_unit_ledger": {
+    "R_X(s, t)": "autocorrelation function at times s and t",
+    "C_X(s, t)": "autocovariance function",
+    "mu_X(t)": "mean function E[X_t]"
+   },
+   "assumptions": [
+    "Second order process: E[X_t^2] finite for all t, so the moment functions exist",
+    "For the Gaussian case, every finite collection of coordinates is jointly Gaussian"
+   ],
+   "breakdown_regime": "First and second moments do not determine a general process: the text exhibits WSS processes with identical moment functions and wildly different path behavior, so moment based descriptions are a modeling choice, not a summary of everything.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's object model for anything time indexed: one probability space, a mean function, and a two argument correlation function as the complete second order fingerprint. Any module that consumes a time series should be able to state which of these objects it uses.",
+    "source_operator": "random_process_and_gaussian_process",
+    "telemetry": "time indexed measurement streams, empirical mean and correlation surfaces over time pairs"
+   }
+  },
+  {
+   "primitive_id": "independent_increments",
+   "name": "Independent increment processes: increments over disjoint intervals are mutually independent, the memoryless building block behind random walks, Brownian motion, and Poisson processes",
+   "verbatim_quote": "A random process is said to have independent increments if for any positive integer n and any t0 < t1 < · · · < tn in T, the increments Xt1 − Xt0 , . . . , Xtn − Xtn−1 are mutually independent.",
+   "page": "Section 4.3, p. 115",
+   "latex": "X_{t_1} - X_{t_0}, \\ X_{t_2} - X_{t_1}, \\ \\ldots, \\ X_{t_n} - X_{t_{n-1}} \\quad \\text{mutually independent}",
+   "symbol_and_unit_ledger": {
+    "X_t": "process value at time t",
+    "X_{t_i} - X_{t_{i-1}}": "increment over the interval (t_{i-1}, t_i]"
+   },
+   "assumptions": [
+    "Intervals are disjoint and ordered",
+    "No stationarity of increments is assumed by the definition itself"
+   ],
+   "breakdown_regime": "Any feedback, mean reversion, or momentum in the increments breaks the property; most real series have dependent increments, which is precisely what the martingale difference and filtering machinery is for.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats independent increments as the null model of accumulation: if increments over disjoint windows are independent, the past is exhausted by the current level, forecasting reduces to the increment law, and variance grows additively over time.",
+    "source_operator": "independent_increments",
+    "telemetry": "increment series over disjoint windows, independence tests between windows"
+   }
+  },
+  {
+   "primitive_id": "brownian_motion_wiener_process",
+   "name": "Brownian motion: continuous path, independent increment Gaussian process with covariance C_W(s, t) = sigma^2 min(s, t)",
+   "verbatim_quote": "A Brownian motion, also called a Wiener process, with parameter σ 2 > 0, is a random process W = (Wt : t ≥ 0) such that",
+   "page": "Section 4.4, pp. 116-118 (properties B.0-B.3)",
+   "latex": "C_W(s, t) = \\sigma^2 (s \\wedge t), \\qquad W_t - W_s \\sim N(0, \\sigma^2 (t - s)) \\ \\text{for } t \\ge s",
+   "symbol_and_unit_ledger": {
+    "sigma^2": "variance rate, variance per unit time",
+    "s wedge t": "minimum of s and t",
+    "W_t": "process value at time t"
+   },
+   "assumptions": [
+    "W_0 = 0 almost surely",
+    "Increments are independent and Gaussian with variance proportional to elapsed time",
+    "Sample paths are continuous with probability one (property B.3, which does not follow from the moment conditions alone)"
+   ],
+   "breakdown_regime": "The moment conditions B.0-B.2 admit discontinuous modifications, so path statements need B.3 explicitly; processes with drift, jumps, or variance not linear in time are outside the class.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's canonical continuous accumulation of uncertainty: variance grows linearly in elapsed time and the covariance of two epochs is set by their overlap. It is the reference scaling for how uncertainty about a diffusing quantity should grow between observations.",
+    "source_operator": "brownian_motion_wiener_process",
+    "telemetry": "elapsed time between observations, empirical increment variances by lag"
+   }
+  },
+  {
+   "primitive_id": "poisson_process",
+   "name": "Poisson process: counting process with independent increments and Poisson distributed counts, equivalently iid exponential interarrival times",
+   "verbatim_quote": "definition 4.4 Let λ ≥ 0. A Poisson process with rate λ is a random process N = (Nt : t ≥ 0) such that",
+   "page": "Section 4.5, pp. 118-120 (Definition 4.4, Proposition 4.5)",
+   "latex": "P(N_t - N_s = k) = \\frac{e^{-\\lambda (t - s)} (\\lambda (t - s))^k}{k!}",
+   "symbol_and_unit_ledger": {
+    "lambda": "event rate, expected events per unit time",
+    "N_t": "number of events in (0, t]",
+    "k": "event count over the interval"
+   },
+   "assumptions": [
+    "Counts over disjoint intervals are independent",
+    "The rate lambda is constant in time for the homogeneous form"
+   ],
+   "breakdown_regime": "Clustering, inhibition, or a time varying rate breaks the equivalence with iid exponential gaps; the conditional uniform order statistic property (Proposition 4.5(c)) is a sharp test that real event streams often fail.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's null model for event streams: memoryless arrivals at a constant rate. Its three equivalent faces, counting definition, exponential gaps, and uniform order statistics given the count, give three independent ways to test whether an event stream is really memoryless.",
+    "source_operator": "poisson_process",
+    "telemetry": "event timestamps, interarrival gap samples, counts per window"
+   }
+  },
+  {
+   "primitive_id": "stationarity_and_wss",
+   "name": "Strict stationarity (all finite order laws shift invariant) and wide sense stationarity (constant mean, correlation a function of lag only); Gaussian plus WSS implies strictly stationary",
+   "verbatim_quote": "As shown above, a stationary second order random process is WSS.",
+   "page": "Section 4.6, pp. 121-124",
+   "latex": "E[X_{t_1} X_{t_2}] = R_X(t_1 - t_2), \\qquad E[X_t] = \\mu_X \\ \\text{constant}",
+   "symbol_and_unit_ledger": {
+    "R_X(tau)": "autocorrelation as a function of the lag tau = t_1 - t_2",
+    "mu_X": "time invariant mean"
+   },
+   "assumptions": [
+    "Second order: finite second moments at all times",
+    "WSS constrains only first and second moments; strict stationarity constrains all finite order distributions"
+   ],
+   "breakdown_regime": "WSS alone permits spectacularly nonstationary looking processes, as the text's example with time varying higher order behavior shows; only with Gaussianity does WSS upgrade to full stationarity. Trends and regime changes break both notions.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stationarity is the engine's license to pool data across time: under WSS, correlation depends only on lag, so one correlation function estimated from the whole record describes every epoch. The primitive also names the audit: estimate moments at separated epochs and test whether they move.",
+    "source_operator": "stationarity_and_wss",
+    "telemetry": "lag indexed correlation estimates, epoch wise mean and variance comparisons"
+   }
+  },
+  {
+   "primitive_id": "markov_property",
+   "name": "Markov property: past and future are conditionally independent given the present state; for stationary Gaussian processes it is equivalent to multiplicative correlation, hence exponential covariance",
+   "verbatim_quote": "In words, thinking of tn as the present time, the Markov property means that the past and future of X are conditionally independent given the present state Xtn .",
+   "page": "Section 4.8, pp. 125-128 (Definition 4.6, equation 4.13)",
+   "latex": "P\\left( X_{t_{n+1}} \\in A \\,|\\, X_{t_1}, \\ldots, X_{t_n} \\right) = P\\left( X_{t_{n+1}} \\in A \\,|\\, X_{t_n} \\right), \\qquad \\rho(r, t) = \\rho(r, s)\\rho(s, t) \\ \\ (r < s < t, \\text{ Gaussian case})",
+   "symbol_and_unit_ledger": {
+    "X_{t_n}": "present state",
+    "rho(s, t)": "correlation coefficient between X_s and X_t",
+    "A": "Borel set of possible next values"
+   },
+   "assumptions": [
+    "The state must be rich enough to summarize the past; an impoverished state variable destroys the property",
+    "The Gaussian characterization requires Var(X_t) > 0 for all t"
+   ],
+   "breakdown_regime": "Hidden state, long memory, or omitted variables break the property for the observed process even when an enlarged state would restore it; the repair is state augmentation, which is exactly the state space modeling move.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's central compression license: a sufficient state makes history irrelevant given the present, so forecasting, filtering, and simulation all factor through one step transitions. The Gaussian corollary gives a one line test: a stationary Gaussian process is Markov only if its covariance decays exponentially in lag.",
+    "source_operator": "markov_property",
+    "telemetry": "state definitions per tracked entity, one step transition estimates, lag correlation profiles"
+   }
+  },
+  {
+   "primitive_id": "em_algorithm",
+   "name": "Expectation-maximization: iterate E-step Q(theta|theta(k)) = E[log p_cd(X|theta) | y, theta(k)] and M-step maximization; observed likelihood is nondecreasing along the iterates",
+   "verbatim_quote": "(Expectation step) Compute Q(θ|θ(k) ) for all θ, where Q(θ|θ(k) ) = E[ log pcd (X|θ) | y, θ(k) ].",
+   "page": "Section 5.2, pp. 156-160 (Algorithm 5.4, Proposition 5.7)",
+   "latex": "Q(\\theta | \\theta^{(k)}) = E\\left[ \\log p_{cd}(X|\\theta) \\,|\\, y, \\theta^{(k)} \\right], \\qquad \\theta^{(k+1)} \\in \\arg\\max_{\\theta} Q(\\theta | \\theta^{(k)})",
+   "symbol_and_unit_ledger": {
+    "theta": "parameter to be estimated",
+    "p_cd(X|theta)": "complete data pmf or density",
+    "y": "observed (incomplete) data",
+    "Q": "expected complete data log likelihood under the current parameter"
+   },
+   "assumptions": [
+    "Complete data model p_cd is known up to theta",
+    "The conditional expectation over hidden data given y and theta(k) is computable or samplable"
+   ],
+   "breakdown_regime": "Convergence can be to a local maximizer or an inflection point of the likelihood, not the global ML estimate; the text is explicit that convexity of the parameter set does not rescue this, because the induced set of distributions on Y is not convex.",
+   "domain": "inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's standard fitting loop whenever part of the data is hidden: impute the hidden part in expectation under current parameters, refit as if the imputation were data, and repeat, with monotone likelihood as the progress certificate and multi-start as the guard against local optima.",
+    "source_operator": "em_algorithm",
+    "telemetry": "observed sequences with latent components, complete data log likelihood evaluations per iteration"
+   }
+  },
+  {
+   "primitive_id": "hmm_forward_backward_and_baum_welch",
+   "name": "Hidden Markov model inference: forward recursion alpha and backward recursion give posterior state and transition probabilities gamma and xi; Baum-Welch is EM with these posteriors as the E-step",
+   "verbatim_quote": "The key to efficient computation is to recursively compute certain quantities through a recursion forward in time, and others through a recursion backward in time.",
+   "page": "Section 5.3.1, pp. 162-166; Section 5.3.3, pp. 167-169",
+   "latex": "\\alpha_j(t+1) = \\left[ \\sum_{i \\in S} \\alpha_i(t) a_{ij} \\right] b_{j y_{t+1}}, \\qquad \\alpha_i(1) = \\pi_i b_{i y_1}",
+   "symbol_and_unit_ledger": {
+    "alpha_i(t)": "joint probability of observations up to t and state i at t",
+    "a_ij": "transition probability from state i to j",
+    "b_{j l}": "emission probability of symbol l in state j",
+    "pi": "initial state distribution",
+    "gamma, xi": "posterior state and transition probabilities built from alpha and the backward variables"
+   },
+   "assumptions": [
+    "Hidden chain is time homogeneous Markov with finite state space S",
+    "Observations are conditionally independent given the state sequence"
+   ],
+   "breakdown_regime": "Cost is quadratic in the number of states per time step, and long sequences underflow without scaling; model mismatch (non Markov hidden dynamics, state dependent emission drift) makes the posteriors confidently wrong.",
+   "domain": "inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's regime attribution machinery: forward-backward turns an observed sequence into per-time posterior probabilities over hidden regimes and regime transitions, and Baum-Welch refits the regime model from those posteriors, exactly the EM loop with the smoothing posteriors as sufficient statistics.",
+    "source_operator": "em_algorithm",
+    "telemetry": "observed symbol or measurement sequences, transition and emission matrices, posterior regime probabilities"
+   }
+  },
+  {
+   "primitive_id": "viterbi_algorithm",
+   "name": "Viterbi algorithm: dynamic programming recursion delta_j(t) = max_i {delta_i(t-1) a_ij b_j,yt} with backpointers, returning the single most likely hidden state sequence",
+   "verbatim_quote": "In some applications one wishes to have an estimate of the entire sequence Z.",
+   "page": "Section 5.3.2, pp. 166-167 (Algorithm 5.9)",
+   "latex": "\\delta_j(t) = \\max_i \\left\\{ \\delta_i(t-1) a_{ij} b_{j y_t} \\right\\}, \\qquad \\delta_i(1) = \\pi(i) b_{i y_1}",
+   "symbol_and_unit_ledger": {
+    "delta_i(t)": "maximum joint probability over partial state paths ending in state i at time t, with observations to t",
+    "phi_j(t)": "backpointer, the argmax predecessor state",
+    "z*": "most likely complete state sequence recovered by traceback"
+   },
+   "assumptions": [
+    "Same HMM assumptions as the forward-backward primitive",
+    "The maximizer is a joint (whole sequence) MAP path, which need not agree with the per-time posterior maximizers"
+   ],
+   "breakdown_regime": "Ties and near ties between paths are resolved arbitrarily by the argmax; when posterior mass is spread over many paths, the single Viterbi path can be unrepresentative, which the forward-backward posteriors reveal.",
+   "domain": "inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's narrative extractor: where forward-backward gives probabilities over regimes, Viterbi commits to the single most probable regime story for a completed sequence, with backpointers making the commitment auditable step by step.",
+    "source_operator": "hmm_forward_backward_and_baum_welch",
+    "telemetry": "observed sequences, fitted transition and emission parameters, decoded state paths"
+   }
+  },
+  {
+   "primitive_id": "markov_chain_classification_and_equilibrium",
+   "name": "Classification of states (transient, null recurrent, positive recurrent) and equilibrium: an irreducible positive recurrent chain has a unique equilibrium distribution, characterized by pi Q = 0 in continuous time (pi = pi P in discrete time)",
+   "verbatim_quote": "proposition 6.9 Suppose X is irreducible and nonexplosive. (a) A probability distribution π is an equilibrium distribution if and only if πQ = 0.",
+   "page": "Section 6.2, pp. 179-182; Section 6.3, pp. 182-185 (Propositions 6.8, 6.9)",
+   "latex": "\\pi Q = 0, \\qquad \\pi_i = \\frac{1}{-q_{ii} M_i}",
+   "symbol_and_unit_ledger": {
+    "pi": "equilibrium probability distribution over states",
+    "Q": "generator matrix of the continuous time chain, q_ii the negative exit rate from i",
+    "M_i": "mean recurrence time of state i",
+    "P (discrete time)": "one step transition matrix, equilibrium solves pi = pi P"
+   },
+   "assumptions": [
+    "Chain is irreducible, so all states share one classification",
+    "Continuous time statements assume the process is nonexplosive",
+    "Positive recurrence is equivalent to existence of the equilibrium distribution"
+   ],
+   "breakdown_regime": "Transient and null recurrent chains have no equilibrium distribution: mass escapes or returns too slowly, and long run frequencies do not settle. Explosive continuous time chains break the generator characterization.",
+   "domain": "markov dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's long run audit for any state based model: classify the states, solve the balance equations, and only then quote long run frequencies. If the chain is not positive recurrent, long run averages are not a property of the model and must not be reported as one.",
+    "source_operator": "markov_chain_classification_and_equilibrium",
+    "telemetry": "transition matrices or rate matrices, simulated state visit frequencies, mean return time estimates"
+   }
+  },
+  {
+   "primitive_id": "littles_law",
+   "name": "Little's law: mean content equals mean flow rate times mean delay, N = lambda T, under minimal assumptions",
+   "verbatim_quote": "Little’s law is that λT = N where λ is the mean flow rate, T is the mean delay in the system, and N is the mean content of the system.",
+   "page": "Section 6.6, pp. 189-192",
+   "latex": "N = \\lambda T",
+   "symbol_and_unit_ledger": {
+    "N": "mean number of items in the system",
+    "lambda": "mean arrival or flow rate, items per unit time",
+    "T": "mean time an item spends in the system"
+   },
+   "assumptions": [
+    "The system is observed in a regime where the three means exist (the text gives several versions with different technical hypotheses)",
+    "Arrival and departure accounting is consistent: content is arrivals minus departures"
+   ],
+   "breakdown_regime": "The law ties together means only; it says nothing about distributions, variances, or tail delays, and it does not apply instantaneously in transient regimes where the means are not yet defined.",
+   "domain": "queueing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A conservation identity the engine can use anywhere items flow through a stage: inventory equals throughput times latency. It converts between the three quantities with almost no modeling assumptions, so any two measured values audit the third.",
+    "source_operator": "littles_law",
+    "telemetry": "flow rates through a stage, counts of items in the stage, per-item residence times"
+   }
+  },
+  {
+   "primitive_id": "pasta",
+   "name": "PASTA (Poisson Arrivals See Time Averages): with Poisson arrivals the distribution seen by arrivals equals the time average distribution; with state dependent rates lambda_k the arrival seen distribution is r_k = pi_k lambda_k / lambda",
+   "verbatim_quote": "This situation is called “Poisson Arrivals See Time Averages” (PASTA).",
+   "page": "Section 6.7, pp. 192-194",
+   "latex": "r_k = \\frac{\\pi_k \\lambda_k}{\\lambda}, \\qquad \\lambda = \\sum_k \\pi_k \\lambda_k",
+   "symbol_and_unit_ledger": {
+    "r_k": "fraction of arrivals that find k items in the system",
+    "pi_k": "equilibrium fraction of time with k items",
+    "lambda_k": "arrival rate while the system holds k items",
+    "lambda": "overall mean arrival rate"
+   },
+   "assumptions": [
+    "The system is in equilibrium (positive recurrent in the text's development)",
+    "PASTA itself requires arrivals to be a Poisson process with state independent rate"
+   ],
+   "breakdown_regime": "For non Poisson or state dependent arrivals the arrival seen distribution is rate weighted, not the time average: sampling at event epochs is a biased measurement of the system, and the bias factor is exactly lambda_k / lambda.",
+   "domain": "queueing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's sampling bias correction: measurements taken at event times see a rate weighted world. Whenever data is collected at moments generated by the system itself rather than on a uniform clock, the PASTA correction, or its absence, decides whether the sample represents the time average.",
+    "source_operator": "pasta",
+    "telemetry": "event epoch samples versus clock samples, state dependent event rates, equilibrium state frequencies"
+   }
+  },
+  {
+   "primitive_id": "foster_lyapunov_drift_criterion",
+   "name": "Foster-Lyapunov stability criterion: a nonnegative potential V with drift PV - V <= -epsilon + b I_C outside a finite set certifies positive recurrence; the companion moment bound turns drift inequalities into bounds on equilibrium means",
+   "verbatim_quote": "The drift vector of V (X(t)) is defined by d(i) = E[V (X(t + 1))|X(t) = i] − V (i).",
+   "page": "Section 6.9, pp. 196-198 (Propositions 6.13, 6.14, Corollary 6.15)",
+   "latex": "PV(i) - V(i) \\le -\\epsilon + b I_C(i) \\ \\forall i \\ \\Longrightarrow \\ X \\text{ is positive recurrent}",
+   "symbol_and_unit_ledger": {
+    "V": "nonnegative Lyapunov (potential) function on the state space",
+    "PV - V": "one step expected drift of V",
+    "epsilon > 0": "minimum downward drift outside the finite set C",
+    "b I_C": "bounded allowance for upward drift inside C",
+    "f-bar <= g-bar": "moment bound conclusion: equilibrium mean of f is at most that of g when PV - V <= -f + g"
+   },
+   "assumptions": [
+    "Chain is irreducible on a countable state space",
+    "Sublevel sets {i : V(i) <= K} are finite for the recurrence part"
+   ],
+   "breakdown_regime": "The criterion is sufficient, not necessary: failure to find a Lyapunov function proves nothing. A drift that is only nonpositive, without the strict -epsilon margin outside a finite set, gives recurrence but not positive recurrence or finite equilibrium means.",
+   "domain": "markov dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's stability certificate for any iterative or state based update rule: exhibit a potential that decreases in expectation whenever the state is large, and stability plus quantitative bounds on long run averages follow without solving the dynamics. It converts stability from a simulation impression into a proof obligation.",
+    "source_operator": "foster_lyapunov_drift_criterion",
+    "telemetry": "state magnitude measures for iterative processes, one step expected change of candidate potentials"
+   }
+  },
+  {
+   "primitive_id": "mean_ergodicity",
+   "name": "Mean ergodicity in the mean square sense: time averages of a WSS process converge to the ensemble mean if and only if a covariance weighted average vanishes; sufficient when the autocovariance decays to zero",
+   "verbatim_quote": "In general, whether X is m.s. ergodic in the m.s. sense is determined by the autocovariance function, CX .",
+   "page": "Section 7.4, pp. 236-238 (Proposition 7.18)",
+   "latex": "\\lim_{t \\to \\infty} \\frac{2}{t} \\int_0^t \\left(1 - \\frac{\\tau}{t}\\right) C_X(\\tau)\\, d\\tau = 0",
+   "symbol_and_unit_ledger": {
+    "C_X(tau)": "autocovariance at lag tau",
+    "t": "averaging horizon",
+    "mu_X": "ensemble (statistical) mean the time average must reach"
+   },
+   "assumptions": [
+    "Process is WSS and mean square continuous (real valued in the stated proposition)",
+    "The condition is on the whole covariance tail, not on any finite lag window"
+   ],
+   "breakdown_regime": "A covariance that does not decay, for example C_X identically 1 from a random constant component, destroys ergodicity completely: the time average equals the random initial value forever and never reaches the ensemble mean.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's license check before replacing an ensemble expectation with one long observed average: ergodicity is a property of the covariance tail. Persistent components, however small in variance, veto the substitution because a single path never explores them.",
+    "source_operator": "mean_ergodicity",
+    "telemetry": "long single path averages, autocovariance estimates at increasing lags, variance of block averages by block length"
+   }
+  },
+  {
+   "primitive_id": "karhunen_loeve_expansion",
+   "name": "Karhunen-Loeve expansion: a mean square continuous process on [a, b] expands in the eigenfunctions of its correlation kernel with uncorrelated coefficients; Mercer's theorem gives the kernel's own eigendecomposition",
+   "verbatim_quote": "theorem 7.23 ( Karhunen-Loève expansion) If X = (Xt : a ≤ t ≤ b) is a m.s. continuous random process it has a KL expansion,",
+   "page": "Section 7.6, pp. 244-250 (Theorems 7.22, 7.23)",
+   "latex": "X_t = \\sum_{n=1}^{\\infty} \\phi_n(t) \\langle X, \\phi_n \\rangle, \\qquad R_X(s, t) = \\sum_{n=1}^{\\infty} \\lambda_n \\phi_n(s) \\phi_n^*(t)",
+   "symbol_and_unit_ledger": {
+    "phi_n": "orthonormal eigenfunctions of the correlation kernel on [a, b]",
+    "lambda_n": "nonnegative eigenvalues, equal to the variances of the expansion coefficients",
+    "<X, phi_n>": "inner product coefficient, the nth coordinate of the process",
+    "R_X": "autocorrelation function of X"
+   },
+   "assumptions": [
+    "X is mean square continuous on the finite interval [a, b], equivalently R_X is continuous on the square (Proposition 7.7)",
+    "Coefficients are uncorrelated; they are independent only in the Gaussian case"
+   ],
+   "breakdown_regime": "On infinite intervals the discrete eigenbasis generally gives way to a spectral integral; truncating the series discards energy equal to the sum of the dropped eigenvalues, which is the honest error budget of any finite representation.",
+   "domain": "stochastic processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's compression scheme for whole trajectories: rotate a process into uncorrelated coordinates ordered by variance, keep the leading coordinates, and know the discarded energy exactly. It is principal component analysis for functions, with the correlation kernel playing the covariance matrix.",
+    "source_operator": "karhunen_loeve_expansion",
+    "telemetry": "trajectory samples on a fixed window, empirical correlation kernels, eigenvalue spectra of the kernel"
+   }
+  },
+  {
+   "primitive_id": "power_spectral_density",
+   "name": "Power spectral density: the Fourier transform of the autocorrelation of a WSS process; LTI systems act multiplicatively, S_Y = |H|^2 S_X, and total power is the integral of the density",
+   "verbatim_quote": "Given a WSS random process X = (Xt : t ∈ R), the Fourier transform of its correlation function RX is denoted by SX . For reasons that we will soon see, the function SX is called the power spectral density of X.",
+   "page": "Section 8.2, pp. 266-269 (equations 8.14, 8.15)",
+   "latex": "S_Y(\\omega) = |H(\\omega)|^2 S_X(\\omega), \\qquad E[|X_t|^2] = R_X(0) = \\int_{-\\infty}^{\\infty} S_X(\\omega) \\frac{d\\omega}{2\\pi}",
+   "symbol_and_unit_ledger": {
+    "S_X(omega)": "power spectral density of X at angular frequency omega, nonnegative and real",
+    "H(omega)": "transfer function of the linear time invariant system",
+    "R_X(0)": "total power (mean square value) of the process"
+   },
+   "assumptions": [
+    "X is WSS so that a lag only autocorrelation exists",
+    "The classical integral form assumes R_X is integrable; otherwise the density is a generalized function with possible impulses"
+   ],
+   "breakdown_regime": "Nonstationary processes have no single PSD; time varying spectra are needed. Idealized white noise has flat infinite extent spectrum and infinite power, a useful fiction that must be band limited before physical conclusions are drawn.",
+   "domain": "spectral analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's frequency domain bookkeeping: correlation structure becomes a nonnegative density over frequencies, linear operations become pointwise multiplication, and power budgets add across bands. It is the tool for deciding which timescales carry the variance of a series.",
+    "source_operator": "power_spectral_density",
+    "telemetry": "periodogram and spectral estimates of series, filter transfer functions, band power integrals"
+   }
+  },
+  {
+   "primitive_id": "wiener_filtering_causal_and_noncausal",
+   "name": "Wiener filtering: the MMSE linear filter satisfies R_XY = h * R_Y, giving H(omega) = S_XY(omega)/S_Y(omega) noncausally; the causal solution factors S_Y = S_Y+ S_Y- and projects, H = (1/S_Y+) [ e^{j omega T} S_XY / S_Y- ]_+",
+   "verbatim_quote": "or RXY = h ∗ RY . In the frequency domain the optimality condition becomes SXY (ω) = H(ω)SY (ω) for all ω.",
+   "page": "Section 9.1, pp. 297-300; Section 9.4, pp. 306-307 (equation 9.9)",
+   "latex": "H(\\omega) = \\frac{S_{XY}(\\omega)}{S_Y(\\omega)} \\ \\text{(noncausal)}, \\qquad H = \\frac{1}{S_Y^+} \\left[ \\frac{e^{j\\omega T} S_{XY}}{S_Y^-} \\right]_+ \\ \\text{(causal)}",
+   "symbol_and_unit_ledger": {
+    "S_XY": "cross power spectral density between target X and observation Y",
+    "S_Y": "power spectral density of the observation",
+    "S_Y+, S_Y-": "causal (minimum phase) and anticausal spectral factors of S_Y",
+    "[ . ]_+": "projection onto causal (positive type) functions",
+    "T": "estimation lead time: T > 0 prediction, T = 0 filtering, T < 0 smoothing"
+   },
+   "assumptions": [
+    "X and Y are jointly WSS with known spectra",
+    "Closed form causal solution requires rational spectra so the factorization and partial fraction steps are finite"
+   ],
+   "breakdown_regime": "The noncausal filter uses future observations and is unrealizable in real time; the causal filter pays a strictly larger MMSE (the text's example: 0.3246 causal versus about 0.3162 noncausal). Non WSS problems fall back to the Kalman recursion.",
+   "domain": "spectral analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's optimal linear estimation in the frequency domain, in both its honest forms: the noncausal ratio of spectra as the unattainable benchmark, and the causal spectral factorization solution as the realizable filter, with the MMSE gap between them pricing the cost of causality.",
+    "source_operator": "wiener_filtering_causal_and_noncausal",
+    "telemetry": "cross and auto spectral estimates of target and observation streams, rational spectrum fits"
+   }
+  },
+  {
+   "primitive_id": "martingale_wrt_filtration",
+   "name": "Martingale with respect to a filtration: an adapted, integrable process with E[Y_{n+1} | F_n] = Y_n almost surely, the formal statement that accumulated value is a fair game given the information flow",
+   "verbatim_quote": "Note that if Y = (Yn : n ≥ 0) is a martingale with respect to a filtration F = (Fn : n ≥ 0), then Y is also a martingale with respect to the filtration generated by Y itself.",
+   "page": "Section 10.2, pp. 329-330 (Definition 10.5)",
+   "latex": "E[Y_{n+1} | F_n] = Y_n \\quad \\text{a.s.}",
+   "symbol_and_unit_ledger": {
+    "F_n": "sigma-algebra of information available at time n, with F_n subset of F_{n+1}",
+    "Y_n": "process value at time n, required to be F_n measurable (adapted) and integrable"
+   },
+   "assumptions": [
+    "Adaptedness: Y_n is measurable with respect to F_n",
+    "Integrability: E|Y_n| finite for all n"
+   ],
+   "breakdown_regime": "If the process peeks at future information it is not adapted and the fairness conclusion is void; this is the formal defect in the text's example of a random time that inspects the first three flips before deciding to stop at time zero.",
+   "domain": "martingale theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's fairness primitive for sequential accumulation: a quantity is a martingale exactly when, given everything observable so far, its expected next value is its current value. Any claimed systematic drift must therefore be exhibited as a failure of this equation against a declared information set.",
+    "source_operator": "martingale_wrt_filtration",
+    "telemetry": "information set definitions per timestamp, cumulative value series, conditional mean diagnostics"
+   }
+  },
+  {
+   "primitive_id": "doob_maximal_inequalities",
+   "name": "Doob's maximal inequalities: for a nonnegative supermartingale, P(max_{0<=k<=n} X_k >= gamma) <= E[X_0]/gamma, and for an L2 martingale, E[(max X_k)^2] <= 4 E[X_n^2]",
+   "verbatim_quote": "(a) (Doob’s maximal inequality) Let X0 , X1 , X2 , . . . be nonnegative random variables such that E[Xk+1 | X0 , . . . , Xk ] ≤ Xk for k ≥ 0",
+   "page": "Section 4.3, pp. 115-116 (Proposition 4.2)",
+   "latex": "P\\left( \\max_{0 \\le k \\le n} X_k \\ge \\gamma \\right) \\le \\frac{E[X_0]}{\\gamma}, \\qquad E\\left[ \\left( \\max_{0 \\le k \\le n} X_k \\right)^2 \\right] \\le 4 E[X_n^2]",
+   "symbol_and_unit_ledger": {
+    "X_k": "nonnegative supermartingale (first bound) or martingale with finite second moment (second bound)",
+    "gamma": "excursion threshold",
+    "n": "time horizon"
+   },
+   "assumptions": [
+    "First bound needs nonnegativity and the supermartingale property",
+    "Second bound needs E[X_n^2] finite"
+   ],
+   "breakdown_regime": "The bounds control the maximum, not the endpoint; they are one sided tools for excursion risk and are loose by design, since they must hold for every martingale simultaneously.",
+   "domain": "martingale theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pathwise risk control for the engine: the probability that a fair cumulative process ever crosses a threshold within a horizon is bounded by its starting value over the threshold. This prices worst excursion, not just terminal deviation, which is the quantity risk management actually feels.",
+    "source_operator": "doob_maximal_inequalities",
+    "telemetry": "running maxima of cumulative estimate series, threshold crossing logs, terminal second moments"
+   }
+  },
+  {
+   "primitive_id": "azuma_hoeffding_inequality",
+   "name": "Azuma-Hoeffding inequality: a martingale with bounded increments concentrates around its start, P(|Y_n - Y_0| >= lambda) <= 2 exp(-lambda^2 / (2 sum d_i^2))",
+   "verbatim_quote": "Thus, the Azuma-Hoeffding inequality with centering can be applied with di = 2c for all i, giving the desired result.",
+   "page": "Section 10.3, pp. 332-335 (Proposition 10.9; application sentence quoted from p. 335)",
+   "latex": "P\\left( |Y_n - Y_0| \\ge \\lambda \\right) \\le 2 \\exp\\left( -\\frac{\\lambda^2}{2 \\sum_{i=1}^{n} d_i^2} \\right)",
+   "symbol_and_unit_ledger": {
+    "Y_n": "martingale value at time n (book's centered form allows a predictable centering B_n)",
+    "d_i": "almost sure bound on the ith increment magnitude",
+    "lambda": "deviation threshold"
+   },
+   "assumptions": [
+    "Increments are bounded almost surely by the d_i",
+    "Y is a martingale with respect to the working filtration (the book's version permits a predictable centering process)"
+   ],
+   "breakdown_regime": "Unbounded increments void the bound entirely; heavy tailed increments need truncation or different tools. The bound also degrades linearly in accumulated variance proxy sum d_i^2, so long horizons with large steps give weak concentration.",
+   "domain": "martingale theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Concentration for dependent accumulation: the engine can bound the deviation of a cumulative estimate whose increments are dependent but bounded and fair, exactly the situation where iid Chernoff bounds do not apply. The d_i are an audit: any increment that cannot be bounded cannot be certified.",
+    "source_operator": "azuma_hoeffding_inequality",
+    "telemetry": "increment bound estimates for sequential estimators, deviation thresholds, horizon lengths"
+   }
+  },
+  {
+   "primitive_id": "optional_sampling_theorem",
+   "name": "Optional sampling theorem: stopping a martingale at a non anticipating stopping time preserves the mean, E[X_T] = E[X_0], under boundedness or domination conditions (Propositions 10.14, Corollaries 10.15-10.17)",
+   "verbatim_quote": "proposition 10.14 If X is a martingale and T is an optional stopping time, relative to (Ω, F , P ), then E[X0 ] = limn→∞ E[XT ∧n ].",
+   "page": "Section 10.4, pp. 336-340 (Lemma 10.13, Proposition 10.14, Corollaries 10.15-10.17)",
+   "latex": "E[X_T] = E[X_0]",
+   "symbol_and_unit_ledger": {
+    "T": "optional stopping time: {T <= n} belongs to F_n for all n, so the stop decision uses only current information",
+    "X_T": "martingale value at the stopping time",
+    "T wedge n": "stopped time min(T, n), for which E[X_{T wedge n}] = E[X_0] holds with no extra conditions"
+   },
+   "assumptions": [
+    "T is a genuine stopping time relative to the filtration",
+    "At least one integrability side condition: T bounded, or |X_n| dominated by an integrable variable, or bounded conditional increments with E[T] finite"
+   ],
+   "breakdown_regime": "The doubling strategy is the standing counterexample: T is a legitimate stopping time with E[T] = 2 and X_T = 1 almost surely from X_0 = 0, because the required borrowing is unbounded and the domination conditions fail. Peeking random times fail even earlier, at the definition.",
+   "domain": "martingale theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's no free lunch theorem for stopping rules: no non anticipating exit rule changes the expected value of a fair accumulation, and every claimed exception must identify which integrability hypothesis it violates. It disciplines any sequential decision layer that reports gains from when it chose to stop.",
+    "source_operator": "optional_sampling_theorem",
+    "telemetry": "stopping rule definitions and their information sets, stopped value distributions, exposure and borrowing bounds during stopped processes"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "39cafa532dd90076-t1",
+   "think": "This book is a rigorous but engineering first treatment of random processes, grown out of the author's ECE 534 course notes at the University of Illinois and published by Cambridge University Press in 2015. Its stated problem, from the preface, is complexity: a random process is a family of possibly infinitely many random variables, and no one can work with the full joint distribution. The whole book is a catalog of structural assumptions that collapse that complexity into a few functions or numbers, together with the theorems that certify the collapse is legitimate. Means and covariances replace distributions. Gaussian processes are pinned down by two functions. Markov processes are pinned down by one step transitions and an initial distribution. Independent increment processes are pinned down by single increments. Limit theorems compress further: the law of large numbers says a distribution can, for averaging purposes, be replaced by its mean, and the central limit theorem says it can be replaced by its mean and variance, a move the author explicitly likens to Taylor approximation. Chapter 2 deserves separate attention because it defines the senses in which approximations converge, and the four modes are not interchangeable. Almost sure convergence is a statement about whole sample paths, convergence in probability and in mean square are statements about pairs, and convergence in distribution is a statement about laws alone, checkable through characteristic functions. The Chernoff bound and Cramer's theorem then quantify the far tail that the central limit theorem refuses to describe: the probability that an empirical mean sits a fixed distance from its expectation decays exponentially in n, with a rate given by the Legendre transform of the log moment generating function. Any engine that reports confidence must know which mode it is claiming and which tail regime it is in. The load bearing device of the middle chapters is geometry. Random variables with finite second moments form a Hilbert space, estimation is projection, and the orthogonality principle characterizes the projection: the error must be orthogonal to every admissible estimator. From that single fact the book derives the mean as a projection onto constants, conditional expectation as a projection onto all functions of the observations, the linear MMSE estimator as a projection onto a finite dimensional span, the innovations sequence as Gram-Schmidt orthogonalization of the observation stream, the Kalman recursion as innovations based estimation for a state space model, and Wiener filtering as projection in the frequency domain. A reader who internalizes the projection picture can rederive most of the estimation machinery on demand, which is exactly the author's intent. The second device is diagonalization. A Gaussian vector becomes independent coordinates after a rotation. A process on an interval becomes uncorrelated coordinates under the Karhunen-Loeve expansion, with Mercer's theorem supplying the eigenbasis of the correlation kernel. A stationary process is diagonalized by the Fourier transform, which turns convolution into multiplication and produces the power spectral density and the Wiener filter in one line. Spectral factorization then splits the density into causal and anticausal factors so that the causal filter, the one that respects the arrow of time, can be extracted. The calculus chapters make a subtler point. Mean square continuity, differentiability, and integration of a process are properties of its correlation function, not of its sample paths, and the book is careful to separate the two; a process can be mean square continuous with badly behaved paths, and Brownian motion is the standing example of the gap between the two notions. Ergodicity is treated the same way, as a verifiable condition on the autocovariance rather than a slogan: time averages converge to ensemble means exactly when a weighted average of the covariance vanishes. Two smaller threads repay attention. The first chapter's failure rate function treats a lifetime through its instantaneous conditional risk, and the identity F(t) = 1 - exp(-integral of h) shows that an entire lifetime distribution can be carried by that single rate curve, a compression the queueing chapters reuse whenever they model service and patience. The inference chapter adds an information theoretic yardstick: Kullback-Leibler divergence measures the cost of a wrong model, and the surrounding classification discussion shows how that yardstick, not raw likelihood, governs how fast evidence separates competing explanations. The third strand is dynamics. Markov chains and processes are studied twice: once for inference, where hidden states are recovered by forward-backward smoothing, the Viterbi path, and Baum-Welch reestimation, and once for stability, where classification of states, equilibrium equations, Little's law, PASTA, and Foster-Lyapunov drift criteria answer whether a system settles, what it settles to, and what averages can be trusted. The queueing material also contributes a warning that generalizes far beyond queues: what an arriving customer sees is not what a time average reports unless arrivals are Poisson, so sampling a system at event epochs and sampling it uniformly in time are different measurements. The final chapter changes the question from estimation to discipline: martingales with respect to filtrations formalize what it means to have no exploitable foresight, Doob and Azuma-Hoeffding bound the excursions of fair accumulations, and the optional sampling theorem states precisely when stopping a fair process preserves its mean, exhibiting the doubling strategy as the canonical way the hypotheses fail. For a reasoning engine the transfer is direct: state sufficiency, recursive belief updating from innovations, drift based stability certificates, concentration bounds for dependent sums, and a sharp distinction between time averages, ensemble averages, and event seen averages are exactly the pieces needed to reason about sequential evidence without self deception. The book's limits are equally clear. The machinery is second order at heart; non Gaussian, heavy tailed, or nonstationary phenomena are handled only where a theorem explicitly reaches them; causal Wiener filtering closes in form only for rational spectra; EM converges to local optima; and ergodicity is a hypothesis to be verified, never a default.",
+   "retrocausal_genealogy": "The lineage is the standard spine of twentieth century probability, and the book's own citations mark much of it. Kolmogorov's axiomatic frame of 1933 supplies Chapter 1. The estimation geometry descends from Wiener's filtering work and the Hilbert space view of least squares, with Kalman's state space recursion presented as its discrete time heir. The Karhunen-Loeve expansion carries the names of Karhunen and Loeve from the 1940s, with Mercer's theorem behind it. Chapter 6 cites its sources directly: Foster's drift criteria of 1953, Kingman's moment bound method in queueing of 1962, Tweedie's version of the moment bounds of 1983, and the Meyn and Tweedie synthesis of 1993, alongside the author's own network stability research with Tassiulas. The EM algorithm reached hidden Markov models through Baum and Welch before the general method was named, and the martingale chapter follows Doob, with Azuma and Hoeffding supplying the bounded difference concentration step.",
+   "theory_of_mind": "Hajek writes for engineers who intend to compute. His model of the reader is someone who will accept measure theory, filtrations, and Lebesgue integration exactly to the extent that they pay off in a recursion, a filter, or a stability certificate, and the book keeps paying: nearly every definition is followed by the theorem that makes it usable and an example drawn from queues, channels, games, or estimation. His model of the domain is that randomness in engineered systems is structured randomness. Left unstructured it is intractable, but Gaussianity, the Markov property, independent increments, and stationarity are not conveniences; in his treatment they are the actual mechanisms by which real systems generate data, so exploiting them is modeling, not cheating. He also trusts geometry more than algebra: whenever a result can be seen as a projection, a rotation, or a potential function decreasing, that is the proof he prefers.",
+   "cross_layer_veto": "Several results in this book exist to veto conclusions drawn at other layers. The optional sampling theorem vetoes any strategy layer that claims an edge from stopping rules alone: unless the stopping time is non anticipating and an integrability condition holds, a fair accumulation does not stay fair, and the doubling strategy shows the failure is real, not technical. The ergodicity criterion vetoes replacing ensemble averages with time averages whenever the autocovariance does not decay. PASTA vetoes reading arrival epoch distributions off time averages for non Poisson arrivals. The Foster-Lyapunov criterion vetoes stability claims based on finite horizon simulation, demanding a drift certificate instead. Cramer's theorem vetoes Gaussian tail estimates for fixed size deviations, and the mean square calculus vetoes differentiating or integrating a process whose correlation function fails the diagonal continuity test, however smooth individual paths may look."
+  }
+ ],
+ "universal_lens": "Read as a template, the book says that any system evolving under uncertainty can be made tractable by the same sequence of moves. First choose a state that renders the future conditionally independent of the past. Second, if the full distribution is too rich to carry, carry its second order shadow and know exactly what was discarded. Third, treat every estimate as a projection onto what has actually been observed, with the error orthogonal to the evidence. Fourth, diagonalize: find the coordinates, in time, frequency, or an eigenbasis, in which the components decouple. Fifth, certify long run behavior with a potential function whose drift points home. Sixth, never quote an average until you can say whether it is a time average, an ensemble average, or an event seen average.",
+ "gsi_mapping": "For the Galaxy Sports Institute this book is a syllabus spine for stochastic reasoning. Its chapter order is a curriculum: convergence literacy before limit theorems, estimation geometry before filtering, Markov modeling before inference and stability, and martingale discipline last, as the ethics of sequential claims. Each primitive becomes a learning objective with a checkable condition attached, and the worked settings, queues, channels, games of chance, and tracking problems, become teaching cases for how structure licenses simplification. The Institute also takes the book's scholarly habit as method: cite the theorem, state its hypotheses, and exhibit the counterexample, like the doubling strategy, that shows why each hypothesis is load bearing.",
+ "gse_mapping": "For the Galaxy Sports Edge engine the transfers are concrete. The Markov property licenses a state representation of a matchup in which the current state carries everything the past can say about the future. The innovations form of the Kalman recursion is the template for updating beliefs as evidence arrives one piece at a time, each update using only the unpredictable part of the new observation. Forward-backward smoothing is the template for attributing an observed sequence to hidden regimes after the fact, and the Viterbi path is the single most likely regime narrative. Foster-Lyapunov drift gives a stability audit for iterative rating updates, Azuma-Hoeffding and Doob bound the excursion risk of cumulative estimates, and the ergodicity and PASTA chapters police which averages the engine may legitimately quote."
+}
