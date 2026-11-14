@@ -48,6 +48,8 @@ EXTENDED_BOOK_PAGE_CAPS: Dict[str, int] = {
     **DEFAULT_BOOK_PAGE_CAPS,
     "65dd26cd834db798": 20,  # IBM US7483986 Self-Organizing Multi-Agent Topology (14 pages -> full patent)
     "6ff1729124cef6c7": 40,  # Halmos 1950 Measure Theory (40 foundational pages)
+    "6cb818e53ff368b9": 35,  # Galton 1889 Natural Inheritance (page 1 boilerplate + pages 2..35 TOC/Preface/Ch I-III)
+    "7a407377b5f10417": 15,  # 2014 Quantifying Shot Quality in the NBA - Second Spectrum (8 pages -> full paper)
 }
 
 
@@ -322,6 +324,24 @@ def run_ocr_rescue(
             }
         )
 
+    manifest_name = "ocr_rescue_tierb_manifest.json" if book_ids else "ocr_rescue_manifest.json"
+    manifest_path = out_dir / manifest_name
+    merged_books = list(results)
+    if book_ids and not dry_run and manifest_path.is_file():
+        try:
+            prior = json.loads(manifest_path.read_text(encoding="utf-8"))
+            by_id: Dict[str, Dict[str, Any]] = {
+                str(item["book_id"]): item
+                for item in prior.get("books_rescued", [])
+                if isinstance(item, dict) and item.get("book_id")
+            }
+            for item in results:
+                by_id[str(item["book_id"])] = item
+            merged_books = [by_id[k] for k in sorted(by_id.keys())]
+        except Exception:
+            merged_books = list(results)
+
+    cumulative_pages_ocr = sum(int(item.get("pages_rescued") or 0) for item in merged_books)
     manifest = {
         "schema": "gse.gcp_vision_ocr_rescue.v1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -332,13 +352,12 @@ def run_ocr_rescue(
         "dry_run": dry_run,
         "planned_total_pages": planned_total,
         "actual_pages_ocr": total_pages_ocr,
-        "always_free_pct_used": round(100.0 * total_pages_ocr / 1000.0, 2),
+        "cumulative_manifest_pages_ocr": cumulative_pages_ocr,
+        "always_free_pct_used": round(100.0 * cumulative_pages_ocr / 1000.0, 2),
         "estimated_cost_usd": 0.0,
         "vision_api_http_batches": total_api_requests,
-        "books_rescued": results,
+        "books_rescued": merged_books,
     }
-    manifest_name = "ocr_rescue_tierb_manifest.json" if book_ids else "ocr_rescue_manifest.json"
-    manifest_path = out_dir / manifest_name
     manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
     return manifest
 

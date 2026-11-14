@@ -1,0 +1,98 @@
+{
+  "book_id": "42b273eb6893e2cc",
+  "source_status": "COMPLETE",
+  "title": "B-20__Final_pay_stub_1_REDACTED__2026-05-15",
+  "file_name": "B-20__Final_pay_stub_1_REDACTED__2026-05-15.pdf",
+  "sha256": "42b273eb6893e2cc7f46e7d914669cb36b831aff5c4406f1fa204b112e3ef1f2",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 1,
+  "windows_extracted": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal payroll cycles, earnings summation, and deduction hierarchies form a structured vector space over real-valued time-series. Universal Lens: Rooted in B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gsi_mapping": "Bayesian belief nets model employee compensation as stochastic processes; conformal prediction bounds yield robust risk-adjusted pay estimates. GSI Mapping: Rooted in B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "gse_mapping": "Situational reasoning maps pay period transitions through state-space trajectories; state transitions encode accruals, deductions, and net income dynamics. GSE Mapping: Rooted in B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+  "primitives": [
+    {
+      "primitive_id": "payroll_cycle_accumulator",
+      "name": "Payroll Cycle Accumulator",
+      "verbatim_quote": "EMPLOYEE ID Pay PD Start 4/26/2026 Pay PD End Date : 05/09/2026 Check Date : 05/15/2026",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'start_date': 'datetime(2026, 4, 26)', 'end_date': 'datetime(2026, 5, 9)', 'check_date': 'datetime(2026, 5, 15)'}",
+      "assumptions": "Pay periods are fixed-length intervals with deterministic start/end dates.",
+      "breakdown_regime": "Periodic boundary conditions apply to all temporal compensation metrics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's temporal belief propagation kernel; GSE employs it for dynamic state transition tracking of pay cycles.",
+        "source_operator": "payroll_cycle_accumulator",
+        "telemetry": "Verification via timestamp alignment with ledger entries."
+      }
+    },
+    {
+      "primitive_id": "earnings_vector_summation",
+      "name": "Earnings Vector Summation",
+      "verbatim_quote": "Description Hours Pay Rate Current $ PayPD Ending YTD $ Description Current $ YTD $ Salary",
+      "page": 1,
+      "latex": "\\vec{E}_{\\text{period}} = \\sum_{i=1}^{n} (h_i \\cdot r_i)",
+      "symbol_and_unit_ledger": "{'h_i': 'hours worked (dimensionless)', 'r_i': 'hourly rate ($/hr)', 'E_period': 'total earnings for period ($)'}",
+      "assumptions": "Each earning component is independently additive and scalar-valued.",
+      "breakdown_regime": "Linear superposition holds across all non-deductible components.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses this in probabilistic forecasting of annualized salary; GSE applies it to compute cumulative performance indicators.",
+        "source_operator": "earnings_vector_summation",
+        "telemetry": "Validation via reconciliation with gross pay total."
+      }
+    },
+    {
+      "primitive_id": "deduction_matrix_inversion",
+      "name": "Deduction Matrix Inversion",
+      "verbatim_quote": "FED W/H EE 2,133.94 21,020.55 Pay Period Salary 4,800.00 05/09/2026 46,707.73 FED OASDI EE 714.38 7,047.39",
+      "page": 1,
+      "latex": "\\mathbf{D}^{-1}(t) = \\begin{bmatrix} d_{1}(t) & 0 & \\cdots \\\\ 0 & d_{2}(t) & \\cdots \\\\ \\vdots & \\vdots & \\ddots \\end{bmatrix}",
+      "symbol_and_unit_ledger": "{'d_i(t)': 'deduction amount at time t ($)', 'D': 'diagonal matrix of deductions ($)'}",
+      "assumptions": "Deductions form a diagonal matrix under independent tax regimes.",
+      "breakdown_regime": "Matrix inversion invalidates when deductions overlap or are non-scalar.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used by GSI to derive inverse probability distributions of net income; GSE computes residual liabilities post-deduction.",
+        "source_operator": "deduction_matrix_inversion",
+        "telemetry": "Cross-validation against reported net pay."
+      }
+    },
+    {
+      "primitive_id": "net_income_computation",
+      "name": "Net Income Computation",
+      "verbatim_quote": "YTD Current YTD Period Totals: 11,710.54 116,745.75 Period Totals: 3,502.07 34,413.06 EARNINGS: 11,710.54 DEDUCTIONS: 3,502.07 NET",
+      "page": 1,
+      "latex": "N = \\sum E - \\sum D",
+      "symbol_and_unit_ledger": "{'N': 'net income ($)', 'E': 'total earnings ($)', 'D': 'total deductions ($)'}",
+      "assumptions": "All earnings and deductions are accounted for in the period.",
+      "breakdown_regime": "Scalar subtraction holds only if all components are known and non-negative.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI models net income as a posterior distribution; GSE tracks its evolution through lifecycle states.",
+        "source_operator": "net_income_computation",
+        "telemetry": "Reconciliation with final check amount."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "42b273eb6893e2cc_t0",
+      "think": "The document presents a structured payroll summary that encodes temporal, scalar, and vectorial data. The first page establishes a clear temporal framework for pay periods, which can be modeled as discrete-time signals. Earnings are aggregated into a vector space where each component corresponds to a distinct income type, enabling linear algebraic operations such as summation and inner products. Deductions are represented as a diagonal matrix, allowing for matrix inversion techniques to isolate individual contributions. Net income emerges as a scalar projection of this structure. These primitives form the basis for probabilistic inference in GSI and dynamic state transitions in GSE. The document’s layout reflects an implicit assumption of financial consistency and temporal coherence, which supports formal modeling. The interplay between gross, net, and YTD values suggests a hierarchical structure suitable for recursive Bayesian updating and state-space modeling. Window 1 Synthesis: Rooted in B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 1/1 pages of B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc): [payroll_cycle_accumulator p.1]: EMPLOYEE ID Pay PD Start 4/26/2026 Pay PD End Date : 05/09/2026 Check Date : 05/15/2026 (Maps to GSI's temporal belief propagation kernel; GSE employs it for dynamic state transition tracking of pay cycles.) [earnings_vector_summation p.1]: Description Hours Pay Rate Current $ PayPD Ending YTD $ Description Current $ YTD $ Salary (GSI uses this in probabilistic forecasting of annualized salary; GSE applies it to compute cumulative performance indicators.) [deduction_matrix_inversion p.1]: FED W/H EE 2,133.94 21,020.55 Pay Period Salary 4,800.00 05/09/2026 46,707.73 FED OASDI EE 714.38 7,047.39 (Used by GSI to derive inverse probability distributions of net income; GSE computes residual liabilities post-deduction.) [net_income_computation p.1]: YTD Current YTD Period Totals: 11,710.54 116,745.75 Period Totals: 3,502.07 34,413.06 EARNINGS: 11,710.54 DEDUCTIONS: 3,502.07 NET (GSI models net income as a posterior distribution; GSE tracks its evolution through lifecycle states.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc): [payroll_cycle_accumulator p.1]: EMPLOYEE ID Pay PD Start 4/26/2026 Pay PD End Date : 05/09/2026 Check Date : 05/15/2026 (Maps to GSI's temporal belief propagation kernel; GSE employs it for dynamic state transition tracking of pay cycles.) [earnings_vector_summation p.1]: Description Hours Pay Rate Current $ PayPD Ending YTD $ Description Current $ YTD $ Salary (GSI uses this in probabilistic forecasting of annualized salary; GSE applies it to compute cumulative performance indicators.) [deduction_matrix_inversion p.1]: FED W/H EE 2,133.94 21,020.55 Pay Period Salary 4,800.00 05/09/2026 46,707.73 FED OASDI EE 714.38 7,047.39 (Used by GSI to derive inverse probability distributions of net income; GSE computes residual liabilities post-deduction.) [net_income_computation p.1]: YTD Current YTD Period Totals: 11,710.54 116,745.75 Period Totals: 3,502.07 34,413.06 EARNINGS: 11,710.54 DEDUCTIONS: 3,502.07 NET (GSI models net income as a posterior distribution; GSE tracks its evolution through lifecycle states.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc): [payroll_cycle_accumulator p.1]: EMPLOYEE ID Pay PD Start 4/26/2026 Pay PD End Date : 05/09/2026 Check Date : 05/15/2026 (Maps to GSI's temporal belief propagation kernel; GSE employs it for dynamic state transition tracking of pay cycles.) [earnings_vector_summation p.1]: Description Hours Pay Rate Current $ PayPD Ending YTD $ Description Current $ YTD $ Salary (GSI uses this in probabilistic forecasting of annualized salary; GSE applies it to compute cumulative performance indicators.) [deduction_matrix_inversion p.1]: FED W/H EE 2,133.94 21,020.55 Pay Period Salary 4,800.00 05/09/2026 46,707.73 FED OASDI EE 714.38 7,047.39 (Used by GSI to derive inverse probability distributions of net income; GSE computes residual liabilities post-deduction.) [net_income_computation p.1]: YTD Current YTD Period Totals: 11,710.54 116,745.75 Period Totals: 3,502.07 34,413.06 EARNINGS: 11,710.54 DEDUCTIONS: 3,502.07 NET (GSI models net income as a posterior distribution; GSE tracks its evolution through lifecycle states.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.\n\nFull-book synthesis across 1/1 pages of B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc): [payroll_cycle_accumulator p.1]: EMPLOYEE ID Pay PD Start 4/26/2026 Pay PD End Date : 05/09/2026 Check Date : 05/15/2026 (Maps to GSI's temporal belief propagation kernel; GSE employs it for dynamic state transition tracking of pay cycles.) [earnings_vector_summation p.1]: Description Hours Pay Rate Current $ PayPD Ending YTD $ Description Current $ YTD $ Salary (GSI uses this in probabilistic forecasting of annualized salary; GSE applies it to compute cumulative performance indicators.) [deduction_matrix_inversion p.1]: FED W/H EE 2,133.94 21,020.55 Pay Period Salary 4,800.00 05/09/2026 46,707.73 FED OASDI EE 714.38 7,047.39 (Used by GSI to derive inverse probability distributions of net income; GSE computes residual liabilities post-deduction.) [net_income_computation p.1]: YTD Current YTD Period Totals: 11,710.54 116,745.75 Period Totals: 3,502.07 34,413.06 EARNINGS: 11,710.54 DEDUCTIONS: 3,502.07 NET (GSI models net income as a posterior distribution; GSE tracks its evolution through lifecycle states.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in 19th-century actuarial science and 20th-century financial accounting frameworks, this structure evolved through modern HRIS systems and enterprise resource planning paradigms. Retrocausal Genealogy (Window 1): Rooted in B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents within this system include employees, payroll processors, and regulatory bodies. Each agent operates under distinct constraints—employees seek maximum net income, processors ensure compliance, regulators enforce accuracy. Modeling these agents requires multi-agent simulation and game-theoretic equilibrium analysis. Theory of Mind (Window 1): Rooted in B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that deduction types do not redundantly represent the same tax category. Leakage vetoes prevent double-counting of benefits or deductions across layers, preserving integrity of the vector space representation. Cross-Layer Veto (Window 1): Rooted in B-20__Final_pay_stub_1_REDACTED__2026-05-15 (42b273eb6893e2cc, 1/1 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

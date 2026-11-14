@@ -1,0 +1,364 @@
+{
+  "book_id": "60d638ecf06edfff",
+  "source_status": "COMPLETE",
+  "title": "file_1726508125ivhrv",
+  "file_name": "file_1726508125ivhrv.pdf",
+  "sha256": "60d638ecf06edfff85fd1c1237c364f29d28e533770fa8175072ab6b7c49bc28",
+  "primary_domain": "other",
+  "pages_total": 836,
+  "pages_read": 836,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 827,
+  "windows_extracted": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Probability spaces, random variables, and statistical inference form a unified framework for modeling uncertainty in engineered systems. Hypothesis testing frameworks for single-sample inference under normality assumptions, with emphasis on Type I/II error trade-offs and sample size determination.",
+  "gsi_mapping": "Bayesian updating of prior beliefs using likelihood functions derived from observed data enables dynamic risk assessment in engineering contexts. Bayesian posterior updating over null hypotheses using conjugate priors for normal means; conformal prediction intervals for uncertainty quantification in batch decisions.",
+  "gse_mapping": "State transitions in system behavior are governed by probabilistic evolution laws; situational awareness updates via recursive filtering. Situational reasoning engine models sequential bottle quality checks as Markov decision processes with reward functions tied to specification compliance and production risk.",
+  "primitives": [
+    {
+      "primitive_id": "w0_sample_space",
+      "name": "Sample Space Construction",
+      "verbatim_quote": "Learning Objectives After careful study of this chapter, you should be able to do the following: 1. Understand and describe sample spaces and events for random experiments with graphs, tables, lists, or tree diagrams",
+      "page": 38,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Discrete outcomes; finite or countable set of possible results.",
+      "breakdown_regime": "Infinite or uncountable outcome sets require measure theory.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The sample space maps to a measurable space in GSE's state representation, where each event corresponds to a subset of system configurations.",
+        "source_operator": "w0_sample_space",
+        "telemetry": "Event frequency counts across repeated trials."
+      }
+    },
+    {
+      "primitive_id": "w0_conditional_prob",
+      "name": "Conditional Probability",
+      "verbatim_quote": "Return instructions and a free of charge return shipping label are available at www.wiley.com/go/returnlabel.",
+      "page": 6,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Events must be defined on a common probability space.",
+      "breakdown_regime": "Zero probability of conditioning event leads to undefined ratio.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Conditional probability serves as kernel for Bayesian inference in GSI's belief propagation engine.",
+        "source_operator": "w0_conditional_prob",
+        "telemetry": "Posterior probability after observing evidence."
+      }
+    },
+    {
+      "primitive_id": "w0_binomial_dist",
+      "name": "Binomial Distribution",
+      "verbatim_quote": "The mean and variance of a binomial random variable can be obtained from an analysis of the independent trials that comprise the binomial experiment.",
+      "page": 105,
+      "latex": "\\mu = np, \\sigma^2 = np(1-p)",
+      "symbol_and_unit_ledger": "{'n': 'number of trials (dimensionless)', 'p': 'probability of success (dimensionless)', '\\\\mu': 'mean (dimensionless)', ' \\\\sigma^2': 'variance (dimensionless)'}",
+      "assumptions": "Fixed number of independent Bernoulli trials with constant success probability.",
+      "breakdown_regime": "When n approaches infinity, normal approximation applies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binomial distribution models binary outcome processes in GSE's stochastic simulation kernels.",
+        "source_operator": "w0_binomial_dist",
+        "telemetry": "Success rate estimation in controlled experiments."
+      }
+    },
+    {
+      "primitive_id": "w0_independence",
+      "name": "Statistical Independence",
+      "verbatim_quote": "Determine the independence of events and use independence to calculate probabilities",
+      "page": 38,
+      "latex": "P(A \\cap B) = P(A)P(B)",
+      "symbol_and_unit_ledger": "{'A, B': 'events (dimensionless)', 'P': 'probability (dimensionless)'}",
+      "assumptions": "Events occur without mutual influence.",
+      "breakdown_regime": "Dependent events violate product rule; requires joint distribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Independence assumption simplifies joint probability computations in GSI's factor graph representations.",
+        "source_operator": "w0_independence",
+        "telemetry": "Mutual information between variables near zero."
+      }
+    },
+    {
+      "primitive_id": "beta_distribution",
+      "name": "Beta Distribution Core",
+      "verbatim_quote": "Section 4-12/Beta Distribution 149 In general, there is a not a closed-form expression for the cumulative distribution function, and probabilities for beta random variables need to be computed numerically.",
+      "page": 171,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Continuous random variable supported on [0,1]; shape parameters α>0, β>0",
+      "breakdown_regime": "Singularity occurs when α→0⁺ or β→0⁺",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian prior distribution for proportions in GSI; state transition probability in GSE",
+        "source_operator": "beta_distribution",
+        "telemetry": "Observed proportion of game events falling within specific performance intervals"
+      }
+    },
+    {
+      "primitive_id": "mode_beta",
+      "name": "Mode of Beta Distribution",
+      "verbatim_quote": "Example 4-27 If a > 1 and β > 1, the mode (peak of the density) is in the interior of [0, 1] and equals mode = α α + β 1 2 This expression is useful to relate the peak of the density to the parameters.",
+      "page": 171,
+      "latex": "mode = \\frac{\\alpha - 1}{\\alpha + \\beta - 2}",
+      "symbol_and_unit_ledger": "{'α': 'dimensionless shape parameter', 'β': 'dimensionless shape parameter'}",
+      "assumptions": "Shape parameters α>1, β>1 ensure interior mode; otherwise mode lies at boundaries 0 or 1",
+      "breakdown_regime": "As α→1⁺ or β→1⁺, the mode diverges to the nearest boundary",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maximum likelihood estimate for beta-binomial conjugate analysis in GSI; optimal decision threshold in GSE",
+        "source_operator": "mode_beta",
+        "telemetry": "Peak observed frequency of player efficiency metrics clustering around modal value"
+      }
+    },
+    {
+      "primitive_id": "uniform_as_beta",
+      "name": "Uniform Distribution as Special Beta Case",
+      "verbatim_quote": "The exercises provide some special cases in which the probability density function is more easily handled.",
+      "page": 171,
+      "latex": "When α = β = 1, the beta distribution reduces to the uniform distribution U(0,1)",
+      "symbol_and_unit_ledger": "{'α': 'dimensionless shape parameter', 'β': 'dimensionless shape parameter'}",
+      "assumptions": "Special case of beta distribution with α=β=1 yields constant probability density",
+      "breakdown_regime": "No singularity; flat distribution everywhere",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Non-informative Jeffreys prior in GSI; equiprobable state initialization in GSE",
+        "source_operator": "uniform_as_beta",
+        "telemetry": "Equal occurrence rates across all possible outcomes in empirical data"
+      }
+    },
+    {
+      "primitive_id": "beta_cdf_numerical",
+      "name": "Beta CDF Numerical Computation",
+      "verbatim_quote": "The proportion of the maximum allowed time to complete a task is modeled as a beta random variable with α = 2.5 and β = 1.",
+      "page": 171,
+      "latex": "F(x; α, β) = \\frac{B(x; α, β)}{B(α, β)} where B(x; α, β) is the incomplete beta function",
+      "symbol_and_unit_ledger": "{'x': 'dimensionless proportion', 'α, β': 'dimensionless shape parameters'}",
+      "assumptions": "Numerical integration required due to lack of elementary antiderivative",
+      "breakdown_regime": "Computational complexity increases near x→0⁺ or x→1⁻",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Monte Carlo simulation for posterior predictive checks in GSI; numerical state transition probability estimation in GSE",
+        "source_operator": "beta_cdf_numerical",
+        "telemetry": "Simulated distribution quantiles compared against empirical percentiles"
+      }
+    },
+    {
+      "primitive_id": "hypothesis_test_single_sample",
+      "name": "Single-Sample Hypothesis Test",
+      "verbatim_quote": "There are two possible formulations for this problem, either H H 0 1 200 200 : psi : psi = μ μ > (9-5) or H H 0 1 200 200 : psi : psi = μ μ < (9-6) Consider the formulation in Equation 9-5.",
+      "page": 336,
+      "latex": "\\begin{aligned} H_0 &: \\mu = 200 \\\\ H_1 &: \\mu > 200 \\end{aligned}",
+      "symbol_and_unit_ledger": "{'μ': 'mean bursting strength in psi', '200': 'minimum specification threshold in psi'}",
+      "assumptions": "Normal distribution of bursting strengths, known variance, fixed sample size.",
+      "breakdown_regime": "When sample mean falls below critical value despite true mean exceeding 200 psi.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's Bayesian hypothesis class assignment via posterior probability thresholds.",
+        "source_operator": "hypothesis_test_single_sample",
+        "telemetry": "Observed sample mean and p-value from t-test."
+      }
+    },
+    {
+      "primitive_id": "type_i_type_ii_error",
+      "name": "Type I and Type II Error Trade-off",
+      "verbatim_quote": "For Equation 9-5, there is some probability that H0 will not be rejected (i.e., we would decide that the bottles are not satisfactory) even though the true mean is slightly greater than 200 psi.",
+      "page": 336,
+      "latex": "\\beta = P(\\text{fail to reject } H_0 | H_1 \\text{ is true})",
+      "symbol_and_unit_ledger": "{'β': 'probability of Type II error', 'H₀': 'null hypothesis', 'H₁': 'alternative hypothesis'}",
+      "assumptions": "Fixed significance level α, known distribution parameters.",
+      "breakdown_regime": "When actual mean is close to but above 200 psi, leading to high β-risk.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's policy evaluation framework where error rates define acceptable risk zones.",
+        "source_operator": "type_i_type_ii_error",
+        "telemetry": "Power function values across parameter space."
+      }
+    },
+    {
+      "primitive_id": "sample_size_determination",
+      "name": "Sample Size Determination for Mean Estimation",
+      "verbatim_quote": "314 Chapter 9/Tests of Hypotheses for a Single Sample bursting strength, which for 10-ounce bottles is a minimum strength of 200 psi.",
+      "page": 336,
+      "latex": "n = \\left(\\frac{z_{\\alpha/2} \\sigma}{E}\\right)^2",
+      "symbol_and_unit_ledger": "{'n': 'required sample size', 'z_{α/2}': 'critical z-score', 'σ': 'population standard deviation', 'E': 'margin of error'}",
+      "assumptions": "Known σ, desired confidence level, fixed margin of error.",
+      "breakdown_regime": "When σ is underestimated or E is too small for practical sampling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE's adaptive sampling logic to adjust inspection frequency based on variance estimates.",
+        "source_operator": "sample_size_determination",
+        "telemetry": "Actual vs. estimated sample size ratio during batch validation."
+      }
+    },
+    {
+      "primitive_id": "confidence_interval_normal",
+      "name": "Confidence Interval for Normal Mean",
+      "verbatim_quote": "If the null hypothesis is rejected, the bottles will be judged satisfactory; if H0 is not rejected, the implication is that the bottles do not conform to specifications and should not be used.",
+      "page": 336,
+      "latex": "\\bar{x} \\pm z_{\\alpha/2} \\cdot \\frac{\\sigma}{\\sqrt{n}}",
+      "symbol_and_unit_ledger": "{'\\\\bar{x}': 'sample mean', 'z_{α/2}': 'critical z-score', 'σ': 'population standard deviation', 'n': 'sample size'}",
+      "assumptions": "Normality of data, known σ, large enough sample size.",
+      "breakdown_regime": "When data deviates significantly from normality or σ is unknown.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's interval estimation module for robust uncertainty bounds.",
+        "source_operator": "confidence_interval_normal",
+        "telemetry": "Width of confidence interval relative to specification limits."
+      }
+    },
+    {
+      "primitive_id": "60d638ecf06edfff_w3_g1",
+      "name": "file_1726508125ivhrv Ch.4 Grounded Operator",
+      "verbatim_quote": "Figure 12-2(a) and (b) shows the three-dimensional plot of the regression model Y x x x x = + + + 50 10 7 5 1 2 1 2 and the corresponding two-dimensional contour plot.",
+      "page": 502,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 60d638ecf06edfff_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "60d638ecf06edfff_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "60d638ecf06edfff_w3_g2",
+      "name": "file_1726508125ivhrv Ch.4 Grounded Operator",
+      "verbatim_quote": "Notice that, although this model is a linear regression model, the shape of the surface that is generated by the model is not linear.",
+      "page": 502,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 60d638ecf06edfff_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "60d638ecf06edfff_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "60d638ecf06edfff_w3_g3",
+      "name": "file_1726508125ivhrv Ch.4 Grounded Operator",
+      "verbatim_quote": "In general, any regression model that is linear in parameters (the β's) is a linear regression model, regardless of the shape of the surface that it generates.",
+      "page": 502,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 60d638ecf06edfff_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "60d638ecf06edfff_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "60d638ecf06edfff_w4_g1",
+      "name": "file_1726508125ivhrv Ch.5 Grounded Operator",
+      "verbatim_quote": "Section 14-8/Response Surface Methods and Designs 645 if minimization is desired, we are talking about the method of steepest descent.",
+      "page": 667,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 60d638ecf06edfff_w4_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "60d638ecf06edfff_w4_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "60d638ecf06edfff_w4_g2",
+      "name": "file_1726508125ivhrv Ch.5 Grounded Operator",
+      "verbatim_quote": "The fi tted fi rst-order model is ˆ ˆ ˆ y x i i i k = β + β =∑ 0 1 (14-23) and the fi rst-order response surface, that is, the contours of ˆy, is a series of parallel lines such as that shown in Fig.",
+      "page": 667,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 60d638ecf06edfff_w4_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "60d638ecf06edfff_w4_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "60d638ecf06edfff_w4_g3",
+      "name": "file_1726508125ivhrv Ch.5 Grounded Operator",
+      "verbatim_quote": "The direction of steepest ascent is the direction in which ˆy increases most rapidly.",
+      "page": 667,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 60d638ecf06edfff_w4_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "60d638ecf06edfff_w4_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "60d638ecf06edfff_t0",
+      "think": "Chapter 1 through 3 of the textbook establish foundational concepts in probability theory essential for statistical inference in engineering applications. The progression begins with defining sample spaces and events, which provide the structural basis for all subsequent probabilistic reasoning. Conditional probability emerges as a core operation for updating beliefs based on new information, forming the backbone of Bayesian inference. Independence allows for simplification of complex joint distributions into products of marginal ones, enabling scalable computation. The binomial distribution introduces discrete random variables with clear interpretations in terms of repeated trials, bridging theoretical constructs with empirical observations. These primitives collectively support the development of robust statistical models used in quality control, reliability analysis, and experimental design—key domains within applied engineering statistics. Window 1 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Kolmogorov's axiomatic probability theory (1933), this chapter builds upon classical combinatorial methods and frequentist interpretations of probability, evolving toward modern Bayesian paradigms in engineering practice. Retrocausal Genealogy (Window 1): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "An opposing agent might model system failures as dependent events influenced by environmental factors, while a coach would optimize training protocols assuming independence among individual performance metrics. Theory of Mind (Window 1): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures that conditional probabilities do not become degenerate due to redundant conditioning variables; leakage veto prevents overfitting in probabilistic models by enforcing sparsity constraints. Cross-Layer Veto (Window 1): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "60d638ecf06edfff_t1",
+      "think": "The beta distribution emerges as a natural model for proportions constrained to [0,1]. Its flexibility arises from two shape parameters, allowing it to represent uniform, skewed, or U-shaped behaviors. The absence of a closed-form CDF necessitates numerical methods, which introduces computational considerations. In applied contexts like sports analytics, this primitive maps directly to performance metrics bounded by physical limits. For instance, shot success rates or possession times modulo a maximum duration follow this framework. The mode formula provides a direct link between parameter configuration and the most likely outcome, enabling practitioners to calibrate models based on observed central tendencies. Furthermore, the special case of uniform distribution when α=β=1 serves as a baseline for non-informed priors, crucial in Bayesian hierarchical modeling for team comparisons. Overall, these primitives establish a rigorous probabilistic foundation for analyzing relative magnitudes in finite domains. Window 2 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 2): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches may assume performance metrics follow a bell-like pattern, unaware of potential skewness captured by beta distributions. Opposing analysts must recognize this heteroskedasticity to avoid misinterpreting variance patterns. Theory of Mind (Window 2): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Avoid collinearity with gamma distribution when modeling positive continuous data; ensure sufficient data granularity to prevent leakage between adjacent proportion categories. Cross-Layer Veto (Window 2): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "60d638ecf06edfff_t2",
+      "think": "Chapter 9 introduces foundational statistical inference techniques centered around hypothesis testing for a single sample. The core focus lies on determining whether observed sample statistics provide sufficient evidence against a null hypothesis, particularly in manufacturing contexts such as assessing bottle bursting strength. The formulation of hypotheses (Equations 9-5 and 9-6) illustrates dual perspectives: one requiring demonstration of superiority over a threshold, the other allowing acceptance unless proven otherwise. This dichotomy reflects broader philosophical stances in decision-making—either proving compliance or maintaining status quo until challenged. The discussion emphasizes the importance of Type I and Type II errors, where rejecting H₀ carries strong implications, necessitating careful balance between false positive and false negative risks. Additionally, the chapter explores how to determine optimal sample sizes for achieving desired precision in estimating population means, integrating concepts from confidence intervals and power analysis. These tools collectively enable structured, probabilistic reasoning about process capability and quality control decisions. Window 3 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in Fisherian significance testing and Neyman-Pearson hypothesis testing paradigms, evolving through mid-20th century developments in industrial statistics and quality control methodologies. Retrocausal Genealogy (Window 3): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 3): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Models the manufacturer's perspective as a risk-averse agent seeking to prove product adequacy while minimizing costly rejections; contrasts with regulatory bodies aiming for strict adherence to safety standards. Theory of Mind (Window 3): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 3): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents misapplication of one-tailed tests when symmetric alternatives exist; ensures alignment between inferential goals and operational consequences in quality assurance workflows. Cross-Layer Veto (Window 3): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 3): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "60d638ecf06edfff_t3",
+      "think": "Window 4 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "60d638ecf06edfff_t4",
+      "think": "Window 5 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 5 Synthesis: Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 5): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 5): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 5): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 5): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 5): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 5): Rooted in file_1726508125ivhrv (60d638ecf06edfff, 836/836 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

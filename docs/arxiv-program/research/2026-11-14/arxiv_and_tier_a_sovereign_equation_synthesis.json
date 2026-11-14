@@ -1,17 +1,17 @@
 {
   "schema": "gse.arxiv_and_sovereign_equation_synthesis.v1",
-  "generated_at_utc": "2026-11-14T13:11:17Z",
+  "generated_at_utc": "2026-11-14T13:41:36Z",
   "counts": {
-    "complete_sovereign_books": 917,
+    "complete_sovereign_books": 981,
     "refused_stub_books_fail_closed": 22,
     "gatekeeper_validation_failures": 0,
-    "total_sovereign_primitives": 11787,
-    "total_sovereign_reasoning_traces": 3028,
-    "total_pages_inspected": 51075,
-    "trainer_feed_records_emitted": 14815,
+    "total_sovereign_primitives": 12794,
+    "total_sovereign_reasoning_traces": 3278,
+    "total_pages_inspected": 54318,
+    "trainer_feed_records_emitted": 16072,
     "active_router_mask_bits": 276,
     "arxiv_program_unique_ids_indexed": 6183,
-    "sovereign_books_with_explicit_arxiv_id": 151
+    "sovereign_books_with_explicit_arxiv_id": 173
   },
   "context_mask_uint32_words_9": [
     4294967295,
@@ -25,42 +25,42 @@
     1048575
   ],
   "track_counts": {
-    "arxiv_and_preprints": 152,
+    "arxiv_and_preprints": 174,
     "football_coaching_rules_and_scouting": 10,
-    "graduate_math_stats_physics_textbooks": 711,
+    "graduate_math_stats_physics_textbooks": 752,
     "mit_sloan_jqas_nessis_conferences": 1,
-    "nfl_war_and_fourth_down_decision": 4,
+    "nfl_war_and_fourth_down_decision": 5,
     "sports_psychology_and_cognition": 39
   },
   "six_situational_family_weights": {
     "pressure": {
-      "sovereign_primitives_count": 510,
-      "bounded_james_stein_weight": 0.175862,
+      "sovereign_primitives_count": 565,
+      "bounded_james_stein_weight": 0.176256,
       "all_finite_non_nan": true
     },
     "weather": {
-      "sovereign_primitives_count": 1550,
-      "bounded_james_stein_weight": 0.178617,
+      "sovereign_primitives_count": 1711,
+      "bounded_james_stein_weight": 0.178746,
       "all_finite_non_nan": true
     },
     "restFatigue": {
-      "sovereign_primitives_count": 1129,
-      "bounded_james_stein_weight": 0.178107,
+      "sovereign_primitives_count": 1218,
+      "bounded_james_stein_weight": 0.178244,
       "all_finite_non_nan": true
     },
     "coveragePersonnel": {
-      "sovereign_primitives_count": 1099,
-      "bounded_james_stein_weight": 0.178056,
+      "sovereign_primitives_count": 1179,
+      "bounded_james_stein_weight": 0.178186,
       "all_finite_non_nan": true
     },
     "qbSkillScript": {
-      "sovereign_primitives_count": 6655,
-      "bounded_james_stein_weight": 0.179676,
+      "sovereign_primitives_count": 7221,
+      "bounded_james_stein_weight": 0.179701,
       "all_finite_non_nan": true
     },
     "marketMicrostructure": {
-      "sovereign_primitives_count": 844,
-      "bounded_james_stein_weight": 0.177477,
+      "sovereign_primitives_count": 900,
+      "bounded_james_stein_weight": 0.177632,
       "all_finite_non_nan": true
     }
   },
@@ -130,8 +130,9 @@
       },
       "0..3|tier_B": {
         "total": 835,
-        "pending_unextracted": 835,
-        "pending_with_local_file": 835
+        "pending_unextracted": 833,
+        "pending_with_local_file": 833,
+        "completed_or_extracted": 1
       },
       "0..3|tier_C": {
         "total": 3349,
@@ -144,9 +145,7 @@
       },
       "4..7|tier_B": {
         "total": 814,
-        "completed_or_extracted": 751,
-        "pending_unextracted": 63,
-        "pending_with_local_file": 63
+        "completed_or_extracted": 814
       },
       "4..7|tier_C": {
         "total": 3347,
@@ -168,329 +167,8 @@
     },
     "shard_4to7_tier_a_remaining_with_file": 0,
     "shard_4to7_tier_a_remaining_preview": [],
-    "shard_4to7_tier_b_pending_candidates_count": 63,
-    "shard_4to7_tier_b_pending_candidates": [
-      {
-        "book_id": "6cb818e53ff368b9",
-        "title": "Galton-1889-NaturalInheritance",
-        "file_name": "Galton-1889-NaturalInheritance.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.0
-      },
-      {
-        "book_id": "7a407377b5f10417",
-        "title": "2014 Quantifying Shot Quality in the NBA - Second Spectrum",
-        "file_name": "2014 Quantifying Shot Quality in the NBA - Second Spectrum.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.0
-      },
-      {
-        "book_id": "48e22c15affb2618",
-        "title": "2022 - Seattle Kraken Expansion Draft Strategic Approaches - Malter et al",
-        "file_name": "2022 - Seattle Kraken Expansion Draft Strategic Approaches - Malter et al.md",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.01
-      },
-      {
-        "book_id": "4fb38b8539394e5a",
-        "title": "0360-enhancing-sports-strategy-with-video-analytics",
-        "file_name": "0360-enhancing-sports-strategy-with-video-analytics.md",
-        "primary_domain": "history",
-        "tier": "B",
-        "file_size_mb": 0.011
-      },
-      {
-        "book_id": "6393e14863aea01b",
-        "title": "0279-bayesian-weighted-discretetime-dynamic-models-for",
-        "file_name": "0279-bayesian-weighted-discretetime-dynamic-models-for.md",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.011
-      },
-      {
-        "book_id": "7b262e3f7ad470b0",
-        "title": "0643-bettors-reaction-match-dynamics-evidence",
-        "file_name": "0643-bettors-reaction-match-dynamics-evidence.md",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.011
-      },
-      {
-        "book_id": "6e831dbf393ded5d",
-        "title": "biomechanics-modality-taxonomy",
-        "file_name": "biomechanics-modality-taxonomy.md",
-        "primary_domain": "physics",
-        "tier": "B",
-        "file_size_mb": 0.011
-      },
-      {
-        "book_id": "49148b024b3e1c20",
-        "title": "papers-scoring-strategy-2026-09-13",
-        "file_name": "papers-scoring-strategy-2026-09-13.md",
-        "primary_domain": "history",
-        "tier": "B",
-        "file_size_mb": 0.011
-      },
-      {
-        "book_id": "7f3754e314020e95",
-        "title": "0369-multiperson-physicsbased-pose-estimation-for-combat",
-        "file_name": "0369-multiperson-physicsbased-pose-estimation-for-combat.md",
-        "primary_domain": "physics",
-        "tier": "B",
-        "file_size_mb": 0.012
-      },
-      {
-        "book_id": "48340b5ed35c35d5",
-        "title": "1564-causal-effect-two-for-one-strategy",
-        "file_name": "1564-causal-effect-two-for-one-strategy.md",
-        "primary_domain": "history",
-        "tier": "B",
-        "file_size_mb": 0.012
-      },
-      {
-        "book_id": "4f9d4518d71a6d88",
-        "title": "0269-understanding-wholebody-interpersonal-dynamics-between-two",
-        "file_name": "0269-understanding-wholebody-interpersonal-dynamics-between-two.md",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.014
-      },
-      {
-        "book_id": "48cc4c08c58e10bc",
-        "title": "NAVIER_STOKES_256_BKM_CONVERGENCE_SWEEP",
-        "file_name": "NAVIER_STOKES_256_BKM_CONVERGENCE_SWEEP.md",
-        "primary_domain": "physics",
-        "tier": "B",
-        "file_size_mb": 0.017
-      },
-      {
-        "book_id": "5435366b83b66d41",
-        "title": "PHYSICS-BIOPHYSICS-AND-ONCOLOGY-21-REPO-TWO-PASS-INTEGRATION",
-        "file_name": "PHYSICS-BIOPHYSICS-AND-ONCOLOGY-21-REPO-TWO-PASS-INTEGRATION.md",
-        "primary_domain": "physics",
-        "tier": "B",
-        "file_size_mb": 0.02
-      },
-      {
-        "book_id": "51a00fd8652ab023",
-        "title": "CLOUD_CREDITS_MAXIMIZATION_STRATEGY_2026-07-08",
-        "file_name": "CLOUD_CREDITS_MAXIMIZATION_STRATEGY_2026-07-08.md",
-        "primary_domain": "history",
-        "tier": "B",
-        "file_size_mb": 0.024
-      },
-      {
-        "book_id": "58b343cf48db7af8",
-        "title": "navier-stokes-session-full (1)",
-        "file_name": "navier-stokes-session-full (1).md",
-        "primary_domain": "physics",
-        "tier": "B",
-        "file_size_mb": 0.026
-      },
-      {
-        "book_id": "73ac7209f3ebd60d",
-        "title": "2026-11-02-MULTIDOMAIN-CORPUS-PALEOLOGO-SUPERAGENT-QUANTUM-MATH-DOSSIER",
-        "file_name": "2026-11-02-MULTIDOMAIN-CORPUS-PALEOLOGO-SUPERAGENT-QUANTUM-MATH-DOSSIER.md",
-        "primary_domain": "physics",
-        "tier": "B",
-        "file_size_mb": 0.026
-      },
-      {
-        "book_id": "4f365453b13a2226",
-        "title": "2017 Possession Sketches - Mapping NBA Strategies",
-        "file_name": "2017 Possession Sketches - Mapping NBA Strategies.md",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.034
-      },
-      {
-        "book_id": "5ca156f559320f67",
-        "title": "2020 - You Cannot Do That Ben Stokes Dynamically Predicting Shot Type in Cricket Using a Personalized Deep Neural Network - Unknown Authors",
-        "file_name": "2020 - You Cannot Do That Ben Stokes Dynamically Predicting Shot Type in Cricket Using a Personalized Deep Neural Network - Unknown Authors.md",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.041
-      },
-      {
-        "book_id": "59eb09a58c43e2bb",
-        "title": "2025 - An Extensive Investigation of Strategies in Baseball - William et al",
-        "file_name": "2025 - An Extensive Investigation of Strategies in Baseball - William et al.md",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.041
-      },
-      {
-        "book_id": "71bc5d82cd7903e7",
-        "title": "Catapult-US10372975-ManagingMechanicalStress",
-        "file_name": "Catapult-US10372975-ManagingMechanicalStress.txt",
-        "primary_domain": "physics",
-        "tier": "B",
-        "file_size_mb": 0.043
-      },
-      {
-        "book_id": "49e36701b825db8b",
-        "title": "Intellions-US7330839-DynamicPricing",
-        "file_name": "Intellions-US7330839-DynamicPricing.txt",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.048
-      },
-      {
-        "book_id": "4b11521af3bfb511",
-        "title": "2026 - Adaptive Responses of Cardiorespiratory Fitness and Cardiometabolic Risk Factors to Polarized Versus Other Types of Training Intensity Distr - Zhou et al",
-        "file_name": "2026 - Adaptive Responses of Cardiorespiratory Fitness and Cardiometabolic Risk Factors to Polarized Versus Other Types of Training Intensity Distr - Zhou et al.md",
-        "primary_domain": "physiology",
-        "tier": "B",
-        "file_size_mb": 0.05
-      },
-      {
-        "book_id": "6a41fcb480db59f9",
-        "title": "Fighting_as_a_Profit_Maximizing_Strategy",
-        "file_name": "Fighting_as_a_Profit_Maximizing_Strategy.md",
-        "primary_domain": "history",
-        "tier": "B",
-        "file_size_mb": 0.054
-      },
-      {
-        "book_id": "42b273eb6893e2cc",
-        "title": "B-20__Final_pay_stub_1_REDACTED__2026-05-15",
-        "file_name": "B-20__Final_pay_stub_1_REDACTED__2026-05-15.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.057
-      },
-      {
-        "book_id": "6ca03f407df84049",
-        "title": "Meeting_Briefing_Rodney_2026-06-04",
-        "file_name": "Meeting_Briefing_Rodney_2026-06-04.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.065
-      },
-      {
-        "book_id": "58c849de616638fd",
-        "title": "Legal_Brief_Case_Status_2026-06-03",
-        "file_name": "Legal_Brief_Case_Status_2026-06-03.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.088
-      },
-      {
-        "book_id": "6b0da49699651dc2",
-        "title": "Legal_Risk_Assessment_SCORED_2026-06-03",
-        "file_name": "Legal_Risk_Assessment_SCORED_2026-06-03.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.096
-      },
-      {
-        "book_id": "6235d0bc4122cbeb",
-        "title": "ADA-GB",
-        "file_name": "ADA-GB.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.114
-      },
-      {
-        "book_id": "57cb1aea75288325",
-        "title": "SWEEP-HISTORY-90-DAYS-2026-11-11",
-        "file_name": "SWEEP-HISTORY-90-DAYS-2026-11-11.md",
-        "primary_domain": "history",
-        "tier": "B",
-        "file_size_mb": 0.126
-      },
-      {
-        "book_id": "7baf7a85894e5cd0",
-        "title": "2026 - Comparing wins above replacement across baseball history - Doane",
-        "file_name": "2026 - Comparing wins above replacement across baseball history - Doane.md",
-        "primary_domain": "history",
-        "tier": "B",
-        "file_size_mb": 0.158
-      },
-      {
-        "book_id": "5646540d14e1357b",
-        "title": "GBaxley - HR Manager Offer Letter 032925rev2",
-        "file_name": "GBaxley - HR Manager Offer Letter 032925rev2.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.202
-      },
-      {
-        "book_id": "50b7069ff3eaeeb3",
-        "title": "2408.14305v1",
-        "file_name": "2408.14305v1.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.321
-      },
-      {
-        "book_id": "7e0b402efb804d90",
-        "title": "Garrett Baxley Final Divorce Decree",
-        "file_name": "Garrett Baxley Final Divorce Decree.PDF",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.486
-      },
-      {
-        "book_id": "7698a0617c3d0237",
-        "title": "2608.12926v1",
-        "file_name": "2608.12926v1.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.825
-      },
-      {
-        "book_id": "71034d7432995094",
-        "title": "2605.22073v2",
-        "file_name": "2605.22073v2.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 0.998
-      },
-      {
-        "book_id": "782ce0a29e05f92c",
-        "title": "2610.00399v1",
-        "file_name": "2610.00399v1.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 1.003
-      },
-      {
-        "book_id": "62f24269d72b132d",
-        "title": "2510.15983v1",
-        "file_name": "2510.15983v1.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 1.026
-      },
-      {
-        "book_id": "7fc1ca02b07bc823",
-        "title": "2512.19551v1",
-        "file_name": "2512.19551v1.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 1.053
-      },
-      {
-        "book_id": "7feafccec99c99f0",
-        "title": "2609.17091v1",
-        "file_name": "2609.17091v1.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 1.114
-      },
-      {
-        "book_id": "624e96529b5ade4e",
-        "title": "2606.09842v1",
-        "file_name": "2606.09842v1.pdf",
-        "primary_domain": "other",
-        "tier": "B",
-        "file_size_mb": 1.218
-      }
-    ]
+    "shard_4to7_tier_b_pending_candidates_count": 0,
+    "shard_4to7_tier_b_pending_candidates": []
   },
   "refused_stubs": [
     {
@@ -776,6 +454,32 @@
         ]
       },
       {
+        "book_id": "454e68991600b407",
+        "title": "1505.01462v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 39,
+        "pages_total": 39,
+        "primitives_count": 13,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "1505.01462"
+        ]
+      },
+      {
+        "book_id": "456917e1b93f5ca0",
+        "title": "2606.30449v1",
+        "primary_domain": "other",
+        "track": "arxiv_and_preprints",
+        "pages_read": 17,
+        "pages_total": 17,
+        "primitives_count": 16,
+        "traces_count": 4,
+        "arxiv_ids": [
+          "2606.30449"
+        ]
+      },
+      {
         "book_id": "45a869f7c1cf01ec",
         "title": "arxiv_2404.11335v1",
         "primary_domain": "other",
@@ -903,32 +607,6 @@
         "traces_count": 4,
         "arxiv_ids": [
           "2603.17866"
-        ]
-      },
-      {
-        "book_id": "4976b9a326ff29c0",
-        "title": "arxiv_2310.09511v1",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 10,
-        "pages_total": 10,
-        "primitives_count": 16,
-        "traces_count": 4,
-        "arxiv_ids": [
-          "2310.09511"
-        ]
-      },
-      {
-        "book_id": "49ef491902061145",
-        "title": "arxiv_2406.17220v2",
-        "primary_domain": "other",
-        "track": "arxiv_and_preprints",
-        "pages_read": 34,
-        "pages_total": 34,
-        "primitives_count": 16,
-        "traces_count": 4,
-        "arxiv_ids": [
-          "2406.17220"
         ]
       }
     ],
@@ -1366,6 +1044,17 @@
         "pages_total": 1,
         "primitives_count": 3,
         "traces_count": 1,
+        "arxiv_ids": []
+      },
+      {
+        "book_id": "7baf7a85894e5cd0",
+        "title": "2026 - Comparing wins above replacement across baseball history - Doane",
+        "primary_domain": "history",
+        "track": "nfl_war_and_fourth_down_decision",
+        "pages_read": 54,
+        "pages_total": 54,
+        "primitives_count": 20,
+        "traces_count": 5,
         "arxiv_ids": []
       },
       {

@@ -1,14 +1,15 @@
 {
   "schema": "gse.gcp_vision_ocr_rescue.v1",
-  "generated_at_utc": "2026-11-14T12:27:39.510056+00:00",
+  "generated_at_utc": "2026-11-14T13:31:25.744262+00:00",
   "project_id": "galaxysportsedge",
   "vision_feature": "DOCUMENT_TEXT_DETECTION",
   "always_free_monthly_units": 1000,
   "circuit_breaker_max_pages": 120,
   "dry_run": false,
-  "planned_total_pages": 45,
-  "actual_pages_ocr": 45,
-  "always_free_pct_used": 4.5,
+  "planned_total_pages": 43,
+  "actual_pages_ocr": 43,
+  "cumulative_manifest_pages_ocr": 88,
+  "always_free_pct_used": 8.8,
   "estimated_cost_usd": 0.0,
   "vision_api_http_batches": 9,
   "books_rescued": [
@@ -47,6 +48,30 @@
       "word_count": 7820,
       "char_count": 52448,
       "sample_opening_words": "(12) United States Patent Huang et al. US012025768B2 (10) Patent No.: (45) Date of Patent: US 12.025.768 B2"
+    },
+    {
+      "book_id": "6cb818e53ff368b9",
+      "file_name": "Galton-1889-NaturalInheritance.pdf",
+      "primary_domain": "other",
+      "pdf_total_pages": 287,
+      "pages_rescued": 35,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "6cb818e53ff368b9_vision_ocr_core.txt",
+      "word_count": 5560,
+      "char_count": 33481,
+      "sample_opening_words": "Google This is a digital copy of a book that was preserved for generations on library shelves before"
+    },
+    {
+      "book_id": "7a407377b5f10417",
+      "file_name": "2014 Quantifying Shot Quality in the NBA - Second Spectrum.pdf",
+      "primary_domain": "other",
+      "pdf_total_pages": 8,
+      "pages_rescued": 8,
+      "coverage_mode": "FULL_DOCUMENT",
+      "output_txt_rel": "7a407377b5f10417_vision_ocr_core.txt",
+      "word_count": 5314,
+      "char_count": 30605,
+      "sample_opening_words": "8TH ANNUAL MIT SLOAN SPORTS ANALYTICS CONFERENCE FEBRUARY 28 - MARCH 1, 2014 HYNES CONVENTION CENTER PRESENTED BY"
     }
   ]
 }

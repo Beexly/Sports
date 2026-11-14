@@ -1,0 +1,306 @@
+{
+  "book_id": "5609fcaa7922ad04",
+  "source_status": "COMPLETE",
+  "title": "2609.15254v1",
+  "file_name": "2609.15254v1.pdf",
+  "sha256": "5609fcaa7922ad04f182d67ad9fd0f80aa43f2fe83f67b41608ad814c381e7d3",
+  "primary_domain": "other",
+  "pages_total": 31,
+  "pages_read": 31,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 31,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Conformal prediction under networked interference unifies causal inference with distributional robustness via stability margins and coverage guarantees. The mathematical unification of networked interference relies on constructing a product coupling that aligns observational and interventional score-vector marginals. By enforcing conditional independence across units, the framework isolates target-specific perturbations, ensuring conformal p-values remain invariant under localized treatment shifts, effectively mapping complex graph dependencies to tractable probabilistic couplings.",
+  "gsi_mapping": "Bayesian conformal inference maps treatment effect estimation to calibrated prediction sets using exchangeability corrections and exposure-aware predictors. In GSI, this coupling acts as a Bayesian bridge between observed game telemetry and counterfactual intervention scenarios. By aligning exposure distributions, we compute conformal prediction sets for individual player impacts, rigorously bounding uncertainty when simulating isolated tactical changes within a highly interconnected team network without violating marginal coverage guarantees.",
+  "gse_mapping": "Situational reasoning models networked interference through state transitions governed by group-level neighborhood sizes and predictor stability margins. For GSE situational reasoning, the primitive maps state transitions where a specific agent's action alters neighbor exposures. The coupling ensures that unaffected agents maintain identical state trajectories across observational and interventional branches, allowing the engine to isolate causal effects of a single play from systemic noise.",
+  "primitives": [
+    {
+      "primitive_id": "interference_adjusted_conformal",
+      "name": "Interference-Adjusted Weighted Conformal Prediction",
+      "verbatim_quote": "To address this issue, we develop interference-adjusted weighted conformal prediction that accounts for interference by constructing an observable upper bound on the ideal and unobserved conformal pvalue under the target intervention.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Relaxes the no-interference assumption; assumes covariates are independently sampled; treatments are conditionally independent given covariates; exposure depends on covariates and treatments of neighboring units.",
+      "breakdown_regime": "When interference causes failure of weighted exchangeability, leading to invalid coverage under standard WCP.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's predictive uncertainty quantification framework for counterfactual outcomes and individual treatment effects under networked interference. Maps to GSE's state-transition models where system states are influenced by neighboring entities, requiring robust prediction sets.",
+        "source_operator": "interference_adjusted_conformal",
+        "telemetry": "Empirical marginal coverage rates and prediction-set sizes under varying degrees of network interference."
+      }
+    },
+    {
+      "primitive_id": "score_stability_condition",
+      "name": "Score-Stability Condition",
+      "verbatim_quote": "We also derive a sharper construction when intervention-induced changes in nonconformity scores are bounded.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Intervention-induced changes in nonconformity scores are bounded.",
+      "breakdown_regime": "Reduces variance in prediction set sizes while preserving coverage guarantees.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives a tighter variant of the interference-adjusted conformal method, enhancing GSI's precision in uncertainty estimation. In GSE, this condition enables more efficient resource allocation by reducing over-conservatism in state-transition predictions.",
+        "source_operator": "score_stability_condition",
+        "telemetry": "Normalized prediction-set size and empirical coverage rates under bounded score changes."
+      }
+    },
+    {
+      "primitive_id": "exposure_graph_model",
+      "name": "Exposure Graph Model",
+      "verbatim_quote": "Such decisions require comparing the observed factual outcome under the assigned treatment with the counterfactual outcome that would have been observed under an alternative treatment.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each unit's potential outcomes depend on its own covariates and treatments of other units through an exposure variable; exposure is modeled as a function of covariates and treatments of neighboring units.",
+      "breakdown_regime": "When the exposure structure introduces dependencies that violate exchangeability under standard weighting schemes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's causal inference pipelines where interference patterns are represented as graphs. Maps to GSE's situational reasoning modules that model interactions between agents as state transitions governed by neighborhood influences.",
+        "source_operator": "exposure_graph_model",
+        "telemetry": "Graph properties such as degree distribution and clustering coefficient, alongside coverage performance metrics."
+      }
+    },
+    {
+      "primitive_id": "covariate_dependent_policy",
+      "name": "Covariate-Dependent Treatment Assignment",
+      "verbatim_quote": "The fundamental challenge is that only the factual outcome is observed, while the remaining potential outcomes must be predicted from data (Rubin, 1974, 2005).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Treatments are assigned independently for each unit based on a common probability distribution π(·|Xi) conditional on its covariates.",
+      "breakdown_regime": "Allows flexible treatment assignment while maintaining analytical tractability for interference-adjusted inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's policy evaluation and optimization tasks where treatment assignments are learned from covariates. Maps to GSE's decision-making processes that adapt actions based on local state information.",
+        "source_operator": "covariate_dependent_policy",
+        "telemetry": "Policy performance metrics such as average treatment effect and empirical distribution of covariates across treated and control groups."
+      }
+    },
+    {
+      "primitive_id": "wcp_stability_margin",
+      "name": "Worst-Case Prediction Stability Margin",
+      "verbatim_quote": "For IA-WCP+, the stability margin is given by ∆I j = \u0012λ 4 + |ˆθE| \u0013 ̃EI j -Ej , (37) where ˆθE is set to zero for predictors that do not use the exposure level E.",
+      "page": 8,
+      "latex": "\\Delta I_j = \\left(\\frac{\\lambda}{4} + |\\hat{\\theta}_E|\\right) \\tilde{E}_{ij} - E_j",
+      "symbol_and_unit_ledger": "{'ΔI_j': 'Stability margin for unit j, dimensionless', 'λ': 'Regularization parameter, dimensionless', 'θ̂_E': 'Estimated exposure coefficient, dimensionless', 'Ẽ_ij': 'Predicted exposure for unit i and treatment j, dimensionless', 'E_j': 'Observed exposure level for treatment j, dimensionless'}",
+      "assumptions": "Exchangeability of calibration and test data; stable unit treatment value assumption (SUTVA); bounded influence of exposure on outcome.",
+      "breakdown_regime": "When λ → 0 and |θ̂_E| → 0, the margin collapses to zero, indicating loss of robustness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's state transition kernel for causal inference under interference by quantifying deviation from nominal exposure levels.",
+        "source_operator": "wcp_stability_margin",
+        "telemetry": "Empirical coverage rate vs. theoretical coverage threshold."
+      }
+    },
+    {
+      "primitive_id": "neighborhood_size_impact",
+      "name": "Neighborhood Size Impact on Calibration Units",
+      "verbatim_quote": "As shown in Figure 4, smaller values of G produce larger neighborhoods and increase the fraction of calibration units affected by the intervention.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Number of groups, integer', 'N': 'Total number of units, integer', 'F': 'Fraction of affected units, dimensionless'}",
+      "assumptions": "Network structure allows for group-based partitioning; intervention effects propagate within neighborhoods.",
+      "breakdown_regime": "As G → 1, F → 1, leading to full overlap of calibration sets and potential overfitting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's spatial-temporal state space model where group size determines interaction radius.",
+        "source_operator": "neighborhood_size_impact",
+        "telemetry": "Miscoverage gap as a function of G."
+      }
+    },
+    {
+      "primitive_id": "coverage_efficiency_tradeoff",
+      "name": "Coverage-Efficiency Tradeoff in Predictive Sets",
+      "verbatim_quote": "In contrast, IA-WCP+ performance tracks that of ideal WCP and is substantially more efficient than IA-WCP.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Coverage probability, dimensionless', 'W': 'Prediction set width, dimensionless', 'IA-WCP': 'Individualized Adaptive Worst-Case Predictor, dimensionless', 'IA-WCP+': 'Improved IA-WCP with exposure adjustment, dimensionless', 'Ideal WCP': 'Theoretical optimal predictor, dimensionless'}",
+      "assumptions": "Predictors are trained on data with known interference patterns; empirical coverage converges to nominal level.",
+      "breakdown_regime": "When G is small, IA-WCP becomes overly conservative, reducing efficiency without improving coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's decision-making policy where prediction set width influences action selection thresholds.",
+        "source_operator": "coverage_efficiency_tradeoff",
+        "telemetry": "Normalized prediction set width relative to ideal WCP."
+      }
+    },
+    {
+      "primitive_id": "predictor_exposure_influence",
+      "name": "Exposure-Level Influence on Predictor Performance",
+      "verbatim_quote": "It also reduces the empirical miscoverage gap of WCP, whose coverage approaches that of ideal WCP when the predictor accounts for the exposure level.",
+      "page": 8,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'Miscoverage gap, dimensionless', 'P': 'Predictor type, categorical', 'E': 'Exposure level, dimensionless'}",
+      "assumptions": "Predictor can incorporate exposure variables; exposure impacts outcome variability.",
+      "breakdown_regime": "If E is ignored, M increases monotonically with increasing interference strength.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's belief update mechanism where exposure-dependent predictors refine uncertainty estimates.",
+        "source_operator": "predictor_exposure_influence",
+        "telemetry": "Difference between actual and target coverage rates."
+      }
+    },
+    {
+      "primitive_id": "conditional_coupling_construction",
+      "name": "Conditional Coupling Construction",
+      "verbatim_quote": "We construct the coupling conditionally on (X1:N, T1:N, I), with TI = 0.",
+      "page": 16,
+      "latex": null,
+      "symbol_and_unit_ledger": "X1:N: Covariate vectors (dimensionless features); T1:N: Treatment assignments (binary indicators); I: Target unit index (integer); TI: Treatment status of target (binary).",
+      "assumptions": "Existence of a joint probability space accommodating both observational and interventional measures; consistency of potential outcomes.",
+      "breakdown_regime": "Fails if the support of the interventional distribution is disjoint from the observational distribution given the conditioning variables.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to defining a shared latent state in GSE where baseline player attributes and initial formations are fixed before applying a specific tactical intervention.",
+        "source_operator": "conditional_coupling_construction",
+        "telemetry": "Overlap metric between observational and interventional covariate densities."
+      }
+    },
+    {
+      "primitive_id": "exposure_distribution_invariance",
+      "name": "Exposure Distribution Invariance",
+      "verbatim_quote": "Since the exposure of a unit does not depend on its own treatment, EI | X1:N, T1:N d= ̃EI I | X1:N, ̃T I 1:N, (77) where d= denotes equality in distribution.",
+      "page": 16,
+      "latex": "E_I | X_{1:N}, T_{1:N} \\stackrel{d}{=} \\tilde{E}^I_I | X_{1:N}, \\tilde{T}^I_{1:N}",
+      "symbol_and_unit_ledger": "EI: Exposure of target unit (continuous/discrete scalar); ̃EI I: Interventional exposure of target; ̃T I 1:N: Intervened treatment vector.",
+      "assumptions": "No direct self-interference; exposure mechanism depends strictly on neighbors' treatments and covariates.",
+      "breakdown_regime": "Violated if an agent's exposure metric explicitly incorporates their own binary action variable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's isolation of external pressure metrics; a quarterback's pressure score remains identically distributed regardless of their own pass/run decision, driven solely by defensive alignment.",
+        "source_operator": "exposure_distribution_invariance",
+        "telemetry": "Kolmogorov-Smirnov statistic between empirical exposure CDFs under observational and intervened regimes."
+      }
+    },
+    {
+      "primitive_id": "neighbor_exposure_coupling",
+      "name": "Neighbor Exposure Coupling",
+      "verbatim_quote": "(78) We may therefore couple these exposures so that EI = ̃EI I , and Ej = ̃EI j , j ∈Uex I , (79) almost surely.",
+      "page": 16,
+      "latex": "E_I = \\tilde{E}^I_I, \\quad E_j = \\tilde{E}^I_j, \\quad j \\in U^{ex}_I",
+      "symbol_and_unit_ledger": "Ej: Exposure of neighbor j (scalar); Uex I: Set of exposed neighbors (index set); Almost surely: Probability measure equals one.",
+      "assumptions": "Shared structural equation governing exposure generation for both treated and control neighbors within the defined neighborhood.",
+      "breakdown_regime": "Breaks down if the intervention fundamentally rewires the network topology, altering the neighbor set Uex I.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly translates to GSE trajectory synchronization; defenders adjacent to the ball carrier experience identical spatial constraints whether the carrier runs or passes, enabling exact state matching.",
+        "source_operator": "neighbor_exposure_coupling",
+        "telemetry": "Fraction of coupled neighbor states exhibiting zero deviation in exposure values."
+      }
+    },
+    {
+      "primitive_id": "conformal_weight_cancellation",
+      "name": "Conformal Weight Cancellation",
+      "verbatim_quote": "Consequently, the unaffected units cancel from the difference between the two p-values and pint I,y -pobs I,y = P j∈Hex I Wj \u0002 1{V int j ≥VI(y)} -1{V obs j ≥VI(y)} \u0003 WI + P j∈I1 Wj .",
+      "page": 16,
+      "latex": "p^{int}_{I,y} - p^{obs}_{I,y} = \\frac{\\sum_{j \\in H^{ex}_I} W_j \\left[ \\mathbb{1}\\{V^{int}_j \\geq V_I(y)\\} - \\mathbb{1}\\{V^{obs}_j \\geq V_I(y)\\} \\right]}{W_I + \\sum_{j \\in I_1} W_j}",
+      "symbol_and_unit_ledger": "p^{int}_{I,y}: Interventional p-value (probability); p^{obs}_{I,y}: Observational p-value (probability); Wj: Conformal weight (dimensionless); VI(y): Nonconformity score (real-valued).",
+      "assumptions": "Unaffected units maintain identical nonconformity scores across regimes; weights are independent of the intervention.",
+      "breakdown_regime": "Singularity occurs if the denominator approaches zero (vanishing weights) or if unaffected units exhibit regime-dependent score shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents the GSI noise-filtering kernel; background player movements that do not interact with the play cancel out, leaving only the signal from directly impacted agents in the confidence interval.",
+        "source_operator": "conformal_weight_cancellation",
+        "telemetry": "Magnitude of the residual p-value difference after cancellation."
+      }
+    },
+    {
+      "primitive_id": "5609fcaa7922ad04_w3_g1",
+      "name": "2609.15254v1 Ch.4 Grounded Operator",
+      "verbatim_quote": "Conditionally on the event defining the treated calibration set I1, the covariates of treated calibration units have density proportional to π(x)pX(x).",
+      "page": 24,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5609fcaa7922ad04_w3_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5609fcaa7922ad04_w3_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5609fcaa7922ad04_w3_g2",
+      "name": "2609.15254v1 Ch.4 Grounded Operator",
+      "verbatim_quote": "Since pX(XN) = w(XN)π(XN)pX(XN), w(x) = 1 π(x), (148) the covariate density of the augmented sample can be written, up to a normalizing constant, as w(XN) Y j∈I1 π(Xj)pX(Xj)π(XN)pX(XN).",
+      "page": 24,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5609fcaa7922ad04_w3_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5609fcaa7922ad04_w3_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "5609fcaa7922ad04_w3_g3",
+      "name": "2609.15254v1 Ch.4 Grounded Operator",
+      "verbatim_quote": "(149) After extracting the factor w(XN), the remaining covariate density is symmetric in the augmented covariates {Xj : j ∈I1} ∪{XN}.",
+      "page": 24,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 5609fcaa7922ad04_w3_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "5609fcaa7922ad04_w3_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5609.15254v1_t0",
+      "think": "This chapter develops conformal inference methods for individual treatment effects under networked interference. Standard weighted conformal prediction (WCP) relies on exchangeability after propensity-score reweighting, which fails when outcomes depend on treatments of other units. To correct for this, we introduce interference-adjusted WCP that constructs an upper bound on the unobserved conformal p-value, ensuring finite-sample marginal coverage for counterfactual outcomes. A sharper variant, IAWCP+, is derived under a score-stability condition that bounds intervention-induced changes in nonconformity scores, producing tighter prediction intervals. These methods map naturally to GSI's need for reliable uncertainty quantification in sports analytics under strategic interference (e.g., team tactics), and to GSE's requirement for robust state-transition predictions in multi-agent systems. Window 1 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in Rubin's potential outcomes framework (1974) and Neyman-Rubin causal models. Builds on conformal prediction theory (Vovk et al., 2005) and recent advances in causal inference under interference (Athey et al., 2018; Aronow et al., 2017). Retrocausal Genealogy (Window 1): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing coaches or analysts might assume independence between teams, leading to overconfident predictions. Our methods account for strategic interactions, providing more realistic uncertainty bands that robustify decision-making against adversarial adjustments. Theory of Mind (Window 1): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity condition: covariates must be linearly independent across units to avoid perfect multicollinearity. Anti-leakage condition: exposure functions must not leak sensitive information about individual treatments to other units, preserving privacy and preventing manipulation. Cross-Layer Veto (Window 1): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5609fcaa7922ad04_t1",
+      "think": "Chapter 2 explores the application of conformal prediction techniques to estimate individual treatment effects under networked interference. The core challenge lies in maintaining marginal coverage guarantees despite violations of exchangeability due to interference. The paper introduces two variants—IA-WCP and IA-WCP+—that adjust for exposure levels and stabilize prediction sets. These methods rely on a stability margin defined in Equation (37), which incorporates regularization and estimated exposure coefficients. As the number of groups G decreases, neighborhoods expand, affecting more calibration units and causing undercoverage in standard WCP. IA-WCP mitigates this by applying worst-case corrections but becomes overly conservative. In contrast, IA-WCP+ improves efficiency by incorporating exposure information, aligning closely with ideal WCP performance. The results suggest that accurate modeling of exposure effects enhances both coverage and precision of treatment effect estimates. This work contributes to the broader literature on conformal inference for causal inference, particularly addressing the issue of covariate shift induced by network interference. Window 2 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This builds upon prior work in conformal prediction (Vovk et al., 2005) and its extension to treatment effects (Tibshirani et al., 2019), while integrating insights from network interference theory (Tchetgen & VanderWeele, 2012). Retrocausal Genealogy (Window 2): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents in this framework include researchers designing experiments, policymakers interpreting results, and practitioners deploying interventions. Each agent must balance statistical rigor with practical applicability, especially when interference complicates causal identification. Theory of Mind (Window 2): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity conditions prevent overfitting by ensuring predictors are not merely correlated with exposure but causally informative. Leakage veto ensures that no spurious associations between exposure and outcomes drive incorrect coverage adjustments. Cross-Layer Veto (Window 2): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "5609fcaa7922ad04_t2",
+      "think": "The derivation in pages 16-17 establishes a rigorous probabilistic foundation for estimating individual treatment effects under network interference using conformal inference. The core doctrinal leap is the construction of a joint probability space—a coupling—that simultaneously accommodates the observational reality and the hypothetical interventional world. By conditioning on the covariates and treatments, and specifically fixing the target unit as untreated initially, the authors exploit the structural assumption that a unit's exposure is independent of its own treatment. This allows them to assert distributional equality between observational and interventional exposures for the target and its directly affected neighbors. Consequently, they can couple these random variables almost surely, meaning they take identical values in the constructed space. This exact matching extends to the potential outcomes, ensuring that the nonconformity scores for unaffected units cancel out perfectly when comparing interventional and observational p-values. The resulting difference in p-values is thus bounded strictly by the contributions of the affected neighbors, scaled by their conformal weights. This elegant cancellation mechanism transforms an intractable global dependency problem into a localized error bound, guaranteeing that the adjusted prediction sets maintain valid marginal coverage even in the presence of complex network spillovers. It bridges the gap between theoretical causal graphs and practical, finite-sample statistical guarantees.",
+      "retrocausal_genealogy": "This primitive traces its lineage to the foundational work of Neyman and Rubin on potential outcomes, extended by Holland to address the stable unit treatment value assumption (SUTVA). The explicit handling of network interference builds upon the exposure graph frameworks introduced by Aronow et al., while the conformal inference machinery directly inherits from Vovk's algorithmic probability theory. The specific coupling technique echoes Strassen's theorem on optimal transport, repurposed here to align causal regimes rather than minimize transportation cost, marking a significant evolution in finite-sample causal inference.",
+      "theory_of_mind": "From a theory of mind perspective, the model assumes rational, structurally embedded agents whose local environments (exposures) are determined by the collective actions of their neighbors. The 'mind' of the statistical estimator must anticipate how a single agent's intervention ripples through the network, altering the exposures of connected nodes. It models the opposing force—the network's inherent noise and confounding—by explicitly bounding the divergence between what is observed and what would happen under intervention, treating the unaffected majority as predictable, canceling entities.",
+      "cross_layer_veto": "A critical veto condition arises if the assumption of conditional independence across units is violated by hidden, global confounders that synchronize exposures beyond the defined neighborhood. Furthermore, if the intervention itself alters the underlying network topology (e.g., players moving positions dynamically in response to a tactic), the set of affected neighbors becomes endogenous, breaking the coupling. The framework also vetoes applications where the conformal weights are highly heterogeneous and correlated with the interference pattern, as this could amplify the residual error term beyond acceptable bounds, invalidating the coverage guarantees."
+    },
+    {
+      "trace_id": "5609fcaa7922ad04_t3",
+      "think": "Window 4 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 4): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 4): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 4): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 2609.15254v1 (5609fcaa7922ad04, 31/31 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

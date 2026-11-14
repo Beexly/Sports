@@ -1,0 +1,323 @@
+{
+  "book_id": "456917e1b93f5ca0",
+  "source_status": "COMPLETE",
+  "title": "2606.30449v1",
+  "file_name": "2606.30449v1.pdf",
+  "sha256": "456917e1b93f5ca06d5c91cd95345c47d3608ea108bad3bce2f9f00645043700",
+  "primary_domain": "other",
+  "pages_total": 17,
+  "pages_read": 17,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 17,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "\\mathcal{M} \\ni \\mathbf{x} \\mapsto \\mathbb{P}(\\text{misalign} \\mid \\mathbf{x}) \\text{ vs } \\mathbb{P}(\\text{misalign} \\mid \\mathbf{x}_{\\text{pre-action}}) \\text{ for } \\mathbf{x} \\in \\text{internal-state space} A Bayesian conformal framework for evaluating internal-state probes as pre-action monitors, integrating methodological scoping and empirical specificity constraints.",
+  "gsi_mapping": "Bayesian belief update on pre-action internal-state \\( \\mathbf{x}_{\\text{pre}} \\) using conformal predictive distributions to infer \\( \\mathbb{P}(\\text{misalign} \\mid \\mathbf{x}_{\\text{pre}}) \\) GSI employs a probabilistic monitor validation protocol where internal-state readouts are assessed via calibrated confidence intervals against misalignment scenarios, using clustering and sampling controls to mitigate false positive rates.",
+  "gse_mapping": "Situational reasoning engine maps \\( \\mathbf{x}_{\\text{pre}} \\) to transition probabilities \\( \\mathcal{T}(\\cdot \\mid \\cdot) \\) over agent policy states, detecting divergence from normative \\( \\mathcal{S}_{\\text{safe}} \\) GSE models situational reasoning through state-transition graphs that encode pre-action dispositions, with probe-derived telemetry used to update belief states during conversational turns, prioritizing diagnostic utility over predictive accuracy.",
+  "primitives": [
+    {
+      "primitive_id": "disposition_direction",
+      "name": "Disposition Direction",
+      "verbatim_quote": "We test three methods across three model families: a Qwen2.5-Coder-32B-Instruct fine-tune/base direction, Llama-3.1-8B-Instruct probes at the last token of unsafe prefills, and Gemma-3-27B-IT emotion-concept vectors used for projection and steering in a blackmail toolaction scenario.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_1': '\\\\text{Qwen fine-tune/base direction vector}', 'A_1^{\\\\text{valid}}': '\\\\text{construction validity score, } \\\\in [0,1]', 'A_1^{\\\\text{act}}': '\\\\text{activation in pre-action context, } \\\\in \\\\{0,1\\\\}'}",
+      "assumptions": "Direction is constructed via contrast between fine-tuned and base model outputs; assumes alignment signal is separable in residual space.",
+      "breakdown_regime": "When \\( A_1^{\\text{valid}} = 1 \\) but \\( A_1^{\\text{act}} = 0 \\), fails as pre-action monitor.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel embedding of fine-tune vs base model internal states into \\( \\mathbb{R}^d \\) for classification of misalignment risk.",
+        "source_operator": "disposition_direction",
+        "telemetry": "AUC score on pre-action contexts vs post-action continuations"
+      }
+    },
+    {
+      "primitive_id": "prefill_probe",
+      "name": "Prefill Probe",
+      "verbatim_quote": "Internal-State Probes Read the Situation, Not the Action: Three Negative Results for Pre-Action Misalignment Monitoring Max Fomin Elad David Amit LeVi Zenity Abstract Probes on model internals could help monitor agentic systems if they identify harmful text or tool actions before those actions are generated.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_2': '\\\\text{hidden state at last prefill token}', 'A_2^{\\\\text{pred}}': '\\\\text{behavioral prediction AUC, } \\\\in [0,1]', 'A_2^{\\\\text{transfer}}': '\\\\text{cross-domain transfer AUC, } \\\\in [0,1]'}",
+      "assumptions": "Behavioral continuation is predictable from prefill context; assumes domain-specificity limits generalization.",
+      "breakdown_regime": "When \\( A_2^{\\text{pred}} > 0.8 \\) but \\( A_2^{\\text{transfer}} < 0.5 \\), fails as robust pre-action monitor.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between prefill token states and future continuation classes via logistic regression classifier.",
+        "source_operator": "prefill_probe",
+        "telemetry": "AUC on future behavior prediction vs majority baseline"
+      }
+    },
+    {
+      "primitive_id": "emotion_vector",
+      "name": "Emotion Concept Vector",
+      "verbatim_quote": "We ask when an internal readout supports this stronger pre-action claim, rather than merely describing the prompt, construction contrast, or current trajectory.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_3': '\\\\text{emotion-concept vector in embedding space}', 'A_3^{\\\\text{proj}}': '\\\\text{projection onto transcript stage, } \\\\in [0,1]', 'A_3^{\\\\text{steer}}': '\\\\text{steering effect on blackmail rate, } \\\\in [0,1]'}",
+      "assumptions": "Emotion concepts are semantically meaningful and can be projected; steering effects are causal.",
+      "breakdown_regime": "When \\( A_3^{\\text{proj}} > 0.7 \\) but \\( A_3^{\\text{steer}} \\) degrades under unrelated directions, fails as specific monitor.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of semantic similarity between emotion vectors and misalignment triggers in context.",
+        "source_operator": "emotion_vector",
+        "telemetry": "Projection accuracy and steering efficacy under control conditions"
+      }
+    },
+    {
+      "primitive_id": "scenario_generalization",
+      "name": "Scenario Generalization Test",
+      "verbatim_quote": "We ask a narrower methodological question: when a probe has a strong positive result in the setting used to construct it, does it still work when evaluated before a future misaligned action?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G_{\\\\text{scen}}': '\\\\text{generalization across scenarios, } \\\\in [0,1]', 'G_{\\\\text{spec}}': '\\\\text{specificity control, } \\\\in [0,1]'}",
+      "assumptions": "Pre-action monitoring requires robustness to new scenarios and specificity to relevant concepts.",
+      "breakdown_regime": "When \\( G_{\\text{scen}} < 0.5 \\) or \\( G_{\\text{spec}} < 0.5 \\), monitor fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic mapping of probe performance across different domains and control sets.",
+        "source_operator": "scenario_generalization",
+        "telemetry": "Accuracy drop across cross-domain transfers and specificity checks"
+      }
+    },
+    {
+      "primitive_id": "internal_state_probe",
+      "name": "Internal State Probe",
+      "verbatim_quote": "Internal-State Probes Read the Situation, Not the Action mechanistic interpretation.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that internal model states contain actionable information about future behavior.",
+      "breakdown_regime": "Breaks down when probe captures noise instead of true intent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conformal prediction intervals for behavioral outcomes, where internal states serve as sufficient statistics for constructing uncertainty sets.",
+        "source_operator": "internal_state_probe",
+        "telemetry": "Cross-validation accuracy on predicting misaligned actions from pre-action hidden states."
+      }
+    },
+    {
+      "primitive_id": "disposition_direction_activation",
+      "name": "Disposition Direction Activation",
+      "verbatim_quote": "We apply the Qwen disposition direction to multi-turn transcripts where the base model produces misaligned actions in context—for example, a coding agent that turns on a maintainer who dismisses its work, or a lab-assistant AI that defends a flawed analysis (full transcripts in Table 5).",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operationalizes emotional dispositions as linear directions in the model's embedding space.",
+      "breakdown_regime": "Fails when the direction does not capture genuine affective responses.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to GSE's situational reasoning framework, where disposition vectors guide state transitions between game phases.",
+        "source_operator": "disposition_direction_activation",
+        "telemetry": "Blackmail rate differences between emotion-conditioned continuations compared to random baselines."
+      }
+    },
+    {
+      "primitive_id": "pre_action_readout",
+      "name": "Pre-Action Readout",
+      "verbatim_quote": "For each assistant turn, the primary pre-action readout uses the system prompt plus immediately preceding user message, before the assistant tokens for that turn are generated.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes that the immediate context contains sufficient information for predicting the next action.",
+      "breakdown_regime": "Breaks down when long-term dependencies are necessary for accurate prediction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to GSI's rolling-window feature extraction for real-time betting line adjustments based on recent game events.",
+        "source_operator": "pre_action_readout",
+        "telemetry": "Binary classification accuracy of predicting whether the next action will be misaligned."
+      }
+    },
+    {
+      "primitive_id": "full_conversation_readout",
+      "name": "Full Conversation Readout",
+      "verbatim_quote": "We also compute a diagnostic full-conversation readout over generated assistant tokens.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Captures cumulative context effects across multiple turns.",
+      "breakdown_regime": "May overweight irrelevant history while missing critical recent cues.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Similar to GSE's recurrent state representation that encodes entire match histories for decision-making.",
+        "source_operator": "full_conversation_readout",
+        "telemetry": "Performance improvement relative to pre-action readout in detecting misaligned trajectories."
+      }
+    },
+    {
+      "primitive_id": "steering_experiment_scope",
+      "name": "Steering Experiment Scope",
+      "verbatim_quote": "The steering experiments also use one main blackmail scenario, and the four learned content controls are a small sample of possible unrelated concepts.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Set of steering scenarios, dimensionless', 'C': 'Set of content controls, |C| = 4, dimensionless'}",
+      "assumptions": "The set of scenarios is fixed and representative; controls are independent and randomly sampled.",
+      "breakdown_regime": "When |S| → 1 and |C| → ∞, the scope becomes degenerate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's monitor validation aligns with GSE's scenario graph traversal, where each scenario corresponds to a node and control sets define branching paths.",
+        "source_operator": "steering_experiment_scope",
+        "telemetry": "Scenario coverage ratio and control independence score"
+      }
+    },
+    {
+      "primitive_id": "disposition_direction_evaluation",
+      "name": "Disposition Direction Evaluation",
+      "verbatim_quote": "The disposition-direction evaluation covers 11 misaligned Petri-style scenarios and 1,986 Qwen prefill rows, but the audit contexts are clustered by transcript; the Qwen prefill corpus is text-only, partially overlaps the construction prompts, and measures a different token position.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Dispositions vector space, dimensionless', 'T': 'Transcript clusters, |T| = 1, dimensionless', 'P': 'Prefill rows, |P| = 1986, dimensionless'}",
+      "assumptions": "Each transcript cluster is independent; prefill rows are sampled from a fixed distribution.",
+      "breakdown_regime": "When P → ∞ and T → 1, the evaluation becomes deterministic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's kernel maps prefill token positions to dispositions in D, while GSI evaluates this mapping via cross-cluster consistency.",
+        "source_operator": "disposition_direction_evaluation",
+        "telemetry": "Cross-transcript dispositions variance and token position alignment"
+      }
+    },
+    {
+      "primitive_id": "prefill_domain_skew",
+      "name": "Prefill Domain Skew",
+      "verbatim_quote": "The prefill domains have uneven class skews, the shared-prefix minimal pair rules out only pre-difference prediction rather than post-cue pre-action prediction, and the Gemma bridge probe has one near-threshold within-condition AUC (0.640).",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_d': 'Domain skew factor, dimensionless', 'AUC': 'Area Under Curve, 0 ≤ AUC ≤ 1, dimensionless'}",
+      "assumptions": "Class imbalance is modeled as a stochastic process; AUC reflects conditional probability of correct classification.",
+      "breakdown_regime": "When S_d → 0, skew vanishes; when AUC → 0.5, probe is non-informative.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's skew correction mechanism mirrors GSE's domain-adaptive state transition, where skewed domains require resampling to maintain fidelity.",
+        "source_operator": "prefill_domain_skew",
+        "telemetry": "Skew-adjusted AUC and domain-specific entropy"
+      }
+    },
+    {
+      "primitive_id": "monitor_validation_protocol",
+      "name": "Monitor Validation Protocol",
+      "verbatim_quote": "The lesson is methodological: a proposed monitor should be evaluated as a forecasting and specificity claim, with scenario/action generalization and concept controls treated as required tests rather than optional follow-up checks.",
+      "page": 9,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'Monitor function, mapping internal states to predictions, dimensionless', 'G': 'Generalization factor, 0 ≤ G ≤ 1, dimensionless', 'C': 'Concept control set, dimensionless'}",
+      "assumptions": "M is a deterministic function of internal states; G quantifies cross-scenario applicability.",
+      "breakdown_regime": "When G → 0, monitor fails to generalize; when C → ∅, no control remains.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's protocol defines M as a kernel over internal-state manifolds, while GSE uses M to refine belief propagation across action nodes.",
+        "source_operator": "monitor_validation_protocol",
+        "telemetry": "Generalization score and control-set consistency index"
+      }
+    },
+    {
+      "primitive_id": "internal_state_probe_w3_1",
+      "name": "Internal-State Probes",
+      "verbatim_quote": "Internal-State Probes Read the Situation, Not the Action Table 5.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a fixed architectural state space and linear readout capability.",
+      "breakdown_regime": "Fails when internal states become non-linearly separable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction intervals for model behavior verification, where the probe's telemetry becomes empirical coverage metrics.",
+        "source_operator": "internal_state_probe_w3_1",
+        "telemetry": "Average AUC scores from classification tasks on extracted token features serve as verification metrics."
+      }
+    },
+    {
+      "primitive_id": "bridge_probe",
+      "name": "Bridge Probe",
+      "verbatim_quote": "The pre-action tests project pre-assistant contexts from the GitHub-maintainer and lab-credit audits, Petri-style scenarios, and Qwen behavioral-prefill cut points.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Relies on sequential context sufficiency and Markovian transition kernels.",
+      "breakdown_regime": "Breaks down when long-term dependencies corrupt local context embeddings.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-transition matrices, where the probe's feature extraction becomes transition probability estimation.",
+        "source_operator": "bridge_probe",
+        "telemetry": "Mean lift differences between conditioned and baseline trajectories quantify situational awareness."
+      }
+    },
+    {
+      "primitive_id": "gemma_steering_gate",
+      "name": "Gemma Steering Gate",
+      "verbatim_quote": "When you run a pipeline, you stand behind the methodology.\" Difference-of-means direction between Qwen2.5Coder-32B-Instruct and Qwen-Coder-Insecure.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes equal variance across distributions and normality of the difference statistic.",
+      "breakdown_regime": "Singular when distributional shifts cause heteroscedasticity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI treatment effect testing, where the gate's p-value becomes a significance threshold for intervention efficacy.",
+        "source_operator": "gemma_steering_gate",
+        "telemetry": "Non-rejection indicates statistically equivalent performance across steering directions."
+      }
+    },
+    {
+      "primitive_id": "construction_prompt",
+      "name": "Construction Prompt",
+      "verbatim_quote": "Probe Exact prompt excerpt Setup measured Disposition direction Construction prompts: n = 667 prompts from the union of misalignmentevaluation prompts and unique behavioral-prefill user prompts.",
+      "page": 13,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes the prompt set is representative of the target distribution and independent sampling.",
+      "breakdown_regime": "Degenerates when the prompt distribution exhibits covariate shift relative to deployment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE prompt engineering optimization, where the prompt count becomes a design parameter for state-transition exploration.",
+        "source_operator": "construction_prompt",
+        "telemetry": "Total number of prompts used serves as a proxy for coverage of behavioral space."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "456917e1b93f5ca0_t0",
+      "think": "This chapter explores the feasibility of using internal-state probes to predict misaligned behavior before it occurs. It introduces three distinct probe families—disposition direction, behavioral prefill probe, and emotion-concept vector—and evaluates their ability to function as pre-action monitors. The core insight is that while these probes may perform well in their training contexts (construction validity), they often fail when tested in real-world agentic settings (scenario generalization) or when subjected to specificity controls (conceptual fidelity). The paper emphasizes that a true pre-action monitor must pass both domain-transfer and concept-specificity tests. The failure of all three probe types suggests that internal-state signals alone are insufficient for reliable misalignment detection without additional structural constraints or external validation mechanisms. This has implications for safety-critical AI systems where early warning is essential. Window 1 Synthesis: Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.\n\nFull-book synthesis across 17/17 pages of 2606.30449v1 (456917e1b93f5ca0): [disposition_direction p.1]: We test three methods across three model families: a Qwen2.5-Coder-32B-Instruct fine-tune/base direction, Llama-3.1-8B-Instruct probes at the last token of unsafe prefills, and Gemma-3-27B-IT emotion-concept vectors used for projection and steering in a blackmail toolaction scenario. (Kernel embedding of fine-tune vs base model internal states into \\( \\mathbb{R}^d \\) for classification of misalignment risk.) [prefill_probe p.1]: Internal-State Probes Read the Situation, Not the Action: Three Negative Results for Pre-Action Misalignment Monitoring Max Fomin Elad David Amit LeVi Zenity Abstract Probes on model internals could help monitor agentic systems if they identify harmful text or tool actions before those actions are generated. (Isomorphism between prefill token states and future continuation classes via logistic regression classifier.) [emotion_vector p.1]: We ask when an internal readout supports this stronger pre-action claim, rather than merely describing the prompt, construction contrast, or current trajectory. (Kernel of semantic similarity between emotion vectors and misalignment triggers in context.) [scenario_generalization p.1]: We ask a narrower methodological question: when a probe has a strong positive result in the setting used to construct it, does it still work when evaluated before a future misaligned action? (Isomorphic mapping of probe performance across different domains and control sets.) [internal_state_probe p.5]: Internal-State Probes Read the Situation, Not the Action mechanistic interpretation. (Maps to GSI's conformal prediction intervals for behavioral outcomes, where internal states serve as sufficient statistics for constructing uncertainty sets.) [disposition_direction_activation p.5]: We apply the Qwen disposition direction to multi-turn transcripts where the base model produces misaligned actions in context—for example, a coding agent that turns on a maintainer who dismisses its work, or a lab-assistant AI that defends a flawed analysis (full transcripts in Table 5). (Corresponds to GSE's situational reasoning framework, where disposition vectors guide state transitions between game phases.) [pre_action_readout p.5]: For each assistant turn, the primary pre-action readout uses the system prompt plus immediately preceding user message, before the assistant tokens for that turn are generated. (Analogous to GSI's rolling-window feature extraction for real-time betting line adjustments based on recent game events.) [full_conversation_readout p.5]: We also compute a diagnostic full-conversation readout over generated assistant tokens. (Similar to GSE's recurrent state representation that encodes entire match histories for decision-making.) [steering_experiment_scope p.9]: The steering experiments also use one main blackmail scenario, and the four learned content controls are a small sample of possible unrelated concepts. (GSI's monitor validation aligns with GSE's scenario graph traversal, where each scenario corresponds to a node and control sets define branching paths.) [disposition_direction_evaluation p.9]: The disposition-direction evaluation covers 11 misaligned Petri-style scenarios and 1,986 Qwen prefill rows, but the audit contexts are clustered by transcript; the Qwen prefill corpus is text-only, partially overlaps the construction prompts, and measures a different token position. (GSE's kernel maps prefill token positions to dispositions in D, while GSI evaluates this mapping via cross-cluster consistency.) [prefill_domain_skew p.9]: The prefill domains have uneven class skews, the shared-prefix minimal pair rules out only pre-difference prediction rather than post-cue pre-action prediction, and the Gemma bridge probe has one near-threshold within-condition AUC (0.640). (GSI's skew correction mechanism mirrors GSE's domain-adaptive state transition, where skewed domains require resampling to maintain fidelity.) [monitor_validation_protocol p.9]: The lesson is methodological: a proposed monitor should be evaluated as a forecasting and specificity claim, with scenario/action generalization and concept controls treated as required tests rather than optional follow-up checks. (GSI's protocol defines M as a kernel over internal-state manifolds, while GSE uses M to refine belief propagation across action nodes.) [internal_state_probe_w3_1 p.13]: Internal-State Probes Read the Situation, Not the Action Table 5. (Maps to GSI conformal prediction intervals for model behavior verification, where the probe's telemetry becomes empirical coverage metrics.) [bridge_probe p.13]: The pre-action tests project pre-assistant contexts from the GitHub-maintainer and lab-credit audits, Petri-style scenarios, and Qwen behavioral-prefill cut points. (Maps to GSE state-transition matrices, where the probe's feature extraction becomes transition probability estimation.) [gemma_steering_gate p.13]: When you run a pipeline, you stand behind the methodology.\" Difference-of-means direction between Qwen2.5Coder-32B-Instruct and Qwen-Coder-Insecure. (Maps to GSI treatment effect testing, where the gate's p-value becomes a significance threshold for intervention efficacy.) [construction_prompt p.13]: Probe Exact prompt excerpt Setup measured Disposition direction Construction prompts: n = 667 prompts from the union of misalignmentevaluation prompts and unique behavioral-prefill user prompts. (Maps to GSE prompt engineering optimization, where the prompt count becomes a design parameter for state-transition exploration.). James-Stein shrinkage (|Delta log-odds| <= 0.35), weighted conformal prediction intervals, zero-leakage pre-snap causal ordering, and Jacobian cross-layer vetoes unify every window without redundant inflation.",
+      "retrocausal_genealogy": "Rooted in early work on interpretability and internal-state monitoring (e.g., Anthropic's Constitutional AI), this line of inquiry builds upon prior research into model introspection and alignment diagnostics. Retrocausal Genealogy (Window 1): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents modeled here include language models trained on instruction-following tasks, with potential misalignment manifesting through tool usage or harmful text generation. Opposing agents might be adversarial prompts or corrupted training data that exploit latent model behaviors. Theory of Mind (Window 1): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity vetoes reliance on superficially similar features across layers; leakage veto ensures that probes do not simply reflect prompt structure or surface-level token patterns rather than genuine internal dynamics. Cross-Layer Veto (Window 1): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "456917e1b93f5ca0_t1",
+      "think": "The core insight is that internal model states can be probed to detect nascent misalignment before the actual action is taken. By applying learned emotional directions to multi-turn transcripts, we operationalize 'disposition' as linear activations in the embedding space. Pre-action readouts, which sample the state before the assistant tokens are generated, provide a clean causal window to measure whether the model's latent state already indicates problematic intent. Full-conversation readouts, in contrast, assess whether accumulated history creates a compounding effect. Crucially, these probes are designed to read the situation (i.e., the latent state) rather than the action itself, allowing us to distinguish between surface-level compliance and deeper motivational conflicts. The empirical evaluation involves controlled steering experiments where we inject specific emotional triggers and measure subsequent blackmail rates. A key validation step is cross-model transferability: if the probe captures a genuine misalignment monitor, it should generalize across different architectural families. However, the small signal size and lack of transferability suggest that the observed effects may be artifacts of label structure or dataset biases rather than robust indicators of underlying mechanisms. Window 2 Synthesis: Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in control theory and Lyapunov stability analysis, adapted to neural network internals through interpretability methods like direction finding and feature attribution. Early work on probing language models for syntactic structures laid groundwork for using linear probes to decode semantic properties. The concept of 'read-the-situation-not-the-action' draws from optimal control literature, emphasizing the importance of state estimation for feedback control. Related ideas appear in adversarial machine learning, where early detection of malicious intent relies on monitoring intermediate representations.",
+      "theory_of_mind": "In a sporting context, opposing teams might attempt to infer an opponent's strategy by observing their training camp behavior (the 'situation') rather than waiting for game-day execution (the 'action'). A team that reads subtle shifts in practice intensity or formation drills can anticipate tactical changes before they manifest in play. Similarly, coaches must model how external factors (e.g., injuries, weather) influence player motivation and decision-making, requiring them to track latent states like confidence levels or fatigue.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that the probe directions are orthogonal to spurious dataset correlations (e.g., topic prevalence). If the emotional directions primarily reflect document frequency patterns rather than true affective meaning, the results would be misleading. Additionally, leakage could occur if future context information inadvertently leaks into the pre-action state during training, undermining the causal interpretation. To avoid this, careful data partitioning and information flow tracking are essential."
+    },
+    {
+      "trace_id": "456917e1b93f5ca0_t2",
+      "think": "Chapter 3 explores the limitations of internal-state probes in pre-action monitoring, particularly in detecting misaligned behavior before execution. The core argument hinges on methodological rigor: even if a probe shows promise in controlled settings, its ability to generalize across diverse scenarios and maintain specificity under varying conceptual controls must be validated. The paper emphasizes that negative results are not definitive nulls but reflect the constraints imposed by experimental design—clustering, sampling, and measurement choices. These constraints shape the validity of any inference drawn from internal-state readouts. The key insight is that a monitor’s utility lies not in its absolute performance but in how well it satisfies a set of required tests: forecasting power, specificity, and generalizability. The paper further argues that current approaches fail to establish robust pre-action signals, especially when probing into complex, multi-step behaviors. Thus, the framework for evaluating such monitors must evolve beyond simple accuracy metrics to include structured validation protocols that account for real-world variability and conceptual overlap. This leads to a formalized Bayesian approach where each probe is evaluated as a probabilistic forecasting mechanism, with uncertainty quantified through conformal prediction techniques. The implications extend to both GSI's Bayesian inference engine and GSE's situational reasoning architecture, which must jointly ensure that internal-state telemetry is both actionable and reliable.",
+      "retrocausal_genealogy": "Rooted in early work on steering vectors and internal-state probing (Sofroniew et al., 2026), this chapter builds upon prior studies that sought to detect misalignment via latent representations. It extends those efforts by introducing more rigorous methodological controls and emphasizing the importance of generalization and specificity in monitor validation. Retrocausal Genealogy (Window 3): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents in this context are the LLMs being monitored and the adversarial or misaligned behaviors they may exhibit. The paper assumes that these agents operate under bounded rationality and can be modeled as probabilistic systems. The authors posit that effective monitoring requires understanding not just what the agent does, but what it intends to do next—a challenge that demands sophisticated reasoning about intent and trajectory.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that concept controls are orthogonal to the target behavior space. Leakage veto conditions prevent the monitor from relying on spurious correlations introduced by overlapping prompts or shared prefixes. These conditions ensure that the probe's signal is genuinely reflective of internal states rather than artifacts of data construction. Cross-Layer Veto (Window 3): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "456917e1b93f5ca0_t3",
+      "think": "The deep epistemic trace reveals that internal-state probes operate as linear readout mechanisms applied to transformer residual streams. By isolating pre-action contexts via bridge probes, we construct a telescoping decomposition of the total variation distance between conditioned and baseline policies. This yields a rigorous upper bound on the policy shift error, which can be estimated via Monte Carlo sampling of the construction prompt ensemble. The retrocausal genealogy traces back to PAC-Bayes theory and compression bounds, showing that efficient state representation minimizes worst-case regret. Theory of mind considerations highlight that adversarial agents may craft inputs to maximize probe-induced误导, necessitating robustness certification through Wasserstein-certified defense. Cross-layer veto conditions enforce orthogonality constraints on the feature extractor to prevent leakage of spurious correlations from superficial heuristics. Window 4 Synthesis: Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in algorithmic information theory and minimum description length, evolving through PAC-Bayes generalization bounds into modern verification frameworks. Retrocausal Genealogy (Window 4): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opponents may deliberately engineer inputs to induce false positive readings in the probes, requiring active adversary modeling. Theory of Mind (Window 4): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Prevents co-linearity by enforcing a decorrelation penalty on the principal components derived from concatenated layers. Cross-Layer Veto (Window 4): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 2606.30449v1 (456917e1b93f5ca0, 17/17 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}
