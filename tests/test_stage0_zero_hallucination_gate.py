@@ -31,7 +31,7 @@ from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E40
     assert_zero_roster_contamination,
     load_stage0_game_roster_allowlist,
 )
-from scripts.ops.preflight_live_roster_injury_gate import require_week  # noqa: E402
+from scripts.ops.preflight_live_roster_injury_gate import require_week, PreflightRosterGateError  # noqa: E402
 
 
 def test_stage0_allowlist_and_confirmed_starters():
@@ -176,3 +176,9 @@ def test_week10_stage0_live_roster_config_fresh_on_2026_11_14() -> None:
     cfg = require_week(10, today=date(2026, 11, 14))
     assert cfg["week"] == 10
     assert cfg["as_of"] == "2026-11-13"
+    try:
+        require_week(10, today=date(2026, 11, 18))
+    except PreflightRosterGateError:
+        pass
+    else:
+        raise AssertionError("Expected PreflightRosterGateError for stale Week-10 config")
