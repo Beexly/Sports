@@ -45,7 +45,9 @@ describe("ingestDepthCharts", () => {
 
     expect(res.status).toBe("ok");
     expect(res.rowsWritten).toBe(2);
-    expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { season: 2024 } });
+    // Stale-test repair: ba175a93a scoped the season replace to the week buckets
+    // this run writes (week: { in: weeksWritten }) so labelled weeks are not wiped.
+    expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { season: 2024, week: { in: [3] } } });
     // Devin Review (PR #734): delete + insert must be one atomic transaction,
     // not two independent statements, so a createMany failure after deleteMany
     // succeeds cannot erase the season's rows with nothing to replace them.

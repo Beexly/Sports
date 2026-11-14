@@ -35,7 +35,7 @@ describe("/picks - static sealed rendering has no runtime-fetch states to regres
   it("mounts no hardcoded pick fixtures - cards render only from the sealed card", () => {
     expect(pageSrc).not.toMatch(/picks\s*=\s*\[\s*\{/);
     expect(pageSrc).toMatch(/card\.main\.filter/);
-    expect(pageSrc).toMatch(/<SealedTable rows=\{locked\} \/>/);
+    expect(pageSrc).toMatch(/<SealedTable rows=\{locked\} freeLimit=\{2\} \/>/);
   });
 
   it("keeps the conversion path to the paid storefront", () => {
