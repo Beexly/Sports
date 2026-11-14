@@ -622,3 +622,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 06:14:03 | COMPLETE | 0f7a15a9e46c43f2 | primitives=32 think_words=913
 - 2026-11-14 06:14:47 | CLAIMED | 231bf7b09d64465b | worker=hermes-inline shard03 file=2026 - Learning Human Sports Motion Feasibility via Quantile Regression on Tracking Data - Guti rrez-P rez et al.pdf
 - 2026-11-14 06:19:24 | COMPLETE | 231bf7b09d64465b | primitives=32 think_words=858
+- 2026-11-14 06:19:50 | CLAIMED | 314bb5b2616cb834 | worker=hermes-inline shard03 file=2026 - Who Blocks Whom Probabilistic Pass-Blocking Assignments for Evaluating Blockers and Pass Rushers in American Football - Brahme et al.pdf
+- 2026-11-14 06:25:48 | COMPLETE | 314bb5b2616cb834 | primitives=37 think_words=893
