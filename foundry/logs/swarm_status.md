@@ -570,3 +570,5 @@ Gatekeeper: fail-closed SQLite (foundry.db), commit validation = verbatim+pages,
 - 2026-11-14 02:35:52 | COMPLETE | 181310dec4740603 | primitives=25 think_words=851
 - 2026-11-14 02:36:39 | CLAIMED | 3012b2996271809f | worker=hermes-inline shard03 file=2021 - MAYFIELD Machine Learning Algorithm for Yearly Forecasting Indicators and Estimation of Long-Run Player Development - Unknown Authors.pdf
 - 2026-11-14 02:42:50 | COMPLETE | 3012b2996271809f | primitives=36 think_words=932
+- 2026-11-14 02:43:36 | CLAIMED | 2ec2fac5565ea22e | worker=hermes-inline shard03 file=2021 - Prediction of Defensive Player Trajectories in NFL Games with Defender CNN-LSTM model - Unknown Authors.pdf
+- 2026-11-14 02:55:00 | COMPLETE | 2ec2fac5565ea22e | primitives=29 think_words=852

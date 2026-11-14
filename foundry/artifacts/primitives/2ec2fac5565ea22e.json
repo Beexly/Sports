@@ -1,0 +1,593 @@
+{
+  "book_id": "2ec2fac5565ea22e",
+  "shard": "2",
+  "source_status": "EXTRACTED",
+  "extraction_mode": "TIER_A_PAPER_RECONSTRUCTED_LATEX",
+  "source_note": "Lin Lee Cheong, Xiangyu Zeng (Amazon ML Solutions Lab), Ankit Tyagi (NFL Next Gen Stats), 'Prediction of Defensive Player Trajectories in NFL Games with Defender CNN-LSTM Model', MIT Sloan Sports Analytics Conference 2021 Research Paper Competition (17 pages). Full paper with a CNN-LSTM + social-pooling defender trajectory model, what-if targeted-receiver counterfactuals, RFID data cleaning, and three reference-free trajectory metrics (PS/DR/SP -> TS -> play score -> model score); extracted faithfully (not a derivative summary). The social-pooling, distance-ratio, and trajectory-score equations are shifted-font and reconstructed as labeled LaTeX from prose; a source inconsistency is flagged (the printed DR=|optimal-actual|/(optimal+actual) equals 0 at optimal, but the text and TS usage treat larger DR as better). Outputs are predicted defender trajectories and coverage grades from public NFL RFID tracking; zero sportsbook lines, spreads, totals, or implied odds.",
+  "primitives": [
+    {
+      "primitive_id": "defenders_reactive_hard",
+      "name": "Defenders' reactive trajectories are hard to model",
+      "verbatim_quote": "Defensive players in football have complex trajectory patterns that are hard to accurately model and evaluate",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Defensive players have complex trajectory patterns that are hard to model because of their inherently reactive role, dynamically responding to offensive strategies and the quarterback's on-the-spot decisions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A reactive agent whose motion depends on others' decisions is the same coupled-dynamics problem GSE models for coverage.",
+        "source_operator": "defenders_reactive_hard",
+        "telemetry": "defenders reactive -> hard to model"
+      }
+    },
+    {
+      "primitive_id": "dbs_hardest_long_distance",
+      "name": "Defensive backs are the hardest: long distances, target-dependent",
+      "verbatim_quote": "Amongst defensive players, defensive backs are the most challenging to model",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Defensive backs are the most challenging defensive players to model because they travel long distances on passing plays and change trajectories based on their perception of where the ball will go, unlike other defenders with limited movement."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A target-dependent long-range trajectory is the same coverage-responsibility prediction GSE prioritizes for defensive backs.",
+        "source_operator": "dbs_hardest_long_distance",
+        "telemetry": "DBs hardest: long distance, target-dependent"
+      }
+    },
+    {
+      "primitive_id": "22_players_interacting",
+      "name": "22 interacting players per play",
+      "verbatim_quote": "which translates to 22 players interacting with each other at any given time",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Eleven players per side means 22 players interact at any time; individual trajectories depend on personal assignments, overall strategy (man vs zone), and the movement and decisions of surrounding players and the ball."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A 22-agent interacting system is the same multi-agent coupling GSE's coverage model must capture.",
+        "source_operator": "22_players_interacting",
+        "telemetry": "22 players; assignments + strategy + neighbors"
+      }
+    },
+    {
+      "primitive_id": "what_if_targeted_receiver",
+      "name": "What-if: change the targeted receiver, predict new trajectory",
+      "verbatim_quote": "how should the defensive backs’ trajectories change if the receiver targeted in a passing play is changed?",
+      "page": 1,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "A key task is the what-if scenario: how a defensive back's trajectory would change if the targeted receiver were changed; the targeted receiver is thrown the ball, a non-targeted receiver is eligible but not thrown to, and the model should shift its prediction toward the new target."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A counterfactual target-swap prediction is the same what-if coverage simulation GSE uses to evaluate quarterback decisions.",
+        "source_operator": "what_if_targeted_receiver",
+        "telemetry": "what-if: swap targeted receiver -> new trajectory"
+      }
+    },
+    {
+      "primitive_id": "rfid_10hz_sensor",
+      "name": "RFID shoulder-pad + ball tags at 10 Hz",
+      "verbatim_quote": "we utilize player and ball sensor data collected through radio-frequency identification (RFID) tags on player’s shoulder pads and in the game ball",
+      "page": 2,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Player and ball sensor data come from RFID tags on shoulder pads and in the game ball, transmitting location every tenth of a second, including coordinates, orientation, and direction per player plus ball location and speed; the focus is passing plays."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A 10 Hz RFID tracking feed is the same Next Gen Stats substrate GSE uses for trajectory modeling.",
+        "source_operator": "rfid_10hz_sensor",
+        "telemetry": "RFID shoulder pads + ball; 0.1s; x/y/orientation/dir"
+      }
+    },
+    {
+      "primitive_id": "sequence_prediction_task",
+      "name": "Trajectory prediction as sequence-to-sequence",
+      "verbatim_quote": "The prediction of defensive backs’ trajectory is essentially equivalent to a sequence prediction problem where the input sequence is the observed positions of a player",
+      "page": 2,
+      "latex": "(x^i_{1:t},y^i_{1:t})\\mapsto (x^i_{t+1:t+K},y^i_{t+1:t+K})",
+      "symbol_and_unit_ledger": {
+        "K": "future prediction horizon (10-15 steps)"
+      },
+      "assumptions": [
+        "Defensive-back trajectory prediction is a sequence prediction problem: the input is observed positions over previous time steps and the output is future x-y coordinates over a fixed horizon K, observing ground truth up to the current step."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A sequence-to-sequence position forecast is the same trajectory-prediction formulation GSE uses for player movement.",
+        "source_operator": "sequence_prediction_task",
+        "telemetry": "observed positions -> K future x/y steps"
+      }
+    },
+    {
+      "primitive_id": "rmse_fails_whatif",
+      "name": "RMSE cannot evaluate hypothetical what-if trajectories",
+      "verbatim_quote": "Regression metrics such as root mean squared error (RMSE) require us to calculate errors relative to known results; this does not exist for hypothetical, what-if situations",
+      "page": 3,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "RMSE requires known ground-truth results, which do not exist for hypothetical what-if situations (a defender guarding two receivers has a recorded trajectory only for the actual target), motivating new metrics that score each trajectory independently using spatial information and maximum realistic physical effort."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The absence of ground truth for counterfactuals is the same evaluation gap GSE fills with reference-free trajectory metrics.",
+        "source_operator": "rmse_fails_whatif",
+        "telemetry": "RMSE needs ground truth; what-ifs have none"
+      }
+    },
+    {
+      "primitive_id": "social_forces_lineage",
+      "name": "Social forces model lineage (Helbing-Molnar 1995)",
+      "verbatim_quote": "A pioneering model of human motion, called social forces model was proposed by Helbing and Molnar",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The social forces model (Helbing & Molnar 1995) uses attractive forces toward goals and repulsive forces to avoid collisions, extended to robotics and activity understanding; Gaussian processes were also used for human motion, but these hand-crafted approaches generalize poorly to complex settings like football."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The social-forces tradition is the same interaction-modeling lineage GSE's coverage dynamics descend from.",
+        "source_operator": "social_forces_lineage",
+        "telemetry": "social forces: attractive + repulsive (1995)"
+      }
+    },
+    {
+      "primitive_id": "handcrafted_vs_datadriven",
+      "name": "Hand-crafted interactions fail to generalize; data-driven wins",
+      "verbatim_quote": "these methods used hand-crafted functions to model “interactions” for specific settings rather than inferring them in a data-driven fashion",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Traditional methods used hand-crafted interaction functions for specific settings rather than inferring them data-driven, capturing simple interactions but failing to generalize to football where settings change with play calls, teams, and skillsets, and ignoring distant-future interactions; recent data-driven approaches outperform them."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Learning interactions data-driven rather than hand-crafting them is the same generalization principle GSE applies to coverage.",
+        "source_operator": "handcrafted_vs_datadriven",
+        "telemetry": "hand-crafted interactions don't generalize"
+      }
+    },
+    {
+      "primitive_id": "lstm_vanishing_gradient",
+      "name": "LSTM/GRU mitigate vanishing gradient and long-range dependency",
+      "verbatim_quote": "GRUs and LSTMs are less negatively affected by the vanishing gradient problem during model training and have less long-range dependency issues",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "LSTM and GRU recurrent networks are less affected by the vanishing gradient problem and long-range dependency issues than vanilla RNNs, suited to time series with lags of unknown duration between important events, and successful in translation, speech, and captioning."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gated recurrence for long-range temporal dependencies is the same sequence backbone GSE uses for trajectory forecasting.",
+        "source_operator": "lstm_vanishing_gradient",
+        "telemetry": "LSTM/GRU vs vanishing gradient"
+      }
+    },
+    {
+      "primitive_id": "alahi_social_pooling",
+      "name": "Alahi's social pooling connects neighboring LSTMs",
+      "verbatim_quote": "Alahi demonstrated that the addition of a social pooling layer that connected all neighboring LSTMs could enable interaction modeling",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Alahi et al. (Social LSTM) approached human trajectory prediction as sequence prediction and showed a social pooling layer connecting neighboring LSTMs enables interaction modeling; this paper adapts that concept to football using tabular sensor data rather than images."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Social pooling of neighbor states is the same interaction-aggregation GSE adapts for multi-player coverage.",
+        "source_operator": "alahi_social_pooling",
+        "telemetry": "Alahi social pooling connects neighbor LSTMs"
+      }
+    },
+    {
+      "primitive_id": "1d_cnn_time_features",
+      "name": "1D convolutions extract time-dependent features from sensors",
+      "verbatim_quote": "Since player tracking data arrives from sensors in the form of one-dimensional (1D) signals, we employ 1D convolutions with different kernel sizes",
+      "page": 4,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Because tracking data arrives as one-dimensional sensor signals, 1D convolutions with different kernel sizes extract information from multiple players; pooling after CNN summarizes features, reduces overfitting, and provides translational invariance (shifted/mirrored inputs yield shifted/mirrored trajectories)."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "1D temporal convolution plus pooling is the same feature-extraction and invariance design GSE uses on tracking signals.",
+        "source_operator": "1d_cnn_time_features",
+        "telemetry": "1D CNN multi-kernel; pooling -> translational invariance"
+      }
+    },
+    {
+      "primitive_id": "separate_inputs_for_whatif",
+      "name": "Defender and receiver as separate inputs to enable what-ifs",
+      "verbatim_quote": "The defender and targeted receiver data are treated as separate inputs to easily accommodate what-ifs situations",
+      "page": 5,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Important features (screened by XGBoost importance) come from the defender, ball, and targeted receiver; defender and targeted-receiver data are separate inputs so the targeted receiver can be preferentially changed for what-if scenarios."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Separating the controllable target input is the same counterfactual-interface design GSE uses to swap the targeted receiver.",
+        "source_operator": "separate_inputs_for_whatif",
+        "telemetry": "defender/ball/receiver separate inputs"
+      }
+    },
+    {
+      "primitive_id": "cnn_lstm_architecture",
+      "name": "CNN-LSTM: 1D-CNN+pool -> concat -> LSTM -> dense",
+      "verbatim_quote": "These CNN-extracted features are then concatenated and repeated for K time steps, and the LSTM sequence model predicts for K future time steps",
+      "page": 5,
+      "latex": "\\text{inputs}\\xrightarrow{\\text{1D-CNN+pool}}\\text{concat}\\xrightarrow{\\text{repeat }K}\\text{LSTM}\\xrightarrow{\\text{dense}}\\hat x,\\hat y_{t+1:t+K}",
+      "symbol_and_unit_ledger": {
+        "K": "future steps (10 dev / 15 production)"
+      },
+      "assumptions": [
+        "All inputs pass independently through 1D-CNN layers and pooling (extracting patterns 3-5 steps prior), are concatenated and repeated for K time steps, then an LSTM predicts K future steps (usually 10 or 15) with a dense layer per output step minimizing RMSE between predicted and real positions."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A CNN-then-LSTM sequence architecture is the same trajectory-forecasting backbone GSE deploys.",
+        "source_operator": "cnn_lstm_architecture",
+        "telemetry": "1D-CNN+pool -> concat -> LSTM(K) -> dense; RMSE"
+      }
+    },
+    {
+      "primitive_id": "social_pooling_all_dbs",
+      "name": "Social pooling over all DBs (no spatial cutoff), no new params",
+      "verbatim_quote": "Instead of a spatial cutoff, we apply social pooling to all other defensive backs within the play, and separately to ball and receiver inputs",
+      "page": 6,
+      "latex": "S_i^t=[\\phi(c_i^t);\\ \\phi(c_{R,B}^t);\\ \\phi(\\textstyle\\sum_{j\\in N_i}c_j^t)]",
+      "symbol_and_unit_ledger": {
+        "c": "convolutional features",
+        "phi": "ReLU embedding",
+        "N_i": "other defensive backs in play"
+      },
+      "assumptions": [
+        "The social-pooled feature for defender i at time t concatenates ReLU-embedded convolutional features of the defender, the receiver-and-ball input, and the sum over neighboring defensive backs; unlike Alahi's rectangular spatial cutoff, pooling applies to all other defensive backs in the play and separately to ball/receiver, and introduces no additional parameters. The equation is shifted-font and reconstructed."
+      ],
+      "breakdown_regime": "shifted-font equation reconstructed (Alahi social pooling adaptation)",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Parameter-free social pooling over all coverage peers is the same interaction aggregation GSE uses without a spatial cutoff.",
+        "source_operator": "social_pooling_all_dbs",
+        "telemetry": "S_i = [phi(c_i); phi(c_RB); phi(sum c_j)]; no new params"
+      }
+    },
+    {
+      "primitive_id": "dataset_1M_trajectories",
+      "name": "1,068,910 train / 264,155 test trajectories (2018-19)",
+      "verbatim_quote": "The data was split into 1,068,910 unique trajectories of defenders for training, and 264,155 unique trajectories for testing",
+      "page": 6,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The NFL-collected 2018-2019 dataset (pre-2018 unavailable due to sensor hardware/software changes) is split into 1,068,910 unique defender trajectories for training and 264,155 for testing, split by play to prevent information leakage."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A large play-split trajectory corpus is the same leakage-free training design GSE requires.",
+        "source_operator": "dataset_1M_trajectories",
+        "telemetry": "1,068,910 train / 264,155 test; split by play"
+      }
+    },
+    {
+      "primitive_id": "superhuman_speed_filter",
+      "name": "Filter superhuman motion: speed <= 12.47 yd/s",
+      "verbatim_quote": "we upper bounded the recorded speed at 12.47 yards per second",
+      "page": 6,
+      "latex": "v_{\\max}=12.47\\ \\text{yd/s};\\ \\Delta d_{\\max}=1.247\\ \\text{yd per }0.1\\text{s}",
+      "symbol_and_unit_ledger": {
+        "v_max": "human speed upper bound"
+      },
+      "assumptions": [
+        "Data cleaning removes 'superhuman' movements: recorded speed is upper-bounded at 12.47 yards per second, and with a 0.1s time step any consecutive-point distance over 1.247 yards is removed; off-field trajectories are removed and only pass-forward-to-pass-arrived data retained."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A physical-plausibility filter is the same superhuman-motion veto GSE applies to tracking data.",
+        "source_operator": "superhuman_speed_filter",
+        "telemetry": "speed <= 12.47 yd/s; step <= 1.247 yd"
+      }
+    },
+    {
+      "primitive_id": "pass_forward_to_arrived_window",
+      "name": "Model only the pass-forward to pass-arrived window",
+      "verbatim_quote": "we only retained data from pass forward to pass arrived",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Only data from pass forward to pass arrived is retained, because the concern is how the defensive back reacts to different potential receivers while the ball is in the air, which is the hardest phase to predict."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isolating the ball-in-air reaction window is the same phase-focused modeling GSE uses for coverage evaluation.",
+        "source_operator": "pass_forward_to_arrived_window",
+        "telemetry": "window: pass forward -> pass arrived"
+      }
+    },
+    {
+      "primitive_id": "xgboost_feature_screening",
+      "name": "XGBoost + LSTM screen features; game context dropped",
+      "verbatim_quote": "We applied an XGBoost model and simple LSTM models to quickly explore, sub-select and validate a variety of raw and engineered features",
+      "page": 7,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "XGBoost and simple LSTM models screen raw and engineered features (speed, acceleration, personnel, prior x-y, direction/orientation, ball trajectory/velocity); differencing makes series stationary and directional decomposition splits rotation into x/y; game features (role, yards to go, yard from endzone) were deemed not important; 3-5 prior steps suffice, with ball and targeted receiver provided real-time beyond the current step."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A feature-importance screening that drops uninformative context is the same parsimony step GSE applies before training.",
+        "source_operator": "xgboost_feature_screening",
+        "telemetry": "XGBoost screen; differencing; 3-5 steps; game ctx dropped"
+      }
+    },
+    {
+      "primitive_id": "cnn_lstm_beats_xgboost_horizon",
+      "name": "CNN-LSTM beats XGBoost beyond the first step",
+      "verbatim_quote": "The XGBoost model, which is not a sequence model, was trained directly against the target for that specific time step",
+      "page": 8,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The Defender CNN-LSTM outperforms other models on most time steps except the first; XGBoost, a non-sequence model trained per-step, is initially better but vastly outperformed later because sequence models apply a single overall loss across all steps and account for prior actions via the hidden state."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A sequence model overtaking a per-step model over the horizon is the same temporal-advantage result GSE expects.",
+        "source_operator": "cnn_lstm_beats_xgboost_horizon",
+        "telemetry": "CNN-LSTM > XGBoost after step 1 (hidden state)"
+      }
+    },
+    {
+      "primitive_id": "optimal_db_behavior",
+      "name": "Optimal DB behavior: close on the targeted receiver fastest",
+      "verbatim_quote": "The optimal behavior of a defensive back is defined here as moving as quickly as possible towards the targeted receiver",
+      "page": 9,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Optimal defensive-back behavior is defined as moving as quickly as possible toward the targeted receiver who expects the catch; interceptions and jumping routes are excluded as rare and needing extra labeling, so a correct model predicts markedly different trajectories when the target changes."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A fastest-close-on-target optimality definition is the same coverage-effort objective GSE scores against.",
+        "source_operator": "optimal_db_behavior",
+        "telemetry": "optimal = close on target fastest (no INT/jump)"
+      }
+    },
+    {
+      "primitive_id": "three_reference_free_metrics",
+      "name": "Three reference-free metrics: trajectory, play, model score",
+      "verbatim_quote": "three new metrics are introduced to enable us to assess overall model performance",
+      "page": 11,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Three new metrics assess performance without a golden trajectory: a trajectory score (TS) for a single trajectory, a play score aggregating multiple defenders' TS, and an overall model performance score from a set of play scores."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A hierarchy of reference-free trajectory/play/model scores is the same evaluation stack GSE uses for what-if coverage.",
+        "source_operator": "three_reference_free_metrics",
+        "telemetry": "TS -> play score -> model score"
+      }
+    },
+    {
+      "primitive_id": "positional_convergence_PS",
+      "name": "Positional convergence: weighted rate of distance change",
+      "verbatim_quote": "positional convergence (PS) metric defined as the weighted average of the rate of change of distance between the two players over multiple time steps",
+      "page": 11,
+      "latex": "\\mathrm{PS}=\\sum_t w_t\\,\\frac{d_{t+1}-d_t}{\\Delta t};\\ \\mathrm{PS}<0\\text{ converging},\\ =0\\text{ parallel},\\ >0\\text{ diverging}",
+      "symbol_and_unit_ledger": {
+        "d_t": "defender-receiver distance at t",
+        "w_t": "time-step weights"
+      },
+      "assumptions": [
+        "Positional convergence (PS) is the weighted average rate of change of defender-receiver distance over time steps; its sign indicates converging (negative), parallel (zero), or diverging (positive); weighting is application-dependent (equal for the whole trajectory, heavier final step if final location feeds downstream systems). The formula is reconstructed from the prose."
+      ],
+      "breakdown_regime": "formula reconstructed from prose description",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A rate-of-closure metric is the same convergence measure GSE uses to grade coverage effort independent of absolute distance.",
+        "source_operator": "positional_convergence_PS",
+        "telemetry": "PS = weighted d(distance)/dt; sign = converge/parallel/diverge"
+      }
+    },
+    {
+      "primitive_id": "distance_ratio_DR",
+      "name": "Distance ratio: actual vs best-effort optimal distance",
+      "verbatim_quote": "The defender’s actual distance covered is compared against the approximate optimal distance",
+      "page": 13,
+      "latex": "\\mathrm{DR}=\\frac{|\\text{optimal}-\\text{actual}|}{\\text{optimal}+\\text{actual}}",
+      "symbol_and_unit_ledger": {
+        "optimal": "defender pass-forward to receiver pass-arrived distance (human-bounded)",
+        "actual": "distance covered"
+      },
+      "assumptions": [
+        "Distance ratio (DR) compares the defender's actual distance covered against a best-effort optimal distance (defender's pass-forward location to receiver's pass-arrived location, upper-bounded by max human distance per step), modulating PS to reward near-optimal effort. The printed formula is |optimal-actual|/(optimal+actual); NOTE a source inconsistency: the text says scores closer to 1 are closest to optimal and the TS formula rewards larger DR, but the printed ratio equals 0 at optimal, so the intended DR likely increases with closeness to optimal; flagged."
+      ],
+      "breakdown_regime": "printed DR formula inconsistent with text/TS usage (0 at optimal vs 'closer to 1 = optimal'); flagged",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An effort-vs-best-possible ratio is the same physical-effort normalization GSE uses to separate blown coverage from modeling error.",
+        "source_operator": "distance_ratio_DR",
+        "telemetry": "DR = |opt-act|/(opt+act); effort modulation (inconsistency flagged)"
+      }
+    },
+    {
+      "primitive_id": "trajectory_score_TS",
+      "name": "Trajectory score combines PS, DR, and superhuman penalty",
+      "verbatim_quote": "each trajectory score can be computed as follows",
+      "page": 14,
+      "latex": "\\mathrm{TS}=\\begin{cases}\\mathrm{PS}(1+\\mathrm{DR})+\\mathrm{SP},&\\mathrm{PS}<0\\\\ \\mathrm{PS}(2-\\mathrm{DR})+\\mathrm{SP},&\\mathrm{PS}\\ge0\\end{cases}",
+      "symbol_and_unit_ledger": {
+        "SP": "superhuman-step count penalty",
+        "TS": "trajectory score (more negative = better)"
+      },
+      "assumptions": [
+        "The trajectory score combines positional convergence, distance ratio, and a superhuman penalty (count of steps whose distance exceeds a human cutoff): TS = PS*(1+DR)+SP when PS<0, else PS*(2-DR)+SP; a more negative score is better, typically in [-2,2]. The formula is shifted-font and reconstructed."
+      ],
+      "breakdown_regime": "shifted-font piecewise formula reconstructed; SP penalizes humanly impossible steps",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A composite convergence-effort-plausibility score is the same reference-free trajectory grade GSE assigns to predicted coverage.",
+        "source_operator": "trajectory_score_TS",
+        "telemetry": "TS = PS*(1+DR)+SP (PS<0) else PS*(2-DR)+SP; [-2,2]"
+      }
+    },
+    {
+      "primitive_id": "play_score_exponential_weight",
+      "name": "Play score: exponential distance-weighting of defenders",
+      "verbatim_quote": "players are exponentially weighted based on their distance to the targeted receiver",
+      "page": 14,
+      "latex": "\\text{PlayScore}=\\sum_i e^{-\\lambda\\,\\text{dist}_i}\\,\\mathrm{TS}_i",
+      "symbol_and_unit_ledger": {
+        "dist_i": "defender i distance to targeted receiver"
+      },
+      "assumptions": [
+        "Multiple trajectory scores aggregate into a play score by exponentially weighting players by their distance to the targeted receiver, so players in a net effective radius contribute most; a highly-scored example play has aggregated score -1.175. The exponential-weight form is reconstructed from the prose."
+      ],
+      "breakdown_regime": "exponential-weight form reconstructed from prose",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Distance-weighted aggregation of coverage scores is the same play-level coverage grade GSE computes.",
+        "source_operator": "play_score_exponential_weight",
+        "telemetry": "play score = exp-weighted TS by dist to target; ex -1.175"
+      }
+    },
+    {
+      "primitive_id": "sanity_check_bad_trajectories",
+      "name": "Sanity check: injecting bad trajectories worsens scores",
+      "verbatim_quote": "the scores deteriorated as expected by becoming more positive",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "Model performance is compared by averaging distance-weighted play scores or all defender trajectories; a sanity check replacing a quarter of trajectories with bad ones (randomized direction/speed) deteriorated scores as expected (more positive): actual real TS -0.1036, predicted LSTM-CNN -0.0825, bad model (25% bad) +0.0452."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A corruption sanity check is the same metric-validity test GSE runs to confirm scores track quality.",
+        "source_operator": "sanity_check_bad_trajectories",
+        "telemetry": "actual -0.1036 / pred -0.0825 / 25%-bad +0.0452"
+      }
+    },
+    {
+      "primitive_id": "20pct_over_baseline_expert_validated",
+      "name": "20% over baseline LSTM; NFL expert finds trajectories sound",
+      "verbatim_quote": "This resulted in a 20% improvement compared to the baseline LSTM model",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The CNN-LSTM models give a 20% improvement over the baseline LSTM; the modified social pooling outperforms state-of-the-art on NFL sensor time series; models are shallow by design (complexity vs 2-season data tradeoff); an NFL football expert reviewed all plays and found the majority of predicted trajectories sound, with slight degradation on very long plays and some non-optimal orientation/speed cases."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A validated improvement with expert review is the same credibility standard GSE holds for its coverage model.",
+        "source_operator": "20pct_over_baseline_expert_validated",
+        "telemetry": "20% over baseline LSTM; NFL expert: majority sound"
+      }
+    },
+    {
+      "primitive_id": "metrics_flag_noisy_plays",
+      "name": "Reference-free metrics flag noisy/problematic plays",
+      "verbatim_quote": "We also presented metrics capable of evaluating defender trajectories, independent of a reference ‘golden’ trajectory",
+      "page": 15,
+      "latex": "",
+      "symbol_and_unit_ledger": "",
+      "assumptions": [
+        "The metrics evaluate defender trajectories independent of a reference golden trajectory, enabling quantitative evaluation of large numbers of trajectories and plays and of what-if performance, and automatically flagging noisy or problematic plays and trajectories."
+      ],
+      "breakdown_regime": "no_equation_domain",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Reference-free metrics that auto-flag bad plays are the same data-quality and coverage-audit tool GSE uses.",
+        "source_operator": "metrics_flag_noisy_plays",
+        "telemetry": "no golden trajectory; auto-flag noisy plays"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "defendercnnlstm2021_trace",
+      "think": "The retrocausal genealogy of this paper is the difficulty of modeling reactive defensive motion in football. Lin Lee Cheong and Xiangyu Zeng of the Amazon ML Solutions Lab, with Ankit Tyagi of NFL Next Gen Stats, observe that defensive players have complex trajectories that are hard to model because of their inherently reactive role, and that defensive backs are the hardest because they travel long distances on passing plays and change direction based on where they perceive the ball will go. With twenty-two players interacting per play, trajectories depend on assignments, coverage strategy, and the movement of neighbors and the ball. The scientific lineage runs from Helbing and Molnar's 1995 social forces model and Gaussian-process motion models, through Alahi's Social LSTM social pooling, to gated recurrent networks that mitigate the vanishing gradient problem, and the paper adapts these to tabular RFID sensor data rather than images. The data are NFL-collected RFID tags on shoulder pads and in the ball, transmitting coordinates, orientation, and direction every tenth of a second, plus ball location and speed, for the 2018 and 2019 seasons because earlier sensor hardware differs. The corpus is 1,068,910 training and 264,155 testing defender trajectories, split by play to prevent leakage. Cleaning removes superhuman motion by upper-bounding speed at 12.47 yards per second and consecutive-step distance at 1.247 yards, removes off-field trajectories, and retains only the pass-forward to pass-arrived window, the hardest phase where the back reacts to potential receivers while the ball is in the air. The task is sequence prediction: observed positions map to K future x-y steps, with K of ten in development and fifteen in production. The recursive theory of mind is predicting a defender who is himself predicting the quarterback. The Defender CNN-LSTM passes defender, ball, and targeted-receiver inputs independently through 1D convolutions and pooling, concatenates and repeats them for K steps, and runs an LSTM with a dense output minimizing RMSE; defender and receiver are separate inputs precisely so the targeted receiver can be swapped for what-if scenarios. A social-pooling variant concatenates ReLU-embedded convolutional features of the defender, the receiver-and-ball, and the sum over all other defensive backs in the play, with no spatial cutoff and no additional parameters, letting the model account for nearby players as a real defender would. Features were screened by XGBoost importance, with game-context features like yards-to-go deemed unimportant and three to five prior steps sufficient. Cross-layer veto adjudication is the evaluation problem and its reference-free solution. RMSE needs ground truth, which does not exist for hypothetical what-if trajectories, so the paper introduces three metrics: a trajectory score combining positional convergence PS, the weighted rate of change of defender-receiver distance whose sign marks converging, parallel, or diverging; a distance ratio DR comparing actual distance covered to a human-bounded best-effort optimal distance; and a superhuman penalty SP. The trajectory score is PS times one plus DR plus SP when converging, else PS times two minus DR plus SP, with more negative better; play scores exponentially weight defenders by distance to the target, and model scores average play scores. A sanity check injecting a quarter bad trajectories worsened scores as expected, from actual negative 0.1036 to predicted negative 0.0825 to bad positive 0.0452. In production, evaluated on a different game distribution, the CNN-LSTM predicts defenders closer to receivers than the NFL's simple-LSTM baseline across air-time percentiles, measured by nearest-defender-to-receiver distance over the fifteen-step horizon. I flag a source inconsistency: the printed DR ratio equals zero at optimal distance, yet the text and the trajectory-score usage treat larger DR as better. The implementation invariants map directly onto GSE. The CNN-LSTM sequence backbone is GSE's trajectory forecaster; separate target inputs are GSE's counterfactual interface for swapping the targeted receiver; parameter-free social pooling over all coverage peers is GSE's interaction aggregation; the superhuman speed filter is GSE's physical-plausibility veto; and the reference-free PS/DR/SP trajectory score, distance-weighted play score, and corruption sanity check are GSE's coverage-evaluation stack that separates blown coverage from modeling error. The outputs are predicted defender trajectories and coverage grades from public NFL tracking, with zero sportsbook lines, spreads, totals, or implied odds anywhere in the method. The parameter ledger and the limitations close the account. The corpus is 2018-2019 RFID at 10 Hz, 1,068,910 training and 264,155 testing trajectories split by play; the architecture uses 32 convolutional filters and a 32-dimensional LSTM hidden state, ReLU embeddings, Adam, MSE loss, single-GPU Keras, predicting ten steps in development and fifteen in production with longer plays tiled; the speed bound is 12.47 yards per second; the result is a 20 percent improvement over the baseline LSTM, with an NFL expert judging the majority of predicted trajectories sound and slight degradation on very long plays. The social-pooling, distance-ratio, and trajectory-score equations are shifted-font, so they are reconstructed as labeled LaTeX from the prose and flagged, including the distance-ratio inconsistency between the printed formula and its described interpretation. The invariant for GSE is to carry the what-if-capable CNN-LSTM coverage forecaster and the reference-free trajectory metrics, while recording that interceptions and route-jumping are excluded, that very long plays degrade, and that the distance-ratio definition needs reconciliation before quantitative reuse.",
+      "retrocausal_genealogy": "The paper originates in the difficulty of modeling reactive defensive motion: defenders respond to offensive strategy and QB decisions, and DBs are hardest (long distances, target-dependent direction). Cheong/Zeng (Amazon ML Solutions Lab) + Tyagi (NFL NGS). Lineage: Helbing-Molnar 1995 social forces, Gaussian-process motion, Alahi Social LSTM social pooling, gated RNNs (LSTM/GRU) vs vanishing gradient; adapted to tabular RFID sensor data. Data: NFL 2018-2019 RFID at 10 Hz (shoulder pads + ball), 1,068,910 train / 264,155 test trajectories split by play.",
+      "theory_of_mind": "Predicting a defender who is himself predicting the QB. Defender CNN-LSTM: defender/ball/targeted-receiver inputs through independent 1D-CNN+pool (3-5 prior steps), concat+repeat K, LSTM+dense minimizing RMSE; separate target input enables what-if receiver swaps. Social pooling S_i=[phi(c_i);phi(c_RB);phi(sum_j c_j)] over ALL other DBs (no spatial cutoff, no new params). XGBoost feature screening drops game context; superhuman filter (speed<=12.47 yd/s, step<=1.247 yd); pass-forward-to-arrived window; K=10 dev/15 prod.",
+      "cross_layer_veto": "RMSE needs ground truth absent for what-ifs -> reference-free metrics: PS (weighted rate of distance change; sign=converge/parallel/diverge), DR (actual vs human-bounded best-effort distance), SP (superhuman penalty); TS=PS*(1+DR)+SP if PS<0 else PS*(2-DR)+SP (more negative better, ~[-2,2]); play score exp-weights defenders by distance to target; sanity check 25% bad trajectories worsens scores (actual -0.1036/pred -0.0825/bad +0.0452). 20% over baseline LSTM; NFL expert: majority sound; long plays degrade. DR printed formula inconsistent with text/TS usage (flagged); equations shifted-font reconstructed; zero sportsbook lines."
+    }
+  ],
+  "universal_lens": "Defensive-back trajectories in NFL passing plays are predicted from pass-forward to pass-arrived by a CNN-LSTM sequence model with parameter-free social pooling over all coverage peers, capable of what-if targeted-receiver counterfactuals, and evaluated by reference-free metrics (positional convergence, distance ratio, superhuman penalty) that grade coverage effort without a golden trajectory.",
+  "gsi_mapping": "GSI treats the model as 1D-CNN+pool -> concat -> LSTM(K=10/15) -> dense on defender/ball/receiver inputs (separate target for what-ifs), social pooling S_i=[phi(c_i);phi(c_RB);phi(sum c_j)] over all DBs (no params); RFID 10 Hz 2018-19, 1,068,910/264,155 trajectories split by play; superhuman filter v<=12.47 yd/s; metrics PS=weighted d(distance)/dt, DR=|opt-act|/(opt+act) (inconsistency flagged), TS=PS*(1+DR)+SP or PS*(2-DR)+SP, play score exp-weighted by distance; 20% over baseline LSTM, NFL expert majority sound; sanity check actual -0.1036/pred -0.0825/bad +0.0452.",
+  "gse_mapping": "GSE lifts the what-if-capable CNN-LSTM coverage forecaster, the separate-target counterfactual interface, parameter-free social pooling over coverage peers, the superhuman physical-plausibility veto, and the reference-free PS/DR/SP trajectory-play-model evaluation stack that separates blown coverage from modeling error; DR inconsistency and excluded interceptions/long-play degradation recorded; all outputs are trajectory predictions and coverage grades, never sportsbook lines."
+}
