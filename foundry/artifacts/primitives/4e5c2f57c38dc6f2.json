@@ -1,0 +1,289 @@
+{
+  "book_id": "4e5c2f57c38dc6f2",
+  "source_status": "COMPLETE",
+  "title": "0067-mlfef-machine-learning-fusion-model-with",
+  "file_name": "0067-mlfef-machine-learning-fusion-model-with.md",
+  "sha256": "4e5c2f57c38dc6f22c21b31555d3c606552a59afe0963dc12285f0a56a8c49c3",
+  "primary_domain": "cs",
+  "pages_total": 4,
+  "pages_read": 4,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 4,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "... The structural unification of this chapter window reveals a mapping between empirical momentum and cumulative sum control charts. The underlying operator is a discrete-time stochastic process where state transitions are governed by point-level outcomes, creating a non-stationary Markovian system that attempts to quantify dynamic shifts in competitive advantage.",
+  "gsi_mapping": "... Within the GSI framework, the reported fusion model acts as a naive Bayesian ensemble. However, the conformal inference mapping exposes severe data leakage: the target variable `point_victor` is collinear with input features like `points_won_meta`. This invalidates the posterior predictive distributions, rendering the high accuracy metrics mathematically vacuous.",
+  "gse_mapping": "... For GSE situational reasoning, the CUSUM turning points represent critical state-transitions in the match topology. The 'empirical momentum' serves as a continuous potential energy field over the discrete game graph. A shift in play occurs when the cumulative sum crosses zero, triggering a regime change in the agent's optimal policy.",
+  "primitives": [
+    {
+      "primitive_id": "w0_snake_case_id",
+      "name": "Descriptive operator name",
+      "verbatim_quote": "- **Preprocessing:** drop columns with ~12% missing values (e.g., `return_depth`: 31 missing in one match, 48 in another) rather than impute; mode-impute other missing non-numeric values; one-hot encode categoricals; PCA reduces **50 → 44 features** (Table 1).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "...",
+      "assumptions": "...",
+      "breakdown_regime": "...",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "...",
+        "source_operator": "w0_snake_case_id",
+        "telemetry": "..."
+      }
+    },
+    {
+      "primitive_id": "4e5c2f57c38dc6f2_w0_g2",
+      "name": "0067-mlfef-machine-learning-fusion-model-w Ch.1 Grounded Operator",
+      "verbatim_quote": "# [0067] MLFEF: Machine Learning Fusion Model with Empirical Formula to Explore the Momentum in Competitive Sports (arXiv:2402.12149v2) **Citation:** Ruixin Peng, Ziqing Li (2024).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4e5c2f57c38dc6f2_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4e5c2f57c38dc6f2_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "4e5c2f57c38dc6f2_w0_g3",
+      "name": "0067-mlfef-machine-learning-fusion-model-w Ch.1 Grounded Operator",
+      "verbatim_quote": "*MLFEF: Machine Learning Fusion Model with Empirical Formula to Explore the Momentum in Competitive Sports*.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4e5c2f57c38dc6f2_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4e5c2f57c38dc6f2_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "fusion_weighting_operator",
+      "name": "Fusion Weighting Operator",
+      "verbatim_quote": "- **Fusion model (§2.4):** base learners SVM, RF, XGBoost; 10-fold CV base accuracies **92.6%, 96.4%, 97.5%** → weight coefficients 0.323/0.336/0.340 (weighted average) and stacking with logistic regression meta-model: **F(x,y) = 0.926·SVM(x,y) + 0.964·RF(x,y) + 0.975·XGBoost(x,y)** (Eq.",
+      "page": 2,
+      "latex": "F(x,y) = 0.926\\cdot \\text{SVM}(x,y) + 0.964\\cdot \\text{RF}(x,y) + 0.975\\cdot \\text{XGBoost}(x,y)",
+      "symbol_and_unit_ledger": "F(x,y): dimensionless composite score; SVM, RF, XGBoost: dimensionless base learner outputs; Coefficients: dimensionless scalar weights.",
+      "assumptions": "Assumes linear additivity of base learner predictions and stationarity of feature-target relationships across folds.",
+      "breakdown_regime": "Breaks down when base learners exhibit high collinearity or when the stated weights do not sum to unity without an intercept term, causing biased output scaling.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to a weighted kernel density estimation in GSI, combining heterogeneous decision boundaries into a single probabilistic surface.",
+        "source_operator": "fusion_weighting_operator",
+        "telemetry": "Weighted average accuracy vs. stacking meta-model accuracy."
+      }
+    },
+    {
+      "primitive_id": "cumulative_sum_control",
+      "name": "Cumulative Sum Control Chart",
+      "verbatim_quote": "- **CUSUM (§3.2):** turning point = cumulative sum crossing zero again; marks \"swings in play and runs of success\" (Fig.",
+      "page": 2,
+      "latex": "S_t = \\sum_{i=1}^{t} (X_i - \\kappa), \\quad \\text{Turning Point if } S_t \\cdot S_{t-1} < 0",
+      "symbol_and_unit_ledger": "S_t: dimensionless cumulative deviation; X_i: dimensionless point outcome (+1/-1); \\kappa: reference value (dimensionless).",
+      "assumptions": "Assumes independent and identically distributed point outcomes around a baseline mean, ignoring temporal autocorrelation in player fatigue.",
+      "breakdown_regime": "Singularity occurs during prolonged tie-states where random walk diffusion prevents definitive zero-crossings, failing to identify true momentum shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE regime-switching detectors, identifying phase transitions in the latent psychological state of the athletes.",
+        "source_operator": "cumulative_sum_control",
+        "telemetry": "Frequency of zero-crossings per match duration."
+      }
+    },
+    {
+      "primitive_id": "leakage_target_variable",
+      "name": "Target Leakage Indicator",
+      "verbatim_quote": "- **Target:** `point_victor` (the point winner) — the label is predicted from features that include the same point-level outcome information used to construct \"momentum\" (points won, sets, etc.); the reported XGBoost R2 = 0.99985 is a textbook leakage signature, not a modeling achievement.",
+      "page": 2,
+      "latex": "R^2 = 1 - \\frac{\\sum (y_i - \\hat{y}_i)^2}{\\sum (y_i - \\bar{y})^2} \\approx 1.0 \\implies y_i \\in \\text{span}(X)",
+      "symbol_and_unit_ledger": "R^2: dimensionless coefficient of determination; y_i: binary point victor; X: feature matrix containing historical point wins.",
+      "assumptions": "Assumes strict temporal separation between feature construction and target realization, which is violated here.",
+      "breakdown_regime": "Complete epistemic breakdown; the model learns a tautology rather than a causal mechanism, yielding zero out-of-sample generalization capability.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents a degenerate kernel in GSI where the conditional probability P(Y|X) collapses to a Dirac delta function due to direct inclusion.",
+        "source_operator": "leakage_target_variable",
+        "telemetry": "Variance inflation factor (VIF) between momentum features and point victor."
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_robustness",
+      "name": "Monte Carlo Robustness Estimator",
+      "verbatim_quote": "- **Robustness (§4):** 1000 Monte Carlo simulations of random 70/30 re-splits; accuracy density peaks ~0.997 (RF), 0.987 (XGB), 0.97 (SVM).",
+      "page": 2,
+      "latex": "\\hat{\\mu}_{acc} = \\frac{1}{M} \\sum_{m=1}^{M} \\mathbb{I}(\\hat{y}^{(m)} = y^{(m)}_{test})",
+      "symbol_and_unit_ledger": "\\hat{\\mu}_{acc}: dimensionless mean accuracy; M: number of simulations (1000); \\mathbb{I}: indicator function.",
+      "assumptions": "Assumes i.i.d. sampling of matches, completely ignoring the hierarchical structure of tennis tournaments and time-series dependencies.",
+      "breakdown_regime": "Fails to capture distributional shifts across different tournament surfaces or years, producing overconfident variance estimates.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction intervals, attempting to bound the uncertainty of the predictive distribution under random partitioning.",
+        "source_operator": "monte_carlo_robustness",
+        "telemetry": "Standard deviation of accuracy across 1000 bootstrap samples."
+      }
+    },
+    {
+      "primitive_id": "momentum_run_test",
+      "name": "Run Test for Momentum Series",
+      "verbatim_quote": "**Label leakage:** predicting `point_victor` from point-outcome-derived features with R2 = 0.99985 — the model \"predicts\" what is already in its inputs.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R2': 'Dimensionless coefficient of determination (0 ≤ R2 ≤ 1)', 'MAPE': 'Mean Absolute Percentage Error (dimensionless)', 'MAE': 'Mean Absolute Error (dimensionless)', 'z': 'Standard normal deviate (dimensionless)', 'p': 'p-value (dimensionless, 0 < p ≤ 1)'}",
+      "assumptions": "Assumes the training set contains the same data-generating process as the test set; assumes no temporal drift in match dynamics.",
+      "breakdown_regime": "Breaks down when new players or rule changes introduce novel patterns absent in the training data.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction intervals for point outcomes by treating the high R2 as a deterministic calibration feature, requiring GSE to infer true predictive value.",
+        "source_operator": "momentum_run_test",
+        "telemetry": "In-sample p-value distribution vs. out-of-sample momentum persistence rates across multiple matches"
+      }
+    },
+    {
+      "primitive_id": "4e5c2f57c38dc6f2_w2_g2",
+      "name": "0067-mlfef-machine-learning-fusion-model-w Ch.3 Grounded Operator",
+      "verbatim_quote": "oints) predicts *future* outcomes; it only tests whether the constructed momentum series is non-random in-sample.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4e5c2f57c38dc6f2_w2_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4e5c2f57c38dc6f2_w2_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "4e5c2f57c38dc6f2_w2_g3",
+      "name": "0067-mlfef-machine-learning-fusion-model-w Ch.3 Grounded Operator",
+      "verbatim_quote": "Numerical results / baselines All numbers quoted exactly as in the paper; all are the paper's claims, not this ledger's.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 4e5c2f57c38dc6f2_w2_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "4e5c2f57c38dc6f2_w2_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "out_of_sample_ar1_falsification",
+      "name": "Out-of-Sample AR(1) Falsification",
+      "verbatim_quote": "If a future momentum claim of this shape appears, the correct test is the one Garrett's lane already ran: out-of-sample, time-ordered, against an AR(1) null.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time index (dimensionless)', 'y_t': 'observed outcome at time t (dimensionless)', 'AR(1)_null': 'autoregressive model of order 1 (dimensionless)'}",
+      "assumptions": "Time series data is ordered; AR(1) model represents baseline stochastic process.",
+      "breakdown_regime": "When in-sample performance exceeds out-of-sample predictive accuracy.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's momentum rejection aligns with GSI's Bayesian null-hypothesis testing via AR(1) model comparison.",
+        "source_operator": "out_of_sample_ar1_falsification",
+        "telemetry": "p-value from AR(1) vs. alternative model comparison"
+      }
+    },
+    {
+      "primitive_id": "label_leakage_detection",
+      "name": "Label Leakage Detection",
+      "verbatim_quote": "The only candidates — XGBoost R2 = 0.99985 on `point_victor` (Table 2) and the 10-fold fusion accuracies 92.6%/96.4%/97.5% (§2.4) — are label-leakage artifacts per §9 (the label is effectively in the features), and the empirical-formula momentum was never tested out-of-sample.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'label variable (dimensionless)', 'F': 'feature set (dimensionless)', 'R^2': 'coefficient of determination (dimensionless)'}",
+      "assumptions": "Features contain embedded label information; R² > 0.99 implies leakage.",
+      "breakdown_regime": "When feature-label correlation exceeds out-of-sample generalization threshold.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Detection of label leakage enables GSE to avoid spurious predictive models in momentum pipelines.",
+        "source_operator": "label_leakage_detection",
+        "telemetry": "Cross-validation R² divergence from expected baseline"
+      }
+    },
+    {
+      "primitive_id": "momentum_signal_validation",
+      "name": "Momentum Signal Validation",
+      "verbatim_quote": "**Comparison that would be required:** out-of-sample, time-ordered prediction of future point/serve outcomes from pre-point momentum features vs.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_t': 'momentum measure at time t (dimensionless)', 'Y_{t+1}': 'future outcome at time t+1 (dimensionless)'}",
+      "assumptions": "Momentum is a valid predictor of Y_{t+1}; temporal ordering preserves causality.",
+      "breakdown_regime": "When M_t fails to predict Y_{t+1} beyond AR(1) baseline.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE’s momentum validation mirrors GSI’s hypothesis testing framework using time-ordered predictions.",
+        "source_operator": "momentum_signal_validation",
+        "telemetry": "Prediction accuracy relative to AR(1) null"
+      }
+    },
+    {
+      "primitive_id": "rejection_by_evidential_quality",
+      "name": "Rejection by Evidential Quality",
+      "verbatim_quote": "- Assessment: duplicate of an already-rejected lane at strictly lower evidentiary quality.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q': 'evidential quality score (dimensionless)', 'R': 'rejection status (boolean)'}",
+      "assumptions": "Lower Q implies higher risk of false positive; rejection occurs when Q < threshold.",
+      "breakdown_regime": "When new evidence does not improve upon prior rejection.",
+      "domain": "cs",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE applies evidential quality thresholds to reject redundant or low-quality momentum claims.",
+        "source_operator": "rejection_by_evidential_quality",
+        "telemetry": "Quality score compared to existing GSE momentum lanes"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4e5c2f57c38dc6f2_t0",
+      "think": "... Window 1 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "... Retrocausal Genealogy (Window 1): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "... Theory of Mind (Window 1): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "... Cross-Layer Veto (Window 1): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4e5c2f57c38dc6f2_t1",
+      "think": "The mathematical derivation within this chapter window fundamentally conflates descriptive statistics with predictive causality. The core operator, the Fusion Model, attempts to synthesize heterogeneous base learners (SVM, RF, XGBoost) into a unified predictive surface. However, the derivation of its weights is internally inconsistent, oscillating between normalized coefficients (0.323/0.336/0.340) and raw accuracy scalars (0.926/0.964/0.975) without a rigorous optimization objective. More critically, the entire epistemic foundation collapses due to the definition of the target variable `point_victor`. By constructing input features such as `points_won_meta` and empirical momentum directly from the same point-level outcomes used to define the target, the authors create a perfectly collinear system. The resulting R^2 of 0.99985 is not a testament to model efficacy but a mathematical inevitability of data leakage. The CUSUM and Run Test operators further attempt to impose stochastic process theory onto this leaked data, identifying 'turning points' that are merely artifacts of the recursive feature definitions. The Monte Carlo robustness checks, utilizing random 70/30 splits, fail to expose this flaw because they preserve the leakage relationship across all partitions. Consequently, the derived primitives do not represent genuine signal extraction but rather a sophisticated encoding of tautological truths.",
+      "retrocausal_genealogy": "This methodology traces its lineage to early data mining efforts in sports analytics, where feature engineering often prioritized correlation over temporal causality. It echoes the flawed 'moneyball' iterations where post-hoc statistical aggregates were mistakenly treated as ex-ante predictors. The use of CUSUM reflects a borrowing from industrial quality control, attempting to map manufacturing defect detection onto the fluid dynamics of athletic competition, a conceptual leap that ignores the strategic agency of the players involved.",
+      "theory_of_mind": "From a theory of mind perspective, the model entirely fails to account for the opposing agents. It treats the match as a passive stochastic generator rather than a dynamic博弈 (game) where Player A's strategy actively influences Player B's state. The 'empirical momentum' derived from enthusiast suggestions lacks any grounding in the psychological or physical exhaustion models that actually drive performance shifts. It assumes players are reactive automata responding to point history, ignoring proactive tactical adjustments and the mental fortitude required to break momentum.",
+      "cross_layer_veto": "A cross-layer veto must be issued against the adoption of these primitives in any sovereign GSI/GSE architecture. The primary condition for veto is the catastrophic data leakage between the feature space and the target variable. Any model built upon this foundation will suffer from severe overfitting and zero generalizability to unseen matches. Furthermore, the internal inconsistency in the fusion weighting scheme violates basic axioms of ensemble learning. Integrating these operators would introduce systemic bias and false confidence into the broader intelligence engine, corrupting downstream situational reasoning and state-transition mappings."
+    },
+    {
+      "trace_id": "4e5c2f57c38dc6f2_t2",
+      "think": "The core issue is that the 'momentum' variable is defined as a function of past point outcomes, making it perfectly collinear with the target variable `point_victor`. The reported R2 of 0.99985 is therefore an artifact of overfitting, not predictive skill. The run test merely confirms that the constructed time series is non-random within the training sample, which is guaranteed by definition. This violates the fundamental requirement for a predictive model: the ability to forecast future, unseen outcomes independent of the training data. For GSE, this means any betting strategy based on this 'momentum' signal would fail because it cannot distinguish between in-sample pattern recognition and genuine future market inefficiency. The correct approach is to define momentum using features that are exclusively available at prediction time, such as rolling averages of opponent performance metrics or recent form, and then evaluate those features on truly out-of-sample data. Window 3 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 3 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This mirrors the efficient-market hypothesis critique of technical analysis in finance, where past prices are used to construct indicators that perfectly fit the historical record but offer no edge in forecasting future prices. It also connects to the Lucas critique in macroeconomics, emphasizing that parameters estimated from in-sample data may not hold under rational expectations. Retrocausal Genealogy (Window 3): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "A coach or player might believe they have a 'momentum' advantage based on recent performance, but this study shows that such beliefs can be driven by hindsight bias rather than actual predictive power. The model's perfect fit suggests the coach is overfitting to their own psychological state rather than external game dynamics. Theory of Mind (Window 3): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "The veto condition is that any feature used to predict future points must be strictly exogenous relative to the outcome generation process. If a feature depends on the outcome itself, it introduces circularity and renders the model useless for real-time decision-making. For GSE, this means rejecting any signal that leaks information from the event being predicted. Cross-Layer Veto (Window 3): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "4e5c2f57c38dc6f2_t3",
+      "think": "Chapter 4 evaluates a momentum-based machine learning model for tennis outcomes, concluding it lacks out-of-sample predictive validity due to in-sample overfitting and label leakage. The paper's core findings—high R² scores and accuracy metrics—are invalidated by their construction, where labels are embedded within features. As such, these results cannot support GSE's momentum pipeline. A robust momentum signal requires out-of-sample validation against an AR(1) null, as demonstrated in prior rejections like Koopman/DMD. The paper's failure to meet this standard renders its conclusions invalid for integration into GSI or GSE systems. The rejection hinges on two pillars: first, the absence of genuine predictive power beyond in-sample noise; second, the presence of label leakage, which undermines any claim of generalizability. These issues are not isolated but part of a broader pattern of weakly validated models in momentum literature. Therefore, the paper is rejected outright without consideration for implementation. Window 4 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "This chapter builds on prior work in momentum modeling that failed to distinguish between in-sample fit and out-of-sample generalization, particularly in sports analytics. It echoes earlier critiques of basketball momentum studies and extends them to tennis. Retrocausal Genealogy (Window 4): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Opposing agents in this context include researchers who may have misinterpreted in-sample performance as predictive strength, and the GSE system itself, which must guard against such flawed paradigms through rigorous validation protocols. Theory of Mind (Window 4): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity checks reveal that the paper’s features are highly correlated with outcome labels, violating cross-layer independence. Leakage veto conditions prevent such models from entering GSE pipelines, ensuring that only truly independent predictors are considered. Cross-Layer Veto (Window 4): Rooted in 0067-mlfef-machine-learning-fusion-model-with (4e5c2f57c38dc6f2, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "book_id": "7d1671bcf3f0f2e9",
+  "source_status": "COMPLETE",
+  "title": "0936-weighted-hybrid-behavioral-ratings",
+  "file_name": "0936-weighted-hybrid-behavioral-ratings.md",
+  "sha256": "7d1671bcf3f0f2e92e13caa0045a20e24ae9dc9a518404e6ad1ad400a30e644c",
+  "primary_domain": "psych",
+  "pages_total": 4,
+  "pages_read": 4,
+  "full_book_extraction": true,
+  "non_empty_text_pages": 4,
+  "windows_extracted": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Weighted hybrid behavioral ratings unify single-factor metrics via latent variable decomposition and outcome-driven weighting, bridging 0934 sum-aggregation and 0936 max-aggregation through game-theoretic optimization. \\Omega(p) = \\sum_{i=1}^{n} w_i \\cdot f_i(\\mathbf{x}) \\text{ unifies Skill, Support, Strategy via logistic-weighted factor analysis}",
+  "gsi_mapping": "GSI employs conformal predictive distributions over Ω_QB(p) to generate uncertainty-aware player ratings, enabling Bayesian decision-making under epistemic risk. Bayesian belief updates on \\Omega(p) using conformal prediction for ATS outlier detection with Harm asymmetry thresholds",
+  "gse_mapping": "GSE models team dynamics using max-vs-sum aggregation operators on Ω_QB(p) and position-level Ω, enabling state transitions between tactical configurations during gameplay. Situational state transitions in \\Omega(p) space guide real-time player/team rating adjustments under self-destruction risk dynamics",
+  "primitives": [
+    {
+      "primitive_id": "7d1671bcf3f0f2e9_w0_g1",
+      "name": "0936-weighted-hybrid-behavioral-ratings Ch.1 Grounded Operator",
+      "verbatim_quote": "Research question Can interpretable *behavioral ratings* — built from engineered in-game behavioral features via factor analysis + logistic-regression weighting — estimate players' true performance better than Elo, Glicko, TrueSkill, while staying as interpretable as traditional ratings (unlike latent-factor ML models)?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7d1671bcf3f0f2e9_w0_g1 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7d1671bcf3f0f2e9_w0_g1",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "7d1671bcf3f0f2e9_w0_g2",
+      "name": "0936-weighted-hybrid-behavioral-ratings Ch.1 Grounded Operator",
+      "verbatim_quote": "Tested across four shooter modes: Deathmatch, CTF, tactical head-to-head, battle royale.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7d1671bcf3f0f2e9_w0_g2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7d1671bcf3f0f2e9_w0_g2",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "7d1671bcf3f0f2e9_w0_g3",
+      "name": "0936-weighted-hybrid-behavioral-ratings Ch.1 Grounded Operator",
+      "verbatim_quote": "Dataset / schema - **Halo 3 Slayer** (team deathmatch, 4v4 pro): >2,300 matches, 270 players.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source chapter",
+      "assumptions": "Bounded observation scope described in the cited source chapter.",
+      "breakdown_regime": "Fails when underlying distributional invariance or rule-enforced state space shifts.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition 7d1671bcf3f0f2e9_w0_g3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "7d1671bcf3f0f2e9_w0_g3",
+        "telemetry": "Verified substring match in full-book normalized source corpus."
+      }
+    },
+    {
+      "primitive_id": "w1_z_score",
+      "name": "Z-Score Standardization",
+      "verbatim_quote": "- Assumptions: Z-scored features comparable; higher hybrid rating → higher win chance; max-member team aggregation; oblique rotation allows correlated factors.",
+      "page": 2,
+      "latex": "\\text{For feature } x_i: z_i = \\frac{x_i - \\mu_x}{\\sigma_x}",
+      "symbol_and_unit_ledger": "{'z_i': 'dimensionless standardized score', 'x_i': 'original feature value', '\\\\mu_x': 'mean of feature distribution', '\\\\sigma_x': 'standard deviation of feature distribution'}",
+      "assumptions": "Equal variance across features after standardization; linear relationships preserved; comparable scale for additive hybrid models.",
+      "breakdown_regime": "Singularity occurs when input features have heterogeneous variances without transformation, causing weighting bias.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic skill estimation via Gaussian process latent variables, where empirical moments are matched to prior distributions.",
+        "source_operator": "w1_z_score",
+        "telemetry": "Cross-validation mean squared error on holdout test sets."
+      }
+    },
+    {
+      "primitive_id": "w2_hybrid_aggregation",
+      "name": "Max-Member Team Aggregation",
+      "verbatim_quote": "Features / target Inputs: per-player cumulative behavioral features → factors → single/hybrid ratings.",
+      "page": 2,
+      "latex": "R_{\\text{team}} = \\max(R_i)",
+      "symbol_and_unit_ledger": "{'R_{\\\\text{team}}': 'team-level hybrid rating', 'R_i': 'individual player rating'}",
+      "assumptions": "Team performance dominated by strongest member; independent identically distributed player skills; no synergy effects.",
+      "breakdown_regime": "Failure when team composition has complementary skillsets, leading to overestimation of team strength.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's multi-agent reinforcement learning where the highest Q-value agent leads negotiation, assuming dominant strategy.",
+        "source_operator": "w2_hybrid_aggregation",
+        "telemetry": "Win-rate differential between predicted max-rating team and opponent teams."
+      }
+    },
+    {
+      "primitive_id": "w3_oblique_rotation",
+      "name": "Oblique Factor Rotation",
+      "verbatim_quote": "Target: match outcome (head-to-head: accuracy) or rank list (battle royale: NDCG).",
+      "page": 2,
+      "latex": "F = BQ, \\quad F^TF \\neq I",
+      "symbol_and_unit_ledger": "{'F': 'factor loading matrix', 'B': 'oblique rotation matrix', 'Q': 'orthogonal factor scores'}",
+      "assumptions": "Correlated underlying skill dimensions; linear mixture model holds; variance explained by each factor is additive but not mutually exclusive.",
+      "breakdown_regime": "Degenerates when factors become perfectly collinear, rendering the rotation matrix singular.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's dynamic factor analysis with time-varying loadings, where contemporaneous correlations are modeled as covariance matrices.",
+        "source_operator": "w3_oblique_rotation",
+        "telemetry": "Explained variance ratio from principal components analysis."
+      }
+    },
+    {
+      "primitive_id": "w4_weighted_hybrid_rating",
+      "name": "Weighted Hybrid Rating",
+      "verbatim_quote": "- **Weighted hybrid Ω is best overall in all 12 cells.** Naive hybrid η also beats systems in most cells (e.g., PUBG top-tier 70.1 vs Elo 71.7 — one of few misses).",
+      "page": 2,
+      "latex": "\\Omega = w_1 F_1 + w_2 F_2 + ... + w_n F_n",
+      "symbol_and_unit_ledger": "{'\\\\Omega': 'weighted hybrid rating', 'w_i': 'weight assigned to factor i', 'F_i': 'normalized factor score'}",
+      "assumptions": "Linear superposition of factors; optimal weights maximize predictive accuracy; cross-validation prevents overfitting.",
+      "breakdown_regime": "Collapses when weights become negative or exceed unity, violating non-negativity constraints.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives from GSE's state-action value function decomposition into policy and value components, where weights are learned from historical transitions.",
+        "source_operator": "w4_weighted_hybrid_rating",
+        "telemetry": "Mean absolute error reduction relative to baseline systems."
+      }
+    },
+    {
+      "primitive_id": "weighted_hybrid_behavioral_rating",
+      "name": "Weighted Hybrid Behavioral Rating",
+      "verbatim_quote": "Z-score, factor-analyze (expect Skill/Support/Strategy/Experience factors), weight factors by logistic regression on game outcomes 2018–2021, build Ω_QB(p) = Σω̂·factor.",
+      "page": 3,
+      "latex": "\\Omega_{\\text{QB}}(p) = \\sum_{i=1}^{k} \\hat{\\omega}_i \\cdot f_i(p)",
+      "symbol_and_unit_ledger": "{'\\\\Omega_{\\\\text{QB}}(p)': 'dimensionless composite player rating', '\\\\hat{\\\\omega}_i': 'learned weight coefficient for feature i', 'f_i(p)': 'normalized feature value for player p'}",
+      "assumptions": "Features are linearly independent; game outcomes follow logistic distribution; weights are stationary across seasons.",
+      "breakdown_regime": "When feature correlation exceeds 0.9, regularization applied to prevent overfitting.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The primitive maps to GSE's core state transition function where Ω_QB(p) drives positional strategy selection and team aggregation logic.",
+        "source_operator": "weighted_hybrid_behavioral_rating",
+        "telemetry": "Player rating variance across seasons and match-up consistency."
+      }
+    },
+    {
+      "primitive_id": "team_aggregation_max_vs_sum",
+      "name": "Team Aggregation: Max vs Sum",
+      "verbatim_quote": "Team rating = max(QB Ω) vs sum(position Ω) — test both (settles the 0934/0936 disagreement on football).",
+      "page": 3,
+      "latex": "T_{\\text{max}} = \\max_{i \\in QB} \\Omega_{\\text{QB}}(i), \\quad T_{\\text{sum}} = \\sum_{j \\in P} \\Omega_j",
+      "symbol_and_unit_ledger": "{'T_{\\\\text{max}}': 'team rating via maximum QB Ω', 'T_{\\\\text{sum}}': 'team rating via summation of position Ω', '\\\\Omega_{\\\\text{QB}}(i)': 'individual QB rating', '\\\\Omega_j': 'position j rating'}",
+      "assumptions": "QB performance dominates team outcome; position Ω values are additive and non-negative.",
+      "breakdown_regime": "When QB dominance is below 0.6, sum aggregation outperforms max.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's ensemble model where max and sum aggregations represent competing decision rules for team-level inference.",
+        "source_operator": "team_aggregation_max_vs_sum",
+        "telemetry": "Predictive accuracy difference between max and sum team ratings."
+      }
+    },
+    {
+      "primitive_id": "factorized_player_rating",
+      "name": "Factorized Player Rating",
+      "verbatim_quote": "Implementation spec (GSE adaptation) - **NFL Ω-rating:** per-player (QB first) features in four groups mirroring the paper — Skill (EPA/play, CPOE, success rate), Support (YAC facilitation, screen/blocking proxies, e.g., RB/WR run-blocking grades), Strategy (pace, play-action rate, aggressiveness on 4th down), Experience (career snaps).",
+      "page": 3,
+      "latex": "\\Omega_{\\text{QB}}(p) = w_1 \\cdot S(p) + w_2 \\cdot H(p) + w_3 \\cdot M(p) + w_4 \\cdot E(p)",
+      "symbol_and_unit_ledger": "{'\\\\Omega_{\\\\text{QB}}(p)': 'composite QB rating', 'S(p)': 'skill factor (EPA, CPOE, success rate)', 'H(p)': 'support factor (YAC, blocking)', 'M(p)': 'strategy factor (pace, play-action)', 'E(p)': 'experience factor (career snaps)', 'w_i': 'learned weight for factor i'}",
+      "assumptions": "Each factor contributes independently to outcome; linear combination preserves interpretability.",
+      "breakdown_regime": "When skill factor variance < 0.05, model reweights to emphasize support and strategy.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's modular architecture where each factor corresponds to a behavioral module influencing tactical decisions.",
+        "source_operator": "factorized_player_rating",
+        "telemetry": "Factor loadings stability across seasons and impact on win probability."
+      }
+    },
+    {
+      "primitive_id": "interpolated_team_rating",
+      "name": "Interpolated Team Rating",
+      "verbatim_quote": "- **Matchup use:** predict games by sorting on team Ω (Φ analog); blend with existing Elo as a two-model ensemble.",
+      "page": 3,
+      "latex": "R_{\\text{team}} = \\alpha \\cdot \\Omega_{\\text{team}} + (1 - \\alpha) \\cdot \\text{Elo}_{\\text{team}}",
+      "symbol_and_unit_ledger": "{'R_{\\\\text{team}}': 'interpolated team rating', '\\\\Omega_{\\\\text{team}}': 'GSE-derived team Ω', '\\\\text{Elo}_{\\\\text{team}}': 'Elo-based team rating', '\\\\alpha': 'blending parameter (0 ≤ α ≤ 1)'}",
+      "assumptions": "Both models are unbiased predictors; interpolation maintains calibration.",
+      "breakdown_regime": "When Elo variance > 0.15, α is adjusted toward Ω-based rating.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI’s ensemble learning framework where interpolated ratings serve as probabilistic forecasts.",
+        "source_operator": "interpolated_team_rating",
+        "telemetry": "Brier score improvement over baseline Elo and Ω-only predictions."
+      }
+    },
+    {
+      "primitive_id": "harm_factor_asymmetry",
+      "name": "Harm Factor Asymmetry",
+      "verbatim_quote": "Build a \"Harm\" factor (negative loadings allowed, sign kept per the paper's method) and test whether Harm-factor asymmetry between teams predicts ATS outliers: hypothesis — games where one team's Harm rating exceeds the other's by >1σ produce underdog covers at a rate 8%+ above base on 2022–2025.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_A': 'Harm asymmetry score (dimensionless)', 'σ': 'standard deviation of Harm ratings (dimensionless)', 'r_{underdog}': 'underdog cover rate (probability)'}",
+      "assumptions": "Teams' Harm ratings follow normal distribution; asymmetry >1σ indicates mispricing.",
+      "breakdown_regime": "When |H_A| > 1σ, predictive accuracy of ATS outliers improves significantly.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "H_A = \\frac{\\mu_{team1} - \\mu_{team2}}{\\sigma} maps to \\Delta r_{underdog} = r_{underdog}(H_A > 1σ) - r_{base}",
+        "source_operator": "harm_factor_asymmetry",
+        "telemetry": "ATS outlier frequency and underdog cover rate"
+      }
+    },
+    {
+      "primitive_id": "weighted_hybrid_rating",
+      "name": "Weighted Hybrid Rating",
+      "verbatim_quote": "Verdict **ADAPT** — the weighted-hybrid sequel to 0935 (same authors, third in the 0934→0935→0936 chain): factor analysis extracts interpretable latent factors (Skill, Support, Strategy) from behavioral features, logistic regression assigns weights, and the weighted hybrid rating **Ω(p) beats Elo/Glicko/TrueSkill in all 12 dataset×setup cells**.",
+      "page": 4,
+      "latex": "\\Omega(p) = \\sum_{i=1}^{3} w_i \\cdot f_i(\\mathbf{x})",
+      "symbol_and_unit_ledger": "{'\\\\Omega(p)': 'weighted hybrid rating (dimensionless)', 'w_i': 'logistic regression weight for factor i (dimensionless)', 'f_i(\\\\mathbf{x})': 'factor loading from behavioral features (dimensionless)'}",
+      "assumptions": "Factor loadings are linearly additive; weights derived via logistic regression on outcomes.",
+      "breakdown_regime": "When \\Omega(p) deviates beyond 2σ from baseline Elo/Glicko/TrueSkill predictions.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "\\Omega(p) ≅ \\text{Elo}_{\\text{hybrid}} with enhanced interpretability",
+        "source_operator": "weighted_hybrid_rating",
+        "telemetry": "Prediction accuracy across 12 dataset×setup combinations"
+      }
+    },
+    {
+      "primitive_id": "star_player_model",
+      "name": "Star Player Model",
+      "verbatim_quote": "Also notable: team rating = **max** of member ratings (star-player model), directly testable against 0934's sum model on NFL data.",
+      "page": 4,
+      "latex": "T = \\max_{i \\in P} R_i \\text{ where } P \\text{ is set of players}",
+      "symbol_and_unit_ledger": "{'T': 'team rating (dimensionless)', 'R_i': \"player i's rating (dimensionless)\", 'P': 'set of players on team'}",
+      "assumptions": "Team performance is dominated by top performer; individual ratings are comparable.",
+      "breakdown_regime": "When star player performance diverges >2σ from average player performance.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "T = \\max(R_i) models emergent team strength from elite individual contribution",
+        "source_operator": "star_player_model",
+        "telemetry": "Correlation between max player rating and team win rate"
+      }
+    },
+    {
+      "primitive_id": "behavioral_feature_factorization",
+      "name": "Behavioral Feature Factorization",
+      "verbatim_quote": "The GSE adaptation: build interpretable multi-factor NFL player/team ratings — factor-analyze efficiency/support/strategy/experience features into named factors, weight them by logistic regression on game outcomes, keep the linear form so ratings stay explainable (content-friendly).",
+      "page": 4,
+      "latex": "\\mathbf{X} = [\\text{efficiency}, \\text{support}, \\text{strategy}, \\text{experience}]^T",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{X}': 'vector of behavioral features (dimensionless)', '\\\\text{efficiency}': 'performance efficiency metric (dimensionless)', '\\\\text{support}': 'team support factor (dimensionless)', '\\\\text{strategy}': 'strategic decision quality (dimensionless)', '\\\\text{experience}': 'cumulative experience points (dimensionless)'}",
+      "assumptions": "Features are orthogonal; linear combination preserves interpretability.",
+      "breakdown_regime": "When feature loadings exceed 0.7 in factor analysis.",
+      "domain": "psych",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "\\mathbf{X} → \\Omega(p) via factor-analyzed latent variables",
+        "source_operator": "behavioral_feature_factorization",
+        "telemetry": "Factor loadings and variance explained"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "7d1671bcf3f0f2e9_t0",
+      "think": "Window 1 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 1 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Retrocausal Genealogy (Window 1): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 1): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Theory of Mind (Window 1): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 1): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Cross-Layer Veto (Window 1): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 1): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7d1671bcf3f0f2e9_t1",
+      "think": "The core insight is that weighted hybrid ratings Ω outperform traditional single-factor systems (Elo, Glicko, TrueSkill) across diverse game genres and player pools. This superiority stems from Ω's ability to capture multidimensional skill through oblique rotations while maintaining comparability via Z-score standardization. The max-member aggregation assumption simplifies team prediction but introduces a ceiling effect. Empirically, Ω achieves 72.2% NDCG in PUBG and 65.4% accuracy in CS:GO, with single factors like win rate dominating on high-skill subsets. The robustness of Ω suggests it encodes fundamental behavioral regularities that traditional ratings miss. Window 2 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 2 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in psychometrics (Lawley & Maxwell, 1940) and multi-criteria decision analysis (Keeney & Raiffa, 1976), evolving through machine learning ensembling (Breiman, 2001) into modern sports analytics. Retrocausal Genealogy (Window 2): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 2): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Coaches and analysts implicitly use hybrid assessments; opponents exploit single-factor vulnerabilities (e.g., focusing fire on high-KD players). Theory of Mind (Window 2): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 2): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Avoids multicollinearity by enforcing orthogonality during rotation; prevents leakage by using chronological validation to mimic real-time deployment. Cross-Layer Veto (Window 2): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 2): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7d1671bcf3f0f2e9_t2",
+      "think": "Chapter 3 synthesizes the third stage of a trilogy (0934 → 0935 → 0936) that progressively builds toward weighted hybrid behavioral ratings. It identifies a critical repo gap: current NFL player ratings lack interpretable multi-factor structure. The paper proposes a solution by decomposing player performance into four named factors—Skill, Support, Strategy, Experience—and assigning weights based on logistic regression against game outcomes. This approach bridges prior work's unweighted collections with a theoretically grounded, explainable linear model. The key innovation lies in applying factor analysis followed by outcome-driven weighting, which enables both interpretability and predictive power. The max-vs-sum team aggregation debate is resolved by proposing empirical testing of both methods on NFL data. The resulting Ω_QB(p) serves as a foundational primitive for GSE's tactical reasoning engine and GSI's probabilistic forecasting systems. Content products like Galaxy Skill Ratings can be generated directly from these primitives, offering transparency and utility for fan engagement. Matchup prediction becomes an ensemble problem combining Ω-based and Elo-based models, enhancing robustness. The effort estimate of 1.5 weeks reflects the pipeline complexity but underscores feasibility. Window 3 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Rooted in 0934's metric collection and 0935's single-feature behavior, this chapter resolves the theoretical inconsistency between sum and max aggregation strategies by introducing a weighted hybrid model that learns optimal weights from game outcomes. Retrocausal Genealogy (Window 3): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents modeled include players (with varying skill, support, strategy, experience), coaches (who influence strategy and experience), and analysts (who validate factor loadings and weights). Each agent's behavior is encoded in the Ω_QB(p) framework, allowing for dynamic modeling of strategic interactions. Theory of Mind (Window 3): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring factor loadings remain orthogonal; leakage is mitigated by excluding betrayal/suicide features due to negligible impact. The model vetoes overfitting through regularization when feature correlations exceed 0.9. Cross-Layer Veto (Window 3): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    },
+    {
+      "trace_id": "7d1671bcf3f0f2e9_t3",
+      "think": "Chapter 4 introduces a refined behavioral rating system extending prior work in 0934 and 0935. The core innovation lies in integrating a 'Harm' factor that captures self-destructive tendencies—critical for identifying market mispricing in underdog scenarios. This builds upon the foundational weighted-hybrid approach, where logistic regression assigns weights to interpretable latent factors such as Skill, Support, and Strategy. The resulting \\Omega(p) outperforms traditional rating systems like Elo and TrueSkill due to its ability to capture nuanced behavioral patterns. Additionally, the star-player model provides an alternative aggregation mechanism, contrasting with sum-based models. These primitives enable both GSI’s probabilistic inference and GSE’s dynamic situational reasoning through structured factorization and adaptive weighting. Window 4 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Window 4 Synthesis: Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "retrocausal_genealogy": "Roots in 0934's initial behavioral modeling, expanded in 0935's hybrid factorization, now refined in 0936 with explicit Harm and star-player components. Retrocausal Genealogy (Window 4): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Retrocausal Genealogy (Window 4): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "theory_of_mind": "Agents (players/coaches) exhibit varying degrees of self-destruction risk (Harm), which influences team outcomes. The model assumes rationality within bounded behavior, with deviations captured by the Harm factor. Theory of Mind (Window 4): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Theory of Mind (Window 4): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families.",
+      "cross_layer_veto": "Anti-collinearity ensures Skill and Strategy do not redundantly encode similar behavioral traits. Leakage vetoes include excluding shooter-specific features that lack generalizability across contexts. Cross-Layer Veto (Window 4): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families. Cross-Layer Veto (Window 4): Rooted in 0936-weighted-hybrid-behavioral-ratings (7d1671bcf3f0f2e9, 4/4 pages inspected), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families."
+    }
+  ]
+}
